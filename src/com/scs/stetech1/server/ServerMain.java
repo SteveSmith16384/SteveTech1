@@ -1,7 +1,6 @@
 package com.scs.stetech1.server;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import ssmith.util.FixedLoopTime;
@@ -12,6 +11,7 @@ import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.ErrorListener;
+import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
@@ -19,9 +19,18 @@ import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.network.serializing.Serializer;
 import com.jme3.system.JmeContext;
+import com.scs.stetech1.client.entities.Crate;
+import com.scs.stetech1.client.entities.Floor;
+import com.scs.stetech1.client.entities.PlayersAvatar;
 import com.scs.stetech1.components.IEntity;
-import com.scs.stetech1.components.IServerControlled;
+import com.scs.stetech1.components.IProcessable;
+import com.scs.stetech1.components.ISharedEntity;
+import com.scs.stetech1.netmessages.AckMessage;
+import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.HelloMessage;
+import com.scs.stetech1.netmessages.MyAbstractMessage;
+import com.scs.stetech1.netmessages.NewEntityMessage;
+import com.scs.stetech1.netmessages.NewPlayerMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.SharedSettings;
@@ -31,11 +40,11 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
 	private Server myServer;
-	public static SorcerersProperties properties;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10);
-	private FixedLoopTime loopTimer = new FixedLoopTime(100);
-	//private ServerGame game;
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
+
+	public static SorcerersProperties properties;
+	private FixedLoopTime loopTimer = new FixedLoopTime(100);
 	public BulletAppState bulletAppState;
 
 	public static void main(String[] args) {
@@ -62,7 +71,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		Serializer.registerClass(PingMessage.class);
 		myServer.addMessageListener(this, PingMessage.class);
-		//myServer.broadcast(arg0)
 
 	}
 
@@ -75,28 +83,33 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
 		//bulletAppState.getPhysicsSpace().addTickListener(this);
 		//bulletAppState.getPhysicsSpace().setAccuracy(1f / 80f);
+
+		createGame();
 	}
-	
-	
-	public void gameLoop(float tpf_secs) {
+
+
+	@Override
+	public void simpleUpdate(float tpf_secs) {
 		myServer.broadcast(new PingMessage());
 
 		// Loop through the ents
 		for (IEntity e : entities.values()) {
-			if (e instanceof IServerControlled) {
-				IServerControlled sc = (IServerControlled)e;
-				sc.process(tpf_secs);
+			if (e instanceof IProcessable) {
+				IProcessable p = (IProcessable)e;
+				p.process(tpf_secs);
+			}
+			if (e instanceof ISharedEntity) {
+				ISharedEntity sc = (ISharedEntity)e;
+				if (sc.canMove()) {
+					myServer.broadcast(new EntityUpdateMessage(sc));
+				}
 			}
 		}
 
-		/*if (game != null) {
-			game.gameLoop(tpf_secs);
-		}*/
-
 		// Loop through clients
-		for (ClientData client : clients.values()) {
-			for (IEntity e : entities.values()) {
-				// todo - send entity updates to all
+		synchronized (clients) {
+			for (ClientData client : clients.values()) {
+				client.sendMessages(this.myServer);
 			}
 		}
 
@@ -108,65 +121,123 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	@Override
 	public void messageReceived(HostedConnection source, Message message) {
 		ClientData client = clients.get(source.getId());
+
+		MyAbstractMessage msg = (MyAbstractMessage)message;
+		if (msg.requiresAck) {
+			// Check not already been ack'd
+			if (client.packets.hasBeenAckd(msg.id)) {
+				return;
+			}
+		}
+
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
 			client.ping = System.nanoTime() - pingMessage.sentTime;
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
 			System.out.println("Server received '" +helloMessage.getMessage() +"' from client #"+source.getId() );
+		} else if (message instanceof NewPlayerMessage) {
+			NewPlayerMessage newPlayerMessage = (NewPlayerMessage) message;
+			client.name = newPlayerMessage.name;
+			createPlayersAvatar();
+			sendEntityListToClient(client);
+		} else if (message instanceof AckMessage) {
+			AckMessage ackMessage = (AckMessage) message;
+			client.packets.acked(ackMessage.ackingId);
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
+		}
+
+		// Alway ack all messages!
+		if (msg.requiresAck) {
+			myServer.broadcast(Filters.equalTo(client.conn), new AckMessage(msg.id)); // Send it straight back
+		}
+	}
+
+
+	private void createPlayersAvatar() {
+		PlayersAvatar avatar = new PlayersAvatar(this, null, null, null);
+		this.addEntity(avatar);
+	}
+
+
+	private void sendEntityListToClient(ClientData client) {
+		synchronized (entities) {
+			for (IEntity e : entities.values()) {
+				if (e instanceof ISharedEntity) {
+					ISharedEntity se = (ISharedEntity)e;
+					client.packets.add(new NewEntityMessage(se));
+					//client.packets.add(new EntityUpdateMessage(se));
+				}
+			}
 		}
 	}
 
 
 	@Override
-	public void handleError(Object arg0, Throwable arg1) {
-		SharedSettings.p("Network error: " + arg1);
-		// TODO Auto-generated method stub
+	public void handleError(Object arg0, Throwable ex) {
+		SharedSettings.p("Network error: " + ex);
 
 	}
 
 
 	@Override
-	public void connectionAdded(Server arg0, HostedConnection arg1) {
+	public void connectionAdded(Server arg0, HostedConnection conn) {
 		SharedSettings.p("Client connected!");
-		clients.put(arg1.getId(), new ClientData(arg1.getId(), arg1));
+		clients.put(conn.getId(), new ClientData(conn));
 
-		//todo - add avatar
-		
-		/*if (game == null && clients.size() > 0) {
-			game = new ServerGame();
-		}*/
 	}
 
 
 	@Override
-	public void connectionRemoved(Server arg0, HostedConnection arg1) {
+	public void connectionRemoved(Server arg0, HostedConnection source) {
 		SharedSettings.p("Client removed");
-		// todo - remove client
+
+		ClientData client = clients.get(source.getId());
+
+		this.playerLeft(client.id);
+	}
+
+
+	private void playerLeft(int id) {
+		synchronized (clients) {
+			this.clients.remove(id);
+		}
 		// todo - remove avatar
-		// TODO Auto-generated method stub
 
 	}
-	
-	
+
+
 	@Override
 	public void addEntity(IEntity e) {
-		// TODO Auto-generated method stub
-		
+		synchronized (entities) {
+			this.entities.put(e.getID(), e);
+		}
+
 	}
 
 
 	@Override
 	public void removeEntity(IEntity e) {
-		// TODO Auto-generated method stub
-		
+		synchronized (entities) {
+			this.entities.remove(e.getID());
+		}
+
 	}
 
 
 	public BulletAppState getBulletAppState() {
 		return bulletAppState;
+	}
+
+
+
+	private void createGame() {
+		Floor floor = new Floor(this, 0, 0, 0, 10, 10, .5f, "", null);
+		this.addEntity(floor);
+
+		Crate crate = new Crate(this, 0, 0, 0, 10, 10, .5f, "", 0);
+		this.addEntity(crate);
 	}
 
 

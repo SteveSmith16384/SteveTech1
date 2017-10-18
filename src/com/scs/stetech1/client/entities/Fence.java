@@ -9,6 +9,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
 public class Fence extends PhysicalEntity {
@@ -20,7 +21,7 @@ public class Fence extends PhysicalEntity {
 	//private RigidBodyControl floor_phy;
 
 	public Fence(IEntityController _game, float x, float height, float z, float rot, int texCode) {
-		super(_game, "Fence");
+		super(_game, EntityTypes.FENCE, "Fence");
 
 		Box box1 = new Box(WIDTH/2, height/2, .1f);
 		box1.scaleTextureCoordinates(new Vector2f(WIDTH, height));

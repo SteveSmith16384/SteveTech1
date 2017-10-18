@@ -2,8 +2,11 @@ package com.scs.stetech1.client;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.prefs.BackingStoreException;
+
+import ssmith.util.RealtimeInterval;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
@@ -18,7 +21,6 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.ErrorListener;
@@ -32,13 +34,17 @@ import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
+import com.scs.stetech1.netmessages.AckMessage;
 import com.scs.stetech1.netmessages.HelloMessage;
+import com.scs.stetech1.netmessages.MyAbstractMessage;
+import com.scs.stetech1.netmessages.NewPlayerMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.PacketCache;
 import com.scs.stetech1.shared.SharedSettings;
 
-public class SorcerersClient extends SimpleApplication implements ClientStateListener, ErrorListener, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
+public class SorcerersClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -51,6 +57,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	private Client myClient;
 	public BulletAppState bulletAppState;
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
+
+	private PacketCache packets = new PacketCache();
+	private RealtimeInterval sendpacketsInt = new RealtimeInterval(50);
 
 	public static void main(String[] args) {
 		try {
@@ -115,6 +124,14 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		//guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 
+		// Set up Physics
+		bulletAppState = new BulletAppState();
+		getStateManager().attach(bulletAppState);
+		bulletAppState.getPhysicsSpace().addCollisionListener(this);
+		//bulletAppState.getPhysicsSpace().addTickListener(this);
+		//bulletAppState.getPhysicsSpace().setAccuracy(1f / 80f);
+		//bulletAppState.getPhysicsSpace().enableDebug(game.getAssetManager());
+
 		try {
 			myClient = Network.connectToServer("localhost", 6143);
 			myClient.start();
@@ -126,15 +143,16 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 			Serializer.registerClass(PingMessage.class);
 			myClient.addMessageListener(this, PingMessage.class);
-			
+
 			myClient.send(new HelloMessage("123"));
+			myClient.send(new NewPlayerMessage("Mark Gray"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Settings.CAM_DIST);
 
-		getCamera().setLocation(new Vector3f(0f, 0f, 10f));
+		//getCamera().setLocation(new Vector3f(0f, 0f, 10f));
 		//game.getCamera().lookAt(new Vector3f(0f, 0f, 0f), Vector3f.UNIT_Y);
 
 		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
@@ -142,14 +160,6 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 		getInputManager().addMapping(TEST, new KeyTrigger(KeyInput.KEY_T));
 		getInputManager().addListener(this, TEST);            
-
-		// Set up Physics
-		bulletAppState = new BulletAppState();
-		getStateManager().attach(bulletAppState);
-		bulletAppState.getPhysicsSpace().addCollisionListener(this);
-		//bulletAppState.getPhysicsSpace().addTickListener(this);
-		//bulletAppState.getPhysicsSpace().setAccuracy(1f / 80f);
-		//bulletAppState.getPhysicsSpace().enableDebug(game.getAssetManager());
 
 		setUpLight();
 
@@ -194,44 +204,64 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
+		if (sendpacketsInt.hitInterval()) {
+			// Send packets
+			Iterator<MyAbstractMessage> it = this.packets.getMsgs();
+			while (it.hasNext()) {
+				this.myClient.send(it.next());
+			}
+		}
 	}
 
 
 	@Override
 	public void messageReceived(Client source, Message message) {
+		MyAbstractMessage msg = (MyAbstractMessage)message;
+		if (msg.requiresAck) {
+			// Check not already been ack'd
+			if (packets.hasBeenAckd(msg.id)) {
+				return;
+			}
+		}
+
 		if (message instanceof PingMessage) {
-			PingMessage pingMessage = (PingMessage) message;
+			//PingMessage pingMessage = (PingMessage) message;
 			myClient.send(message); // Send it straight back
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
 			System.out.println("Client #"+source.getId()+" received: '"+helloMessage.getMessage() + "'");
+		} else if (message instanceof AckMessage) {
+			AckMessage ackMessage = (AckMessage) message;
+			this.packets.acked(ackMessage.ackingId);
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
+
+		// Always ack all messages!
+		if (msg.requiresAck) {
+			myClient.send(new AckMessage(msg.id)); // Send it straight back
+		}
 	}
 
-	
+
 	@Override
 	public void clientConnected(Client arg0) {
 		SharedSettings.p("Connected!");
-		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void clientDisconnected(Client arg0, DisconnectInfo arg1) {
 		SharedSettings.p("Disconnected!");
-		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void handleError(Object arg0, Throwable arg1) {
 		SharedSettings.p("Network error: " + arg1);
-		// TODO Auto-generated method stub
-		
+
 	}
 
 
@@ -306,5 +336,5 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	@Override
 	public void onAction(String name, boolean value, float tpf) {
 	}
-	
+
 }

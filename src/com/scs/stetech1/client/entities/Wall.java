@@ -10,12 +10,13 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
 public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollideable { // Need ICollideable so lasers don't bounce off it
 
-	public Wall(IEntityController _game, float x, float yBottom, float z, float rotDegrees) {
-		super(_game, "Wall");
+	public Wall(IEntityController _game, float x, float yBottom, float z, String tex, float rotDegrees) {
+		super(_game, EntityTypes.WALL, "Wall");
 
 		float w = 3f;
 		float h = 1f;
@@ -25,7 +26,7 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Wall", box1);
 		//int i = NumberFunctions.rnd(1, 10);
-		TextureKey key3 = new TextureKey(Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
+		TextureKey key3 = new TextureKey(tex);// Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
 		key3.setGenerateMips(true);
 		Texture tex3 = module.getAssetManager().loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);

@@ -11,8 +11,8 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {//,
 	protected Node main_node;
 	public RigidBodyControl floor_phy;
 
-	public PhysicalEntity(IEntityController _game, String _name) {
-		super(_game, _name);
+	public PhysicalEntity(IEntityController _game, int type, String _name) {
+		super(_game, type, _name);
 
 		main_node = new Node(name + "_MainNode");
 	}

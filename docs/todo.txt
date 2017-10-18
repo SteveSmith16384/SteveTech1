@@ -1,3 +1,5 @@
-MULTIPLAYER SORCERERS
+STETECH1
 
 Split up into separate projects: Client, server, shared, Sorcerers
+Ignore messages older than newer messages?
+Reduce object creation

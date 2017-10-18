@@ -27,6 +27,7 @@ import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
 public class PlayersAvatar extends PhysicalEntity implements IProcessable, ICollideable, ICanShoot, IShowOnHUD, ITargetByAI, IAffectedByPhysics, IDamagable {
@@ -47,7 +48,7 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 
 	public HUD hud;
 	public MyBetterCharacterControl playerControl;
-	public final int id;
+	//public final int id;
 	public Spatial playerGeometry;
 	private float score = 0;
 	private float health;
@@ -58,10 +59,10 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 	private int numShots = 0;
 	private int numShotsHit = 0;
 
-	public PlayersAvatar(IEntityController _module, int _id, Camera _cam, IInputDevice _input, HUD _hud) {
-		super(_module, "Player");
+	public PlayersAvatar(IEntityController _module, Camera _cam, IInputDevice _input, HUD _hud) {
+		super(_module, EntityTypes.AVATAR, "Player");
 
-		id = _id;
+		//id = _id;
 		cam = _cam;
 		input = _input;
 		hud = _hud;
@@ -97,25 +98,25 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 
 
 	public static Spatial getPlayersModel(IEntityController game, int pid) {
-			// Add player's box
-			Box box1 = new Box(PLAYER_RAD, PLAYER_HEIGHT/2, PLAYER_RAD);
-			//Cylinder box1 = new Cylinder(1, 8, PLAYER_RAD, PLAYER_HEIGHT, true);
-			Geometry playerGeometry = new Geometry("Player", box1);
-			TextureKey key3 = new TextureKey("Textures/computerconsole2.jpg");
-			key3.setGenerateMips(true);
-			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = null;
-			if (Settings.LIGHTING) {
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-				floor_mat.setTexture("DiffuseMap", tex3);
-			} else {
-				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-				floor_mat.setTexture("ColorMap", tex3);
-			}
-			playerGeometry.setMaterial(floor_mat);
-			//playerGeometry.setLocalTranslation(new Vector3f(0, PLAYER_HEIGHT/2, 0)); // Need this to ensure the crate is on the floor
-			playerGeometry.setLocalTranslation(new Vector3f(0, (PLAYER_HEIGHT/2)-.075f, 0)); // Need this to ensure the crate is on the floor
-			return playerGeometry;
+		// Add player's box
+		Box box1 = new Box(PLAYER_RAD, PLAYER_HEIGHT/2, PLAYER_RAD);
+		//Cylinder box1 = new Cylinder(1, 8, PLAYER_RAD, PLAYER_HEIGHT, true);
+		Geometry playerGeometry = new Geometry("Player", box1);
+		TextureKey key3 = new TextureKey("Textures/computerconsole2.jpg");
+		key3.setGenerateMips(true);
+		Texture tex3 = game.getAssetManager().loadTexture(key3);
+		Material floor_mat = null;
+		if (Settings.LIGHTING) {
+			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			floor_mat.setTexture("DiffuseMap", tex3);
+		} else {
+			floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+			floor_mat.setTexture("ColorMap", tex3);
+		}
+		playerGeometry.setMaterial(floor_mat);
+		//playerGeometry.setLocalTranslation(new Vector3f(0, PLAYER_HEIGHT/2, 0)); // Need this to ensure the crate is on the floor
+		playerGeometry.setLocalTranslation(new Vector3f(0, (PLAYER_HEIGHT/2)-.075f, 0)); // Need this to ensure the crate is on the floor
+		return playerGeometry;
 	}
 
 
@@ -172,7 +173,7 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 			if (this.abilityOther != null) {
 				abilityOther.process(tpf);
 			}
-*/
+			 */
 			hud.process(tpf);
 
 			/*if (this.abilityOther != null) {

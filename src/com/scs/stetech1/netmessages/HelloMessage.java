@@ -1,21 +1,25 @@
 package com.scs.stetech1.netmessages;
 
-import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 @Serializable
-public class HelloMessage extends AbstractMessage {
+public class HelloMessage extends MyAbstractMessage {
 
-	private String hello;       // custom message data
+	private String hello;
 
 	public HelloMessage() {
+		super(false);
 
-	}    // empty constructor
+	}
 
-	public HelloMessage(String s) { 
+	
+	public HelloMessage(String s) {
+		this();
+		
 		hello = s; 
-	} // custom constructor
+	}
 
+	
 	public String getMessage() {
 		return hello;
 	}

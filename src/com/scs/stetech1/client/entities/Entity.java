@@ -1,6 +1,7 @@
 package com.scs.stetech1.client.entities;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
@@ -10,17 +11,17 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class Entity implements IEntity, Savable {
 	
-	private static int nextId = 0;
+	private static AtomicInteger nextID = new AtomicInteger();
 	
-	public final int id;
+	public int id;
+	public final int type;
 	protected IEntityController module;
-	//protected GameModule module;
 	public String name;
 
-	public Entity(IEntityController _game, String _name) {
-		id = nextId++;
-		module = _game;
-		//module = _module;
+	public Entity(IEntityController _module, int _type, String _name) {
+		id = nextID.addAndGet(1);
+		type = _type;
+		module = _module;
 		name = _name;
 	}
 
@@ -51,6 +52,12 @@ public class Entity implements IEntity, Savable {
 	@Override
 	public int getID() {
 		return id;
+	}
+
+
+	@Override
+	public int getType() {
+		return type;
 	}
 
 }

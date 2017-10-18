@@ -12,6 +12,7 @@ import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
 public class Floor extends PhysicalEntity implements ICollideable {
@@ -21,7 +22,7 @@ public class Floor extends PhysicalEntity implements ICollideable {
 	private float w, h, d;
 
 	public Floor(IEntityController _game, float x, float y, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
-		super(_game, "Floor");
+		super(_game, EntityTypes.FLOOR, "Floor");
 
 		this.w = w;
 		this.h = h;

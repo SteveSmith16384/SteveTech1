@@ -17,7 +17,6 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import com.jme3.ui.Picture;
 import com.scs.stetech1.client.SorcerersClient;
-import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.gui.TextArea;
 import com.scs.stetech1.server.Settings;

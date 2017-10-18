@@ -2,6 +2,6 @@ package com.scs.stetech1.components;
 
 public interface IProcessable {
 
-	void process(float tpf);
+	void process(float tpf_secs);
 	
 }

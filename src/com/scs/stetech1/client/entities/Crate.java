@@ -12,18 +12,19 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
 public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollideable {//,  { // IProcessable,  // Need ICollideable so lasers don't bounce off it
 
-	public Crate(IEntityController _game, float x, float y, float z, float w, float h, float d, float rotDegrees) {
-		super(_game, "Crate");
+	public Crate(IEntityController _game, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
+		super(_game, EntityTypes.CRATE, "Crate");
 
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Crate", box1);
 		//int i = NumberFunctions.rnd(1, 10);
-		TextureKey key3 = new TextureKey(Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
+		TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
 		key3.setGenerateMips(true);
 		Texture tex3 = module.getAssetManager().loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);

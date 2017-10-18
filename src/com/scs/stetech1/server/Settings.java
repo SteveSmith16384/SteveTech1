@@ -8,12 +8,10 @@ public class Settings {
 	public static final String VERSION = "0.01";
 	public static final boolean SHOW_LOGO = false;
 	public static final boolean RECORD_VID = false;
-	public static final boolean USE_MODEL_FOR_PLAYERS = true;
+	public static final boolean USE_MODEL_FOR_PLAYERS = false;
 	public static final boolean SHOW_FLASH_EXPLOSIONS = false;
 
 	// DEBUG
-	public static final boolean DEBUG_PYRAMID = false;
-	public static final boolean DEBUG_SPELLS = false;
 	public static final boolean DEBUG_DEATH = false;
 	public static final boolean DEBUG_HUD = false;
 
@@ -28,7 +26,7 @@ public class Settings {
 	public static final float CAM_DIST = 50f;
 	public static final int FLOOR_SECTION_SIZE = 12;
 	public static final boolean LIGHTING = true;
-	public static final String NAME = "Sorcerers";
+	public static final String NAME = "SteTech1";
 	
 	// User Data
 	public static final String ENTITY = "Entity";
@@ -38,7 +36,7 @@ public class Settings {
 	}
 
 	
-	public static String getCrateTex() {
+/*	public static String getCrateTex() {
 		if (NEON) {
 			return "Textures/10125-v4.jpg"; //glowingbox.png";
 		} else {
@@ -56,5 +54,5 @@ public class Settings {
 			return "Textures/floor0041.png";
 		}
 	}
-
+*/
 }

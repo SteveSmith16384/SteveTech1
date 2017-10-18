@@ -1,9 +1,15 @@
 package com.scs.stetech1.netmessages;
 
-public class PlayerInputMessage {
+import com.jme3.math.Vector3f;
 
-	public PlayerInputMessage() {
-		// TODO Auto-generated constructor stub
+public class PlayerInputMessage extends MyAbstractMessage {
+
+	public Vector3f direction;
+	
+	public PlayerInputMessage(Vector3f _direction) {
+		super(false);
+
+		direction = _direction;
 	}
 
 
