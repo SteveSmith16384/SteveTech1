@@ -1,0 +1,3 @@
+MULTIPLAYER SORCERERS
+
+Split up into separate projects: Client, server, shared, Sorcerers
