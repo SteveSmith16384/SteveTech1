@@ -1,20 +1,23 @@
 package com.scs.stetech1.netmessages;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.jme3.network.AbstractMessage;
+import com.jme3.network.serializing.Serializable;
 
+@Serializable
 public class MyAbstractMessage extends AbstractMessage {
 
-	public int id;
-	private static AtomicInteger nextID = new AtomicInteger();
-	public long timestamp = System.nanoTime();
+	private transient static AtomicLong nextID = new AtomicLong();
+
+	public long msgId;
+	public long timestamp = System.currentTimeMillis();
 	public boolean requiresAck;
 	
 	public MyAbstractMessage(boolean _requiresAck) {
 		super();
 		
-		id = nextID.addAndGet(1);
+		msgId = nextID.addAndGet(1);
 		this.setReliable(false); // UDP
 		
 		requiresAck = _requiresAck;

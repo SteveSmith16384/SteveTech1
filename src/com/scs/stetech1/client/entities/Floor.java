@@ -30,7 +30,7 @@ public class Floor extends PhysicalEntity implements ICollideable {
 
 		creationData.put("size", new Vector3f(w, h, d));
 		creationData.put("tex", tex);
-		
+
 		this.w = w;
 		this.h = h;
 		this.d = d;
@@ -50,34 +50,35 @@ public class Floor extends PhysicalEntity implements ICollideable {
 		}));
 
 		Geometry geometry = new Geometry("Crate", box1);
-		TextureKey key3 = new TextureKey(tex);
-		key3.setGenerateMips(true);
-		Texture tex3 = module.getAssetManager().loadTexture(key3);
-		tex3.setWrap(WrapMode.Repeat);
+		if (!_game.isServer()) { // Not running in server
+			TextureKey key3 = new TextureKey(tex);
+			key3.setGenerateMips(true);
+			Texture tex3 = module.getAssetManager().loadTexture(key3);
+			tex3.setWrap(WrapMode.Repeat);
 
-		Material floor_mat = null;
-		if (Settings.LIGHTING) {
-			floor_mat = new Material(module.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			floor_mat.setTexture("DiffuseMap", tex3);
-		} else {
-			floor_mat = new Material(module.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-			floor_mat.setTexture("ColorMap", tex3);
+			Material floor_mat = null;
+			if (Settings.LIGHTING) {
+				floor_mat = new Material(module.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+				floor_mat.setTexture("DiffuseMap", tex3);
+			} else {
+				floor_mat = new Material(module.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+				floor_mat.setTexture("ColorMap", tex3);
+			}
+			geometry.setMaterial(floor_mat);
 		}
-		geometry.setMaterial(floor_mat);
-
 		this.main_node.attachChild(geometry);
 		geometry.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2)); // Move it into position
 
-		floor_phy = new RigidBodyControl(0f);
-		main_node.addControl(floor_phy);
-		module.getBulletAppState().getPhysicsSpace().add(floor_phy);
+		rigidBodyControl = new RigidBodyControl(0f);
+		main_node.addControl(rigidBodyControl);
+		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);
-		floor_phy.setUserObject(this);
+		rigidBodyControl.setUserObject(this);
 
-		floor_phy.setFriction(1f);
-		floor_phy.setRestitution(1f);
+		rigidBodyControl.setFriction(1f);
+		rigidBodyControl.setRestitution(1f);
 
 		module.addEntity(this);
 
@@ -90,7 +91,7 @@ public class Floor extends PhysicalEntity implements ICollideable {
 			float diff = tpf*1f;
 			thisScroll.addLocal(diff, diff, diff);
 			thisScroll.multLocal(this.texScroll);
-			
+
 			while (this.thisScroll.x > 1) {
 				this.thisScroll.x--;
 			}
@@ -106,7 +107,7 @@ public class Floor extends PhysicalEntity implements ICollideable {
 			float offx = this.thisScroll.x;
 			float offy = this.thisScroll.y;
 			float offz = this.thisScroll.z;
-			
+
 			//Settings.p("thisScroll=" + thisScroll);
 
 			box1.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(new float[]{
@@ -117,7 +118,7 @@ public class Floor extends PhysicalEntity implements ICollideable {
 					w+offx, offz, w+offx, d+offz, offx, d+offz, offx, offz, // top
 					w+offx, offz, w+offx, d+offz, offx, d+offz, offx, offz  // bottom
 			}));
-			
+
 		}
 	}
 

@@ -1,5 +1,7 @@
 package ssmith.util;
 
+import com.scs.stetech1.server.Settings;
+
 public class FixedLoopTime {
 
 	private long duration;
@@ -11,7 +13,7 @@ public class FixedLoopTime {
 
 
 	public void start() {
-		startTime = System.nanoTime();
+		startTime = System.currentTimeMillis();
 	}
 
 
@@ -19,13 +21,17 @@ public class FixedLoopTime {
 		if (startTime < 0) {
 			throw new RuntimeException("todo");
 		}
-		long now = System.nanoTime();
-		if (now - startTime < duration) {
+		
+		long now = System.currentTimeMillis();
+		long diff = duration - (now - startTime); 
+		if (diff > 0) {
 			try {
-				Thread.sleep(duration - (now - startTime));
+				Thread.sleep(diff);
 			} catch (InterruptedException e) {
 				//e.printStackTrace();
 			}
+		} else {
+			Settings.p("Too slow!");
 		}
 	}
 

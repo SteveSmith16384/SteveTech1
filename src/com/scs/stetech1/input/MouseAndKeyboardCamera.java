@@ -81,13 +81,6 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 			return;
 		}
 		
-		/*if (Settings.DEBUG_GAMEPAD_DIV_TPF) {
-			value /= tpf; // SCS
-		}*/
-
-		//Settings.p("name=" + name);
-		//Settings.p("CAM=" +this.cam.getName());
-
 		if (name.equals("mFLYCAM_Left")){
 			//Settings.p("name=" + name);
 			rotateCamera(value, initialUpVec);

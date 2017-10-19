@@ -7,6 +7,8 @@ import com.scs.stetech1.components.IEntity;
 
 public interface IEntityController {
 
+	public boolean isServer();
+	
 	AssetManager getAssetManager();
 	
 	BulletAppState getBulletAppState();

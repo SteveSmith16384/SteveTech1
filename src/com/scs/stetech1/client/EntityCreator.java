@@ -11,8 +11,8 @@ import com.scs.stetech1.shared.EntityTypes;
 
 public class EntityCreator {
 
-	public EntityCreator() {
-		// TODO Auto-generated constructor stub
+	private EntityCreator() {
+
 	}
 
 	/**
@@ -23,6 +23,8 @@ public class EntityCreator {
 		case EntityTypes.AVATAR:
 		{
 			AbstractPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud);
+			avatar.playerControl.warp(msg.pos);
+			//game.getCamera().setLocation(msg.pos);
 			return avatar;
 		}
 		

@@ -13,13 +13,13 @@ public class ClientData {
 
 	public HostedConnection conn;
 	public long ping;
-	public int id;
+	//public int id;
 	public String name;
 	public PacketCache packets = new PacketCache();
 	public RemoteInput remoteInput = new RemoteInput();// For storing message that are translated into input
 
 	public ClientData(HostedConnection _conn) {
-		id = _conn.getId();
+		//id = _conn.getId();
 		conn = _conn;
 	}
 
@@ -30,6 +30,11 @@ public class ClientData {
 		while (it.hasNext()) {
 			myServer.broadcast(Filters.equalTo(conn), it.next());
 		}
+	}
+	
+	
+	public int getPlayerID() {
+		return conn.getId();
 	}
 
 }

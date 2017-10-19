@@ -28,28 +28,30 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		creationData.put("size", new Vector3f(w, h, d));
 		creationData.put("tex", tex);
 		creationData.put("rotDegrees", rotDegrees);
-		
+
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Crate", box1);
 		//int i = NumberFunctions.rnd(1, 10);
-		TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
-		key3.setGenerateMips(true);
-		Texture tex3 = module.getAssetManager().loadTexture(key3);
-		tex3.setWrap(WrapMode.Repeat);
+		if (!_game.isServer()) { // Not running in server
+			TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
+			key3.setGenerateMips(true);
+			Texture tex3 = module.getAssetManager().loadTexture(key3);
+			tex3.setWrap(WrapMode.Repeat);
 
-		Material floor_mat = null;
-		if (Settings.LIGHTING) {
-			floor_mat = new Material(module.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			floor_mat.setTexture("DiffuseMap", tex3);
-		} else {
-			floor_mat = new Material(module.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-			floor_mat.setTexture("ColorMap", tex3);
+			Material floor_mat = null;
+			if (Settings.LIGHTING) {
+				floor_mat = new Material(module.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+				floor_mat.setTexture("DiffuseMap", tex3);
+			} else {
+				floor_mat = new Material(module.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+				floor_mat.setTexture("ColorMap", tex3);
+			}
+
+			geometry.setMaterial(floor_mat);
+			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			geometry.setQueueBucket(Bucket.Transparent);
 		}
-		
-		geometry.setMaterial(floor_mat);
-		floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-		geometry.setQueueBucket(Bucket.Transparent);
 
 		this.main_node.attachChild(geometry);
 		float rads = (float)Math.toRadians(rotDegrees);
@@ -57,14 +59,14 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		//main_node.setLocalTranslation(x+(w/2), h/2, z+0.5f);
 		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
-		floor_phy = new RigidBodyControl(1f);
-		main_node.addControl(floor_phy);
-		module.getBulletAppState().getPhysicsSpace().add(floor_phy);
+		rigidBodyControl = new RigidBodyControl(1f);
+		main_node.addControl(rigidBodyControl);
+		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);
-		floor_phy.setUserObject(this);
-		
+		rigidBodyControl.setUserObject(this);
+
 		module.addEntity(this);
 
 	}

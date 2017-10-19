@@ -48,7 +48,7 @@ public class MyProperties {
 			int value = Integer.parseInt(properties.getProperty(name));
 			return value;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			properties.put(name, ""+def);
 			needsSaving = true;
 			return def;
@@ -68,7 +68,7 @@ public class MyProperties {
 				return getPropertyAsBoolean(name, def);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			properties.put(name, ""+def);
 			needsSaving = true;
 			return def;
@@ -81,7 +81,7 @@ public class MyProperties {
 			float value = Float.parseFloat(properties.getProperty(name));
 			return value;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			//ex.printStackTrace();
 			properties.put(name, ""+def);
 			needsSaving = true;
 			return def;

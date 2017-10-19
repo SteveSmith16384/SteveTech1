@@ -1,17 +1,28 @@
 package com.scs.stetech1.input;
 
 import com.jme3.math.Vector3f;
+import com.scs.stetech1.netmessages.PlayerInputMessage;
 
 public class RemoteInput implements IInputDevice {
 
+	private boolean fwd;
+	private Vector3f dir = new Vector3f(0, 0, -1);
+	private Vector3f leftDir = new Vector3f(0, -1, 0);
+	
 	public RemoteInput() {
-		// TODO Auto-generated constructor stub
+
+	}
+	
+	
+	public void decodeMessage(PlayerInputMessage pim) {
+		this.dir = pim.direction;
+		this.fwd = pim.fwd;
+		
 	}
 
 	@Override
 	public boolean getFwdValue() {
-		// TODO Auto-generated method stub
-		return false;
+		return fwd;
 	}
 
 	@Override
@@ -58,14 +69,12 @@ public class RemoteInput implements IInputDevice {
 
 	@Override
 	public Vector3f getDirection() {
-		// TODO Auto-generated method stub
-		return null;
+		return dir;
 	}
 
 	@Override
 	public Vector3f getLeft() {
-		// TODO Auto-generated method stub
-		return null;
+		return leftDir;
 	}
 
 }

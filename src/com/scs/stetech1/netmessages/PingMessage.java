@@ -1,6 +1,8 @@
 package com.scs.stetech1.netmessages;
 
+import com.jme3.network.serializing.Serializable;
 
+@Serializable
 public class PingMessage extends MyAbstractMessage {
 	
 	public long sentTime;
@@ -8,7 +10,7 @@ public class PingMessage extends MyAbstractMessage {
 	public PingMessage() {
 		super(false);
 
-		sentTime = System.nanoTime();
+		sentTime = System.currentTimeMillis();
 	}
 
 }

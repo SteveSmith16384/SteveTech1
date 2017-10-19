@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.scs.stetech1.netmessages.MyAbstractMessage;
+import com.scs.stetech1.server.Settings;
 
 public class PacketCache {
 
-	private HashMap<Integer, MyAbstractMessage> msgs = new HashMap<>();
+	private HashMap<Long, MyAbstractMessage> msgs = new HashMap<>();
 
 	public PacketCache() {
 
@@ -20,17 +21,20 @@ public class PacketCache {
 		}
 		
 		synchronized(msgs) {
-			msgs.put(m.id, m);
+			msgs.put(m.msgId, m);
+		}
+		if (msgs.size() > 100) {
+			Settings.p("Lots of messages! " + msgs.size());
 		}
 	}
 
 	
-	public boolean hasBeenAckd(int id) {
+	public boolean hasBeenAckd(long id) {
 		return this.msgs.containsKey(id);
 	}
 	
 
-	public void acked(int id) {
+	public void acked(long id) {
 		synchronized(msgs) {
 			msgs.remove(id);
 		}

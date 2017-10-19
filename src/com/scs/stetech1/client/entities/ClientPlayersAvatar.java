@@ -50,16 +50,6 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar {
 	}
 	
 	
-	/*@Override
-	public Vector3f getDirection() {
-		return cam.getDirection();
-	}
-
-	@Override
-	public Vector3f getLeft() {
-		return cam.getLeft();
-	}*/
-
 	@Override
 	public Vector3f getLocation() {
 		return this.cam.getLocation();
@@ -104,7 +94,6 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar {
 
 		return null;
 	}
-
 
 
 	public FrustumIntersect getInsideOutside(PhysicalEntity entity) {

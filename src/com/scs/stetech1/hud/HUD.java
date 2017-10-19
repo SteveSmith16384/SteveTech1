@@ -144,11 +144,6 @@ public class HUD extends Node implements IProcessable {
 			}
 		}
 		
-		if (Settings.DEBUG_HUD) {
-			this.abilityGun.setText("" + NumberFunctions.rnd(1000,  9999));
-			this.score.setText("" + NumberFunctions.rnd(1000,  9999));
-		}
-
 		if (process_damage_box) {
 			this.dam_box_col.a -= (tpf/2);
 			if (dam_box_col.a <= 0) {

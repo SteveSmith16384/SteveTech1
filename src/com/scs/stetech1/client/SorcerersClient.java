@@ -30,6 +30,7 @@ import com.jme3.network.Network;
 import com.jme3.network.serializing.Serializer;
 import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
+import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
@@ -41,6 +42,8 @@ import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.NewPlayerMessage;
 import com.scs.stetech1.netmessages.PingMessage;
+import com.scs.stetech1.netmessages.PlayerInputMessage;
+import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PacketCache;
@@ -137,16 +140,37 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		//bulletAppState.getPhysicsSpace().enableDebug(game.getAssetManager());
 
 		try {
+			Serializer.registerClass(HelloMessage.class);
+			Serializer.registerClass(PingMessage.class);
+			Serializer.registerClass(AckMessage.class);
+			Serializer.registerClass(NewPlayerMessage.class);
+			Serializer.registerClass(PlayerInputMessage.class);
+			Serializer.registerClass(UnknownEntityMessage.class);
+			Serializer.registerClass(NewEntityMessage.class);
+			Serializer.registerClass(EntityUpdateMessage.class);
+
 			myClient = Network.connectToServer("localhost", 6143);
 			myClient.start();
 			myClient.addClientStateListener(this);
 			myClient.addErrorListener(this);
 
-			Serializer.registerClass(HelloMessage.class);
+			//Serializer.registerClass(HelloMessage.class);
 			myClient.addMessageListener(this, HelloMessage.class);
 
-			Serializer.registerClass(PingMessage.class);
+			//Serializer.registerClass(PingMessage.class);
 			myClient.addMessageListener(this, PingMessage.class);
+
+			//Serializer.registerClass(AckMessage.class);
+			myClient.addMessageListener(this, AckMessage.class);
+
+			//Serializer.registerClass(NewEntityMessage.class);
+			myClient.addMessageListener(this, NewEntityMessage.class);
+
+			//Serializer.registerClass(EntityUpdateMessage.class);
+			myClient.addMessageListener(this, EntityUpdateMessage.class);
+
+			//Serializer.registerClass(NewPlayerMessage.class);
+			myClient.addMessageListener(this, NewPlayerMessage.class);
 
 			myClient.send(new HelloMessage("123"));
 			myClient.send(new NewPlayerMessage("Mark Gray"));
@@ -223,7 +247,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		MyAbstractMessage msg = (MyAbstractMessage)message;
 		if (msg.requiresAck) {
 			// Check not already been ack'd
-			if (packets.hasBeenAckd(msg.id)) {
+			if (packets.hasBeenAckd(msg.msgId)) {
 				return;
 			}
 		}
@@ -243,14 +267,20 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			this.addEntity(e);
 		} else if (message instanceof EntityUpdateMessage) {
 			EntityUpdateMessage eum = (EntityUpdateMessage)message;
-			// todo - send req if we don't know about the entity
+			IEntity e = this.entities.get(eum.entityID);
+			if (e != null) {
+				PhysicalEntity pe = (PhysicalEntity)e;
+				pe.getMainNode().setLocalTranslation(eum.pos);
+			} else {
+				this.packets.add(new UnknownEntityMessage(eum.entityID));
+			}
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 
 		// Always ack all messages!
 		if (msg.requiresAck) {
-			myClient.send(new AckMessage(msg.id)); // Send it straight back
+			myClient.send(new AckMessage(msg.msgId)); // Send it straight back
 		}
 	}
 
@@ -347,5 +377,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	@Override
 	public void onAction(String name, boolean value, float tpf) {
 	}
+
+
+	@Override
+	public boolean isServer() {
+		return true;
+	}
+
 
 }

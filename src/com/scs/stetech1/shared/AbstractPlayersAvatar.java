@@ -44,8 +44,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private float score = 0;
 	private float health;
 
-	private boolean restarting = false;
-	private float restartTime, invulnerableTime;
+	protected boolean restarting = false;
+	protected float restartTime, invulnerableTime;
 
 	private int numShots = 0;
 	private int numShotsHit = 0;
@@ -91,7 +91,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		Box box1 = new Box(PLAYER_RAD, PLAYER_HEIGHT/2, PLAYER_RAD);
 		//Cylinder box1 = new Cylinder(1, 8, PLAYER_RAD, PLAYER_HEIGHT, true);
 		Geometry playerGeometry = new Geometry("Player", box1);
-		TextureKey key3 = new TextureKey("Textures/computerconsole2.jpg");
+		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
 		Material floor_mat = null;
@@ -125,28 +125,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}*/
 
 
-	public void moveToStartPostion(boolean invuln) {
-		/*Point p = module.mapData.getPlayerStartPos(id);
-		Vector3f warpPos = new Vector3f(p.x, module.mapData.getRespawnHeight(), p.y);
-		Settings.p("Scheduling player to start position: " + warpPos);
-		this.playerControl.warp(warpPos);
-		if (invuln) {
-			invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
-		}*/
-	}
-
-
 	@Override
 	public void process(float tpf) {
-		if (this.restarting) {
-			restartTime -= tpf;
-			if (this.restartTime <= 0) {
-				this.moveToStartPostion(true);
-				restarting = false;
-				return;
-			}
-		}
-
 		if (invulnerableTime >= 0) {
 			invulnerableTime -= tpf;
 		}
@@ -343,5 +323,10 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		return null;
 	}
 
+
+	@Override
+	public boolean canMove() {
+			return true;
+	}
 
 }

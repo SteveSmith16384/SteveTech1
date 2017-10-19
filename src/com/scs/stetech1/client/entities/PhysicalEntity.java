@@ -11,7 +11,7 @@ import com.scs.stetech1.shared.IEntityController;
 public abstract class PhysicalEntity extends Entity implements IProcessable, ISharedEntity {
 
 	protected Node main_node;
-	public RigidBodyControl floor_phy;
+	public RigidBodyControl rigidBodyControl;
 
 	public PhysicalEntity(IEntityController _game, int type, String _name) {
 		super(_game, type, _name);
@@ -22,8 +22,8 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 
 	@Override
 	public void remove() {
-		if (floor_phy != null) {
-			this.module.getBulletAppState().getPhysicsSpace().remove(this.floor_phy);
+		if (rigidBodyControl != null) {
+			this.module.getBulletAppState().getPhysicsSpace().remove(this.rigidBodyControl);
 		}
 		super.remove();
 		if (this.main_node.getParent() == null) {
@@ -41,13 +41,13 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 
 	public float distance(PhysicalEntity o) {
 		//return distance(o.getMainNode().getWorldTranslation());
-		return distance(o.floor_phy.getPhysicsLocation());
+		return distance(o.rigidBodyControl.getPhysicsLocation());
 	}
 
 
 	public float distance(Vector3f pos) {
 		//float dist = this.getMainNode().getWorldTranslation().distance(pos);
-		float dist = this.floor_phy.getPhysicsLocation().distance(pos);
+		float dist = this.rigidBodyControl.getPhysicsLocation().distance(pos);
 		return dist;
 	}
 
@@ -88,13 +88,13 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 
 	public Vector3f getLocation() {
 		//return this.main_node.getWorldTranslation(); 000?
-		return this.floor_phy.getPhysicsLocation();
+		return this.rigidBodyControl.getPhysicsLocation();
 		
 	}
 
 
 	public void applyForce(Vector3f dir) {
-		floor_phy.applyImpulse(dir, Vector3f.ZERO);//.applyCentralForce(dir);
+		rigidBodyControl.applyImpulse(dir, Vector3f.ZERO);//.applyCentralForce(dir);
 	}
 
 
@@ -112,7 +112,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 
 	@Override
 	public boolean canMove() {
-		return this.floor_phy.getMass() > 0;
+		return this.rigidBodyControl.getMass() > 0;
 	}
 
 }

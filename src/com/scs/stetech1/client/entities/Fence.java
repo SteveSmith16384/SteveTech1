@@ -25,14 +25,14 @@ public class Fence extends PhysicalEntity {
 
 		creationData.put("rot", rot);
 		creationData.put("tex", tex);
-		
+
 		Box box1 = new Box(WIDTH/2, height/2, .1f);
 		box1.scaleTextureCoordinates(new Vector2f(WIDTH, height));
 		Geometry geometry = new Geometry("Fence", box1);
-		TextureKey key3 = null;
-		key3 = new TextureKey(tex);
-		
-		/*switch (texCode) {
+		if (!_game.isServer()) { // Not running in server
+			TextureKey key3 = new TextureKey(tex);
+
+			/*switch (texCode) {
 		case 0:
 			//TextureKey key3 = new TextureKey("Textures/bricktex.jpg");
 			key3 = new TextureKey("Textures/seamless_bricks/bricks.png");
@@ -43,35 +43,35 @@ public class Fence extends PhysicalEntity {
 			break;
 		}*/
 
-		key3.setGenerateMips(true);
-		Texture tex3 = module.getAssetManager().loadTexture(key3);
-		tex3.setWrap(WrapMode.Repeat);
+			key3.setGenerateMips(true);
+			Texture tex3 = module.getAssetManager().loadTexture(key3);
+			tex3.setWrap(WrapMode.Repeat);
 
-		Material floor_mat = null;
-		if (Settings.LIGHTING) {
-			floor_mat = new Material(module.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			floor_mat.setTexture("DiffuseMap", tex3);
-		} else {
-			floor_mat = new Material(module.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-			floor_mat.setTexture("ColorMap", tex3);
+			Material floor_mat = null;
+			if (Settings.LIGHTING) {
+				floor_mat = new Material(module.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+				floor_mat.setTexture("DiffuseMap", tex3);
+			} else {
+				floor_mat = new Material(module.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+				floor_mat.setTexture("ColorMap", tex3);
+			}
+			geometry.setMaterial(floor_mat);
+			// Uncomment if tex is transparent
+			//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			//geometry.setQueueBucket(Bucket.Transparent);
 		}
-		geometry.setMaterial(floor_mat);
-		// Uncomment if tex is transparent
-		//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-		//geometry.setQueueBucket(Bucket.Transparent);
-
 		this.main_node.attachChild(geometry);
 		float rads = (float)Math.toRadians(rot);
 		main_node.rotate(0, rads, 0);
 		main_node.setLocalTranslation(x+(WIDTH/2), height/2, z+0.5f);
 
-		floor_phy = new RigidBodyControl(0);
-		main_node.addControl(floor_phy);
+		rigidBodyControl = new RigidBodyControl(0);
+		main_node.addControl(rigidBodyControl);
 
-		module.getBulletAppState().getPhysicsSpace().add(floor_phy);
+		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 
 		geometry.setUserData(Settings.ENTITY, this);
-		floor_phy.setUserObject(this);
+		rigidBodyControl.setUserObject(this);
 
 	}
 

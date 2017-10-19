@@ -1,12 +1,20 @@
 package com.scs.stetech1.netmessages;
 
 import com.jme3.network.AbstractMessage;
+import com.jme3.network.serializing.Serializable;
 
-public class AckMessage extends AbstractMessage {
+@Serializable
+public class AckMessage extends MyAbstractMessage {
 
-	public int ackingId;
-	
-	public AckMessage(int _ackingId) {
+	public long ackingId;
+
+	public AckMessage() {
+		this(-1);
+	}
+
+
+	public AckMessage(long _ackingId) {
+		super(false);
 		ackingId = _ackingId;
 	}
 
