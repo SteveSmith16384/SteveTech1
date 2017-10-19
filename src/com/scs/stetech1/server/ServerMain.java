@@ -21,7 +21,6 @@ import com.jme3.network.serializing.Serializer;
 import com.jme3.system.JmeContext;
 import com.scs.stetech1.client.entities.Crate;
 import com.scs.stetech1.client.entities.Floor;
-import com.scs.stetech1.client.entities.PlayersAvatar;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.components.ISharedEntity;
@@ -32,7 +31,9 @@ import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.NewPlayerMessage;
 import com.scs.stetech1.netmessages.PingMessage;
+import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.SharedSettings;
 
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, ErrorListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
@@ -139,7 +140,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		} else if (message instanceof NewPlayerMessage) {
 			NewPlayerMessage newPlayerMessage = (NewPlayerMessage) message;
 			client.name = newPlayerMessage.name;
-			createPlayersAvatar();
+			createPlayersAvatar(client);
 			sendEntityListToClient(client);
 		} else if (message instanceof AckMessage) {
 			AckMessage ackMessage = (AckMessage) message;
@@ -155,8 +156,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	}
 
 
-	private void createPlayersAvatar() {
-		PlayersAvatar avatar = new PlayersAvatar(this, null, null, null);
+	private void createPlayersAvatar(ClientData client) {
+		AbstractPlayersAvatar avatar = new ServerPlayersAvatar(this, client.id, client.remoteInput);
 		this.addEntity(avatar);
 	}
 

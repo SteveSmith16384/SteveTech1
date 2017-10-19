@@ -1,5 +1,7 @@
 package com.scs.stetech1.client.entities;
 
+import java.util.HashMap;
+
 import com.jme3.asset.TextureKey;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
@@ -15,9 +17,14 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollideable { // Need ICollideable so lasers don't bounce off it
 
+	private HashMap<String, Object> creationData = new HashMap<String, Object>();
+
 	public Wall(IEntityController _game, float x, float yBottom, float z, String tex, float rotDegrees) {
 		super(_game, EntityTypes.WALL, "Wall");
 
+		creationData.put("tex", tex);
+		creationData.put("rot", rotDegrees);
+		
 		float w = 3f;
 		float h = 1f;
 		float d = 0.1f;
@@ -71,6 +78,12 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
+	}
+
+
+	@Override
+	public HashMap<String, Object> getCreationData() {
+		return creationData;
 	}
 
 

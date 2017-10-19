@@ -1,5 +1,7 @@
 package com.scs.stetech1.client.entities;
 
+import java.util.HashMap;
+
 import com.jme3.asset.TextureKey;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
@@ -15,20 +17,22 @@ import com.scs.stetech1.shared.IEntityController;
 public class Fence extends PhysicalEntity {
 
 	private static final float WIDTH = 2f;
-	//private static final float HEIGHT = 1.5f;
 
-	//private Geometry geometry;
-	//private RigidBodyControl floor_phy;
+	private HashMap<String, Object> creationData = new HashMap<String, Object>();
 
-	public Fence(IEntityController _game, float x, float height, float z, float rot, int texCode) {
+	public Fence(IEntityController _game, float x, float height, float z, float rot, String tex) {
 		super(_game, EntityTypes.FENCE, "Fence");
 
+		creationData.put("rot", rot);
+		creationData.put("tex", tex);
+		
 		Box box1 = new Box(WIDTH/2, height/2, .1f);
 		box1.scaleTextureCoordinates(new Vector2f(WIDTH, height));
 		Geometry geometry = new Geometry("Fence", box1);
 		TextureKey key3 = null;
+		key3 = new TextureKey(tex);
 		
-		switch (texCode) {
+		/*switch (texCode) {
 		case 0:
 			//TextureKey key3 = new TextureKey("Textures/bricktex.jpg");
 			key3 = new TextureKey("Textures/seamless_bricks/bricks.png");
@@ -37,7 +41,7 @@ public class Fence extends PhysicalEntity {
 		case 1:
 			key3 = new TextureKey("Textures/bricktex.jpg");
 			break;
-		}
+		}*/
 
 		key3.setGenerateMips(true);
 		Texture tex3 = module.getAssetManager().loadTexture(key3);
@@ -75,6 +79,12 @@ public class Fence extends PhysicalEntity {
 	@Override
 	public void process(float tpf) {
 		// Do nothing
+	}
+
+
+	@Override
+	public HashMap<String, Object> getCreationData() {
+		return creationData;
 	}
 
 

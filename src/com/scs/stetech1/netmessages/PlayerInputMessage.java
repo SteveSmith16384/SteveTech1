@@ -6,7 +6,7 @@ public class PlayerInputMessage extends MyAbstractMessage {
 
 	public Vector3f direction;
 	
-	public PlayerInputMessage(Vector3f _direction) {
+	public PlayerInputMessage(boolean fwd, Vector3f _direction) {
 		super(false);
 
 		direction = _direction;

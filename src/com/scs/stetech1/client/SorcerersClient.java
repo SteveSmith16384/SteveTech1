@@ -35,8 +35,10 @@ import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
 import com.scs.stetech1.netmessages.AckMessage;
+import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.HelloMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
+import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.NewPlayerMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.server.Settings;
@@ -57,6 +59,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	private Client myClient;
 	public BulletAppState bulletAppState;
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
+	public HUD hud;
+	public IInputDevice input;
 
 	private PacketCache packets = new PacketCache();
 	private RealtimeInterval sendpacketsInt = new RealtimeInterval(50);
@@ -163,8 +167,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 		setUpLight();
 
-		HUD hud = this.createHUD(getCamera(), 0);
-		IInputDevice input = new MouseAndKeyboardCamera(getCamera(), getInputManager());
+		hud = this.createHUD(getCamera(), 0);
+		input = new MouseAndKeyboardCamera(getCamera(), getInputManager());
 		//this.addPlayersAvatar(0, getCamera(), input, hud);
 
 		if (Settings.RECORD_VID) {
@@ -233,6 +237,13 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		} else if (message instanceof AckMessage) {
 			AckMessage ackMessage = (AckMessage) message;
 			this.packets.acked(ackMessage.ackingId);
+		} else if (message instanceof NewEntityMessage) {
+			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
+			IEntity e = EntityCreator.createEntity(this, newEntityMessage);
+			this.addEntity(e);
+		} else if (message instanceof EntityUpdateMessage) {
+			EntityUpdateMessage eum = (EntityUpdateMessage)message;
+			// todo - send req if we don't know about the entity
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}

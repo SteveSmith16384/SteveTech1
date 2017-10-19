@@ -1,6 +1,5 @@
 package com.scs.stetech1.server;
 
-import ssmith.lang.NumberFunctions;
 
 public class Settings {
 

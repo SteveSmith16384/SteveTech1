@@ -1,12 +1,14 @@
 package com.scs.stetech1.client.entities;
 
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.stetech1.components.IProcessable;
+import com.scs.stetech1.components.ISharedEntity;
 import com.scs.stetech1.shared.IEntityController;
 
-public abstract class PhysicalEntity extends Entity implements IProcessable {//, IAffectedByPhysics {
+public abstract class PhysicalEntity extends Entity implements IProcessable, ISharedEntity {
 
 	protected Node main_node;
 	public RigidBodyControl floor_phy;
@@ -93,8 +95,24 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {//,
 
 	public void applyForce(Vector3f dir) {
 		floor_phy.applyImpulse(dir, Vector3f.ZERO);//.applyCentralForce(dir);
-		//Settings.p("Bang!");
 	}
 
+
+	@Override
+	public Vector3f getLocalTranslation() {
+		return this.getMainNode().getLocalTranslation();
+	}
+
+
+	@Override
+	public Quaternion getRotation() {
+		return this.getMainNode().getLocalRotation();
+	}
+
+
+	@Override
+	public boolean canMove() {
+		return this.floor_phy.getMass() > 0;
+	}
 
 }

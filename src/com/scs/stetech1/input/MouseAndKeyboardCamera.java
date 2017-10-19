@@ -8,6 +8,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 
 public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListener, IInputDevice { 
@@ -133,7 +134,6 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 			ability1 = isPressed;
 		} else if (binding.equals("CycleAbility")) {
 			this.cycleAbility = isPressed;
-			//this.zoomCamera(10);
 		}		
 	}
 
@@ -183,17 +183,19 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 	@Override
 	public boolean isSelectNextAbilityPressed() {
 		return this.cycleAbility;
+	}
+
+
+	@Override
+	public Vector3f getDirection() {
+		return cam.getDirection();
+	}
+
+
+	@Override
+	public Vector3f getLeft() {
+		return cam.getLeft();
 	}        
-
-
-	/*@Override
-	public void resetFlags() {
-		/*left = false;
-		right = false;
-		up = false;
-		down = false;
-		
-	}*/
 
 
 }

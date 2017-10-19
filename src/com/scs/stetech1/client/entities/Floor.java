@@ -1,5 +1,7 @@
 package com.scs.stetech1.client.entities;
 
+import java.util.HashMap;
+
 import com.jme3.asset.TextureKey;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
@@ -21,9 +23,14 @@ public class Floor extends PhysicalEntity implements ICollideable {
 	private Vector3f texScroll, thisScroll;
 	private float w, h, d;
 
+	private HashMap<String, Object> creationData = new HashMap<String, Object>();
+
 	public Floor(IEntityController _game, float x, float y, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
 		super(_game, EntityTypes.FLOOR, "Floor");
 
+		creationData.put("size", new Vector3f(w, h, d));
+		creationData.put("tex", tex);
+		
 		this.w = w;
 		this.h = h;
 		this.d = d;
@@ -118,6 +125,12 @@ public class Floor extends PhysicalEntity implements ICollideable {
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
+	}
+
+
+	@Override
+	public HashMap<String, Object> getCreationData() {
+		return creationData;
 	}
 
 

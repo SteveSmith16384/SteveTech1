@@ -1,18 +1,16 @@
-package com.scs.stetech1.client.entities;
+package com.scs.stetech1.shared;
 
-import java.util.List;
+import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
-import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
-import com.jme3.renderer.Camera.FrustumIntersect;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.scs.stetech1.client.MyBetterCharacterControl;
+import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
@@ -21,16 +19,11 @@ import com.scs.stetech1.components.IDamagable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.components.IShowOnHUD;
-import com.scs.stetech1.components.ITargetByAI;
-import com.scs.stetech1.hud.AbstractHUDImage;
-import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityTypes;
-import com.scs.stetech1.shared.IEntityController;
 
-public class PlayersAvatar extends PhysicalEntity implements IProcessable, ICollideable, ICanShoot, IShowOnHUD, ITargetByAI, IAffectedByPhysics, IDamagable {
+public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessable, ICollideable, ICanShoot, IShowOnHUD, IAffectedByPhysics, IDamagable {
 
 	// Player dimensions
 	public static final float PLAYER_HEIGHT = 0.7f;
@@ -39,16 +32,14 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 
 	public final Vector3f walkDirection = new Vector3f();
 	public float moveSpeed = Settings.PLAYER_MOVE_SPEED;
-	private IInputDevice input;
+	protected IInputDevice input;
 
 	//Temporary vectors used on each frame.
-	public Camera cam;
 	public final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
-	public HUD hud;
 	public MyBetterCharacterControl playerControl;
-	//public final int id;
+	public final int playerID;
 	public Spatial playerGeometry;
 	private float score = 0;
 	private float health;
@@ -59,17 +50,15 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 	private int numShots = 0;
 	private int numShotsHit = 0;
 
-	public PlayersAvatar(IEntityController _module, Camera _cam, IInputDevice _input, HUD _hud) {
+	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input) {
 		super(_module, EntityTypes.AVATAR, "Player");
 
-		//id = _id;
-		cam = _cam;
+		playerID = _playerID;
 		input = _input;
-		hud = _hud;
 		//health = module.getPlayersHealth(id);
 
-		int pid = 1;//Settings.GAME_MODE != GameMode.CloneWars ? id : Settings.CLONE_ID;
-		playerGeometry = getPlayersModel(module, pid);
+		//int pid = 1;//Settings.GAME_MODE != GameMode.CloneWars ? id : Settings.CLONE_ID;
+		playerGeometry = getPlayersModel(module, playerID);
 		this.getMainNode().attachChild(playerGeometry);
 
 		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
@@ -174,7 +163,6 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 				abilityOther.process(tpf);
 			}
 			 */
-			hud.process(tpf);
 
 			/*if (this.abilityOther != null) {
 				if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
@@ -189,8 +177,8 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 			 * lifting of terrain. For free flying games simply add speed 
 			 * to Y axis
 			 */
-			camDir.set(cam.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
-			camLeft.set(cam.getLeft()).multLocal(moveSpeed);
+			camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
+			camLeft.set(input.getLeft()).multLocal(moveSpeed);
 			if (input.getFwdValue()) {	
 				//Settings.p("fwd=" + input.getFwdValue());
 				walkDirection.addLocal(camDir);
@@ -224,26 +212,15 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 
 		}
 
-		// Position camera at node
-		Vector3f vec = getMainNode().getWorldTranslation();
-		cam.setLocation(new Vector3f(vec.x, vec.y + (PLAYER_HEIGHT/2), vec.z));
-
-		// Rotate us to point in the direction of the camera
-		Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
-		//gun.lookAt(lookAtPoint.clone(), Vector3f.UNIT_Y);
-		lookAtPoint.y = cam.getLocation().y; // Look horizontal
-		this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
-		//this.getMainNode().lookAt(lookAtPoint.clone(), Vector3f.UNIT_Y);  This won't rotate the model since it's locked to the physics controller
-
-		// Move cam fwd so we don't see ourselves
-		cam.setLocation(cam.getLocation().add(cam.getDirection().mult(PLAYER_RAD)));
-		cam.update();
-
 		//this.input.resetFlags();
 
 		walkDirection.set(0, 0, 0);
 	}
 
+	
+	/*public abstract Vector3f getDirection();
+
+	public abstract Vector3f getLeft();*/
 
 	public boolean isOnGround() {
 		return playerControl.isOnGround();
@@ -257,25 +234,6 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 			this.numShots++;
 			calcAccuracy();
 		}*/
-	}
-
-
-	public FrustumIntersect getInsideOutside(PhysicalEntity entity) {
-		FrustumIntersect insideoutside = cam.contains(entity.getMainNode().getWorldBound());
-		return insideoutside;
-	}
-
-
-	@Override
-	public Vector3f getLocation() {
-		return this.cam.getLocation();
-		//return playerControl.getPhysicsRigidBody().getPhysicsLocation();  This is very low to the ground!
-	}
-
-
-	@Override
-	public Vector3f getShootDir() {
-		return this.cam.getDirection();
 	}
 
 
@@ -293,7 +251,7 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 				//module.audioExplode.play();
 				//this.health -= dam;
 				//this.hud.setHealth(this.health);
-				this.hud.showDamageBox();
+				//this.hud.showDamageBox();
 
 				died("hit by " + bullet.toString());
 			}
@@ -320,7 +278,7 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 	public void hasSuccessfullyHit(IEntity e) {
 		this.incScore(20, "shot " + e.toString());
 		//new AbstractHUDImage(game, module, this.hud, "Textures/text/hit.png", this.hud.hud_width, this.hud.hud_height, 2);
-		this.hud.showCollectBox();
+		//this.hud.showCollectBox();
 		numShotsHit++;
 		calcAccuracy();
 	}
@@ -328,18 +286,15 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 
 	private void calcAccuracy() {
 		int a = (int)((this.numShotsHit * 100f) / this.numShots);
-		hud.setAccuracy(a);
+		//hud.setAccuracy(a);
 	}
 
 
 	public void incScore(float amt, String reason) {
 		Settings.p("Inc score: +" + amt + ", " + reason);
 		this.score += amt;
-		this.hud.setScore(this.score);
+		//this.hud.setScore(this.score);
 
-		if (this.score >= 100) {
-			new AbstractHUDImage(module, this.hud, "Textures/text/winner.png", this.hud.hud_width, this.hud.hud_height, 10);
-		}
 	}
 
 
@@ -349,7 +304,7 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 			IBullet bullet = (IBullet)other;
 			if (bullet.getShooter() != null) {
 				if (bullet.getShooter() != this) {
-					if (!(bullet.getShooter() instanceof PlayersAvatar)) {
+					if (!(bullet.getShooter() instanceof AbstractPlayersAvatar)) {
 						this.hitByBullet(bullet);
 						bullet.getShooter().hasSuccessfullyHit(this);
 					}
@@ -368,11 +323,6 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 	}
 
 
-	public Camera getCamera() {
-		return this.cam;
-	}
-
-
 	@Override
 	public void damaged(float amt, String reason) {
 		died(reason);
@@ -388,31 +338,10 @@ public class PlayersAvatar extends PhysicalEntity implements IProcessable, IColl
 	}
 
 
-	public Vector3f getPointOnFloor(float range) {
-		Vector3f from = this.cam.getLocation();
-		Vector3f to = this.cam.getDirection().normalize().multLocal(range).addLocal(from);
-		List<PhysicsRayTestResult> results = module.getBulletAppState().getPhysicsSpace().rayTest(from, to);
-		float dist = -1;
-		PhysicsRayTestResult closest = null;
-		for (PhysicsRayTestResult r : results) {
-			if (r.getCollisionObject().getUserObject() != null) {
-				if (closest == null) {
-					closest = r;
-				} else if (r.getHitFraction() < dist) {
-					closest = r;
-				}
-				dist = r.getHitFraction();
-			}
-		}
-		if (closest != null) {
-			Entity e = (Entity)closest.getCollisionObject().getUserObject();
-			Vector3f hitpoint = to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
-			Settings.p("Hit " + e + " at " + hitpoint);
-			//module.doExplosion(from, null);
-			return hitpoint;
-		}
-
+	@Override
+	public HashMap<String, Object> getCreationData() {
 		return null;
 	}
+
 
 }

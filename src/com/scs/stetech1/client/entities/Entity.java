@@ -15,7 +15,7 @@ public class Entity implements IEntity, Savable {
 	
 	public int id;
 	public final int type;
-	protected IEntityController module;
+	protected transient IEntityController module;
 	public String name;
 
 	public Entity(IEntityController _module, int _type, String _name) {

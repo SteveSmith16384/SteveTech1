@@ -1,9 +1,12 @@
 package com.scs.stetech1.client.entities;
 
+import java.util.HashMap;
+
 import com.jme3.asset.TextureKey;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
@@ -15,11 +18,17 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollideable {//,  { // IProcessable,  // Need ICollideable so lasers don't bounce off it
+public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
+
+	private HashMap<String, Object> creationData = new HashMap<String, Object>();
 
 	public Crate(IEntityController _game, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
 		super(_game, EntityTypes.CRATE, "Crate");
 
+		creationData.put("size", new Vector3f(w, h, d));
+		creationData.put("tex", tex);
+		creationData.put("rotDegrees", rotDegrees);
+		
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Crate", box1);
@@ -72,6 +81,11 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		// Do nothing
 	}
 
+
+	@Override
+	public HashMap<String, Object> getCreationData() {
+		return creationData;
+	}
 
 
 }
