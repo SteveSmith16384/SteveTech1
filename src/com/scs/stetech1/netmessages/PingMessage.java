@@ -8,7 +8,7 @@ public class PingMessage extends MyAbstractMessage {
 	public long sentTime;
 
 	public PingMessage() {
-		super(false);
+		super(false, false);
 
 		sentTime = System.currentTimeMillis();
 	}

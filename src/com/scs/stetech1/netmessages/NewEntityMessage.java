@@ -20,6 +20,7 @@ public class NewEntityMessage extends EntityUpdateMessage {
 		super(e);
 		
 		this.requiresAck = true;
+		this.setReliable(true);
 		
 		entityID = e.getID();
 		type = e.getType();

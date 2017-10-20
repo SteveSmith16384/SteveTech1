@@ -10,5 +10,17 @@ public class EntityTypes {
 	
 	private EntityTypes() {
 	}
+	
+	
+	public static String getName(int type) {
+		switch (type) {
+		case AVATAR: return "Avatar";
+		case CRATE: return "CRATE";
+		case FLOOR: return "FLOOR";
+		case FENCE: return "FENCE";
+		case WALL: return "WALL";
+		default: return "UNKNOWN";
+		}
+	}
 
 }

@@ -60,6 +60,7 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		rigidBodyControl = new RigidBodyControl(0f);
 		main_node.addControl(rigidBodyControl);
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+		module.getRootNode().attachChild(this.main_node);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);

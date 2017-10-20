@@ -8,7 +8,7 @@ public class HelloMessage extends MyAbstractMessage {
 	private String hello;
 
 	public HelloMessage() {
-		super(false);
+		super(false, true);
 
 	}
 

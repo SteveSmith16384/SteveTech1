@@ -64,7 +64,9 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
 		playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
 		this.getMainNode().addControl(playerControl);
+		
 		module.getBulletAppState().getPhysicsSpace().add(playerControl);
+		module.getRootNode().attachChild(this.main_node);
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		playerControl.getPhysicsRigidBody().setUserObject(this);
@@ -133,7 +135,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		if (!this.restarting) {
 			// Have we fallen off the edge
-			if (this.playerControl.getPhysicsRigidBody().getPhysicsLocation().y < -1f) { // scs catching here after died!
+			if (this.playerControl.getPhysicsRigidBody().getPhysicsLocation().y < -5f) { // scs catching here after died!
 				died("Too low");
 				return;
 			}

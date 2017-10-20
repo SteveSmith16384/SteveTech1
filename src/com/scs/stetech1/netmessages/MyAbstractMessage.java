@@ -14,11 +14,11 @@ public class MyAbstractMessage extends AbstractMessage {
 	public long timestamp = System.currentTimeMillis();
 	public boolean requiresAck;
 	
-	public MyAbstractMessage(boolean _requiresAck) {
+	public MyAbstractMessage(boolean _requiresAck, boolean tcp) {
 		super();
 		
 		msgId = nextID.addAndGet(1);
-		this.setReliable(false); // UDP
+		this.setReliable(tcp);
 		
 		requiresAck = _requiresAck;
 	}

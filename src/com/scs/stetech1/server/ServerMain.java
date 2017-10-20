@@ -24,17 +24,16 @@ import com.scs.stetech1.client.entities.Floor;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.components.ISharedEntity;
-import com.scs.stetech1.netmessages.AckMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.HelloMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
-import com.scs.stetech1.netmessages.NewPlayerMessage;
+import com.scs.stetech1.netmessages.NewPlayerAckMessage;
+import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
-import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.SharedSettings;
 
@@ -67,8 +66,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		Serializer.registerClass(HelloMessage.class);
 		Serializer.registerClass(PingMessage.class);
-		Serializer.registerClass(AckMessage.class);
-		Serializer.registerClass(NewPlayerMessage.class);
+		//Serializer.registerClass(AckMessage.class);
+		Serializer.registerClass(NewPlayerRequestMessage.class);
+		Serializer.registerClass(NewPlayerAckMessage.class);
 		Serializer.registerClass(PlayerInputMessage.class);
 		Serializer.registerClass(UnknownEntityMessage.class);
 		Serializer.registerClass(NewEntityMessage.class);
@@ -79,19 +79,13 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		myServer.addConnectionListener(this);
 
 		myServer.addMessageListener(this, HelloMessage.class);
-
 		myServer.addMessageListener(this, PingMessage.class);
-
-		myServer.addMessageListener(this, AckMessage.class);
-
-		myServer.addMessageListener(this, NewPlayerMessage.class);
-
+		//myServer.addMessageListener(this, AckMessage.class);
+		myServer.addMessageListener(this, NewPlayerRequestMessage.class);
+		myServer.addMessageListener(this, NewPlayerAckMessage.class);
 		myServer.addMessageListener(this, PlayerInputMessage.class);
-
 		myServer.addMessageListener(this, UnknownEntityMessage.class);
-
 		myServer.addMessageListener(this, NewEntityMessage.class);
-
 		myServer.addMessageListener(this, EntityUpdateMessage.class);
 
 	}
@@ -112,8 +106,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		if (myServer.hasConnections()) {
-			myServer.broadcast(new PingMessage());
+		if (myServer.hasConnections()) { // this.rootNode
+			//myServer.broadcast(new PingMessage()); todo - re-add
 
 			// Loop through the ents
 			for (IEntity e : entities.values()) {
@@ -124,7 +118,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				if (e instanceof ISharedEntity) {
 					ISharedEntity sc = (ISharedEntity)e;
 					if (sc.canMove()) {
-						myServer.broadcast(new EntityUpdateMessage(sc));
+						//myServer.broadcast(new EntityUpdateMessage(sc));
 					}
 				}
 			}
@@ -144,33 +138,46 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void messageReceived(HostedConnection source, Message message) {
-		ClientData client = clients.get(source.getId());
+		ClientData client = null;
+		synchronized (clients) {
+			client = clients.get(source.getId());
+		}
 
 		MyAbstractMessage msg = (MyAbstractMessage)message;
-		if (msg.requiresAck) {
+		/*if (msg.requiresAck) {
 			// Check not already been ack'd
-			if (client.packets.hasBeenAckd(msg.msgId)) {
-				return;
+			try {
+				if (client.packets.hasBeenAckd(msg.msgId)) {
+					return;
+				}
+			} catch (NullPointerException ex) {
+				ex.printStackTrace();
 			}
-		}
+		}*/
 
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
 			client.ping = System.currentTimeMillis() - pingMessage.sentTime;
+			
 		} else if (message instanceof PlayerInputMessage) {
 			PlayerInputMessage pim = (PlayerInputMessage)message;
 			client.remoteInput.decodeMessage(pim);
+			
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
 			System.out.println("Server received '" +helloMessage.getMessage() +"' from client #"+source.getId() );
-		} else if (message instanceof NewPlayerMessage) {
-			NewPlayerMessage newPlayerMessage = (NewPlayerMessage) message;
+			
+		} else if (message instanceof NewPlayerRequestMessage) {
+			NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 			client.name = newPlayerMessage.name;
+			myServer.broadcast(Filters.equalTo(client.conn), new NewPlayerAckMessage());
+			// todo - send newplayerconf message
 			createPlayersAvatar(client);
 			sendEntityListToClient(client);
-		} else if (message instanceof AckMessage) {
+			
+		/*} else if (message instanceof AckMessage) {
 			AckMessage ackMessage = (AckMessage) message;
-			client.packets.acked(ackMessage.ackingId);
+			client.packets.acked(ackMessage.ackingId);*/
 		} else if (message instanceof UnknownEntityMessage) {
 			UnknownEntityMessage uem = (UnknownEntityMessage)msg;
 			IEntity e = this.entities.get(uem.entityID);
@@ -180,7 +187,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		}
 
 		if (msg.requiresAck) {
-			myServer.broadcast(Filters.equalTo(client.conn), new AckMessage(msg.msgId)); // Send it straight back
+			//myServer.broadcast(Filters.equalTo(client.conn), new AckMessage(msg.msgId)); // Send it straight back
 		}
 	}
 
@@ -204,15 +211,18 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private void sendNewEntity(ClientData client, IEntity e) {
 		if (e instanceof ISharedEntity) {
 			ISharedEntity se = (ISharedEntity)e;
-			client.packets.add(new NewEntityMessage(se));
+			//client.packets.add(new NewEntityMessage(se));
+			myServer.broadcast(Filters.equalTo(client.conn), new NewEntityMessage(se));
+
 		}
 
 	}
 
 
 	@Override
-	public void handleError(Object arg0, Throwable ex) {
-		SharedSettings.p("Network error: " + ex);
+	public void handleError(Object obj, Throwable ex) {
+		SharedSettings.p("Network error with " + obj + ": " + ex);
+		ex.printStackTrace();
 
 	}
 
@@ -220,7 +230,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	@Override
 	public void connectionAdded(Server arg0, HostedConnection conn) {
 		SharedSettings.p("Client connected!");
-		clients.put(conn.getId(), new ClientData(conn));
+		synchronized (clients) {
+			clients.put(conn.getId(), new ClientData(conn));
+		}
 
 	}
 
@@ -269,11 +281,11 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	private void createGame() {
-		Floor floor = new Floor(this, 0, 0, 0, 10, 10, .5f, "Textures/crate.png", null);
+		Floor floor = new Floor(this, 0, 0, 0, 10, .5f, 10, "Textures/crate.png", null);
 		this.addEntity(floor);
 
 		Crate crate = new Crate(this, 8, 2, 8, 1, 1, 1f, "Textures/floor015.png", 0);
-		this.addEntity(crate);
+		this.addEntity(crate); // this.rootNode
 	}
 
 

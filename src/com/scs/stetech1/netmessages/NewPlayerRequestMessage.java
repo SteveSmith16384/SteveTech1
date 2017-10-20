@@ -3,16 +3,16 @@ package com.scs.stetech1.netmessages;
 import com.jme3.network.serializing.Serializable;
 
 @Serializable
-public class NewPlayerMessage extends MyAbstractMessage {
+public class NewPlayerRequestMessage extends MyAbstractMessage {
 	
 	public String name;
 
-	public NewPlayerMessage() {
+	public NewPlayerRequestMessage() {
 		this(null);
 	}
 	
-	public NewPlayerMessage(String _name) {
-		super(true);
+	public NewPlayerRequestMessage(String _name) {
+		super(true, true);
 		
 		name = _name;
 	}

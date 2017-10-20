@@ -17,9 +17,9 @@ public class PacketCache {
 
 	public void add(MyAbstractMessage m) {
 		if (!m.requiresAck) {
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Only schedule messages that require ack!");
 		}
-		
+
 		synchronized(msgs) {
 			msgs.put(m.msgId, m);
 		}
@@ -28,15 +28,19 @@ public class PacketCache {
 		}
 	}
 
-	
+
 	public boolean hasBeenAckd(long id) {
 		return this.msgs.containsKey(id);
 	}
-	
+
 
 	public void acked(long id) {
 		synchronized(msgs) {
-			msgs.remove(id);
+			//if (msgs.containsKey(id)) {
+				msgs.remove(id);
+			/*} else {
+				//Settings.p("Warning")
+			}*/
 		}
 	}
 
@@ -46,7 +50,7 @@ public class PacketCache {
 	}
 
 
-/*	public void sendAll(MessageConnection conn) {
+	/*	public void sendAll(MessageConnection conn) {
 		synchronized(msgs) {
 			//Iterator<MyAbstractMessage> it = this.msgs.values().iterator();
 			for (MyAbstractMessage m : this.msgs.values()) {
@@ -54,5 +58,5 @@ public class PacketCache {
 			}
 		}
 	}
-*/
+	 */
 }

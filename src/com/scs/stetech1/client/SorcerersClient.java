@@ -2,7 +2,6 @@ package com.scs.stetech1.client;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.prefs.BackingStoreException;
 
@@ -35,18 +34,17 @@ import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
-import com.scs.stetech1.netmessages.AckMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.HelloMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
-import com.scs.stetech1.netmessages.NewPlayerMessage;
+import com.scs.stetech1.netmessages.NewPlayerAckMessage;
+import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.shared.PacketCache;
 import com.scs.stetech1.shared.SharedSettings;
 
 public class SorcerersClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
@@ -57,16 +55,17 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	public static final Random rnd = new Random();
 
 	public static BitmapFont guiFont_small; // = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-	public static SorcerersClient instance;
+	//public static SorcerersClient instance;
 	public static AppSettings settings;
 	private Client myClient;
 	public BulletAppState bulletAppState;
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	public HUD hud;
 	public IInputDevice input;
-
-	private PacketCache packets = new PacketCache();
-	private RealtimeInterval sendpacketsInt = new RealtimeInterval(50);
+	private boolean joinedGame = false; // todo - set to true when conf'd
+	
+	//private PacketCache packets = new PacketCache();
+	private RealtimeInterval sendInputsInterval = new RealtimeInterval(50);
 
 	public static void main(String[] args) {
 		try {
@@ -85,7 +84,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			}
 
 			SorcerersClient app = new SorcerersClient();
-			instance = app;
+			//instance = app;
 			app.setSettings(settings);
 			app.setPauseOnLostFocus(true);
 
@@ -142,8 +141,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		try {
 			Serializer.registerClass(HelloMessage.class);
 			Serializer.registerClass(PingMessage.class);
-			Serializer.registerClass(AckMessage.class);
-			Serializer.registerClass(NewPlayerMessage.class);
+			//Serializer.registerClass(AckMessage.class);
+			Serializer.registerClass(NewPlayerRequestMessage.class);
+			Serializer.registerClass(NewPlayerAckMessage.class);
 			Serializer.registerClass(PlayerInputMessage.class);
 			Serializer.registerClass(UnknownEntityMessage.class);
 			Serializer.registerClass(NewEntityMessage.class);
@@ -154,26 +154,16 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			myClient.addClientStateListener(this);
 			myClient.addErrorListener(this);
 
-			//Serializer.registerClass(HelloMessage.class);
 			myClient.addMessageListener(this, HelloMessage.class);
-
-			//Serializer.registerClass(PingMessage.class);
 			myClient.addMessageListener(this, PingMessage.class);
-
-			//Serializer.registerClass(AckMessage.class);
-			myClient.addMessageListener(this, AckMessage.class);
-
-			//Serializer.registerClass(NewEntityMessage.class);
+			//myClient.addMessageListener(this, AckMessage.class);
 			myClient.addMessageListener(this, NewEntityMessage.class);
-
-			//Serializer.registerClass(EntityUpdateMessage.class);
 			myClient.addMessageListener(this, EntityUpdateMessage.class);
-
-			//Serializer.registerClass(NewPlayerMessage.class);
-			myClient.addMessageListener(this, NewPlayerMessage.class);
+			myClient.addMessageListener(this, NewPlayerRequestMessage.class);
+			myClient.addMessageListener(this, NewPlayerAckMessage.class);
 
 			myClient.send(new HelloMessage("123"));
-			myClient.send(new NewPlayerMessage("Mark Gray"));
+			myClient.send(new NewPlayerRequestMessage("Mark Gray"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -232,12 +222,14 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		if (sendpacketsInt.hitInterval()) {
+		// Send inputs every 50ms
+		if (sendInputsInterval.hitInterval()) {
 			// Send packets
-			Iterator<MyAbstractMessage> it = this.packets.getMsgs();
+			/*Iterator<MyAbstractMessage> it = this.packets.getMsgs();
 			while (it.hasNext()) {
 				this.myClient.send(it.next());
-			}
+			}*/
+			this.myClient.send(new PlayerInputMessage(this.input));
 		}
 	}
 
@@ -245,12 +237,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	@Override
 	public void messageReceived(Client source, Message message) {
 		MyAbstractMessage msg = (MyAbstractMessage)message;
-		if (msg.requiresAck) {
+		/*if (msg.requiresAck) {
 			// Check not already been ack'd
 			if (packets.hasBeenAckd(msg.msgId)) {
 				return;
 			}
-		}
+		}*/
 
 		if (message instanceof PingMessage) {
 			//PingMessage pingMessage = (PingMessage) message;
@@ -258,9 +250,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
 			System.out.println("Client #"+source.getId()+" received: '"+helloMessage.getMessage() + "'");
-		} else if (message instanceof AckMessage) {
+		/*} else if (message instanceof AckMessage) {
 			AckMessage ackMessage = (AckMessage) message;
-			this.packets.acked(ackMessage.ackingId);
+			this.packets.acked(ackMessage.ackingId);*/
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 			IEntity e = EntityCreator.createEntity(this, newEntityMessage);
@@ -272,7 +264,10 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				PhysicalEntity pe = (PhysicalEntity)e;
 				pe.getMainNode().setLocalTranslation(eum.pos);
 			} else {
-				this.packets.add(new UnknownEntityMessage(eum.entityID));
+				if (this.joinedGame) {
+					//this.packets.add(new UnknownEntityMessage(eum.entityID));
+					myClient.send(new UnknownEntityMessage(eum.entityID));
+				}
 			}
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
@@ -280,7 +275,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 		// Always ack all messages!
 		if (msg.requiresAck) {
-			myClient.send(new AckMessage(msg.msgId)); // Send it straight back
+			//myClient.send(new AckMessage(msg.msgId)); // Send it straight back
 		}
 	}
 
@@ -300,8 +295,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 
 	@Override
-	public void handleError(Object arg0, Throwable arg1) {
-		SharedSettings.p("Network error: " + arg1);
+	public void handleError(Object obj, Throwable ex) {
+		SharedSettings.p("Network error with " + obj + ": " + ex);
+		ex.printStackTrace();
 
 	}
 
@@ -381,7 +377,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	@Override
 	public boolean isServer() {
-		return true;
+		return false;
 	}
 
 

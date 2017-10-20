@@ -2,6 +2,7 @@ package com.scs.stetech1.netmessages;
 
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;
+import com.scs.stetech1.input.IInputDevice;
 
 @Serializable
 public class PlayerInputMessage extends MyAbstractMessage {
@@ -10,15 +11,16 @@ public class PlayerInputMessage extends MyAbstractMessage {
 	public boolean fwd;
 
 	public PlayerInputMessage() {
-		super(false);
+		super(false, false);
 	}
 	
 	
-	public PlayerInputMessage(Vector3f _direction, boolean _fwd) {
-		super(false);
+	public PlayerInputMessage(IInputDevice inputs) {
+		super(false, false);
 
-		direction = _direction;
-		fwd = _fwd;
+		direction = inputs.getDirection();
+		fwd = inputs.getFwdValue();
+		// todo - other inputs
 	}
 
 

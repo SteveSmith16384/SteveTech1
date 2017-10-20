@@ -15,21 +15,16 @@ public class ClientData {
 	public long ping;
 	//public int id;
 	public String name;
-	public PacketCache packets = new PacketCache();
+	//public PacketCache packets = new PacketCache();
 	public RemoteInput remoteInput = new RemoteInput();// For storing message that are translated into input
-
+	//public boolean isInGame = false;
+	
 	public ClientData(HostedConnection _conn) {
-		//id = _conn.getId();
 		conn = _conn;
 	}
 
 
 	public void sendMessages(Server myServer) {
-		// Ssend entity updates to all
-		Iterator<MyAbstractMessage> it = this.packets.getMsgs();
-		while (it.hasNext()) {
-			myServer.broadcast(Filters.equalTo(conn), it.next());
-		}
 	}
 	
 	

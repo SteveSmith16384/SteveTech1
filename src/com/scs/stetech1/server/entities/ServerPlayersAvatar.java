@@ -34,7 +34,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar {
 		Settings.p("Scheduling player to start position: " + warpPos);
 		this.playerControl.warp(warpPos);
 		if (invuln) {
-			//todo invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
+			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
 		}
 	}
 

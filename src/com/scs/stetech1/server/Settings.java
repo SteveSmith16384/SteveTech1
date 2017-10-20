@@ -32,23 +32,4 @@ public class Settings {
 	}
 
 	
-/*	public static String getCrateTex() {
-		if (NEON) {
-			return "Textures/10125-v4.jpg"; //glowingbox.png";
-		} else {
-			int i = NumberFunctions.rnd(1, 10);
-			return "Textures/boxes and crates/" + i + ".png";
-		}
-	}
-	
-	
-	public static String getRoadwayTex() {
-		if (NEON) {
-			return "Textures/tron_blue.jpg";
-		} else {
-			int i = NumberFunctions.rnd(1, 10);
-			return "Textures/floor0041.png";
-		}
-	}
-*/
 }

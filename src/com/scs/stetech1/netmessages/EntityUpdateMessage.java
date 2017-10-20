@@ -14,11 +14,11 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 	public boolean force; // Force new position on client, e.g. avatar restarting
 
 	public EntityUpdateMessage() {
-		super(false);
+		super(false, false);
 	}
 	
 	public EntityUpdateMessage(ISharedEntity e) {
-		super(false);
+		super(false, false);
 		
 		entityID = e.getID();
 		pos = e.getLocalTranslation();

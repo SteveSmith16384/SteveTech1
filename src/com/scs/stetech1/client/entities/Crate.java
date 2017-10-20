@@ -27,7 +27,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 
 		creationData.put("size", new Vector3f(w, h, d));
 		creationData.put("tex", tex);
-		creationData.put("rotDegrees", rotDegrees);
+		creationData.put("rot", rotDegrees);
 
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
@@ -61,7 +61,9 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 
 		rigidBodyControl = new RigidBodyControl(1f);
 		main_node.addControl(rigidBodyControl);
+		
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+		module.getRootNode().attachChild(this.main_node);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);

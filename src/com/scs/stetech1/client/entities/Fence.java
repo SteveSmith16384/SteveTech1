@@ -32,17 +32,6 @@ public class Fence extends PhysicalEntity {
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 
-			/*switch (texCode) {
-		case 0:
-			//TextureKey key3 = new TextureKey("Textures/bricktex.jpg");
-			key3 = new TextureKey("Textures/seamless_bricks/bricks.png");
-			break;
-
-		case 1:
-			key3 = new TextureKey("Textures/bricktex.jpg");
-			break;
-		}*/
-
 			key3.setGenerateMips(true);
 			Texture tex3 = module.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
@@ -69,6 +58,7 @@ public class Fence extends PhysicalEntity {
 		main_node.addControl(rigidBodyControl);
 
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+		module.getRootNode().attachChild(this.main_node);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);

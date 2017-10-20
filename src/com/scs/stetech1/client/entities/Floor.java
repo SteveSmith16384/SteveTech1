@@ -71,8 +71,10 @@ public class Floor extends PhysicalEntity implements ICollideable {
 
 		rigidBodyControl = new RigidBodyControl(0f);
 		main_node.addControl(rigidBodyControl);
+		
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-
+		module.getRootNode().attachChild(this.main_node);
+		
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);
