@@ -13,8 +13,8 @@ public class ClientData {
 
 	public HostedConnection conn;
 	public long ping;
-	//public int id;
 	public String name;
+	public long latestInputTimestamp; // todo - use this
 	//public PacketCache packets = new PacketCache();
 	public RemoteInput remoteInput = new RemoteInput();// For storing message that are translated into input
 	//public boolean isInGame = false;
@@ -24,8 +24,12 @@ public class ClientData {
 	}
 
 
-	public void sendMessages(Server myServer) {
+	public int getMsgID() {
 	}
+	
+	
+	/*public void sendMessages(Server myServer) {
+	}*/
 	
 	
 	public int getPlayerID() {

@@ -47,6 +47,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	public static SorcerersProperties properties;
 	private FixedLoopTime loopTimer = new FixedLoopTime(100);
+	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(SharedSettings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	public BulletAppState bulletAppState;
 
 	public static void main(String[] args) {
@@ -115,20 +116,22 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					IProcessable p = (IProcessable)e;
 					p.process(tpf_secs);
 				}
+				if (sendEntityUpdatesInt.hasHit()) {
 				if (e instanceof ISharedEntity) {
 					ISharedEntity sc = (ISharedEntity)e;
 					if (sc.canMove()) {
-						//myServer.broadcast(new EntityUpdateMessage(sc));
+						//todo - re-add myServer.broadcast(new EntityUpdateMessage(sc));
 					}
+				}
 				}
 			}
 
 			// Loop through clients
-			synchronized (clients) {
+			/*synchronized (clients) {
 				for (ClientData client : clients.values()) {
 					client.sendMessages(this.myServer);
 				}
-			}
+			}*/
 		}
 
 		loopTimer.waitForFinish();
@@ -161,8 +164,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			
 		} else if (message instanceof PlayerInputMessage) {
 			PlayerInputMessage pim = (PlayerInputMessage)message;
-			client.remoteInput.decodeMessage(pim);
-			
+			if (pim.timestamp > client.latestInputTimestamp) {
+				client.remoteInput.decodeMessage(pim);
+				client.latestInputTimestamp = pim.timestamp;
+			}
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
 			System.out.println("Server received '" +helloMessage.getMessage() +"' from client #"+source.getId() );
@@ -170,32 +175,35 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		} else if (message instanceof NewPlayerRequestMessage) {
 			NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 			client.name = newPlayerMessage.name;
-			myServer.broadcast(Filters.equalTo(client.conn), new NewPlayerAckMessage());
-			// todo - send newplayerconf message
-			createPlayersAvatar(client);
+			int avatarid = createPlayersAvatar(client);
+			// Send newplayerconf message
+			myServer.broadcast(Filters.equalTo(client.conn), new NewPlayerAckMessage(client.getPlayerID(), avatarid));
 			sendEntityListToClient(client);
 			
 		/*} else if (message instanceof AckMessage) {
 			AckMessage ackMessage = (AckMessage) message;
 			client.packets.acked(ackMessage.ackingId);*/
+
 		} else if (message instanceof UnknownEntityMessage) {
 			UnknownEntityMessage uem = (UnknownEntityMessage)msg;
 			IEntity e = this.entities.get(uem.entityID);
 			this.sendNewEntity(client, e);
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 
-		if (msg.requiresAck) {
+		/*if (msg.requiresAck) {
 			//myServer.broadcast(Filters.equalTo(client.conn), new AckMessage(msg.msgId)); // Send it straight back
-		}
+		}*/
 	}
 
 
-	private void createPlayersAvatar(ClientData client) {
+	private int createPlayersAvatar(ClientData client) {
 		ServerPlayersAvatar avatar = new ServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput);
 		avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
+		return avatar.id;
 	}
 
 

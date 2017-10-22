@@ -1,11 +1,16 @@
 STETECH1
 
+https://gamedev.stackexchange.com/questions/81950/how-to-sync-client-and-server-at-the-first-frame
+
 TODO
-Avatar falling through floor
-Ignore messages older 
+	NOT NEEDED: Send msg to client asking for time, and get time sent.  When rcvd, calc clients time
+Client should calc positions of entites based on lerp of previous positions and current time
+	Avatar falling through floor
+
 
 
 LATER
 Split up into separate projects: Client, server, shared, Sorcerers
-than newer messages?
 Reduce object creation
+Kick players who don't move
+Confirm a client is a proper client

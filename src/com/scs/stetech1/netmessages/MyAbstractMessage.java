@@ -12,7 +12,7 @@ public class MyAbstractMessage extends AbstractMessage {
 
 	public long msgId;
 	public long timestamp = System.currentTimeMillis();
-	public boolean requiresAck;
+	//public boolean requiresAck;
 	
 	public MyAbstractMessage(boolean _requiresAck, boolean tcp) {
 		super();

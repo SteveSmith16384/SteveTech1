@@ -11,10 +11,6 @@ public class Settings {
 	// DEBUG
 	//public static final boolean DEBUG_HUD = false;
 
-	// Game settings
-	public static int NUM_COLLECTABLES = 0;
-	public static int NUM_SECTORS = 3;
-	
 	// Our movement speed
 	public static final float PLAYER_MOVE_SPEED = 3f;
 	public static final float JUMP_FORCE = 8f;

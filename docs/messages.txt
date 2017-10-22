@@ -2,17 +2,12 @@ NOTES
 Calulate client msg time based on last ping time
 
 
-SCENARIOS
-=========
-Clent Connects:
-	Get client ping
-	Send all entities to client
-
-
 CLIENT
 Send avatar position and direction every 33-50ms
 Render from history - 50ms ago, lerp between historical positions
-	
+
+SERVER
+
 	
 SERVER
 Loop every 15ms
@@ -24,8 +19,8 @@ Run game loop
 PLAYER CONTROL
 Turning is handled entirely by the client
 Player moves and their avatar is moved immediately
-	Client sends position and timestamp to client
-	Server checks position of the client is valid
+	Client sends input to server
+	Server calcs position of the client
 	Server sends back position of all entities
 	Client corrects itself based on servers position
 Player shooting
@@ -33,8 +28,3 @@ Player shooting
 	Server moves players to correct position and checks the client has hit
 	 
 	
-MESSAGES
-Ping message
-Create entity
-Update entity
-Refresh entity - for if the client doesn't know about an updated object

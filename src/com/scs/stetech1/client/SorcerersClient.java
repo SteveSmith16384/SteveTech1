@@ -63,9 +63,11 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	public HUD hud;
 	public IInputDevice input;
 	private boolean joinedGame = false; // todo - set to true when conf'd
+	public ClientPlayersAvatar avatar;
+	public int playerID, playersAvatarID;
 	
 	//private PacketCache packets = new PacketCache();
-	private RealtimeInterval sendInputsInterval = new RealtimeInterval(50);
+	private RealtimeInterval sendInputsInterval = new RealtimeInterval(SharedSettings.SEND_INPUT_INTERVAL_MS);
 
 	public static void main(String[] args) {
 		try {
@@ -231,6 +233,16 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			}*/
 			this.myClient.send(new PlayerInputMessage(this.input));
 		}
+		
+		for (IEntity e : this.entities) {
+			if (e instanceof PhysicalEntity) {
+				PhysicalEntity pe = (PhysicalEntity)e;
+				if (pe.canMove()) {
+					// todo - update client positions based on lerping server's data
+					pe.getMainNode()
+				}
+			}
+		}
 	}
 
 
@@ -247,22 +259,31 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		if (message instanceof PingMessage) {
 			//PingMessage pingMessage = (PingMessage) message;
 			myClient.send(message); // Send it straight back
+			
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
 			System.out.println("Client #"+source.getId()+" received: '"+helloMessage.getMessage() + "'");
-		/*} else if (message instanceof AckMessage) {
+
+			/*} else if (message instanceof AckMessage) {
 			AckMessage ackMessage = (AckMessage) message;
 			this.packets.acked(ackMessage.ackingId);*/
+			
+		} else if (message instanceof NewPlayerConfMessage) {
+			NewPlayerAckMessage npcm = (NewPlayerAckMessage)message;
+			this.playerID = npcm.playerID;
+			this.playersAvatarID = npcm.avatarEntityID;
+			Settings.p("We are player " + playerID);
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 			IEntity e = EntityCreator.createEntity(this, newEntityMessage);
 			this.addEntity(e);
+			
 		} else if (message instanceof EntityUpdateMessage) {
 			EntityUpdateMessage eum = (EntityUpdateMessage)message;
 			IEntity e = this.entities.get(eum.entityID);
 			if (e != null) {
 				PhysicalEntity pe = (PhysicalEntity)e;
-				pe.getMainNode().setLocalTranslation(eum.pos);
+				//todo - calc index of position
 			} else {
 				if (this.joinedGame) {
 					//this.packets.add(new UnknownEntityMessage(eum.entityID));
@@ -274,9 +295,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		}
 
 		// Always ack all messages!
-		if (msg.requiresAck) {
+		/*if (msg.requiresAck) {
 			//myClient.send(new AckMessage(msg.msgId)); // Send it straight back
-		}
+		}*/
 	}
 
 
@@ -316,7 +337,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			int f = 3;
 		}*/
 
-		/*todo PhysicalEntity a=null, b=null;
+		/*PhysicalEntity a=null, b=null;
 		Object oa = event.getObjectA().getUserObject(); 
 		if (oa instanceof Spatial) {
 			Spatial ga = (Spatial)event.getObjectA().getUserObject(); 

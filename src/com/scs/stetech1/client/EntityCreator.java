@@ -27,7 +27,9 @@ public class EntityCreator {
 		{
 			AbstractPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud);
 			avatar.playerControl.warp(msg.pos);
-			//game.getCamera().setLocation(msg.pos);
+			if (game.avatar == null && msg.entityID == game.playersAvatarID) {
+				game.avatar = avatar;
+			}
 			return avatar;
 		}
 		

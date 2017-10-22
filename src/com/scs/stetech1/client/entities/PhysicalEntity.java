@@ -6,12 +6,16 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.components.ISharedEntity;
+import com.scs.stetech1.server.entities.ArrayList;
+import com.scs.stetech1.server.entities.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
 public abstract class PhysicalEntity extends Entity implements IProcessable, ISharedEntity {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
+	public ArrayList<EntityPositionData> positionData;// = new ArrayList<>();
+	
 
 	public PhysicalEntity(IEntityController _game, int type, String _name) {
 		super(_game, type, _name);
