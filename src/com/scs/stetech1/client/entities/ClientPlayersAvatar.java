@@ -6,13 +6,15 @@ import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
+import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
 
-public class ClientPlayersAvatar extends AbstractPlayersAvatar {
+public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD {
 
 	public HUD hud;
 	public Camera cam;
@@ -47,6 +49,12 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar {
 		cam.setLocation(cam.getLocation().add(cam.getDirection().mult(PLAYER_RAD)));
 		cam.update();
 
+	}
+	
+	
+	@Override
+	public void hasSuccessfullyHit(IEntity e) {
+		// Do nothing - done server-side
 	}
 	
 	

@@ -16,9 +16,9 @@ public class PacketCache {
 
 
 	public void add(MyAbstractMessage m) {
-		if (!m.requiresAck) {
+		/*if (!m.requiresAck) {
 			throw new RuntimeException("Only schedule messages that require ack!");
-		}
+		}*/
 
 		synchronized(msgs) {
 			msgs.put(m.msgId, m);

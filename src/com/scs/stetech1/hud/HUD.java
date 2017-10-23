@@ -3,8 +3,6 @@ package com.scs.stetech1.hud;
 import java.util.ArrayList;
 import java.util.List;
 
-import ssmith.lang.NumberFunctions;
-
 import com.jme3.bounding.BoundingBox;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
@@ -19,7 +17,6 @@ import com.jme3.ui.Picture;
 import com.scs.stetech1.client.SorcerersClient;
 import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.gui.TextArea;
-import com.scs.stetech1.server.Settings;
 
 /*
  * Positioning text = the co-ords of BitmapText are for the top-left of the first line of text, and they go down from there.
@@ -38,8 +35,6 @@ public class HUD extends Node implements IProcessable {
 	private List<Picture> targetting_reticules = new ArrayList<>();
 	private SorcerersClient game;
 	private BitmapText abilityGun, abilityOther, score, haveBall, accuracy;
-	public BitmapText helpText;
-	private float showHelpUntil = 5;
 
 	public HUD(SorcerersClient _game, float xBL, float yBL, float w, float h, BitmapFont font_small, int id, Camera _cam) {
 		super("HUD");
@@ -137,13 +132,6 @@ public class HUD extends Node implements IProcessable {
 
 	@Override
 	public void process(float tpf) {
-		if (showHelpUntil > 0) {
-			showHelpUntil -= tpf;
-			if (showHelpUntil <= 0) {
-				this.helpText.removeFromParent();
-			}
-		}
-		
 		if (process_damage_box) {
 			this.dam_box_col.a -= (tpf/2);
 			if (dam_box_col.a <= 0) {

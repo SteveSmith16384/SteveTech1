@@ -19,7 +19,7 @@ public class NewEntityMessage extends EntityUpdateMessage {
 	public NewEntityMessage(ISharedEntity e) {
 		super(e);
 		
-		this.requiresAck = true;
+		//this.requiresAck = true;
 		this.setReliable(true);
 		
 		entityID = e.getID();

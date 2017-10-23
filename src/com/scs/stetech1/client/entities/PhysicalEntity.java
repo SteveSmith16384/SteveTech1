@@ -1,26 +1,47 @@
 package com.scs.stetech1.client.entities;
 
+import java.util.ArrayList;
+
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.components.ISharedEntity;
-import com.scs.stetech1.server.entities.ArrayList;
-import com.scs.stetech1.server.entities.EntityPositionData;
+import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
 public abstract class PhysicalEntity extends Entity implements IProcessable, ISharedEntity {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
-	public ArrayList<EntityPositionData> positionData;// = new ArrayList<>();
-	
+	protected ArrayList<EntityPositionData> positionData = new ArrayList<>(); // todo - use diff type of list
+
 
 	public PhysicalEntity(IEntityController _game, int type, String _name) {
 		super(_game, type, _name);
 
 		main_node = new Node(name + "_MainNode");
+	}
+
+
+	public void addPositionData(EntityPositionData data) {
+		synchronized (positionData) {
+			positionData.add(data);
+			while (positionData.size() > 3) { // todo - not this
+				positionData.remove(0);
+			}
+		}
+	}
+
+
+	public void calcPosition(long time) {
+		if (!positionData.isEmpty()) {
+			// todo - interpol
+			EntityPositionData epd = positionData.get(positionData.size()-1);
+			// todo - if its our avatar, don't adjust rotation!
+			this.getMainNode().setLocalTranslation(epd.position);
+		}
 	}
 
 
@@ -93,7 +114,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 	public Vector3f getLocation() {
 		//return this.main_node.getWorldTranslation(); 000?
 		return this.rigidBodyControl.getPhysicsLocation();
-		
+
 	}
 
 

@@ -11,7 +11,7 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 	public int entityID;
 	public Vector3f pos;
 	public Quaternion dir;
-	public boolean force; // Force new position on client, e.g. avatar restarting
+	public boolean force; // Force new position on client, e.g. avatar restarting.  Todo - use this
 
 	public EntityUpdateMessage() {
 		super(false, false);

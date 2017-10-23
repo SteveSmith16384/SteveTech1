@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import ssmith.util.FixedLoopTime;
+import ssmith.util.RealtimeInterval;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
@@ -32,6 +33,7 @@ import com.scs.stetech1.netmessages.NewPlayerAckMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
+import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.IEntityController;
@@ -47,6 +49,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	public static SorcerersProperties properties;
 	private FixedLoopTime loopTimer = new FixedLoopTime(100);
+	private RealtimeInterval sendPingInt = new RealtimeInterval(SharedSettings.PING_INTERVAL_MS);
 	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(SharedSettings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	public BulletAppState bulletAppState;
 
@@ -54,6 +57,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		try {
 			ServerMain app;
 			app = new ServerMain();
+			app.setPauseOnLostFocus(false);
 			app.start(JmeContext.Type.Headless);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,21 +112,27 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		if (myServer.hasConnections()) { // this.rootNode
-			//myServer.broadcast(new PingMessage()); todo - re-add
+			if (sendPingInt.hitInterval()) {
+				myServer.broadcast(new PingMessage());
+			}
 
 			// Loop through the ents
-			for (IEntity e : entities.values()) {
-				if (e instanceof IProcessable) {
-					IProcessable p = (IProcessable)e;
-					p.process(tpf_secs);
-				}
-				if (sendEntityUpdatesInt.hasHit()) {
-				if (e instanceof ISharedEntity) {
-					ISharedEntity sc = (ISharedEntity)e;
-					if (sc.canMove()) {
-						//todo - re-add myServer.broadcast(new EntityUpdateMessage(sc));
+			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
+			synchronized (entities) {
+				for (IEntity e : entities.values()) {
+					if (e instanceof IProcessable) {
+						IProcessable p = (IProcessable)e;
+						p.process(tpf_secs);
 					}
-				}
+					if (sendUpdates) {
+						if (e instanceof ISharedEntity) {
+							ISharedEntity sc = (ISharedEntity)e;
+							if (sc.canMove()) {
+								myServer.broadcast(new EntityUpdateMessage(sc));
+								Settings.p("Sending EntityUpdateMessage for " + sc);
+							}
+						}
+					}
 				}
 			}
 
@@ -145,6 +155,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		synchronized (clients) {
 			client = clients.get(source.getId());
 		}
+		
+		Settings.p("Rcvd " + message.getClass().getSimpleName());
 
 		MyAbstractMessage msg = (MyAbstractMessage)message;
 		/*if (msg.requiresAck) {
@@ -160,27 +172,29 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
-			client.ping = System.currentTimeMillis() - pingMessage.sentTime;
-			
+			client.ping = System.currentTimeMillis() - pingMessage.serverSentTime;
+			client.clientDiffTime = pingMessage.clientSentTime - pingMessage.serverSentTime + (client.ping/2);
+
 		} else if (message instanceof PlayerInputMessage) {
 			PlayerInputMessage pim = (PlayerInputMessage)message;
 			if (pim.timestamp > client.latestInputTimestamp) {
 				client.remoteInput.decodeMessage(pim);
 				client.latestInputTimestamp = pim.timestamp;
 			}
+
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
-			System.out.println("Server received '" +helloMessage.getMessage() +"' from client #"+source.getId() );
-			
+			System.out.println("Server received '" + helloMessage.getMessage() + "' from client #"+source.getId() );
+
 		} else if (message instanceof NewPlayerRequestMessage) {
 			NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 			client.name = newPlayerMessage.name;
-			int avatarid = createPlayersAvatar(client);
+			client.avatarID = createPlayersAvatar(client);
 			// Send newplayerconf message
-			myServer.broadcast(Filters.equalTo(client.conn), new NewPlayerAckMessage(client.getPlayerID(), avatarid));
+			myServer.broadcast(Filters.equalTo(client.conn), new NewPlayerAckMessage(client.getPlayerID(), client.avatarID));
 			sendEntityListToClient(client);
-			
-		/*} else if (message instanceof AckMessage) {
+
+			/*} else if (message instanceof AckMessage) {
 			AckMessage ackMessage = (AckMessage) message;
 			client.packets.acked(ackMessage.ackingId);*/
 
@@ -259,8 +273,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		synchronized (clients) {
 			this.clients.remove(client.getPlayerID());
 		}
-		// todo - remove avatar
-
+		// Remove avatar
+		if (client.avatarID >= 0) {
+			this.removeEntity(this.entities.get(client.avatarID));
+		}
 	}
 
 
@@ -275,10 +291,14 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void removeEntity(IEntity e) {
-		synchronized (entities) {
-			this.entities.remove(e.getID());
+		try {
+			synchronized (entities) {
+				this.entities.remove(e.getID());
+			}
+			this.myServer.broadcast(new RemoveEntityMessage(e.getID()));
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
 		}
-
 	}
 
 

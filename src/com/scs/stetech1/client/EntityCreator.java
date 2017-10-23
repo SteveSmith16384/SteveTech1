@@ -25,7 +25,7 @@ public class EntityCreator {
 		switch (msg.type) {
 		case EntityTypes.AVATAR:
 		{
-			AbstractPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud);
+			ClientPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud);
 			avatar.playerControl.warp(msg.pos);
 			if (game.avatar == null && msg.entityID == game.playersAvatarID) {
 				game.avatar = avatar;

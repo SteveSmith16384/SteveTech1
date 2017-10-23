@@ -1,10 +1,17 @@
-TIME	CLIENT	Server
-0
+Client render in past to ensure 
+
+TIME	CLIENT					Server
+0		Client presses down
+Pos:	0, 1					0,0
 
 50
+Pos:
 
 100
+Pos:
 
 150
+Pos:
 
 200
+Pos:

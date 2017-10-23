@@ -1,9 +1,13 @@
 package com.scs.stetech1.shared;
 
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+
 public class EntityPositionData {
 
-	public long stateIndex;
+	public long stateTime;
 	
 	public Vector3f position;
 	
+	public Quaternion direction;
 }

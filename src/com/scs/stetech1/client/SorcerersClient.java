@@ -29,6 +29,7 @@ import com.jme3.network.Network;
 import com.jme3.network.serializing.Serializer;
 import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
+import com.scs.stetech1.client.entities.ClientPlayersAvatar;
 import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.hud.HUD;
@@ -42,8 +43,10 @@ import com.scs.stetech1.netmessages.NewPlayerAckMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
+import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.SharedSettings;
 
@@ -55,17 +58,16 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	public static final Random rnd = new Random();
 
 	public static BitmapFont guiFont_small; // = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-	//public static SorcerersClient instance;
 	public static AppSettings settings;
 	private Client myClient;
 	public BulletAppState bulletAppState;
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	public HUD hud;
 	public IInputDevice input;
-	private boolean joinedGame = false; // todo - set to true when conf'd
 	public ClientPlayersAvatar avatar;
-	public int playerID, playersAvatarID;
-	
+	public int playerID = -1;
+	public long playersAvatarID;
+
 	//private PacketCache packets = new PacketCache();
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(SharedSettings.SEND_INPUT_INTERVAL_MS);
 
@@ -88,7 +90,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			SorcerersClient app = new SorcerersClient();
 			//instance = app;
 			app.setSettings(settings);
-			app.setPauseOnLostFocus(true);
+			app.setPauseOnLostFocus(false); // Needs to always be in sync with server!
 
 			/*File video, audio;
 			if (Settings.RECORD_VID) {
@@ -150,6 +152,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			Serializer.registerClass(UnknownEntityMessage.class);
 			Serializer.registerClass(NewEntityMessage.class);
 			Serializer.registerClass(EntityUpdateMessage.class);
+			Serializer.registerClass(RemoveEntityMessage.class);
 
 			myClient = Network.connectToServer("localhost", 6143);
 			myClient.start();
@@ -163,6 +166,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			myClient.addMessageListener(this, EntityUpdateMessage.class);
 			myClient.addMessageListener(this, NewPlayerRequestMessage.class);
 			myClient.addMessageListener(this, NewPlayerAckMessage.class);
+			myClient.addMessageListener(this, RemoveEntityMessage.class);
 
 			myClient.send(new HelloMessage("123"));
 			myClient.send(new NewPlayerRequestMessage("Mark Gray"));
@@ -225,7 +229,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		// Send inputs every 50ms
-		if (sendInputsInterval.hitInterval()) {
+		if (sendInputsInterval.hitInterval()) { // this.getCamera()
 			// Send packets
 			/*Iterator<MyAbstractMessage> it = this.packets.getMsgs();
 			while (it.hasNext()) {
@@ -233,22 +237,26 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			}*/
 			this.myClient.send(new PlayerInputMessage(this.input));
 		}
-		
-		for (IEntity e : this.entities) {
+
+		long time = System.currentTimeMillis();
+		for (IEntity e : this.entities.values()) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				if (pe.canMove()) {
-					// todo - update client positions based on lerping server's data
-					pe.getMainNode()
+					pe.calcPosition(time);
 				}
 			}
+		}
+		
+		if (this.avatar != null) {
+			avatar.process(tpf_secs);
 		}
 	}
 
 
 	@Override
 	public void messageReceived(Client source, Message message) {
-		MyAbstractMessage msg = (MyAbstractMessage)message;
+		//MyAbstractMessage msg = (MyAbstractMessage)message;
 		/*if (msg.requiresAck) {
 			// Check not already been ack'd
 			if (packets.hasBeenAckd(msg.msgId)) {
@@ -256,10 +264,13 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			}
 		}*/
 
+		Settings.p("Rcvd " + message.getClass().getSimpleName());
+
 		if (message instanceof PingMessage) {
-			//PingMessage pingMessage = (PingMessage) message;
+			PingMessage pingMessage = (PingMessage) message;
+			pingMessage.clientSentTime = System.currentTimeMillis();
 			myClient.send(message); // Send it straight back
-			
+
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
 			System.out.println("Client #"+source.getId()+" received: '"+helloMessage.getMessage() + "'");
@@ -267,28 +278,41 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			/*} else if (message instanceof AckMessage) {
 			AckMessage ackMessage = (AckMessage) message;
 			this.packets.acked(ackMessage.ackingId);*/
-			
-		} else if (message instanceof NewPlayerConfMessage) {
+
+		} else if (message instanceof NewPlayerAckMessage) {
 			NewPlayerAckMessage npcm = (NewPlayerAckMessage)message;
-			this.playerID = npcm.playerID;
-			this.playersAvatarID = npcm.avatarEntityID;
-			Settings.p("We are player " + playerID);
+			if (this.playerID <= 0) {
+				this.playerID = npcm.playerID;
+				this.playersAvatarID = npcm.avatarEntityID;
+				Settings.p("We are player " + playerID);
+			} else {
+				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
+			}
+
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-			IEntity e = EntityCreator.createEntity(this, newEntityMessage);
-			this.addEntity(e);
-			
+			// Check we don't already know about it
+			if (!this.entities.containsKey(newEntityMessage.entityID)) {
+				IEntity e = EntityCreator.createEntity(this, newEntityMessage);
+				this.addEntity(e);
+			} else {
+				// Ignore
+			}
 		} else if (message instanceof EntityUpdateMessage) {
 			EntityUpdateMessage eum = (EntityUpdateMessage)message;
 			IEntity e = this.entities.get(eum.entityID);
 			if (e != null) {
 				PhysicalEntity pe = (PhysicalEntity)e;
-				//todo - calc index of position
+				EntityPositionData epd = new EntityPositionData();
+				epd.direction = eum.dir;
+				epd.position = eum.pos;
+				epd.stateTime = eum.timestamp;
+				pe.addPositionData(epd);
+				Settings.p("New position for " + e + ": " + eum.pos);
 			} else {
-				if (this.joinedGame) {
-					//this.packets.add(new UnknownEntityMessage(eum.entityID));
-					myClient.send(new UnknownEntityMessage(eum.entityID));
-				}
+				/*if (this.joinedGame) {
+					myClient.send(new UnknownEntityMessage(eum.entityID));  Do we actually need this?
+				}*/
 			}
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);

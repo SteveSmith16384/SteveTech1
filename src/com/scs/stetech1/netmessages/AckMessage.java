@@ -4,7 +4,7 @@ import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
 
 @Serializable
-public class AckMessage extends MyAbstractMessage { // todo - do we need this?
+public class AckMessage extends MyAbstractMessage { Do we need this?
 
 	public long ackingId;
 

@@ -12,18 +12,12 @@ import com.jme3.texture.Texture;
 import com.scs.stetech1.client.MyBetterCharacterControl;
 import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.components.IAffectedByPhysics;
-import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
-import com.scs.stetech1.components.ICollideable;
-import com.scs.stetech1.components.IDamagable;
-import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessable;
-import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.input.IInputDevice;
-import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 
-public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessable, ICollideable, ICanShoot, IShowOnHUD, IAffectedByPhysics, IDamagable {
+public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessable, ICanShoot, IAffectedByPhysics {
 
 	// Player dimensions
 	public static final float PLAYER_HEIGHT = 0.7f;
@@ -41,30 +35,22 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public MyBetterCharacterControl playerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
-	private float score = 0;
-	private float health;
-
-	protected boolean restarting = false;
-	protected float restartTime, invulnerableTime;
-
-	private int numShots = 0;
-	private int numShotsHit = 0;
+	protected float score = 0;
+	protected float health;
 
 	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input) {
 		super(_module, EntityTypes.AVATAR, "Player");
 
 		playerID = _playerID;
 		input = _input;
-		//health = module.getPlayersHealth(id);
 
-		//int pid = 1;//Settings.GAME_MODE != GameMode.CloneWars ? id : Settings.CLONE_ID;
 		playerGeometry = getPlayersModel(module, playerID);
 		this.getMainNode().attachChild(playerGeometry);
 
 		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
 		playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
 		this.getMainNode().addControl(playerControl);
-		
+
 		module.getBulletAppState().getPhysicsSpace().add(playerControl);
 		module.getRootNode().attachChild(this.main_node);
 
@@ -129,80 +115,62 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	@Override
 	public void process(float tpf) {
-		if (invulnerableTime >= 0) {
-			invulnerableTime -= tpf;
-		}
 
-		if (!this.restarting) {
-			// Have we fallen off the edge
-			if (this.playerControl.getPhysicsRigidBody().getPhysicsLocation().y < -5f) { // scs catching here after died!
-				died("Too low");
-				return;
-			}
-
-			/*abilityGun.process(tpf);
+		/*abilityGun.process(tpf);
 			if (this.abilityOther != null) {
 				abilityOther.process(tpf);
 			}
-			 */
+		 */
 
-			/*if (this.abilityOther != null) {
+		/*if (this.abilityOther != null) {
 				if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
 					//Settings.p("Using " + this.ability.toString());
 					this.abilityOther.activate(tpf);
 				}
 			}*/
 
-			/*
-			 * The direction of character is determined by the camera angle
-			 * the Y direction is set to zero to keep our character from
-			 * lifting of terrain. For free flying games simply add speed 
-			 * to Y axis
-			 */
-			camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
-			camLeft.set(input.getLeft()).multLocal(moveSpeed);
-			if (input.getFwdValue()) {	
-				//Settings.p("fwd=" + input.getFwdValue());
-				walkDirection.addLocal(camDir);
-			} else if (input.getBackValue()) {
-				walkDirection.addLocal(camDir.negate());
-			}
-			if (input.getStrafeLeftValue()) {		
-				walkDirection.addLocal(camLeft);
-			} else if (input.getStrafeRightValue()) {		
-				walkDirection.addLocal(camLeft.negate());
-			}
+		/*
+		 * The direction of character is determined by the camera angle
+		 * the Y direction is set to zero to keep our character from
+		 * lifting of terrain. For free flying games simply add speed 
+		 * to Y axis
+		 */
+		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
+		camLeft.set(input.getLeft()).multLocal(moveSpeed);
+		if (input.getFwdValue()) {	
+			//Settings.p("fwd=" + input.getFwdValue());
+			walkDirection.addLocal(camDir);
+		} else if (input.getBackValue()) {
+			walkDirection.addLocal(camDir.negate());
+		}
+		if (input.getStrafeLeftValue()) {		
+			walkDirection.addLocal(camLeft);
+		} else if (input.getStrafeRightValue()) {		
+			walkDirection.addLocal(camLeft.negate());
+		}
 
-			/*if (walkDirection.length() != 0) {
+		/*if (walkDirection.length() != 0) {
 				Settings.p("walkDirection=" + walkDirection);
 			}*/
-			playerControl.setWalkDirection(walkDirection);
+		playerControl.setWalkDirection(walkDirection);
 
-			if (input.isJumpPressed()){
-				this.jump();
-			}
+		if (input.isJumpPressed()){
+			this.jump();
+		}
 
-			if (input.isShootPressed()) {
-				shoot();
-			}
+		if (input.isShootPressed()) {
+			shoot();
+		}
 
-			// These must be after we might use them, so the hud is correct 
-			/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
+		// These must be after we might use them, so the hud is correct 
+		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 			if (abilityOther != null) {
 				this.hud.setAbilityOtherText(this.abilityOther.getHudText());
 			}*/
 
-		}
-
-		//this.input.resetFlags();
-
 		walkDirection.set(0, 0, 0);
 	}
 
-	
-	/*public abstract Vector3f getDirection();
-
-	public abstract Vector3f getLeft();*/
 
 	public boolean isOnGround() {
 		return playerControl.isOnGround();
@@ -224,78 +192,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
-	public void hitByBullet(IBullet bullet) {
-		if (invulnerableTime <= 0) {
-			float dam = bullet.getDamageCaused();
-			if (dam > 0) {
-				Settings.p("Player hit by bullet");
-				//module.doExplosion(this.main_node.getWorldTranslation(), this);
-				//module.audioExplode.play();
-				//this.health -= dam;
-				//this.hud.setHealth(this.health);
-				//this.hud.showDamageBox();
-
-				died("hit by " + bullet.toString());
-			}
-		} else {
-			Settings.p("Player hit but is currently invulnerable");
-		}
-	}
-
-
-	private void died(String reason) {
-		Settings.p("Player died: " + reason);
-		this.restarting = true;
-		this.restartTime = ServerMain.properties.GetRestartTimeSecs();
-		//invulnerableTime = RESTART_DUR*3;
-
-		// Move us below the map
-		Vector3f pos = this.getMainNode().getWorldTranslation().clone();//.floor_phy.getPhysicsLocation().clone();
-		pos.y = -10;//-SimpleCity.FLOOR_THICKNESS * 2;
-		playerControl.warp(pos);
-	}
-
-
-	@Override
-	public void hasSuccessfullyHit(IEntity e) {
-		this.incScore(20, "shot " + e.toString());
-		//new AbstractHUDImage(game, module, this.hud, "Textures/text/hit.png", this.hud.hud_width, this.hud.hud_height, 2);
-		//this.hud.showCollectBox();
-		numShotsHit++;
-		calcAccuracy();
-	}
-
-
-	private void calcAccuracy() {
-		int a = (int)((this.numShotsHit * 100f) / this.numShots);
-		//hud.setAccuracy(a);
-	}
-
-
-	public void incScore(float amt, String reason) {
-		Settings.p("Inc score: +" + amt + ", " + reason);
-		this.score += amt;
-		//this.hud.setScore(this.score);
-
-	}
-
-
-	@Override
-	public void collidedWith(ICollideable other) {
-		if (other instanceof IBullet) {
-			IBullet bullet = (IBullet)other;
-			if (bullet.getShooter() != null) {
-				if (bullet.getShooter() != this) {
-					if (!(bullet.getShooter() instanceof AbstractPlayersAvatar)) {
-						this.hitByBullet(bullet);
-						bullet.getShooter().hasSuccessfullyHit(this);
-					}
-				}
-			}
-		}
-	}
-
-
 	@Override
 	public void applyForce(Vector3f force) {
 		//playerControl.getPhysicsRigidBody().applyImpulse(force, Vector3f.ZERO);//.applyCentralForce(dir);
@@ -303,13 +199,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		//Settings.p("Applying force to player:" + force);
 		//this.addWalkDirection.addLocal(force);
 	}
-
-
-	@Override
-	public void damaged(float amt, String reason) {
-		died(reason);
-	}
-
 
 
 	@Override
@@ -328,7 +217,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	@Override
 	public boolean canMove() {
-			return true;
+		return true;
 	}
 
 }

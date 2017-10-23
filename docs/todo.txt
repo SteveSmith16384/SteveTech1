@@ -3,13 +3,37 @@ STETECH1
 https://gamedev.stackexchange.com/questions/81950/how-to-sync-client-and-server-at-the-first-frame
 
 TODO
-	NOT NEEDED: Send msg to client asking for time, and get time sent.  When rcvd, calc clients time
+Client should not pause when losing focus
+Esc not working in client
 Client should calc positions of entites based on lerp of previous positions and current time
-	Avatar falling through floor
+Avatar falling through floor
 
 
+CLIENT
+Send inputs every 50ms
+Render others from history - 50ms ago, lerp between historical positions
 
+
+SERVER
+Receive player inputs and pass the to avatar (if later than prev)
+Run game loop every 15ms
+	Send entity positions for changed entities
+
+
+PLAYER CONTROL
+Turning is handled entirely by the client
+Player moves and their avatar is moved immediately
+	Client sends input to server
+	Server calcs position of the client
+	Server sends back position of all entities
+	Client corrects itself based on servers position
+Player shooting
+	Client sends shot msg with timestamp and direction
+	Server moves players to correct position and checks the client has hit
+	 
+	
 LATER
+Simulate slow network
 Split up into separate projects: Client, server, shared, Sorcerers
 Reduce object creation
 Kick players who don't move

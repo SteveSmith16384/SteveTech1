@@ -5,12 +5,13 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class PingMessage extends MyAbstractMessage {
 	
-	public long sentTime;
+	public long serverSentTime;
+	public long clientSentTime;
 
 	public PingMessage() {
 		super(false, false);
 
-		sentTime = System.currentTimeMillis();
+		serverSentTime = System.currentTimeMillis();
 	}
 
 }
