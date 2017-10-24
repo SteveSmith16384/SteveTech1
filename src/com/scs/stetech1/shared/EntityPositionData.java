@@ -5,9 +5,9 @@ import com.jme3.math.Vector3f;
 
 public class EntityPositionData {
 
-	public long stateTime;
+	public long serverStateTime;
 	
 	public Vector3f position;
 	
-	public Quaternion direction;
+	public Quaternion rotation;
 }

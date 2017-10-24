@@ -33,11 +33,11 @@ import com.scs.stetech1.netmessages.NewPlayerAckMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
+import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.shared.SharedSettings;
 
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, ErrorListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
@@ -48,9 +48,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // EntityID::Entity
 
 	public static SorcerersProperties properties;
-	private FixedLoopTime loopTimer = new FixedLoopTime(100);
-	private RealtimeInterval sendPingInt = new RealtimeInterval(SharedSettings.PING_INTERVAL_MS);
-	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(SharedSettings.SERVER_SEND_UPDATE_INTERVAL_MS);
+	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
+	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
+	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	public BulletAppState bulletAppState;
 
 	public static void main(String[] args) {
@@ -67,31 +67,22 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	public ServerMain() throws IOException {
 		properties = new SorcerersProperties(PROPS_FILE);
-		loopTimer.start();
 
-		Serializer.registerClass(HelloMessage.class);
-		Serializer.registerClass(PingMessage.class);
-		//Serializer.registerClass(AckMessage.class);
-		Serializer.registerClass(NewPlayerRequestMessage.class);
-		Serializer.registerClass(NewPlayerAckMessage.class);
-		Serializer.registerClass(PlayerInputMessage.class);
-		Serializer.registerClass(UnknownEntityMessage.class);
-		Serializer.registerClass(NewEntityMessage.class);
-		Serializer.registerClass(EntityUpdateMessage.class);
-
-		myServer = Network.createServer(SharedSettings.PORT);
+		Settings.Register();
+		
+		myServer = Network.createServer(Settings.PORT);
 		myServer.start();
 		myServer.addConnectionListener(this);
 
 		myServer.addMessageListener(this, HelloMessage.class);
 		myServer.addMessageListener(this, PingMessage.class);
-		//myServer.addMessageListener(this, AckMessage.class);
 		myServer.addMessageListener(this, NewPlayerRequestMessage.class);
 		myServer.addMessageListener(this, NewPlayerAckMessage.class);
 		myServer.addMessageListener(this, PlayerInputMessage.class);
 		myServer.addMessageListener(this, UnknownEntityMessage.class);
 		myServer.addMessageListener(this, NewEntityMessage.class);
 		myServer.addMessageListener(this, EntityUpdateMessage.class);
+		myServer.addMessageListener(this, PlayerLeftMessage.class);
 
 	}
 
@@ -106,6 +97,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		//bulletAppState.getPhysicsSpace().setAccuracy(1f / 80f);
 
 		createGame();
+		loopTimer.start();
 	}
 
 
@@ -113,7 +105,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	public void simpleUpdate(float tpf_secs) {
 		if (myServer.hasConnections()) { // this.rootNode
 			if (sendPingInt.hitInterval()) {
-				myServer.broadcast(new PingMessage());
+				myServer.broadcast(new PingMessage(true));
 			}
 
 			// Loop through the ents
@@ -129,7 +121,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 							ISharedEntity sc = (ISharedEntity)e;
 							if (sc.canMove()) {
 								myServer.broadcast(new EntityUpdateMessage(sc));
-								Settings.p("Sending EntityUpdateMessage for " + sc);
+								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}
 						}
 					}
@@ -144,7 +136,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			}*/
 		}
 
-		loopTimer.waitForFinish();
+		loopTimer.waitForFinish(); // Keep clients and server running at same speed
 		loopTimer.start();
 	}
 
@@ -156,7 +148,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			client = clients.get(source.getId());
 		}
 		
-		Settings.p("Rcvd " + message.getClass().getSimpleName());
+		//Settings.p("Rcvd " + message.getClass().getSimpleName());
 
 		MyAbstractMessage msg = (MyAbstractMessage)message;
 		/*if (msg.requiresAck) {
@@ -172,8 +164,21 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
-			client.ping = System.currentTimeMillis() - pingMessage.serverSentTime;
-			client.clientDiffTime = pingMessage.clientSentTime - pingMessage.serverSentTime + (client.ping/2);
+			if (pingMessage.s2c) {
+				client.pingRTT = System.currentTimeMillis() - pingMessage.originalSentTime;
+				client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime + (client.pingRTT/2);
+				/*
+				 * Server sent time: 2000
+				 * Client response time: 1000
+				 * Ping: 200 
+				 * clientToServerDiffTime: 1000 - 2000 + (200/2) = -900 
+				*/
+				Settings.p("Client rtt = " + client.pingRTT);
+				Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
+			} else {
+				pingMessage.responseSentTime = System.currentTimeMillis();
+				myServer.broadcast(Filters.equalTo(client.conn), pingMessage);
+			}
 
 		} else if (message instanceof PlayerInputMessage) {
 			PlayerInputMessage pim = (PlayerInputMessage)message;
@@ -188,7 +193,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		} else if (message instanceof NewPlayerRequestMessage) {
 			NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-			client.name = newPlayerMessage.name;
+			client.playerName = newPlayerMessage.name;
 			client.avatarID = createPlayersAvatar(client);
 			// Send newplayerconf message
 			myServer.broadcast(Filters.equalTo(client.conn), new NewPlayerAckMessage(client.getPlayerID(), client.avatarID));
@@ -203,6 +208,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			IEntity e = this.entities.get(uem.entityID);
 			this.sendNewEntity(client, e);
 
+		} else if (message instanceof PlayerLeftMessage) {
+			// todo 
+			
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
@@ -243,15 +251,16 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void handleError(Object obj, Throwable ex) {
-		SharedSettings.p("Network error with " + obj + ": " + ex);
+		Settings.p("Network error with " + obj + ": " + ex);
 		ex.printStackTrace();
+		// todo - remove connection?
 
 	}
 
 
 	@Override
 	public void connectionAdded(Server arg0, HostedConnection conn) {
-		SharedSettings.p("Client connected!");
+		Settings.p("Client connected!");
 		synchronized (clients) {
 			clients.put(conn.getId(), new ClientData(conn));
 		}
@@ -261,15 +270,14 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void connectionRemoved(Server arg0, HostedConnection source) {
-		SharedSettings.p("Client removed");
-
+		Settings.p("connectionRemoved()");
 		ClientData client = clients.get(source.getId());
-
 		this.playerLeft(client);
 	}
 
 
 	private void playerLeft(ClientData client) {
+		Settings.p("Removing player " + client.getPlayerID());
 		synchronized (clients) {
 			this.clients.remove(client.getPlayerID());
 		}
@@ -291,6 +299,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void removeEntity(IEntity e) {
+		Settings.p("Removing " + e);
 		try {
 			synchronized (entities) {
 				this.entities.remove(e.getID());
@@ -309,10 +318,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	private void createGame() {
-		Floor floor = new Floor(this, 0, 0, 0, 10, .5f, 10, "Textures/crate.png", null);
+		Floor floor = new Floor(this, 0, 0, 0, 10, .5f, 10, "Textures/floor015.png", null);
 		this.addEntity(floor);
 
-		Crate crate = new Crate(this, 8, 2, 8, 1, 1, 1f, "Textures/floor015.png", 0);
+		Crate crate = new Crate(this, 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 0);
 		this.addEntity(crate); // this.rootNode
 	}
 
@@ -371,6 +380,12 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	@Override
 	public boolean isServer() {
 		return true;
+	}
+
+
+	@Override
+	public IEntity getPlayersAvatar() {
+		return null; // Not used by the server
 	}
 
 

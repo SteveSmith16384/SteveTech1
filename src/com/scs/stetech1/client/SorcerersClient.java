@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.prefs.BackingStoreException;
 
+import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
 import com.jme3.app.SimpleApplication;
@@ -23,6 +24,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.ErrorListener;
+import com.jme3.network.Filters;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
@@ -37,18 +39,17 @@ import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.HelloMessage;
-import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.NewPlayerAckMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
+import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.shared.SharedSettings;
 
 public class SorcerersClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
 
@@ -56,6 +57,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	private static final String TEST = "Test";
 
 	public static final Random rnd = new Random();
+
+	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 
 	public static BitmapFont guiFont_small; // = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 	public static AppSettings settings;
@@ -66,10 +69,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	public IInputDevice input;
 	public ClientPlayersAvatar avatar;
 	public int playerID = -1;
-	public long playersAvatarID;
+	public long playersAvatarID = -1;
+	public long pingRTT;
+	public long clientToServerDiffTime; // Add to current time to get server time
 
-	//private PacketCache packets = new PacketCache();
-	private RealtimeInterval sendInputsInterval = new RealtimeInterval(SharedSettings.SEND_INPUT_INTERVAL_MS);
+	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
+	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 
 	public static void main(String[] args) {
 		try {
@@ -143,25 +148,15 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		//bulletAppState.getPhysicsSpace().enableDebug(game.getAssetManager());
 
 		try {
-			Serializer.registerClass(HelloMessage.class);
-			Serializer.registerClass(PingMessage.class);
-			//Serializer.registerClass(AckMessage.class);
-			Serializer.registerClass(NewPlayerRequestMessage.class);
-			Serializer.registerClass(NewPlayerAckMessage.class);
-			Serializer.registerClass(PlayerInputMessage.class);
-			Serializer.registerClass(UnknownEntityMessage.class);
-			Serializer.registerClass(NewEntityMessage.class);
-			Serializer.registerClass(EntityUpdateMessage.class);
-			Serializer.registerClass(RemoveEntityMessage.class);
-
-			myClient = Network.connectToServer("localhost", 6143);
+			Settings.Register();
+			
+			myClient = Network.connectToServer("localhost", Settings.PORT);
 			myClient.start();
 			myClient.addClientStateListener(this);
 			myClient.addErrorListener(this);
 
 			myClient.addMessageListener(this, HelloMessage.class);
 			myClient.addMessageListener(this, PingMessage.class);
-			//myClient.addMessageListener(this, AckMessage.class);
 			myClient.addMessageListener(this, NewEntityMessage.class);
 			myClient.addMessageListener(this, EntityUpdateMessage.class);
 			myClient.addMessageListener(this, NewPlayerRequestMessage.class);
@@ -196,6 +191,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			VideoRecorderAppState video_recorder = new VideoRecorderAppState();
 			stateManager.attach(video_recorder);
 		}
+		
+		
+		loopTimer.start();
 
 	}
 
@@ -228,29 +226,33 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		// Send inputs every 50ms
+		if (sendPingInt.hitInterval()) {
+			myClient.send(new PingMessage(false));
+		}
+
+		// Send inputs
 		if (sendInputsInterval.hitInterval()) { // this.getCamera()
-			// Send packets
-			/*Iterator<MyAbstractMessage> it = this.packets.getMsgs();
-			while (it.hasNext()) {
-				this.myClient.send(it.next());
-			}*/
 			this.myClient.send(new PlayerInputMessage(this.input));
 		}
 
-		long time = System.currentTimeMillis();
+		long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
+		serverTime -= Settings.CLIENT_RENDER_DELAY; // Render from history
 		for (IEntity e : this.entities.values()) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				if (pe.canMove()) {
-					pe.calcPosition(time);
+					pe.calcPosition(serverTime);
 				}
 			}
 		}
-		
+
 		if (this.avatar != null) {
 			avatar.process(tpf_secs);
 		}
+		
+		loopTimer.waitForFinish(); // Keep clients and server running at same speed
+		loopTimer.start();
+
 	}
 
 
@@ -264,12 +266,25 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			}
 		}*/
 
-		Settings.p("Rcvd " + message.getClass().getSimpleName());
+		//Settings.p("Rcvd " + message.getClass().getSimpleName());
 
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
-			pingMessage.clientSentTime = System.currentTimeMillis();
-			myClient.send(message); // Send it straight back
+			if (!pingMessage.s2c) {
+				pingRTT = System.currentTimeMillis() - pingMessage.originalSentTime;
+				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime + (pingRTT/2);
+				/*
+				 * Client sent time: 1000
+				 * Server response time: 5000
+				 * Ping: 100 
+				 * clientToServerDiffTime: 5000 - 1000 + (100/2) = 4050 
+				*/
+				Settings.p("pingRTT = " + pingRTT);
+				Settings.p("clientToServerDiffTime = " + clientToServerDiffTime);
+			} else {
+				pingMessage.responseSentTime = System.currentTimeMillis();
+				myClient.send(message); // Send it straight back
+			}
 
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
@@ -298,17 +313,19 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			} else {
 				// Ignore
 			}
+			
 		} else if (message instanceof EntityUpdateMessage) {
 			EntityUpdateMessage eum = (EntityUpdateMessage)message;
 			IEntity e = this.entities.get(eum.entityID);
 			if (e != null) {
-				PhysicalEntity pe = (PhysicalEntity)e;
 				EntityPositionData epd = new EntityPositionData();
-				epd.direction = eum.dir;
+				epd.serverStateTime = eum.timestamp + clientToServerDiffTime;
+				epd.rotation = eum.dir;
 				epd.position = eum.pos;
-				epd.stateTime = eum.timestamp;
+
+				PhysicalEntity pe = (PhysicalEntity)e;
 				pe.addPositionData(epd);
-				Settings.p("New position for " + e + ": " + eum.pos);
+				//Settings.p("New position for " + e + ": " + eum.pos);
 			} else {
 				/*if (this.joinedGame) {
 					myClient.send(new UnknownEntityMessage(eum.entityID));  Do we actually need this?
@@ -327,21 +344,21 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	@Override
 	public void clientConnected(Client arg0) {
-		SharedSettings.p("Connected!");
+		Settings.p("Connected!");
 
 	}
 
 
 	@Override
 	public void clientDisconnected(Client arg0, DisconnectInfo arg1) {
-		SharedSettings.p("Disconnected!");
+		Settings.p("Disconnected!");
 
 	}
 
 
 	@Override
 	public void handleError(Object obj, Throwable ex) {
-		SharedSettings.p("Network error with " + obj + ": " + ex);
+		Settings.p("Network error with " + obj + ": " + ex);
 		ex.printStackTrace();
 
 	}
@@ -417,12 +434,27 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	@Override
 	public void onAction(String name, boolean value, float tpf) {
+		if (name.equalsIgnoreCase(QUIT)) {
+			if (playerID >= 0) {
+				this.myClient.send(new PlayerLeftMessage(this.playerID));
+				Thread.sleep(500);
+				this.stop(true);
+			}
+		} else if (name.equalsIgnoreCase(TEST)) {
+
+		}
 	}
 
 
 	@Override
 	public boolean isServer() {
 		return false;
+	}
+
+
+	@Override
+	public IEntity getPlayersAvatar() {
+		return avatar;
 	}
 
 

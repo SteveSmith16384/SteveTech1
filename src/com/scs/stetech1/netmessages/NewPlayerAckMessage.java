@@ -9,12 +9,12 @@ public class NewPlayerAckMessage extends MyAbstractMessage {
 	public int playerID;
 
 	public NewPlayerAckMessage() {
-		super(true, true);
+		super(true);
 	}
 	
 	
 	public NewPlayerAckMessage(int _playerID, long _avatarEntityID) {
-		super(true, true);
+		super(true);
 		
 		playerID = _playerID;
 		avatarEntityID = _avatarEntityID;

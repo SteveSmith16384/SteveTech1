@@ -8,11 +8,11 @@ public class RemoveEntityMessage extends MyAbstractMessage {
 	public int entityID;
 
 	public RemoveEntityMessage() {
-		super(false, false);
+		super(false);
 	}
 	
 	public RemoveEntityMessage(int _entityID) {
-		super(false, false);
+		super(false);
 		
 		entityID = _entityID;
 	}

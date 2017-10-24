@@ -7,18 +7,19 @@ import com.scs.stetech1.input.IInputDevice;
 @Serializable
 public class PlayerInputMessage extends MyAbstractMessage {
 
-	public Vector3f direction;
+	public Vector3f direction, leftDir;
 	public boolean fwd;
 
 	public PlayerInputMessage() {
-		super(false, false);
+		super(false);
 	}
 	
 	
 	public PlayerInputMessage(IInputDevice inputs) {
-		super(false, false);
+		super(false);
 
 		direction = inputs.getDirection();
+		leftDir = inputs.getLeft();
 		fwd = inputs.getFwdValue();
 		// todo - other inputs
 	}

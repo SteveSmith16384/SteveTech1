@@ -8,12 +8,12 @@ public class UnknownEntityMessage extends MyAbstractMessage {
 	public int entityID;
 
 	public UnknownEntityMessage() {
-		super(true, true);
+		super(true);
 	}
 
 	
 	public UnknownEntityMessage(int _entityID) {
-		super(true, true);
+		super(true);
 		
 		entityID = _entityID;
 	}

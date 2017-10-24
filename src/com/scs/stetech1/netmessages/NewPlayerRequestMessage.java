@@ -12,7 +12,7 @@ public class NewPlayerRequestMessage extends MyAbstractMessage {
 	}
 	
 	public NewPlayerRequestMessage(String _name) {
-		super(true, true);
+		super(true);
 		
 		name = _name;
 	}

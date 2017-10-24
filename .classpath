@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="jMonkeyEngine3-sources"/>
+	<classpathentry excluding="*" kind="src" path="jMonkeyEngine3-sources"/>
 	<classpathentry kind="src" path="assets"/>
 	<classpathentry kind="lib" path="C:/Program Files/jmonkeyplatform/jmonkeyplatform/libs/eventbus.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/jmonkeyplatform/jmonkeyplatform/libs/gluegen-rt.jar"/>

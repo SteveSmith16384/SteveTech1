@@ -5,24 +5,28 @@ import com.scs.stetech1.netmessages.PlayerInputMessage;
 
 public class RemoteInput implements IInputDevice {
 
-	private boolean fwd;
+	/*private boolean fwd;
 	private Vector3f dir = new Vector3f(0, 0, -1);
 	private Vector3f leftDir = new Vector3f(0, -1, 0);
-	
+	 */
+
+	private PlayerInputMessage pim;
+
 	public RemoteInput() {
 
 	}
-	
-	
-	public void decodeMessage(PlayerInputMessage pim) {
-		this.dir = pim.direction;
-		this.fwd = pim.fwd;
-		
+
+
+	public void decodeMessage(PlayerInputMessage _pim) {
+		pim = _pim;
+		//this.dir = pim.direction;
+		//this.fwd = pim.fwd;
+
 	}
 
 	@Override
 	public boolean getFwdValue() {
-		return fwd;
+		return pim.fwd;
 	}
 
 	@Override
@@ -67,14 +71,22 @@ public class RemoteInput implements IInputDevice {
 		return false;
 	}
 
+
 	@Override
 	public Vector3f getDirection() {
-		return dir;
+		if (pim != null) {
+			return pim.direction;
+		}
+		return Vector3f.UNIT_Y;
 	}
+
 
 	@Override
 	public Vector3f getLeft() {
-		return leftDir;
+		if (pim != null) {
+			return pim.leftDir;
+		}
+		return Vector3f.UNIT_Z;
 	}
 
 }

@@ -12,15 +12,13 @@ public class MyAbstractMessage extends AbstractMessage {
 
 	public long msgId;
 	public long timestamp = System.currentTimeMillis();
-	//public boolean requiresAck;
 	
-	public MyAbstractMessage(boolean _requiresAck, boolean tcp) { // todo- remove _requiresAck
+	public MyAbstractMessage(boolean tcp) {
 		super();
 		
 		msgId = nextID.addAndGet(1);
 		this.setReliable(tcp);
 		
-		//requiresAck = _requiresAck;
 	}
 
 }

@@ -19,7 +19,7 @@ public class FixedLoopTime {
 
 	public void waitForFinish() {
 		if (startTime < 0) {
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Start time not set");
 		}
 		
 		long now = System.currentTimeMillis();
@@ -31,7 +31,7 @@ public class FixedLoopTime {
 				//e.printStackTrace();
 			}
 		} else {
-			Settings.p("Too slow!");
+			Settings.p("Too slow! " + diff);
 		}
 	}
 

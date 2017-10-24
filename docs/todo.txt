@@ -3,20 +3,30 @@ STETECH1
 https://gamedev.stackexchange.com/questions/81950/how-to-sync-client-and-server-at-the-first-frame
 
 TODO
-Client should not pause when losing focus
-Esc not working in client
-Client should calc positions of entites based on lerp of previous positions and current time
-Avatar falling through floor
+Esc not closing window
+Update spatials in sep thread!
+Close client if server crashes
+Delib slow down messages
+
+	Client should calc positions of entites based on lerp of previous positions and current time
+	Ensure avatars move at same speed on client and server
+Create server-controlled moving item to check interpol
+Take average ping time
+Make all objects kinematic on client side?
+
+
+UNIT TESTS / INTEGRATION TESTS
+
 
 
 CLIENT
-Send inputs every 50ms
+Send inputs every "server tickrate"
 Render others from history - 50ms ago, lerp between historical positions
 
 
 SERVER
 Receive player inputs and pass the to avatar (if later than prev)
-Run game loop every 15ms
+Run game loop every 20ms
 	Send entity positions for changed entities
 
 
@@ -33,8 +43,10 @@ Player shooting
 	 
 	
 LATER
+Don't send entity update if position not changed
 Simulate slow network
 Split up into separate projects: Client, server, shared, Sorcerers
 Reduce object creation
 Kick players who don't move
 Confirm a client is a proper client
+
