@@ -8,7 +8,7 @@ import com.scs.stetech1.input.IInputDevice;
 public class PlayerInputMessage extends MyAbstractMessage {
 
 	public Vector3f direction, leftDir;
-	public boolean fwd;
+	public boolean fwd, back, strafeLeft, strafeRight, jump;
 
 	public PlayerInputMessage() {
 		super(false);
@@ -21,6 +21,10 @@ public class PlayerInputMessage extends MyAbstractMessage {
 		direction = inputs.getDirection();
 		leftDir = inputs.getLeft();
 		fwd = inputs.getFwdValue();
+		back = inputs.getBackValue();
+		strafeLeft = inputs.getStrafeLeftValue();
+		strafeRight = inputs.getStrafeRightValue();
+		jump = inputs.isJumpPressed();
 		// todo - other inputs
 	}
 

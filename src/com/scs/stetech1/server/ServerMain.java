@@ -176,6 +176,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				Settings.p("Client rtt = " + client.pingRTT);
 				Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
 			} else {
+				// Send it back to the client
 				pingMessage.responseSentTime = System.currentTimeMillis();
 				myServer.broadcast(Filters.equalTo(client.conn), pingMessage);
 			}
@@ -189,7 +190,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		} else if (message instanceof HelloMessage) {
 			HelloMessage helloMessage = (HelloMessage) message;
-			System.out.println("Server received '" + helloMessage.getMessage() + "' from client #"+source.getId() );
+			System.out.println("Server received '" + helloMessage.getMessage() + "' from client #" + source.getId() );
 
 		} else if (message instanceof NewPlayerRequestMessage) {
 			NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
@@ -209,15 +210,12 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			this.sendNewEntity(client, e);
 
 		} else if (message instanceof PlayerLeftMessage) {
-			// todo 
+			this.connectionRemoved(this.myServer, source);
 			
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 
-		/*if (msg.requiresAck) {
-			//myServer.broadcast(Filters.equalTo(client.conn), new AckMessage(msg.msgId)); // Send it straight back
-		}*/
 	}
 
 
@@ -241,11 +239,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private void sendNewEntity(ClientData client, IEntity e) {
 		if (e instanceof ISharedEntity) {
 			ISharedEntity se = (ISharedEntity)e;
-			//client.packets.add(new NewEntityMessage(se));
-			myServer.broadcast(Filters.equalTo(client.conn), new NewEntityMessage(se));
-
+			NewEntityMessage nem = new NewEntityMessage(se);
+			nem.force = true;
+			myServer.broadcast(Filters.equalTo(client.conn), nem);
 		}
-
 	}
 
 

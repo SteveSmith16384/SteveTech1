@@ -31,26 +31,22 @@ public class RemoteInput implements IInputDevice {
 
 	@Override
 	public boolean getBackValue() {
-		// TODO Auto-generated method stub
-		return false;
+		return pim.back;
 	}
 
 	@Override
 	public boolean getStrafeLeftValue() {
-		// TODO Auto-generated method stub
-		return false;
+		return pim.strafeLeft;
 	}
 
 	@Override
 	public boolean getStrafeRightValue() {
-		// TODO Auto-generated method stub
-		return false;
+		return pim.strafeRight;
 	}
 
 	@Override
 	public boolean isJumpPressed() {
-		// TODO Auto-generated method stub
-		return false;
+		return pim.jump;
 	}
 
 	@Override

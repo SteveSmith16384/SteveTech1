@@ -3,20 +3,19 @@ STETECH1
 https://gamedev.stackexchange.com/questions/81950/how-to-sync-client-and-server-at-the-first-frame
 
 TODO
-Esc not closing window
-Update spatials in sep thread!
-Close client if server crashes
-Delib slow down messages
-
+	Esc not closing window
+	Update spatials in sep thread!
 	Client should calc positions of entites based on lerp of previous positions and current time
 	Ensure avatars move at same speed on client and server
 Create server-controlled moving item to check interpol
 Take average ping time
 Make all objects kinematic on client side?
+Shooting
+Delib slow down messages
 
 
 UNIT TESTS / INTEGRATION TESTS
-
+Test interpolation
 
 
 CLIENT
@@ -45,8 +44,8 @@ Player shooting
 LATER
 Don't send entity update if position not changed
 Simulate slow network
-Split up into separate projects: Client, server, shared, Sorcerers
+Split up into separate projects: AbstractClient, Abstractserver, shared, Sorcerers
 Reduce object creation
 Kick players who don't move
-Confirm a client is a proper client
+Close client if server crashes
 

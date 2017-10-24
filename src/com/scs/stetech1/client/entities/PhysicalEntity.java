@@ -29,6 +29,13 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 	}
 
 
+	public void clearPositiondata() {
+		synchronized (positionData) {
+			positionData.clear();
+		}
+	}
+	
+	
 	public void addPositionData(EntityPositionData newData) {
 		synchronized (positionData) {
 			for(int i=0 ; i<this.positionData.size() ; i++) {
@@ -37,7 +44,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 				if (epd.serverStateTime < newData.serverStateTime) {
 					positionData.add(i, newData); // insert at position based on timestamp!
 					// Remove later entries
-					while (this.positionData.size() > i+3) { // todo - delete based on age
+					while (this.positionData.size() > i+3) {
 						this.positionData.remove(i+1);
 					}
 					return;
@@ -61,31 +68,33 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 							return; // To early!
 						}
 					} else if (firstEPD.serverStateTime > serverTime && secondEPD.serverStateTime < serverTime) {
-						// todo - interpol between positions
+						// interpol between positions
 						float frac = (firstEPD.serverStateTime - serverTime) / (serverTime - secondEPD.serverStateTime);
 						final Vector3f newPos = firstEPD.position.interpolate(secondEPD.position, frac);
 						// Set positions in Callable
 						{
-							mainApp.enqueue(new Callable<Spatial>() {
+							/*mainApp.enqueue(new Callable<Spatial>() {
 								public Spatial call() throws Exception {
 									getMainNode().setLocalTranslation(newPos);
 									return getMainNode();
 								}
-							});
+							})*/;
 							//this.getMainNode().setLocalTranslation(newPos);
+							this.setPosition(mainApp, newPos);
 						}
 						if (module.getPlayersAvatar() != this) { // if its our avatar, don't adjust rotation!
 							Quaternion newRot = new Quaternion();
 							final Quaternion newRot2 = newRot.slerp(firstEPD.rotation, secondEPD.rotation, frac);
 							//this.getMainNode().setLocalRotation(newRot);
 							{
-								// Set rotation in Callable
+								/*// Set rotation in Callable
 								mainApp.enqueue(new Callable<Spatial>() {
 									public Spatial call() throws Exception {
 										getMainNode().setLocalRotation(newRot2);
 										return getMainNode();
 									}
-								});
+								});*/
+								this.setRotation(mainApp, newRot2);
 							}
 						} else {
 							Settings.p("Updated avatar pos: " + newPos);
@@ -99,6 +108,27 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 
 	}
 
+
+	public void setPosition(SorcerersClient mainApp, final Vector3f newPos) {
+		mainApp.enqueue(new Callable<Spatial>() {
+			public Spatial call() throws Exception {
+				getMainNode().setLocalTranslation(newPos);
+				return getMainNode();
+			}
+		});
+	}
+	
+	
+	public void setRotation(SorcerersClient mainApp, final Quaternion newRot2) {
+		// Set rotation in Callable
+		mainApp.enqueue(new Callable<Spatial>() {
+			public Spatial call() throws Exception {
+				getMainNode().setLocalRotation(newRot2);
+				return getMainNode();
+			}
+		});
+
+	}
 
 
 	@Override

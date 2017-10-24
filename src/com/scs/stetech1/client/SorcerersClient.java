@@ -241,7 +241,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				if (pe.canMove()) {
-					pe.calcPosition(serverTime);
+					pe.calcPosition(this, serverTime);
 				}
 			}
 		}
@@ -324,7 +324,14 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				epd.position = eum.pos;
 
 				PhysicalEntity pe = (PhysicalEntity)e;
-				pe.addPositionData(epd);
+				if (eum.force) {
+					// Set it now!
+					pe.setPosition(this, epd.position);
+					pe.setRotation(this, epd.rotation);
+					pe.clearPositiondata();
+				} else {
+					pe.addPositionData(epd);
+				}
 				//Settings.p("New position for " + e + ": " + eum.pos);
 			} else {
 				/*if (this.joinedGame) {
@@ -437,7 +444,11 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		if (name.equalsIgnoreCase(QUIT)) {
 			if (playerID >= 0) {
 				this.myClient.send(new PlayerLeftMessage(this.playerID));
-				Thread.sleep(500);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				this.stop(true);
 			}
 		} else if (name.equalsIgnoreCase(TEST)) {
