@@ -3,6 +3,9 @@ STETECH1
 https://gamedev.stackexchange.com/questions/81950/how-to-sync-client-and-server-at-the-first-frame
 
 TODO
+Move entities to shared package
+Create EnemyPlayerAvatar entity for othe players
+Client create entity when shooting?
 	Esc not closing window
 	Update spatials in sep thread!
 	Client should calc positions of entites based on lerp of previous positions and current time

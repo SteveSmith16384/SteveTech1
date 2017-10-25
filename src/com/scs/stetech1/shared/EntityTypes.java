@@ -7,6 +7,7 @@ public class EntityTypes {
 	public static final int FLOOR = 3;
 	public static final int FENCE = 4;
 	public static final int WALL = 5;
+	public static final int UNFIRED_BULLET = 6;
 	
 	private EntityTypes() {
 	}

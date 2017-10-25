@@ -25,12 +25,18 @@ public class EntityCreator {
 		switch (msg.type) {
 		case EntityTypes.AVATAR:
 		{
+			int playerID = msg.data.get<Integer>("playerID");
+			if (playerID == game.playerID) {
 			ClientPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud);
 			avatar.playerControl.warp(msg.pos);
-			if (game.avatar == null && msg.entityID == game.playersAvatarID) {
+			//if (game.avatar == null && msg.entityID == game.playersAvatarID) {
 				game.avatar = avatar;
+			//}
+				return avatar;
+			} else {
+				EnemyPlayersAvatar avatar = new EnemyPlayersAvatar();
+				return avatar;
 			}
-			return avatar;
 		}
 		
 		case EntityTypes.FLOOR:
