@@ -3,11 +3,11 @@ package com.scs.stetech1.client;
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.client.entities.ClientPlayersAvatar;
 import com.scs.stetech1.client.entities.Crate;
+import com.scs.stetech1.client.entities.EnemyPlayersAvatar;
 import com.scs.stetech1.client.entities.Floor;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 
 public class EntityCreator {
@@ -25,7 +25,7 @@ public class EntityCreator {
 		switch (msg.type) {
 		case EntityTypes.AVATAR:
 		{
-			int playerID = msg.data.get<Integer>("playerID");
+			int playerID = (int)msg.data.get("playerID");
 			if (playerID == game.playerID) {
 			ClientPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud);
 			avatar.playerControl.warp(msg.pos);
