@@ -1,6 +1,7 @@
 package com.scs.stetech1.client.entities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 import com.jme3.bullet.control.RigidBodyControl;
@@ -10,18 +11,18 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.scs.stetech1.client.SorcerersClient;
 import com.scs.stetech1.components.IProcessable;
-import com.scs.stetech1.components.ISharedEntity;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
-public abstract class PhysicalEntity extends Entity implements IProcessable, ISharedEntity {
+public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
 	private ArrayList<EntityPositionData> positionData = new ArrayList<>(); // todo - use diff type of list
 
-
+	private Vector3f prevPos = new Vector3f();
+	
 	public PhysicalEntity(IEntityController _game, int type, String _name) {
 		super(_game, type, _name);
 
@@ -34,8 +35,8 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 			positionData.clear();
 		}
 	}
-	
-	
+
+
 	public void addPositionData(EntityPositionData newData) {
 		synchronized (positionData) {
 			for(int i=0 ; i<this.positionData.size() ; i++) {
@@ -51,7 +52,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 				}
 			}
 			// Add to end
-			positionData.add(newData); // insert at position based on timestamp!
+			positionData.add(newData);
 		}
 	}
 
@@ -65,38 +66,25 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 					if (firstEPD == null) {
 						firstEPD = secondEPD;
 						if (firstEPD.serverStateTime < serverTime) {
-							return; // To early!
+							return; // Too early!
 						}
 					} else if (firstEPD.serverStateTime > serverTime && secondEPD.serverStateTime < serverTime) {
 						// interpol between positions
 						float frac = (firstEPD.serverStateTime - serverTime) / (serverTime - secondEPD.serverStateTime);
 						final Vector3f newPos = firstEPD.position.interpolate(secondEPD.position, frac);
-						// Set positions in Callable
-						{
-							/*mainApp.enqueue(new Callable<Spatial>() {
-								public Spatial call() throws Exception {
-									getMainNode().setLocalTranslation(newPos);
-									return getMainNode();
-								}
-							})*/;
-							//this.getMainNode().setLocalTranslation(newPos);
-							this.setPosition(mainApp, newPos);
-						}
-						if (module.getPlayersAvatar() != this) { // if its our avatar, don't adjust rotation!
+						// Set positions in Callable // todo - don't do anything if position not changed
+						if (module.getPlayersAvatar() == this) {
+							// Updating the avatar
+							// if its our avatar, don't adjust rotation!
+							 // todo - if our avatar, adjust us, don't just jump to new position
+							this.scheduleNewPosition(mainApp, newPos);
+						} else {
+							this.scheduleNewPosition(mainApp, newPos);
+
 							Quaternion newRot = new Quaternion();
 							final Quaternion newRot2 = newRot.slerp(firstEPD.rotation, secondEPD.rotation, frac);
-							//this.getMainNode().setLocalRotation(newRot);
-							{
-								/*// Set rotation in Callable
-								mainApp.enqueue(new Callable<Spatial>() {
-									public Spatial call() throws Exception {
-										getMainNode().setLocalRotation(newRot2);
-										return getMainNode();
-									}
-								});*/
-								this.setRotation(mainApp, newRot2);
-							}
-						} else {
+							// Set rotation in Callable
+							this.scheduleNewRotation(mainApp, newRot2);
 							Settings.p("Updated avatar pos: " + newPos);
 						}
 						return;
@@ -105,21 +93,23 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 				// If we got this far, all position data is too old!
 			}
 		}
+		Settings.p("No position data for " + this.name);
 
 	}
 
 
-	public void setPosition(SorcerersClient mainApp, final Vector3f newPos) {
-		mainApp.enqueue(new Callable<Spatial>() {
+	public void scheduleNewPosition(SorcerersClient mainApp, final Vector3f newPos) {
+		mainApp.enqueue(new Callable<Spatial>() { // this
 			public Spatial call() throws Exception {
-				getMainNode().setLocalTranslation(newPos);
+				//getMainNode().setLocalTranslation(newPos);
+				setWorldTranslation(newPos);
 				return getMainNode();
 			}
 		});
 	}
-	
-	
-	public void setRotation(SorcerersClient mainApp, final Quaternion newRot2) {
+
+
+	public void scheduleNewRotation(SorcerersClient mainApp, final Quaternion newRot2) {
 		// Set rotation in Callable
 		mainApp.enqueue(new Callable<Spatial>() {
 			public Spatial call() throws Exception {
@@ -197,10 +187,16 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 	}*/
 
 
-	public Vector3f getLocation() {
+	/*public Vector3f getWorldTranslation() {
 		//return this.main_node.getWorldTranslation(); 000?
 		return this.rigidBodyControl.getPhysicsLocation();
 
+	}*/
+	
+	
+	public void setWorldTranslation(Vector3f pos) {
+		// This is overridden by avatars, as they need to warp
+		this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
 	}
 
 
@@ -209,21 +205,41 @@ public abstract class PhysicalEntity extends Entity implements IProcessable, ISh
 	}
 
 
-	@Override
-	public Vector3f getLocalTranslation() {
+	//@Override
+	public Vector3f getWorldTranslation() {
 		return this.getMainNode().getLocalTranslation();
 	}
 
 
-	@Override
+	//@Override
 	public Quaternion getRotation() {
 		return this.getMainNode().getLocalRotation();
 	}
 
 
-	@Override
-	public boolean canMove() {
-		return this.rigidBodyControl.getMass() > 0;
+	//@Override
+	public boolean hasMoved() {
+		Vector3f newPos = this.getWorldTranslation();
+		//boolean hasMoved = (newPos.x != this.prevPos.x || newPos.y != this.prevPos.y || newPos.y != this.prevPos.y); // todo - check rotation
+		float dist = newPos.distance(prevPos);
+		boolean hasMoved = dist > 0.001f; //!newPos.equals(prevPos);
+		if (hasMoved) {
+			Settings.p(this.toString() + " has moved " + dist);
+		}
+		this.prevPos.x = newPos.x;
+		this.prevPos.y = newPos.y;
+		this.prevPos.z = newPos.z;
+		
+		return hasMoved;
 	}
+
+
+	@Override
+	public String toString() {
+		return super.toString();
+	}
+
+
+	public abstract HashMap<String, Object> getCreationData();
 
 }

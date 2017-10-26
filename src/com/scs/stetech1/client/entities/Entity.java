@@ -33,7 +33,7 @@ public class Entity implements IEntity, Savable {
 
 
 	public void remove() {
-		module.removeEntity(this);
+		module.removeEntity(this.id);
 	}
 	
 	

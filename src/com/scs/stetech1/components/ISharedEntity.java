@@ -1,18 +1,19 @@
 package com.scs.stetech1.components;
 
-import java.util.HashMap;
 
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
-
-public interface ISharedEntity extends IEntity {
+/**
+ * Implement this to transfer the object from client to server
+ *
+ */
+/*public interface ISharedEntity extends IEntity { todo - delete this?
 	
 	HashMap<String, Object> getCreationData();
 	
-	Vector3f getLocalTranslation();
+	Vector3f getWorldTranslation();
 	
 	Quaternion getRotation();
 	
-	boolean canMove();
+	//boolean hasMoved();
 
 }
+*/

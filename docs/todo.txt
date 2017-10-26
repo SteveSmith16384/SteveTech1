@@ -1,19 +1,18 @@
 STETECH1
 
-https://gamedev.stackexchange.com/questions/81950/how-to-sync-client-and-server-at-the-first-frame
-
 TODO
+	Warp player
+	Camera not starting in right place
+Take average ping time
+Make all objects kinematic on client side?
 Move entities to shared package
-Create EnemyPlayerAvatar entity for othe players
-Client create entity when shooting?
+	Create EnemyPlayerAvatar entity for other players
 	Esc not closing window
-	Update spatials in sep thread!
 	Client should calc positions of entites based on lerp of previous positions and current time
 	Ensure avatars move at same speed on client and server
 Create server-controlled moving item to check interpol
-Take average ping time
-Make all objects kinematic on client side?
 Shooting
+Client request bullet object
 Delib slow down messages
 
 
@@ -51,4 +50,5 @@ Split up into separate projects: AbstractClient, Abstractserver, shared, Sorcere
 Reduce object creation
 Kick players who don't move
 Close client if server crashes
+Use tpf to ensure clients/server run at same speed
 

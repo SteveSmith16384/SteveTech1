@@ -7,6 +7,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.scs.stetech1.client.MyBetterCharacterControl;
@@ -38,13 +39,19 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	protected float score = 0;
 	protected float health;
 
+	private HashMap<String, Object> creationData = new HashMap<String, Object>();
+
 	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input) {
 		super(_module, EntityTypes.AVATAR, "Player");
 
+		creationData.put("playerID", _playerID);
+		
 		playerID = _playerID;
 		input = _input;
 
 		playerGeometry = getPlayersModel(module, playerID);
+		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
+		
 		this.getMainNode().attachChild(playerGeometry);
 
 		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
@@ -69,7 +76,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			this.hud.setAbilityOtherText(this.abilityOther.getHudText());
 		}*/
 
-		playerControl.getPhysicsRigidBody().setCcdMotionThreshold(PLAYER_RAD*2);
+		//playerControl.getPhysicsRigidBody().setCcdMotionThreshold(PLAYER_RAD*2);
 
 	}
 
@@ -196,7 +203,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public void applyForce(Vector3f force) {
 		//playerControl.getPhysicsRigidBody().applyImpulse(force, Vector3f.ZERO);//.applyCentralForce(dir);
 		//playerControl.getPhysicsRigidBody().applyCentralForce(force);
-		//Settings.p("Applying force to player:" + force);
+		Settings.p("Unable to apply force to player:" + force);
 		//this.addWalkDirection.addLocal(force);
 	}
 
@@ -211,13 +218,22 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	@Override
 	public HashMap<String, Object> getCreationData() {
-		return null;
+		return creationData;
 	}
+
+
+	/*@Override
+	public boolean canMove() {
+		return true;
+	}*/
 
 
 	@Override
-	public boolean canMove() {
-		return true;
+	public void setWorldTranslation(Vector3f pos) {
+		float dist = pos.distance(this.getWorldTranslation());
+		// We need to Warp() players
+		this.playerControl.warp(pos);
 	}
+
 
 }

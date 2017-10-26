@@ -2,31 +2,22 @@ package com.scs.stetech1.client.entities;
 
 import java.util.HashMap;
 
-import com.jme3.asset.TextureKey;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
-import com.jme3.renderer.queue.RenderQueue.Bucket;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Box;
-import com.jme3.texture.Texture;
-import com.jme3.texture.Texture.WrapMode;
+import com.jme3.scene.Spatial;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
 public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
 
-	public EnemyPlayersAvatar(IEntityController _game, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, EntityTypes.AVATAR, "EnemyAvatar");
+	public EnemyPlayersAvatar(IEntityController game, int pid) {
+		super(game, EntityTypes.AVATAR, "EnemyAvatar");
 
-		Box box1 = new Box(w/2, h/2, d/2);
-		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
-		Geometry geometry = new Geometry("Crate", box1);
-		//int i = NumberFunctions.rnd(1, 10);
-		if (!_game.isServer()) { // Not running in server
+		Spatial geometry = AbstractPlayersAvatar.getPlayersModel(game, pid);
+		/*if (!game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
 			key3.setGenerateMips(true);
 			Texture tex3 = module.getAssetManager().loadTexture(key3);
@@ -44,13 +35,11 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 			geometry.setMaterial(floor_mat);
 			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 			geometry.setQueueBucket(Bucket.Transparent);
-		}
+		}*/
 
 		this.main_node.attachChild(geometry);
-		float rads = (float)Math.toRadians(rotDegrees);
-		main_node.rotate(0, rads, 0);
-		//main_node.setLocalTranslation(x+(w/2), h/2, z+0.5f);
-		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
+		//float rads = (float)Math.toRadians(rotDegrees);
+		//main_node.rotate(0, rads, 0);
 
 		rigidBodyControl = new RigidBodyControl(1f);
 		main_node.addControl(rigidBodyControl);

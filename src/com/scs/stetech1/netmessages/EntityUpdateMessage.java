@@ -3,7 +3,7 @@ package com.scs.stetech1.netmessages;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;
-import com.scs.stetech1.components.ISharedEntity;
+import com.scs.stetech1.client.entities.PhysicalEntity;
 
 @Serializable
 public class EntityUpdateMessage extends MyAbstractMessage {
@@ -17,11 +17,11 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		super(false);
 	}
 	
-	public EntityUpdateMessage(ISharedEntity e) {
+	public EntityUpdateMessage(PhysicalEntity e) {
 		super(false);
 		
 		entityID = e.getID();
-		pos = e.getLocalTranslation();
+		pos = e.getWorldTranslation();
 		dir = e.getRotation();
 	}
 

@@ -18,15 +18,13 @@ import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
-import com.jme3.network.serializing.Serializer;
 import com.jme3.system.JmeContext;
 import com.scs.stetech1.client.entities.Crate;
 import com.scs.stetech1.client.entities.Floor;
+import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessable;
-import com.scs.stetech1.components.ISharedEntity;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
-import com.scs.stetech1.netmessages.HelloMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.NewPlayerAckMessage;
@@ -69,12 +67,11 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		properties = new SorcerersProperties(PROPS_FILE);
 
 		Settings.Register();
-		
+
 		myServer = Network.createServer(Settings.PORT);
 		myServer.start();
 		myServer.addConnectionListener(this);
 
-		myServer.addMessageListener(this, HelloMessage.class);
 		myServer.addMessageListener(this, PingMessage.class);
 		myServer.addMessageListener(this, NewPlayerRequestMessage.class);
 		myServer.addMessageListener(this, NewPlayerAckMessage.class);
@@ -117,9 +114,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 						p.process(tpf_secs);
 					}
 					if (sendUpdates) {
-						if (e instanceof ISharedEntity) {
-							ISharedEntity sc = (ISharedEntity)e;
-							if (sc.canMove()) {
+						if (e instanceof PhysicalEntity) {
+							PhysicalEntity sc = (PhysicalEntity)e;
+							if (sc.hasMoved()) { // Don't send if not moved
 								myServer.broadcast(new EntityUpdateMessage(sc));
 								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}
@@ -147,7 +144,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		synchronized (clients) {
 			client = clients.get(source.getId());
 		}
-		
+
 		//Settings.p("Rcvd " + message.getClass().getSimpleName());
 
 		MyAbstractMessage msg = (MyAbstractMessage)message;
@@ -165,6 +162,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
 			if (pingMessage.s2c) {
+				try {
 				client.pingRTT = System.currentTimeMillis() - pingMessage.originalSentTime;
 				client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime + (client.pingRTT/2);
 				/*
@@ -172,9 +170,12 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				 * Client response time: 1000
 				 * Ping: 200 
 				 * clientToServerDiffTime: 1000 - 2000 + (200/2) = -900 
-				*/
+				 */
 				Settings.p("Client rtt = " + client.pingRTT);
 				Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
+				} catch (NullPointerException npe) {
+					npe.printStackTrace(); // todo - why getting this?
+				}
 			} else {
 				// Send it back to the client
 				pingMessage.responseSentTime = System.currentTimeMillis();
@@ -187,10 +188,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				client.remoteInput.decodeMessage(pim);
 				client.latestInputTimestamp = pim.timestamp;
 			}
-
-		} else if (message instanceof HelloMessage) {
-			HelloMessage helloMessage = (HelloMessage) message;
-			System.out.println("Server received '" + helloMessage.getMessage() + "' from client #" + source.getId() );
 
 		} else if (message instanceof NewPlayerRequestMessage) {
 			NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
@@ -211,7 +208,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		} else if (message instanceof PlayerLeftMessage) {
 			this.connectionRemoved(this.myServer, source);
-			
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
@@ -237,8 +234,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	private void sendNewEntity(ClientData client, IEntity e) {
-		if (e instanceof ISharedEntity) {
-			ISharedEntity se = (ISharedEntity)e;
+		if (e instanceof PhysicalEntity) {
+			PhysicalEntity se = (PhysicalEntity)e;
 			NewEntityMessage nem = new NewEntityMessage(se);
 			nem.force = true;
 			myServer.broadcast(Filters.equalTo(client.conn), nem);
@@ -268,19 +265,25 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	@Override
 	public void connectionRemoved(Server arg0, HostedConnection source) {
 		Settings.p("connectionRemoved()");
-		ClientData client = clients.get(source.getId());
-		this.playerLeft(client);
+		synchronized (clients) {
+			ClientData client = clients.get(source.getId());
+			this.playerLeft(client);
+		}
 	}
 
 
 	private void playerLeft(ClientData client) {
-		Settings.p("Removing player " + client.getPlayerID());
-		synchronized (clients) {
-			this.clients.remove(client.getPlayerID());
-		}
-		// Remove avatar
-		if (client.avatarID >= 0) {
-			this.removeEntity(this.entities.get(client.avatarID));
+		try {
+			Settings.p("Removing player " + client.getPlayerID());
+			synchronized (clients) {
+				this.clients.remove(client.getPlayerID());
+			}
+			// Remove avatar
+			if (client.avatarID >= 0) {
+				this.removeEntity(client.avatarID);
+			}
+		} catch (NullPointerException npe) {
+			npe.printStackTrace();
 		}
 	}
 
@@ -295,13 +298,13 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	@Override
-	public void removeEntity(IEntity e) {
-		Settings.p("Removing " + e);
+	public void removeEntity(int id) {
+		Settings.p("Removing entity " + id);
 		try {
 			synchronized (entities) {
-				this.entities.remove(e.getID());
+				this.entities.remove(id);
 			}
-			this.myServer.broadcast(new RemoveEntityMessage(e.getID()));
+			this.myServer.broadcast(new RemoveEntityMessage(id));
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}

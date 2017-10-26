@@ -12,6 +12,9 @@ public class PlayerInputMessage extends MyAbstractMessage {
 
 	public PlayerInputMessage() {
 		super(false);
+		
+		direction = Vector3f.UNIT_Y; // To avoid NPEs from RemoteController
+		leftDir = Vector3f.UNIT_Z; // To avoid NPEs from RemoteController
 	}
 	
 	

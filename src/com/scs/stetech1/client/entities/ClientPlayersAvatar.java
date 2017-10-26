@@ -16,6 +16,7 @@ import com.scs.stetech1.shared.AbstractPlayersAvatar;
 
 public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD {
 
+	//private static final Vector3f CAM_HEIGHT_OFFSET = new Vector3f(0, PLAYER_HEIGHT/2, 0);
 	public HUD hud;
 	public Camera cam;
 
@@ -36,7 +37,10 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 
 		// Position camera at node
 		Vector3f vec = getMainNode().getWorldTranslation();
-		cam.setLocation(new Vector3f(vec.x, vec.y + (PLAYER_HEIGHT/2), vec.z));
+		//cam.setLocation(new Vector3f(vec.x, vec.y + (PLAYER_HEIGHT/2), vec.z));
+		cam.getLocation().x = vec.x;
+		cam.getLocation().y = vec.y + (PLAYER_HEIGHT/2);
+		cam.getLocation().z = vec.z;
 
 		// Rotate us to point in the direction of the camera
 		Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
@@ -46,8 +50,8 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		//this.getMainNode().lookAt(lookAtPoint.clone(), Vector3f.UNIT_Y);  This won't rotate the model since it's locked to the physics controller
 
 		// Move cam fwd so we don't see ourselves
-		cam.setLocation(cam.getLocation().add(cam.getDirection().mult(PLAYER_RAD)));
-		cam.update();
+		//cam.setLocation(cam.getLocation().add(cam.getDirection().mult(PLAYER_RAD)));
+		//cam.update();
 
 	}
 	
@@ -59,7 +63,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	
 	
 	@Override
-	public Vector3f getLocation() {
+	public Vector3f getWorldTranslation() {
 		return this.cam.getLocation();
 		//return playerControl.getPhysicsRigidBody().getPhysicsLocation();  This is very low to the ground!
 	}

@@ -2,7 +2,6 @@ package com.scs.stetech1.server;
 
 import com.jme3.network.serializing.Serializer;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
-import com.scs.stetech1.netmessages.HelloMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.NewPlayerAckMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
@@ -19,7 +18,7 @@ public class Settings {
 	public static final int PORT = 6143;
 	//public static final int SEND_INPUT_INTERVAL_MS = 50;
 	public static final int SERVER_TICKRATE_MS = 20;
-	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 100; // todo - make 50
+	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 1000; // todo - make 50/100  // scs check
 	public static final int CLIENT_RENDER_DELAY = 100;
 	public static final int PING_INTERVAL_MS = 10 * 1000;
 	
@@ -48,7 +47,6 @@ public class Settings {
 
 	
 	public static void Register() {
-		Serializer.registerClass(HelloMessage.class);
 		Serializer.registerClass(PingMessage.class);
 		Serializer.registerClass(NewPlayerRequestMessage.class);
 		Serializer.registerClass(NewPlayerAckMessage.class);
