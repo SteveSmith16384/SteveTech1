@@ -226,7 +226,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 		// Send inputs
 		if (sendInputsInterval.hitInterval()) { // this.getCamera()
-			this.myClient.send(new PlayerInputMessage(this.input));
+			if (myClient.isConnected()) {
+				this.myClient.send(new PlayerInputMessage(this.input));
+			}
 		}
 
 		long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
@@ -234,7 +236,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		for (IEntity e : this.entities.values()) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
-				if (pe.hasMoved()) {
+				if (pe.canMove()) { // Only bother with things that can move
 					pe.calcPosition(this, serverTime);
 				}
 			}
@@ -442,7 +444,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				this.stop(true);
+				this.myClient.close();
+				this.stop();
 			}
 		} else if (name.equalsIgnoreCase(TEST)) {
 

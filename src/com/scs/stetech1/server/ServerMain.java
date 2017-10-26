@@ -267,7 +267,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		Settings.p("connectionRemoved()");
 		synchronized (clients) {
 			ClientData client = clients.get(source.getId());
+			if (client != null) { // For some reason, connectionRemoved() gets called multiple times
 			this.playerLeft(client);
+			}
 		}
 	}
 

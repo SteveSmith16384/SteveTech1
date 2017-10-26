@@ -1,19 +1,21 @@
 STETECH1
 
 TODO
-	Warp player
-	Camera not starting in right place
+Predict player position if no data?
+Jumping - cancel client-side jump physics once server has taken over
 Take average ping time
-Make all objects kinematic on client side?
-Move entities to shared package
+Test with 2 players
 	Create EnemyPlayerAvatar entity for other players
 	Esc not closing window
 	Client should calc positions of entites based on lerp of previous positions and current time
 	Ensure avatars move at same speed on client and server
+Stop client if no comms for a while
 Create server-controlled moving item to check interpol
 Shooting
 Client request bullet object
 Delib slow down messages
+Make all objects kinematic on client side?
+Move entities to shared package
 
 
 UNIT TESTS / INTEGRATION TESTS

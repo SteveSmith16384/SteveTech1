@@ -195,6 +195,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 
 	public void jump() {
+		Settings.p("Jumping!");
 		this.playerControl.jump();
 	}
 
@@ -222,12 +223,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
-	/*@Override
-	public boolean canMove() {
-		return true;
-	}*/
-
-
 	@Override
 	public void setWorldTranslation(Vector3f pos) {
 		float dist = pos.distance(this.getWorldTranslation());
@@ -236,4 +231,15 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
+	@Override
+	public boolean canMove() {
+		return true; // Always calc for avatars
+	}
+
+	
+	@Override
+	public boolean hasMoved() {
+		return true; // Always send for avatars
+	}
+	
 }

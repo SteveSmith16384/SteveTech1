@@ -19,10 +19,11 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
-	private ArrayList<EntityPositionData> positionData = new ArrayList<>(); // todo - use diff type of list
+	private ArrayList<EntityPositionData> positionData = new ArrayList<>(); // todo - use diff type of list?
+	//private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // todo - use diff type of list?
 
-	private Vector3f prevPos = new Vector3f();
-	
+	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
+
 	public PhysicalEntity(IEntityController _game, int type, String _name) {
 		super(_game, type, _name);
 
@@ -43,7 +44,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 				// Time gets earlier
 				EntityPositionData epd = this.positionData.get(i);
 				if (epd.serverStateTime < newData.serverStateTime) {
-					positionData.add(i, newData); // insert at position based on timestamp!
+					positionData.add(i, newData);
 					// Remove later entries
 					while (this.positionData.size() > i+3) {
 						this.positionData.remove(i+1);
@@ -57,7 +58,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 	}
 
 
-	public void calcPosition(SorcerersClient mainApp, long serverTime) {
+	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
 		synchronized (positionData) {
 			if (this.positionData.size() > 1) {
 				EntityPositionData firstEPD = null;
@@ -65,22 +66,23 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 					// Time gets earlier
 					if (firstEPD == null) {
 						firstEPD = secondEPD;
-						if (firstEPD.serverStateTime < serverTime) {
+						if (secondEPD.serverStateTime < serverTimeToUse) {
 							return; // Too early!
 						}
-					} else if (firstEPD.serverStateTime > serverTime && secondEPD.serverStateTime < serverTime) {
+					} else if (firstEPD.serverStateTime > serverTimeToUse && secondEPD.serverStateTime < serverTimeToUse) {
 						// interpol between positions
-						float frac = (firstEPD.serverStateTime - serverTime) / (serverTime - secondEPD.serverStateTime);
-						final Vector3f newPos = firstEPD.position.interpolate(secondEPD.position, frac);
-						// Set positions in Callable // todo - don't do anything if position not changed
+						float frac = (firstEPD.serverStateTime - serverTimeToUse) / (serverTimeToUse - secondEPD.serverStateTime);
+						Vector3f newPos = firstEPD.position.interpolate(secondEPD.position, frac);
 						if (module.getPlayersAvatar() == this) {
-							// Updating the avatar
+							// if our avatar, adjust us, don't just jump to new position
+							//todo - re-add newPos = newPos.interpolate(this.getWorldTranslation(), .5f); // Move us halfway?
+						}
+						//todo - re-add if (!newPos.equals(this.getWorldTranslation())) {
+						this.scheduleNewPosition(mainApp, newPos);
+						//}
+						if (module.getPlayersAvatar() == this) {
 							// if its our avatar, don't adjust rotation!
-							 // todo - if our avatar, adjust us, don't just jump to new position
-							this.scheduleNewPosition(mainApp, newPos);
 						} else {
-							this.scheduleNewPosition(mainApp, newPos);
-
 							Quaternion newRot = new Quaternion();
 							final Quaternion newRot2 = newRot.slerp(firstEPD.rotation, secondEPD.rotation, frac);
 							// Set rotation in Callable
@@ -92,8 +94,8 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 				}
 				// If we got this far, all position data is too old!
 			}
+			//Settings.p("No position data for " + this.name + " (" + positionData.size() + " entries)");
 		}
-		Settings.p("No position data for " + this.name);
 
 	}
 
@@ -192,8 +194,8 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 		return this.rigidBodyControl.getPhysicsLocation();
 
 	}*/
-	
-	
+
+
 	public void setWorldTranslation(Vector3f pos) {
 		// This is overridden by avatars, as they need to warp
 		this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
@@ -205,31 +207,33 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 	}
 
 
-	//@Override
 	public Vector3f getWorldTranslation() {
 		return this.getMainNode().getLocalTranslation();
 	}
 
 
-	//@Override
 	public Quaternion getRotation() {
 		return this.getMainNode().getLocalRotation();
 	}
 
 
-	//@Override
+	public boolean canMove() {
+		return this.rigidBodyControl.getMass() > 0;// || this.rigidBodyControl.isKinematic();
+	}
+
+
 	public boolean hasMoved() {
 		Vector3f newPos = this.getWorldTranslation();
 		//boolean hasMoved = (newPos.x != this.prevPos.x || newPos.y != this.prevPos.y || newPos.y != this.prevPos.y); // todo - check rotation
 		float dist = newPos.distance(prevPos);
-		boolean hasMoved = dist > 0.001f; //!newPos.equals(prevPos);
+		boolean hasMoved = dist > 0.001f; //!newPos.equals(prevPos); 
 		if (hasMoved) {
 			Settings.p(this.toString() + " has moved " + dist);
+			this.prevPos.x = newPos.x;
+			this.prevPos.y = newPos.y;
+			this.prevPos.z = newPos.z;
 		}
-		this.prevPos.x = newPos.x;
-		this.prevPos.y = newPos.y;
-		this.prevPos.z = newPos.z;
-		
+
 		return hasMoved;
 	}
 
