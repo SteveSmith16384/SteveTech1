@@ -8,11 +8,13 @@ import com.scs.stetech1.client.SorcerersClient;
 import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.server.Settings;
 
-public class AbstractPositionCalculator {
+public abstract class AbstractPositionCalculator {
 
 	private List<EntityPositionData> positionData = new LinkedList<>();
+	// private lop
 
 	public AbstractPositionCalculator() {
+		//maxData = _maxData;
 	}
 
 
@@ -24,7 +26,7 @@ public class AbstractPositionCalculator {
 				if (epd.serverTimestamp < newData.serverTimestamp) {
 					positionData.add(i, newData);
 					// Remove later entries
-					while (this.positionData.size() > i+3) {
+					while (this.positionData.size() > i+3) { // todo - base on time
 						this.positionData.remove(i+1);
 					}
 					return;
@@ -36,7 +38,7 @@ public class AbstractPositionCalculator {
 	}
 
 
-	public void calcPosition(SorcerersClient mainApp, PhysicalEntity entity, long serverTimeToUse) {
+	public void calcPosition(long serverTimeToUse) {
 		synchronized (positionData) {
 			if (this.positionData.size() > 1) {
 				EntityPositionData firstEPD = null;
@@ -48,30 +50,11 @@ public class AbstractPositionCalculator {
 							return; // Too early!
 						}
 					} else if (firstEPD.serverTimestamp > serverTimeToUse && secondEPD.serverTimestamp < serverTimeToUse) {
-						// interpolate between timestamps
-						float frac = (firstEPD.serverTimestamp - serverTimeToUse) / (serverTimeToUse - secondEPD.serverTimestamp);
-						Vector3f posToSet = firstEPD.position.interpolate(secondEPD.position, frac);
-						if (mainApp.getPlayersAvatar() == this) {
-							// if our avatar, adjust us, don't just jump to new position
-							// todo - check where we should be based on where we were 100ms ago
-							//todo - re-add newPos = newPos.interpolate(this.getWorldTranslation(), .5f); // Move us halfway?
-							entity.scheduleNewPosition(mainApp, posToSet);
-						} else
-							//todo - re-add if (!newPos.equals(this.getWorldTranslation())) {
-							entity.scheduleNewPosition(mainApp, posToSet);
-						//}
-						/*todo if (module.getPlayersAvatar() == this) {
-							// if its our avatar, don't adjust rotation!
-						} else {
-						//Quaternion newRot = new Quaternion(); todo - this
-						//final Quaternion newRot2 = newRot.slerp(firstEPD.rotation, secondEPD.rotation, frac);
-							this.scheduleNewRotation(mainApp, tempNewRot);
-							//Settings.p("Updated avatar pos: " + newPos);
-						}*/
+						this.gotData(firstEPD, secondEPD, serverTimeToUse);
 						return;
 					} else if (firstEPD.serverTimestamp < serverTimeToUse) {
 						// Data is too old!
-						Settings.p("Position data too old for " + entity.name + " (" + positionData.size() + " entries)");
+						//Settings.p("Position data too old for " + entity.name + " (" + positionData.size() + " entries)");
 						return;
 					}
 				}
@@ -80,6 +63,9 @@ public class AbstractPositionCalculator {
 		}
 
 	}
+
+
+	public abstract void gotData(EntityPositionData firstEPD, EntityPositionData secondEPD, long serverTimeToUse);
 
 
 	public void clearPositiondata() {

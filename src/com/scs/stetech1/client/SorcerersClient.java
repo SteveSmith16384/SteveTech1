@@ -48,6 +48,7 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AveragePingTime;
+import com.scs.stetech1.shared.ClientAvatarPositionCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
@@ -76,7 +77,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
-	public LinkedList<EntityPositionData> avatarPositionData = new LinkedList<>();
+	//public LinkedList<EntityPositionData> avatarPositionData = new LinkedList<>();
+	private ClientAvatarPositionCalculator avatarPositions = new ClientAvatarPositionCalculator();
 	private List<MyAbstractMessage> messages = new LinkedList<>();
 
 	public static void main(String[] args) {
@@ -289,13 +291,14 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 					epd.serverTimestamp = serverTime;
 					epd.position = avatar.getWorldTranslation().clone();
 					//epd.rotation not required?
-					synchronized (avatarPositionData) {
+					/*synchronized (avatarPositionData) {
 						avatarPositionData.add(epd);
 						// clear these down
 						while (avatarPositionData.size() > 10) {
 							avatarPositionData.remove(0);
 						}
-					}
+					}*/
+					this.avatarPositions.addPositionData(epd);
 				}
 			}
 		}

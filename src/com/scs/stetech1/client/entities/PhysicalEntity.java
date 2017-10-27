@@ -22,7 +22,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 	//private LinkedList<EntityPositionData> positionData = new LinkedList<>();
 
-	private PositionCalculator posCalc = new PositionCalculator();
+	private PositionCalculator posCalc;// = new PositionCalculator();
 	//private Vector3f tempNewPos = new Vector3f();
 	//private Quaternion tempNewRot = new Quaternion();
 
@@ -41,7 +41,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 
 	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
-		posCalc.calcPosition(mainApp, this, serverTimeToUse);
+		posCalc.calcPosition(serverTimeToUse);
 
 	}
 
