@@ -5,7 +5,7 @@ import com.jme3.math.Vector3f;
 
 public class EntityPositionData {
 
-	public long serverStateTime;
+	public long serverTimestamp;
 	
 	public Vector3f position;
 	

@@ -77,7 +77,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 	@Override
 	public void process(float tpf) {
 		//super.process(tpf);
-		//Settings.p("Pos: " + this.getLocation());
+		//Settings.p("Pos: " + this.getWorldTranslation());
 	}
 
 

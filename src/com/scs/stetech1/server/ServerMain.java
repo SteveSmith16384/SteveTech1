@@ -163,7 +163,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			PingMessage pingMessage = (PingMessage) message;
 			if (pingMessage.s2c) {
 				try {
-				client.pingRTT = System.currentTimeMillis() - pingMessage.originalSentTime;
+				long p = System.currentTimeMillis() - pingMessage.originalSentTime;
+				client.pingRTT = client.pingCalc.add(p);
 				client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime + (client.pingRTT/2);
 				/*
 				 * Server sent time: 2000
@@ -171,8 +172,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				 * Ping: 200 
 				 * clientToServerDiffTime: 1000 - 2000 + (200/2) = -900 
 				 */
-				Settings.p("Client rtt = " + client.pingRTT);
-				Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
+				//Settings.p("Client rtt = " + client.pingRTT);
+				//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
 				} catch (NullPointerException npe) {
 					npe.printStackTrace(); // todo - why getting this?
 				}

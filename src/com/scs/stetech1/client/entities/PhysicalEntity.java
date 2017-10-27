@@ -1,6 +1,5 @@
 package com.scs.stetech1.client.entities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
@@ -14,13 +13,18 @@ import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.PositionCalculator;
 
 public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
-	private ArrayList<EntityPositionData> positionData = new ArrayList<>(); // todo - use diff type of list?
-	//private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // todo - use diff type of list?
+
+	//private LinkedList<EntityPositionData> positionData = new LinkedList<>();
+
+	private PositionCalculator posCalc = new PositionCalculator();
+	private Vector3f tempNewPos = new Vector3f();
+	private Quaternion tempNewRot = new Quaternion();
 
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
 
@@ -31,19 +35,46 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 	}
 
 
-	public void clearPositiondata() {
-		synchronized (positionData) {
-			positionData.clear();
-		}
+	public void addPositionData(EntityPositionData newData) {
+		this.posCalc.addPositionData(newData);
 	}
 
 
+	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
+		posCalc.calcPosition(mainApp, serverTimeToUse, tempNewPos, tempNewRot);
+
+		if (module.getPlayersAvatar() == this) {
+			// if our avatar, adjust us, don't just jump to new position
+			// todo - check where we should be based on where we were 100ms ago
+			//todo - re-add newPos = newPos.interpolate(this.getWorldTranslation(), .5f); // Move us halfway?
+		}
+		//todo - re-add if (!newPos.equals(this.getWorldTranslation())) {
+		this.scheduleNewPosition(mainApp, tempNewPos);
+		//}
+		if (module.getPlayersAvatar() == this) {
+			// if its our avatar, don't adjust rotation!
+		} else {
+			// Set rotation in Callable
+			this.scheduleNewRotation(mainApp, tempNewRot);
+			//Settings.p("Updated avatar pos: " + newPos);
+		}
+
+	}
+
+	public void clearPositiondata() {
+		/*synchronized (positionData) {
+			positionData.clear();
+		}*/
+		this.posCalc.clearPositiondata();
+	}
+
+	/*
 	public void addPositionData(EntityPositionData newData) {
 		synchronized (positionData) {
 			for(int i=0 ; i<this.positionData.size() ; i++) {
 				// Time gets earlier
 				EntityPositionData epd = this.positionData.get(i);
-				if (epd.serverStateTime < newData.serverStateTime) {
+				if (epd.serverTimestamp < newData.serverTimestamp) {
 					positionData.add(i, newData);
 					// Remove later entries
 					while (this.positionData.size() > i+3) {
@@ -66,15 +97,16 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 					// Time gets earlier
 					if (firstEPD == null) {
 						firstEPD = secondEPD;
-						if (secondEPD.serverStateTime < serverTimeToUse) {
+						if (secondEPD.serverTimestamp < serverTimeToUse) {
 							return; // Too early!
 						}
-					} else if (firstEPD.serverStateTime > serverTimeToUse && secondEPD.serverStateTime < serverTimeToUse) {
+					} else if (firstEPD.serverTimestamp > serverTimeToUse && secondEPD.serverTimestamp < serverTimeToUse) {
 						// interpol between positions
-						float frac = (firstEPD.serverStateTime - serverTimeToUse) / (serverTimeToUse - secondEPD.serverStateTime);
+						float frac = (firstEPD.serverTimestamp - serverTimeToUse) / (serverTimeToUse - secondEPD.serverTimestamp);
 						Vector3f newPos = firstEPD.position.interpolate(secondEPD.position, frac);
 						if (module.getPlayersAvatar() == this) {
 							// if our avatar, adjust us, don't just jump to new position
+							// todo - check where we should be based on where we were 100ms ago
 							//todo - re-add newPos = newPos.interpolate(this.getWorldTranslation(), .5f); // Move us halfway?
 						}
 						//todo - re-add if (!newPos.equals(this.getWorldTranslation())) {
@@ -97,29 +129,31 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 			//Settings.p("No position data for " + this.name + " (" + positionData.size() + " entries)");
 		}
 
-	}
+	}*/
 
 
 	public void scheduleNewPosition(SorcerersClient mainApp, final Vector3f newPos) {
-		mainApp.enqueue(new Callable<Spatial>() { // this
+		// Don't need to schedule it since we're in the JME thread
+		/*mainApp.enqueue(new Callable<Spatial>() { // this
 			public Spatial call() throws Exception {
-				//getMainNode().setLocalTranslation(newPos);
+				//getMainNode().setLocalTranslation(newPos);*/
 				setWorldTranslation(newPos);
-				return getMainNode();
+				/*return getMainNode();
 			}
-		});
+		});*/
 	}
 
 
 	public void scheduleNewRotation(SorcerersClient mainApp, final Quaternion newRot2) {
+		// Don't need to schedule it since we're in the JME thread
 		// Set rotation in Callable
-		mainApp.enqueue(new Callable<Spatial>() {
-			public Spatial call() throws Exception {
+		/*mainApp.enqueue(new Callable<Spatial>() {
+			public Spatial call() throws Exception {*/
 				getMainNode().setLocalRotation(newRot2);
-				return getMainNode();
+	/*			return getMainNode();
 			}
 		});
-
+*/
 	}
 
 

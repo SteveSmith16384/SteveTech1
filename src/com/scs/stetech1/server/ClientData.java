@@ -2,10 +2,12 @@ package com.scs.stetech1.server;
 
 import com.jme3.network.HostedConnection;
 import com.scs.stetech1.input.RemoteInput;
+import com.scs.stetech1.shared.AveragePingTime;
 
 public class ClientData {
 
 	public HostedConnection conn;
+	public AveragePingTime pingCalc = new AveragePingTime();
 	public long pingRTT;
 	public String playerName;
 	public long latestInputTimestamp;

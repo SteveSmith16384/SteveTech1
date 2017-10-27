@@ -2,6 +2,8 @@ package com.scs.stetech1.client;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.prefs.BackingStoreException;
 
@@ -36,6 +38,7 @@ import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
+import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.NewPlayerAckMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
@@ -44,6 +47,7 @@ import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.AveragePingTime;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
@@ -66,11 +70,14 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	public ClientPlayersAvatar avatar;
 	public int playerID = -1;
 	public long playersAvatarID = -1;
+	private AveragePingTime pingCalc = new AveragePingTime();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
+	public LinkedList<EntityPositionData> avatarPositionData = new LinkedList<>();
+	private List<MyAbstractMessage> messages = new LinkedList<>();
 
 	public static void main(String[] args) {
 		try {
@@ -219,31 +226,94 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 
 	@Override
-	public void simpleUpdate(float tpf_secs) {
-		if (sendPingInt.hitInterval()) {
-			myClient.send(new PingMessage(false));
-		}
+	public void simpleUpdate(float tpf_secs) {  //this.rootNode.getChild(2).getWorldTranslation();
+		long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 
-		// Send inputs
-		if (sendInputsInterval.hitInterval()) { // this.getCamera()
-			if (myClient.isConnected()) {
-				this.myClient.send(new PlayerInputMessage(this.input));
+		// Process messages in JME thread
+		synchronized (messages) { //this.getCamera()
+			// Check we don't already know about it
+			while (!this.messages.isEmpty()) {
+				MyAbstractMessage message = this.messages.remove(0);
+				if (message instanceof NewEntityMessage) {
+					NewEntityMessage newEntityMessage = (NewEntityMessage) message;
+					if (!this.entities.containsKey(newEntityMessage.entityID)) {
+						IEntity e = EntityCreator.createEntity(this, newEntityMessage);
+						this.addEntity(e);
+					}
+
+				} else if (message instanceof EntityUpdateMessage) {
+					EntityUpdateMessage eum = (EntityUpdateMessage)message;
+					IEntity e = this.entities.get(eum.entityID);
+					if (e != null) {
+						Settings.p("Updating " + e);
+						EntityPositionData epd = new EntityPositionData();
+						epd.serverTimestamp = eum.timestamp + clientToServerDiffTime;
+						epd.rotation = eum.dir;
+						epd.position = eum.pos;
+
+						PhysicalEntity pe = (PhysicalEntity)e;
+						if (eum.force) {
+							// Set it now!
+							pe.scheduleNewPosition(this, epd.position);
+							pe.scheduleNewRotation(this, epd.rotation);
+							pe.clearPositiondata();
+						} else {
+							pe.addPositionData(epd);
+						}
+						//Settings.p("New position for " + e + ": " + eum.pos);
+					} else {
+						/*if (this.joinedGame) {
+						myClient.send(new UnknownEntityMessage(eum.entityID));  Do we actually need this?
+					}*/
+					}
+
+				} else if (message instanceof RemoveEntityMessage) {
+					RemoveEntityMessage rem = (RemoveEntityMessage)message;
+					this.removeEntity(rem.entityID);
+				}
 			}
 		}
 
-		long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
-		serverTime -= Settings.CLIENT_RENDER_DELAY; // Render from history
+		if (myClient.isConnected()) {  //this.rootNode.getChild(1).getWorldTranslation();
+			if (sendPingInt.hitInterval()) {
+				myClient.send(new PingMessage(false));
+			}
+
+			// Send inputs
+			if (sendInputsInterval.hitInterval()) { // this.getCamera()
+				if (myClient.isConnected() && this.avatar != null) {
+					this.myClient.send(new PlayerInputMessage(this.input));
+
+					// Store our position
+					EntityPositionData epd = new EntityPositionData();
+					epd.serverTimestamp = serverTime;
+					epd.position = avatar.getWorldTranslation().clone();
+					//epd.rotation not required?
+					synchronized (avatarPositionData) {
+						avatarPositionData.add(epd);
+						// clear these down
+						while (avatarPositionData.size() > 10) {
+							avatarPositionData.remove(0);
+						}
+					}
+				}
+			}
+		}
+
+		long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 		for (IEntity e : this.entities.values()) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				if (pe.canMove()) { // Only bother with things that can move
-					pe.calcPosition(this, serverTime);
+					pe.calcPosition(this, serverTimePast);
 				}
 			}
 		}
 
 		if (this.avatar != null) {
 			avatar.process(tpf_secs);
+		} else {
+			Settings.p("Avatar is null!");
 		}
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
@@ -254,20 +324,13 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	@Override
 	public void messageReceived(Client source, Message message) {
-		//MyAbstractMessage msg = (MyAbstractMessage)message;
-		/*if (msg.requiresAck) {
-			// Check not already been ack'd
-			if (packets.hasBeenAckd(msg.msgId)) {
-				return;
-			}
-		}*/
-
 		//Settings.p("Rcvd " + message.getClass().getSimpleName());
 
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
 			if (!pingMessage.s2c) {
-				pingRTT = System.currentTimeMillis() - pingMessage.originalSentTime;
+				long p2 = System.currentTimeMillis() - pingMessage.originalSentTime;
+				this.pingRTT = this.pingCalc.add(p2);
 				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime + (pingRTT/2);
 				/*
 				 * Client sent time: 1000
@@ -287,6 +350,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
 				this.playersAvatarID = npcm.avatarEntityID;
+				synchronized (this.entities) {
+					// Set avatar if we already have it
+					if (this.entities.containsKey(playersAvatarID)) {
+						this.avatar = (ClientPlayersAvatar)entities.get(playersAvatarID);
+					}
+				}
 				Settings.p("We are player " + playerID);
 			} else {
 				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
@@ -294,20 +363,19 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-			// Check we don't already know about it
-			if (!this.entities.containsKey(newEntityMessage.entityID)) {
-				IEntity e = EntityCreator.createEntity(this, newEntityMessage);
-				this.addEntity(e);
-			} else {
-				// Ignore
+			synchronized (messages) {
+				messages.add(newEntityMessage);
 			}
 
 		} else if (message instanceof EntityUpdateMessage) {
 			EntityUpdateMessage eum = (EntityUpdateMessage)message;
-			IEntity e = this.entities.get(eum.entityID);
+			synchronized (messages) {
+				messages.add(eum);
+			}
+			/*IEntity e = this.entities.get(eum.entityID);
 			if (e != null) {
 				EntityPositionData epd = new EntityPositionData();
-				epd.serverStateTime = eum.timestamp + clientToServerDiffTime;
+				epd.serverTimestamp = eum.timestamp + clientToServerDiffTime;
 				epd.rotation = eum.dir;
 				epd.position = eum.pos;
 
@@ -322,14 +390,15 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				}
 				//Settings.p("New position for " + e + ": " + eum.pos);
 			} else {
-				/*if (this.joinedGame) {
-					myClient.send(new UnknownEntityMessage(eum.entityID));  Do we actually need this?
-				}*/
-			}
+			}*/
 
 		} else if (message instanceof RemoveEntityMessage) {
 			RemoveEntityMessage rem = (RemoveEntityMessage)message;
-			this.removeEntity(rem.entityID);
+			synchronized (messages) {
+				messages.add(rem);
+			}
+
+			//this.removeEntity(rem.entityID);
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
@@ -440,7 +509,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			if (playerID >= 0) {
 				this.myClient.send(new PlayerLeftMessage(this.playerID));
 				try {
-					Thread.sleep(500);
+					Thread.sleep(200);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

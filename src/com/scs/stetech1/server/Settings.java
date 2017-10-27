@@ -15,10 +15,14 @@ import com.scs.stetech1.netmessages.UnknownEntityMessage;
 public class Settings {
 
 	public static final boolean DEBUG = true;
+	//public static final boolean ALWAYS_UPDATE_ALL_ENTITIES = true;
+	public static final boolean VERBOSE = true;
+	
+	
 	public static final int PORT = 6143;
 	//public static final int SEND_INPUT_INTERVAL_MS = 50;
 	public static final int SERVER_TICKRATE_MS = 20;
-	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 1000; // todo - make 50/100  // scs check
+	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 1000; // todo - make 50/100
 	public static final int CLIENT_RENDER_DELAY = 100;
 	public static final int PING_INTERVAL_MS = 10 * 1000;
 	

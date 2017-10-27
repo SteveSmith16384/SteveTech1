@@ -11,8 +11,8 @@ import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
+import com.scs.stetech1.shared.IEntityController;
 
 public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD {
 
@@ -20,11 +20,13 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	public HUD hud;
 	public Camera cam;
 
-	public ClientPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud) {
+	public ClientPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, float x, float y, float z) {
 		super(_module, _playerID, _input);
 		
 		cam = _cam;
 		hud = _hud;
+		
+		this.setWorldTranslation(new Vector3f(x, y, z));
 
 	}
 	

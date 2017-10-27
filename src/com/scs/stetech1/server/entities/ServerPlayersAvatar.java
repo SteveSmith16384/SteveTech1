@@ -129,7 +129,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 
 	public void moveToStartPostion(boolean invuln) {
 		//Point p = module.mapData.getPlayerStartPos(id);
-		Vector3f warpPos = new Vector3f(3f, 3f, 3f);
+		Vector3f warpPos = new Vector3f(3f, 5f, 3f + this.playerID);
 		Settings.p("Scheduling player to start position: " + warpPos);
 		this.playerControl.warp(warpPos);
 		if (invuln) {
