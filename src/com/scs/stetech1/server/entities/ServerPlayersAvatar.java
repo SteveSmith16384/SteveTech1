@@ -33,13 +33,14 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 				return;
 			}
 		}
+		
 		if (invulnerableTime >= 0) {
 			invulnerableTime -= tpf;
 		}
 
 		if (!this.restarting) {
 			// Have we fallen off the edge
-			if (this.playerControl.getPhysicsRigidBody().getPhysicsLocation().y < -5f) { // scs catching here after died!
+			if (this.playerControl.getPhysicsRigidBody().getPhysicsLocation().y < -5f) {
 				died("Too low");
 				return;
 			}

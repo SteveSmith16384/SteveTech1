@@ -23,8 +23,8 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 	//private LinkedList<EntityPositionData> positionData = new LinkedList<>();
 
 	private PositionCalculator posCalc = new PositionCalculator();
-	private Vector3f tempNewPos = new Vector3f();
-	private Quaternion tempNewRot = new Quaternion();
+	//private Vector3f tempNewPos = new Vector3f();
+	//private Quaternion tempNewRot = new Quaternion();
 
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
 
@@ -41,23 +41,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 
 	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
-		posCalc.calcPosition(mainApp, serverTimeToUse, tempNewPos, tempNewRot);
-
-		if (module.getPlayersAvatar() == this) {
-			// if our avatar, adjust us, don't just jump to new position
-			// todo - check where we should be based on where we were 100ms ago
-			//todo - re-add newPos = newPos.interpolate(this.getWorldTranslation(), .5f); // Move us halfway?
-		}
-		//todo - re-add if (!newPos.equals(this.getWorldTranslation())) {
-		this.scheduleNewPosition(mainApp, tempNewPos);
-		//}
-		if (module.getPlayersAvatar() == this) {
-			// if its our avatar, don't adjust rotation!
-		} else {
-			// Set rotation in Callable
-			this.scheduleNewRotation(mainApp, tempNewRot);
-			//Settings.p("Updated avatar pos: " + newPos);
-		}
+		posCalc.calcPosition(mainApp, this, serverTimeToUse);
 
 	}
 

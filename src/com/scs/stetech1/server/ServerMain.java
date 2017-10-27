@@ -35,6 +35,7 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, ErrorListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
@@ -117,6 +118,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity sc = (PhysicalEntity)e;
 							if (sc.hasMoved()) { // Don't send if not moved
+								if (sc.type == EntityTypes.AVATAR) {
+									Settings.p("Sending avatar pos:" + sc.getWorldTranslation());
+								}
 								myServer.broadcast(new EntityUpdateMessage(sc));
 								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}

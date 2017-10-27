@@ -8,12 +8,11 @@ import com.scs.stetech1.client.SorcerersClient;
 import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.server.Settings;
 
-public class PositionCalculator {
+public class AbstractPositionCalculator {
 
 	private List<EntityPositionData> positionData = new LinkedList<>();
 
-	public PositionCalculator() {
-
+	public AbstractPositionCalculator() {
 	}
 
 
