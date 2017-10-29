@@ -19,6 +19,6 @@ public interface IEntityController {
 	
 	void removeEntity(int id);
 	
-	IEntity getPlayersAvatar();
+	//IEntity getPlayersAvatar();
 	
 }

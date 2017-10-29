@@ -1,6 +1,9 @@
 STETECH1
 
 TODO
+Reduce dependencies between classes
+Return new EntityPos from calculator
+Treat bullets like players avatar
 	Avatar not moving fwd on client
 Client jumping back since we're comparing what the server sent 100ms ago
 Unit test on PositionCalculator
