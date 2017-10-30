@@ -431,8 +431,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	public void handleError(Object obj, Throwable ex) {
 		Settings.p("Network error with " + obj + ": " + ex);
 		ex.printStackTrace();
-		this.stop();
-
+		quit();
 	}
 
 
@@ -509,21 +508,26 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	@Override
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(QUIT)) {
-			if (playerID >= 0) {
-				this.myClient.send(new PlayerLeftMessage(this.playerID));
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				this.myClient.close();
-				this.stop();
-			}
+			quit();
 		} else if (name.equalsIgnoreCase(TEST)) {
 
 		}
 	}
 
+	
+	private void quit() {
+		if (playerID >= 0) {
+			this.myClient.send(new PlayerLeftMessage(this.playerID));
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+			this.myClient.close();
+			this.stop();
+
+	}
 
 	@Override
 	public boolean isServer() {

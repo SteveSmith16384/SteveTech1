@@ -43,7 +43,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
-	private static AtomicInteger nextID = new AtomicInteger();
+	private static AtomicInteger nextEntityID = new AtomicInteger();
 	
 	private Server myServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
@@ -121,9 +121,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity sc = (PhysicalEntity)e;
 							if (sc.hasMoved()) { // Don't send if not moved
-								if (sc.type == EntityTypes.AVATAR) {
+								/*if (sc.type == EntityTypes.AVATAR) {
 									Settings.p("Sending avatar pos:" + sc.getWorldTranslation());
-								}
+								}*/
 								myServer.broadcast(new EntityUpdateMessage(sc));
 								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}
@@ -225,7 +225,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	private int createPlayersAvatar(ClientData client) {
-		ServerPlayersAvatar avatar = new ServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, nextID.getAndAdd(1));
+		int id = getNextEntityID();
+		ServerPlayersAvatar avatar = new ServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, id);
 		avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
 		return avatar.id;
@@ -301,6 +302,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	@Override
 	public void addEntity(IEntity e) {
 		synchronized (entities) {
+			//Settings.p("Trying to add " + e + " (id " + e.getID() + ")");
+			if (this.entities.containsKey(e.getID())) {
+				throw new RuntimeException("Entity id " + e.getID() + " already exists: " + e);
+			}
 			this.entities.put(e.getID(), e);
 		}
 
@@ -328,11 +333,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	private void createGame() {
-		Floor floor = new Floor(this, nextID.addAndGet(1), 0, 0, 0, 10, .5f, 10, "Textures/floor015.png", null);
-		this.addEntity(floor);
-
-		Crate crate = new Crate(this, nextID.addAndGet(1), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 0);
-		this.addEntity(crate); // this.rootNode
+		int id = getNextEntityID();
+		new Floor(this, id, 0, 0, 0, 10, .5f, 10, "Textures/floor015.png", null);
+		id = getNextEntityID();
+		new Crate(this, id, 8, 2, 8, 1, 1, 1f, "Textures/crate.png");
 	}
 
 
@@ -390,6 +394,11 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	@Override
 	public boolean isServer() {
 		return true;
+	}
+	
+	
+	private static int getNextEntityID() {
+		return nextEntityID.getAndAdd(1);
 	}
 
 /*

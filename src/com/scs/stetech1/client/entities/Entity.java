@@ -11,10 +11,10 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class Entity implements IEntity, Savable {
 	
-	public int id;
+	public final int id;
 	public final int type;
 	protected transient IEntityController module;
-	public String name;
+	public final String name;
 
 	public Entity(IEntityController _module, int _id, int _type, String _name) {
 		id = _id;;//nextID.addAndGet(1);

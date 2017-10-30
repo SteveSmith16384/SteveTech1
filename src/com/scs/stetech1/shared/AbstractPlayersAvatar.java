@@ -39,19 +39,23 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	protected float score = 0;
 	protected float health;
 
-	private HashMap<String, Object> creationData = new HashMap<String, Object>();
+	private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
 
 	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
 		super(_module, eid, EntityTypes.AVATAR, "Player");
 
-		creationData.put("playerID", _playerID);
-		
+		if (_module.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("id", eid); this.getID();
+			creationData.put("playerID", _playerID);
+		}
+
 		playerID = _playerID;
 		input = _input;
 
 		playerGeometry = getPlayersModel(module, playerID);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
-		
+
 		this.getMainNode().attachChild(playerGeometry);
 
 		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
@@ -236,10 +240,10 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		return true; // Always calc for avatars
 	}
 
-	
+
 	@Override
 	public boolean hasMoved() {
 		return true; // Always send for avatars
 	}
-	
+
 }

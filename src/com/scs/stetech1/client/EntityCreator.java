@@ -29,7 +29,6 @@ public class EntityCreator {
 			int playerID = (int)msg.data.get("playerID");
 			if (playerID == game.playerID) {
 				ClientPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, id, msg.pos.x, msg.pos.y, msg.pos.z);
-				//avatar.playerControl.warp(msg.pos);
 				game.avatar = avatar;
 				return avatar;
 			} else {
@@ -51,8 +50,8 @@ public class EntityCreator {
 		{
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
-			float rot = (Float)msg.data.get("rot");
-			Crate crate = new Crate(game, id, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex, rot);
+			//float rot = (Float)msg.data.get("rot");
+			Crate crate = new Crate(game, id, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex);
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}
 

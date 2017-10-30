@@ -23,14 +23,17 @@ public class Floor extends PhysicalEntity implements ICollideable {
 	private Vector3f texScroll, thisScroll;
 	private float w, h, d;
 
-	private HashMap<String, Object> creationData = new HashMap<String, Object>();
+	private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
 
 	public Floor(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
 		super(_game, id, EntityTypes.FLOOR, "Floor");
 
-		creationData.put("id", id);
-		creationData.put("size", new Vector3f(w, h, d));
-		creationData.put("tex", tex);
+		if (_game.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("id", id);
+			creationData.put("size", new Vector3f(w, h, d));
+			creationData.put("tex", tex);
+		}
 
 		this.w = w;
 		this.h = h;
@@ -72,10 +75,10 @@ public class Floor extends PhysicalEntity implements ICollideable {
 
 		rigidBodyControl = new RigidBodyControl(0f);
 		main_node.addControl(rigidBodyControl);
-		
+
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		module.getRootNode().attachChild(this.main_node);
-		
+
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);

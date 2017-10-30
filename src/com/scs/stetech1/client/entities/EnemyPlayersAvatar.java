@@ -13,13 +13,16 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
 
-	private HashMap<String, Object> creationData = new HashMap<String, Object>();
+	private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
 
 	public EnemyPlayersAvatar(IEntityController game, int pid, int eid) {
 		super(game, eid, EntityTypes.AVATAR, "EnemyAvatar");
 
-		creationData.put("id", eid);
-		creationData.put("playerID", eid);
+		if (game.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("id", eid);
+			creationData.put("playerID", eid);
+		}
 
 		Spatial geometry = AbstractPlayersAvatar.getPlayersModel(game, pid);
 		/*if (!game.isServer()) { // Not running in server
@@ -48,7 +51,7 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 
 		rigidBodyControl = new RigidBodyControl(1f);
 		main_node.addControl(rigidBodyControl);
-		
+
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		module.getRootNode().attachChild(this.main_node);
 

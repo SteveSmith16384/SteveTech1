@@ -20,15 +20,18 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
 
-	private HashMap<String, Object> creationData = new HashMap<String, Object>();
+	private HashMap<String, Object> creationData;
 
-	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
+	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex) {//, float rotDegrees) {
 		super(_game, id, EntityTypes.CRATE, "Crate");
 
-		creationData.put("id", id);
-		creationData.put("size", new Vector3f(w, h, d));
-		creationData.put("tex", tex);
-		creationData.put("rot", rotDegrees);
+		if (_game.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("id", id);
+			creationData.put("size", new Vector3f(w, h, d));
+			creationData.put("tex", tex);
+			//creationData.put("rot", rotDegrees);
+		}
 
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
@@ -55,14 +58,13 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		}
 
 		this.main_node.attachChild(geometry);
-		float rads = (float)Math.toRadians(rotDegrees);
-		main_node.rotate(0, rads, 0);
-		//main_node.setLocalTranslation(x+(w/2), h/2, z+0.5f);
+		/*float rads = (float)Math.toRadians(rotDegrees);
+		main_node.rotate(0, rads, 0);*/
 		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
 		rigidBodyControl = new RigidBodyControl(1f);
 		main_node.addControl(rigidBodyControl);
-		
+
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		module.getRootNode().attachChild(this.main_node);
 

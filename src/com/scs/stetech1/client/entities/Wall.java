@@ -17,14 +17,17 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollideable { // Need ICollideable so lasers don't bounce off it
 
-	private HashMap<String, Object> creationData = new HashMap<String, Object>();
+	private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
 
 	public Wall(IEntityController _game, int id, float x, float yBottom, float z, String tex, float rotDegrees) {
 		super(_game, id, EntityTypes.WALL, "Wall");
 
-		creationData.put("id", id);
-		creationData.put("tex", tex);
-		creationData.put("rot", rotDegrees);
+		if (_game.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("id", id);
+			creationData.put("tex", tex);
+			//creationData.put("rot", rotDegrees);
+		}
 
 		float w = 3f;
 		float h = 1f;

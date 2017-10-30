@@ -8,7 +8,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class MyAbstractMessage extends AbstractMessage {
 
-	private transient static AtomicLong nextID = new AtomicLong();
+	private transient static AtomicLong nextID = new AtomicLong(); // todo - rename
 
 	public long msgId;
 	public long timestamp = System.currentTimeMillis();

@@ -18,15 +18,18 @@ public class Fence extends PhysicalEntity {
 
 	private static final float WIDTH = 2f;
 
-	private HashMap<String, Object> creationData = new HashMap<String, Object>();
+	private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
 
 	public Fence(IEntityController _game, int id, float x, float height, float z, float rot, String tex) {
 		super(_game, id, EntityTypes.FENCE, "Fence");
 
+		if (_game.isServer()) {
+			creationData = new HashMap<String, Object>();
 		creationData.put("id", id);
-		creationData.put("rot", rot);
+		//creationData.put("rot", rot);
 		creationData.put("tex", tex);
-
+		}
+		
 		Box box1 = new Box(WIDTH/2, height/2, .1f);
 		box1.scaleTextureCoordinates(new Vector2f(WIDTH, height));
 		Geometry geometry = new Geometry("Fence", box1);
