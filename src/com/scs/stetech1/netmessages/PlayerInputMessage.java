@@ -8,7 +8,7 @@ import com.scs.stetech1.input.IInputDevice;
 public class PlayerInputMessage extends MyAbstractMessage {
 
 	public Vector3f direction, leftDir;
-	public boolean fwd, back, strafeLeft, strafeRight, jump;
+	public boolean fwd, back, strafeLeft, strafeRight, jump, mainAbility, secondaryAbility, selectNextAbility;
 
 	public PlayerInputMessage() {
 		super(false);
@@ -28,7 +28,9 @@ public class PlayerInputMessage extends MyAbstractMessage {
 		strafeLeft = inputs.getStrafeLeftValue();
 		strafeRight = inputs.getStrafeRightValue();
 		jump = inputs.isJumpPressed();
-		// todo - other inputs
+		this.mainAbility = inputs.isShootPressed();
+		this.secondaryAbility = inputs.isAbilityOtherPressed();
+		this.selectNextAbility = inputs.isSelectNextAbilityPressed();
 	}
 
 

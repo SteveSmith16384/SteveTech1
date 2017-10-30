@@ -34,15 +34,14 @@ public class HUD extends Node implements IProcessable {
 	private boolean process_damage_box;
 	private List<Picture> targetting_reticules = new ArrayList<>();
 	private SorcerersClient game;
-	private BitmapText abilityGun, abilityOther, score, haveBall, accuracy;
+	private BitmapText abilityGun, abilityOther, score, playerID;
 
-	public HUD(SorcerersClient _game, float xBL, float yBL, float w, float h, BitmapFont font_small, int id, Camera _cam) {
+	public HUD(SorcerersClient _game, float xBL, float yBL, float w, float h, BitmapFont font_small, Camera _cam) {
 		super("HUD");
 
 		game = _game;
 		hud_width = w;
 		hud_height = h;
-		playerId = id;
 		cam = _cam;
 
 		super.setLocalTranslation(xBL, yBL, 0);
@@ -67,13 +66,9 @@ public class HUD extends Node implements IProcessable {
 		abilityOther.setLocalTranslation(10, hud_height-45, 0);
 		this.attachChild(abilityOther);
 
-		haveBall = new BitmapText(font_small, false);
-		haveBall.setLocalTranslation(10, hud_height-60, 0);
-		this.attachChild(haveBall);
-
-		accuracy = new BitmapText(font_small, false);
-		accuracy.setLocalTranslation(10, hud_height-75, 0);
-		this.attachChild(accuracy);
+		playerID = new BitmapText(font_small, false);
+		playerID.setLocalTranslation(10, hud_height-60, 0);
+		this.attachChild(playerID);
 
 		// Damage box
 		{
@@ -155,6 +150,11 @@ public class HUD extends Node implements IProcessable {
 	}
 
 
+	public void setPlayerID(int id) {
+		this.playerID.setText("PlayerID: " + id);
+	}
+
+
 	/*public void setHealth(float h) {
 		if (!Settings.DEBUG_HUD) {
 			this.health.setText("HEALTH: " + (int)h);
@@ -171,20 +171,6 @@ public class HUD extends Node implements IProcessable {
 
 	public void setAbilityOtherText(String s) {
 		this.abilityOther.setText(s);
-	}
-
-
-	public void setAccuracy(int a)  {
-		this.accuracy.setText("Accuracy: " + a + "%");
-	}
-	
-	
-	public void updateHasBall(boolean a) {
-		if (a) {
-			this.haveBall.setText("YOU HAVE THE BALL");
-		} else {
-			this.haveBall.setText("");
-		}
 	}
 
 

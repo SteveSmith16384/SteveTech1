@@ -24,7 +24,6 @@ public class EntityPositionData {
 
 
 	public EntityPositionData getInterpol(EntityPositionData other, long time) {
-		//EntityPositionData newPD = new EntityPositionData();
 		// interpolate between timestamps
 		float frac = (this.serverTimestamp - time) / (time - other.serverTimestamp);
 		Vector3f posToSet = this.position.interpolate(other.position, frac);

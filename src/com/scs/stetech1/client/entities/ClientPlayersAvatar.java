@@ -17,7 +17,6 @@ import com.scs.stetech1.shared.EntityPositionData;
 
 public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD {
 
-	//private static final Vector3f CAM_HEIGHT_OFFSET = new Vector3f(0, PLAYER_HEIGHT/2, 0);
 	public HUD hud;
 	public Camera cam;
 	private SorcerersClient game;
@@ -66,15 +65,15 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		EntityPositionData serverEPD = posCalc.calcPosition(serverTimeToUse);
 		if (serverEPD != null) {
 			// check where we should be based on where we were 100ms ago
-			EntityPositionData clientEPD = game.avatarPositions.calcPosition(serverTimeToUse);
-			// Is there a different
+			EntityPositionData clientEPD = game.avatarPositions.calcPosition(serverTimeToUse);// - mainApp.clientToServerDiffTime);
+			// Is there a difference
 			float diff = serverEPD.position.distance(clientEPD.position);
 			if (diff > .1f) {
 				Settings.p("Adjusting client: " + diff);
-				// Todo - replay positrion diff based on later positions
-				this.setWorldTranslation(serverEPD.position);
+				// Get diff between player pos X ms ago and current pos, and re-add this to server pos
+				Vector3f offset = clientEPD.position.subtract(mainApp.avatar.getWorldTranslation());
+				this.setWorldTranslation(serverEPD.position.add(offset)); // todo - test this!
 			}
-			//EntityPositionData combinedEPD = serverEPD.getInterpol(clientEPD, time);
 			//No! this.setWorldRotation(serverEPD.rotation);
 		}
 

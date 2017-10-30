@@ -1,14 +1,14 @@
 STETECH1
 
 TODO
-Reduce dependencies between classes
-Return new EntityPos from calculator
-Treat bullets like players avatar
-	Avatar not moving fwd on client
 Client jumping back since we're comparing what the server sent 100ms ago
+	Show playerid on screen
+Reduce dependencies between classes
+	Return new EntityPos from calculator
+Treat bullets like players avatar
 Unit test on PositionCalculator
 Jumping - cancel client-side jump physics once server has taken over
-Test with 2 players
+Test with 2 players and see if I can see the other avatar
 Create server-controlled moving item to check interpol
 Shooting
 Delib slow down messages

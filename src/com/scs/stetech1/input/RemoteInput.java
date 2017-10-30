@@ -44,20 +44,17 @@ public class RemoteInput implements IInputDevice {
 
 	@Override
 	public boolean isShootPressed() {
-		// TODO Auto-generated method stub
-		return false;
+		return pim.mainAbility;
 	}
 
 	@Override
 	public boolean isAbilityOtherPressed() {
-		// TODO Auto-generated method stub
-		return false;
+		return pim.secondaryAbility;
 	}
 
 	@Override
 	public boolean isSelectNextAbilityPressed() {
-		// TODO Auto-generated method stub
-		return false;
+		return pim.selectNextAbility;
 	}
 
 

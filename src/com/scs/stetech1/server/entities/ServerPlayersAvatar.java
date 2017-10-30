@@ -41,6 +41,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 		if (!this.restarting) {
 			// Have we fallen off the edge
 			if (this.playerControl.getPhysicsRigidBody().getPhysicsLocation().y < -5f) {
+				Settings.p("playerID " + this.playerID + " has died due to falling off the edge");
 				died("Too low");
 				return;
 			}
@@ -121,7 +122,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 
 
 	public void incScore(float amt, String reason) {
-		Settings.p("Inc score: +" + amt + ", " + reason);
+		//Settings.p("Inc score: +" + amt + ", " + reason);
 		this.score += amt;
 		//this.hud.setScore(this.score);
 
@@ -137,7 +138,6 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
 		}
 	}
-
 
 
 	@Override

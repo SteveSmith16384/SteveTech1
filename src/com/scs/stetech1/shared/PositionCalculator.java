@@ -15,14 +15,14 @@ public final class PositionCalculator {
 	public void addPositionData(EntityPositionData newData) {
 		synchronized (positionData) {
 			for(int i=0 ; i<this.positionData.size() ; i++) {
-				// Time gets earlier
+				// Time gets earlier, number gets smaller
 				EntityPositionData epd = this.positionData.get(i);
-				if (epd.serverTimestamp < newData.serverTimestamp) {
+				if (newData.serverTimestamp > epd.serverTimestamp) {
 					positionData.add(i, newData);
 					// Remove later entries
-					while (this.positionData.size() > i+3) { // todo - base on time
-						this.positionData.remove(i+1);
-					}
+					/*todo - re-add while (this.positionData.size() > i+3) { // todo - base on time
+						this.positionData.remove(i+3);
+					}*/
 					return;
 				}
 			}
@@ -40,7 +40,7 @@ public final class PositionCalculator {
 					// Time gets earlier
 					if (firstEPD == null) {
 						firstEPD = secondEPD;
-						if (secondEPD.serverTimestamp < serverTimeToUse) {
+						if (serverTimeToUse > secondEPD.serverTimestamp) {
 							return null; // Too early!
 						}
 					} else if (firstEPD.serverTimestamp > serverTimeToUse && secondEPD.serverTimestamp < serverTimeToUse) {

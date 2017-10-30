@@ -44,7 +44,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
 	private static AtomicInteger nextEntityID = new AtomicInteger();
-	
+
 	private Server myServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // EntityID::Entity
@@ -121,9 +121,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity sc = (PhysicalEntity)e;
 							if (sc.hasMoved()) { // Don't send if not moved
-								/*if (sc.type == EntityTypes.AVATAR) {
+								if (sc.type == EntityTypes.AVATAR) {
 									Settings.p("Sending avatar pos:" + sc.getWorldTranslation());
-								}*/
+								}
 								myServer.broadcast(new EntityUpdateMessage(sc));
 								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}
@@ -170,19 +170,19 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			PingMessage pingMessage = (PingMessage) message;
 			if (pingMessage.s2c) {
 				try {
-				long p = System.currentTimeMillis() - pingMessage.originalSentTime;
-				client.pingRTT = client.pingCalc.add(p);
-				client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime + (client.pingRTT/2);
-				/*
-				 * Server sent time: 2000
-				 * Client response time: 1000
-				 * Ping: 200 
-				 * clientToServerDiffTime: 1000 - 2000 + (200/2) = -900 
-				 */
-				//Settings.p("Client rtt = " + client.pingRTT);
-				//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
+					long p = System.currentTimeMillis() - pingMessage.originalSentTime;
+					client.pingRTT = client.pingCalc.add(p);
+					client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime + (client.pingRTT/2);
+					/*
+					 * Server sent time: 2000
+					 * Client response time: 1000
+					 * Ping: 200 
+					 * clientToServerDiffTime: 1000 - 2000 + (200/2) = -900 
+					 */
+					//Settings.p("Client rtt = " + client.pingRTT);
+					//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
 				} catch (NullPointerException npe) {
-					npe.printStackTrace(); // todo - why getting this?
+					npe.printStackTrace();
 				}
 			} else {
 				// Send it back to the client
@@ -256,7 +256,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	public void handleError(Object obj, Throwable ex) {
 		Settings.p("Network error with " + obj + ": " + ex);
 		ex.printStackTrace();
-		// todo - remove connection?
+
+		// Remove connection
+		this.connectionRemoved(this.myServer, (HostedConnection)obj);
 
 	}
 
@@ -277,7 +279,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		synchronized (clients) {
 			ClientData client = clients.get(source.getId());
 			if (client != null) { // For some reason, connectionRemoved() gets called multiple times
-			this.playerLeft(client);
+				this.playerLeft(client);
 			}
 		}
 	}
@@ -334,7 +336,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	private void createGame() {
 		int id = getNextEntityID();
-		new Floor(this, id, 0, 0, 0, 10, .5f, 10, "Textures/floor015.png", null);
+		new Floor(this, id, 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		id = getNextEntityID();
 		new Crate(this, id, 8, 2, 8, 1, 1, 1f, "Textures/crate.png");
 	}
@@ -395,18 +397,18 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	public boolean isServer() {
 		return true;
 	}
-	
-	
+
+
 	private static int getNextEntityID() {
 		return nextEntityID.getAndAdd(1);
 	}
 
-/*
+	/*
 	@Override
 	public IEntity getPlayersAvatar() {
 		return null; // Not used by the server
 	}
 
-*/
+	 */
 
 }

@@ -151,6 +151,26 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		//bulletAppState.getPhysicsSpace().setAccuracy(1f / 80f);
 		//bulletAppState.getPhysicsSpace().enableDebug(game.getAssetManager());
 
+		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Settings.CAM_DIST);
+
+		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
+		getInputManager().addListener(this, QUIT);            
+
+		getInputManager().addMapping(TEST, new KeyTrigger(KeyInput.KEY_T));
+		getInputManager().addListener(this, TEST);            
+
+		setUpLight();
+
+		hud = this.createHUD(getCamera());
+		input = new MouseAndKeyboardCamera(getCamera(), getInputManager());
+
+		if (Settings.RECORD_VID) {
+			Settings.p("Recording video");
+			VideoRecorderAppState video_recorder = new VideoRecorderAppState();
+			stateManager.attach(video_recorder);
+		}
+
+
 		try {
 			Settings.Register();
 
@@ -171,36 +191,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			e.printStackTrace();
 		}
 
-		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Settings.CAM_DIST);
-
-		//getCamera().setLocation(new Vector3f(0f, 0f, 10f));
-		//game.getCamera().lookAt(new Vector3f(0f, 0f, 0f), Vector3f.UNIT_Y);
-
-		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
-		getInputManager().addListener(this, QUIT);            
-
-		getInputManager().addMapping(TEST, new KeyTrigger(KeyInput.KEY_T));
-		getInputManager().addListener(this, TEST);            
-
-		setUpLight();
-
-		hud = this.createHUD(getCamera(), 0);
-		input = new MouseAndKeyboardCamera(getCamera(), getInputManager());
-		//this.addPlayersAvatar(0, getCamera(), input, hud);
-
-		if (Settings.RECORD_VID) {
-			Settings.p("Recording video");
-			VideoRecorderAppState video_recorder = new VideoRecorderAppState();
-			stateManager.attach(video_recorder);
-		}
-
-
 		loopTimer.start();
 
 	}
 
 
-	private HUD createHUD(Camera c, int id) {
+	private HUD createHUD(Camera c) {
 		BitmapFont guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		// HUD coords are full screen co-ords!
 		// cam.getWidth() = 640x480, cam.getViewPortLeft() = 0.5f
@@ -208,11 +204,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		//float y = (c.getHeight() * c.getViewPortTop())-(c.getHeight()/2);
 		float yBL = c.getHeight() * c.getViewPortBottom();
 
-		//Settings.p("Created HUD for " + id + ": " + xBL + "," +yBL);
-
 		float w = c.getWidth() * (c.getViewPortRight()-c.getViewPortLeft());
 		float h = c.getHeight() * (c.getViewPortTop()-c.getViewPortBottom());
-		HUD hud = new HUD(this, xBL, yBL, w, h, guiFont_small, id, c);
+		HUD hud = new HUD(this, xBL, yBL, w, h, guiFont_small, c);
 		getGuiNode().attachChild(hud);
 		return hud;
 
@@ -280,25 +274,21 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				myClient.send(new PingMessage(false));
 			}
 
-			// Send inputs
-			if (sendInputsInterval.hitInterval()) { // this.getCamera()
-				if (myClient.isConnected() && this.avatar != null) {
-					this.myClient.send(new PlayerInputMessage(this.input));
+			if (this.avatar != null) {
+				// Send inputs
+				if (sendInputsInterval.hitInterval()) { // this.getCamera()
+					if (myClient.isConnected()) {
+						this.myClient.send(new PlayerInputMessage(this.input));
 
-					// Store our position
-					EntityPositionData epd = new EntityPositionData();
-					epd.serverTimestamp = serverTime;
-					epd.position = avatar.getWorldTranslation().clone();
-					//epd.rotation not required?
-					/*synchronized (avatarPositionData) {
-						avatarPositionData.add(epd);
-						// clear these down
-						while (avatarPositionData.size() > 10) {
-							avatarPositionData.remove(0);
-						}
-					}*/
-					this.avatarPositions.addPositionData(epd);
+					}
 				}
+
+				// Store our position
+				EntityPositionData epd = new EntityPositionData();
+				epd.serverTimestamp = serverTime;
+				epd.position = avatar.getWorldTranslation().clone();
+				//epd.rotation not required
+				this.avatarPositions.addPositionData(epd);
 			}
 		}
 
@@ -315,7 +305,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		if (this.avatar != null) {
 			avatar.process(tpf_secs);
 		} else {
-			Settings.p("Avatar is null!");
+			//Settings.p("Avatar is null!");
 		}
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
@@ -352,6 +342,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
 				this.playersAvatarID = npcm.avatarEntityID;
+				if (hud != null) {
+					this.hud.setPlayerID(this.playerID);
+				}
 				synchronized (this.entities) {
 					// Set avatar if we already have it
 					if (this.entities.containsKey(playersAvatarID)) {
@@ -374,42 +367,16 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			synchronized (unprocessedMessages) {
 				unprocessedMessages.add(eum);
 			}
-			/*IEntity e = this.entities.get(eum.entityID);
-			if (e != null) {
-				EntityPositionData epd = new EntityPositionData();
-				epd.serverTimestamp = eum.timestamp + clientToServerDiffTime;
-				epd.rotation = eum.dir;
-				epd.position = eum.pos;
-
-				PhysicalEntity pe = (PhysicalEntity)e;
-				if (eum.force) {
-					// Set it now!
-					pe.scheduleNewPosition(this, epd.position);
-					pe.scheduleNewRotation(this, epd.rotation);
-					pe.clearPositiondata();
-				} else {
-					pe.addPositionData(epd);
-				}
-				//Settings.p("New position for " + e + ": " + eum.pos);
-			} else {
-			}*/
 
 		} else if (message instanceof RemoveEntityMessage) {
 			RemoveEntityMessage rem = (RemoveEntityMessage)message;
 			synchronized (unprocessedMessages) {
 				unprocessedMessages.add(rem);
 			}
-
-			//this.removeEntity(rem.entityID);
-
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 
-		// Always ack all messages!
-		/*if (msg.requiresAck) {
-			//myClient.send(new AckMessage(msg.msgId)); // Send it straight back
-		}*/
 	}
 
 
@@ -514,8 +481,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		}
 	}
 
-	
+
 	private void quit() {
+		Settings.p("quit()");
 		if (playerID >= 0) {
 			this.myClient.send(new PlayerLeftMessage(this.playerID));
 			try {
@@ -524,8 +492,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				e.printStackTrace();
 			}
 		}
-			this.myClient.close();
-			this.stop();
+		this.myClient.close();
+		this.stop();
 
 	}
 
@@ -534,11 +502,5 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		return false;
 	}
 
-	/*
-	@Override
-	public IEntity getPlayersAvatar() {
-		return avatar;
-	}
 
-	 */
 }

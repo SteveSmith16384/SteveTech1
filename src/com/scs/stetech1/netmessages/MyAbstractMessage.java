@@ -8,7 +8,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class MyAbstractMessage extends AbstractMessage {
 
-	private transient static AtomicLong nextID = new AtomicLong(); // todo - rename
+	private transient static AtomicLong nextMsgID = new AtomicLong();
 
 	public long msgId;
 	public long timestamp = System.currentTimeMillis();
@@ -16,7 +16,7 @@ public class MyAbstractMessage extends AbstractMessage {
 	public MyAbstractMessage(boolean tcp) {
 		super();
 		
-		msgId = nextID.addAndGet(1);
+		msgId = nextMsgID.addAndGet(1);
 		this.setReliable(tcp);
 		
 	}
