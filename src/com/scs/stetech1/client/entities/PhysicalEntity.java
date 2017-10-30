@@ -1,35 +1,27 @@
 package com.scs.stetech1.client.entities;
 
 import java.util.HashMap;
-import java.util.concurrent.Callable;
 
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.scs.stetech1.client.SorcerersClient;
 import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.shared.PositionCalculator;
 
 public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
-
-	//private LinkedList<EntityPositionData> positionData = new LinkedList<>();
-
-	private PositionCalculator posCalc;// = new PositionCalculator();
-	//private Vector3f tempNewPos = new Vector3f();
-	//private Quaternion tempNewRot = new Quaternion();
-
+	protected PositionCalculator posCalc = new PositionCalculator();
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
 
-	public PhysicalEntity(IEntityController _game, int type, String _name) {
-		super(_game, type, _name);
+	public PhysicalEntity(IEntityController _game, int id, int type, String _name) {
+		super(_game, id, type, _name);
 
 		main_node = new Node(name + "_MainNode");
 	}
@@ -40,38 +32,24 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 	}
 
 
+	// This is overridden by Avatars to take into account local position
 	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
-		posCalc.calcPosition(serverTimeToUse);
+		EntityPositionData epd = posCalc.calcPosition(serverTimeToUse);
+		if (epd != null) {
+			this.setWorldTranslation(epd.position);
+			this.setWorldRotation(epd.rotation);
+		}
 
 	}
+
 
 	public void clearPositiondata() {
 		this.posCalc.clearPositiondata();
 	}
 
 
-	public void scheduleNewPosition(SorcerersClient mainApp, final Vector3f newPos) {
-		// Don't need to schedule it since we're in the JME thread
-		/*mainApp.enqueue(new Callable<Spatial>() { // this
-			public Spatial call() throws Exception {
-				//getMainNode().setLocalTranslation(newPos);*/
-				setWorldTranslation(newPos);
-				/*return getMainNode();
-			}
-		});*/
-	}
-
-
-	public void scheduleNewRotation(SorcerersClient mainApp, final Quaternion newRot2) {
-		// Don't need to schedule it since we're in the JME thread
-		// Set rotation in Callable
-		/*mainApp.enqueue(new Callable<Spatial>() {
-			public Spatial call() throws Exception {*/
-				getMainNode().setLocalRotation(newRot2);
-	/*			return getMainNode();
-			}
-		});
-*/
+	public void setWorldRotation(final Quaternion newRot2) {
+		getMainNode().setLocalRotation(newRot2);
 	}
 
 
@@ -141,11 +119,11 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 	}*/
 
 
-	/*public Vector3f getWorldTranslation() {
+	public Vector3f getWorldTranslation() {
+		//return this.rigidBodyControl.getPhysicsLocation();
 		//return this.main_node.getWorldTranslation(); 000?
-		return this.rigidBodyControl.getPhysicsLocation();
-
-	}*/
+		return this.getMainNode().getLocalTranslation();
+	}
 
 
 	public void setWorldTranslation(Vector3f pos) {
@@ -156,11 +134,6 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 	public void applyForce(Vector3f dir) {
 		rigidBodyControl.applyImpulse(dir, Vector3f.ZERO);//.applyCentralForce(dir);
-	}
-
-
-	public Vector3f getWorldTranslation() {
-		return this.getMainNode().getLocalTranslation();
 	}
 
 

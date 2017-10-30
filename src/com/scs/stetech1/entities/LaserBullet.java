@@ -21,8 +21,8 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 	public ICanShoot shooter;
 	private float timeLeft = 3;
 
-	public LaserBullet(IEntityController _game, ICanShoot _shooter) {
-		super(_game, EntityTypes.UNFIRED_BULLET, "LaserBullet");
+	public LaserBullet(IEntityController _game, int id, ICanShoot _shooter) {
+		super(_game, id, EntityTypes.UNFIRED_BULLET, "LaserBullet");
 
 		this.shooter = _shooter;
 

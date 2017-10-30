@@ -2,6 +2,7 @@ package com.scs.stetech1.server;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
@@ -42,6 +43,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
+	private static AtomicInteger nextID = new AtomicInteger();
+	
 	private Server myServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // EntityID::Entity
@@ -222,7 +225,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	private int createPlayersAvatar(ClientData client) {
-		ServerPlayersAvatar avatar = new ServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput);
+		ServerPlayersAvatar avatar = new ServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, nextID.getAndAdd(1));
 		avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
 		return avatar.id;
@@ -325,10 +328,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	private void createGame() {
-		Floor floor = new Floor(this, 0, 0, 0, 10, .5f, 10, "Textures/floor015.png", null);
+		Floor floor = new Floor(this, nextID.addAndGet(1), 0, 0, 0, 10, .5f, 10, "Textures/floor015.png", null);
 		this.addEntity(floor);
 
-		Crate crate = new Crate(this, 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 0);
+		Crate crate = new Crate(this, nextID.addAndGet(1), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 0);
 		this.addEntity(crate); // this.rootNode
 	}
 
@@ -389,12 +392,12 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		return true;
 	}
 
-
+/*
 	@Override
 	public IEntity getPlayersAvatar() {
 		return null; // Not used by the server
 	}
 
-
+*/
 
 }

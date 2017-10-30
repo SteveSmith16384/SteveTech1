@@ -14,7 +14,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility {
 	
 	@Override
 	public void launchBullet(IEntityController game, ICanShoot _shooter) {
-		new LaserBullet(game, shooter);
+		//todo - use existing stored bullet new LaserBullet(game, shooter);
 		
 	}
 	

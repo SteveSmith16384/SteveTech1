@@ -18,8 +18,8 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 	private int numShotsHit = 0;
 
 
-	public ServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input) {
-		super(_module, _playerID, _input);
+	public ServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
+		super(_module, _playerID, _input, eid);
 	}
 
 

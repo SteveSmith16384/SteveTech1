@@ -21,19 +21,20 @@ public class EntityCreator {
 	 */
 	public static IEntity createEntity(SorcerersClient game, NewEntityMessage msg) {
 		Settings.p("Creating " + EntityTypes.getName(msg.type));
+		int id = (Integer)msg.data.get("id");
 
 		switch (msg.type) {
 		case EntityTypes.AVATAR:
 		{
 			int playerID = (int)msg.data.get("playerID");
 			if (playerID == game.playerID) {
-				ClientPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, msg.pos.x, msg.pos.y, msg.pos.z);
+				ClientPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, id, msg.pos.x, msg.pos.y, msg.pos.z);
 				//avatar.playerControl.warp(msg.pos);
 				game.avatar = avatar;
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				EnemyPlayersAvatar avatar = new EnemyPlayersAvatar(game, playerID);
+				EnemyPlayersAvatar avatar = new EnemyPlayersAvatar(game, playerID, id);
 				return avatar;
 			}
 		}
@@ -42,7 +43,7 @@ public class EntityCreator {
 		{
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
-			Floor floor = new Floor(game, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex, null);
+			Floor floor = new Floor(game, id, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex, null);
 			return floor;
 		}
 
@@ -51,7 +52,7 @@ public class EntityCreator {
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
 			float rot = (Float)msg.data.get("rot");
-			Crate crate = new Crate(game, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex, rot);
+			Crate crate = new Crate(game, id, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex, rot);
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}
 

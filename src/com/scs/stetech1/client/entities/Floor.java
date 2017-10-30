@@ -25,9 +25,10 @@ public class Floor extends PhysicalEntity implements ICollideable {
 
 	private HashMap<String, Object> creationData = new HashMap<String, Object>();
 
-	public Floor(IEntityController _game, float x, float y, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
-		super(_game, EntityTypes.FLOOR, "Floor");
+	public Floor(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
+		super(_game, id, EntityTypes.FLOOR, "Floor");
 
+		creationData.put("id", id);
 		creationData.put("size", new Vector3f(w, h, d));
 		creationData.put("tex", tex);
 

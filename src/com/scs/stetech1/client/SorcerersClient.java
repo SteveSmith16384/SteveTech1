@@ -47,8 +47,8 @@ import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.AveragePingTime;
-import com.scs.stetech1.shared.ClientAvatarPositionCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
@@ -77,9 +77,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
-	//public LinkedList<EntityPositionData> avatarPositionData = new LinkedList<>();
-	private ClientAvatarPositionCalculator avatarPositions = new ClientAvatarPositionCalculator();
-	private List<MyAbstractMessage> messages = new LinkedList<>();
+	public PositionCalculator avatarPositions = new PositionCalculator();
+	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public static void main(String[] args) {
 		try {
@@ -231,52 +230,52 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	public void simpleUpdate(float tpf_secs) {  //this.rootNode.getChild(2).getWorldTranslation();
 		long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 
-		// Process messages in JME thread
-		synchronized (messages) { //this.getCamera()
-			// Check we don't already know about it
-			while (!this.messages.isEmpty()) {
-				MyAbstractMessage message = this.messages.remove(0);
-				if (message instanceof NewEntityMessage) {
-					NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-					if (!this.entities.containsKey(newEntityMessage.entityID)) {
-						IEntity e = EntityCreator.createEntity(this, newEntityMessage);
-						this.addEntity(e);
-					}
-
-				} else if (message instanceof EntityUpdateMessage) {
-					EntityUpdateMessage eum = (EntityUpdateMessage)message;
-					IEntity e = this.entities.get(eum.entityID);
-					if (e != null) {
-						Settings.p("Updating " + e);
-						EntityPositionData epd = new EntityPositionData();
-						epd.serverTimestamp = eum.timestamp + clientToServerDiffTime;
-						epd.rotation = eum.dir;
-						epd.position = eum.pos;
-
-						PhysicalEntity pe = (PhysicalEntity)e;
-						if (eum.force) {
-							// Set it now!
-							pe.scheduleNewPosition(this, epd.position);
-							pe.scheduleNewRotation(this, epd.rotation);
-							pe.clearPositiondata();
-						} else {
-							pe.addPositionData(epd);
+		if (myClient.isConnected()) {  //this.rootNode.getChild(1).getWorldTranslation();
+			// Process messages in JME thread
+			synchronized (unprocessedMessages) { //this.getCamera()
+				// Check we don't already know about it
+				while (!this.unprocessedMessages.isEmpty()) {
+					MyAbstractMessage message = this.unprocessedMessages.remove(0);
+					if (message instanceof NewEntityMessage) {
+						NewEntityMessage newEntityMessage = (NewEntityMessage) message;
+						if (!this.entities.containsKey(newEntityMessage.entityID)) {
+							IEntity e = EntityCreator.createEntity(this, newEntityMessage);
+							this.addEntity(e);
 						}
-						//Settings.p("New position for " + e + ": " + eum.pos);
-					} else {
-						/*if (this.joinedGame) {
+
+					} else if (message instanceof EntityUpdateMessage) {
+						EntityUpdateMessage eum = (EntityUpdateMessage)message;
+						IEntity e = this.entities.get(eum.entityID);
+						if (e != null) {
+							Settings.p("Updating " + e);
+							EntityPositionData epd = new EntityPositionData();
+							epd.serverTimestamp = eum.timestamp + clientToServerDiffTime;
+							epd.rotation = eum.dir;
+							epd.position = eum.pos;
+
+							PhysicalEntity pe = (PhysicalEntity)e;
+							if (eum.force) {
+								// Set it now!
+								pe.setWorldTranslation(epd.position);
+								pe.setWorldRotation(epd.rotation);
+								pe.clearPositiondata();
+							} else {
+								pe.addPositionData(epd);
+							}
+							//Settings.p("New position for " + e + ": " + eum.pos);
+						} else {
+							/*if (this.joinedGame) {
 						myClient.send(new UnknownEntityMessage(eum.entityID));  Do we actually need this?
 					}*/
-					}
+						}
 
-				} else if (message instanceof RemoveEntityMessage) {
-					RemoveEntityMessage rem = (RemoveEntityMessage)message;
-					this.removeEntity(rem.entityID);
+					} else if (message instanceof RemoveEntityMessage) {
+						RemoveEntityMessage rem = (RemoveEntityMessage)message;
+						this.removeEntity(rem.entityID);
+					}
 				}
 			}
-		}
 
-		if (myClient.isConnected()) {  //this.rootNode.getChild(1).getWorldTranslation();
 			if (sendPingInt.hitInterval()) {
 				myClient.send(new PingMessage(false));
 			}
@@ -366,14 +365,14 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-			synchronized (messages) {
-				messages.add(newEntityMessage);
+			synchronized (unprocessedMessages) {
+				unprocessedMessages.add(newEntityMessage);
 			}
 
 		} else if (message instanceof EntityUpdateMessage) {
 			EntityUpdateMessage eum = (EntityUpdateMessage)message;
-			synchronized (messages) {
-				messages.add(eum);
+			synchronized (unprocessedMessages) {
+				unprocessedMessages.add(eum);
 			}
 			/*IEntity e = this.entities.get(eum.entityID);
 			if (e != null) {
@@ -397,8 +396,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 		} else if (message instanceof RemoveEntityMessage) {
 			RemoveEntityMessage rem = (RemoveEntityMessage)message;
-			synchronized (messages) {
-				messages.add(rem);
+			synchronized (unprocessedMessages) {
+				unprocessedMessages.add(rem);
 			}
 
 			//this.removeEntity(rem.entityID);
@@ -423,7 +422,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	@Override
 	public void clientDisconnected(Client arg0, DisconnectInfo arg1) {
-		Settings.p("Disconnected!");
+		Settings.p("clientDisconnected()");
 
 	}
 
@@ -432,6 +431,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	public void handleError(Object obj, Throwable ex) {
 		Settings.p("Network error with " + obj + ": " + ex);
 		ex.printStackTrace();
+		this.stop();
 
 	}
 
@@ -530,11 +530,11 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		return false;
 	}
 
-
+	/*
 	@Override
 	public IEntity getPlayersAvatar() {
 		return avatar;
 	}
 
-
+	 */
 }

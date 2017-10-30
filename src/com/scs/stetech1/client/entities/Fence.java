@@ -20,9 +20,10 @@ public class Fence extends PhysicalEntity {
 
 	private HashMap<String, Object> creationData = new HashMap<String, Object>();
 
-	public Fence(IEntityController _game, float x, float height, float z, float rot, String tex) {
-		super(_game, EntityTypes.FENCE, "Fence");
+	public Fence(IEntityController _game, int id, float x, float height, float z, float rot, String tex) {
+		super(_game, id, EntityTypes.FENCE, "Fence");
 
+		creationData.put("id", id);
 		creationData.put("rot", rot);
 		creationData.put("tex", tex);
 

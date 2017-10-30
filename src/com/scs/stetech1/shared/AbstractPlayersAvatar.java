@@ -41,8 +41,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	private HashMap<String, Object> creationData = new HashMap<String, Object>();
 
-	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input) {
-		super(_module, EntityTypes.AVATAR, "Player");
+	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
+		super(_module, eid, EntityTypes.AVATAR, "Player");
 
 		creationData.put("playerID", _playerID);
 		

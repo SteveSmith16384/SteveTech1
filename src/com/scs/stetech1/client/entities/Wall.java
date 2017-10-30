@@ -19,9 +19,10 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 
 	private HashMap<String, Object> creationData = new HashMap<String, Object>();
 
-	public Wall(IEntityController _game, float x, float yBottom, float z, String tex, float rotDegrees) {
-		super(_game, EntityTypes.WALL, "Wall");
+	public Wall(IEntityController _game, int id, float x, float yBottom, float z, String tex, float rotDegrees) {
+		super(_game, id, EntityTypes.WALL, "Wall");
 
+		creationData.put("id", id);
 		creationData.put("tex", tex);
 		creationData.put("rot", rotDegrees);
 

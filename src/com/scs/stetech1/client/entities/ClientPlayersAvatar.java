@@ -6,35 +6,38 @@ import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
+import com.scs.stetech1.client.SorcerersClient;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
-import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.EntityPositionData;
 
 public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD {
 
 	//private static final Vector3f CAM_HEIGHT_OFFSET = new Vector3f(0, PLAYER_HEIGHT/2, 0);
 	public HUD hud;
 	public Camera cam;
+	private SorcerersClient game;
 
-	public ClientPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, float x, float y, float z) {
-		super(_module, _playerID, _input);
-		
+	public ClientPlayersAvatar(SorcerersClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
+		super(_module, _playerID, _input, eid);
+
+		game = _module;
 		cam = _cam;
 		hud = _hud;
-		
+
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
 	}
-	
-	
+
+
 	@Override
 	public void process(float tpf) {
 		super.process(tpf);
-		
+
 		hud.process(tpf);
 
 		// Position camera at node
@@ -56,19 +59,40 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		//cam.update();
 
 	}
-	
-	
+
+
+	@Override
+	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
+		EntityPositionData serverEPD = posCalc.calcPosition(serverTimeToUse);
+		if (serverEPD != null) {
+			// check where we should be based on where we were 100ms ago
+			EntityPositionData clientEPD = game.avatarPositions.calcPosition(serverTimeToUse);
+			// Is there a different
+			float diff = serverEPD.position.distance(clientEPD.position);
+			if (diff > .1f) {
+				Settings.p("Adjusting client: " + diff);
+				// Todo - replay positrion diff based on later positions
+				this.setWorldTranslation(serverEPD.position);
+			}
+			//EntityPositionData combinedEPD = serverEPD.getInterpol(clientEPD, time);
+			//No! this.setWorldRotation(serverEPD.rotation);
+		}
+
+	}
+
+
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {
 		// Do nothing - done server-side
 	}
-	
-	
-	@Override
+
+
+	// Don't use cam position, just use main node position
+	/*@Override
 	public Vector3f getWorldTranslation() {
 		return this.cam.getLocation();
 		//return playerControl.getPhysicsRigidBody().getPhysicsLocation();  This is very low to the ground!
-	}
+	}*/
 
 
 	@Override

@@ -22,9 +22,10 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 
 	private HashMap<String, Object> creationData = new HashMap<String, Object>();
 
-	public Crate(IEntityController _game, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, EntityTypes.CRATE, "Crate");
+	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
+		super(_game, id, EntityTypes.CRATE, "Crate");
 
+		creationData.put("id", id);
 		creationData.put("size", new Vector3f(w, h, d));
 		creationData.put("tex", tex);
 		creationData.put("rot", rotDegrees);
