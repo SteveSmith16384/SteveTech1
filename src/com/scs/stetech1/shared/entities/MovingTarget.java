@@ -18,10 +18,14 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
+public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
 
-	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, id, EntityTypes.CRATE, "Crate");
+	private static final float SPEED = 7;
+
+	private Vector3f currDir = new Vector3f(0, 1f, 0);
+
+	public MovingTarget(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
+		super(_game, id, EntityTypes.MOVING_TARGET, "MovingTarget");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -60,6 +64,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
 		rigidBodyControl = new RigidBodyControl(1f);
+		//rigidBodyControl.setGravity(Vector3f.ZERO); // Floats
 		main_node.addControl(rigidBodyControl);
 
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
@@ -78,6 +83,11 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 	public void process(float tpf) {
 		//super.process(tpf);
 		//Settings.p("Pos: " + this.getWorldTranslation());
+		
+		// move around
+		//todo - move randomly if (Settings.r)
+		this.rigidBodyControl.applyCentralForce(currDir.mult(SPEED));
+
 	}
 
 

@@ -2,6 +2,8 @@ package com.scs.stetech1.server;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ssmith.util.FixedLoopTime;
@@ -54,6 +56,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	public BulletAppState bulletAppState;
+	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public static void main(String[] args) {
 		try {
@@ -104,19 +107,46 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
+		synchronized (unprocessedMessages) {
+			while (!this.unprocessedMessages.isEmpty()) {
+				MyAbstractMessage message = this.unprocessedMessages.remove(0);
+				ClientData client = message.client;
+				if (message instanceof NewPlayerRequestMessage) {
+					NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
+					client.playerName = newPlayerMessage.name;
+					client.avatarID = createPlayersAvatar(client);
+					// Send newplayerconf message
+					myServer.broadcast(Filters.equalTo(client.conn), new NewPlayerAckMessage(client.getPlayerID(), client.avatarID));
+					sendEntityListToClient(client);
+
+				} else if (message instanceof UnknownEntityMessage) {
+					UnknownEntityMessage uem = (UnknownEntityMessage) message;
+					IEntity e = this.entities.get(uem.entityID);
+					this.sendNewEntity(client, e);
+
+				} else if (message instanceof PlayerLeftMessage) {
+					this.connectionRemoved(this.myServer, client.conn);
+
+				} else {
+					throw new RuntimeException("Unknown message type: " + message);
+				}
+			}
+		}
+
 		if (myServer.hasConnections()) { // this.rootNode
 			if (sendPingInt.hitInterval()) {
 				myServer.broadcast(new PingMessage(true));
 			}
 
-			// Loop through the ents
 			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
 			synchronized (entities) {
+				// Loop through the entities
 				for (IEntity e : entities.values()) {
 					if (e instanceof IProcessable) {
 						IProcessable p = (IProcessable)e;
 						p.process(tpf_secs);
 					}
+
 					if (sendUpdates) {
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity sc = (PhysicalEntity)e;
@@ -155,16 +185,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		//Settings.p("Rcvd " + message.getClass().getSimpleName());
 
 		MyAbstractMessage msg = (MyAbstractMessage)message;
-		/*if (msg.requiresAck) {
-			// Check not already been ack'd
-			try {
-				if (client.packets.hasBeenAckd(msg.msgId)) {
-					return;
-				}
-			} catch (NullPointerException ex) {
-				ex.printStackTrace();
-			}
-		}*/
 
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
@@ -197,28 +217,11 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				client.latestInputTimestamp = pim.timestamp;
 			}
 
-		} else if (message instanceof NewPlayerRequestMessage) {
-			NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-			client.playerName = newPlayerMessage.name;
-			client.avatarID = createPlayersAvatar(client);
-			// Send newplayerconf message
-			myServer.broadcast(Filters.equalTo(client.conn), new NewPlayerAckMessage(client.getPlayerID(), client.avatarID));
-			sendEntityListToClient(client);
-
-			/*} else if (message instanceof AckMessage) {
-			AckMessage ackMessage = (AckMessage) message;
-			client.packets.acked(ackMessage.ackingId);*/
-
-		} else if (message instanceof UnknownEntityMessage) {
-			UnknownEntityMessage uem = (UnknownEntityMessage)msg;
-			IEntity e = this.entities.get(uem.entityID);
-			this.sendNewEntity(client, e);
-
-		} else if (message instanceof PlayerLeftMessage) {
-			this.connectionRemoved(this.myServer, source);
-
 		} else {
-			throw new RuntimeException("Unknown message type: " + message);
+			msg.client = client;
+			synchronized (this.unprocessedMessages) {
+				this.unprocessedMessages.add(msg);
+			}
 		}
 
 	}
@@ -404,13 +407,5 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private static int getNextEntityID() {
 		return nextEntityID.getAndAdd(1);
 	}
-
-	/*
-	@Override
-	public IEntity getPlayersAvatar() {
-		return null; // Not used by the server
-	}
-
-	 */
 
 }

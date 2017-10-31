@@ -8,7 +8,7 @@ import com.scs.stetech1.shared.entities.PhysicalEntity;
 @Serializable
 public class NewEntityMessage extends EntityUpdateMessage {
 	
-	public int type, entityID;
+	public int type;//, entityID;
 	public HashMap<String, Object> data = new HashMap<>(); 
 
 	public NewEntityMessage() {
@@ -21,7 +21,7 @@ public class NewEntityMessage extends EntityUpdateMessage {
 		
 		this.setReliable(true); // Since superclass has set it to false
 		
-		entityID = e.getID();
+		//entityID = e.getID();
 		type = e.getType();
 		data = e.getCreationData();
 	}

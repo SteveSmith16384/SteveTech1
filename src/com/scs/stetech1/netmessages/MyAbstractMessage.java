@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.jme3.network.AbstractMessage;
 import com.jme3.network.serializing.Serializable;
+import com.scs.stetech1.server.ClientData;
 
 @Serializable
 public class MyAbstractMessage extends AbstractMessage {
@@ -12,6 +13,7 @@ public class MyAbstractMessage extends AbstractMessage {
 
 	public long msgId;
 	public long timestamp = System.currentTimeMillis();
+	public ClientData client; // for the server
 	
 	public MyAbstractMessage(boolean tcp) {
 		super();

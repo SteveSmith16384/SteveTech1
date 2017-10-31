@@ -8,6 +8,7 @@ public class EntityTypes {
 	public static final int FENCE = 4;
 	public static final int WALL = 5;
 	public static final int UNFIRED_BULLET = 6;
+	public static final int MOVING_TARGET = 7;
 	
 	private EntityTypes() {
 	}
@@ -20,6 +21,8 @@ public class EntityTypes {
 		case FLOOR: return "FLOOR";
 		case FENCE: return "FENCE";
 		case WALL: return "WALL";
+		case UNFIRED_BULLET: return "UNFIRED_BULLET";
+		case MOVING_TARGET: return "MOVING_TARGET";
 		default: return "UNKNOWN";
 		}
 	}

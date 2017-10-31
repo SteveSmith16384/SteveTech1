@@ -31,6 +31,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		hud = _hud;
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
+		//this.getMainNode().setLocalTranslation(x, y, z); // scs new
 
 	}
 
@@ -67,15 +68,20 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		EntityPositionData serverEPD = this.serverPositionData.calcPosition(serverTimeToUse);
 		if (serverEPD != null) {
 			// check where we should be based on where we were 100ms ago
-			EntityPositionData clientEPD = game.clientAvatarPositionData.calcPosition(serverTimeToUse);// - mainApp.clientToServerDiffTime);
+			EntityPositionData clientEPD = game.clientAvatarPositionData.calcPosition(serverTimeToUse);
 			if (clientEPD != null) {
 				// Is there a difference
 				float diff = serverEPD.position.distance(clientEPD.position);
 				if (diff > 0.1f) {
-					Settings.p("Adjusting client: " + diff);
+					//Settings.p("Adjusting client: " + diff);
 					// Get diff between player pos X millis ago and current pos, and re-add this to server pos
-					Vector3f offset = mainApp.avatar.getWorldTranslation().subtract(clientEPD.position);
-					Vector3f newPos = serverEPD.position.add(offset);
+					Vector3f clientMovementSinceRenderDelay = mainApp.avatar.getWorldTranslation().subtract(clientEPD.position);
+					clientMovementSinceRenderDelay.y = 0; // Don't adjust y-axis
+					Vector3f newPos = serverEPD.position.add(clientMovementSinceRenderDelay);
+					Settings.p("Moving player to " + newPos);
+					if (newPos.y < 0.4f || newPos.y > 7) {
+						Settings.p("Too far!");
+					}
 					this.setWorldTranslation(newPos); // todo - test this!
 				}
 			}

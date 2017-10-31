@@ -16,6 +16,8 @@ public class TestPositionCalculator {
 		basicPositionCalc2_AddInReverse();
 		basicPositionCalc2_EarlyInSegment();
 		basicPositionCalc2_LateInSegment();
+		basicPositionCalc_TooEarly();
+		basicPositionCalc_TooLate();
 	}
 
 
@@ -59,6 +61,7 @@ public class TestPositionCalculator {
 			Settings.p("basicPositionCalc2_EarlyInSegment Failed: Diff is " + diff);
 		}
 	}
+	
 
 	private void basicPositionCalc2_LateInSegment() {
 		PositionCalculator posCalc = new PositionCalculator();
@@ -72,5 +75,30 @@ public class TestPositionCalculator {
 			Settings.p("basicPositionCalc2_LateInSegment Failed: Diff is " + diff);
 		}
 	}
+
+
+	private void basicPositionCalc_TooEarly() {
+		PositionCalculator posCalc = new PositionCalculator();
+		for (int i=10 ; i>0 ; i--) {
+			posCalc.addPositionData(new EntityPositionData(new Vector3f(i, 0, 0), null, 100+(i*100)));
+		}
+		EntityPositionData after2000 = posCalc.calcPosition(2000);
+		if (after2000 != null) {
+			Settings.p("basicPositionCalc_TooEarly Failed: Should be null");
+		}
+	}
+
+
+	private void basicPositionCalc_TooLate() {
+		PositionCalculator posCalc = new PositionCalculator();
+		for (int i=10 ; i>0 ; i--) {
+			posCalc.addPositionData(new EntityPositionData(new Vector3f(i, 0, 0), null, 100+(i*100)));
+		}
+		EntityPositionData after0 = posCalc.calcPosition(0);
+		if (after0 != null) {
+			Settings.p("basicPositionCalc_TooEarly Failed: Should be null");
+		}
+	}
+
 
 }

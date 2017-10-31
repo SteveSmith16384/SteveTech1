@@ -1,5 +1,7 @@
 package com.scs.stetech1.server;
 
+import java.util.Random;
+
 import com.jme3.network.serializing.Serializer;
 import com.scs.stetech1.netmessages.AllEntitiesSentMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
@@ -19,9 +21,10 @@ public class Settings {
 	//public static final boolean ALWAYS_UPDATE_ALL_ENTITIES = true;
 	public static final boolean VERBOSE = true;
 
+	public static final Random rnd = new Random();
 
 	public static final int PORT = 6143;
-	public static final int SERVER_TICKRATE_MS = 20; // Source: every 15ms
+	public static final int SERVER_TICKRATE_MS = 20; // Source: 15ms
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 100; // This must be fast enough so the client has recent data to work with 
 	public static final int CLIENT_RENDER_DELAY = SERVER_SEND_UPDATE_INTERVAL_MS*2; // Source: 50ms
 	public static final int PING_INTERVAL_MS = 10 * 1000;

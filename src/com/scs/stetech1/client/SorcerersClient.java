@@ -58,8 +58,6 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
 
-	public static final Random rnd = new Random();
-
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 
 	public static BitmapFont guiFont_small; // = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
@@ -245,7 +243,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 						EntityUpdateMessage eum = (EntityUpdateMessage)message;
 						IEntity e = this.entities.get(eum.entityID);
 						if (e != null) {
-							Settings.p("Updating " + e);
+							//Settings.p("Received EntityUpdateMessage for " + e);
 							EntityPositionData epd = new EntityPositionData();
 							epd.serverTimestamp = eum.timestamp + clientToServerDiffTime;
 							epd.rotation = eum.dir;
@@ -300,6 +298,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				EntityPositionData epd = new EntityPositionData();
 				epd.serverTimestamp = serverTime;
 				epd.position = avatar.getWorldTranslation().clone();
+				//Settings.p("Storing local position " + epd.position);
 				//epd.rotation not required
 				this.clientAvatarPositionData.addPositionData(epd);
 			}
@@ -309,6 +308,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe = (PhysicalEntity)e;
 					if (pe.canMove()) { // Only bother with things that can move
+						//pe.getWorldTranslation();
 						pe.calcPosition(this, serverTimePast);
 					}
 				}

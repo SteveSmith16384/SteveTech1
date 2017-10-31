@@ -228,6 +228,15 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 
 	@Override
+	public Vector3f getWorldTranslation() {
+		// Need this override since main node is at 0,0,0 at the start
+		return this.playerControl.getPhysicsRigidBody().getPhysicsLocation();  // This is very low to the ground!
+		//return this.main_node.getWorldTranslation(); 000?
+		//return this.getMainNode().getLocalTranslation();
+	}
+
+
+	@Override
 	public void setWorldTranslation(Vector3f pos) {
 		float dist = pos.distance(this.getWorldTranslation());
 		// We need to Warp() players

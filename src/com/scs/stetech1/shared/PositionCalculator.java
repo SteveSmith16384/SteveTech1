@@ -7,8 +7,6 @@ import com.scs.stetech1.server.Settings;
 
 public final class PositionCalculator {
 
-	//private static final int MAX_ENTRIES = 50;
-
 	private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // Newest entry is at the start
 
 	public PositionCalculator() {
@@ -19,8 +17,7 @@ public final class PositionCalculator {
 	public void addPositionData(EntityPositionData newData) {
 		synchronized (positionData) {
 			boolean added = false;
-			for(int i=0 ; i<this.positionData.size() ; i++) {
-				// Time gets earlier, number gets smaller
+			for(int i=0 ; i<this.positionData.size() ; i++) { // Goes backwards in time, number gets smaller
 				EntityPositionData epd = this.positionData.get(i);
 				if (!added) {
 					if (newData.serverTimestamp > epd.serverTimestamp) {
@@ -54,29 +51,33 @@ public final class PositionCalculator {
 		synchronized (positionData) {
 			if (this.positionData.size() > 1) {
 
+				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
+					//Settings.p(this.toString(serverTimeToUse));
+					//long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
+					//Settings.p(startDiff + " too soon");
+					return null; // Our selected time is too soon!
+				} else if (this.positionData.getLast().serverTimestamp > serverTimeToUse) {
+					//Settings.p(this.toString(serverTimeToUse));
+					return null; // Our selected time is too late!
+				}
+
 				EntityPositionData firstEPD = null;
 				for(EntityPositionData secondEPD : this.positionData) { // Time gets earlier, number goes down
-					if (firstEPD == null) {
-						firstEPD = secondEPD;
-						if (serverTimeToUse > secondEPD.serverTimestamp) {
+					if (firstEPD != null) {
+						if (firstEPD.serverTimestamp >= serverTimeToUse && secondEPD.serverTimestamp <= serverTimeToUse) {
+							return this.getInterpolatedPosition(firstEPD, secondEPD, serverTimeToUse); //positionData.indexOf(firstEPD); 
+						}/* else if (firstEPD.serverTimestamp < serverTimeToUse) {
+							// Data is too old!
 							Settings.p(this.toString(serverTimeToUse));
-							long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
-							Settings.p(startDiff + " too soon");
-							return null; // Too soon!
-						}
-					} else if (secondEPD.serverTimestamp <= serverTimeToUse && firstEPD.serverTimestamp >= serverTimeToUse) {
-						return this.getInterpolatedPosition(firstEPD, secondEPD, serverTimeToUse);
-					} else if (firstEPD.serverTimestamp < serverTimeToUse) {
-						// Data is too old!
-						Settings.p(this.toString(serverTimeToUse));
-						long diff = serverTimeToUse - firstEPD.serverTimestamp;
-						Settings.p("Position data too old for " + serverTimeToUse + " by " + diff + " (" + positionData.size() + " entries)");
-						Settings.p("Data goes from " + positionData.getFirst().serverTimestamp + " to " + positionData.getLast().serverTimestamp);
-						return null;
+							//long diff = serverTimeToUse - firstEPD.serverTimestamp;
+							//Settings.p("Position data too old for " + serverTimeToUse + " by " + diff + " (" + positionData.size() + " entries)");
+							//Settings.p("Data goes from " + positionData.getFirst().serverTimestamp + " to " + positionData.getLast().serverTimestamp);
+							return null;
+						}*/
 					}
 					firstEPD = secondEPD;
 				}
-
+				throw new RuntimeException("Should not get here!");
 			}
 			Settings.p("No position data (" + positionData.size() + " entries)");
 		}
@@ -128,7 +129,7 @@ public final class PositionCalculator {
 
 	public String toString(long showTime) {
 		StringBuilder str = new StringBuilder();
-		str.append("OUTPUT\n");
+		str.append("OUTPUT:-\n");
 		boolean shownTime = false;
 		for(int i=0 ; i<this.positionData.size() ; i++) { // Time gets earlier, number gets smaller
 			EntityPositionData epd = this.positionData.get(i);
