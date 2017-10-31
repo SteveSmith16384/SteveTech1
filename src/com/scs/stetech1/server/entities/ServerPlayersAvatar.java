@@ -6,6 +6,7 @@ import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IDamagable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.input.IInputDevice;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.IEntityController;
@@ -33,7 +34,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 				return;
 			}
 		}
-		
+
 		if (invulnerableTime >= 0) {
 			invulnerableTime -= tpf;
 		}
@@ -46,11 +47,11 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 				return;
 			}
 		}
-		
+
 		super.process(tpf);
 	}
-	
-	
+
+
 	@Override
 	public void damaged(float amt, String reason) {
 		died(reason);
@@ -79,7 +80,11 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 	private void died(String reason) {
 		Settings.p("Player died: " + reason);
 		this.restarting = true;
-		this.restartTime = 3; // todo - why is this null? ServerMain.properties.GetRestartTimeSecs();
+		try {
+			this.restartTime = ServerMain.properties.GetRestartTimeSecs();
+		} catch (NullPointerException ex){
+			ex.printStackTrace();
+		}
 		//invulnerableTime = RESTART_DUR*3;
 
 		// Move us below the map

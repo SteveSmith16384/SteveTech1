@@ -3,7 +3,7 @@ package com.scs.stetech1.netmessages;
 import java.util.HashMap;
 
 import com.jme3.network.serializing.Serializable;
-import com.scs.stetech1.client.entities.PhysicalEntity;
+import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 @Serializable
 public class NewEntityMessage extends EntityUpdateMessage {
@@ -19,8 +19,7 @@ public class NewEntityMessage extends EntityUpdateMessage {
 	public NewEntityMessage(PhysicalEntity e) {
 		super(e);
 		
-		//this.requiresAck = true;
-		this.setReliable(true);
+		this.setReliable(true); // Since superclass has set it to false
 		
 		entityID = e.getID();
 		type = e.getType();

@@ -32,11 +32,11 @@ import com.jme3.network.Network;
 import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
 import com.scs.stetech1.client.entities.ClientPlayersAvatar;
-import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
+import com.scs.stetech1.netmessages.AllEntitiesSentMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
@@ -47,10 +47,11 @@ import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.AveragePingTime;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.PositionCalculator;
+import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public class SorcerersClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
 
@@ -74,10 +75,11 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	private AveragePingTime pingCalc = new AveragePingTime();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
+	public boolean gameStarted = false;
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
-	public PositionCalculator avatarPositions = new PositionCalculator();
+	public PositionCalculator clientAvatarPositionData = new PositionCalculator();
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public static void main(String[] args) {
@@ -150,6 +152,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		//bulletAppState.getPhysicsSpace().addTickListener(this);
 		//bulletAppState.getPhysicsSpace().setAccuracy(1f / 80f);
 		//bulletAppState.getPhysicsSpace().enableDebug(game.getAssetManager());
+		bulletAppState.setEnabled(false); // Wait until all entities received
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Settings.CAM_DIST);
 
@@ -185,6 +188,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			myClient.addMessageListener(this, NewPlayerRequestMessage.class);
 			myClient.addMessageListener(this, NewPlayerAckMessage.class);
 			myClient.addMessageListener(this, RemoveEntityMessage.class);
+			myClient.addMessageListener(this, AllEntitiesSentMessage.class);
 
 			myClient.send(new NewPlayerRequestMessage("Mark Gray"));
 		} catch (IOException e) {
@@ -266,6 +270,13 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 					} else if (message instanceof RemoveEntityMessage) {
 						RemoveEntityMessage rem = (RemoveEntityMessage)message;
 						this.removeEntity(rem.entityID);
+
+					} else if (message instanceof AllEntitiesSentMessage) {
+						this.bulletAppState.setEnabled(true); // Go!
+						gameStarted = true;
+
+					} else {
+						throw new RuntimeException("Unknown message type: " + message);
 					}
 				}
 			}
@@ -273,10 +284,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			if (sendPingInt.hitInterval()) {
 				myClient.send(new PingMessage(false));
 			}
+		}
 
+		if (gameStarted) {
 			if (this.avatar != null) {
 				// Send inputs
-				if (sendInputsInterval.hitInterval()) { // this.getCamera()
+				if (sendInputsInterval.hitInterval()) {
 					if (myClient.isConnected()) {
 						this.myClient.send(new PlayerInputMessage(this.input));
 
@@ -288,24 +301,22 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				epd.serverTimestamp = serverTime;
 				epd.position = avatar.getWorldTranslation().clone();
 				//epd.rotation not required
-				this.avatarPositions.addPositionData(epd);
+				this.clientAvatarPositionData.addPositionData(epd);
 			}
-		}
 
-		long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
-		for (IEntity e : this.entities.values()) {
-			if (e instanceof PhysicalEntity) {
-				PhysicalEntity pe = (PhysicalEntity)e;
-				if (pe.canMove()) { // Only bother with things that can move
-					pe.calcPosition(this, serverTimePast);
+			long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
+			for (IEntity e : this.entities.values()) {
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity pe = (PhysicalEntity)e;
+					if (pe.canMove()) { // Only bother with things that can move
+						pe.calcPosition(this, serverTimePast);
+					}
 				}
 			}
-		}
 
-		if (this.avatar != null) {
-			avatar.process(tpf_secs);
-		} else {
-			//Settings.p("Avatar is null!");
+			if (this.avatar != null) {
+				avatar.process(tpf_secs);
+			}
 		}
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
@@ -342,9 +353,9 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
 				this.playersAvatarID = npcm.avatarEntityID;
-				if (hud != null) {
-					this.hud.setPlayerID(this.playerID);
-				}
+				//if (hud != null) {
+				this.hud.setPlayerID(this.playerID);
+				//}
 				synchronized (this.entities) {
 					// Set avatar if we already have it
 					if (this.entities.containsKey(playersAvatarID)) {
@@ -373,6 +384,13 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			synchronized (unprocessedMessages) {
 				unprocessedMessages.add(rem);
 			}
+
+		} else if (message instanceof AllEntitiesSentMessage) {
+			AllEntitiesSentMessage rem = (AllEntitiesSentMessage)message;
+			synchronized (unprocessedMessages) {
+				unprocessedMessages.add(rem);
+			}
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}

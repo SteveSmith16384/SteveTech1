@@ -5,12 +5,12 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public class TestPositionCalculator implements IUnitTestClass {
+public class TestPositionCalculator {
 
 	public TestPositionCalculator() {
 	}
 
-	@Override
+
 	public void runTests() {
 		basicPositionCalc1();
 		basicPositionCalc2_AddInReverse();

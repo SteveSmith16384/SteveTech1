@@ -11,12 +11,12 @@ import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.scs.stetech1.client.MyBetterCharacterControl;
-import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IProcessable;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessable, ICanShoot, IAffectedByPhysics {
 

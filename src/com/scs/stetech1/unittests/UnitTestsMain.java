@@ -5,7 +5,7 @@ import com.scs.stetech1.server.Settings;
 public class UnitTestsMain {
 
 	public UnitTestsMain() {
-		IUnitTestClass testPosCalc = new TestPositionCalculator();
+		TestPositionCalculator testPosCalc = new TestPositionCalculator();
 		testPosCalc.runTests();
 		Settings.p("Tests finished");
 	}

@@ -1,4 +1,4 @@
-package com.scs.stetech1.client.entities;
+package com.scs.stetech1.shared.entities;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -9,7 +9,7 @@ import com.jme3.export.Savable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Entity implements IEntity, Savable {
+public abstract class Entity implements IEntity, Savable {
 	
 	public final int id;
 	public final int type;
@@ -17,7 +17,7 @@ public class Entity implements IEntity, Savable {
 	public final String name;
 
 	public Entity(IEntityController _module, int _id, int _type, String _name) {
-		id = _id;;//nextID.addAndGet(1);
+		id = _id;
 		type = _type;
 		module = _module;
 		name = _name;

@@ -1,4 +1,4 @@
-package com.scs.stetech1.client.entities;
+package com.scs.stetech1.shared.entities;
 
 import java.util.HashMap;
 
@@ -22,8 +22,6 @@ public class Floor extends PhysicalEntity implements ICollideable {
 	private Box box1;
 	private Vector3f texScroll, thisScroll;
 	private float w, h, d;
-
-	private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
 
 	public Floor(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
 		super(_game, id, EntityTypes.FLOOR, "Floor");

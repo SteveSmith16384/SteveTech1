@@ -20,11 +20,9 @@ import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.system.JmeContext;
-import com.scs.stetech1.client.entities.Crate;
-import com.scs.stetech1.client.entities.Floor;
-import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessable;
+import com.scs.stetech1.netmessages.AllEntitiesSentMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
@@ -38,6 +36,8 @@ import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.entities.Floor;
+import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, ErrorListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
@@ -121,9 +121,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity sc = (PhysicalEntity)e;
 							if (sc.hasMoved()) { // Don't send if not moved
-								if (sc.type == EntityTypes.AVATAR) {
+								/*if (sc.type == EntityTypes.AVATAR) {
 									Settings.p("Sending avatar pos:" + sc.getWorldTranslation());
-								}
+								}*/
 								myServer.broadcast(new EntityUpdateMessage(sc));
 								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}
@@ -238,6 +238,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			for (IEntity e : entities.values()) {
 				this.sendNewEntity(client, e);
 			}
+			AllEntitiesSentMessage aes = new AllEntitiesSentMessage();
+			myServer.broadcast(Filters.equalTo(client.conn), aes);
 		}
 	}
 
@@ -338,7 +340,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		int id = getNextEntityID();
 		new Floor(this, id, 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		id = getNextEntityID();
-		new Crate(this, id, 8, 2, 8, 1, 1, 1f, "Textures/crate.png");
+		//todo - re-add new Crate(this, id, 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 	}
 
 

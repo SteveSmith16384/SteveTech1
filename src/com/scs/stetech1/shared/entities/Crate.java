@@ -1,10 +1,13 @@
-package com.scs.stetech1.client.entities;
+package com.scs.stetech1.shared.entities;
 
 import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
@@ -15,30 +18,25 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollideable { // Need ICollideable so lasers don't bounce off it
+public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
 
-	private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
-
-	public Wall(IEntityController _game, int id, float x, float yBottom, float z, String tex, float rotDegrees) {
-		super(_game, id, EntityTypes.WALL, "Wall");
+	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
+		super(_game, id, EntityTypes.CRATE, "Crate");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("id", id);
+			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
-			//creationData.put("rot", rotDegrees);
+			//creationData.put("rot", rotDegrees); No, since chances are it will have moved anyway
 		}
-
-		float w = 3f;
-		float h = 1f;
-		float d = 0.1f;
 
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
-		Geometry geometry = new Geometry("Wall", box1);
+		Geometry geometry = new Geometry("Crate", box1);
+		//int i = NumberFunctions.rnd(1, 10);
 		if (!_game.isServer()) { // Not running in server
-			//int i = NumberFunctions.rnd(1, 10);
-			TextureKey key3 = new TextureKey(tex);// Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
+			TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
 			key3.setGenerateMips(true);
 			Texture tex3 = module.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
@@ -53,16 +51,18 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 			}
 
 			geometry.setMaterial(floor_mat);
+			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			geometry.setQueueBucket(Bucket.Transparent);
 		}
-		this.main_node.attachChild(geometry);
-		if (rotDegrees != 0) {
-			float rads = (float)Math.toRadians(rotDegrees);
-			main_node.rotate(0, rads, 0);
-		}
-		main_node.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2));
 
-		rigidBodyControl = new RigidBodyControl(0f);
+		this.main_node.attachChild(geometry);
+		float rads = (float)Math.toRadians(rotDegrees);
+		main_node.rotate(0, rads, 0);
+		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
+
+		rigidBodyControl = new RigidBodyControl(1f);
 		main_node.addControl(rigidBodyControl);
+
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		module.getRootNode().attachChild(this.main_node);
 
@@ -77,7 +77,8 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 
 	@Override
 	public void process(float tpf) {
-		//Settings.p("Pos: " + this.getLocation());
+		//super.process(tpf);
+		//Settings.p("Pos: " + this.getWorldTranslation());
 	}
 
 
@@ -91,7 +92,6 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 	public HashMap<String, Object> getCreationData() {
 		return creationData;
 	}
-
 
 
 }

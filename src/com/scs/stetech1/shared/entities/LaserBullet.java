@@ -1,4 +1,4 @@
-package com.scs.stetech1.entities;
+package com.scs.stetech1.shared.entities;
 
 import java.util.HashMap;
 
@@ -6,7 +6,6 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.scs.stetech1.client.entities.PhysicalEntity;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICollideable;

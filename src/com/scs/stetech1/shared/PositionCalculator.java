@@ -3,9 +3,13 @@ package com.scs.stetech1.shared;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.scs.stetech1.server.Settings;
+
 public final class PositionCalculator {
 
-	private List<EntityPositionData> positionData = new LinkedList<>();
+	//private static final int MAX_ENTRIES = 50;
+
+	private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // Newest entry is at the start
 
 	public PositionCalculator() {
 
@@ -14,20 +18,34 @@ public final class PositionCalculator {
 
 	public void addPositionData(EntityPositionData newData) {
 		synchronized (positionData) {
+			boolean added = false;
 			for(int i=0 ; i<this.positionData.size() ; i++) {
 				// Time gets earlier, number gets smaller
 				EntityPositionData epd = this.positionData.get(i);
-				if (newData.serverTimestamp > epd.serverTimestamp) {
-					positionData.add(i, newData);
-					// Remove later entries
-					/*todo - re-add while (this.positionData.size() > i+3) { // todo - base on time
-						this.positionData.remove(i+3);
-					}*/
-					return;
+				if (!added) {
+					if (newData.serverTimestamp > epd.serverTimestamp) {
+						positionData.add(i, newData);
+						added = true;
+						break;
+					}
 				}
 			}
-			// Add to end
-			positionData.add(newData);
+			if (!added) {
+				// Add to end
+				positionData.add(newData);
+			}
+
+			// Remove later entries
+			int min_entries = 5000 / Settings.SERVER_SEND_UPDATE_INTERVAL_MS;
+			long cutoff = System.currentTimeMillis() - (Settings.SERVER_SEND_UPDATE_INTERVAL_MS*2);
+			while (this.positionData.size() > min_entries) {
+				EntityPositionData epd = this.positionData.getLast();
+				if (epd.serverTimestamp < cutoff) {
+					this.positionData.removeLast();
+				} else {
+					break;
+				}
+			}
 		}
 	}
 
@@ -35,25 +53,32 @@ public final class PositionCalculator {
 	public EntityPositionData calcPosition(long serverTimeToUse) {
 		synchronized (positionData) {
 			if (this.positionData.size() > 1) {
+
 				EntityPositionData firstEPD = null;
-				for(EntityPositionData secondEPD : this.positionData) {
-					// Time gets earlier, number goes down
+				for(EntityPositionData secondEPD : this.positionData) { // Time gets earlier, number goes down
 					if (firstEPD == null) {
 						firstEPD = secondEPD;
 						if (serverTimeToUse > secondEPD.serverTimestamp) {
-							return null; // Too early!
+							Settings.p(this.toString(serverTimeToUse));
+							long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
+							Settings.p(startDiff + " too soon");
+							return null; // Too soon!
 						}
-					} else if (firstEPD.serverTimestamp > serverTimeToUse && secondEPD.serverTimestamp < serverTimeToUse) {
+					} else if (secondEPD.serverTimestamp <= serverTimeToUse && firstEPD.serverTimestamp >= serverTimeToUse) {
 						return this.getInterpolatedPosition(firstEPD, secondEPD, serverTimeToUse);
 					} else if (firstEPD.serverTimestamp < serverTimeToUse) {
 						// Data is too old!
-						//Settings.p("Position data too old for " + entity.name + " (" + positionData.size() + " entries)");
+						Settings.p(this.toString(serverTimeToUse));
+						long diff = serverTimeToUse - firstEPD.serverTimestamp;
+						Settings.p("Position data too old for " + serverTimeToUse + " by " + diff + " (" + positionData.size() + " entries)");
+						Settings.p("Data goes from " + positionData.getFirst().serverTimestamp + " to " + positionData.getLast().serverTimestamp);
 						return null;
 					}
 					firstEPD = secondEPD;
 				}
+
 			}
-			//Settings.p("No position data for " + this.name + " (" + positionData.size() + " entries)");
+			Settings.p("No position data (" + positionData.size() + " entries)");
 		}
 		return null;
 
@@ -101,4 +126,19 @@ public final class PositionCalculator {
 	}
 
 
+	public String toString(long showTime) {
+		StringBuilder str = new StringBuilder();
+		str.append("OUTPUT\n");
+		boolean shownTime = false;
+		for(int i=0 ; i<this.positionData.size() ; i++) { // Time gets earlier, number gets smaller
+			EntityPositionData epd = this.positionData.get(i);
+			if (!shownTime && showTime > epd.serverTimestamp) {
+				str.append("Here: " + showTime + "\n");
+				shownTime = true;
+			}
+			str.append(i + ": " + epd.serverTimestamp + "\n");
+		}		
+
+		return str.toString();
+	}
 }

@@ -1,6 +1,10 @@
 STETECH1
 
 TODO
+Only activate client physics when all entities received
+Unit test position client avatar based on history and client position history
+Search for todos
+Get rotation when sending to new clients
 	Client jumping back since we're comparing what the server sent 100ms ago
 	Show playerid on screen
 Reduce dependencies between classes

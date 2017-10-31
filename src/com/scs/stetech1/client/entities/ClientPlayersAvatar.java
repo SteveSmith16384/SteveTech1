@@ -14,6 +14,8 @@ import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityPositionData;
+import com.scs.stetech1.shared.entities.Entity;
+import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD {
 
@@ -62,19 +64,21 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 
 	@Override
 	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
-		EntityPositionData serverEPD = posCalc.calcPosition(serverTimeToUse);
+		EntityPositionData serverEPD = this.serverPositionData.calcPosition(serverTimeToUse);
 		if (serverEPD != null) {
 			// check where we should be based on where we were 100ms ago
-			EntityPositionData clientEPD = game.avatarPositions.calcPosition(serverTimeToUse);// - mainApp.clientToServerDiffTime);
-			// Is there a difference
-			float diff = serverEPD.position.distance(clientEPD.position);
-			if (diff > .1f) {
-				Settings.p("Adjusting client: " + diff);
-				// Get diff between player pos X ms ago and current pos, and re-add this to server pos
-				Vector3f offset = clientEPD.position.subtract(mainApp.avatar.getWorldTranslation());
-				this.setWorldTranslation(serverEPD.position.add(offset)); // todo - test this!
+			EntityPositionData clientEPD = game.clientAvatarPositionData.calcPosition(serverTimeToUse);// - mainApp.clientToServerDiffTime);
+			if (clientEPD != null) {
+				// Is there a difference
+				float diff = serverEPD.position.distance(clientEPD.position);
+				if (diff > 0.1f) {
+					Settings.p("Adjusting client: " + diff);
+					// Get diff between player pos X millis ago and current pos, and re-add this to server pos
+					Vector3f offset = mainApp.avatar.getWorldTranslation().subtract(clientEPD.position);
+					Vector3f newPos = serverEPD.position.add(offset);
+					this.setWorldTranslation(newPos); // todo - test this!
+				}
 			}
-			//No! this.setWorldRotation(serverEPD.rotation);
 		}
 
 	}

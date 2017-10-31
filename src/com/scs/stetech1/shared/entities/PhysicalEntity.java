@@ -1,4 +1,4 @@
-package com.scs.stetech1.client.entities;
+package com.scs.stetech1.shared.entities;
 
 import java.util.HashMap;
 
@@ -17,8 +17,12 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
-	protected PositionCalculator posCalc = new PositionCalculator();
+	protected PositionCalculator serverPositionData = new PositionCalculator();
+	
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
+	private Quaternion prevRot = new Quaternion();
+	
+	protected HashMap<String, Object> creationData;
 
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name) {
 		super(_game, id, type, _name);
@@ -28,23 +32,25 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 
 	public void addPositionData(EntityPositionData newData) {
-		this.posCalc.addPositionData(newData);
+		this.serverPositionData.addPositionData(newData);
 	}
 
 
 	// This is overridden by Avatars to take into account local position
 	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
-		EntityPositionData epd = posCalc.calcPosition(serverTimeToUse);
+		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse);
 		if (epd != null) {
 			this.setWorldTranslation(epd.position);
 			this.setWorldRotation(epd.rotation);
+		} else {
+			Settings.p("No position data for " + this);
 		}
 
 	}
 
 
 	public void clearPositiondata() {
-		this.posCalc.clearPositiondata();
+		this.serverPositionData.clearPositiondata();
 	}
 
 
@@ -137,7 +143,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 	}
 
 
-	public Quaternion getRotation() {
+	public Quaternion getWorldRotation() {
 		return this.getMainNode().getLocalRotation();
 	}
 
@@ -148,16 +154,22 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 
 	public boolean hasMoved() {
-		Vector3f newPos = this.getWorldTranslation();
-		//boolean hasMoved = (newPos.x != this.prevPos.x || newPos.y != this.prevPos.y || newPos.y != this.prevPos.y); // todo - check rotation
-		float dist = newPos.distance(prevPos);
-		boolean hasMoved = dist > 0.001f; //!newPos.equals(prevPos); 
+		// todo - can rigidBodyControl tell us if it's moved?
+		Vector3f currentPos = this.getWorldTranslation();
+		float dist = currentPos.distance(prevPos);
+		boolean hasMoved = dist > 0.001f; 
 		if (hasMoved) {
 			Settings.p(this.toString() + " has moved " + dist);
-			this.prevPos.x = newPos.x;
-			this.prevPos.y = newPos.y;
-			this.prevPos.z = newPos.z;
+			this.prevPos.set(currentPos);
 		}
+
+		// Check if rotation changed
+		Quaternion currentRot = this.getWorldRotation();
+		boolean rotChanged = !currentRot.equals(this.prevRot);
+		if (rotChanged) {
+			prevRot.set(currentRot);
+		}
+		hasMoved = hasMoved || rotChanged;
 
 		return hasMoved;
 	}
