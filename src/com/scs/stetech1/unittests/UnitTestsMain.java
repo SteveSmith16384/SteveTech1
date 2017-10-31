@@ -1,10 +1,13 @@
 package com.scs.stetech1.unittests;
 
+import com.scs.stetech1.server.Settings;
+
 public class UnitTestsMain {
 
 	public UnitTestsMain() {
 		IUnitTestClass testPosCalc = new TestPositionCalculator();
 		testPosCalc.runTests();
+		Settings.p("Tests finished");
 	}
 	
 

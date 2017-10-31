@@ -2,7 +2,6 @@ package com.scs.stetech1.weapons;
 
 import com.scs.stetech1.abilities.IAbility;
 import com.scs.stetech1.components.ICanShoot;
-import com.scs.stetech1.entities.LaserBullet;
 import com.scs.stetech1.shared.IEntityController;
 
 public class LaserRifle extends AbstractMagazineGun implements IAbility {

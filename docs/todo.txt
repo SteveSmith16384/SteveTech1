@@ -1,7 +1,7 @@
 STETECH1
 
 TODO
-Client jumping back since we're comparing what the server sent 100ms ago
+	Client jumping back since we're comparing what the server sent 100ms ago
 	Show playerid on screen
 Reduce dependencies between classes
 	Return new EntityPos from calculator

@@ -25,8 +25,9 @@ public class EntityPositionData {
 
 	public EntityPositionData getInterpol(EntityPositionData other, long time) {
 		// interpolate between timestamps
-		float frac = (this.serverTimestamp - time) / (time - other.serverTimestamp);
-		Vector3f posToSet = this.position.interpolate(other.position, frac);
+		float frac = ((float)(serverTimestamp - time) / (float)(serverTimestamp - other.serverTimestamp));
+		Vector3f posToSet = new Vector3f();
+		posToSet.interpolate(this.position, other.position, frac);
 
 		Quaternion newRot = new Quaternion();
 		Quaternion newRot2 = newRot;

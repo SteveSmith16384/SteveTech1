@@ -37,20 +37,20 @@ public final class PositionCalculator {
 			if (this.positionData.size() > 1) {
 				EntityPositionData firstEPD = null;
 				for(EntityPositionData secondEPD : this.positionData) {
-					// Time gets earlier
+					// Time gets earlier, number goes down
 					if (firstEPD == null) {
 						firstEPD = secondEPD;
 						if (serverTimeToUse > secondEPD.serverTimestamp) {
 							return null; // Too early!
 						}
 					} else if (firstEPD.serverTimestamp > serverTimeToUse && secondEPD.serverTimestamp < serverTimeToUse) {
-						//this.gotData(firstEPD, secondEPD, serverTimeToUse);
 						return this.getInterpolatedPosition(firstEPD, secondEPD, serverTimeToUse);
 					} else if (firstEPD.serverTimestamp < serverTimeToUse) {
 						// Data is too old!
 						//Settings.p("Position data too old for " + entity.name + " (" + positionData.size() + " entries)");
 						return null;
 					}
+					firstEPD = secondEPD;
 				}
 			}
 			//Settings.p("No position data for " + this.name + " (" + positionData.size() + " entries)");
