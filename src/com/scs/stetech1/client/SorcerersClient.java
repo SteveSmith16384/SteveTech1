@@ -22,9 +22,9 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.network.AbstractMessage;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
+import com.jme3.network.ErrorListener;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
@@ -46,13 +46,13 @@ import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.AveragePingTime;
+import com.scs.stetech1.shared.AverageNumberCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
-public class SorcerersClient extends SimpleApplication implements ClientStateListener, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
+public class SorcerersClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -69,14 +69,14 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	public ClientPlayersAvatar avatar;
 	public int playerID = -1;
 	public long playersAvatarID = -1;
-	private AveragePingTime pingCalc = new AveragePingTime();
+	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
 	public boolean gameStarted = false;
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
-	public PositionCalculator clientAvatarPositionData = new PositionCalculator();
+	public PositionCalculator clientAvatarPositionData = new PositionCalculator(500); // todo - check
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public static void main(String[] args) {
@@ -177,7 +177,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			myClient = Network.connectToServer("localhost", Settings.PORT);
 			myClient.start();
 			myClient.addClientStateListener(this);
-			//myClient.addErrorListener(this);
+			myClient.addErrorListener(this);
 
 			myClient.addMessageListener(this, PingMessage.class);
 			myClient.addMessageListener(this, NewEntityMessage.class);
@@ -223,104 +223,104 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {  //this.rootNode.getChild(2).getWorldTranslation();
-		long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
+		try {
+			final long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 
-		if (myClient.isConnected()) {  //this.rootNode.getChild(1).getWorldTranslation();
-			// Process messages in JME thread
-			synchronized (unprocessedMessages) { //this.getCamera()
-				// Check we don't already know about it
-				while (!this.unprocessedMessages.isEmpty()) {
-					MyAbstractMessage message = this.unprocessedMessages.remove(0);
-					if (message instanceof NewEntityMessage) {
-						NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-						if (!this.entities.containsKey(newEntityMessage.entityID)) {
-							IEntity e = EntityCreator.createEntity(this, newEntityMessage);
-							this.addEntity(e);
-						}
-
-					} else if (message instanceof EntityUpdateMessage) {
-						EntityUpdateMessage eum = (EntityUpdateMessage)message;
-						IEntity e = this.entities.get(eum.entityID);
-						if (e != null) {
-							//Settings.p("Received EntityUpdateMessage for " + e);
-							EntityPositionData epd = new EntityPositionData();
-							epd.serverTimestamp = eum.timestamp + clientToServerDiffTime;
-							epd.rotation = eum.dir;
-							epd.position = eum.pos;
-
-							PhysicalEntity pe = (PhysicalEntity)e;
-							if (eum.force) {
-								// Set it now!
-								pe.setWorldTranslation(epd.position);
-								pe.setWorldRotation(epd.rotation);
-								pe.clearPositiondata();
-							} else {
-								pe.addPositionData(epd);
+			if (myClient.isConnected()) {  //this.rootNode.getChild(1).getWorldTranslation();
+				// Process messages in JME thread
+				synchronized (unprocessedMessages) { //this.getCamera()
+					// Check we don't already know about it
+					while (!this.unprocessedMessages.isEmpty()) {
+						MyAbstractMessage message = this.unprocessedMessages.remove(0);
+						if (message instanceof NewEntityMessage) {
+							NewEntityMessage newEntityMessage = (NewEntityMessage) message;
+							if (!this.entities.containsKey(newEntityMessage.entityID)) {
+								IEntity e = EntityCreator.createEntity(this, newEntityMessage);
+								this.addEntity(e);
 							}
-							//Settings.p("New position for " + e + ": " + eum.pos);
+
+						} else if (message instanceof EntityUpdateMessage) {
+							EntityUpdateMessage eum = (EntityUpdateMessage)message;
+							IEntity e = this.entities.get(eum.entityID);
+							if (e != null) {
+								//Settings.p("Received EntityUpdateMessage for " + e);
+								EntityPositionData epd = new EntityPositionData();
+								epd.serverTimestamp = eum.timestamp;// + clientToServerDiffTime;
+								epd.rotation = eum.dir;
+								epd.position = eum.pos;
+
+								PhysicalEntity pe = (PhysicalEntity)e;
+								if (eum.force) {
+									// Set it now!
+									pe.setWorldTranslation(epd.position);
+									pe.setWorldRotation(epd.rotation);
+									pe.clearPositiondata();
+								} else {
+									pe.addPositionData(epd);
+								}
+								//Settings.p("New position for " + e + ": " + eum.pos);
+							} else {
+							}
+
+						} else if (message instanceof RemoveEntityMessage) {
+							RemoveEntityMessage rem = (RemoveEntityMessage)message;
+							this.removeEntity(rem.entityID);
+
+						} else if (message instanceof AllEntitiesSentMessage) {
+							this.bulletAppState.setEnabled(true); // Go!
+							gameStarted = true;
+
 						} else {
-							/*if (this.joinedGame) {
-						send(new UnknownEntityMessage(eum.entityID));  Do we actually need this?
-					}*/
+							throw new RuntimeException("Unknown message type: " + message);
 						}
-
-					} else if (message instanceof RemoveEntityMessage) {
-						RemoveEntityMessage rem = (RemoveEntityMessage)message;
-						this.removeEntity(rem.entityID);
-
-					} else if (message instanceof AllEntitiesSentMessage) {
-						this.bulletAppState.setEnabled(true); // Go!
-						gameStarted = true;
-
-					} else {
-						throw new RuntimeException("Unknown message type: " + message);
 					}
+				}
+
+				if (sendPingInt.hitInterval()) {
+					send(new PingMessage(false));
 				}
 			}
 
-			if (sendPingInt.hitInterval()) {
-				send(new PingMessage(false));
+			if (gameStarted) {
+				if (this.avatar != null) {
+					// Send inputs
+					if (sendInputsInterval.hitInterval()) {
+						if (myClient.isConnected()) {
+							this.send(new PlayerInputMessage(this.input));
+						}
+					}
+
+					// Store our position
+					EntityPositionData epd = new EntityPositionData();
+					epd.serverTimestamp = serverTime;
+					epd.position = avatar.getWorldTranslation().clone();
+					//Settings.p("Storing local position " + epd.position);
+					//epd.rotation not required
+					this.clientAvatarPositionData.addPositionData(epd);
+				}
+
+				long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
+				for (IEntity e : this.entities.values()) {
+					if (e instanceof PhysicalEntity) {
+						PhysicalEntity pe = (PhysicalEntity)e;
+						if (pe.canMove()) { // Only bother with things that can move
+							//pe.getWorldTranslation();
+							pe.calcPosition(this, serverTimePast);
+						}
+					}
+				}
+
+				if (this.avatar != null) {
+					avatar.process(tpf_secs);
+				}
 			}
+
+			loopTimer.waitForFinish(); // Keep clients and server running at same speed
+			loopTimer.start();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			this.quit();
 		}
-
-		if (gameStarted) {
-			if (this.avatar != null) {
-				// Send inputs
-				if (sendInputsInterval.hitInterval()) {
-					if (myClient.isConnected()) {
-						this.send(new PlayerInputMessage(this.input));
-
-					}
-				}
-
-				// Store our position
-				EntityPositionData epd = new EntityPositionData();
-				epd.serverTimestamp = serverTime;
-				epd.position = avatar.getWorldTranslation().clone();
-				//Settings.p("Storing local position " + epd.position);
-				//epd.rotation not required
-				this.clientAvatarPositionData.addPositionData(epd);
-			}
-
-			long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
-			for (IEntity e : this.entities.values()) {
-				if (e instanceof PhysicalEntity) {
-					PhysicalEntity pe = (PhysicalEntity)e;
-					if (pe.canMove()) { // Only bother with things that can move
-						//pe.getWorldTranslation();
-						pe.calcPosition(this, serverTimePast);
-					}
-				}
-			}
-
-			if (this.avatar != null) {
-				avatar.process(tpf_secs);
-			}
-		}
-
-		loopTimer.waitForFinish(); // Keep clients and server running at same speed
-		loopTimer.start();
-
 	}
 
 
@@ -333,7 +333,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			if (!pingMessage.s2c) {
 				long p2 = System.currentTimeMillis() - pingMessage.originalSentTime;
 				this.pingRTT = this.pingCalc.add(p2);
-				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime + (pingRTT/2);
+				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (pingRTT/2); // If running on the same server, this should be 0! (or close enough)
 				/*
 				 * Client sent time: 1000
 				 * Server response time: 5000
@@ -342,11 +342,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				 */
 				Settings.p("pingRTT = " + pingRTT);
 				Settings.p("clientToServerDiffTime = " + clientToServerDiffTime);
-				
-				// Show difference between client and server time
-				/*long serverTime = System.currentTimeMillis() + clientToServerDiffTime;
-				long diff = System.currentTimeMillis() - serverTime;
-				Settings.p("client::server time diff = " + diff);*/
+
 			} else {
 				pingMessage.responseSentTime = System.currentTimeMillis();
 				send(message); // Send it straight back
@@ -416,12 +412,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	}
 
 
-	/*@Override
+	@Override
 	public void handleError(Object obj, Throwable ex) {
 		Settings.p("Network error with " + obj + ": " + ex);
 		ex.printStackTrace();
 		quit();
-	}*/
+	}
 
 
 	@Override
@@ -524,7 +520,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		return false;
 	}
 
-	
+
 	private void send(final Message msg) {
 		if (Settings.COMMS_DELAY == 0) {
 			myClient.send(msg);

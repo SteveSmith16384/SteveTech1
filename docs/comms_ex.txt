@@ -1,14 +1,16 @@
-Client render in past to ensure 
+Client render in past to ensure it has enough data.
+This example assumes a 50ms delay in comms from client to server (or vice versa)
+Client and server positions should match if client time is earlier
 
-TIME	CLIENT					Server
-0		Client presses down
-Pos:	0, 1					0,0
+TIME	CLIENT						Server
+0		Client presses down(1)
+Pos:	0,1							0,0
 
-50
-Pos:
+50		Client presses down(2)		Server rcvs "Client presses down(1)"
+Pos:	0,2							0,1
 
-100
-Pos:
+100		Client stops pressing		Server rcvs "Client presses down(2)"
+Pos:	0,2							0,2
 
 150
 Pos:

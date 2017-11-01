@@ -6,6 +6,7 @@ import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
+import com.scs.stetech1.client.ClientAvatarPositionCalc;
 import com.scs.stetech1.client.SorcerersClient;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IShowOnHUD;
@@ -65,7 +66,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 
 	@Override
 	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
-		EntityPositionData serverEPD = this.serverPositionData.calcPosition(serverTimeToUse);
+		/*EntityPositionData serverEPD = this.serverPositionData.calcPosition(serverTimeToUse);
 		if (serverEPD != null) {
 			// check where we should be based on where we were X ms ago
 			EntityPositionData clientEPD = game.clientAvatarPositionData.calcPosition(serverTimeToUse);
@@ -73,18 +74,28 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 				// Is there a difference
 				float diff = serverEPD.position.distance(clientEPD.position);
 				if (diff > 0.1f) {
-					//Settings.p("Adjusting client: " + diff);
-					// Get diff between player pos X millis ago and current pos, and re-add this to server pos
+					Settings.p("Adjusting client: " + diff);
+
+					// OPTION 1: Get diff between player pos X millis ago and current pos, and re-add this to server pos
 					Vector3f clientMovementSinceRenderDelay = mainApp.avatar.getWorldTranslation().subtract(clientEPD.position);
 					clientMovementSinceRenderDelay.y = 0; // Don't adjust y-axis
-					Vector3f newPos = serverEPD.position.add(clientMovementSinceRenderDelay);
+					//Vector3f newPos = serverEPD.position.add(clientMovementSinceRenderDelay);
+
+					// OPTION 2: Adjust player by halfway between server pos and client pos
+					Vector3f newPos = new Vector3f();
+					newPos.interpolate(serverEPD.position, clientEPD.position, .5f);
 					Settings.p("Moving player to " + newPos);
 					if (newPos.y < 0.4f || newPos.y > 7) {
 						Settings.p("Too far!");
 					}
-					this.setWorldTranslation(newPos); // todo - test this!
+					this.setWorldTranslation(newPos);
 				}
 			}
+		}*/
+
+		Vector3f newPos = ClientAvatarPositionCalc.calcHistoricalPosition(this.getWorldTranslation(), serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+		if (newPos != null) {
+			this.setWorldTranslation(newPos);
 		}
 
 	}

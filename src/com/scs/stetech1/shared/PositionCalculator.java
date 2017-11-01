@@ -1,16 +1,18 @@
 package com.scs.stetech1.shared;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import com.scs.stetech1.server.Settings;
 
 public final class PositionCalculator {
 
 	private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // Newest entry is at the start
+	private int maxEntries;
 
-	public PositionCalculator() {
+	public PositionCalculator(int _maxEntries) {
+		super();
 
+		maxEntries = _maxEntries;
 	}
 
 
@@ -33,15 +35,11 @@ public final class PositionCalculator {
 			}
 
 			// Remove later entries
-			int min_entries = 5000 / Settings.SERVER_SEND_UPDATE_INTERVAL_MS;
-			long cutoff = System.currentTimeMillis() - (Settings.SERVER_SEND_UPDATE_INTERVAL_MS*2);
-			while (this.positionData.size() > min_entries) {
+			//int min_entries = 5000 / Settings.SERVER_SEND_UPDATE_INTERVAL_MS;
+			//long cutoff = System.currentTimeMillis() - (Settings.SERVER_SEND_UPDATE_INTERVAL_MS*2);
+			while (this.positionData.size() > maxEntries) {
 				EntityPositionData epd = this.positionData.getLast();
-				if (epd.serverTimestamp < cutoff) {
-					this.positionData.removeLast();
-				} else {
-					break;
-				}
+				this.positionData.removeLast();
 			}
 		}
 	}
@@ -137,7 +135,7 @@ public final class PositionCalculator {
 				str.append("Here: " + showTime + "\n");
 				shownTime = true;
 			}
-			str.append(i + ": " + epd.serverTimestamp + "\n");
+			str.append(i + ": " + epd.serverTimestamp + " - " + epd.position + "\n");
 		}		
 
 		return str.toString();

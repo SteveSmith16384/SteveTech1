@@ -5,11 +5,22 @@ import com.scs.stetech1.server.Settings;
 public class UnitTestsMain {
 
 	public UnitTestsMain() {
-		TestPositionCalculator testPosCalc = new TestPositionCalculator();
-		testPosCalc.runTests();
-		Settings.p("Tests finished");
+		try {
+			TestPositionCalculator testPosCalc = new TestPositionCalculator();
+			testPosCalc.runTests();
+
+			TestAveragePingTime aptTests = new TestAveragePingTime();
+			aptTests.runTests();
+
+			TestAvatarPositionCalcs tapc = new TestAvatarPositionCalcs();
+			tapc.runTests();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		Settings.p("Tests finished.  Any errors are shown above");
 	}
-	
+
 
 	/**
 	 * @param args

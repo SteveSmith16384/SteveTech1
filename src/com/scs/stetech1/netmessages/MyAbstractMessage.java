@@ -13,7 +13,7 @@ public class MyAbstractMessage extends AbstractMessage {
 
 	public long msgId;
 	public long timestamp = System.currentTimeMillis();
-	public ClientData client; // for the server
+	public ClientData client; // for the server to keep track of who sent it
 	
 	public MyAbstractMessage(boolean tcp) {
 		super();

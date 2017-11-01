@@ -5,7 +5,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class PingMessage extends MyAbstractMessage {
 	
-	public boolean s2c;
+	public boolean s2c; // Is it server2client or vice-versa
 	public long originalSentTime;
 	public long responseSentTime;
 

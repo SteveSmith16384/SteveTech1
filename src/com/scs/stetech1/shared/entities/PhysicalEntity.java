@@ -17,7 +17,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
-	protected PositionCalculator serverPositionData = new PositionCalculator();
+	protected PositionCalculator serverPositionData;// = new PositionCalculator();
 	
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
 	private Quaternion prevRot = new Quaternion();
@@ -27,6 +27,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name) {
 		super(_game, id, type, _name);
 
+		serverPositionData = new PositionCalculator(100); // todo- check
 		main_node = new Node(name + "_MainNode");
 	}
 

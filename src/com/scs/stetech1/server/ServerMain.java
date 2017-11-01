@@ -188,17 +188,17 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			PingMessage pingMessage = (PingMessage) message;
 			if (pingMessage.s2c) {
 				try {
-					long p = System.currentTimeMillis() - pingMessage.originalSentTime;
-					client.pingRTT = client.pingCalc.add(p);
-					client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime + (client.pingRTT/2);
+					long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
+					client.pingRTT = client.pingCalc.add(rttDuration);
+					client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
 					/*
 					 * Server sent time: 2000
 					 * Client response time: 1000
 					 * Ping: 200 
 					 * clientToServerDiffTime: 1000 - 2000 + (200/2) = -900 
 					 */
-					//Settings.p("Client rtt = " + client.pingRTT);
-					//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
+					Settings.p("Client rtt = " + client.pingRTT);
+					Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
 				} catch (NullPointerException npe) {
 					npe.printStackTrace();
 				}

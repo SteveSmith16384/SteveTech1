@@ -1,12 +1,17 @@
 STETECH1
 
 TODO
-Log positions of avatar?
-Adjust clients position in the direction of the "correct" position, but only by a small bit
-	Dont override errorlistemer
-	Delay sending msgs in thread
-	Client's avatar position going haywire
-Unit test position client avatar based on history and client position history
+Compare client pos-rtt against server pos of same time
+The positionCalcs in the client's avatar for client & server positions should be the same
+Unit test poscalc using the same list each time
+Jumping - screen is not updated
+Use Executor for running threads
+	Unit test position client avatar based on history and client position history
+Unit test ping message & calcs
+	Even with msg delay, client and server time should be the same?
+Create generic classes and test them
+Log positions of avatar and analyse?
+	Adjust clients position in the direction of the "correct" position, but only by a small bit
 Search for todos
 	Client jumping back since we're comparing what the server sent 100ms ago
 Reduce dependencies between classes
@@ -48,11 +53,11 @@ Player shooting
 	
 LATER
 Don't send entity update if position not changed
-Simulate slow network
-Split up into separate projects: AbstractClient, Abstractserver, shared, Sorcerers
+Split up into separate packages: AbstractClient, Abstractserver, shared, Sorcerers
 Reduce object creation
 Kick players who don't move
-Close client if server crashes
 Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
+client/server encryption
+Make classes final
 

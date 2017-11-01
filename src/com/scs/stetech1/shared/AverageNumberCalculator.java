@@ -3,11 +3,11 @@ package com.scs.stetech1.shared;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AveragePingTime {
+public class AverageNumberCalculator {
 
 	public List<Long> pingTimes = new LinkedList<>();
 
-	public AveragePingTime() {
+	public AverageNumberCalculator() {
 	}
 	
 	
