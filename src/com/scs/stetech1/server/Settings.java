@@ -28,6 +28,7 @@ public class Settings {
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 100; // This must be fast enough so the client has recent data to work with 
 	public static final int CLIENT_RENDER_DELAY = SERVER_SEND_UPDATE_INTERVAL_MS*2; // Source: 50ms
 	public static final int PING_INTERVAL_MS = 10 * 1000;
+	public static final int COMMS_DELAY = 50;
 
 	public static final String VERSION = "0.01";
 	public static final boolean SHOW_LOGO = false;

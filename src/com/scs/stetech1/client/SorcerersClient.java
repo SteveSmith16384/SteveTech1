@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.prefs.BackingStoreException;
 
 import ssmith.util.FixedLoopTime;
@@ -23,9 +22,9 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.network.AbstractMessage;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
-import com.jme3.network.ErrorListener;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
@@ -53,7 +52,7 @@ import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
-public class SorcerersClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
+public class SorcerersClient extends SimpleApplication implements ClientStateListener, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -178,7 +177,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			myClient = Network.connectToServer("localhost", Settings.PORT);
 			myClient.start();
 			myClient.addClientStateListener(this);
-			myClient.addErrorListener(this);
+			//myClient.addErrorListener(this);
 
 			myClient.addMessageListener(this, PingMessage.class);
 			myClient.addMessageListener(this, NewEntityMessage.class);
@@ -188,7 +187,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			myClient.addMessageListener(this, RemoveEntityMessage.class);
 			myClient.addMessageListener(this, AllEntitiesSentMessage.class);
 
-			myClient.send(new NewPlayerRequestMessage("Mark Gray"));
+			send(new NewPlayerRequestMessage("Mark Gray"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -261,7 +260,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 							//Settings.p("New position for " + e + ": " + eum.pos);
 						} else {
 							/*if (this.joinedGame) {
-						myClient.send(new UnknownEntityMessage(eum.entityID));  Do we actually need this?
+						send(new UnknownEntityMessage(eum.entityID));  Do we actually need this?
 					}*/
 						}
 
@@ -280,7 +279,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			}
 
 			if (sendPingInt.hitInterval()) {
-				myClient.send(new PingMessage(false));
+				send(new PingMessage(false));
 			}
 		}
 
@@ -289,7 +288,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				// Send inputs
 				if (sendInputsInterval.hitInterval()) {
 					if (myClient.isConnected()) {
-						this.myClient.send(new PlayerInputMessage(this.input));
+						this.send(new PlayerInputMessage(this.input));
 
 					}
 				}
@@ -345,7 +344,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				Settings.p("clientToServerDiffTime = " + clientToServerDiffTime);
 			} else {
 				pingMessage.responseSentTime = System.currentTimeMillis();
-				myClient.send(message); // Send it straight back
+				send(message); // Send it straight back
 			}
 
 		} else if (message instanceof NewPlayerAckMessage) {
@@ -412,12 +411,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	}
 
 
-	@Override
+	/*@Override
 	public void handleError(Object obj, Throwable ex) {
 		Settings.p("Network error with " + obj + ": " + ex);
 		ex.printStackTrace();
 		quit();
-	}
+	}*/
 
 
 	@Override
@@ -503,7 +502,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	private void quit() {
 		Settings.p("quit()");
 		if (playerID >= 0) {
-			this.myClient.send(new PlayerLeftMessage(this.playerID));
+			this.send(new PlayerLeftMessage(this.playerID));
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -520,5 +519,24 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		return false;
 	}
 
+	
+	private void send(final Message msg) {
+		if (Settings.COMMS_DELAY == 0) {
+			myClient.send(msg);
+		}
+		else {
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(Settings.COMMS_DELAY);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					myClient.send(msg);
+				}
+			};
+		}
+	}
 
 }

@@ -53,7 +53,7 @@ public class HUD extends Node implements IProcessable {
 
 		score = new BitmapText(font_small, false);
 		score.setLocalTranslation(10, hud_height-15, 0);
-		this.attachChild(score);
+		//this.attachChild(score);
 		this.setScore(0);
 
 		abilityGun = new BitmapText(font_small, false);

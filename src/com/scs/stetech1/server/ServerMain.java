@@ -14,7 +14,6 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.network.ConnectionListener;
-import com.jme3.network.ErrorListener;
 import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
@@ -36,12 +35,11 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
-public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, ErrorListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
+public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -116,7 +114,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					client.playerName = newPlayerMessage.name;
 					client.avatarID = createPlayersAvatar(client);
 					// Send newplayerconf message
-					myServer.broadcast(Filters.equalTo(client.conn), new NewPlayerAckMessage(client.getPlayerID(), client.avatarID));
+					broadcast(client.conn, new NewPlayerAckMessage(client.getPlayerID(), client.avatarID));
 					sendEntityListToClient(client);
 
 				} else if (message instanceof UnknownEntityMessage) {
@@ -135,7 +133,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		if (myServer.hasConnections()) { // this.rootNode
 			if (sendPingInt.hitInterval()) {
-				myServer.broadcast(new PingMessage(true));
+				broadcast(new PingMessage(true));
 			}
 
 			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
@@ -154,7 +152,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 								/*if (sc.type == EntityTypes.AVATAR) {
 									Settings.p("Sending avatar pos:" + sc.getWorldTranslation());
 								}*/
-								myServer.broadcast(new EntityUpdateMessage(sc));
+								broadcast(new EntityUpdateMessage(sc));
 								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}
 						}
@@ -207,7 +205,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			} else {
 				// Send it back to the client
 				pingMessage.responseSentTime = System.currentTimeMillis();
-				myServer.broadcast(Filters.equalTo(client.conn), pingMessage);
+				broadcast(client.conn, pingMessage);
 			}
 
 		} else if (message instanceof PlayerInputMessage) {
@@ -242,7 +240,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				this.sendNewEntity(client, e);
 			}
 			AllEntitiesSentMessage aes = new AllEntitiesSentMessage();
-			myServer.broadcast(Filters.equalTo(client.conn), aes);
+			broadcast(client.conn, aes);
 		}
 	}
 
@@ -252,12 +250,12 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			PhysicalEntity se = (PhysicalEntity)e;
 			NewEntityMessage nem = new NewEntityMessage(se);
 			nem.force = true;
-			myServer.broadcast(Filters.equalTo(client.conn), nem);
+			broadcast(client.conn, nem);
 		}
 	}
 
 
-	@Override
+	/*@Override
 	public void handleError(Object obj, Throwable ex) {
 		Settings.p("Network error with " + obj + ": " + ex);
 		ex.printStackTrace();
@@ -265,7 +263,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		// Remove connection
 		this.connectionRemoved(this.myServer, (HostedConnection)obj);
 
-	}
+	}*/
 
 
 	@Override
@@ -326,7 +324,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			synchronized (entities) {
 				this.entities.remove(id);
 			}
-			this.myServer.broadcast(new RemoveEntityMessage(id));
+			this.broadcast(new RemoveEntityMessage(id));
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
@@ -408,4 +406,43 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		return nextEntityID.getAndAdd(1);
 	}
 
+
+	private void broadcast(final MyAbstractMessage msg) {
+		if (Settings.COMMS_DELAY == 0) {
+			myServer.broadcast(msg);
+		}
+		else {
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(Settings.COMMS_DELAY);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					myServer.broadcast(msg);
+				}
+			};
+		}
+	}
+
+
+	private void broadcast(final HostedConnection conn, final MyAbstractMessage msg) {
+		if (Settings.COMMS_DELAY == 0) {
+			myServer.broadcast(Filters.equalTo(conn), msg);
+		}
+		else {
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(Settings.COMMS_DELAY);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					myServer.broadcast(Filters.equalTo(conn), msg);
+				}
+			};
+		}
+	}
 }

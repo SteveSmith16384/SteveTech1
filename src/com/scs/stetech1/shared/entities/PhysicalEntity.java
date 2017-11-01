@@ -154,12 +154,14 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 
 	public boolean hasMoved() {
-		// todo - can rigidBodyControl tell us if it's moved?
 		Vector3f currentPos = this.getWorldTranslation();
 		float dist = currentPos.distance(prevPos);
 		boolean hasMoved = dist > 0.001f; 
 		if (hasMoved) {
-			Settings.p(this.toString() + " has moved " + dist);
+			if (dist > 10f) {
+				Settings.p(this.toString() + " has moved A LOT " + dist);
+			}
+				Settings.p(this.toString() + " has moved " + dist);
 			this.prevPos.set(currentPos);
 		}
 

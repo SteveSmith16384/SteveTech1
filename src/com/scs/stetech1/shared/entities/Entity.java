@@ -1,7 +1,6 @@
 package com.scs.stetech1.shared.entities;
 
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;

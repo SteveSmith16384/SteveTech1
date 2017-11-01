@@ -31,7 +31,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		hud = _hud;
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
-		//this.getMainNode().setLocalTranslation(x, y, z); // scs new
+		//this.getMainNode().setLocalTranslation(x, y, z);
 
 	}
 
@@ -67,7 +67,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
 		EntityPositionData serverEPD = this.serverPositionData.calcPosition(serverTimeToUse);
 		if (serverEPD != null) {
-			// check where we should be based on where we were 100ms ago
+			// check where we should be based on where we were X ms ago
 			EntityPositionData clientEPD = game.clientAvatarPositionData.calcPosition(serverTimeToUse);
 			if (clientEPD != null) {
 				// Is there a difference
