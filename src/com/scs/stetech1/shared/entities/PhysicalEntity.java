@@ -158,9 +158,9 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 		float dist = currentPos.distance(prevPos);
 		boolean hasMoved = dist > 0.001f; 
 		if (hasMoved) {
-			if (dist > 10f) {
+			/*if (dist > 10f) {
 				Settings.p(this.toString() + " has moved A LOT " + dist);
-			}
+			}*/
 				Settings.p(this.toString() + " has moved " + dist);
 			this.prevPos.set(currentPos);
 		}

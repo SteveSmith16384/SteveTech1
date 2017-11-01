@@ -342,6 +342,11 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				 */
 				Settings.p("pingRTT = " + pingRTT);
 				Settings.p("clientToServerDiffTime = " + clientToServerDiffTime);
+				
+				// Show difference between client and server time
+				/*long serverTime = System.currentTimeMillis() + clientToServerDiffTime;
+				long diff = System.currentTimeMillis() - serverTime;
+				Settings.p("client::server time diff = " + diff);*/
 			} else {
 				pingMessage.responseSentTime = System.currentTimeMillis();
 				send(message); // Send it straight back
@@ -525,7 +530,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			myClient.send(msg);
 		}
 		else {
-			Runnable r = new Runnable() {
+			Thread t = new Thread() {
 				@Override
 				public void run() {
 					try {
@@ -536,6 +541,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 					myClient.send(msg);
 				}
 			};
+			t.start();
 		}
 	}
 

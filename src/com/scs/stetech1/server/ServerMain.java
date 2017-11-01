@@ -412,7 +412,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			myServer.broadcast(msg);
 		}
 		else {
-			Runnable r = new Runnable() {
+			Thread t = new Thread() {
 				@Override
 				public void run() {
 					try {
@@ -423,6 +423,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					myServer.broadcast(msg);
 				}
 			};
+			t.start();
 		}
 	}
 
@@ -432,7 +433,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			myServer.broadcast(Filters.equalTo(conn), msg);
 		}
 		else {
-			Runnable r = new Runnable() {
+			Thread t = new Thread() {
 				@Override
 				public void run() {
 					try {
@@ -443,6 +444,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					myServer.broadcast(Filters.equalTo(conn), msg);
 				}
 			};
+			t.start();
 		}
 	}
 }
