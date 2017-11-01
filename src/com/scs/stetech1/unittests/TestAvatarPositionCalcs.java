@@ -28,13 +28,13 @@ public class TestAvatarPositionCalcs {
 			clientPositions.addPositionData(new EntityPositionData(new Vector3f(i+1, 0, 0), null, i*100));
 		}
 
-		Vector3f currentClientPos = new Vector3f(11, 0, 0);
+		//Vector3f currentClientPos = new Vector3f(11, 0, 0);
 		long time = 800;
 		Settings.p(clientPositions.toString(time));
-		Vector3f newPos = ClientAvatarPositionCalc.calcHistoricalPosition(currentClientPos, serverPositions, clientPositions, time, ping);
-		Vector3f correctPos = new Vector3f(8f, 0, 0); 
+		Vector3f newPos = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositions, clientPositions, time, ping);
+		Vector3f correctDiff = new Vector3f(0f, 0, 0); 
 		
-		float diff = correctPos.distance(newPos); 
+		float diff = correctDiff.distance(newPos); 
 		if (diff > 0.01f) {
 			throw new RuntimeException("basicPositionCalc1 Failed: Diff is " + diff);
 		}
