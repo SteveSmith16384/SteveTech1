@@ -146,7 +146,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		bulletAppState = new BulletAppState();
 		getStateManager().attach(bulletAppState);
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
-		bulletAppState.getPhysicsSpace().enableDebug(this.getAssetManager());
+		//bulletAppState.getPhysicsSpace().enableDebug(this.getAssetManager());
 		bulletAppState.setEnabled(false); // Wait until all entities received
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Settings.CAM_DIST);
@@ -167,7 +167,6 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			VideoRecorderAppState video_recorder = new VideoRecorderAppState();
 			stateManager.attach(video_recorder);
 		}
-
 
 		try {
 			Settings.Register();
@@ -309,7 +308,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
 							
 							if (e instanceof EnemyPlayersAvatar) {
-								Settings.p("EnemyPlayersAvatar = " + pe.getWorldTranslation());
+								//Settings.p("EnemyPlayersAvatar = " + pe.getWorldTranslation());
 							}
 						}
 					}

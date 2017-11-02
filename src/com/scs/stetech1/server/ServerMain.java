@@ -22,7 +22,7 @@ import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.system.JmeContext;
 import com.scs.stetech1.components.IEntity;
-import com.scs.stetech1.components.IProcessable;
+import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.netmessages.AllEntitiesSentMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
@@ -143,8 +143,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			synchronized (entities) {
 				// Loop through the entities
 				for (IEntity e : entities.values()) {
-					if (e instanceof IProcessable) {
-						IProcessable p = (IProcessable)e;
+					if (e instanceof IProcessByServer) {
+						IProcessByServer p = (IProcessByServer)e;
 						p.process(tpf_secs);
 					}
 

@@ -13,12 +13,12 @@ import com.jme3.texture.Texture;
 import com.scs.stetech1.client.MyBetterCharacterControl;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
-import com.scs.stetech1.components.IProcessable;
+import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
-public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessable, ICanShoot, IAffectedByPhysics {
+public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
 
 	// Player dimensions
 	public static final float PLAYER_HEIGHT = 0.7f;
@@ -183,16 +183,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
-	public void shoot() {
-		/*if (this.abilityGun.activate(0)) {
-			this.score--;
-			this.hud.setScore(this.score);
-			this.numShots++;
-			calcAccuracy();
-		}*/
-	}
-
-
+	public abstract void shoot();
+	
 	public void jump() {
 		Settings.p("Jumping!");
 		this.playerControl.jump();

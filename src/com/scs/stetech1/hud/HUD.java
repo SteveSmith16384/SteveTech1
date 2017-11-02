@@ -15,14 +15,14 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import com.jme3.ui.Picture;
 import com.scs.stetech1.client.SorcerersClient;
-import com.scs.stetech1.components.IProcessable;
+import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.gui.TextArea;
 
 /*
  * Positioning text = the co-ords of BitmapText are for the top-left of the first line of text, and they go down from there.
  * 
  */
-public class HUD extends Node implements IProcessable {
+public class HUD extends Node implements IProcessByServer {
 
 	public TextArea log_ta;
 	public float hud_width, hud_height;

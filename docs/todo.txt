@@ -13,24 +13,22 @@ ExecutorService executor = Executors.newFixedThreadPool(NTHREDS);
 STETECH1
 
 URGENT
-EnemyPlayerAvatar is invisible?
 Don't warp player, add to walkDir
+Hitscan weapons?
+Send ability updates to client, to confirm ammo etc...
+Add walls to map
 
 
 TODO
+Show where players are according to server (in realtime)
+Create server-controlled moving item to check interpol
 Create game "simulator"?
 Create generic classes and test them
-Log positions of avatar and analyse?
 Search for todos
-	Client jumping back since we're comparing what the server sent 100ms ago
 Reduce dependencies between classes
 Treat bullets like players avatar
-Test with 2 players and see if I can see the other avatar
-Create server-controlled moving item to check interpol
 Shooting
-Delib slow down messages
 Make all objects kinematic on client side?
-Move entities to shared package
 
 
 UNIT TESTS / INTEGRATION TESTS

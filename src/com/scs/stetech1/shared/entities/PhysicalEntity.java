@@ -1,19 +1,21 @@
 package com.scs.stetech1.shared.entities;
 
 import java.util.HashMap;
+import java.util.List;
 
+import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.stetech1.client.SorcerersClient;
-import com.scs.stetech1.components.IProcessable;
+import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
-public abstract class PhysicalEntity extends Entity implements IProcessable {
+public abstract class PhysicalEntity extends Entity implements IProcessByServer {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
@@ -89,6 +91,34 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 		//float dist = this.getMainNode().getWorldTranslation().distance(pos);
 		float dist = this.rigidBodyControl.getPhysicsLocation().distance(pos);
 		return dist;
+	}
+
+
+	public Vector3f getHitEntity(float range) {
+		Vector3f from = this
+		Vector3f to = this.cam.getDirection().normalize().multLocal(range).addLocal(from);
+		List<PhysicsRayTestResult> results = module.getBulletAppState().getPhysicsSpace().rayTest(from, to);
+		float dist = -1;
+		PhysicsRayTestResult closest = null;
+		for (PhysicsRayTestResult r : results) {
+			if (r.getCollisionObject().getUserObject() != null) {
+				if (closest == null) {
+					closest = r;
+				} else if (r.getHitFraction() < dist) {
+					closest = r;
+				}
+				dist = r.getHitFraction();
+			}
+		}
+		if (closest != null) {
+			Entity e = (Entity)closest.getCollisionObject().getUserObject();
+			Vector3f hitpoint = to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
+			Settings.p("Hit " + e + " at " + hitpoint);
+			//module.doExplosion(from, null);
+			return hitpoint;
+		}
+
+		return null;
 	}
 
 

@@ -1,6 +1,7 @@
 package com.scs.stetech1.server.entities;
 
 import com.jme3.math.Vector3f;
+import com.scs.stetech1.abilities.IAbility;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IDamagable;
@@ -17,7 +18,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 	protected float restartTime, invulnerableTime;
 	private int numShots = 0;
 	private int numShotsHit = 0;
-
+	private IAbility abilityGun;//, abilityOther;
 
 	public ServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
 		super(_module, _playerID, _input, eid);
@@ -140,6 +141,14 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 	@Override
 	public Vector3f getShootDir() {
 		return input.getDirection();
+	}
+
+
+	public void shoot() {
+		if (this.abilityGun.activate(0)) {
+			this.numShots++;
+			calcAccuracy();
+		}
 	}
 
 

@@ -2,10 +2,10 @@ package com.scs.stetech1.hud;
 
 import com.jme3.scene.Node;
 import com.jme3.ui.Picture;
-import com.scs.stetech1.components.IProcessable;
+import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.shared.IEntityController;
 
-public class AbstractHUDImage extends Picture implements IProcessable {
+public class AbstractHUDImage extends Picture implements IProcessByServer {
 
 	private IEntityController game;
 	private float timeLeft;

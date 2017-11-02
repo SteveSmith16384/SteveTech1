@@ -34,8 +34,8 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 			creationData.put("playerID", eid);
 		}*/
 
-		//Spatial geometry = AbstractPlayersAvatar.getPlayersModel(game, pid); todo - re-add
-		Box box1 = new Box(2, 2, 2);
+		Spatial geometry = AbstractPlayersAvatar.getPlayersModel(game, pid);
+		/*Box box1 = new Box(2, 2, 2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Crate", box1);
 
@@ -57,7 +57,7 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 			geometry.setQueueBucket(Bucket.Transparent);
 
-
+*/
 		/*if (!game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
 			key3.setGenerateMips(true);
@@ -82,7 +82,7 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 		//float rads = (float)Math.toRadians(rotDegrees);
 		//main_node.rotate(0, rads, 0);
 
-		rigidBodyControl = new RigidBodyControl(1f);
+		rigidBodyControl = new RigidBodyControl(0f); // Only the server can move them!
 		main_node.addControl(rigidBodyControl);
 
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
@@ -98,6 +98,13 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 
 	}
 
+
+	/*@Override
+	public void setWorldTranslation(Vector3f pos) {
+		this.rigidBodyControl.setPhysicsLocation(pos.clone());
+		this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
+	}
+*/
 
 	@Override
 	public void process(float tpf) {
