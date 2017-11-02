@@ -2,8 +2,17 @@ package com.scs.stetech1.client.entities;
 
 import java.util.HashMap;
 
+import com.jme3.asset.TextureKey;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
+import com.jme3.texture.Texture;
+import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.server.Settings;
@@ -14,18 +23,41 @@ import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
 
-	private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
+	//private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
 
-	public EnemyPlayersAvatar(IEntityController game, int pid, int eid) {
+	public EnemyPlayersAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
 		super(game, eid, EntityTypes.AVATAR, "EnemyAvatar");
 
-		if (game.isServer()) {
+		/*if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("id", eid);
 			creationData.put("playerID", eid);
-		}
+		}*/
 
-		Spatial geometry = AbstractPlayersAvatar.getPlayersModel(game, pid);
+		//Spatial geometry = AbstractPlayersAvatar.getPlayersModel(game, pid); todo - re-add
+		Box box1 = new Box(2, 2, 2);
+		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
+		Geometry geometry = new Geometry("Crate", box1);
+
+			TextureKey key3 = new TextureKey("Textures/crate.png");//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
+			key3.setGenerateMips(true);
+			Texture tex3 = module.getAssetManager().loadTexture(key3);
+			tex3.setWrap(WrapMode.Repeat);
+
+			Material floor_mat = null;
+			if (Settings.LIGHTING) {
+				floor_mat = new Material(module.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+				floor_mat.setTexture("DiffuseMap", tex3);
+			} else {
+				floor_mat = new Material(module.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+				floor_mat.setTexture("ColorMap", tex3);
+			}
+
+			geometry.setMaterial(floor_mat);
+			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			geometry.setQueueBucket(Bucket.Transparent);
+
+
 		/*if (!game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
 			key3.setGenerateMips(true);
@@ -62,6 +94,8 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 
 		module.addEntity(this);
 
+		this.setWorldTranslation(new Vector3f(x, y, z));
+
 	}
 
 
@@ -79,7 +113,7 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 
 	@Override
 	public HashMap<String, Object> getCreationData() {
-		return creationData;
+		return null;//creationData;
 	}
 
 

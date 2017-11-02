@@ -92,7 +92,7 @@ public final class PositionCalculator {
 				}
 				throw new RuntimeException("Should not get here!");
 			}
-			Settings.p("No position data (" + positionData.size() + " entries)");
+			//Settings.p("No position data (" + positionData.size() + " entries)");
 		}
 		return null;
 

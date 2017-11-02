@@ -31,6 +31,7 @@ import com.jme3.network.Network;
 import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
 import com.scs.stetech1.client.entities.ClientPlayersAvatar;
+import com.scs.stetech1.client.entities.EnemyPlayersAvatar;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
@@ -139,16 +140,13 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
-		//guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 
 		// Set up Physics
 		bulletAppState = new BulletAppState();
 		getStateManager().attach(bulletAppState);
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
-		//bulletAppState.getPhysicsSpace().addTickListener(this);
-		//bulletAppState.getPhysicsSpace().setAccuracy(1f / 80f);
-		//bulletAppState.getPhysicsSpace().enableDebug(game.getAssetManager());
+		bulletAppState.getPhysicsSpace().enableDebug(this.getAssetManager());
 		bulletAppState.setEnabled(false); // Wait until all entities received
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Settings.CAM_DIST);
@@ -226,7 +224,10 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		try {
 			final long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 
-			if (myClient.isConnected()) {  //this.rootNode.getChild(1).getWorldTranslation();
+			if (myClient.isConnected()) {  //
+				//this.rootNode.getChild(1).updateGeometricState();
+				//this.rootNode.getChild(1).getLocalTranslation();
+				//this.rootNode.getChild(1).getWorldTranslation();
 				// Process messages in JME thread
 				synchronized (unprocessedMessages) { //this.getCamera()
 					// Check we don't already know about it
@@ -237,6 +238,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 							if (!this.entities.containsKey(newEntityMessage.entityID)) {
 								IEntity e = EntityCreator.createEntity(this, newEntityMessage);
 								this.addEntity(e);
+							} else {
+								// We already know about it
 							}
 
 						} else if (message instanceof EntityUpdateMessage) {
@@ -255,9 +258,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 									pe.setWorldTranslation(epd.position);
 									pe.setWorldRotation(epd.rotation);
 									pe.clearPositiondata();
-								} else {
-									pe.addPositionData(epd);
+									if (pe == this.avatar) {
+										this.clientAvatarPositionData.clearPositiondata(); // Clear our local data as well
+										storeAvatarPosition(serverTime);
+									}
 								}
+								pe.addPositionData(epd);
 								//Settings.p("New position for " + e + ": " + eum.pos);
 							} else {
 								// Todo - Send UnknownEntityMessage
@@ -290,23 +296,21 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 							this.send(new PlayerInputMessage(this.input));
 						}
 					}
-
-					// Store our position
-					EntityPositionData epd = new EntityPositionData();
-					epd.serverTimestamp = serverTime;
-					epd.position = avatar.getWorldTranslation().clone();
-					//epd.rotation not required
-					this.clientAvatarPositionData.addPositionData(epd);
+					storeAvatarPosition(serverTime);
 				}
 
 				long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
-				
+
 				// Loop through each entity and calc position
 				for (IEntity e : this.entities.values()) {
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity pe = (PhysicalEntity)e;
 						if (pe.canMove()) { // Only bother with things that can move
 							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
+							
+							if (e instanceof EnemyPlayersAvatar) {
+								Settings.p("EnemyPlayersAvatar = " + pe.getWorldTranslation());
+							}
 						}
 					}
 				}
@@ -325,6 +329,17 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	}
 
 
+	private void storeAvatarPosition(long serverTime) {
+		// Store our position
+		EntityPositionData epd = new EntityPositionData();
+		epd.serverTimestamp = serverTime;
+		epd.position = avatar.getWorldTranslation().clone();
+		//epd.rotation not required
+		this.clientAvatarPositionData.addPositionData(epd);
+
+	}
+	
+	
 	@Override
 	public void messageReceived(Client source, Message message) {
 		//Settings.p("Rcvd " + message.getClass().getSimpleName());
@@ -335,8 +350,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				long p2 = System.currentTimeMillis() - pingMessage.originalSentTime;
 				this.pingRTT = this.pingCalc.add(p2);
 				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-				Settings.p("pingRTT = " + pingRTT);
-				Settings.p("clientToServerDiffTime = " + clientToServerDiffTime);
+				//Settings.p("pingRTT = " + pingRTT);
+				//Settings.p("clientToServerDiffTime = " + clientToServerDiffTime);
 
 			} else {
 				pingMessage.responseSentTime = System.currentTimeMillis();

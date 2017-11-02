@@ -32,7 +32,7 @@ public class EntityCreator {
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				EnemyPlayersAvatar avatar = new EnemyPlayersAvatar(game, playerID, id);
+				EnemyPlayersAvatar avatar = new EnemyPlayersAvatar(game, playerID, id, msg.pos.x, msg.pos.y, msg.pos.z);
 				return avatar;
 			}
 		}

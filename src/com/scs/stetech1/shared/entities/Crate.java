@@ -35,7 +35,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Crate", box1);
 		if (!_game.isServer()) { // Not running in server
-			TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
+			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = module.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);

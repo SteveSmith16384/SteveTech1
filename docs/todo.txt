@@ -1,12 +1,24 @@
+ExecutorService executor = Executors.newFixedThreadPool(NTHREDS);
+        for (int i = 0; i < 500; i++) {
+            Runnable worker = new MyRunnable(10000000L + i);
+            executor.execute(worker);
+        }
+        // This will make the executor accept no new threads
+        // and finish all existing threads in the queue
+        executor.shutdown();
+        // Wait until all threads are finish
+        executor.awaitTermination();
+        
+        
 STETECH1
 
 URGENT
+EnemyPlayerAvatar is invisible?
+Don't warp player, add to walkDir
 
 
 TODO
-Don't warp player, add to walkDir
 Create game "simulator"?
-Unit test ping message & calcs
 Create generic classes and test them
 Log positions of avatar and analyse?
 Search for todos
@@ -51,7 +63,7 @@ Player shooting
 LATER
 Don't send entity update if position not changed
 Split up into separate packages: AbstractClient, Abstractserver, shared, Sorcerers
-Reduce object creation
+Reduce object creation, including calls to clone()
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while

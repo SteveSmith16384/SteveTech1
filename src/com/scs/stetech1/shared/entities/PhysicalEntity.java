@@ -44,7 +44,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 			this.setWorldTranslation(epd.position);
 			this.setWorldRotation(epd.rotation);
 		} else {
-			Settings.p("No position data for " + this);
+			//Settings.p("No position data for " + this);
 		}
 
 	}
@@ -56,7 +56,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 
 	public void setWorldRotation(final Quaternion newRot2) {
-		getMainNode().setLocalRotation(newRot2);
+		getMainNode().setLocalRotation(newRot2); // todo - set rigibody rotation?
 	}
 
 
@@ -135,6 +135,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessable {
 
 	public void setWorldTranslation(Vector3f pos) {
 		// This is overridden by avatars, as they need to warp
+		this.rigidBodyControl.setPhysicsLocation(pos.clone());
 		this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
 	}
 

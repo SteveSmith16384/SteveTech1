@@ -315,6 +315,14 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				throw new RuntimeException("Entity id " + e.getID() + " already exists: " + e);
 			}
 			this.entities.put(e.getID(), e);
+			
+			// Tell clients
+			if (e instanceof PhysicalEntity) {
+				PhysicalEntity se = (PhysicalEntity)e;
+				NewEntityMessage nem = new NewEntityMessage(se);
+				nem.force = true;
+				broadcast(nem);
+			}
 		}
 
 	}

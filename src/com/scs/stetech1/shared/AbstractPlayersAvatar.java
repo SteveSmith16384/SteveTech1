@@ -99,8 +99,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			floor_mat.setTexture("ColorMap", tex3);
 		}
 		playerGeometry.setMaterial(floor_mat);
-		//playerGeometry.setLocalTranslation(new Vector3f(0, PLAYER_HEIGHT/2, 0)); // Need this to ensure the crate is on the floor
-		playerGeometry.setLocalTranslation(new Vector3f(0, (PLAYER_HEIGHT/2)-.075f, 0)); // Need this to ensure the crate is on the floor
+		//playerGeometry.setLocalTranslation(new Vector3f(0, (PLAYER_HEIGHT/2)-.075f, 0)); // Need this to ensure the crate is on the floor // scs new
 		return playerGeometry;
 	}
 
