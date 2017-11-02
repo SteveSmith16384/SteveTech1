@@ -4,14 +4,11 @@ URGENT
 
 
 TODO
-	Compare client pos MINUS rtt against server pos of same time
-Unit test poscalc using the same list each time
-Jumping - screen is not updated
-Use Executor for running threads
+Don't warp player, add to walkDir
+Create game "simulator"?
 Unit test ping message & calcs
 Create generic classes and test them
 Log positions of avatar and analyse?
-	Adjust clients position in the direction of the "correct" position, but only by a small bit
 Search for todos
 	Client jumping back since we're comparing what the server sent 100ms ago
 Reduce dependencies between classes
@@ -30,7 +27,7 @@ Test interpolation
 
 CLIENT
 Send inputs every "server tickrate"
-Render others from history - 50ms ago, lerp between historical positions
+Render others from history - 100ms ago, lerp between historical positions
 
 
 SERVER

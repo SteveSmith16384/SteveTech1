@@ -25,21 +25,18 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
 
-	public final Vector3f walkDirection = new Vector3f();
+	private final Vector3f walkDirection = new Vector3f();
 	public float moveSpeed = Settings.PLAYER_MOVE_SPEED;
 	protected IInputDevice input;
 
 	//Temporary vectors used on each frame.
-	public final Vector3f camDir = new Vector3f();
+	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
 	public MyBetterCharacterControl playerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
-	protected float score = 0;
 	protected float health;
-
-	private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
 
 	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
 		super(_module, eid, EntityTypes.AVATAR, "Player");
@@ -126,7 +123,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	@Override
 	public void process(float tpf) {
-
 		/*abilityGun.process(tpf);
 			if (this.abilityOther != null) {
 				abilityOther.process(tpf);
@@ -230,7 +226,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	@Override
 	public Vector3f getWorldTranslation() {
 		// Need this override since main node is at 0,0,0 at the start
-		return this.playerControl.getPhysicsRigidBody().getPhysicsLocation();  // This is very low to the ground!
+		return this.playerControl.getPhysicsRigidBody().getPhysicsLocation();
 		//return this.main_node.getWorldTranslation(); 000?
 		//return this.getMainNode().getLocalTranslation();
 	}

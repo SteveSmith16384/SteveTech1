@@ -112,7 +112,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {
-		this.incScore(20, "shot " + e.toString());
+		//this.incScore(20, "shot " + e.toString());
 		//new AbstractHUDImage(game, module, this.hud, "Textures/text/hit.png", this.hud.hud_width, this.hud.hud_height, 2);
 		//this.hud.showCollectBox();
 		numShotsHit++;
@@ -123,14 +123,6 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 	private void calcAccuracy() {
 		int a = (int)((this.numShotsHit * 100f) / this.numShots);
 		//hud.setAccuracy(a);
-	}
-
-
-	public void incScore(float amt, String reason) {
-		//Settings.p("Inc score: +" + amt + ", " + reason);
-		this.score += amt;
-		//this.hud.setScore(this.score);
-
 	}
 
 

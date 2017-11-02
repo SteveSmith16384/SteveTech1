@@ -117,6 +117,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					broadcast(client.conn, new NewPlayerAckMessage(client.getPlayerID(), client.avatarID));
 					sendEntityListToClient(client);
 
+					// Send them a ping to get ping time
+					broadcast(client.conn, new PingMessage(true));
+
 				} else if (message instanceof UnknownEntityMessage) {
 					UnknownEntityMessage uem = (UnknownEntityMessage) message;
 					IEntity e = this.entities.get(uem.entityID);

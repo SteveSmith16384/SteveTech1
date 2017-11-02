@@ -44,15 +44,16 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		hud.process(tpf);
 
 		// Position camera at node
-		Vector3f vec = getMainNode().getWorldTranslation();
-		//cam.setLocation(new Vector3f(vec.x, vec.y + (PLAYER_HEIGHT/2), vec.z));
+		Vector3f vec = this.getWorldTranslation();// getMainNode().getWorldTranslation();
+		// cam.setLocation(new Vector3f(vec.x, vec.y + (PLAYER_HEIGHT/2), vec.z));
+		// Avoid creating new Vector3f
 		cam.getLocation().x = vec.x;
 		cam.getLocation().y = vec.y + (PLAYER_HEIGHT/2);
 		cam.getLocation().z = vec.z;
+		cam.update();
 
 		// Rotate us to point in the direction of the camera
 		Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
-		//gun.lookAt(lookAtPoint.clone(), Vector3f.UNIT_Y);
 		lookAtPoint.y = cam.getLocation().y; // Look horizontal
 		this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
 		//this.getMainNode().lookAt(lookAtPoint.clone(), Vector3f.UNIT_Y);  This won't rotate the model since it's locked to the physics controller
@@ -95,25 +96,31 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 
 		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 		if (offset != null) {
-			//Settings.p("Adjusting client: " + diff);
+			float diff = offset.length();
+			if (diff > 0.1f) {
+				Settings.p("Adjusting client by: " + diff);
 
-			// OPTION 1: Get diff between player pos X millis ago and current pos, and re-add this to server pos
-			/*Vector3f clientMovementSinceRenderDelay = currentClientAvatarPosition.subtract(clientEPD.position);
+				// OPTION 1: Get diff between player pos X millis ago and current pos, and re-add this to server pos
+				/*Vector3f clientMovementSinceRenderDelay = currentClientAvatarPosition.subtract(clientEPD.position);
 				//clientMovementSinceRenderDelay.y = 0; // Don't adjust y-axis
 				Vector3f newPos = serverEPD.position.add(clientMovementSinceRenderDelay);*/
 
-			// OPTION 2: Adjust player by halfway between server pos and client pos
-			/*Vector3f newPos = new Vector3f();
-				newPos.interpolate(serverEPD.position, clientEPD.position, .5f); // todo - just move to 
+				// OPTION 2: Adjust player by halfway between server pos and client pos
+				/*Vector3f newPos = new Vector3f();
+				newPos.interpolate(serverEPD.position, clientEPD.position, .5f); 
 				Settings.p("Moving player to " + newPos);*/
 
-			// OPTION 3: Move player slowly towards server position
-			float MAX_MOVE = 0.1f;
-			if (offset.length() > MAX_MOVE) {
-				offset.normalizeLocal().multLocal(0.1f);
+				// OPTION 3: Move player slowly towards server position
+				float MAX_MOVE = 0.01f;
+				if (diff > MAX_MOVE) {
+					offset.normalizeLocal().multLocal(MAX_MOVE);
+				} else {
+					int zzz = 6;
+				}
+				Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
+				
+				this.setWorldTranslation(newPos);
 			}
-			Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
-			this.setWorldTranslation(newPos);
 		}
 
 	}

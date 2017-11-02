@@ -8,11 +8,18 @@ public final class PositionCalculator {
 
 	private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // Newest entry is at the start
 	private int maxEntries;
+	private boolean cleardown;
 
-	public PositionCalculator(int _maxEntries) {
+	public PositionCalculator(boolean _cleardown, int _maxEntries) {
 		super();
 
 		maxEntries = _maxEntries;
+		cleardown = _cleardown;
+	}
+
+
+	public PositionCalculator(int _maxEntries) {
+		this(false, _maxEntries);
 	}
 
 
@@ -37,10 +44,11 @@ public final class PositionCalculator {
 			// Remove later entries
 			//int min_entries = 5000 / Settings.SERVER_SEND_UPDATE_INTERVAL_MS;
 			//long cutoff = System.currentTimeMillis() - (Settings.SERVER_SEND_UPDATE_INTERVAL_MS*2);
-			while (this.positionData.size() > maxEntries) {
-				EntityPositionData epd = this.positionData.getLast();
+			/*while (this.positionData.size() > maxEntries) {
+				//EntityPositionData epd = this.positionData.getLast();
 				this.positionData.removeLast();
-			}
+			}*/
+			this.reduce(maxEntries);
 		}
 	}
 
@@ -60,10 +68,16 @@ public final class PositionCalculator {
 				}
 
 				EntityPositionData firstEPD = null;
+				int pos = 0;
 				for(EntityPositionData secondEPD : this.positionData) { // Time gets earlier, number goes down
 					if (firstEPD != null) {
 						if (firstEPD.serverTimestamp >= serverTimeToUse && secondEPD.serverTimestamp <= serverTimeToUse) {
-							return this.getInterpolatedPosition(firstEPD, secondEPD, serverTimeToUse); //positionData.indexOf(firstEPD); 
+							if (cleardown) {
+								this.reduce(pos+2);
+							}
+							//return this.getInterpolatedPosition(firstEPD, secondEPD, serverTimeToUse); //positionData.indexOf(firstEPD);
+							return firstEPD.getInterpol(secondEPD, serverTimeToUse);
+
 						}/* else if (firstEPD.serverTimestamp < serverTimeToUse) {
 							// Data is too old!
 							Settings.p(this.toString(serverTimeToUse));
@@ -74,6 +88,7 @@ public final class PositionCalculator {
 						}*/
 					}
 					firstEPD = secondEPD;
+					pos++;
 				}
 				throw new RuntimeException("Should not get here!");
 			}
@@ -82,40 +97,14 @@ public final class PositionCalculator {
 		return null;
 
 	}
+	
+	
+	private void reduce(int num) {
+		while (this.positionData.size() > num) {
+			this.positionData.removeLast();
+		}
 
-
-	public EntityPositionData getInterpolatedPosition(EntityPositionData firstEPD, EntityPositionData secondEPD, long serverTimeToUse) {
-		// interpolate between timestamps
-		return firstEPD.getInterpol(secondEPD, serverTimeToUse);
-		/*float frac = (firstEPD.serverTimestamp - serverTimeToUse) / (serverTimeToUse - secondEPD.serverTimestamp);
-		Vector3f posToSet = firstEPD.position.interpolate(secondEPD.position, frac);
-
-		Quaternion newRot = new Quaternion();
-		Quaternion newRot2 = newRot.slerp(firstEPD.rotation, secondEPD.rotation, frac);
-
-		EntityPositionData epd = new EntityPositionData();
-		epd.position = posToSet;
-		epd.rotation = newRot2;
-		epd.serverTimestamp = serverTimeToUse;
-		return epd;
-/*		if (mainApp.getPlayersAvatar() == this) {
-			// if our avatar, adjust us, don't just jump to new position
-			//todo - re-add newPos = newPos.interpolate(this.getWorldTranslation(), .5f); // Move us halfway?
-			entity.scheduleNewPosition(mainApp, posToSet);
-		} else
-			//todo - re-add if (!newPos.equals(this.getWorldTranslation())) {
-			entity.scheduleNewPosition(mainApp, posToSet);
-		//}
-		/*todo if (module.getPlayersAvatar() == this) {
-	// if its our avatar, don't adjust rotation!
-} else {
-//Quaternion newRot = new Quaternion(); todo - this
-//final Quaternion newRot2 = newRot.slerp(firstEPD.rotation, secondEPD.rotation, frac);
-	this.scheduleNewRotation(mainApp, tempNewRot);
-	//Settings.p("Updated avatar pos: " + newPos);
-}*/	
 	}
-
 
 
 	public void clearPositiondata() {
@@ -140,4 +129,22 @@ public final class PositionCalculator {
 
 		return str.toString();
 	}
+	
+	/*
+	public String toString(PositionCalculator other, long showTime) {
+		StringBuilder str = new StringBuilder();
+		str.append("OUTPUT:-\n");
+		boolean shownTime = false;
+		for(int i=0 ; i<this.positionData.size() ; i++) { // Time gets earlier, number gets smaller
+			EntityPositionData epd = this.positionData.get(i);
+			if (!shownTime && showTime > epd.serverTimestamp) {
+				str.append("Here: " + showTime + "\n");
+				shownTime = true;
+			}
+			str.append(i + ": " + epd.serverTimestamp + " - " + epd.position + "\n");
+		}		
+
+		return str.toString();
+	}
+	*/
 }

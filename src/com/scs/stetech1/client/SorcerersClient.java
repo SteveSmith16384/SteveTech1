@@ -76,7 +76,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
-	public PositionCalculator clientAvatarPositionData = new PositionCalculator(500); // todo - check
+	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public static void main(String[] args) {
@@ -260,6 +260,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 								}
 								//Settings.p("New position for " + e + ": " + eum.pos);
 							} else {
+								// Todo - Send UnknownEntityMessage
 							}
 
 						} else if (message instanceof RemoveEntityMessage) {
@@ -294,18 +295,18 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 					EntityPositionData epd = new EntityPositionData();
 					epd.serverTimestamp = serverTime;
 					epd.position = avatar.getWorldTranslation().clone();
-					//Settings.p("Storing local position " + epd.position);
 					//epd.rotation not required
 					this.clientAvatarPositionData.addPositionData(epd);
 				}
 
 				long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
+				
+				// Loop through each entity and calc position
 				for (IEntity e : this.entities.values()) {
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity pe = (PhysicalEntity)e;
 						if (pe.canMove()) { // Only bother with things that can move
-							//pe.getWorldTranslation();
-							pe.calcPosition(this, serverTimePast);
+							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
 						}
 					}
 				}
@@ -334,12 +335,6 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				long p2 = System.currentTimeMillis() - pingMessage.originalSentTime;
 				this.pingRTT = this.pingCalc.add(p2);
 				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-				/*
-				 * Client sent time: 1000
-				 * Server response time: 5000
-				 * Ping: 100 
-				 * clientToServerDiffTime: 5000 - 1000 + (100/2) = 4050 
-				 */
 				Settings.p("pingRTT = " + pingRTT);
 				Settings.p("clientToServerDiffTime = " + clientToServerDiffTime);
 
@@ -353,9 +348,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
 				this.playersAvatarID = npcm.avatarEntityID;
-				//if (hud != null) {
 				this.hud.setPlayerID(this.playerID);
-				//}
+
 				synchronized (this.entities) {
 					// Set avatar if we already have it
 					if (this.entities.containsKey(playersAvatarID)) {

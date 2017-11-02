@@ -13,7 +13,8 @@ public class ClientAvatarPositionCalc {
 
 
 	/**
-	 * This calculates the difference between what the client and server think the position should be
+	 * This calculates the difference between what the client and server think the position should be,
+	 * so this can be added to the clients current position to get the correct position
 	 */
 	public static Vector3f calcHistoricalPositionOffset(PositionCalculator serverPositionData, PositionCalculator clientAvatarPositionData, long serverTimeToUse, long ping) {
 		EntityPositionData serverEPD = serverPositionData.calcPosition(serverTimeToUse);
@@ -26,10 +27,10 @@ public class ClientAvatarPositionCalc {
 				float diff = serverEPD.position.distance(clientEPD.position);
 				if (diff > 0.1) {
 					// There should be no difference!
-					Settings.p("Server " + serverPositionData.toString(serverTimeToUse));
-					Settings.p("Client " + clientAvatarPositionData.toString(clientTimeToUse));
+					//Settings.p("Server " + serverPositionData.toString(serverTimeToUse));
+					//Settings.p("Client " + clientAvatarPositionData.toString(clientTimeToUse));
 				}
-				return clientEPD.position.subtract(serverEPD.position);
+				return serverEPD.position.subtract(clientEPD.position);
 			}
 		}
 		return null;
@@ -60,7 +61,7 @@ public class ClientAvatarPositionCalc {
 
 				// OPTION 2: Adjust player by halfway between server pos and client pos
 				/*Vector3f newPos = new Vector3f();
-					newPos.interpolate(serverEPD.position, clientEPD.position, .5f); // todo - just move to 
+					newPos.interpolate(serverEPD.position, clientEPD.position, .5f); 
 					Settings.p("Moving player to " + newPos);*/
 
 				// OPTION 3: Move player slowly towards server position
