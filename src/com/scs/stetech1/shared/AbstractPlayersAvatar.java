@@ -135,12 +135,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 				}
 			}*/
 
-		/*
-		 * The direction of character is determined by the camera angle
-		 * the Y direction is set to zero to keep our character from
-		 * lifting of terrain. For free flying games simply add speed 
-		 * to Y axis
-		 */
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 		if (input.getFwdValue()) {	
@@ -180,6 +174,11 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	public boolean isOnGround() {
 		return playerControl.isOnGround();
+	}
+
+
+	public void addToWalkDir(Vector3f offset) {
+		this.walkDirection.addLocal(offset);
 	}
 
 

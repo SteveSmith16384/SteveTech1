@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import ssmith.util.FixedLoopTime;
-import ssmith.util.RealtimeInterval;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
@@ -39,6 +38,9 @@ import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
+import ssmith.util.FixedLoopTime;
+import ssmith.util.RealtimeInterval;
+
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
@@ -55,7 +57,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	public BulletAppState bulletAppState;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
-
+	private ExecutorService executor = Executors.newFixedThreadPool(20);
+	
 	public static void main(String[] args) {
 		try {
 			ServerMain app;
@@ -444,7 +447,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			myServer.broadcast(Filters.equalTo(conn), msg);
 		}
 		else {
-			Thread t = new Thread() {
+			/*Thread t = new Thread() {
 				@Override
 				public void run() {
 					try {
@@ -455,7 +458,20 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					myServer.broadcast(Filters.equalTo(conn), msg);
 				}
 			};
-			t.start();
+			t.start();*/
+			Runnable t = new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(Settings.COMMS_DELAY);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					myServer.broadcast(Filters.equalTo(conn), msg);
+				}
+			};
+            executor.execute(t);
+
 		}
 	}
 }

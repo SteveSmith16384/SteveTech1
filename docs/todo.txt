@@ -1,25 +1,17 @@
-ExecutorService executor = Executors.newFixedThreadPool(NTHREDS);
-        for (int i = 0; i < 500; i++) {
-            Runnable worker = new MyRunnable(10000000L + i);
-            executor.execute(worker);
-        }
-        // This will make the executor accept no new threads
-        // and finish all existing threads in the queue
-        executor.shutdown();
-        // Wait until all threads are finish
-        executor.awaitTermination();
-        
-        
 STETECH1
 
 URGENT
-Don't warp player, add to walkDir
-Hitscan weapons?
-Send ability updates to client, to confirm ammo etc...
-Add walls to map
+	Don't warp player, add to walkDir
+Rewind objects
 
 
 TODO
+Create server console commands
+Create game lobby
+Test with physics blocks
+Hitscan weapons?
+Send ability updates to client, to confirm ammo etc...
+Add walls to map
 Show where players are according to server (in realtime)
 Create server-controlled moving item to check interpol
 Create game "simulator"?
@@ -29,10 +21,6 @@ Reduce dependencies between classes
 Treat bullets like players avatar
 Shooting
 Make all objects kinematic on client side?
-
-
-UNIT TESTS / INTEGRATION TESTS
-Test interpolation
 
 
 CLIENT

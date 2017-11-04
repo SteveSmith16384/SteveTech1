@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.prefs.BackingStoreException;
 
 import ssmith.util.FixedLoopTime;
@@ -25,6 +27,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.ErrorListener;
+import com.jme3.network.Filters;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
@@ -79,6 +82,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
+	private ExecutorService executor = Executors.newFixedThreadPool(20);
 
 	public static void main(String[] args) {
 		try {
@@ -512,12 +516,14 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		Settings.p("quit()");
 		if (playerID >= 0) {
 			this.send(new PlayerLeftMessage(this.playerID));
-			try {
+			/*try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 		}
+        executor.shutdown();
+        //todo executor.awaitTermination();
 		this.myClient.close();
 		this.stop();
 
@@ -534,7 +540,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 			myClient.send(msg);
 		}
 		else {
-			Thread t = new Thread() {
+			/*Thread t = new Thread() {
 				@Override
 				public void run() {
 					try {
@@ -545,7 +551,20 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 					myClient.send(msg);
 				}
 			};
-			t.start();
+			t.start();*/
+			Runnable t = new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(Settings.COMMS_DELAY);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					myClient.send(msg);
+				}
+			};
+            executor.execute(t);
+
 		}
 	}
 

@@ -88,17 +88,17 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 				if (diff > MAX_MOVE) {
 					offset.normalizeLocal().multLocal(MAX_MOVE);
 				} else {
-					int zzz = 6;
+					//int zzz = 6;
 				}
-				Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
-				
-				this.setWorldTranslation(newPos);
+				//Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
+				//this.setWorldTranslation(newPos);
+				this.addToWalkDir(offset); // scs new
 			}
 		}
 
 	}
-
-
+	
+	
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {
 		// Do nothing - done server-side
