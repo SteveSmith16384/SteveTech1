@@ -94,8 +94,11 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 	}
 
 
-	public Vector3f getHitEntity(float range) {
-		Vector3f from = this
+	public Vector3f calcHitEntityInPast(long serverTimeToUse, float range) {
+		// todo - rewind all players avatars
+		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse);
+		if (shooterEPD != null) {
+		Vector3f from = shooterEPD.position;
 		Vector3f to = this.cam.getDirection().normalize().multLocal(range).addLocal(from);
 		List<PhysicsRayTestResult> results = module.getBulletAppState().getPhysicsSpace().rayTest(from, to);
 		float dist = -1;

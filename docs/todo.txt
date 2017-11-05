@@ -6,6 +6,7 @@ Rewind objects
 
 
 TODO
+Show window on server listing current objects and their position
 Create server console commands
 Create game lobby
 Test with physics blocks

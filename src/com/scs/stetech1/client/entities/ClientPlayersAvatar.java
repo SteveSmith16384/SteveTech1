@@ -70,7 +70,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 		if (offset != null) {
 			float diff = offset.length();
-			if (diff > 0.1f) {
+			if (diff > 0.1f) { // todo - make config
 				//Settings.p("Adjusting client by: " + diff);
 
 				// OPTION 1: Get diff between player pos X millis ago and current pos, and re-add this to server pos
@@ -84,7 +84,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 				Settings.p("Moving player to " + newPos);*/
 
 				// OPTION 3: Move player slowly towards server position
-				float MAX_MOVE = 0.01f;
+				float MAX_MOVE = 0.01f; // todo - make config
 				if (diff > MAX_MOVE) {
 					offset.normalizeLocal().multLocal(MAX_MOVE);
 				} else {

@@ -13,8 +13,8 @@ public class ClientData {
 	public long latestInputTimestamp;
 	public int avatarID;
 	public RemoteInput remoteInput = new RemoteInput();// For storing message that are translated into input
-	//public boolean isInGame = false;
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
+	public byte side;
 	
 	public ClientData(HostedConnection _conn) {
 		conn = _conn;
