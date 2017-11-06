@@ -158,11 +158,11 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	}
 
 
-	@Override
+	/*@Override
 	public void shoot() {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 
 
 

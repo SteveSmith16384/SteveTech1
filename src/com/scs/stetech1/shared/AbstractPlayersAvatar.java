@@ -10,6 +10,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
+import com.scs.stetech1.abilities.IAbility;
 import com.scs.stetech1.client.MyBetterCharacterControl;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
@@ -37,6 +38,12 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
+	protected boolean restarting = false;
+	protected float restartTime, invulnerableTime;
+	private int numShots = 0;
+	private int numShotsHit = 0;
+	private IAbility abilityGun, abilityOther;
+
 
 	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
 		super(_module, eid, EntityTypes.AVATAR, "Player");
@@ -122,18 +129,17 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	@Override
 	public void process(float tpf) {
-		/*abilityGun.process(tpf);
-			if (this.abilityOther != null) {
-				abilityOther.process(tpf);
-			}
-		 */
+		abilityGun.process(tpf);
+		if (this.abilityOther != null) {
+			abilityOther.process(tpf);
+		}
 
-		/*if (this.abilityOther != null) {
-				if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
-					//Settings.p("Using " + this.ability.toString());
-					this.abilityOther.activate(tpf);
-				}
-			}*/
+		if (this.abilityOther != null) {
+			if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
+				//Settings.p("Using " + this.ability.toString());
+				this.abilityOther.activate(tpf);
+			}
+		}
 
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
@@ -152,15 +158,15 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		/*if (walkDirection.length() != 0) {
 				Settings.p("walkDirection=" + walkDirection);
 			}*/
-		playerControl.setWalkDirection(walkDirection);
-
 		if (input.isJumpPressed()){
 			this.jump();
 		}
 
 		if (input.isShootPressed()) {
-			shoot();
+			shoot(); // todo - don't do hitscan since we've already done that
 		}
+
+		playerControl.setWalkDirection(walkDirection);
 
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
@@ -182,8 +188,15 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
-	public abstract void shoot();
-	
+	//public abstract void shoot();
+	public void shoot() {
+		if (this.abilityGun.activate(0)) {
+			this.numShots++;
+		}
+	}
+
+
+
 	public void jump() {
 		Settings.p("Jumping!");
 		this.playerControl.jump();
@@ -224,8 +237,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	@Override
 	public void setWorldTranslation(Vector3f pos) {
-		float dist = pos.distance(this.getWorldTranslation());
-		// We need to Warp() players
+		//float dist = pos.distance(this.getWorldTranslation());
+		// We need to warp() players
 		this.playerControl.warp(pos);
 	}
 
@@ -239,6 +252,11 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	@Override
 	public boolean hasMoved() {
 		return true; // Always send for avatars
+	}
+
+
+	public boolean isShooting() {
+		return this.input.isShootPressed();
 	}
 
 }

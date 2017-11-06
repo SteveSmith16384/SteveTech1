@@ -11,20 +11,26 @@ import com.jme3.scene.Node;
 import com.scs.stetech1.client.SorcerersClient;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.PositionCalculator;
 
 public abstract class PhysicalEntity extends Entity implements IProcessByServer {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
-	protected PositionCalculator serverPositionData;// = new PositionCalculator();
-	
+	protected PositionCalculator serverPositionData; // todo - rename
+
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
 	private Quaternion prevRot = new Quaternion();
-	
+
+	// Server-only vars
 	protected HashMap<String, Object> creationData;
+
+	// Rewind settings
+	private Vector3f originalPos = new Vector3f();
+	private Quaternion originalRot = new Quaternion();
+
 
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name) {
 		super(_game, id, type, _name);
@@ -94,12 +100,9 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 	}
 
 
-	public Vector3f calcHitEntityInPast(long serverTimeToUse, float range) {
-		// todo - rewind all players avatars
-		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse);
-		if (shooterEPD != null) {
-		Vector3f from = shooterEPD.position;
-		Vector3f to = this.cam.getDirection().normalize().multLocal(range).addLocal(from);
+	public Vector3f calcHitEntity(float range) {
+		Vector3f from = this.getWorldTranslation();
+		Vector3f to = this.getWorldRotation().getRotationColumn(1).normalize().multLocal(range).addLocal(from); // todo - check
 		List<PhysicsRayTestResult> results = module.getBulletAppState().getPhysicsSpace().rayTest(from, to);
 		float dist = -1;
 		PhysicsRayTestResult closest = null;
@@ -117,51 +120,15 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 			Entity e = (Entity)closest.getCollisionObject().getUserObject();
 			Vector3f hitpoint = to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
 			Settings.p("Hit " + e + " at " + hitpoint);
-			//module.doExplosion(from, null);
 			return hitpoint;
 		}
-
 		return null;
 	}
 
 
-	/*public boolean canSee(PhysicalEntity cansee) {
-		Ray r = new Ray(this.getMainNode().getWorldTranslation(), cansee.getMainNode().getWorldTranslation().subtract(this.getMainNode().getWorldTranslation()).normalizeLocal());
-		//synchronized (module.objects) {
-		//if (go.collides) {
-		CollisionResults results = new CollisionResults();
-		Iterator<IEntity> it = module.entities.iterator();
-		while (it.hasNext()) {
-			IEntity o = it.next();
-			if (o instanceof PhysicalEntity && o != this) {
-				PhysicalEntity go = (PhysicalEntity)o;
-				// if (go.collides) {
-				if (go.getMainNode().getWorldBound() != null) {
-					results.clear();
-					try {
-						go.getMainNode().collideWith(r, results);
-					} catch (UnsupportedCollisionException ex) {
-						System.out.println("Spatial: " + go.getMainNode());
-						ex.printStackTrace();
-					}
-					if (results.size() > 0) {
-						float go_dist = this.distance(cansee)-1;
-						CollisionResult cr = results.getClosestCollision();
-						if (cr.getDistance() < go_dist) {
-							return false;
-						}
-					}
-				}
-				//}
-			}
-		}
-		return true;
-	}*/
-
-
 	public Vector3f getWorldTranslation() {
 		//return this.rigidBodyControl.getPhysicsLocation();
-		//return this.main_node.getWorldTranslation(); 000?
+		//return this.main_node.getWorldTranslation();  // 000?
 		return this.getMainNode().getLocalTranslation();
 	}
 
@@ -196,7 +163,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 			/*if (dist > 10f) {
 				Settings.p(this.toString() + " has moved A LOT " + dist);
 			}*/
-				Settings.p(this.toString() + " has moved " + dist);
+			Settings.p(this.toString() + " has moved " + dist);
 			this.prevPos.set(currentPos);
 		}
 
@@ -219,5 +186,26 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 
 
 	public abstract HashMap<String, Object> getCreationData();
+
+
+	public boolean rewindPosition(long serverTimeToUse) {
+		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse);
+		if (shooterEPD != null) {
+			this.originalPos.set(this.getWorldTranslation());
+			this.originalRot.set(this.getWorldRotation());
+			this.setWorldTranslation(shooterEPD.position);
+			this.setWorldRotation(shooterEPD.rotation);
+			this.main_node.updateGeometricState();
+			return true;
+		}
+		return false;
+	}
+
+
+	public void restorePosition() {
+		this.setWorldTranslation(this.originalPos);
+		this.setWorldRotation(this.originalRot);
+		this.main_node.updateGeometricState();
+	}
 
 }
