@@ -14,12 +14,6 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamagable, ICollideable {
 
-	protected boolean restarting = false;
-	protected float restartTime, invulnerableTime;
-	private int numShots = 0;
-	private int numShotsHit = 0;
-	private IAbility abilityGun;//, abilityOther;
-
 	public ServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
 		super(_module, _playerID, _input, eid);
 	}
@@ -116,14 +110,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 		//this.incScore(20, "shot " + e.toString());
 		//new AbstractHUDImage(game, module, this.hud, "Textures/text/hit.png", this.hud.hud_width, this.hud.hud_height, 2);
 		//this.hud.showCollectBox();
-		numShotsHit++;
-		calcAccuracy();
-	}
-
-
-	private void calcAccuracy() {
-		int a = (int)((this.numShotsHit * 100f) / this.numShots);
-		//hud.setAccuracy(a);
+		//numShotsHit++;
 	}
 
 
@@ -141,14 +128,6 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 	@Override
 	public Vector3f getShootDir() {
 		return input.getDirection();
-	}
-
-
-	public void shoot() {
-		if (this.abilityGun.activate(0)) {
-			this.numShots++;
-			calcAccuracy();
-		}
 	}
 
 

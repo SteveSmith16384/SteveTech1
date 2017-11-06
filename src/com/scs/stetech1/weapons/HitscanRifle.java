@@ -9,10 +9,13 @@ public class HitscanRifle extends AbstractMagazineGun {
 		super(_game, "Hitscan Rifle", _shooter, 200, 500, 10);
 	}
 
+	
 	@Override
-	public void launchBullet(IEntityController _game, ICanShoot _shooter) {
-		if (_game.isServer()) {
+	public void launchBullet() {//IEntityController _game, ICanShoot _shooter) {
+		if (game.isServer()) {
+			// We have already rewound the avatars
 			// TODO Check for a hit!
+			
 			
 		} else {
 			// todo - nozzle flash or something

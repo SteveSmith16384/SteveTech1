@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.BackingStoreException;
 
 import ssmith.util.FixedLoopTime;
@@ -27,7 +28,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.ErrorListener;
-import com.jme3.network.Filters;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
@@ -269,6 +269,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 								pe.addPositionData(epd);
 								//Settings.p("New position for " + e + ": " + eum.pos);
 							} else {
+								Settings.p("Unknown entity ID: " + eum.entityID);
 								// Todo - Send UnknownEntityMessage
 							}
 
@@ -310,7 +311,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 						PhysicalEntity pe = (PhysicalEntity)e;
 						if (pe.canMove()) { // Only bother with things that can move
 							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
-							
+
 							if (e instanceof EnemyPlayersAvatar) {
 								//Settings.p("EnemyPlayersAvatar = " + pe.getWorldTranslation());
 							}
@@ -341,8 +342,8 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		this.clientAvatarPositionData.addPositionData(epd);
 
 	}
-	
-	
+
+
 	@Override
 	public void messageReceived(Client source, Message message) {
 		//Settings.p("Rcvd " + message.getClass().getSimpleName());
@@ -516,14 +517,13 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 		Settings.p("quit()");
 		if (playerID >= 0) {
 			this.send(new PlayerLeftMessage(this.playerID));
-			/*try {
-				Thread.sleep(200);
+			executor.shutdown();
+			try {
+				executor.awaitTermination(1, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}*/
+			}
 		}
-        executor.shutdown();
-        //todo executor.awaitTermination();
 		this.myClient.close();
 		this.stop();
 
@@ -563,7 +563,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 					myClient.send(msg);
 				}
 			};
-            executor.execute(t);
+			executor.execute(t);
 
 		}
 	}

@@ -1,23 +1,27 @@
 STETECH1
 
 URGENT
+Hitscan - only store who they were shooting at, don't process the whole hit
+Hitscan weapons
 	Don't warp player, add to walkDir
-Rewind objects
+	Rewind objects
+Search for todos
 
 
 TODO
+Unit test rewind avatars
+	Rewind all avatars at start
+Spectator mode
 Show window on server listing current objects and their position
 Create server console commands
 Create game lobby
 Test with physics blocks
-Hitscan weapons?
 Send ability updates to client, to confirm ammo etc...
 Add walls to map
 Show where players are according to server (in realtime)
 Create server-controlled moving item to check interpol
 Create game "simulator"?
 Create generic classes and test them
-Search for todos
 Reduce dependencies between classes
 Treat bullets like players avatar
 Shooting

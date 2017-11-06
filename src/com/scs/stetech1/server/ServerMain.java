@@ -58,7 +58,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	public BulletAppState bulletAppState;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	private ExecutorService executor = Executors.newFixedThreadPool(20);
-	
+
 	public static void main(String[] args) {
 		try {
 			ServerMain app;
@@ -108,38 +108,62 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		synchronized (unprocessedMessages) {
-			while (!this.unprocessedMessages.isEmpty()) {
-				MyAbstractMessage message = this.unprocessedMessages.remove(0);
-				ClientData client = message.client;
-				if (message instanceof NewPlayerRequestMessage) {
-					NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-					client.playerName = newPlayerMessage.name;
-					client.avatarID = createPlayersAvatar(client);
-					// Send newplayerconf message
-					broadcast(client.conn, new NewPlayerAckMessage(client.getPlayerID(), client.avatarID));
-					sendEntityListToClient(client);
+		if (myServer.hasConnections()) { // this.rootNode
+			// Process all messsages
+			synchronized (unprocessedMessages) {
+				while (!this.unprocessedMessages.isEmpty()) {
+					MyAbstractMessage message = this.unprocessedMessages.remove(0);
+					ClientData client = message.client;
+					if (message instanceof NewPlayerRequestMessage) {
+						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
+						client.playerName = newPlayerMessage.name;
+						client.avatar = createPlayersAvatar(client);
+						// Send newplayerconf message
+						broadcast(client.conn, new NewPlayerAckMessage(client.getPlayerID(), client.avatar.id));
+						sendEntityListToClient(client);
 
-					// Send them a ping to get ping time
-					broadcast(client.conn, new PingMessage(true));
+						// Send them a ping to get ping time
+						broadcast(client.conn, new PingMessage(true));
 
-				} else if (message instanceof UnknownEntityMessage) {
-					UnknownEntityMessage uem = (UnknownEntityMessage) message;
-					IEntity e = this.entities.get(uem.entityID);
-					this.sendNewEntity(client, e);
+					} else if (message instanceof UnknownEntityMessage) {
+						UnknownEntityMessage uem = (UnknownEntityMessage) message;
+						IEntity e = this.entities.get(uem.entityID);
+						this.sendNewEntity(client, e);
 
-				} else if (message instanceof PlayerLeftMessage) {
-					this.connectionRemoved(this.myServer, client.conn);
+					} else if (message instanceof PlayerLeftMessage) {
+						this.connectionRemoved(this.myServer, client.conn);
 
-				} else {
-					throw new RuntimeException("Unknown message type: " + message);
+					} else {
+						throw new RuntimeException("Unknown message type: " + message);
+					}
 				}
 			}
-		}
 
-		if (myServer.hasConnections()) { // this.rootNode
 			if (sendPingInt.hitInterval()) {
 				broadcast(new PingMessage(true));
+			}
+
+			synchronized (this.clients) {
+				// If any avatars are shooting, rewind all avatars and do shooting first
+				boolean anyShooting = false;
+				for (ClientData c : this.clients.values()) {
+					ServerPlayersAvatar avatar = c.avatar;
+					if (avatar.isShooting()) { // todo - check if hitscan weapon
+						anyShooting = true;
+						break;
+					}
+				}
+				if (anyShooting) {
+					this.rewindAllAvatars(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY); // todo - is time correct?
+
+					for (ClientData c : this.clients.values()) {
+						ServerPlayersAvatar avatar = c.avatar;
+						if (avatar.isShooting()) { // todo - check if hitscan weapon
+							avatar.shoot();
+						}
+					}
+					this.restoreAllAvatarPositions();
+				}
 			}
 
 			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
@@ -231,12 +255,12 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	}
 
 
-	private int createPlayersAvatar(ClientData client) {
+	private ServerPlayersAvatar createPlayersAvatar(ClientData client) {
 		int id = getNextEntityID();
 		ServerPlayersAvatar avatar = new ServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, id);
 		avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
-		return avatar.id;
+		return avatar;
 	}
 
 
@@ -301,8 +325,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				this.clients.remove(client.getPlayerID());
 			}
 			// Remove avatar
-			if (client.avatarID >= 0) {
-				this.removeEntity(client.avatarID);
+			if (client.avatar != null) {
+				this.removeEntity(client.avatar.id);
 			}
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
@@ -318,7 +342,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				throw new RuntimeException("Entity id " + e.getID() + " already exists: " + e);
 			}
 			this.entities.put(e.getID(), e);
-			
+
 			// Tell clients
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity se = (PhysicalEntity)e;
@@ -470,8 +494,26 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					myServer.broadcast(Filters.equalTo(conn), msg);
 				}
 			};
-            executor.execute(t);
+			executor.execute(t);
 
+		}
+	}
+
+
+	private void rewindAllAvatars(long time) {
+		synchronized (this.clients) {
+			for (ClientData c : this.clients.values()) {
+				c.avatar.rewindPosition(time);
+			}
+		}
+	}
+
+
+	private void restoreAllAvatarPositions() {
+		synchronized (this.clients) {
+			for (ClientData c : this.clients.values()) {
+				c.avatar.restorePosition();
+			}
 		}
 	}
 }

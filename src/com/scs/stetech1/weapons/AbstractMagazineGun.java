@@ -34,13 +34,13 @@ public abstract class AbstractMagazineGun implements IAbility {
 	}
 
 
-	public abstract void launchBullet(IEntityController _game, ICanShoot _shooter);
+	public abstract void launchBullet();//IEntityController _game, ICanShoot _shooter);
 
 
 	@Override
 	public final boolean activate(float interpol) {
 		if (this.timeUntilShoot <= 0 && bulletsLeftInMag > 0) {
-			this.launchBullet(game, shooter);
+			this.launchBullet();//game, shooter);
 			timeUntilShoot = this.shotInterval;
 			bulletsLeftInMag--;
 			return true;
