@@ -3,6 +3,7 @@ STETECH1
 URGENT
 	Don't warp player, add to walkDir
 Rewind objects
+Server don't check for hit unless client thinks it has hit
 
 
 TODO

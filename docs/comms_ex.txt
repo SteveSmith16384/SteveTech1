@@ -15,5 +15,11 @@ Pos:	0,2							0,2
 150
 Pos:
 
-200
-Pos:
+200		Client presses shoot
+Pos:	Bullet 0,0
+
+250:								Server receives shoot
+Pos:	Bullet 0,1					Bullet 0,0
+
+300: 
+Pos:	Bullet 0,2					Bullet 0,1
