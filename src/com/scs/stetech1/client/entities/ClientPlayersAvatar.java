@@ -8,13 +8,14 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
 import com.scs.stetech1.client.ClientAvatarPositionCalc;
 import com.scs.stetech1.client.SorcerersClient;
+import com.scs.stetech1.client.syncposition.IPositionAdjuster;
+import com.scs.stetech1.client.syncposition.MoveSlowlyToCorrectPosition;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
-import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.entities.Entity;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
@@ -23,6 +24,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	public HUD hud;
 	public Camera cam;
 	private SorcerersClient game;
+	private IPositionAdjuster syncPos;
 
 	public ClientPlayersAvatar(SorcerersClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
 		super(_module, _playerID, _input, eid);
@@ -33,6 +35,8 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 		//this.getMainNode().setLocalTranslation(x, y, z);
+
+		syncPos = new MoveSlowlyToCorrectPosition(0.1f);
 
 	}
 
@@ -69,32 +73,29 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
 		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 		if (offset != null) {
-			float diff = offset.length();
 			//if (diff > Settings.MAX_CLIENT_POSITION_DISCREP) {
-				//Settings.p("Adjusting client by: " + diff);
+			//Settings.p("Adjusting client by: " + diff);
 
-				// OPTION 1: Get diff between player pos X millis ago and current pos, and re-add this to server pos
-				/*Vector3f clientMovementSinceRenderDelay = currentClientAvatarPosition.subtract(clientEPD.position);
+			// OPTION 1: Get diff between player pos X millis ago and current pos, and re-add this to server pos
+			/*Vector3f clientMovementSinceRenderDelay = currentClientAvatarPosition.subtract(clientEPD.position);
 				//clientMovementSinceRenderDelay.y = 0; // Don't adjust y-axis
 				Vector3f newPos = serverEPD.position.add(clientMovementSinceRenderDelay);*/
 
-				// OPTION 2: Adjust player by halfway between server pos and client pos
-				/*Vector3f newPos = new Vector3f();
+			// OPTION 2: Adjust player by halfway between server pos and client pos
+			/*Vector3f newPos = new Vector3f();
 				newPos.interpolate(serverEPD.position, clientEPD.position, .5f); 
 				Settings.p("Moving player to " + newPos);*/
 
-				//if (diff > 1) {
-					// Move them directly since it's such a long way off
-				//} else {
-					// OPTION 3: Move player slowly towards server position
-					float MAX_MOVE = 0.1f; // todo - make config
+			// OPTION 3: Move player slowly towards server position
+			/*float MAX_MOVE = 0.1f; // todo - make config
 					if (diff > MAX_MOVE) {
 						offset.normalizeLocal().multLocal(MAX_MOVE);
 					}
-				//}
-				//Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
-				//this.setWorldTranslation(newPos);
-				this.addToWalkDir(offset);
+				//}*/
+			//Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
+			//this.setWorldTranslation(newPos);
+			offset = this.syncPos.getNewAdjustment(offset);
+			this.addToWalkDir(offset);
 			//}
 		}
 
@@ -105,14 +106,6 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	public void hasSuccessfullyHit(IEntity e) {
 		// Do nothing - done server-side
 	}
-
-
-	// Don't use cam position, just use main node position
-	/*@Override
-	public Vector3f getWorldTranslation() {
-		return this.cam.getLocation();
-		//return playerControl.getPhysicsRigidBody().getPhysicsLocation();  This is very low to the ground!
-	}*/
 
 
 	@Override

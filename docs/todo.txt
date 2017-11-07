@@ -1,8 +1,9 @@
 STETECH1
 
 URGENT
-Create "simulator" the shows client and server sync'ing
-Client show entitiy list on HUD
+Use test annotations
+	Unit test IPositionSynchronizer
+Client show entity list on HUD
 Show window on server listing current objects and their position
 Avatar falling slowly when not moving forwards (just like jetpac?)
 Can't see other avatar

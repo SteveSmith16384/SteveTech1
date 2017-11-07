@@ -27,8 +27,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
 
-	private final Vector3f walkDirection = new Vector3f();
-	public float moveSpeed = Settings.PLAYER_MOVE_SPEED;
+	//private final Vector3f walkDirection = new Vector3f();
+	public final float moveSpeed = Settings.PLAYER_MOVE_SPEED;
 	protected IInputDevice input;
 
 	//Temporary vectors used on each frame.
