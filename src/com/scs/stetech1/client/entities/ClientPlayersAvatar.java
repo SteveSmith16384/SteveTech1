@@ -70,7 +70,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 		if (offset != null) {
 			float diff = offset.length();
-			if (diff > 0.1f) { // todo - make config
+			//if (diff > Settings.MAX_CLIENT_POSITION_DISCREP) {
 				//Settings.p("Adjusting client by: " + diff);
 
 				// OPTION 1: Get diff between player pos X millis ago and current pos, and re-add this to server pos
@@ -83,22 +83,24 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 				newPos.interpolate(serverEPD.position, clientEPD.position, .5f); 
 				Settings.p("Moving player to " + newPos);*/
 
-				// OPTION 3: Move player slowly towards server position
-				float MAX_MOVE = 0.01f; // todo - make config
-				if (diff > MAX_MOVE) {
-					offset.normalizeLocal().multLocal(MAX_MOVE);
-				} else {
-					//int zzz = 6;
-				}
+				//if (diff > 1) {
+					// Move them directly since it's such a long way off
+				//} else {
+					// OPTION 3: Move player slowly towards server position
+					float MAX_MOVE = 0.1f; // todo - make config
+					if (diff > MAX_MOVE) {
+						offset.normalizeLocal().multLocal(MAX_MOVE);
+					}
+				//}
 				//Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
 				//this.setWorldTranslation(newPos);
-				this.addToWalkDir(offset); // scs new
-			}
+				this.addToWalkDir(offset);
+			//}
 		}
 
 	}
-	
-	
+
+
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {
 		// Do nothing - done server-side
@@ -156,15 +158,6 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		FrustumIntersect insideoutside = cam.contains(entity.getMainNode().getWorldBound());
 		return insideoutside;
 	}
-
-
-	/*@Override
-	public void shoot() {
-		// TODO Auto-generated method stub
-		
-	}*/
-
-
 
 
 }

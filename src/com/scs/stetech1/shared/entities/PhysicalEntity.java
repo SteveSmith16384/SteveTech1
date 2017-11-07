@@ -19,7 +19,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
-	protected PositionCalculator serverPositionData; // todo - rename
+	protected PositionCalculator serverPositionData;
 
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
 	private Quaternion prevRot = new Quaternion();
@@ -64,7 +64,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 
 
 	public void setWorldRotation(final Quaternion newRot2) {
-		getMainNode().setLocalRotation(newRot2); // todo - set rigibody rotation?
+		getMainNode().setLocalRotation(newRot2); // todo - set rigidbody rotation?
 	}
 
 
@@ -100,9 +100,9 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 	}
 
 
-	public Vector3f calcHitEntity(float range) {
+	public PhysicalEntity calcHitEntity(float range) {
 		Vector3f from = this.getWorldTranslation();
-		Vector3f to = this.getWorldRotation().getRotationColumn(1).normalize().multLocal(range).addLocal(from); // todo - check
+		Vector3f to = this.getWorldRotation().getRotationColumn(2).normalize().multLocal(range).addLocal(from); // todo - check
 		List<PhysicsRayTestResult> results = module.getBulletAppState().getPhysicsSpace().rayTest(from, to);
 		float dist = -1;
 		PhysicsRayTestResult closest = null;
@@ -117,10 +117,10 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 			}
 		}
 		if (closest != null) {
-			Entity e = (Entity)closest.getCollisionObject().getUserObject();
+			PhysicalEntity e = (PhysicalEntity)closest.getCollisionObject().getUserObject();
 			Vector3f hitpoint = to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
 			Settings.p("Hit " + e + " at " + hitpoint);
-			return hitpoint;
+			return e;
 		}
 		return null;
 	}
@@ -151,7 +151,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 
 
 	public boolean canMove() {
-		return this.rigidBodyControl.getMass() > 0;// || this.rigidBodyControl.isKinematic();
+		return this.rigidBodyControl.getMass() > 0; // 0 means static, and static doesn't move
 	}
 
 

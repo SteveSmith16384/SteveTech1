@@ -49,6 +49,7 @@ import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
+import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
@@ -270,14 +271,15 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 								//Settings.p("New position for " + e + ": " + eum.pos);
 							} else {
 								Settings.p("Unknown entity ID: " + eum.entityID);
-								// Todo - Send UnknownEntityMessage
+								// Ask the server for entity details since we don't know about it.
+								send(new UnknownEntityMessage(eum.entityID));
 							}
 
 						} else if (message instanceof RemoveEntityMessage) {
 							RemoveEntityMessage rem = (RemoveEntityMessage)message;
 							this.removeEntity(rem.entityID);
 
-						} else if (message instanceof AllEntitiesSentMessage) {
+						} else if (message instanceof AllEntitiesSentMessage) { // We now have enough data to start
 							this.bulletAppState.setEnabled(true); // Go!
 							gameStarted = true;
 
@@ -536,7 +538,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 
 
 	private void send(final Message msg) {
-		if (Settings.COMMS_DELAY == 0) {
+		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
 			myClient.send(msg);
 		}
 		else {
@@ -556,7 +558,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(Settings.COMMS_DELAY);
+						Thread.sleep(Settings.ARTIFICIAL_COMMS_DELAY);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

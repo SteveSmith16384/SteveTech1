@@ -1,12 +1,12 @@
 package com.scs.stetech1.server.entities;
 
 import com.jme3.math.Vector3f;
-import com.scs.stetech1.abilities.IAbility;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IDamagable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.input.IInputDevice;
+import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
@@ -14,8 +14,12 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamagable, ICollideable {
 
+	private ServerMain server;
+	
 	public ServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
 		super(_module, _playerID, _input, eid);
+		
+		server = (ServerMain)_module;
 	}
 
 
@@ -122,6 +126,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 		if (invuln) {
 			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
 		}
+		server.broadcast(new EntityUpdateMessage(this, true));
 	}
 
 

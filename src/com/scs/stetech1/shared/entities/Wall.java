@@ -59,7 +59,7 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		}
 		main_node.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2));
 
-		rigidBodyControl = new RigidBodyControl(0f);
+		rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
 		main_node.addControl(rigidBodyControl);
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		module.getRootNode().attachChild(this.main_node);

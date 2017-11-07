@@ -17,7 +17,7 @@ public class NewEntityMessage extends EntityUpdateMessage {
 	
 	
 	public NewEntityMessage(PhysicalEntity e) {
-		super(e);
+		super(e, true);
 		
 		this.setReliable(true); // Since superclass has set it to false
 		

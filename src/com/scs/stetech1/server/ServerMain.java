@@ -8,6 +8,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import ssmith.util.FixedLoopTime;
+import ssmith.util.RealtimeInterval;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
@@ -20,6 +23,7 @@ import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.system.JmeContext;
+import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.netmessages.AllEntitiesSentMessage;
@@ -35,11 +39,9 @@ import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.entities.Crate;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
-
-import ssmith.util.FixedLoopTime;
-import ssmith.util.RealtimeInterval;
 
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
@@ -144,11 +146,11 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			}
 
 			synchronized (this.clients) {
-				// If any avatars are shooting, rewind all avatars and do shooting first
+				// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
 				boolean anyShooting = false;
 				for (ClientData c : this.clients.values()) {
 					ServerPlayersAvatar avatar = c.avatar;
-					if (avatar.isShooting()) { // todo - check if hitscan weapon
+					if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 						anyShooting = true;
 						break;
 					}
@@ -158,8 +160,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 					for (ClientData c : this.clients.values()) {
 						ServerPlayersAvatar avatar = c.avatar;
-						if (avatar.isShooting()) { // todo - check if hitscan weapon
-							avatar.shoot();
+						if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
+							ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
+							chip.setTarget(avatar.calcHitEntity(chip.getRange())); // This damage etc.. is calculated later
 						}
 					}
 					this.restoreAllAvatarPositions();
@@ -182,7 +185,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 								/*if (sc.type == EntityTypes.AVATAR) {
 									Settings.p("Sending avatar pos:" + sc.getWorldTranslation());
 								}*/
-								broadcast(new EntityUpdateMessage(sc));
+								broadcast(new EntityUpdateMessage(sc, false));
 								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}
 						}
@@ -221,12 +224,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
 					client.pingRTT = client.pingCalc.add(rttDuration);
 					client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-					/*
-					 * Server sent time: 2000
-					 * Client response time: 1000
-					 * Ping: 200 
-					 * clientToServerDiffTime: 1000 - 2000 + (200/2) = -900 
-					 */
 					Settings.p("Client rtt = " + client.pingRTT);
 					Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
 				} catch (NullPointerException npe) {
@@ -376,10 +373,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	private void createGame() {
-		int id = getNextEntityID();
-		new Floor(this, id, 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
-		id = getNextEntityID();
-		//todo - re-add new Crate(this, id, 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
+		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
+		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
+		//new Crate(this, getNextEntityID(), 8, 4, 8, 1, 1, 1f, "Textures/crate.png", 65);
 	}
 
 
@@ -445,8 +441,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	}
 
 
-	private void broadcast(final MyAbstractMessage msg) {
-		if (Settings.COMMS_DELAY == 0) {
+	public void broadcast(final MyAbstractMessage msg) {
+		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
 			myServer.broadcast(msg);
 		}
 		else {
@@ -454,7 +450,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(Settings.COMMS_DELAY);
+						Thread.sleep(Settings.ARTIFICIAL_COMMS_DELAY);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -467,7 +463,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	private void broadcast(final HostedConnection conn, final MyAbstractMessage msg) {
-		if (Settings.COMMS_DELAY == 0) {
+		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
 			myServer.broadcast(Filters.equalTo(conn), msg);
 		}
 		else {
@@ -487,7 +483,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(Settings.COMMS_DELAY);
+						Thread.sleep(Settings.ARTIFICIAL_COMMS_DELAY);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

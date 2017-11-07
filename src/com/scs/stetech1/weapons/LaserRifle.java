@@ -15,19 +15,11 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility {
 
 	
 	@Override
-	public void launchBullet() {//IEntityController game, ICanShoot _shooter) {
-		//todo - use existing stored bullet new LaserBullet(game, shooter);
+	public void launchBullet() {
+		//todo - use existing stored bullet 
+		// new LaserBullet(game, shooter);
 		
 	}
 	
-
-	/*@Override
-	public boolean activate(float interpol) {
-		if (shotInterval.hitInterval()) {
-			new LaserBullet(game, module, shooter);
-			return true;
-		}
-		return false;
-	}*/
 
 }

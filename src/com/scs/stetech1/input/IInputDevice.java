@@ -18,10 +18,9 @@ public interface IInputDevice {
 
 	boolean isJumpPressed();
 
-	boolean isShootPressed();
+	boolean isShootPressed(); 
 
 	boolean isAbilityOtherPressed();
 	
 	boolean isSelectNextAbilityPressed();
-
 }

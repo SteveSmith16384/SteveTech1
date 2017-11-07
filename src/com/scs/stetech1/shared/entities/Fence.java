@@ -56,7 +56,7 @@ public class Fence extends PhysicalEntity {
 		main_node.rotate(0, rads, 0);
 		main_node.setLocalTranslation(x+(WIDTH/2), height/2, z+0.5f);
 
-		rigidBodyControl = new RigidBodyControl(0);
+		rigidBodyControl = new RigidBodyControl(0f);
 		main_node.addControl(rigidBodyControl);
 
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);

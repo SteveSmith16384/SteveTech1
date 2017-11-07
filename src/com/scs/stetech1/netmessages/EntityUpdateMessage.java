@@ -17,12 +17,13 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		super(false);
 	}
 	
-	public EntityUpdateMessage(PhysicalEntity e) {
+	public EntityUpdateMessage(PhysicalEntity e, boolean _force) {
 		super(false);
 		
 		entityID = e.getID();
 		pos = e.getWorldTranslation();
 		dir = e.getWorldRotation();
+		this.force = _force;
 	}
 
 }

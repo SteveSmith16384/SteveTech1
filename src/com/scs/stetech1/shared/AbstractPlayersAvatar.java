@@ -18,6 +18,7 @@ import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
+import com.scs.stetech1.weapons.HitscanRifle;
 
 public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
 
@@ -42,7 +43,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	protected float restartTime, invulnerableTime;
 	private int numShots = 0;
 	private int numShotsHit = 0;
-	private IAbility abilityGun, abilityOther;
+	public IAbility abilityGun, abilityOther;
 
 
 	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
@@ -72,7 +73,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		playerControl.getPhysicsRigidBody().setUserObject(this);
 
-		/*abilityGun = new LaserRifle(_game, _module, this);
+		abilityGun = new HitscanRifle(module, this);
+		/* 
 		if (Settings.DEBUG_SPELLS) {
 			this.abilityOther = new Spellbook(module, this);
 		} else {
@@ -163,7 +165,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		}
 
 		if (input.isShootPressed()) {
-			shoot(); // todo - don't do hitscan since we've already done that
+			shoot();
 		}
 
 		playerControl.setWalkDirection(walkDirection);

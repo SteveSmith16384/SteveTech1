@@ -1,14 +1,16 @@
 package com.scs.stetech1.abilities;
 
-public interface IAbility {
+import com.scs.stetech1.components.IProcessByServer;
+
+public interface IAbility extends IProcessByServer {
 
 	/**
-	 * Called every interval.  Returns whether the HUD needs updating
+	 * Called every interval.
 	 */
-	boolean process(float interpol);
+	//void process(float interpol);
 	
 	/**
-	 * Called when activated
+	 * Called when activated.  Returns whether it was successfully activated.
 	 */
 	boolean activate(float interpol);
 	

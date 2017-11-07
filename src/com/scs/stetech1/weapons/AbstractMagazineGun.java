@@ -50,14 +50,14 @@ public abstract class AbstractMagazineGun implements IAbility {
 
 
 	@Override
-	public boolean process(float interpol) {
+	public void process(float interpol) {
 		if (this.bulletsLeftInMag <= 0) {
 			// Reload
 			this.bulletsLeftInMag = this.magazineSize;
 			this.timeUntilShoot += this.reloadInterval;
 		}
 		timeUntilShoot -= interpol;
-		return false;
+		//return false;
 	}
 
 

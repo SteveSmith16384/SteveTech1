@@ -25,11 +25,11 @@ public class ClientAvatarPositionCalc {
 			if (clientEPD != null) {
 				// Is there a difference
 				float diff = serverEPD.position.distance(clientEPD.position);
-				if (diff > 0.1) {
+				/*if (diff > 0.1) {
 					// There should be no difference!
-					//Settings.p("Server " + serverPositionData.toString(serverTimeToUse));
-					//Settings.p("Client " + clientAvatarPositionData.toString(clientTimeToUse));
-				}
+					Settings.p("Server " + serverPositionData.toString(serverTimeToUse));
+					Settings.p("Client " + clientAvatarPositionData.toString(clientTimeToUse));
+				}*/
 				return serverEPD.position.subtract(clientEPD.position);
 			}
 		}

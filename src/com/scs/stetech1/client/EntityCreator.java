@@ -11,6 +11,9 @@ import com.scs.stetech1.shared.entities.Crate;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.Wall;
 
+/*
+ * This is only used client-side.
+ */
 public class EntityCreator {
 
 	private EntityCreator() {

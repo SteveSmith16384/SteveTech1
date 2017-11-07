@@ -75,6 +75,7 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 		//main_node.rotate(0, rads, 0);
 
 		rigidBodyControl = new RigidBodyControl(0f); // Only the server can move them!
+		rigidBodyControl.setKinematic(true);
 		main_node.addControl(rigidBodyControl);
 
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
