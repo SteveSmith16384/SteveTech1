@@ -97,4 +97,5 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 	}
 
 
+
 }

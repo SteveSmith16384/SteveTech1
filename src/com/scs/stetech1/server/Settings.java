@@ -55,7 +55,7 @@ public class Settings {
 	}
 
 
-	public static void Register() {
+	public static void Register() { // todo - rename
 		Serializer.registerClass(PingMessage.class);
 		Serializer.registerClass(NewPlayerRequestMessage.class);
 		Serializer.registerClass(NewPlayerAckMessage.class);

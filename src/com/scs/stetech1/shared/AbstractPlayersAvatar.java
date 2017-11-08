@@ -75,9 +75,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		abilityGun = new HitscanRifle(module, this);
 		/* 
-		if (Settings.DEBUG_SPELLS) {
-			this.abilityOther = new Spellbook(module, this);
-		} else {
 			this.abilityOther = new JetPac(this);// BoostFwd(this);//getRandomAbility(this);
 		}*/
 
@@ -85,8 +82,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		if (abilityOther != null) {
 			this.hud.setAbilityOtherText(this.abilityOther.getHudText());
 		}*/
-
-		//playerControl.getPhysicsRigidBody().setCcdMotionThreshold(PLAYER_RAD*2);
 
 	}
 
@@ -170,7 +165,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		if (walkDirection.length() != 0) {
 			playerControl.setWalkDirection(walkDirection);
-			Settings.p("Walkdir: " + walkDirection);
+			//Settings.p("Walkdir: " + walkDirection);
 		}
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
@@ -192,7 +187,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
-	//public abstract void shoot();
 	public void shoot() {
 		if (this.abilityGun.activate(0)) {
 			this.numShots++;
@@ -239,6 +233,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
+	// Do NOT use this to "tweak" players position!
 	@Override
 	public void setWorldTranslation(Vector3f pos) {
 		//float dist = pos.distance(this.getWorldTranslation());
@@ -262,5 +257,21 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public boolean isShooting() {
 		return this.input.isShootPressed();
 	}
+
+
+	/*
+	 * Need this since we can't warp a player to correct their position, as they may warp into walls!
+	 * Also, we're adjusting their position based on the past, so we want to offset them, rather than move them to
+	 * a specific point
+	 */
+	@Override
+	public void adjustWorldTranslation(Vector3f offset) {
+		if (offset.length() > 0.01f) { // todo - adjust this?
+			// Adjust avatars differently to normal entities
+			this.walkDirection.addLocal(offset.multLocal(moveSpeed)); 
+			//this.playerControl.warp(this.getWorldTranslation().add(offset)); No!!
+		}
+	}
+
 
 }

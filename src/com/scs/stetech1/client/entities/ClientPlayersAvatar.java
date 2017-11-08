@@ -8,8 +8,8 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
 import com.scs.stetech1.client.ClientAvatarPositionCalc;
 import com.scs.stetech1.client.GenericClient;
-import com.scs.stetech1.client.syncposition.IPositionAdjuster;
-import com.scs.stetech1.client.syncposition.MoveSlowlyToCorrectPosition;
+import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
+import com.scs.stetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
@@ -24,7 +24,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	public HUD hud;
 	public Camera cam;
 	private GenericClient game;
-	private IPositionAdjuster syncPos;
+	private ICorrectClientEntityPosition syncPos;
 
 	public ClientPlayersAvatar(GenericClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
 		super(_module, _playerID, _input, eid);
@@ -34,10 +34,9 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		hud = _hud;
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
-		//this.getMainNode().setLocalTranslation(x, y, z);
 
-		syncPos = new MoveSlowlyToCorrectPosition(0.1f);
-
+		//syncPos = new MoveSlowlyToCorrectPosition(0.1f);
+		syncPos = new InstantPositionAdjustment(); // scs new
 	}
 
 
@@ -94,8 +93,8 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 				//}*/
 			//Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
 			//this.setWorldTranslation(newPos);
-			this.syncPos.adjustAdjustment(offset);
-			this.addToWalkDir(offset);
+			this.syncPos.adjustPosition(this, offset);
+			//this.addToWalkDir(offset);
 			//}
 		}
 

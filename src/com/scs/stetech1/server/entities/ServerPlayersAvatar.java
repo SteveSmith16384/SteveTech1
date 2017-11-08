@@ -40,8 +40,9 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 
 		if (!this.restarting) {
 			// Have we fallen off the edge
-			if (this.playerControl.getPhysicsRigidBody().getPhysicsLocation().y < -5f) {
-				Settings.p("playerID " + this.playerID + " has died due to falling off the edge");
+			if (this.getWorldTranslation().y < -5f) {
+				//this.getMainNode().getWorldTranslation();
+				Settings.p("playerID " + this.playerID + " has died due to falling off the edge (pos " + this.getWorldTranslation() + ")");
 				died("Too low");
 				return;
 			}

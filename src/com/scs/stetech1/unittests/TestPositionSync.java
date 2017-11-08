@@ -3,9 +3,11 @@ package com.scs.stetech1.unittests;
 import org.junit.Test;
 
 import com.jme3.math.Vector3f;
-import com.scs.stetech1.client.syncposition.IPositionAdjuster;
+import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stetech1.client.syncposition.MoveSlowlyToCorrectPosition;
+import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.unittests.dummyentities.DummyPhysicalEntity;
 
 public class TestPositionSync {
 
@@ -15,16 +17,17 @@ public class TestPositionSync {
 
 	@Test
 	public void TestMoveSlowlyToCorrectPosition() {
-		IPositionAdjuster posSync = new MoveSlowlyToCorrectPosition(.1f);
+		IPhysicalEntity pe = new DummyPhysicalEntity();
+		pe.setWorldTranslation(new Vector3f(5f, 0.5f, 5f));
+		
+		ICorrectClientEntityPosition posSync = new MoveSlowlyToCorrectPosition(.1f);
 		
 		Vector3f serverPos = new Vector3f(10f, 0.5f, 10f);
-		Vector3f clientPos = new Vector3f(5f, 0.5f, 5f);
 		int count = 0;
-		while (serverPos.distance(clientPos) > 0.01f) {
-			Vector3f offset = serverPos.subtract(clientPos);
-			posSync.adjustAdjustment(offset);
-			clientPos.addLocal(offset);
-			Settings.p("Client pos: " + clientPos);
+		while (serverPos.distance(pe.getWorldTranslation()) > 0.01f) {
+			Vector3f offset = serverPos.subtract(pe.getWorldTranslation());
+			posSync.adjustPosition(pe, offset);
+			Settings.p("Client pos: " + pe.getWorldTranslation());
 			count++;
 		}
 		Settings.p("Finished: " + count);

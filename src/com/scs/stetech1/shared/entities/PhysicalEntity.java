@@ -9,13 +9,14 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public abstract class PhysicalEntity extends Entity implements IProcessByServer {
+public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
@@ -49,7 +50,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 	public void calcPosition(GenericClient mainApp, long serverTimeToUse) {
 		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse);
 		if (epd != null) {
-			this.setWorldTranslation(epd.position);
+			this.setWorldTranslation(epd.position); // todo - use IPositionAdjuster
 			this.setWorldRotation(epd.rotation);
 		} else {
 			//Settings.p("No position data for " + this);
@@ -135,7 +136,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 
 	public void setWorldTranslation(Vector3f pos) {
 		// This is overridden by avatars, as they need to warp
-		this.rigidBodyControl.setPhysicsLocation(pos.clone());
+		// this.rigidBodyControl.setPhysicsLocation(pos.clone()); Don't need this according to ...[todo]
 		this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
 	}
 
@@ -206,6 +207,13 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 		this.setWorldTranslation(this.originalPos);
 		this.setWorldRotation(this.originalRot);
 		this.main_node.updateGeometricState();
+	}
+
+
+	@Override
+	public void adjustWorldTranslation(Vector3f offset) {
+		this.setWorldTranslation(this.getWorldTranslation().add(offset));
+		
 	}
 
 }

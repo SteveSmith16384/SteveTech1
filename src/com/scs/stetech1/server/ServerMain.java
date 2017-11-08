@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
@@ -39,7 +40,6 @@ import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.shared.entities.Crate;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
@@ -60,11 +60,11 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	public BulletAppState bulletAppState;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	private ExecutorService executor = Executors.newFixedThreadPool(20);
-
+	private LogWindow logWindow;
+	
 	public static void main(String[] args) {
 		try {
-			ServerMain app;
-			app = new ServerMain();
+			ServerMain app = new ServerMain();
 			app.setPauseOnLostFocus(false);
 			app.start(JmeContext.Type.Headless);
 		} catch (Exception e) {
@@ -75,12 +75,21 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	public ServerMain() throws IOException {
 		properties = new SorcerersProperties(PROPS_FILE);
+		logWindow = new LogWindow("Server", 400, 300);
+	}
 
-		Settings.Register();
 
-		myServer = Network.createServer(Settings.PORT);
+	@Override
+	public void simpleInitApp() {
+		try {
+			myServer = Network.createServer(Settings.PORT);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		myServer.start();
 		myServer.addConnectionListener(this);
+
+		Settings.Register();
 
 		myServer.addMessageListener(this, PingMessage.class);
 		myServer.addMessageListener(this, NewPlayerRequestMessage.class);
@@ -91,11 +100,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		myServer.addMessageListener(this, EntityUpdateMessage.class);
 		myServer.addMessageListener(this, PlayerLeftMessage.class);
 
-	}
-
-
-	@Override
-	public void simpleInitApp() {
 		// Set up Physics
 		bulletAppState = new BulletAppState();
 		getStateManager().attach(bulletAppState);
@@ -110,7 +114,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		if (myServer.hasConnections()) { // this.rootNode
+		//if (myServer.hasConnections()) { // this.rootNode
 			// Process all messsages
 			synchronized (unprocessedMessages) {
 				while (!this.unprocessedMessages.isEmpty()) {
@@ -147,15 +151,15 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 			synchronized (this.clients) {
 				// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
-				boolean anyShooting = false;
+				boolean areAnyPlayersShooting = false;
 				for (ClientData c : this.clients.values()) {
 					ServerPlayersAvatar avatar = c.avatar;
 					if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
-						anyShooting = true;
+						areAnyPlayersShooting = true;
 						break;
 					}
 				}
-				if (anyShooting) {
+				if (areAnyPlayersShooting) {
 					this.rewindAllAvatars(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY); // todo - is time correct?
 
 					for (ClientData c : this.clients.values()) {
@@ -171,6 +175,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
 			synchronized (entities) {
+				StringBuilder strEntityDebug = new StringBuilder();
 				// Loop through the entities
 				for (IEntity e : entities.values()) {
 					if (e instanceof IProcessByServer) {
@@ -181,6 +186,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					if (sendUpdates) {
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity sc = (PhysicalEntity)e;
+							strEntityDebug.append(sc.name + " Pos: " + sc.getWorldTranslation() + "\n");
 							if (sc.hasMoved()) { // Don't send if not moved
 								/*if (sc.type == EntityTypes.AVATAR) {
 									Settings.p("Sending avatar pos:" + sc.getWorldTranslation());
@@ -191,6 +197,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 						}
 					}
 				}
+				this.logWindow.setText(strEntityDebug.toString());
 			}
 
 			// Loop through clients
@@ -199,7 +206,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					client.sendMessages(this.myServer);
 				}
 			}*/
-		}
+		//}
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
 		loopTimer.start();

@@ -267,7 +267,7 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 										storeAvatarPosition(serverTime);
 									}
 								}
-								pe.addPositionData(epd);
+								pe.addPositionData(epd); // Store the position for use later
 								//Settings.p("New position for " + e + ": " + eum.pos);
 							} else {
 								Settings.p("Unknown entity ID: " + eum.entityID);
@@ -307,8 +307,7 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 
 				long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 
-				// Loop through each entity and calc position
-				
+				// Loop through each entity and calc correct position				
 				StringBuffer strListEnts = new StringBuffer(); // Log entities
 				for (IEntity e : this.entities.values()) {
 					if (e instanceof PhysicalEntity) {
@@ -316,10 +315,6 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 						strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 						if (pe.canMove()) { // Only bother with things that can move
 							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
-
-							if (e instanceof EnemyPlayersAvatar) {
-								//Settings.p("EnemyPlayersAvatar = " + pe.getWorldTranslation());
-							}
 						}
 					}
 				}

@@ -55,16 +55,15 @@ public final class PositionCalculator {
 
 	public EntityPositionData calcPosition(long serverTimeToUse) {
 		synchronized (positionData) {
-			if (this.positionData.size() > 1) {
+			//if (this.positionData.size() > 1) {
 
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
-					//Settings.p(this.toString(serverTimeToUse));
 					//long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
 					//Settings.p(startDiff + " too soon");
-					return null; // Our selected time is too soon!
+					return this.positionData.getFirst(); // Our selected time is too soon!
 				} else if (this.positionData.getLast().serverTimestamp > serverTimeToUse) {
 					//Settings.p(this.toString(serverTimeToUse));
-					return null; // Our selected time is too late!
+					return this.positionData.getLast(); // Our selected time is too late!
 				}
 
 				EntityPositionData firstEPD = null;
@@ -91,10 +90,10 @@ public final class PositionCalculator {
 					pos++;
 				}
 				throw new RuntimeException("Should not get here!");
-			}
+			//}
 			//Settings.p("No position data (" + positionData.size() + " entries)");
 		}
-		return null;
+		//return null;
 
 	}
 	
