@@ -11,12 +11,10 @@ public class MoveSlowlyToCorrectPosition implements IPositionAdjuster {
 	}
 
 	@Override
-	public Vector3f getNewAdjustment(Vector3f offset) {
+	public void adjustAdjustment(Vector3f offset) {
 		float diff = offset.length();
 		if (diff > maxDist) {
-			return offset.normalize().multLocal(maxDist);
-		} else {
-			return offset.clone(); 
+			offset.normalizeLocal().multLocal(maxDist);
 		}
 	}
 

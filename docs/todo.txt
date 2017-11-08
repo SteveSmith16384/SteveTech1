@@ -1,20 +1,19 @@
 STETECH1
 
 URGENT
-Use test annotations
-	Unit test IPositionSynchronizer
-Client show entity list on HUD
-Show window on server listing current objects and their position
 Avatar falling slowly when not moving forwards (just like jetpac?)
+Show window on server listing current objects and their position
+	Client show entity list on HUD
 Can't see other avatar
-Turn off client side physics?
 	Hitscan - only store who they were shooting at, don't process the whole hit
-Hitscan weapons
-Server don't check for hit unless client thinks it has hit
 Search for todos
 
 
 TODO
+Server don't check for hit unless client thinks it has hit
+Hitscan weapons
+Turn off client side physics?
+Use test annotations
 Add lots of comments
 Unit test rewind avatars
 Spectator mode

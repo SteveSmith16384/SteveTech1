@@ -21,8 +21,9 @@ public class TestPositionSync {
 		Vector3f clientPos = new Vector3f(5f, 0.5f, 5f);
 		int count = 0;
 		while (serverPos.distance(clientPos) > 0.01f) {
-			Vector3f adj = posSync.getNewAdjustment(serverPos.subtract(clientPos));
-			clientPos.addLocal(adj);
+			Vector3f offset = serverPos.subtract(clientPos);
+			posSync.adjustAdjustment(offset);
+			clientPos.addLocal(offset);
 			Settings.p("Client pos: " + clientPos);
 			count++;
 		}

@@ -14,7 +14,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import com.jme3.ui.Picture;
-import com.scs.stetech1.client.SorcerersClient;
+import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.gui.TextArea;
 
@@ -33,10 +33,10 @@ public class HUD extends Node implements IProcessByServer {
 	private ColorRGBA dam_box_col = new ColorRGBA(1, 0, 0, 0.0f);
 	private boolean process_damage_box;
 	private List<Picture> targetting_reticules = new ArrayList<>();
-	private SorcerersClient game;
+	private GenericClient game;
 	private BitmapText abilityGun, abilityOther, score, playerID;
 
-	public HUD(SorcerersClient _game, float xBL, float yBL, float w, float h, BitmapFont font_small, Camera _cam) {
+	public HUD(GenericClient _game, float xBL, float yBL, float w, float h, BitmapFont font_small, Camera _cam) {
 		super("HUD");
 
 		game = _game;
@@ -81,11 +81,11 @@ public class HUD extends Node implements IProcessByServer {
 			this.attachChild(damage_box);
 		}
 
-		/*if (Settings.DEBUG_HUD) {
-			log_ta = new TextArea("log", font_small, 6, "TEXT TEST_" + id);
-			log_ta.setLocalTranslation(0, hud_height/2, 0);
-			this.attachChild(log_ta);
+		log_ta = new TextArea("log", font_small, 6, "Entities");
+		log_ta.setLocalTranslation(0, hud_height/2, 0);
+		this.attachChild(log_ta);
 
+		/*if (Settings.DEBUG_HUD) {
 			Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 			mat.setColor("Color", new ColorRGBA(1, 1, 0, 0.5f));
 			mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);

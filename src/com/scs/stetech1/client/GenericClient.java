@@ -57,7 +57,7 @@ import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
-public class SorcerersClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
+public class GenericClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -101,7 +101,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				settings.setSettingsDialogImage(null);
 			}
 
-			SorcerersClient app = new SorcerersClient();
+			GenericClient app = new GenericClient();
 			//instance = app;
 			app.setSettings(settings);
 			app.setPauseOnLostFocus(false); // Needs to always be in sync with server!
@@ -308,9 +308,12 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 				long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 
 				// Loop through each entity and calc position
+				
+				StringBuffer strListEnts = new StringBuffer(); // Log entities
 				for (IEntity e : this.entities.values()) {
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity pe = (PhysicalEntity)e;
+						strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 						if (pe.canMove()) { // Only bother with things that can move
 							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
 
@@ -320,7 +323,7 @@ public class SorcerersClient extends SimpleApplication implements ClientStateLis
 						}
 					}
 				}
-
+				this.hud.log_ta.setText(strListEnts.toString());
 				if (this.avatar != null) {
 					avatar.process(tpf_secs);
 				}

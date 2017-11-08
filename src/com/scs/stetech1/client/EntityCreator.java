@@ -21,7 +21,7 @@ public class EntityCreator {
 	}
 
 
-	public static IEntity createEntity(SorcerersClient game, NewEntityMessage msg) {
+	public static IEntity createEntity(GenericClient game, NewEntityMessage msg) {
 		Settings.p("Creating " + EntityTypes.getName(msg.type));
 		int id = (Integer)msg.data.get("id");
 

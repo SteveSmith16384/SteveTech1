@@ -8,7 +8,7 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.scs.stetech1.client.SorcerersClient;
+import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
@@ -46,7 +46,7 @@ public abstract class PhysicalEntity extends Entity implements IProcessByServer 
 
 
 	// This is overridden by Avatars to take into account local position
-	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
+	public void calcPosition(GenericClient mainApp, long serverTimeToUse) {
 		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse);
 		if (epd != null) {
 			this.setWorldTranslation(epd.position);

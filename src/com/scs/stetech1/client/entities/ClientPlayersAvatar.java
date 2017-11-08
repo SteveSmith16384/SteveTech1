@@ -7,7 +7,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
 import com.scs.stetech1.client.ClientAvatarPositionCalc;
-import com.scs.stetech1.client.SorcerersClient;
+import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.client.syncposition.IPositionAdjuster;
 import com.scs.stetech1.client.syncposition.MoveSlowlyToCorrectPosition;
 import com.scs.stetech1.components.IEntity;
@@ -23,10 +23,10 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 
 	public HUD hud;
 	public Camera cam;
-	private SorcerersClient game;
+	private GenericClient game;
 	private IPositionAdjuster syncPos;
 
-	public ClientPlayersAvatar(SorcerersClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
+	public ClientPlayersAvatar(GenericClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
 		super(_module, _playerID, _input, eid);
 
 		game = _module;
@@ -70,7 +70,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 
 
 	@Override
-	public void calcPosition(SorcerersClient mainApp, long serverTimeToUse) {
+	public void calcPosition(GenericClient mainApp, long serverTimeToUse) {
 		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 		if (offset != null) {
 			//if (diff > Settings.MAX_CLIENT_POSITION_DISCREP) {
@@ -94,7 +94,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 				//}*/
 			//Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
 			//this.setWorldTranslation(newPos);
-			offset = this.syncPos.getNewAdjustment(offset);
+			this.syncPos.adjustAdjustment(offset);
 			this.addToWalkDir(offset);
 			//}
 		}

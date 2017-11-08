@@ -27,7 +27,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
 
-	//private final Vector3f walkDirection = new Vector3f();
+	private final Vector3f walkDirection = new Vector3f();
 	public final float moveSpeed = Settings.PLAYER_MOVE_SPEED;
 	protected IInputDevice input;
 
@@ -168,8 +168,10 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			shoot();
 		}
 
-		playerControl.setWalkDirection(walkDirection);
-
+		if (walkDirection.length() != 0) {
+			playerControl.setWalkDirection(walkDirection);
+			Settings.p("Walkdir: " + walkDirection);
+		}
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 			if (abilityOther != null) {

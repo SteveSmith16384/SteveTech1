@@ -4,5 +4,5 @@ import com.jme3.math.Vector3f;
 
 public interface IPositionAdjuster {
 
-	Vector3f getNewAdjustment(Vector3f offset);
+	void adjustAdjustment(Vector3f offset);
 }
