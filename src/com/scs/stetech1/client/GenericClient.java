@@ -39,11 +39,11 @@ import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
-import com.scs.stetech1.netmessages.AllEntitiesSentMessage;
+import com.scs.stetech1.netmessages.GeneralCommandMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
-import com.scs.stetech1.netmessages.NewPlayerAckMessage;
+import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
@@ -185,11 +185,11 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 			myClient.addMessageListener(this, NewEntityMessage.class);
 			myClient.addMessageListener(this, EntityUpdateMessage.class);
 			myClient.addMessageListener(this, NewPlayerRequestMessage.class);
-			myClient.addMessageListener(this, NewPlayerAckMessage.class);
+			myClient.addMessageListener(this, GameSuccessfullyJoinedMessage.class);
 			myClient.addMessageListener(this, RemoveEntityMessage.class);
-			myClient.addMessageListener(this, AllEntitiesSentMessage.class);
+			myClient.addMessageListener(this, GeneralCommandMessage.class);
 
-			send(new NewPlayerRequestMessage("Mark Gray"));
+			send(new NewPlayerRequestMessage("Mark Gray", 1));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -279,7 +279,7 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 							RemoveEntityMessage rem = (RemoveEntityMessage)message;
 							this.removeEntity(rem.entityID);
 
-						} else if (message instanceof AllEntitiesSentMessage) { // We now have enough data to start
+						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
 							this.bulletAppState.setEnabled(true); // Go!
 							gameStarted = true;
 
@@ -362,8 +362,8 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 				send(message); // Send it straight back
 			}
 
-		} else if (message instanceof NewPlayerAckMessage) {
-			NewPlayerAckMessage npcm = (NewPlayerAckMessage)message;
+		} else if (message instanceof GameSuccessfullyJoinedMessage) {
+			GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
 				this.playersAvatarID = npcm.avatarEntityID;
@@ -398,8 +398,8 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 				unprocessedMessages.add(rem);
 			}
 
-		} else if (message instanceof AllEntitiesSentMessage) {
-			AllEntitiesSentMessage rem = (AllEntitiesSentMessage)message;
+		} else if (message instanceof GeneralCommandMessage) {
+			GeneralCommandMessage rem = (GeneralCommandMessage)message;
 			synchronized (unprocessedMessages) {
 				unprocessedMessages.add(rem);
 			}

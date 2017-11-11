@@ -3,17 +3,17 @@ package com.scs.stetech1.netmessages;
 import com.jme3.network.serializing.Serializable;
 
 @Serializable
-public class NewPlayerAckMessage extends MyAbstractMessage {
+public class GameSuccessfullyJoinedMessage extends MyAbstractMessage {
 
 	public long avatarEntityID;
 	public int playerID;
 
-	public NewPlayerAckMessage() {
+	public GameSuccessfullyJoinedMessage() {
 		super(true);
 	}
 	
 	
-	public NewPlayerAckMessage(int _playerID, long _avatarEntityID) {
+	public GameSuccessfullyJoinedMessage(int _playerID, long _avatarEntityID) {
 		super(true);
 		
 		playerID = _playerID;

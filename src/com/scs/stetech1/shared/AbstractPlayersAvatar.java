@@ -16,6 +16,7 @@ import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
+import com.scs.stetech1.jme.MyBetterCharacterControl2;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 import com.scs.stetech1.weapons.HitscanRifle;
@@ -35,7 +36,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
-	public MyBetterCharacterControl playerControl;
+	public MyBetterCharacterControl2 playerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
@@ -63,7 +64,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		this.getMainNode().attachChild(playerGeometry);
 
-		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
+		playerControl = new MyBetterCharacterControl2(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
 		playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
 		this.getMainNode().addControl(playerControl);
 
@@ -106,22 +107,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		//playerGeometry.setLocalTranslation(new Vector3f(0, (PLAYER_HEIGHT/2)-.075f, 0)); // Need this to ensure the crate is on the floor // scs new
 		return playerGeometry;
 	}
-
-
-	/*private static IAbility getRandomAbility(PlayersAvatar _player) {
-		int i = NumberFunctions.rnd(1, 3);
-		switch (i) {
-		case 1:
-			return new JetPac(_player);
-		case 2:
-			return new Invisibility(_player);
-		case 3:
-			return new RunFast(_player);
-		default:
-			throw new RuntimeException("Unknown ability: " + i);
-		}
-
-	}*/
 
 
 	@Override
@@ -227,7 +212,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	@Override
 	public Vector3f getWorldTranslation() {
 		// Need this override since main node is at 0,0,0 at the start
-		return this.playerControl.getPhysicsRigidBody().getPhysicsLocation();
+		return this.playerControl.getPhysicsRigidBody().getPhysicsLocation(); // todo - use getWorldTrans()?
 		//return this.main_node.getWorldTranslation(); 000?
 		//return this.getMainNode().getLocalTranslation();
 	}

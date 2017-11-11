@@ -8,10 +8,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import ssmith.swing.LogWindow;
-import ssmith.util.FixedLoopTime;
-import ssmith.util.RealtimeInterval;
-
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
@@ -27,11 +23,11 @@ import com.jme3.system.JmeContext;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
-import com.scs.stetech1.netmessages.AllEntitiesSentMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
+import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
+import com.scs.stetech1.netmessages.GeneralCommandMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
-import com.scs.stetech1.netmessages.NewPlayerAckMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
@@ -43,6 +39,11 @@ import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
+import ssmith.swing.Console;
+import ssmith.swing.LogWindow;
+import ssmith.util.FixedLoopTime;
+import ssmith.util.RealtimeInterval;
+
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
@@ -53,7 +54,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // EntityID::Entity
 
-	public static SorcerersProperties properties;
+	public static GameProperties properties;
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
@@ -61,6 +62,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	private ExecutorService executor = Executors.newFixedThreadPool(20);
 	private LogWindow logWindow;
+	private IConsole console;
 	
 	public static void main(String[] args) {
 		try {
@@ -74,8 +76,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	public ServerMain() throws IOException {
-		properties = new SorcerersProperties(PROPS_FILE);
+		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
+		console = new ServerConsole(this);
 	}
 
 
@@ -93,7 +96,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		myServer.addMessageListener(this, PingMessage.class);
 		myServer.addMessageListener(this, NewPlayerRequestMessage.class);
-		myServer.addMessageListener(this, NewPlayerAckMessage.class);
+		myServer.addMessageListener(this, GameSuccessfullyJoinedMessage.class);
 		myServer.addMessageListener(this, PlayerInputMessage.class);
 		myServer.addMessageListener(this, UnknownEntityMessage.class);
 		myServer.addMessageListener(this, NewEntityMessage.class);
@@ -125,7 +128,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 						client.playerName = newPlayerMessage.name;
 						client.avatar = createPlayersAvatar(client);
 						// Send newplayerconf message
-						broadcast(client.conn, new NewPlayerAckMessage(client.getPlayerID(), client.avatar.id));
+						broadcast(client.conn, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
 						sendEntityListToClient(client);
 
 						// Send them a ping to get ping time
@@ -273,7 +276,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			for (IEntity e : entities.values()) {
 				this.sendNewEntity(client, e);
 			}
-			AllEntitiesSentMessage aes = new AllEntitiesSentMessage();
+			GeneralCommandMessage aes = new GeneralCommandMessage();
 			broadcast(client.conn, aes);
 		}
 	}
@@ -379,7 +382,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 
-	private void createGame() {
+	private void createGame() { // todo - make abstract
 		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 		//new Crate(this, getNextEntityID(), 8, 4, 8, 1, 1, 1f, "Textures/crate.png", 65);
@@ -519,4 +522,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			}
 		}
 	}
+	
+	
+	public void handleCommand(String cmd) {
+		// todo
+	}
+
 }

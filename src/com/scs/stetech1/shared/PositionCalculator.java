@@ -60,6 +60,7 @@ public final class PositionCalculator {
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
 					//long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
 					//Settings.p(startDiff + " too soon");
+					Settings.p(this.toString(serverTimeToUse));
 					return this.positionData.getFirst(); // Our selected time is too soon!
 				} else if (this.positionData.getLast().serverTimestamp > serverTimeToUse) {
 					//Settings.p(this.toString(serverTimeToUse));

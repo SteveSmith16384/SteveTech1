@@ -36,6 +36,11 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 		ball_geo.getLocalTranslation().y -= 0.1f; // Drop bullets slightly
 		/** Make the ball physical with a mass > 0.0f */
 		rigidBodyControl = new RigidBodyControl(.1f);
+		rigidBodyControl = new RigidBodyControl(1f);
+		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
+		} else {
+			rigidBodyControl.setKinematic(true);
+		}
 		/** Add physical ball to physics space. */
 		ball_geo.addControl(rigidBodyControl);
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);

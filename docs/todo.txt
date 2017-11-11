@@ -1,6 +1,12 @@
 STETECH1
 
+NEW
+force avatar warp test
+Make server & client abstract
+Turn off client-side physics - why do I need it?
+
 URGENT
+Solution: Tweak walkDir dist
 Add walls
 Prevent falling
 	Stop server log flickering
