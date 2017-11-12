@@ -4,6 +4,7 @@ NEW
 force avatar warp test
 Make server & client abstract
 Turn off client-side physics - why do I need it?
+Adjust walkdir by fraction of dist
 
 URGENT
 Solution: Tweak walkDir dist
