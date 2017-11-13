@@ -65,6 +65,11 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		rigidBodyControl = new RigidBodyControl(1f);
 		//rigidBodyControl.setGravity(Vector3f.ZERO); // Floats
+		rigidBodyControl = new RigidBodyControl(1f);
+		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
+		} else {
+			rigidBodyControl.setKinematic(true);
+		}
 		main_node.addControl(rigidBodyControl);
 
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);

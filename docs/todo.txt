@@ -8,10 +8,15 @@ https://hub.jmonkeyengine.org/t/bettercharactercontrol-sync-between-server-and-c
 
 URGENT
 No position data when new position is forced
-	Reset walkdirection in physics tick?
-	Server log still flickery
-	Post Q to JME forums
-Google "jme syncing a physics system"
+Server log still flickery
+force avatar warp test
+Make server & client abstract
+	Turn off client-side physics - why do I need it?
+Adjust walkdir by fraction of dist
+Solution: Tweak walkDir dist
+Add walls
+Prevent falling?
+	Stop server log flickering
 	Google "affecting walkdirection"
 Avatar falling slowly when not moving forwards (just like jetpac?)
 Can't see other avatar

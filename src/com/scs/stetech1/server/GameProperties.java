@@ -3,13 +3,13 @@ package com.scs.stetech1.server;
 import java.io.IOException;
 import ssmith.util.MyProperties;
 
-public class SorcerersProperties extends MyProperties {
+public class GameProperties extends MyProperties {
 
-	public SorcerersProperties(String file) throws IOException {
+	public GameProperties(String file) throws IOException {
 		super(file);
 	}
 	
-
+/*
 	public float GetGamepadUpDownAdjust() {
 		return super.getPropertyAsFloat("GamepadUpDownAdjust", .4f);
 	}
@@ -39,7 +39,7 @@ public class SorcerersProperties extends MyProperties {
 		return super.getPropertyAsFloat("BaseScoreInc", 0.005f);
 	}
 
-	
+	*/
 	public float GetRestartTimeSecs() {
 		return super.getPropertyAsFloat("RestartTimeSecs", 3f);
 	}

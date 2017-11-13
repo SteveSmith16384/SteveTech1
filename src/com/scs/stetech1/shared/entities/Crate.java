@@ -59,11 +59,11 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		main_node.rotate(0, rads, 0);
 		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
-		//if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
-			rigidBodyControl = new RigidBodyControl(1f);
-		/*} else {
-			rigidBodyControl = new RigidBodyControl(0f);
-		}*/
+		rigidBodyControl = new RigidBodyControl(1f);
+		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
+		} else {
+			rigidBodyControl.setKinematic(true);
+		}
 		main_node.addControl(rigidBodyControl);
 
 		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
