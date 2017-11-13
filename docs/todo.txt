@@ -7,31 +7,25 @@ https://hub.jmonkeyengine.org/t/bettercharactercontrol-sync-between-server-and-c
 
 
 URGENT
-No position data when new position is forced
-Server log still flickery
-force avatar warp test
-Make server & client abstract
-	Turn off client-side physics - why do I need it?
-Adjust walkdir by fraction of dist
-Solution: Tweak walkDir dist
-Add walls
-Prevent falling?
-	Stop server log flickering
-	Google "affecting walkdirection"
+	Adjust walkdir by fraction of dist
+Use MyBetterCharacterControl2 - check it works first
 Avatar falling slowly when not moving forwards (just like jetpac?)
+No position data when new position is forced?
+Server log still flickery
+	Turn off client-side physics - why do I need it?
 Can't see other avatar
 
 
 TODO
+Make server & client abstract
+force avatar warp test
 Draw map
 Add walls
-Add option to turn off client-side prediction?
 Search for todos
 Prevent falling as this cannot be handled, since walkDirection can't go up?  But what about JecPac?
 Todo - am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
 Hitscan weapons
-Turn off client side physics?
 Use test annotations
 Add lots of comments
 Unit test rewind avatars
