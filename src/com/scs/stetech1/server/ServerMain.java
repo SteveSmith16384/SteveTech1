@@ -42,6 +42,7 @@ import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
+import com.scs.stetech1.shared.entities.Wall;
 
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
@@ -89,7 +90,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		myServer.start();
 		myServer.addConnectionListener(this);
 
-		Settings.Register();
+		Settings.registerMessages();
 
 		myServer.addMessageListener(this, PingMessage.class);
 		myServer.addMessageListener(this, NewPlayerRequestMessage.class);
@@ -383,6 +384,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 		//new Crate(this, getNextEntityID(), 8, 4, 8, 1, 1, 1f, "Textures/crate.png", 65);
+		new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/crate.png", 65);
 	}
 
 
@@ -400,7 +402,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			int f = 3;
 		}*/
 
-		/*todo PhysicalEntity a=null, b=null;
+		/*PhysicalEntity a=null, b=null;
 		Object oa = event.getObjectA().getUserObject(); 
 		if (oa instanceof Spatial) {
 			Spatial ga = (Spatial)event.getObjectA().getUserObject(); 

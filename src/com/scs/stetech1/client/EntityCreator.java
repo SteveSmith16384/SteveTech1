@@ -60,9 +60,11 @@ public class EntityCreator {
 		case EntityTypes.WALL:
 		{
 			Vector3f size = (Vector3f)msg.data.get("size");
+			float w = (float)msg.data.get("w");
+			float h = (float)msg.data.get("h");
 			String tex = (String)msg.data.get("tex");
 			float rot = (Float)msg.data.get("rot");
-			Wall wall = new Wall(game, id, msg.pos.x, msg.pos.y, msg.pos.z, tex, rot);
+			Wall wall = new Wall(game, id, msg.pos.x, msg.pos.y, msg.pos.z, w, h, tex, rot);
 			return wall;
 		}
 

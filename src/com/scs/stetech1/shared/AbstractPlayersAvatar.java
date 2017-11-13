@@ -187,6 +187,11 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
+	public void resetWalkDir() {
+		this.walkDirection.set(0, 0, 0);
+	}
+
+
 	public void shoot() {
 		if (this.abilityGun.activate(0)) {
 			this.numShots++;
@@ -265,10 +270,9 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	 * a specific point
 	 */
 	@Override
-	public void adjustWorldTranslation(Vector3f offset) {
-		if (offset.length() > 0.01f) { // todo - adjust this?
-			// Adjust avatars differently to normal entities
-			this.walkDirection.addLocal(offset.multLocal(moveSpeed)); 
+	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
+		if (offset.length() > 0.01f) {
+			this.walkDirection.addLocal(offset);//.multLocal(moveSpeed)); 
 			//this.playerControl.warp(this.getWorldTranslation().add(offset)); No!!
 		}
 	}

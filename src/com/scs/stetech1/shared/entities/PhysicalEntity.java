@@ -50,7 +50,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public void calcPosition(GenericClient mainApp, long serverTimeToUse) {
 		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse);
 		if (epd != null) {
-			this.setWorldTranslation(epd.position); // todo - use IPositionAdjuster
+			this.setWorldTranslation(epd.position); // todo - use IPositionAdjuster for all entities?
 			this.setWorldRotation(epd.rotation);
 		} else {
 			//Settings.p("No position data for " + this);
@@ -65,7 +65,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void setWorldRotation(final Quaternion newRot2) {
-		getMainNode().setLocalRotation(newRot2); // todo - set rigidbody rotation?
+		getMainNode().setLocalRotation(newRot2);
 	}
 
 
@@ -136,7 +136,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public void setWorldTranslation(Vector3f pos) {
 		// This is overridden by avatars, as they need to warp
-		// this.rigidBodyControl.setPhysicsLocation(pos.clone()); Don't need this according to ...[todo]
+		// this.rigidBodyControl.setPhysicsLocation(pos.clone()); Don't need this according to https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dynamic-vs-static
 		this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
 	}
 

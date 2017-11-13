@@ -17,6 +17,8 @@ import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.font.BitmapFont;
@@ -34,7 +36,6 @@ import com.jme3.network.Network;
 import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
 import com.scs.stetech1.client.entities.ClientPlayersAvatar;
-import com.scs.stetech1.client.entities.EnemyPlayersAvatar;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
@@ -57,7 +58,8 @@ import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
-public class GenericClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener {
+public class GenericClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, 
+IEntityController, PhysicsCollisionListener, PhysicsTickListener, ActionListener {
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -151,6 +153,7 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 		bulletAppState = new BulletAppState();
 		getStateManager().attach(bulletAppState);
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
+		bulletAppState.getPhysicsSpace().addTickListener(this);
 		//bulletAppState.getPhysicsSpace().enableDebug(this.getAssetManager());
 		bulletAppState.setEnabled(false); // Wait until all entities received
 
@@ -174,7 +177,7 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 		}
 
 		try {
-			Settings.Register();
+			Settings.registerMessages();
 
 			myClient = Network.connectToServer("localhost", Settings.PORT);
 			myClient.start();
@@ -565,6 +568,20 @@ public class GenericClient extends SimpleApplication implements ClientStateListe
 			};
 			executor.execute(t);
 
+		}
+	}
+
+
+	@Override
+	public void physicsTick(PhysicsSpace arg0, float arg1) {
+
+	}
+
+
+	@Override
+	public void prePhysicsTick(PhysicsSpace arg0, float arg1) {
+		if (avatar != null) {
+			this.avatar.resetWalkDir();
 		}
 	}
 

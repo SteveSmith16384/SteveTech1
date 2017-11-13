@@ -55,7 +55,7 @@ public final class PositionCalculator {
 
 	public EntityPositionData calcPosition(long serverTimeToUse) {
 		synchronized (positionData) {
-			//if (this.positionData.size() > 1) {
+			if (this.positionData.size() > 0) {
 
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
 					//long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
@@ -90,14 +90,14 @@ public final class PositionCalculator {
 					pos++;
 				}
 				throw new RuntimeException("Should not get here!");
-			//}
+			}
 			//Settings.p("No position data (" + positionData.size() + " entries)");
 		}
-		//return null;
+		return null;
 
 	}
-	
-	
+
+
 	private void reduce(int num) {
 		while (this.positionData.size() > num) {
 			this.positionData.removeLast();
@@ -128,7 +128,7 @@ public final class PositionCalculator {
 
 		return str.toString();
 	}
-	
+
 	/*
 	public String toString(PositionCalculator other, long showTime) {
 		StringBuilder str = new StringBuilder();
@@ -145,5 +145,5 @@ public final class PositionCalculator {
 
 		return str.toString();
 	}
-	*/
+	 */
 }

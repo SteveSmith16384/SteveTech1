@@ -1,18 +1,28 @@
 STETECH1
 
+LINKS
+https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dynamic-vs-static
+https://hub.jmonkeyengine.org/t/character-control-and-walkdirection/15804/10
+https://hub.jmonkeyengine.org/t/bettercharactercontrol-sync-between-server-and-client/33800
+
+
 URGENT
-Add walls
-Prevent falling
-	Stop server log flickering
+No position data when new position is forced
+	Reset walkdirection in physics tick?
+	Server log still flickery
+	Post Q to JME forums
+Google "jme syncing a physics system"
 	Google "affecting walkdirection"
-Player falling off edge when nowhere near the edge?
 Avatar falling slowly when not moving forwards (just like jetpac?)
-	Show window on server listing current objects and their position
 Can't see other avatar
-Search for todos
 
 
 TODO
+Draw map
+Add walls
+Add option to turn off client-side prediction?
+Search for todos
+Prevent falling as this cannot be handled, since walkDirection can't go up?  But what about JecPac?
 Todo - am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
 Hitscan weapons

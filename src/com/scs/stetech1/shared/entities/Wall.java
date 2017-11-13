@@ -17,26 +17,25 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollideable { // Need ICollideable so lasers don't bounce off it
 
-	public Wall(IEntityController _game, int id, float x, float yBottom, float z, String tex, float rotDegrees) {
+	public Wall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
 		super(_game, id, EntityTypes.WALL, "Wall");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("id", id);
+			creationData.put("w", w);
+			creationData.put("h", h);
 			creationData.put("tex", tex);
 			creationData.put("rot", rotDegrees);
 		}
 
-		float w = 3f;
-		float h = 1f;
 		float d = 0.1f;
 
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Wall", box1);
 		if (!_game.isServer()) { // Not running in server
-			//int i = NumberFunctions.rnd(1, 10);
-			TextureKey key3 = new TextureKey(tex);// Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
+			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = module.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);

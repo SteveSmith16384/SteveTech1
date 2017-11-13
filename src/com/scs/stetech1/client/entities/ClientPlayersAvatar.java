@@ -9,7 +9,7 @@ import com.jme3.renderer.Camera.FrustumIntersect;
 import com.scs.stetech1.client.ClientAvatarPositionCalc;
 import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
-import com.scs.stetech1.client.syncposition.InstantPositionAdjustment;
+import com.scs.stetech1.client.syncposition.MoveSlowlyToCorrectPosition;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
@@ -35,8 +35,8 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
-		//syncPos = new MoveSlowlyToCorrectPosition(0.1f);
-		syncPos = new InstantPositionAdjustment(); // scs new
+		syncPos = new MoveSlowlyToCorrectPosition(0.1f);
+		//syncPos = new InstantPositionAdjustment(); Problems
 	}
 
 
