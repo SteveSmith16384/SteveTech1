@@ -36,7 +36,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
-	public MyBetterCharacterControl2 playerControl;
+	public MyBetterCharacterControl playerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
@@ -64,7 +64,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		this.getMainNode().attachChild(playerGeometry);
 
-		playerControl = new MyBetterCharacterControl2(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
+		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
 		playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
 		this.getMainNode().addControl(playerControl);
 
@@ -148,10 +148,10 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			shoot();
 		}
 
-		if (walkDirection.length() != 0) {
+		//if (walkDirection.length() != 0) { No!  Need to set it to zero!
 			playerControl.setWalkDirection(walkDirection);
 			//Settings.p("Walkdir: " + walkDirection);
-		}
+		//}
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 			if (abilityOther != null) {

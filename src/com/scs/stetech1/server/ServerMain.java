@@ -8,6 +8,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import ssmith.swing.LogWindow;
+import ssmith.util.FixedLoopTime;
+import ssmith.util.RealtimeInterval;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
@@ -35,15 +39,10 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
-import com.scs.stetech1.shared.entities.Wall;
-
-import ssmith.swing.Console;
-import ssmith.swing.LogWindow;
-import ssmith.util.FixedLoopTime;
-import ssmith.util.RealtimeInterval;
 
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
@@ -191,10 +190,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity sc = (PhysicalEntity)e;
 							strEntityDebug.append(sc.name + " Pos: " + sc.getWorldTranslation() + "\n");
-							if (sc.hasMoved()) { // Don't send if not moved
-								/*if (sc.type == EntityTypes.AVATAR) {
+							if (sc.hasMoved()) { // Don't send if not moved (unless Avatar)
+								if (sc.type == EntityTypes.AVATAR) {
 									Settings.p("Sending avatar pos:" + sc.getWorldTranslation());
-								}*/
+								}
 								broadcast(new EntityUpdateMessage(sc, false));
 								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}
@@ -387,7 +386,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 		//new Crate(this, getNextEntityID(), 8, 4, 8, 1, 1, 1f, "Textures/crate.png", 65);
-		new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/crate.png", 65);
+		//new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/crate.png", 65);
 	}
 
 
