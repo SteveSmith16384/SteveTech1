@@ -12,13 +12,13 @@ public abstract class Entity implements IEntity, Savable {
 	
 	public final int id;
 	public final int type;
-	protected transient IEntityController module;
+	protected transient IEntityController game;
 	public final String name;
 
 	public Entity(IEntityController _module, int _id, int _type, String _name) {
 		id = _id;
 		type = _type;
-		module = _module;
+		game = _module;
 		name = _name;
 	}
 
@@ -30,7 +30,7 @@ public abstract class Entity implements IEntity, Savable {
 
 
 	public void remove() {
-		module.removeEntity(this.id);
+		game.removeEntity(this.id);
 	}
 	
 	

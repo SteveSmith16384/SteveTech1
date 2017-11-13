@@ -21,16 +21,16 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 	private float timeLeft = 3;
 
 	public LaserBullet(IEntityController _game, int id, ICanShoot _shooter) {
-		super(_game, id, EntityTypes.UNFIRED_BULLET, "LaserBullet");
+		super(_game, id, EntityTypes.LASER_BULLET, "LaserBullet");
 
 		this.shooter = _shooter;
 
 		Vector3f origin = shooter.getWorldTranslation().clone();
 
-		Node ball_geo = BeamLaserModel.Factory(module.getAssetManager(), origin, origin.add(shooter.getShootDir().multLocal(1)), ColorRGBA.Pink);
+		Node ball_geo = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(shooter.getShootDir().multLocal(1)), ColorRGBA.Pink);
 
 		this.main_node.attachChild(ball_geo);
-		module.getRootNode().attachChild(this.main_node);
+		game.getRootNode().attachChild(this.main_node);
 		/** Position the cannon ball  */
 		ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*3)));
 		ball_geo.getLocalTranslation().y -= 0.1f; // Drop bullets slightly
@@ -43,7 +43,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 		}
 		/** Add physical ball to physics space. */
 		ball_geo.addControl(rigidBodyControl);
-		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		/** Accelerate the physical ball to shoot it. */
 		rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(40));
 		rigidBodyControl.setGravity(Vector3f.ZERO);
@@ -51,7 +51,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		ball_geo.setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);
-		module.addEntity(this);
+		game.addEntity(this);
 
 	}
 
@@ -94,10 +94,5 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 		return 10;
 	}
 
-
-	@Override
-	public HashMap<String, Object> getCreationData() {
-		return null;
-	}
 
 }

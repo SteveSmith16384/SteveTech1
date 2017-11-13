@@ -37,15 +37,15 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
-			Texture tex3 = module.getAssetManager().loadTexture(key3);
+			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
 
 			Material floor_mat = null;
 			if (Settings.LIGHTING) {
-				floor_mat = new Material(module.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 				floor_mat.setTexture("DiffuseMap", tex3);
 			} else {
-				floor_mat = new Material(module.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 				floor_mat.setTexture("ColorMap", tex3);
 			}
 
@@ -66,14 +66,14 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		}
 		main_node.addControl(rigidBodyControl);
 
-		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-		module.getRootNode().attachChild(this.main_node);
+		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+		game.getRootNode().attachChild(this.main_node);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);
 
-		module.addEntity(this);
+		game.addEntity(this);
 
 	}
 
@@ -89,13 +89,6 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-
-
-	@Override
-	public HashMap<String, Object> getCreationData() {
-		return creationData;
-	}
-
 
 
 }

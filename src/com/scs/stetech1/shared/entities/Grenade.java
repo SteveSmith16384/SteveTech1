@@ -12,14 +12,17 @@ import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.AbstractPlayersAvatar;
+import com.scs.stetech1.shared.EntityTypes;
+import com.scs.stetech1.shared.IEntityController;
 
 public class Grenade extends PhysicalEntity implements IBullet {
 
 	public ICanShoot shooter;
 	private float timeLeft = 2f;
 	
-	public Grenade(Overwatch _game, GameModule _module, ICanShoot _shooter) {
-		super(_game, _module, "Grenade");
+	public Grenade(IEntityController _game, int id, ICanShoot _shooter) {
+		super(_game, id, EntityTypes.GRENADE, "Grenade");
 
 		this.shooter = _shooter;
 		
@@ -32,7 +35,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
 		Material floor_mat = null;
 		if (Settings.LIGHTING) {
-			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
 			floor_mat.setTexture("DiffuseMap", tex3);
 		} else {
 			floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -42,19 +45,20 @@ public class Grenade extends PhysicalEntity implements IBullet {
 
 		this.main_node.attachChild(ball_geo);
 		game.getRootNode().attachChild(this.main_node);
-		/** Position the cannon ball  */
-		ball_geo.setLocalTranslation(shooter.getLocation().add(shooter.getShootDir().multLocal(PlayersAvatar.PLAYER_RAD*2)));
-		/** Make the ball physical with a mass > 0.0f */
-		floor_phy = new RigidBodyControl(.2f);
-		/** Add physical ball to physics space. */
-		ball_geo.addControl(floor_phy);
-		module.bulletAppState.getPhysicsSpace().add(floor_phy);
+		ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
+		rigidBodyControl = new RigidBodyControl(.2f);
+		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
+		} else {
+			rigidBodyControl.setKinematic(true);
+		}
+		ball_geo.addControl(rigidBodyControl);
+		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		/** Accelerate the physical ball to shoot it. */
-		floor_phy.setLinearVelocity(shooter.getShootDir().mult(15));
+		rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(15));
 		
 		this.getMainNode().setUserData(Settings.ENTITY, this);
-		floor_phy.setUserObject(this);
-		module.addEntity(this);
+		rigidBodyControl.setUserObject(this);
+		game.addEntity(this);
 
 	}
 
@@ -63,7 +67,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 	public void process(float tpf) {
 		this.timeLeft -= tpf;
 		if (this.timeLeft < 0) {
-			module.doExplosion(this.getLocation(), this);//, 3, 10);
+			//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
 			this.remove();
 		}
 		

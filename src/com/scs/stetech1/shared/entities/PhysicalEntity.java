@@ -72,7 +72,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	@Override
 	public void remove() {
 		if (rigidBodyControl != null) {
-			this.module.getBulletAppState().getPhysicsSpace().remove(this.rigidBodyControl);
+			this.game.getBulletAppState().getPhysicsSpace().remove(this.rigidBodyControl);
 		}
 		super.remove();
 		if (this.main_node.getParent() == null) {
@@ -104,7 +104,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public PhysicalEntity calcHitEntity(float range) {
 		Vector3f from = this.getWorldTranslation();
 		Vector3f to = this.getWorldRotation().getRotationColumn(2).normalize().multLocal(range).addLocal(from); // todo - check
-		List<PhysicsRayTestResult> results = module.getBulletAppState().getPhysicsSpace().rayTest(from, to);
+		List<PhysicsRayTestResult> results = game.getBulletAppState().getPhysicsSpace().rayTest(from, to);
 		float dist = -1;
 		PhysicsRayTestResult closest = null;
 		for (PhysicsRayTestResult r : results) {
@@ -186,7 +186,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public abstract HashMap<String, Object> getCreationData();
+	public HashMap<String, Object> getCreationData() {
+		return creationData;
+	}
 
 
 	public boolean rewindPosition(long serverTimeToUse) {

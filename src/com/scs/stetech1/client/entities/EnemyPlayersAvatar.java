@@ -78,14 +78,14 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 		rigidBodyControl.setKinematic(true);
 		main_node.addControl(rigidBodyControl);
 
-		module.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-		module.getRootNode().attachChild(this.main_node);
+		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+		game.getRootNode().attachChild(this.main_node);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);
 
-		module.addEntity(this);
+		game.addEntity(this);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
@@ -108,12 +108,6 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
-	}
-
-
-	@Override
-	public HashMap<String, Object> getCreationData() {
-		return null;//creationData;
 	}
 
 

@@ -59,7 +59,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		playerID = _playerID;
 		input = _input;
 
-		playerGeometry = getPlayersModel(module, playerID);
+		playerGeometry = getPlayersModel(game, playerID);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
 
 		this.getMainNode().attachChild(playerGeometry);
@@ -68,13 +68,13 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
 		this.getMainNode().addControl(playerControl);
 
-		module.getBulletAppState().getPhysicsSpace().add(playerControl);
-		module.getRootNode().attachChild(this.main_node);
+		game.getBulletAppState().getPhysicsSpace().add(playerControl);
+		game.getRootNode().attachChild(this.main_node);
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		playerControl.getPhysicsRigidBody().setUserObject(this);
 
-		abilityGun = new HitscanRifle(module, this);
+		abilityGun = new HitscanRifle(game, this);
 		/* 
 			this.abilityOther = new JetPac(this);// BoostFwd(this);//getRandomAbility(this);
 		}*/
@@ -203,14 +203,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	@Override
 	public void remove() {
 		super.remove();
-		this.module.getBulletAppState().getPhysicsSpace().remove(this.playerControl);
+		this.game.getBulletAppState().getPhysicsSpace().remove(this.playerControl);
 
-	}
-
-
-	@Override
-	public HashMap<String, Object> getCreationData() {
-		return creationData;
 	}
 
 

@@ -121,7 +121,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	public Vector3f getPointOnFloor(float range) {
 		Vector3f from = this.cam.getLocation();
 		Vector3f to = this.cam.getDirection().normalize().multLocal(range).addLocal(from);
-		List<PhysicsRayTestResult> results = module.getBulletAppState().getPhysicsSpace().rayTest(from, to);
+		List<PhysicsRayTestResult> results = game.getBulletAppState().getPhysicsSpace().rayTest(from, to);
 		float dist = -1;
 		PhysicsRayTestResult closest = null;
 		for (PhysicsRayTestResult r : results) {
