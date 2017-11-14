@@ -17,8 +17,6 @@ import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.font.BitmapFont;
@@ -35,16 +33,17 @@ import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
+import com.jme3.system.JmeContext.Type;
 import com.scs.stetech1.client.entities.ClientPlayersAvatar;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
-import com.scs.stetech1.netmessages.GeneralCommandMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
+import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
+import com.scs.stetech1.netmessages.GeneralCommandMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
-import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
@@ -52,6 +51,7 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
@@ -59,7 +59,7 @@ import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public class GenericClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, 
-IEntityController, PhysicsCollisionListener, PhysicsTickListener, ActionListener {
+IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickListener, 
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -153,7 +153,7 @@ IEntityController, PhysicsCollisionListener, PhysicsTickListener, ActionListener
 		bulletAppState = new BulletAppState();
 		getStateManager().attach(bulletAppState);
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
-		bulletAppState.getPhysicsSpace().addTickListener(this);
+		//bulletAppState.getPhysicsSpace().addTickListener(this);
 		//bulletAppState.getPhysicsSpace().enableDebug(this.getAssetManager());
 		bulletAppState.setEnabled(false); // Wait until all entities received
 
@@ -316,6 +316,10 @@ IEntityController, PhysicsCollisionListener, PhysicsTickListener, ActionListener
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity pe = (PhysicalEntity)e;
 						strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
+						if (pe instanceof AbstractPlayersAvatar) {
+							AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
+							strListEnts.append("Walkdir : " + av.playerControl.getWalkDirection() + "\n");
+						}
 						if (pe.canMove()) { // Only bother with things that can move
 							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
 						}
@@ -438,17 +442,8 @@ IEntityController, PhysicsCollisionListener, PhysicsTickListener, ActionListener
 
 	@Override
 	public void collision(PhysicsCollisionEvent event) {
-		//String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
+		String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
 		//System.out.println(s);
-		/*if (s.equals("Entity:Player collided with cannon ball (Geometry)")) {
-			int f = 3;
-		}*/
-
-		//String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
-		//System.out.println(s);
-		/*if (s.equals("Entity:Player collided with cannon ball (Geometry)")) {
-			int f = 3;
-		}*/
 
 		/*PhysicalEntity a=null, b=null;
 		Object oa = event.getObjectA().getUserObject(); 
@@ -532,6 +527,7 @@ IEntityController, PhysicsCollisionListener, PhysicsTickListener, ActionListener
 
 	}
 
+	
 	@Override
 	public boolean isServer() {
 		return false;
@@ -572,7 +568,7 @@ IEntityController, PhysicsCollisionListener, PhysicsTickListener, ActionListener
 	}
 
 
-	@Override
+/*	@Override
 	public void physicsTick(PhysicsSpace arg0, float arg1) {
 
 	}
@@ -581,8 +577,14 @@ IEntityController, PhysicsCollisionListener, PhysicsTickListener, ActionListener
 	@Override
 	public void prePhysicsTick(PhysicsSpace arg0, float arg1) {
 		if (avatar != null) {
-			this.avatar.resetWalkDir();
+			//this.avatar.resetWalkDir();
 		}
+	}
+
+*/
+	@Override
+	public Type getJmeContext() {
+		return getContext().getType();
 	}
 
 }

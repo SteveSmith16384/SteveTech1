@@ -10,6 +10,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
@@ -34,7 +35,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Crate", box1);
-		if (!_game.isServer()) { // Not running in server
+		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);

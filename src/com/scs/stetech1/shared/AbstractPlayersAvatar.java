@@ -36,7 +36,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
-	public MyBetterCharacterControl playerControl;
+	public MyBetterCharacterControl2 playerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
@@ -64,7 +64,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		this.getMainNode().attachChild(playerGeometry);
 
-		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
+		playerControl = new MyBetterCharacterControl2(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
 		playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
 		this.getMainNode().addControl(playerControl);
 
@@ -111,6 +111,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	@Override
 	public void process(float tpf) {
+		walkDirection.set(0, 0, 0);
+
 		abilityGun.process(tpf);
 		if (this.abilityOther != null) {
 			abilityOther.process(tpf);
@@ -125,7 +127,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
-		if (input.getFwdValue()) {	
+		if (input.getFwdValue()) {
 			//Settings.p("fwd=" + input.getFwdValue());
 			walkDirection.addLocal(camDir);
 		} else if (input.getBackValue()) {
@@ -136,10 +138,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		} else if (input.getStrafeRightValue()) {		
 			walkDirection.addLocal(camLeft.negate());
 		}
-
-		/*if (walkDirection.length() != 0) {
-				Settings.p("walkDirection=" + walkDirection);
-			}*/
 		if (input.isJumpPressed()){
 			this.jump();
 		}
@@ -148,17 +146,14 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			shoot();
 		}
 
-		//if (walkDirection.length() != 0) { No!  Need to set it to zero!
-			playerControl.setWalkDirection(walkDirection);
-			//Settings.p("Walkdir: " + walkDirection);
-		//}
+		playerControl.setWalkDirection(walkDirection.clone()); // todo - need to clone?
+
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 			if (abilityOther != null) {
 				this.hud.setAbilityOtherText(this.abilityOther.getHudText());
 			}*/
 
-		walkDirection.set(0, 0, 0);
 	}
 
 
@@ -186,8 +181,10 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 
 	public void jump() {
-		Settings.p("Jumping!");
-		this.playerControl.jump();
+		if (this.game.isServer()) { // Let the server do it, and the client copy
+			Settings.p("Jumping!");
+			this.playerControl.jump();
+		}
 	}
 
 

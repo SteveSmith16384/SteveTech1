@@ -24,6 +24,7 @@ import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.system.JmeContext;
+import com.jme3.system.JmeContext.Type;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
@@ -39,10 +40,12 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
+import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
+import com.scs.stetech1.shared.entities.Wall;
 
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
@@ -63,12 +66,16 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private ExecutorService executor = Executors.newFixedThreadPool(20);
 	private LogWindow logWindow;
 	private IConsole console;
-	
+
 	public static void main(String[] args) {
 		try {
 			ServerMain app = new ServerMain();
 			app.setPauseOnLostFocus(false);
-			app.start(JmeContext.Type.Headless);
+			if (Settings.HEADLESS_SERVER) {
+				app.start(JmeContext.Type.Headless);
+			} else {
+				app.start();				
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -78,7 +85,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	public ServerMain() throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
-		console = new ServerConsole(this);
+		//console = new ServerConsole(this);
 	}
 
 
@@ -88,6 +95,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			myServer = Network.createServer(Settings.PORT);
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.exit(-1);
 		}
 		myServer.start();
 		myServer.addConnectionListener(this);
@@ -108,7 +116,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		getStateManager().attach(bulletAppState);
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
 		//bulletAppState.getPhysicsSpace().addTickListener(this);
-		//bulletAppState.getPhysicsSpace().setAccuracy(1f / 80f);
 
 		createGame();
 		loopTimer.start();
@@ -117,98 +124,104 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
+		StringBuilder strDebug = new StringBuilder();
+
 		//if (myServer.hasConnections()) { // this.rootNode
-			// Process all messsages
-			synchronized (unprocessedMessages) {
-				while (!this.unprocessedMessages.isEmpty()) {
-					MyAbstractMessage message = this.unprocessedMessages.remove(0);
-					ClientData client = message.client;
-					if (message instanceof NewPlayerRequestMessage) {
-						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-						client.playerName = newPlayerMessage.name;
-						client.avatar = createPlayersAvatar(client);
-						// Send newplayerconf message
-						broadcast(client.conn, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
-						sendEntityListToClient(client);
+		
+		// Process all messsages
+		synchronized (unprocessedMessages) {
+			while (!this.unprocessedMessages.isEmpty()) {
+				MyAbstractMessage message = this.unprocessedMessages.remove(0);
+				ClientData client = message.client;
+				if (message instanceof NewPlayerRequestMessage) {
+					NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
+					client.playerName = newPlayerMessage.name;
+					client.avatar = createPlayersAvatar(client);
+					// Send newplayerconf message
+					broadcast(client.conn, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
+					sendEntityListToClient(client);
 
-						// Send them a ping to get ping time
-						broadcast(client.conn, new PingMessage(true));
+					// Send them a ping to get ping time
+					broadcast(client.conn, new PingMessage(true));
 
-					} else if (message instanceof UnknownEntityMessage) {
-						UnknownEntityMessage uem = (UnknownEntityMessage) message;
-						IEntity e = this.entities.get(uem.entityID);
-						this.sendNewEntity(client, e);
+				} else if (message instanceof UnknownEntityMessage) {
+					UnknownEntityMessage uem = (UnknownEntityMessage) message;
+					IEntity e = this.entities.get(uem.entityID);
+					this.sendNewEntity(client, e);
 
-					} else if (message instanceof PlayerLeftMessage) {
-						this.connectionRemoved(this.myServer, client.conn);
+				} else if (message instanceof PlayerLeftMessage) {
+					this.connectionRemoved(this.myServer, client.conn);
 
-					} else {
-						throw new RuntimeException("Unknown message type: " + message);
-					}
+				} else {
+					throw new RuntimeException("Unknown message type: " + message);
 				}
 			}
+		}
 
-			if (sendPingInt.hitInterval()) {
-				broadcast(new PingMessage(true));
+		if (sendPingInt.hitInterval()) {
+			broadcast(new PingMessage(true));
+		}
+
+		synchronized (this.clients) {
+			// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
+			boolean areAnyPlayersShooting = false;
+			for (ClientData c : this.clients.values()) {
+				ServerPlayersAvatar avatar = c.avatar;
+				if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
+					areAnyPlayersShooting = true;
+					break;
+				}
 			}
+			if (areAnyPlayersShooting) {
+				this.rewindAllAvatars(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY); // todo - is time correct?
 
-			synchronized (this.clients) {
-				// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
-				boolean areAnyPlayersShooting = false;
 				for (ClientData c : this.clients.values()) {
 					ServerPlayersAvatar avatar = c.avatar;
 					if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
-						areAnyPlayersShooting = true;
-						break;
+						ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
+						chip.setTarget(avatar.calcHitEntity(chip.getRange())); // This damage etc.. is calculated later
 					}
 				}
-				if (areAnyPlayersShooting) {
-					this.rewindAllAvatars(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY); // todo - is time correct?
-
-					for (ClientData c : this.clients.values()) {
-						ServerPlayersAvatar avatar = c.avatar;
-						if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
-							ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
-							chip.setTarget(avatar.calcHitEntity(chip.getRange())); // This damage etc.. is calculated later
-						}
-					}
-					this.restoreAllAvatarPositions();
-				}
+				this.restoreAllAvatarPositions();
 			}
+		}
 
-			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
-			synchronized (entities) {
-				StringBuilder strEntityDebug = new StringBuilder();
-				// Loop through the entities
-				for (IEntity e : entities.values()) {
-					if (e instanceof IProcessByServer) {
-						IProcessByServer p = (IProcessByServer)e;
-						p.process(tpf_secs);
+		boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
+		synchronized (entities) {
+			// Loop through the entities
+			for (IEntity e : entities.values()) {
+				if (e instanceof IProcessByServer) {
+					IProcessByServer p = (IProcessByServer)e;
+					p.process(tpf_secs);
+				}
+
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity sc = (PhysicalEntity)e;
+					strDebug.append(sc.name + " Pos: " + sc.getWorldTranslation() + "\n");
+					if (sc.type == EntityTypes.AVATAR) {
+						AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
+						strDebug.append("WalkDir: " + av.playerControl.getWalkDirection() + "   Velocity: " + av.playerControl.getVelocity().length() + "\n");
 					}
-
 					if (sendUpdates) {
-						if (e instanceof PhysicalEntity) {
-							PhysicalEntity sc = (PhysicalEntity)e;
-							strEntityDebug.append(sc.name + " Pos: " + sc.getWorldTranslation() + "\n");
-							if (sc.hasMoved()) { // Don't send if not moved (unless Avatar)
-								if (sc.type == EntityTypes.AVATAR) {
-									Settings.p("Sending avatar pos:" + sc.getWorldTranslation());
-								}
-								broadcast(new EntityUpdateMessage(sc, false));
-								//Settings.p("Sending EntityUpdateMessage for " + sc);
-							}
+						if (sc.hasMoved()) { // Don't send if not moved (unless Avatar)
+							broadcast(new EntityUpdateMessage(sc, false));
+							//Settings.p("Sending EntityUpdateMessage for " + sc);
 						}
 					}
 				}
-				this.logWindow.setText(strEntityDebug.toString());
 			}
+		}
 
-			// Loop through clients
-			/*synchronized (clients) {
+		// Loop through clients
+		/*synchronized (clients) {
 				for (ClientData client : clients.values()) {
 					client.sendMessages(this.myServer);
 				}
 			}*/
+		//}
+
+		//if (strEntityDebug.length() > 0) { // Since if sendUpdates == false, it will be empty!
+			this.logWindow.setText(strDebug.toString());
 		//}
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
@@ -307,7 +320,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	public void connectionAdded(Server arg0, HostedConnection conn) {
 		Settings.p("Client connected!");
 		synchronized (clients) {
-			clients.put(conn.getId(), new ClientData(conn));
+			clients.put(conn.getId(), new ClientData(conn, this.getCamera(), this.getInputManager()));
 		}
 
 	}
@@ -386,23 +399,14 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 		//new Crate(this, getNextEntityID(), 8, 4, 8, 1, 1, 1f, "Textures/crate.png", 65);
-		//new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/crate.png", 65);
+		new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/crate.png", 0);
 	}
 
 
 	@Override
 	public void collision(PhysicsCollisionEvent event) {
-		//String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
+		String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
 		//System.out.println(s);
-		/*if (s.equals("Entity:Player collided with cannon ball (Geometry)")) {
-			int f = 3;
-		}*/
-
-		//String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
-		//System.out.println(s);
-		/*if (s.equals("Entity:Player collided with cannon ball (Geometry)")) {
-			int f = 3;
-		}*/
 
 		/*PhysicalEntity a=null, b=null;
 		Object oa = event.getObjectA().getUserObject(); 
@@ -523,10 +527,16 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			}
 		}
 	}
-	
-	
+
+
 	public void handleCommand(String cmd) {
 		// todo
+	}
+
+
+	@Override
+	public Type getJmeContext() {
+		return getContext().getType();
 	}
 
 }

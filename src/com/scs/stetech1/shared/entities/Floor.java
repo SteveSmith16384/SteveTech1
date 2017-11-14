@@ -9,6 +9,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.scene.shape.Box;
+import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
@@ -52,7 +53,7 @@ public class Floor extends PhysicalEntity implements ICollideable {
 		}));
 
 		Geometry geometry = new Geometry("Crate", box1);
-		if (!_game.isServer()) { // Not running in server
+		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);

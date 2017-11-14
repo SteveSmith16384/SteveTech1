@@ -75,8 +75,8 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 		//main_node.rotate(0, rads, 0);
 
 		rigidBodyControl = new RigidBodyControl(0f); // Only the server can move them!
-		rigidBodyControl.setKinematic(true);
 		main_node.addControl(rigidBodyControl);
+		rigidBodyControl.setKinematic(true);
 
 		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		game.getRootNode().attachChild(this.main_node);
@@ -92,13 +92,6 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 	}
 
 
-	/*@Override
-	public void setWorldTranslation(Vector3f pos) {
-		this.rigidBodyControl.setPhysicsLocation(pos.clone());
-		this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
-	}
-*/
-
 	@Override
 	public void process(float tpf) {
 		//Settings.p("Pos: " + this.getLocation());
@@ -108,6 +101,12 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
+	}
+
+
+	@Override
+	public boolean canMove() {
+		return true; // Always calc for avatars
 	}
 
 

@@ -18,6 +18,7 @@ import com.scs.stetech1.netmessages.UnknownEntityMessage;
 
 public class Settings {
 
+	public static final boolean HEADLESS_SERVER = true;
 	public static final boolean DEBUG = true;
 	//public static final boolean VERBOSE = true;
 

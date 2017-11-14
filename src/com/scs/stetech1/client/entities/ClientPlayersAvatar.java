@@ -74,28 +74,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 		if (offset != null) {
 			//if (diff > Settings.MAX_CLIENT_POSITION_DISCREP) {
-			//Settings.p("Adjusting client by: " + diff);
-
-			// OPTION 1: Get diff between player pos X millis ago and current pos, and re-add this to server pos
-			/*Vector3f clientMovementSinceRenderDelay = currentClientAvatarPosition.subtract(clientEPD.position);
-				//clientMovementSinceRenderDelay.y = 0; // Don't adjust y-axis
-				Vector3f newPos = serverEPD.position.add(clientMovementSinceRenderDelay);*/
-
-			// OPTION 2: Adjust player by halfway between server pos and client pos
-			/*Vector3f newPos = new Vector3f();
-				newPos.interpolate(serverEPD.position, clientEPD.position, .5f); 
-				Settings.p("Moving player to " + newPos);*/
-
-			// OPTION 3: Move player slowly towards server position
-			/*float MAX_MOVE = 0.1f; // todo - make config
-					if (diff > MAX_MOVE) {
-						offset.normalizeLocal().multLocal(MAX_MOVE);
-					}
-				//}*/
-			//Vector3f newPos = mainApp.avatar.getWorldTranslation().add(offset);
-			//this.setWorldTranslation(newPos);
 			this.syncPos.adjustPosition(this, offset);
-			//this.addToWalkDir(offset);
 			//}
 		}
 

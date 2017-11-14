@@ -8,6 +8,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
+import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.server.Settings;
@@ -31,7 +32,7 @@ public class Fence extends PhysicalEntity {
 		Box box1 = new Box(WIDTH/2, height/2, .1f);
 		box1.scaleTextureCoordinates(new Vector2f(WIDTH, height));
 		Geometry geometry = new Geometry("Fence", box1);
-		if (!_game.isServer()) { // Not running in server
+		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 
 			key3.setGenerateMips(true);

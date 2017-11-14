@@ -21,6 +21,7 @@ public class LogWindow extends JFrame {
 
 	private JTextArea textArea = null;
 	private JScrollPane pane = null;
+	private String text = "";
 
 	public LogWindow(String title, int width, int height) {
 		super(title);
@@ -29,8 +30,29 @@ public class LogWindow extends JFrame {
 		pane = new JScrollPane(textArea);
 		getContentPane().add(pane);
 		setVisible(true);
-		
-		textArea.setDoubleBuffered(true);
+
+		//textArea.setDoubleBuffered(true);
+
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				try {
+					while (true) {
+					Thread.sleep(500);
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							textArea.setText(text);
+						}
+					});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		t.setDaemon(true);
+		t.start();
+
 	}
 
 
@@ -42,7 +64,7 @@ public class LogWindow extends JFrame {
 	 * @throws InterruptedException 
 	 * @throws InvocationTargetException 
 	 */
-	public void appendText(final String data) {
+	/*public void appendText(final String data) {
 		//textArea.append(data);
 		//this.getContentPane().validate();
 		try {
@@ -54,13 +76,13 @@ public class LogWindow extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 
 	public void setText(final String data) {
 		//textArea.setText(data);
 		//this.getContentPane().validate();
-		try {
+		/*try {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					textArea.setText(data); // data.toString()
@@ -68,7 +90,12 @@ public class LogWindow extends JFrame {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
+		//if (text != null) {
+		//synchronized (text) {
+			text = data;
+		//}
+		//}
 
 	}
 }

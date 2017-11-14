@@ -50,7 +50,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public void calcPosition(GenericClient mainApp, long serverTimeToUse) {
 		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse);
 		if (epd != null) {
-			this.setWorldTranslation(epd.position); // todo - use IPositionAdjuster for all entities?
+			this.setWorldTranslation(epd.position);
 			this.setWorldRotation(epd.rotation);
 		} else {
 			//Settings.p("No position data for " + this);
@@ -159,7 +159,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public boolean hasMoved() {
 		Vector3f currentPos = this.getWorldTranslation();
 		float dist = currentPos.distance(prevPos);
-		boolean hasMoved = dist > 0.001f; 
+		boolean hasMoved = dist > 0.01f; 
 		if (hasMoved) {
 			/*if (dist > 10f) {
 				Settings.p(this.toString() + " has moved A LOT " + dist);

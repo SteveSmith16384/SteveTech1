@@ -20,7 +20,7 @@ public class TestPositionSync {
 		IPhysicalEntity pe = new DummyPhysicalEntity();
 		pe.setWorldTranslation(new Vector3f(5f, 0.5f, 5f));
 		
-		ICorrectClientEntityPosition posSync = new MoveSlowlyToCorrectPosition(.1f);
+		ICorrectClientEntityPosition posSync = new MoveSlowlyToCorrectPosition();
 		
 		Vector3f serverPos = new Vector3f(10f, 0.5f, 10f);
 		int count = 0;
