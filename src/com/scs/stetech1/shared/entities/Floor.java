@@ -24,12 +24,12 @@ public class Floor extends PhysicalEntity implements ICollideable {
 	private Vector3f texScroll, thisScroll;
 	private float w, h, d;
 
-	public Floor(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
+	public Floor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
 		super(_game, id, EntityTypes.FLOOR, "Floor");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("id", id);
+			//creationData.put("id", id);
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
 		}
@@ -70,7 +70,7 @@ public class Floor extends PhysicalEntity implements ICollideable {
 			geometry.setMaterial(floor_mat);
 		}
 		this.main_node.attachChild(geometry);
-		geometry.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2)); // Move it into position
+		geometry.setLocalTranslation(x+(w/2), yTop-(h/2), z+(d/2)); // Move it into position
 
 		rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
 		main_node.addControl(rigidBodyControl);

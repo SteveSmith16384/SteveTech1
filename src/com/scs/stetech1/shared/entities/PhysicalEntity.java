@@ -152,7 +152,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public boolean canMove() {
-		return this.rigidBodyControl.getMass() > 0; // 0 means static, and static doesn't move
+		if (rigidBodyControl != null) {
+			return this.rigidBodyControl.getMass() > 0; // 0 means static, and static doesn't move
+		} else {
+			return true; // ?
+		}
 	}
 
 
@@ -215,7 +219,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	@Override
 	public void adjustWorldTranslation(Vector3f offset) {
 		this.setWorldTranslation(this.getWorldTranslation().add(offset));
-		
+
 	}
 
 }

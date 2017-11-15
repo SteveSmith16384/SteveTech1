@@ -19,33 +19,28 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 	private float timeLeft = 3;
 
 	public LaserBullet(IEntityController _game, int id, ICanShoot _shooter) {
-	}
-	
-	
-	public LaserBullet(IEntityController _game, int id, ICanShoot _shooter) {
 		super(_game, id, EntityTypes.LASER_BULLET, "LaserBullet");
 
 		this.shooter = _shooter;
 
 		Vector3f origin = shooter.getWorldTranslation().clone();
+		origin.addLocal(shooter.getBulletStartOffset());
 
 		Node laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(shooter.getShootDir().multLocal(1)), ColorRGBA.Pink);
 
 		this.main_node.attachChild(laserNode);
 		game.getRootNode().attachChild(this.main_node);
-		/** Position the cannon ball  */
-		laserNode.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*3)));
-		laserNode.getLocalTranslation().y -= 0.1f; // Drop bullets slightly
-		/** Make the ball physical with a mass > 0.0f */
+		//laserNode.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*3)));
+		//laserNode.getLocalTranslation().y -= 0.1f; // Drop bullets slightly
 		rigidBodyControl = new RigidBodyControl(.1f);
 		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
 		} else {
 			rigidBodyControl.setKinematic(true);
 		}
-		/** Add physical ball to physics space. */
 		laserNode.addControl(rigidBodyControl);
 		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-		/** Accelerate the physical ball to shoot it. */
+
+		// Accelerate the physical ball to shoot it.
 		rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(40));
 		rigidBodyControl.setGravity(Vector3f.ZERO);
 
@@ -60,10 +55,10 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 	@Override
 	public void process(float tpf) {
 		if (game.isServer()) {
-		this.timeLeft -= tpf;
-		if (this.timeLeft < 0) {
-			this.remove();
-		}
+			this.timeLeft -= tpf;
+			if (this.timeLeft < 0) {
+				this.remove();
+			}
 		}
 	}
 
@@ -86,7 +81,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 			}
 
 			CubeExplosionShard.Factory(game, module, this.getLocation(), 3);
-*/
+			 */
 			this.remove(); // Don't bounce
 		}
 	}

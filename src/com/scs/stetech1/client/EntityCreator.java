@@ -8,7 +8,9 @@ import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.entities.Crate;
+import com.scs.stetech1.shared.entities.DebuggingSphere;
 import com.scs.stetech1.shared.entities.Floor;
+import com.scs.stetech1.shared.entities.LaserBullet;
 import com.scs.stetech1.shared.entities.Wall;
 
 /*
@@ -23,7 +25,7 @@ public class EntityCreator {
 
 	public static IEntity createEntity(GenericClient game, NewEntityMessage msg) {
 		Settings.p("Creating " + EntityTypes.getName(msg.type));
-		int id = (Integer)msg.data.get("id");
+		int id = msg.entityID;// (Integer)msg.data.get("id");
 
 		switch (msg.type) {
 		case EntityTypes.AVATAR:
@@ -67,12 +69,18 @@ public class EntityCreator {
 			return wall;
 		}
 
-		case EntityTypes.LASER_BULLET:
+		/*case EntityTypes.LASER_BULLET:
 		{
 			String tex = (String)msg.data.get("tex");
 			float rot = (Float)msg.data.get("rot");
-			Wall wall = new Wall(game, id, msg.pos.x, msg.pos.y, msg.pos.z, w, h, tex, rot);
-			return wall;
+			LaserBullet laser = new LaserBullet(game, id, msg.pos.x, msg.pos.y, msg.pos.z, w, h, tex, rot);
+			return laser;
+		}*/
+
+		case EntityTypes.DEBUGGING_SPHERE:
+		{
+			DebuggingSphere laser = new DebuggingSphere(game, id, msg.pos.x, msg.pos.y, msg.pos.z);
+			return laser;
 		}
 
 		default:

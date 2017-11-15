@@ -1,12 +1,17 @@
 package com.scs.stetech1.weapons;
 
 import com.scs.stetech1.abilities.IAbility;
+import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.components.ICanShoot;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.shared.IEntityController;
 
 public abstract class AbstractMagazineGun implements IAbility {
 
 	protected IEntityController game;
+	//protected ServerMain server;
+	//protected GenericClient client;
+	
 	protected ICanShoot shooter;
 	protected String name;
 
@@ -14,8 +19,8 @@ public abstract class AbstractMagazineGun implements IAbility {
 	protected int magazineSize;
 	protected int bulletsLeftInMag;
 	protected float shotInterval, reloadInterval;
-	//protected List<IBullet> awaitingBullets = new LinkedList<>();
 
+	
 	public AbstractMagazineGun(IEntityController _game, String _name, ICanShoot _shooter, float shotInt, float reloadInt, int magSize) {
 		super();
 
@@ -30,7 +35,7 @@ public abstract class AbstractMagazineGun implements IAbility {
 	}
 
 
-	public abstract void launchBullet();//IEntityController _game, ICanShoot _shooter);
+	public abstract void launchBullet();
 
 
 	@Override

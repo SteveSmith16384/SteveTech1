@@ -26,7 +26,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("id", id);
+			//creationData.put("id", id);
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
 			//creationData.put("rot", rotDegrees); No, since chances are it will have moved anyway

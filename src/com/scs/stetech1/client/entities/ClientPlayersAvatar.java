@@ -74,7 +74,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 		if (offset != null) {
 			//if (diff > Settings.MAX_CLIENT_POSITION_DISCREP) {
-			this.syncPos.adjustPosition(this, offset);
+			//todo - re-add this.syncPos.adjustPosition(this, offset);
 			//}
 		}
 

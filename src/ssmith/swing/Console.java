@@ -57,16 +57,17 @@ public class Console extends WindowAdapter implements WindowListener, ActionList
 
 		textArea=new JTextArea();
 		textArea.setEditable(false);
-		JButton button=new JButton("clear"); // todo -= remove
+		//JButton button=new JButton("clear"); // todo -= remove
 		input = new JTextField();
-
+		input.requestFocus();
+		
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(new JScrollPane(textArea),BorderLayout.CENTER);
 		frame.getContentPane().add(input,BorderLayout.SOUTH);
 		frame.setVisible(true);		
 
 		frame.addWindowListener(this);
-		button.addActionListener(this);
+		//button.addActionListener(this);
 		input.addKeyListener(this);
 
 		/*try

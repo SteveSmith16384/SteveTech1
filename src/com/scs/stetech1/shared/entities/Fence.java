@@ -24,7 +24,7 @@ public class Fence extends PhysicalEntity {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("id", id);
+			//creationData.put("id", id);
 			//creationData.put("rot", rot);
 			creationData.put("tex", tex);
 		}

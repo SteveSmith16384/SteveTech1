@@ -9,15 +9,14 @@ import com.scs.stetech1.shared.IEntityController;
  */
 public class LaserRifle extends AbstractMagazineGun implements IAbility {
 
-	public LaserRifle(IEntityController _game, ICanShoot shooter) {
-		super(_game, "Laser Rifle", shooter, .2f, 2, 10);
+	public LaserRifle(IEntityController game, ICanShoot shooter) {
+		super(game, "Laser Rifle", shooter, .2f, 2, 10);
 	}
 
 	
 	@Override
 	public void launchBullet() {
-		//todo - use existing stored bullet 
-		// new LaserBullet(game, shooter);
+		//todo - new LaserBullet(game, shooter);
 		
 	}
 	

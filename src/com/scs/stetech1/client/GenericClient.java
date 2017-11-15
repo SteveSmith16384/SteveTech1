@@ -25,6 +25,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.network.Client;
 import com.jme3.network.ClientStateListener;
 import com.jme3.network.ErrorListener;
@@ -179,7 +180,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 		try {
 			Settings.registerMessages();
 
-			myClient = Network.connectToServer("localhost", Settings.PORT);
+			myClient = Network.connectToServer("localhost", Settings.PORT); // todo - say if can't connect
 			myClient.start();
 			myClient.addClientStateListener(this);
 			myClient.addErrorListener(this);
@@ -227,16 +228,13 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 
 
 	@Override
-	public void simpleUpdate(float tpf_secs) {  //this.rootNode.getChild(2).getWorldTranslation();
-		try {
+	public void simpleUpdate(float tpf_secs) {  //this.rootNode.getChild(3).getWorldTranslation();
+		try { //this.entities;
 			final long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 
-			if (myClient.isConnected()) {  //
-				//this.rootNode.getChild(1).updateGeometricState();
-				//this.rootNode.getChild(1).getLocalTranslation();
-				//this.rootNode.getChild(1).getWorldTranslation();
+			if (myClient != null && myClient.isConnected()) {
 				// Process messages in JME thread
-				synchronized (unprocessedMessages) { //this.getCamera()
+				synchronized (unprocessedMessages) {
 					// Check we don't already know about it
 					while (!this.unprocessedMessages.isEmpty()) {
 						MyAbstractMessage message = this.unprocessedMessages.remove(0);
@@ -295,39 +293,43 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 				if (sendPingInt.hitInterval()) {
 					send(new PingMessage(false));
 				}
-			}
 
-			if (gameStarted) {
-				if (this.avatar != null) {
-					// Send inputs
-					if (sendInputsInterval.hitInterval()) {
-						if (myClient.isConnected()) {
-							this.send(new PlayerInputMessage(this.input));
+				if (gameStarted) {
+					if (this.avatar != null) {
+						// Send inputs
+						if (sendInputsInterval.hitInterval()) {
+							if (myClient.isConnected()) {
+								this.send(new PlayerInputMessage(this.input));
+							}
+						}
+						storeAvatarPosition(serverTime);
+					}
+
+					long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
+
+					if (this.avatar != null) {
+						avatar.resetWalkDir();
+					}
+
+					// Loop through each entity and calc correct position				
+					StringBuffer strListEnts = new StringBuffer(); // Log entities
+					for (IEntity e : this.entities.values()) {
+						if (e instanceof PhysicalEntity) {
+							PhysicalEntity pe = (PhysicalEntity)e;
+							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
+							if (pe instanceof AbstractPlayersAvatar) {
+								AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
+								strListEnts.append("Walkdir : " + av.playerControl.getWalkDirection() + "\n");
+							}
+							if (pe.canMove()) { // Only bother with things that can move
+								pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
+							}
 						}
 					}
-					storeAvatarPosition(serverTime);
-				}
-
-				long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
-
-				// Loop through each entity and calc correct position				
-				StringBuffer strListEnts = new StringBuffer(); // Log entities
-				for (IEntity e : this.entities.values()) {
-					if (e instanceof PhysicalEntity) {
-						PhysicalEntity pe = (PhysicalEntity)e;
-						strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
-						if (pe instanceof AbstractPlayersAvatar) {
-							AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
-							strListEnts.append("Walkdir : " + av.playerControl.getWalkDirection() + "\n");
-						}
-						if (pe.canMove()) { // Only bother with things that can move
-							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
-						}
+					this.hud.log_ta.setText(strListEnts.toString());
+					if (this.avatar != null) {
+						avatar.process(tpf_secs);
 					}
-				}
-				this.hud.log_ta.setText(strListEnts.toString());
-				if (this.avatar != null) {
-					avatar.process(tpf_secs);
 				}
 			}
 
@@ -506,7 +508,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 		if (name.equalsIgnoreCase(QUIT)) {
 			quit();
 		} else if (name.equalsIgnoreCase(TEST)) {
-
+			this.avatar.playerControl.warp(new Vector3f(10, 10, 10));
 		}
 	}
 
@@ -527,7 +529,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 
 	}
 
-	
+
 	@Override
 	public boolean isServer() {
 		return false;
@@ -568,7 +570,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 	}
 
 
-/*	@Override
+	/*	@Override
 	public void physicsTick(PhysicsSpace arg0, float arg1) {
 
 	}
@@ -581,7 +583,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 		}
 	}
 
-*/
+	 */
 	@Override
 	public Type getJmeContext() {
 		return getContext().getType();

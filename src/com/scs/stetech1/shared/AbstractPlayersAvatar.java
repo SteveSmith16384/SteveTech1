@@ -23,7 +23,7 @@ import com.scs.stetech1.weapons.HitscanRifle;
 
 public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
 
-	// Player dimensions
+	// Player dimensions - todo - move these
 	public static final float PLAYER_HEIGHT = 0.7f;
 	public static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
@@ -47,10 +47,10 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public IAbility abilityGun, abilityOther;
 
 
-	public AbstractPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
-		super(_module, eid, EntityTypes.AVATAR, "Player");
+	public AbstractPlayersAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid) {
+		super(_game, eid, EntityTypes.AVATAR, "Player");
 
-		if (_module.isServer()) {
+		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("id", eid); this.getID();
 			creationData.put("playerID", _playerID);
@@ -60,7 +60,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		input = _input;
 
 		playerGeometry = getPlayersModel(game, playerID);
-		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
+		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves - yet?
 
 		this.getMainNode().attachChild(playerGeometry);
 
@@ -104,14 +104,15 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			floor_mat.setTexture("ColorMap", tex3);
 		}
 		playerGeometry.setMaterial(floor_mat);
-		//playerGeometry.setLocalTranslation(new Vector3f(0, (PLAYER_HEIGHT/2)-.075f, 0)); // Need this to ensure the crate is on the floor // scs new
 		return playerGeometry;
 	}
 
 
 	@Override
 	public void process(float tpf) {
-		walkDirection.set(0, 0, 0);
+		if (game.isServer()) { // Client does it before adjusting
+			walkDirection.set(0, 0, 0);
+		}
 
 		abilityGun.process(tpf);
 		if (this.abilityOther != null) {
@@ -141,7 +142,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		if (input.isJumpPressed()){
 			this.jump();
 		}
-
 		if (input.isShootPressed()) {
 			shoot();
 		}
@@ -181,10 +181,10 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 
 	public void jump() {
-		if (this.game.isServer()) { // Let the server do it, and the client copy
-			Settings.p("Jumping!");
-			this.playerControl.jump();
-		}
+		//if (this.game.isServer()) { // Let the server do it, and the client copy
+		Settings.p("Jumping!");
+		this.playerControl.jump();
+		//}
 	}
 
 
@@ -208,7 +208,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	@Override
 	public Vector3f getWorldTranslation() {
 		// Need this override since main node is at 0,0,0 at the start
-		return this.playerControl.getPhysicsRigidBody().getPhysicsLocation(); // todo - use getWorldTrans()?
+		return this.playerControl.getPhysicsRigidBody().getPhysicsLocation();
 		//return this.main_node.getWorldTranslation(); 000?
 		//return this.getMainNode().getLocalTranslation();
 	}
@@ -247,10 +247,18 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	 */
 	@Override
 	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
-		if (offset.length() > 0.01f) {
-			this.walkDirection.addLocal(offset);//.multLocal(moveSpeed)); 
-			//this.playerControl.warp(this.getWorldTranslation().add(offset)); No!!
-		}
+		//if (offset.length() > 0.01f) { Already chcked this
+		this.walkDirection.addLocal(offset);//.multLocal(moveSpeed)); 
+		//this.playerControl.warp(this.getWorldTranslation().add(offset)); No!!
+		//}
+	}
+
+
+	@Override
+	public Vector3f getBulletStartOffset() {
+		Vector3f offset = this.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*3);
+		offset.y -= 0.1f; // Drop bullets slightly
+		return offset;
 	}
 
 

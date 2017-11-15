@@ -23,7 +23,6 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("id", id);
 			creationData.put("w", w);
 			creationData.put("h", h);
 			creationData.put("tex", tex);
@@ -57,7 +56,7 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 			float rads = (float)Math.toRadians(rotDegrees);
 			main_node.rotate(0, rads, 0);
 		}
-		main_node.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2));
+		geometry.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2)); // Never change position of mainNode (unless the whole object is moving)
 
 		rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
 		main_node.addControl(rigidBodyControl);
@@ -70,7 +69,7 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		rigidBodyControl.setUserObject(this);
 
 		game.addEntity(this);
-
+		
 	}
 
 

@@ -2,29 +2,28 @@ STETECH1
 
 LINKS
 https://jmonkeyengine.github.io/wiki/jme3/advanced/walking_character.html
-
 https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dynamic-vs-static
 
 
-
 URGENT
-Google "simple physics"
-	Move walkdir.set(0,0,0)
-	Sometimes the server doesn't like moving?
-Avatar falling slowly when not moving forwards (just like jetpac?)
-Can't see other avatar
+Server-side player not dropping by grav until movement received
 	Use MyBetterCharacterControl2 - check it works first
-Wall in wrong position
 
 
 TODO
+Show error if client unable to connect
+Remove gravity from client's avatar?
 Hitscan weapons
+Test with a few physics blocks
+Avatar falling slowly when not moving forwards (just like jetpac?)
+Laser bullets
+Grenades
+Add walls
 Warp player if position > 3?
 No position data when new position is forced?
 Make server & client abstract
 force avatar warp test
 Draw map
-Add walls
 Search for todos
 Prevent falling as this cannot be handled, since walkDirection can't go up?  But what about JetPac?
 Todo - am I adjusting rotation?
@@ -35,14 +34,11 @@ Unit test rewind avatars
 Spectator mode
 Create server console commands
 Create game lobby
-Test with a few physics blocks
 Send ability updates to client, to confirm ammo etc...
-Add walls to map
 Show where players are according to server (in realtime)
 Create server-controlled moving item to check interpol
 Create generic classes and test them
 Reduce dependencies between classes
-Shooting
 
 
 CLIENT

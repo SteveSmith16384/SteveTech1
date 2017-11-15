@@ -8,9 +8,11 @@ import com.scs.stetech1.components.IEntity;
 
 public interface IEntityController {
 
-	public boolean isServer();
+	//int getNextEntityID();
 	
-	public JmeContext.Type getJmeContext();
+	boolean isServer();
+	
+	JmeContext.Type getJmeContext();
 	
 	AssetManager getAssetManager();
 	
@@ -21,7 +23,5 @@ public interface IEntityController {
 	void addEntity(IEntity e);
 	
 	void removeEntity(int id);
-	
-	//IEntity getPlayersAvatar();
 	
 }

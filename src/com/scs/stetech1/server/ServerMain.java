@@ -16,6 +16,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.math.Vector3f;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
@@ -23,9 +24,11 @@ import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
+import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext;
 import com.jme3.system.JmeContext.Type;
 import com.scs.stetech1.components.ICalcHitInPast;
+import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
@@ -43,6 +46,7 @@ import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.entities.DebuggingSphere;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 import com.scs.stetech1.shared.entities.Wall;
@@ -85,7 +89,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	public ServerMain() throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
-		//console = new ServerConsole(this);
+		console = new ServerConsole(this);
 	}
 
 
@@ -123,7 +127,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	@Override
-	public void simpleUpdate(float tpf_secs) {
+	public void simpleUpdate(float tpf_secs) { //this.rootNode.getChild(2).getWorldTranslation();
 		StringBuilder strDebug = new StringBuilder();
 
 		//if (myServer.hasConnections()) { // this.rootNode
@@ -397,6 +401,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	private void createGame() { // todo - make abstract
 		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
+		new DebuggingSphere(this, getNextEntityID(), 0, 0, 0);
 		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 		//new Crate(this, getNextEntityID(), 8, 4, 8, 1, 1, 1f, "Textures/crate.png", 65);
 		new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/crate.png", 0);
@@ -408,7 +413,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
 		//System.out.println(s);
 
-		/*PhysicalEntity a=null, b=null;
+		PhysicalEntity a=null, b=null;
 		Object oa = event.getObjectA().getUserObject(); 
 		if (oa instanceof Spatial) {
 			Spatial ga = (Spatial)event.getObjectA().getUserObject(); 
@@ -426,7 +431,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		}
 
 		if (a != null && b != null) {
-			//CollisionLogic.collision(this, a, b);
 			if (a instanceof ICollideable && b instanceof ICollideable) {
 				//Settings.p(a + " has collided with " + b);
 				ICollideable ica = (ICollideable)a;
@@ -441,7 +445,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			if (b == null) {
 				Settings.p(ob + " has no entity data!");
 			}
-		}*/
+		}
 	}
 
 
@@ -451,7 +455,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	}
 
 
-	private static int getNextEntityID() {
+	public static int getNextEntityID() {
 		return nextEntityID.getAndAdd(1);
 	}
 
@@ -530,7 +534,15 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 	public void handleCommand(String cmd) {
-		// todo
+		if (cmd.equals("warp")) {
+			for(ClientData client : this.clients.values()) {
+				if (client.avatar != null) {
+					Settings.p("Warping player");
+					client.avatar.playerControl.warp(new Vector3f(10, 10, 10));
+					break;
+				}
+			}
+		}
 	}
 
 

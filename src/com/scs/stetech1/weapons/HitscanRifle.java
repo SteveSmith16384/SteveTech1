@@ -1,9 +1,12 @@
 package com.scs.stetech1.weapons;
 
+import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICanShoot;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.entities.DebuggingSphere;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast {
@@ -12,8 +15,8 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 	
 	public PhysicalEntity hitThisMoment; // Only used server-side
 
-	public HitscanRifle(IEntityController _game, ICanShoot _shooter) {
-		super(_game, "Hitscan Rifle", _shooter, 200, 500, 10);
+	public HitscanRifle(IEntityController game, ICanShoot _shooter) {
+		super(game, "Hitscan Rifle", _shooter, 200, 500, 10);
 	}
 
 	
@@ -26,15 +29,15 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 	
 	
 	@Override
-	public void launchBullet() {//IEntityController _game, ICanShoot _shooter) {
+	public void launchBullet() {
 		if (game.isServer()) {
 			// We have already calculated the hit as part of ICalcHitInPast
 			if (hitThisMoment != null) {
 				Settings.p(hitThisMoment + " shot!");
+				Vector3f pos = this.hitThisMoment.getWorldTranslation();
+				new DebuggingSphere(game, ServerMain.getNextEntityID(), pos.x, pos.y, pos.z); 
 				// todo
 			}
-			
-			
 		} else {
 			// todo - nozzle flash or something
 		}

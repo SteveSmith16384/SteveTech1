@@ -8,6 +8,8 @@ public interface ICanShoot {
 
 	Vector3f getShootDir();
 	
+	Vector3f getBulletStartOffset();
+	
 	void hasSuccessfullyHit(IEntity e);
 	
 }

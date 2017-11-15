@@ -20,15 +20,14 @@ public class Grenade extends PhysicalEntity implements IBullet {
 
 	public ICanShoot shooter;
 	private float timeLeft = 2f;
-	
+
 	public Grenade(IEntityController _game, int id, ICanShoot _shooter) {
 		super(_game, id, EntityTypes.GRENADE, "Grenade");
 
 		this.shooter = _shooter;
-		
+
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
-		/** Create a cannon ball geometry and attach to scene graph. */
 		Geometry ball_geo = new Geometry("cannon ball", sphere);
 
 		TextureKey key3 = new TextureKey( "Textures/grenade.png");
@@ -55,14 +54,14 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		/** Accelerate the physical ball to shoot it. */
 		rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(15));
-		
+
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);
 		game.addEntity(this);
 
 	}
 
-	
+
 	@Override
 	public void process(float tpf) {
 		this.timeLeft -= tpf;
@@ -70,7 +69,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 			//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
 			this.remove();
 		}
-		
+
 	}
 
 
@@ -82,7 +81,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 
 	@Override
 	public void collidedWith(ICollideable other) {
-		
+
 	}
 
 
@@ -90,7 +89,6 @@ public class Grenade extends PhysicalEntity implements IBullet {
 	public float getDamageCaused() {
 		return 0;
 	}
-
 
 
 }
