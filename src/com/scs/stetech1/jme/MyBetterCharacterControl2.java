@@ -711,5 +711,11 @@ public class MyBetterCharacterControl2 extends AbstractPhysicsControl implements
 		return rigidBody;
 	}
 
+	@Override
+	public Object jmeClone() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

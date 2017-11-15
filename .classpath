@@ -3,42 +3,29 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry excluding="*" kind="src" path="jMonkeyEngine3-sources"/>
 	<classpathentry kind="src" path="assets"/>
-	<classpathentry kind="lib" path="libs/jme/eventbus.jar"/>
-	<classpathentry kind="lib" path="libs/jme/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="libs/jme/j-ogg-oggd.jar"/>
-	<classpathentry kind="lib" path="libs/jme/j-ogg-vorbisd.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jbullet.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jglfont-core.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jinput.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-android.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-blender.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-bullet-natives-android.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-bullet-natives.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-bullet.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-core.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-desktop.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-effects.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-ios.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-jbullet.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-jogg.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-jogl.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-lwjgl-natives.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-lwjgl.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-networking.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-niftygui.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-openal-soft-natives-android.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-plugins.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jME3-terrain.jar"/>
-	<classpathentry kind="lib" path="libs/jme/joal.jar"/>
-	<classpathentry kind="lib" path="libs/jme/jogl-all.jar"/>
-	<classpathentry kind="lib" path="libs/jme/launch4j.jar"/>
-	<classpathentry kind="lib" path="libs/jme/lwjgl.jar"/>
-	<classpathentry kind="lib" path="libs/jme/retrace.jar"/>
-	<classpathentry kind="lib" path="libs/jme/stack-alloc.jar"/>
-	<classpathentry kind="lib" path="libs/jme/vecmath.jar"/>
-	<classpathentry kind="lib" path="libs/jme/xmlpull-xpp3.jar"/>
-	<classpathentry kind="lib" path="libs/jme/xstream.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-android"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-android-native"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-blender"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-bullet"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-bullet-native"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-bullet-native-android"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-desktop"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-effects"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-examples"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-ios"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jbullet"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jogg"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jogl"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-niftygui"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-plugins"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-terrain"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-testdata"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-vr"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
