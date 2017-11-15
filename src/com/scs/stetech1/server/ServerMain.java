@@ -120,7 +120,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		getStateManager().attach(bulletAppState);
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
 		//bulletAppState.getPhysicsSpace().addTickListener(this);
-
+		//bulletAppState.getPhysicsSpace().getGravity(gravity);
 		createGame();
 		loopTimer.start();
 	}

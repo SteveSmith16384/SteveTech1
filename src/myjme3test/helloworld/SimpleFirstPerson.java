@@ -17,6 +17,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
+import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 
@@ -42,7 +43,10 @@ public class SimpleFirstPerson extends SimpleApplication implements ActionListen
 	private float headHeight;
 
 	public static void main(String[] args) {
+		AppSettings settings = new AppSettings(true);
+		settings.setSettingsDialogImage(null);
 		SimpleFirstPerson app = new SimpleFirstPerson();
+		app.settings = settings;
 		app.start();
 	}
 
@@ -81,8 +85,8 @@ public class SimpleFirstPerson extends SimpleApplication implements ActionListen
 		// Weight determines how much gravity effects the control
 		player = new BetterCharacterControl(2f,6f,1f);
 		// set basic physical properties:
-		player.setJumpForce(new Vector3f(0,5f,0)); 
-		player.setGravity(new Vector3f(0,1f,0));
+		player.setJumpForce(new Vector3f(0,5f,0));
+		//player.setGravity(new Vector3f(0,1f,0));
 		player.warp(new Vector3f(0,6,0)); 
 
 		// We attach the scene and the player to the rootnode and the physics space,
@@ -90,17 +94,17 @@ public class SimpleFirstPerson extends SimpleApplication implements ActionListen
 		//rootNode.attachChild(sceneModel);
 		//bulletAppState.getPhysicsSpace().add(landscape);
 		bulletAppState.getPhysicsSpace().add(player);
-		
+
 		this.initFloor();
 		this.addBox(.1f, 3f, 5f, 5f);
 		this.addBox(2f, 1f, 7f, 7f);
-		
+
 		/* 
 		 * Add player control to the box. The box will act as our player model
 		 * while the camera follows it
 		 */
 		playerModel.addControl(player);
-		
+
 	}
 
 
@@ -110,7 +114,7 @@ public class SimpleFirstPerson extends SimpleApplication implements ActionListen
 		floor.scaleTextureCoordinates(new Vector2f(3, 6));
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		TextureKey key3 = new TextureKey("Textures/beach.png");
+		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
@@ -178,6 +182,9 @@ public class SimpleFirstPerson extends SimpleApplication implements ActionListen
 		inputManager.addListener(this, "Up");
 		inputManager.addListener(this, "Down");
 		inputManager.addListener(this, "Jump");
+
+		inputManager.addMapping("Test", new KeyTrigger(KeyInput.KEY_T));
+		inputManager.addListener(this, "Test");
 	}
 
 	/** These are our custom actions triggered by key presses.
@@ -193,6 +200,10 @@ public class SimpleFirstPerson extends SimpleApplication implements ActionListen
 			down = isPressed;
 		} else if (binding.equals("Jump")) {
 			if (isPressed) { player.jump(); }
+		} else if (binding.equals("Test")) {
+			if (isPressed) { 
+				player.warp(new Vector3f(2, 10, 2));
+			}
 		}
 	}
 

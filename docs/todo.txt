@@ -6,14 +6,15 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dyn
 
 
 URGENT
-Server-side player not dropping by grav until movement received
+Player not dropping by grav until movement received - test using SimpleFPS?
 	Use MyBetterCharacterControl2 - check it works first
 
 
 TODO
+Change wall tex
+Hitscan weapons
 Show error if client unable to connect
 Remove gravity from client's avatar?
-Hitscan weapons
 Test with a few physics blocks
 Avatar falling slowly when not moving forwards (just like jetpac?)
 Laser bullets
@@ -25,7 +26,6 @@ Make server & client abstract
 force avatar warp test
 Draw map
 Search for todos
-Prevent falling as this cannot be handled, since walkDirection can't go up?  But what about JetPac?
 Todo - am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
 Use test annotations
@@ -39,6 +39,19 @@ Show where players are according to server (in realtime)
 Create server-controlled moving item to check interpol
 Create generic classes and test them
 Reduce dependencies between classes
+
+
+LATER
+	Don't send entity update if position not changed
+Split up into separate packages: AbstractClient, Abstractserver, shared, Sorcerers
+Reduce object creation, including calls to clone()
+Kick players who don't move
+Use tpf to ensure clients/server run at same speed
+Stop client if no comms for a while
+client/server encryption
+Make classes final
+Test with cheating client
+
 
 
 CLIENT
@@ -64,13 +77,3 @@ Player shooting
 	Server moves players to correct position and checks the client has hit
 	 
 	
-LATER
-	Don't send entity update if position not changed
-Split up into separate packages: AbstractClient, Abstractserver, shared, Sorcerers
-Reduce object creation, including calls to clone()
-Kick players who don't move
-Use tpf to ensure clients/server run at same speed
-Stop client if no comms for a while
-client/server encryption
-Make classes final
-Test with cheating client
