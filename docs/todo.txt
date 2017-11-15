@@ -4,8 +4,7 @@ LINKS
 https://jmonkeyengine.github.io/wiki/jme3/advanced/walking_character.html
 
 https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dynamic-vs-static
-https://hub.jmonkeyengine.org/t/character-control-and-walkdirection/15804/10
-https://hub.jmonkeyengine.org/t/bettercharactercontrol-sync-between-server-and-client/33800
+
 
 
 URGENT
