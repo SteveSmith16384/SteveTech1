@@ -9,25 +9,27 @@ https://hub.jmonkeyengine.org/t/bettercharactercontrol-sync-between-server-and-c
 
 
 URGENT
+Google "simple physics"
 	Move walkdir.set(0,0,0)
-Sometimes the server doesn't like moving
+	Sometimes the server doesn't like moving?
 Avatar falling slowly when not moving forwards (just like jetpac?)
 Can't see other avatar
 	Use MyBetterCharacterControl2 - check it works first
+Wall in wrong position
 
 
 TODO
+Hitscan weapons
+Warp player if position > 3?
 No position data when new position is forced?
-Wall in wrong position
 Make server & client abstract
 force avatar warp test
 Draw map
 Add walls
 Search for todos
-Prevent falling as this cannot be handled, since walkDirection can't go up?  But what about JecPac?
+Prevent falling as this cannot be handled, since walkDirection can't go up?  But what about JetPac?
 Todo - am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
-Hitscan weapons
 Use test annotations
 Add lots of comments
 Unit test rewind avatars
@@ -39,12 +41,9 @@ Send ability updates to client, to confirm ammo etc...
 Add walls to map
 Show where players are according to server (in realtime)
 Create server-controlled moving item to check interpol
-Create game "simulator"?
 Create generic classes and test them
 Reduce dependencies between classes
-Treat bullets like players avatar
 Shooting
-Make all objects kinematic on client side?
 
 
 CLIENT
@@ -71,7 +70,7 @@ Player shooting
 	 
 	
 LATER
-Don't send entity update if position not changed
+	Don't send entity update if position not changed
 Split up into separate packages: AbstractClient, Abstractserver, shared, Sorcerers
 Reduce object creation, including calls to clone()
 Kick players who don't move
@@ -79,4 +78,4 @@ Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
 client/server encryption
 Make classes final
-
+Test with cheating client
