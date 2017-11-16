@@ -1,7 +1,8 @@
 STETECH1
 
 LINKS
-https://jmonkeyengine.github.io/wiki/jme3/advanced/walking_character.html
+https://hub.jmonkeyengine.org/t/spidermonkey-crash-on-first-message-from-server/39451/32
+
 https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dynamic-vs-static
 
 

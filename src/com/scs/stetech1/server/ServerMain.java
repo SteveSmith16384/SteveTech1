@@ -101,10 +101,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			e.printStackTrace();
 			System.exit(-1);
 		}
+		Settings.registerMessages();
+
 		myServer.start();
 		myServer.addConnectionListener(this);
-
-		Settings.registerMessages();
 
 		myServer.addMessageListener(this, PingMessage.class);
 		myServer.addMessageListener(this, NewPlayerRequestMessage.class);

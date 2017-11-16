@@ -43,7 +43,7 @@ public class Console extends WindowAdapter implements WindowListener, ActionList
 	//private final PipedInputStream pin=new PipedInputStream(); 
 	//private final PipedInputStream pin2=new PipedInputStream(); 
 
-	Thread errorThrower; // just for testing (Throws an Exception at this Console
+	//Thread errorThrower; // just for testing (Throws an Exception at this Console
 
 	public Console()
 	{
@@ -113,7 +113,7 @@ public class Console extends WindowAdapter implements WindowListener, ActionList
 		// testing part
 		// you may omit this part for your application
 		// 
-		System.out.println("Hello World 2");
+		/*System.out.println("Hello World 2");
 		System.out.println("All fonts available to Graphic2D:\n");
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		String[] fontNames=ge.getAvailableFontFamilyNames();
@@ -123,7 +123,7 @@ public class Console extends WindowAdapter implements WindowListener, ActionList
 		System.out.println("\nLets throw an error on this console");	
 		errorThrower=new Thread(this);
 		errorThrower.setDaemon(true);
-		errorThrower.start();					
+		errorThrower.start();*/					
 	}
 
 	public synchronized void windowClosed(WindowEvent evt)

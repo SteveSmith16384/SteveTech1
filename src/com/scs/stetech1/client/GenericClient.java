@@ -97,7 +97,8 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 				e.printStackTrace();
 			}
 			settings.setUseJoysticks(true);
-			settings.setTitle(Settings.NAME + " (v" + Settings.VERSION + ")");
+			settings.setAudioRenderer(null); // Avoid error with no soundcard
+			settings.setTitle(Settings.NAME);// + " (v" + Settings.VERSION + ")");
 			if (Settings.SHOW_LOGO) {
 				//settings.setSettingsDialogImage("/game_logo.png");
 			} else {
@@ -181,7 +182,6 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 			Settings.registerMessages();
 
 			myClient = Network.connectToServer("localhost", Settings.PORT); // todo - say if can't connect
-			myClient.start();
 			myClient.addClientStateListener(this);
 			myClient.addErrorListener(this);
 
@@ -192,6 +192,8 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 			myClient.addMessageListener(this, GameSuccessfullyJoinedMessage.class);
 			myClient.addMessageListener(this, RemoveEntityMessage.class);
 			myClient.addMessageListener(this, GeneralCommandMessage.class);
+
+			myClient.start();
 
 			send(new NewPlayerRequestMessage("Mark Gray", 1));
 		} catch (IOException e) {

@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry excluding="*" kind="src" path="jMonkeyEngine3-sources"/>
 	<classpathentry kind="src" path="assets"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-android"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-android-native"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-blender"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-bullet"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-bullet-native"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-bullet-native-android"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-desktop"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-effects"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-examples"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-ios"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jbullet"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jogg"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jogl"/>
@@ -24,8 +15,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-niftygui"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-plugins"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-terrain"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-testdata"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-vr"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

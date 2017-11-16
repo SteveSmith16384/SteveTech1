@@ -5,9 +5,10 @@ import java.util.Random;
 import com.jme3.network.serializing.Serializer;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.GameStatusMessage;
-import com.scs.stetech1.netmessages.GeneralCommandMessage;
-import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
+import com.scs.stetech1.netmessages.GeneralCommandMessage;
+import com.scs.stetech1.netmessages.MyAbstractMessage;
+import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
@@ -29,10 +30,10 @@ public class Settings {
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 100; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 
 	public static final int CLIENT_RENDER_DELAY = SERVER_SEND_UPDATE_INTERVAL_MS*2; // How far in past the client should render the view.  Source: 50ms
 	public static final int PING_INTERVAL_MS = 10 * 1000; // How often server sends pings
-	public static final int ARTIFICIAL_COMMS_DELAY = 0; //
+	public static final int ARTIFICIAL_COMMS_DELAY = 100;
 	public static final float MAX_CLIENT_POSITION_DISCREP = 0.1f; // Max difference between what client and server think the pos of avatar is, before client is corrected
 	
-	public static final String VERSION = "0.01";
+	public static final String VERSION_ = "0.01";
 	public static final boolean SHOW_LOGO = false;
 	public static final boolean RECORD_VID = false;
 	public static final boolean USE_MODEL_FOR_PLAYERS = false;
@@ -58,6 +59,7 @@ public class Settings {
 
 
 	public static void registerMessages() {
+		Serializer.registerClass(MyAbstractMessage.class);
 		Serializer.registerClass(PingMessage.class);
 		Serializer.registerClass(NewPlayerRequestMessage.class);
 		Serializer.registerClass(GameSuccessfullyJoinedMessage.class);
