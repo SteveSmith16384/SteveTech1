@@ -8,4 +8,5 @@ public class DebuggingMessage extends MyAbstractMessage {
 	public DebuggingMessage() {
 		super(true);
 	}
+	
 }

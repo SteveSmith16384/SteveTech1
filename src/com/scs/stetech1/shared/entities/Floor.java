@@ -13,12 +13,15 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
+import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.components.ICollideable;
+import com.scs.stetech1.components.IProcessByClient;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Floor extends PhysicalEntity implements ICollideable {
+public class Floor extends PhysicalEntity implements ICollideable, IProcessByClient {
 
 	private Box box1;
 	private Vector3f texScroll, thisScroll;
@@ -53,7 +56,7 @@ public class Floor extends PhysicalEntity implements ICollideable {
 		}));
 
 		Geometry geometry = new Geometry("Crate", box1);
-		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
+		if (_game.getJmeContext() != JmeContext.Type.Headless) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
@@ -91,7 +94,7 @@ public class Floor extends PhysicalEntity implements ICollideable {
 
 
 	@Override
-	public void process(float tpf) {
+	public void process(GenericClient client, float tpf) {
 		if (texScroll != null) {
 			float diff = tpf*1f;
 			thisScroll.addLocal(diff, diff, diff);
@@ -131,6 +134,13 @@ public class Floor extends PhysicalEntity implements ICollideable {
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
+	}
+
+
+	@Override
+	public void process(ServerMain server, float tpf_secs) {
+		// Do nothing
+		
 	}
 
 }

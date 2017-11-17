@@ -10,7 +10,7 @@ import com.scs.stetech1.shared.IEntityController;
 public class SMServer extends SimpleApplication implements ConnectionListener, MessageListener<HostedConnection>  {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
 
 	}
 

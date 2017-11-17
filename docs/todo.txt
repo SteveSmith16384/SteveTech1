@@ -7,26 +7,26 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dyn
 
 
 URGENT
-	Server send something to the client first
-Player not dropping by grav until movement received - test using SimpleFPS?
-	Use MyBetterCharacterControl2 - check it works first
+When shooting, player is moving
+Crates not dropping until knocked
+	Change wall tex - checkout Killer Crates
+Hitscan weapons
+Player not dropping by grav after warp until movement received - test using SimpleFPS?
+	Test with a few physics blocks
 
 
 TODO
+Client statuses - connected, in game
 Don't use broadcast()
-Change wall tex
-Hitscan weapons
+Draw map
 Show error if client unable to connect
-Test with a few physics blocks
 Avatar falling slowly when not moving forwards (just like jetpac?)
 Laser bullets
 Grenades
-Add walls
+Add more walls
 Warp player if position > 3?
-No position data when new position is forced?
 Make server & client abstract
 force avatar warp test
-Draw map
 Search for todos
 Todo - am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
@@ -34,7 +34,6 @@ Use test annotations
 Add lots of comments
 Unit test rewind avatars
 Spectator mode
-Create server console commands
 Create game lobby
 Send ability updates to client, to confirm ammo etc...
 Show where players are according to server (in realtime)
@@ -44,7 +43,6 @@ Reduce dependencies between classes
 
 
 LATER
-	Don't send entity update if position not changed
 Split up into separate packages: AbstractClient, Abstractserver, shared, Sorcerers
 Reduce object creation, including calls to clone()
 Kick players who don't move

@@ -24,7 +24,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 
 
 	@Override
-	public void process(float tpf) {
+	public void process(ServerMain server, float tpf) {
 		if (this.restarting) {
 			restartTime -= tpf;
 			if (this.restartTime <= 0) {
@@ -48,7 +48,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 			}
 		}
 
-		super.process(tpf);
+		super.serverAndClientProcess(server, null, tpf);
 	}
 
 

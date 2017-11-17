@@ -11,15 +11,17 @@ import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.client.syncposition.AdjustBasedOnDistance;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.entities.Entity;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 
-public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD {
+public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD, IProcessByClient {
 
 	public HUD hud;
 	public Camera cam;
@@ -42,10 +44,10 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 
 
 	@Override
-	public void process(float tpf) {
-		super.process(tpf);
+	public void process(GenericClient client, float tpf) {
+		super.serverAndClientProcess(null, client, tpf);
 
-		hud.process(tpf);
+		hud.process(client, tpf);
 
 		// Position camera at node
 		Vector3f vec = this.getWorldTranslation();// getMainNode().getWorldTranslation();
@@ -129,6 +131,13 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 	public FrustumIntersect getInsideOutside(PhysicalEntity entity) {
 		FrustumIntersect insideoutside = cam.contains(entity.getMainNode().getWorldBound());
 		return insideoutside;
+	}
+
+
+	@Override
+	public void process(ServerMain server, float tpf_secs) {
+		// Do nothing
+		
 	}
 
 

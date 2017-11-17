@@ -11,6 +11,8 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -70,7 +72,7 @@ public class Fence extends PhysicalEntity {
 
 
 	@Override
-	public void process(float tpf) {
+	public void process(ServerMain server, float tpf) {
 		// Do nothing
 	}
 

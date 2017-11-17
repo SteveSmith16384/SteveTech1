@@ -15,14 +15,14 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import com.jme3.ui.Picture;
 import com.scs.stetech1.client.GenericClient;
-import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.gui.TextArea;
 
 /*
  * Positioning text = the co-ords of BitmapText are for the top-left of the first line of text, and they go down from there.
  * 
  */
-public class HUD extends Node implements IProcessByServer {
+public class HUD extends Node implements IProcessByClient {
 
 	public TextArea log_ta;
 	public float hud_width, hud_height;
@@ -126,7 +126,7 @@ public class HUD extends Node implements IProcessByServer {
 
 
 	@Override
-	public void process(float tpf) {
+	public void process(GenericClient client, float tpf) {
 		if (process_damage_box) {
 			this.dam_box_col.a -= (tpf/2);
 			if (dam_box_col.a <= 0) {

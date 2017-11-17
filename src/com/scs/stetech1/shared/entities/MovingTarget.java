@@ -15,6 +15,7 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -86,7 +87,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 
 	@Override
-	public void process(float tpf) {
+	public void process(ServerMain server, float tpf) {
 		//super.process(tpf);
 		//Settings.p("Pos: " + this.getWorldTranslation());
 		

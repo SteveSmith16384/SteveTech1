@@ -11,6 +11,7 @@ import com.jme3.texture.Texture;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICollideable;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
@@ -63,7 +64,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 
 
 	@Override
-	public void process(float tpf) {
+	public void process(ServerMain server, float tpf) {
 		this.timeLeft -= tpf;
 		if (this.timeLeft < 0) {
 			//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);

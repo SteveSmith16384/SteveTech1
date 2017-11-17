@@ -13,10 +13,11 @@ import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
+import com.scs.stetech1.shared.HitData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer {
+public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer {//, IProcessByClient {
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
@@ -101,9 +102,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public PhysicalEntity calcHitEntity(Vector3f shootDir, float range) {
+	public HitData calcHitEntity(Vector3f shootDir, float range) {
 		Vector3f from = this.getWorldTranslation();
-		Vector3f to = shootDir.normalize().multLocal(range).addLocal(from); // todo - check
+		Vector3f to = shootDir.normalize().multLocal(range).addLocal(from);
 		List<PhysicsRayTestResult> results = game.getBulletAppState().getPhysicsSpace().rayTest(from, to);
 		float dist = -1;
 		PhysicsRayTestResult closest = null;
@@ -121,7 +122,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			PhysicalEntity e = (PhysicalEntity)closest.getCollisionObject().getUserObject();
 			Vector3f hitpoint = to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
 			Settings.p("Hit " + e + " at " + hitpoint);
-			return e;
+			return new HitData(e, hitpoint);
 		}
 		return null;
 	}
@@ -173,12 +174,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		}
 
 		// Check if rotation changed
-		Quaternion currentRot = this.getWorldRotation();
-		boolean rotChanged = !currentRot.equals(this.prevRot);
+		/*todo Quaternion currentRot = this.getWorldRotation(); //prevRot.subtract(currentRot);
+		boolean rotChanged = !currentRot.equals(this.prevRot); // todo - check diff!
 		if (rotChanged) {
 			prevRot.set(currentRot);
 		}
-		hasMoved = hasMoved || rotChanged;
+		hasMoved = hasMoved || rotChanged;*/
 
 		return hasMoved;
 	}
@@ -221,5 +222,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		this.setWorldTranslation(this.getWorldTranslation().add(offset));
 
 	}
+
+
+	/*@Override
+	public void process(GenericClient client, float tpf) {
+		// Override if required
+		// Do nothing
+	}*/
+
 
 }

@@ -1,6 +1,7 @@
 package com.scs.stetech1.abilities;
 
 import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 
 public interface IAbility extends IProcessByServer {
 
@@ -15,5 +16,9 @@ public interface IAbility extends IProcessByServer {
 	boolean activate(float interpol);
 	
 	String getHudText();
+	
+	void encode(AbilityUpdateMessage aum);
+
+	void decode(AbilityUpdateMessage aum);
 }
 

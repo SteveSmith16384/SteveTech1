@@ -8,6 +8,7 @@ import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.models.BeamLaserModel;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
@@ -53,7 +54,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 
 
 	@Override
-	public void process(float tpf) {
+	public void process(ServerMain server, float tpf) {
 		if (game.isServer()) {
 			this.timeLeft -= tpf;
 			if (this.timeLeft < 0) {

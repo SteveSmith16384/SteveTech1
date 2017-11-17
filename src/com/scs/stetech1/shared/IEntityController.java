@@ -8,8 +8,6 @@ import com.scs.stetech1.components.IEntity;
 
 public interface IEntityController {
 
-	//int getNextEntityID();
-	
 	boolean isServer();
 	
 	JmeContext.Type getJmeContext();

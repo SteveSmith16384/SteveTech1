@@ -11,12 +11,13 @@ import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.scs.stetech1.abilities.IAbility;
+import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.client.MyBetterCharacterControl;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
-import com.scs.stetech1.jme.MyBetterCharacterControl2;
+import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 import com.scs.stetech1.weapons.HitscanRifle;
@@ -36,7 +37,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
-	public MyBetterCharacterControl2 playerControl;
+	//public MyBetterCharacterControl2 playerControl;
+	public MyBetterCharacterControl playerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
@@ -64,7 +66,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		this.getMainNode().attachChild(playerGeometry);
 
-		playerControl = new MyBetterCharacterControl2(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
+		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
 		playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
 		this.getMainNode().addControl(playerControl);
 
@@ -108,15 +110,14 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
-	@Override
-	public void process(float tpf) {
+	protected void serverAndClientProcess(ServerMain server, GenericClient client, float tpf) {
 		if (game.isServer()) { // Client does it before adjusting
 			walkDirection.set(0, 0, 0);
 		}
 
-		abilityGun.process(tpf);
+		abilityGun.process(server, tpf);
 		if (this.abilityOther != null) {
-			abilityOther.process(tpf);
+			abilityOther.process(server, tpf);
 		}
 
 		if (this.abilityOther != null) {
@@ -247,7 +248,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	 */
 	@Override
 	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
-		//if (offset.length() > 0.01f) { Already chcked this
+		//if (offset.length() > 0.01f) { Already checked this
 		this.walkDirection.addLocal(offset);//.multLocal(moveSpeed)); 
 		//this.playerControl.warp(this.getWorldTranslation().add(offset)); No!!
 		//}

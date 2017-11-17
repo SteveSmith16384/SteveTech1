@@ -34,6 +34,7 @@ import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext.Type;
 import com.scs.stetech1.client.entities.ClientPlayersAvatar;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
@@ -227,7 +228,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 
 	private void setUpLight() {
 		AmbientLight al = new AmbientLight();
-		al.setColor(ColorRGBA.White.mult(2));
+		al.setColor(ColorRGBA.White.mult(1));
 		getRootNode().addLight(al);
 	}
 
@@ -271,6 +272,8 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 									if (pe == this.avatar) {
 										this.clientAvatarPositionData.clearPositiondata(); // Clear our local data as well
 										storeAvatarPosition(serverTime);
+										// Stop us walking!
+										this.avatar.resetWalkDir();
 									}
 								}
 								pe.addPositionData(epd); // Store the position for use later
@@ -330,11 +333,15 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 								pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
 							}
 						}
+						if (e instanceof IProcessByClient) {
+							IProcessByClient pbc = (IProcessByClient)e;
+							pbc.process(this, tpf_secs);
+						}
 					}
 					this.hud.log_ta.setText(strListEnts.toString());
-					if (this.avatar != null) {
-						avatar.process(tpf_secs);
-					}
+					/*if (this.avatar != null) {
+						avatar.process(this, tpf_secs);
+					}*/
 				}
 			}
 
