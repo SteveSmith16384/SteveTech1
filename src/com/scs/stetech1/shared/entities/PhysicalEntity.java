@@ -101,9 +101,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public PhysicalEntity calcHitEntity(float range) {
+	public PhysicalEntity calcHitEntity(Vector3f shootDir, float range) {
 		Vector3f from = this.getWorldTranslation();
-		Vector3f to = this.getWorldRotation().getRotationColumn(2).normalize().multLocal(range).addLocal(from); // todo - check
+		Vector3f to = shootDir.normalize().multLocal(range).addLocal(from); // todo - check
 		List<PhysicsRayTestResult> results = game.getBulletAppState().getPhysicsSpace().rayTest(from, to);
 		float dist = -1;
 		PhysicsRayTestResult closest = null;

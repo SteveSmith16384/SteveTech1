@@ -8,10 +8,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import ssmith.swing.LogWindow;
-import ssmith.util.FixedLoopTime;
-import ssmith.util.RealtimeInterval;
-
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
@@ -42,6 +38,7 @@ import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
+import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
@@ -50,6 +47,10 @@ import com.scs.stetech1.shared.entities.DebuggingSphere;
 import com.scs.stetech1.shared.entities.Floor;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
 import com.scs.stetech1.shared.entities.Wall;
+
+import ssmith.swing.LogWindow;
+import ssmith.util.FixedLoopTime;
+import ssmith.util.RealtimeInterval;
 
 public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
 
@@ -183,7 +184,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					ServerPlayersAvatar avatar = c.avatar;
 					if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 						ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
-						chip.setTarget(avatar.calcHitEntity(chip.getRange())); // This damage etc.. is calculated later
+						chip.setTarget(avatar.calcHitEntity(avatar.getShootDir(), chip.getRange())); // This damage etc.. is calculated later
 					}
 				}
 				this.restoreAllAvatarPositions();
@@ -240,6 +241,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			client = clients.get(source.getId());
 		}
 
+		if (client == null) {
+			return;
+		}
 		//Settings.p("Rcvd " + message.getClass().getSimpleName());
 
 		MyAbstractMessage msg = (MyAbstractMessage)message;
@@ -326,6 +330,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		synchronized (clients) {
 			clients.put(conn.getId(), new ClientData(conn, this.getCamera(), this.getInputManager()));
 		}
+		broadcast(conn, new WelcomeClientMessage());
 
 	}
 

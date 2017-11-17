@@ -57,7 +57,6 @@ public class Console extends WindowAdapter implements WindowListener, ActionList
 
 		textArea=new JTextArea();
 		textArea.setEditable(false);
-		//JButton button=new JButton("clear"); // todo -= remove
 		input = new JTextField();
 		input.requestFocus();
 		
@@ -67,7 +66,6 @@ public class Console extends WindowAdapter implements WindowListener, ActionList
 		frame.setVisible(true);		
 
 		frame.addWindowListener(this);
-		//button.addActionListener(this);
 		input.addKeyListener(this);
 
 		/*try

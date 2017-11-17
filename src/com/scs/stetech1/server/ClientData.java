@@ -16,14 +16,12 @@ public class ClientData {
 	public long latestInputTimestamp;
 	public ServerPlayersAvatar avatar;
 	public RemoteInput remoteInput = new RemoteInput();// For storing message that are translated into input
-	//public CombinedInputMethod remoteInput;// = new RemoteInput();// For storing message that are translated into input
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
 	public byte side;
 	
+
 	public ClientData(HostedConnection _conn, Camera cam, InputManager _inputManager) {
 		conn = _conn;
-		
-		//remoteInput = new CombinedInputMethod(cam, _inputManager);// = new RemoteInput();
 	}
 
 
@@ -31,7 +29,7 @@ public class ClientData {
 		return System.currentTimeMillis() + serverToClientDiffTime;
 	}
 
-	
+
 	public int getPlayerID() {
 		return conn.getId();
 	}

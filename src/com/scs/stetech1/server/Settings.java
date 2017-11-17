@@ -15,6 +15,7 @@ import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
+import com.scs.stetech1.netmessages.WelcomeClientMessage;
 
 
 public class Settings {
@@ -60,6 +61,7 @@ public class Settings {
 
 	public static void registerMessages() {
 		Serializer.registerClass(MyAbstractMessage.class);
+		Serializer.registerClass(WelcomeClientMessage.class);
 		Serializer.registerClass(PingMessage.class);
 		Serializer.registerClass(NewPlayerRequestMessage.class);
 		Serializer.registerClass(GameSuccessfullyJoinedMessage.class);

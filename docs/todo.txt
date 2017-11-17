@@ -7,7 +7,7 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dyn
 
 
 URGENT
-Server send something to the client first
+	Server send something to the client first
 Player not dropping by grav until movement received - test using SimpleFPS?
 	Use MyBetterCharacterControl2 - check it works first
 
@@ -17,7 +17,6 @@ Don't use broadcast()
 Change wall tex
 Hitscan weapons
 Show error if client unable to connect
-Remove gravity from client's avatar?
 Test with a few physics blocks
 Avatar falling slowly when not moving forwards (just like jetpac?)
 Laser bullets

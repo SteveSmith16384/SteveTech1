@@ -9,9 +9,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.prefs.BackingStoreException;
 
-import ssmith.util.FixedLoopTime;
-import ssmith.util.RealtimeInterval;
-
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.plugins.ClasspathLocator;
@@ -51,6 +48,7 @@ import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
+import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.AverageNumberCalculator;
@@ -58,6 +56,9 @@ import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 import com.scs.stetech1.shared.entities.PhysicalEntity;
+
+import ssmith.util.FixedLoopTime;
+import ssmith.util.RealtimeInterval;
 
 public class GenericClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, 
 IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickListener, 
@@ -81,6 +82,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
 	public boolean gameStarted = false;
+	private boolean acceptByServer = false;
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
@@ -179,13 +181,14 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 		}
 
 		try {
-			Settings.registerMessages();
+			//Settings.registerMessages();
 
 			myClient = Network.connectToServer("localhost", Settings.PORT); // todo - say if can't connect
 			myClient.addClientStateListener(this);
 			myClient.addErrorListener(this);
 
 			myClient.addMessageListener(this, PingMessage.class);
+			myClient.addMessageListener(this, WelcomeClientMessage.class);
 			myClient.addMessageListener(this, NewEntityMessage.class);
 			myClient.addMessageListener(this, EntityUpdateMessage.class);
 			myClient.addMessageListener(this, NewPlayerRequestMessage.class);
@@ -195,7 +198,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 
 			myClient.start();
 
-			send(new NewPlayerRequestMessage("Mark Gray", 1));
+			//send(new NewPlayerRequestMessage("Mark Gray", 1));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -292,7 +295,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 					}
 				}
 
-				if (sendPingInt.hitInterval()) {
+				if (acceptByServer && sendPingInt.hitInterval()) {
 					send(new PingMessage(false));
 				}
 
@@ -414,7 +417,11 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 			synchronized (unprocessedMessages) {
 				unprocessedMessages.add(rem);
 			}
-
+		} else if (message instanceof WelcomeClientMessage) {
+			WelcomeClientMessage rem = (WelcomeClientMessage)message;
+			acceptByServer = true; // Need to wait until we receive something from the server before we can send to them
+			send(new NewPlayerRequestMessage("Mark Gray", 1));
+			
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}

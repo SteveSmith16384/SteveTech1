@@ -27,30 +27,36 @@ public class RemoteInput implements IInputDevice {
 		return pim.back;
 	}
 
+
 	@Override
 	public boolean getStrafeLeftValue() {
 		return pim.strafeLeft;
 	}
+
 
 	@Override
 	public boolean getStrafeRightValue() {
 		return pim.strafeRight;
 	}
 
+
 	@Override
 	public boolean isJumpPressed() {
 		return pim.jump;
 	}
+
 
 	@Override
 	public boolean isShootPressed() {
 		return pim.mainAbility;
 	}
 
+
 	@Override
 	public boolean isAbilityOtherPressed() {
 		return pim.secondaryAbility;
 	}
+
 
 	@Override
 	public boolean isSelectNextAbilityPressed() {
@@ -60,13 +66,13 @@ public class RemoteInput implements IInputDevice {
 
 	@Override
 	public Vector3f getDirection() {
-			return pim.direction;
+		return pim.direction;
 	}
 
 
 	@Override
 	public Vector3f getLeft() {
-			return pim.leftDir;
+		return pim.leftDir;
 	}
 
 }
