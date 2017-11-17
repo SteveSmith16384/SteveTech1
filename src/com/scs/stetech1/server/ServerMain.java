@@ -122,7 +122,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		getStateManager().attach(bulletAppState);
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
 		//bulletAppState.getPhysicsSpace().addTickListener(this);
-		//bulletAppState.getPhysicsSpace().getGravity(gravity);
 		createGame();
 		loopTimer.start();
 	}
@@ -146,7 +145,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 						// Send newplayerconf message
 						broadcast(client.conn, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
 						sendEntityListToClient(client);
-
+						client.clientStatus = ClientData.Status.InGame;
+						
 						// Send them a ping to get ping time
 						broadcast(client.conn, new PingMessage(true));
 
@@ -158,7 +158,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					} else if (message instanceof PlayerLeftMessage) {
 						this.connectionRemoved(this.myServer, client.conn);
 
-					} else if (message instanceof PlayerInputMessage) { // Process these here so the inputs don't change mid-thread
+					} else if (message instanceof PlayerInputMessage) { // Process these here so the inputs don't change values mid-thread
 						PlayerInputMessage pim = (PlayerInputMessage)message;
 						if (pim.timestamp > client.latestInputTimestamp) {
 							client.remoteInput.decodeMessage(pim);
@@ -187,7 +187,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 				}
 				if (areAnyPlayersShooting) {
 					this.rewindAllAvatars(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY); // todo - is time correct?
-
+					this.rootNode.updateGeometricState();
 					for (ClientData c : this.clients.values()) {
 						ServerPlayersAvatar avatar = c.avatar;
 						if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
@@ -261,8 +261,8 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
 					client.pingRTT = client.pingCalc.add(rttDuration);
 					client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-					Settings.p("Client rtt = " + client.pingRTT);
-					Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
+					//Settings.p("Client rtt = " + client.pingRTT);
+					//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
 				} catch (NullPointerException npe) {
 					npe.printStackTrace();
 				}
@@ -415,7 +415,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	@Override
 	public void collision(PhysicsCollisionEvent event) {
 		String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
-		System.out.println(s);
+		
+		if (event.getObjectB().getUserObject() instanceof Floor == false) {
+			System.out.println(s);
+		}
 
 		PhysicalEntity a=null, b=null;
 		Object oa = event.getObjectA().getUserObject(); 
@@ -490,18 +493,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			myServer.broadcast(Filters.equalTo(conn), msg);
 		}
 		else {
-			/*Thread t = new Thread() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(Settings.COMMS_DELAY);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					myServer.broadcast(Filters.equalTo(conn), msg);
-				}
-			};
-			t.start();*/
 			Runnable t = new Runnable() {
 				@Override
 				public void run() {
@@ -546,6 +537,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					break;
 				}
 			}
+		} else if (cmd.equals("quit")) {
+			this.myServer.close();
+			this.stop();
 		}
 	}
 

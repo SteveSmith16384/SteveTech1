@@ -7,20 +7,18 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dyn
 
 
 URGENT
-When shooting, player is moving
+	When shooting, player is moving
+	Hitscan weapons
 Crates not dropping until knocked
-	Change wall tex - checkout Killer Crates
-Hitscan weapons
 Player not dropping by grav after warp until movement received - test using SimpleFPS?
-	Test with a few physics blocks
 
 
 TODO
-Client statuses - connected, in game
+	Client statuses - connected, in game
 Don't use broadcast()
 Draw map
 Show error if client unable to connect
-Avatar falling slowly when not moving forwards (just like jetpac?)
+	Avatar falling slowly when not moving forwards (just like jetpac?)
 Laser bullets
 Grenades
 Add more walls

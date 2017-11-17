@@ -21,7 +21,7 @@ public class TestPositionCalculator {
 
 
 	private void basicPositionCalc1() {
-		PositionCalculator posCalc = new PositionCalculator(1000);
+		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=0 ; i<10 ; i++) {
 			posCalc.addPositionData(new EntityPositionData(new Vector3f(i, 0, 0), null, i*100));
 		}
@@ -35,7 +35,7 @@ public class TestPositionCalculator {
 
 
 	private void basicPositionCalc2_AddInReverse() {
-		PositionCalculator posCalc = new PositionCalculator(1000);
+		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new EntityPositionData(new Vector3f(i, 0, 0), null, i*100));
 		}
@@ -49,7 +49,7 @@ public class TestPositionCalculator {
 
 
 	private void basicPositionCalc2_EarlyInSegment() {
-		PositionCalculator posCalc = new PositionCalculator(1000);
+		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new EntityPositionData(new Vector3f(i, 0, 0), null, i*100));
 		}
@@ -63,7 +63,7 @@ public class TestPositionCalculator {
 	
 
 	private void basicPositionCalc2_LateInSegment() {
-		PositionCalculator posCalc = new PositionCalculator(1000);
+		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new EntityPositionData(new Vector3f(i, 0, 0), null, i*100));
 		}
@@ -77,7 +77,7 @@ public class TestPositionCalculator {
 
 
 	private void basicPositionCalc_TooEarly() {
-		PositionCalculator posCalc = new PositionCalculator(1000);
+		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new EntityPositionData(new Vector3f(i, 0, 0), null, 100+(i*100)));
 		}
@@ -89,7 +89,7 @@ public class TestPositionCalculator {
 
 
 	private void basicPositionCalc_TooLate() {
-		PositionCalculator posCalc = new PositionCalculator(1000);
+		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new EntityPositionData(new Vector3f(i, 0, 0), null, 100+(i*100)));
 		}

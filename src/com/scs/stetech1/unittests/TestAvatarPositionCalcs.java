@@ -20,8 +20,8 @@ public class TestAvatarPositionCalcs {
 	private void basicPositionCalc1() {
 		int ping = 100;
 		// Players moves at 1f per 100ms
-		PositionCalculator serverPositions = new PositionCalculator(1000);
-		PositionCalculator clientPositions = new PositionCalculator(1000);
+		PositionCalculator serverPositions = new PositionCalculator(false, 1000);
+		PositionCalculator clientPositions = new PositionCalculator(false, 1000);
 		for (int i=0 ; i<10 ; i++) {
 			serverPositions.addPositionData(new EntityPositionData(new Vector3f(i, 0, 0), null, i*100));
 			// Client is 1f ahead

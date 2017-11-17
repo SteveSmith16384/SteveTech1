@@ -21,7 +21,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	protected Node main_node;
 	public RigidBodyControl rigidBodyControl;
-	protected PositionCalculator serverPositionData;
+	protected PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
 	private Quaternion prevRot = new Quaternion();
@@ -196,17 +196,19 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public boolean rewindPosition(long serverTimeToUse) {
+	public void rewindPosition(long serverTimeToUse) {
 		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse);
 		if (shooterEPD != null) {
 			this.originalPos.set(this.getWorldTranslation());
 			this.originalRot.set(this.getWorldRotation());
 			this.setWorldTranslation(shooterEPD.position);
 			this.setWorldRotation(shooterEPD.rotation);
-			this.main_node.updateGeometricState();
-			return true;
+			//this.main_node.updateGeometricState();
+			//return true;
+			return;
 		}
-		return false;
+		//return false;
+		throw new RuntimeException("Todo");
 	}
 
 

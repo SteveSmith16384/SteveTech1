@@ -557,18 +557,6 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 			myClient.send(msg);
 		}
 		else {
-			/*Thread t = new Thread() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(Settings.COMMS_DELAY);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					myClient.send(msg);
-				}
-			};
-			t.start();*/
 			Runnable t = new Runnable() {
 				@Override
 				public void run() {

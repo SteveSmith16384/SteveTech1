@@ -10,6 +10,7 @@ import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AbstractPlayersAvatar;
+import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
 public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamagable, ICollideable {
@@ -49,6 +50,13 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 		}
 
 		super.serverAndClientProcess(server, null, tpf);
+		
+		EntityPositionData epd = new EntityPositionData();
+		epd.serverTimestamp = System.currentTimeMillis();
+		epd.rotation = this.getWorldRotation();
+		epd.position = this.getWorldTranslation();
+		addPositionData(epd); // Store the position for use when rewinding.  Todo - cleardown!
+
 	}
 
 

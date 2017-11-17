@@ -250,7 +250,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
 		//if (offset.length() > 0.01f) { Already checked this
 		this.walkDirection.addLocal(offset);//.multLocal(moveSpeed)); 
-		//this.playerControl.warp(this.getWorldTranslation().add(offset)); No!!
 		//}
 	}
 

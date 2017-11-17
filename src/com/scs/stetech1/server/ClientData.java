@@ -9,6 +9,8 @@ import com.scs.stetech1.shared.AverageNumberCalculator;
 
 public class ClientData {
 
+	public enum Status { Connected, InGame };
+
 	public HostedConnection conn;
 	public AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
@@ -18,7 +20,7 @@ public class ClientData {
 	public RemoteInput remoteInput = new RemoteInput();// For storing message that are translated into input
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
 	public byte side;
-	
+	public Status clientStatus = Status.Connected;
 
 	public ClientData(HostedConnection _conn, Camera cam, InputManager _inputManager) {
 		conn = _conn;

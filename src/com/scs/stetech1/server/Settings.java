@@ -24,8 +24,6 @@ public class Settings {
 	public static final boolean DEBUG = true;
 	//public static final boolean VERBOSE = true;
 
-	public static final Random rnd = new Random();
-
 	public static final int PORT = 6143;
 	public static final int SERVER_TICKRATE_MS = 20; // Source: 15ms
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 100; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 
@@ -45,7 +43,7 @@ public class Settings {
 
 	// Our movement speed
 	public static final float PLAYER_MOVE_SPEED = 3f;
-	public static final float JUMP_FORCE = 8f;
+	public static final float JUMP_FORCE = 6f;
 
 	public static final float CAM_DIST = 50f;
 	public static final boolean LIGHTING = true;
@@ -54,6 +52,15 @@ public class Settings {
 	// User Data
 	public static final String ENTITY = "Entity";
 
+	public static final Random rnd = new Random();
+
+	public Settings() {
+		if (ARTIFICIAL_COMMS_DELAY >= CLIENT_RENDER_DELAY) {
+			throw new RuntimeException("todo");
+		}
+	}
+	
+	
 	public static void p(String s) {
 		System.out.println(System.currentTimeMillis() + ": " + s);
 	}

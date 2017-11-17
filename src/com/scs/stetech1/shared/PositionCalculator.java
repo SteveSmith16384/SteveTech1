@@ -18,10 +18,10 @@ public final class PositionCalculator {
 	}
 
 
-	public PositionCalculator(int _maxEntries) {
+	/*public PositionCalculator(int _maxEntries) {
 		this(false, _maxEntries);
 	}
-
+*/
 
 	public void addPositionData(EntityPositionData newData) {
 		synchronized (positionData) {
@@ -40,15 +40,7 @@ public final class PositionCalculator {
 				// Add to end
 				positionData.add(newData);
 			}
-
-			// Remove later entries
-			//int min_entries = 5000 / Settings.SERVER_SEND_UPDATE_INTERVAL_MS;
-			//long cutoff = System.currentTimeMillis() - (Settings.SERVER_SEND_UPDATE_INTERVAL_MS*2);
-			/*while (this.positionData.size() > maxEntries) {
-				//EntityPositionData epd = this.positionData.getLast();
-				this.positionData.removeLast();
-			}*/
-			this.reduce(maxEntries);
+			this.cleardown(maxEntries);
 		}
 	}
 
@@ -58,12 +50,12 @@ public final class PositionCalculator {
 			if (this.positionData.size() > 0) {
 
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
-					//long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
+					long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
 					//Settings.p(startDiff + " too soon");
-					Settings.p(this.toString(serverTimeToUse));
+					Settings.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));
 					return this.positionData.getFirst(); // Our selected time is too soon!
 				} else if (this.positionData.getLast().serverTimestamp > serverTimeToUse) {
-					//Settings.p(this.toString(serverTimeToUse));
+					Settings.p(this.toString(serverTimeToUse));
 					return this.positionData.getLast(); // Our selected time is too late!
 				}
 
@@ -73,7 +65,7 @@ public final class PositionCalculator {
 					if (firstEPD != null) {
 						if (firstEPD.serverTimestamp >= serverTimeToUse && secondEPD.serverTimestamp <= serverTimeToUse) {
 							if (cleardown) {
-								this.reduce(pos+2);
+								this.cleardown(pos+4);
 							}
 							//return this.getInterpolatedPosition(firstEPD, secondEPD, serverTimeToUse); //positionData.indexOf(firstEPD);
 							return firstEPD.getInterpol(secondEPD, serverTimeToUse);
@@ -99,7 +91,7 @@ public final class PositionCalculator {
 	}
 
 
-	private void reduce(int num) {
+	private void cleardown(int num) {
 		while (this.positionData.size() > num) {
 			this.positionData.removeLast();
 		}
