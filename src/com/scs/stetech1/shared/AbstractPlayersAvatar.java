@@ -90,9 +90,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 
 	public static Spatial getPlayersModel(IEntityController game, int pid) {
-		// Add player's box
 		Box box1 = new Box(PLAYER_RAD, PLAYER_HEIGHT/2, PLAYER_RAD);
-		//Cylinder box1 = new Cylinder(1, 8, PLAYER_RAD, PLAYER_HEIGHT, true);
 		Geometry playerGeometry = new Geometry("Player", box1);
 		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 		key3.setGenerateMips(true);
@@ -112,7 +110,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	protected void serverAndClientProcess(ServerMain server, GenericClient client, float tpf) {
 		if (game.isServer()) { // Client does it before adjusting
-			walkDirection.set(0, 0, 0);
+			this.resetWalkDir(); // todo - do this in one place
 		}
 
 		abilityGun.process(server, tpf);

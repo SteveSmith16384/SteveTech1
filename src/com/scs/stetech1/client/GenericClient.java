@@ -316,7 +316,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 					long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 
 					if (this.avatar != null) {
-						avatar.resetWalkDir();
+						avatar.resetWalkDir(); // todo - do this in one place
 					}
 
 					// Loop through each entity and calc correct position				

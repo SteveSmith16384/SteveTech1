@@ -263,6 +263,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 					client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
 					//Settings.p("Client rtt = " + client.pingRTT);
 					//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
+					if ((client.pingRTT/2) + Settings.SERVER_SEND_UPDATE_INTERVAL_MS > Settings.CLIENT_RENDER_DELAY) {
+						Settings.p("Warning: client ping is longer than client render delay!");
+					}
 				} catch (NullPointerException npe) {
 					npe.printStackTrace();
 				}
@@ -274,6 +277,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 		} else {
 			msg.client = client;
+			// Add it to list for processing in main thread
 			synchronized (this.unprocessedMessages) {
 				this.unprocessedMessages.add(msg);
 			}

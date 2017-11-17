@@ -54,7 +54,7 @@ public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowO
 		// cam.setLocation(new Vector3f(vec.x, vec.y + (PLAYER_HEIGHT/2), vec.z));
 		// Avoid creating new Vector3f
 		cam.getLocation().x = vec.x;
-		cam.getLocation().y = vec.y + (PLAYER_HEIGHT/2);
+		cam.getLocation().y = vec.y + PLAYER_HEIGHT;
 		cam.getLocation().z = vec.z;
 		cam.update();
 

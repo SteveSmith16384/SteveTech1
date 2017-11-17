@@ -20,18 +20,18 @@ public class BeamLaserModel extends Node {
 
 	private Geometry g;
 	private Cylinder cyl;
-	
-	public static BeamLaserModel Factory(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col) {
+
+	public static BeamLaserModel Factory(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat) {
 		if (spare.size() > 0) {
 			BeamLaserModel m = spare.remove(0);
 			m.setPoints(start, end, true);
 			return  m;
 		} else {
-			return new BeamLaserModel(assetManager, start, end, col);
+			return new BeamLaserModel(assetManager, start, end, col, generateMat);
 		}
 	}
 
-	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col) {
+	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat) {
 		super("Laser");
 
 		cyl = new Cylinder(5, 10, 0.03f, start.distance(end), true);
@@ -41,12 +41,14 @@ public class BeamLaserModel extends Node {
 		g.setMesh(cyl);
 		this.attachChild(g);
 
-		Material mat = new Material(assetManager,"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-		Texture t = assetManager.loadTexture("Textures/cells3.png");
-		mat.setTexture("DiffuseMap", t);
-		mat.setColor("GlowColor", col);//ColorRGBA.Pink);
-		mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-		this.setMaterial(mat);
+		if (generateMat) {
+			Material mat = new Material(assetManager,"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			Texture t = assetManager.loadTexture("Textures/cells3.png");
+			mat.setTexture("DiffuseMap", t);
+			mat.setColor("GlowColor", col);//ColorRGBA.Pink);
+			mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			this.setMaterial(mat);
+		}
 
 		this.setPoints(start, end, false);
 
@@ -64,7 +66,7 @@ public class BeamLaserModel extends Node {
 
 	}
 
-	
+
 	@Override
 	public boolean removeFromParent() {
 		this.spare.add(this);
