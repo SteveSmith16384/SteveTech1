@@ -3,12 +3,12 @@ package com.scs.stetech1.weapons;
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICanShoot;
+import com.scs.stetech1.entities.DebuggingSphere;
+import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.HitData;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.shared.entities.DebuggingSphere;
-import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast {
 	

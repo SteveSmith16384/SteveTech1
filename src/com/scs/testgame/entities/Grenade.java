@@ -1,4 +1,4 @@
-package com.scs.stetech1.shared.entities;
+package com.scs.testgame.entities;
 
 
 import com.jme3.asset.TextureKey;
@@ -13,9 +13,10 @@ import com.jme3.texture.Texture;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICollideable;
+import com.scs.stetech1.entities.AbstractPlayersAvatar;
+import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
@@ -28,17 +29,18 @@ public class Grenade extends PhysicalEntity implements IBullet {
 	 * Constructor for server
 	 */
 	public Grenade(IEntityController _game, int id, ICanShoot _shooter) {
-		this(_game, id, _shooter, new Vector3f(_shooter.getWorldTranslation().add(_shooter.getBulletStartOffset())));
+		this(_game, id, new Vector3f(_shooter.getWorldTranslation().add(_shooter.getBulletStartOffset())));
+
+		this.shooter = _shooter;
+
 	}
-	
-	
+
+
 	/*
 	 * Constructor for client
 	 */
-	public Grenade(IEntityController _game, int id, ICanShoot _shooter, Vector3f origin) {
+	public Grenade(IEntityController _game, int id, Vector3f origin) {
 		super(_game, id, EntityTypes.GRENADE, "Grenade");
-
-		this.shooter = _shooter;
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
@@ -64,13 +66,13 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		ball_geo.setLocalTranslation(origin);
 		rigidBodyControl = new RigidBodyControl(.2f);
 		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
+			// Accelerate the physical ball to shoot it.
+			rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(15));
 		} else {
 			rigidBodyControl.setKinematic(true);
 		}
 		ball_geo.addControl(rigidBodyControl);
 		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-		/** Accelerate the physical ball to shoot it. */
-		rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(15));
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);

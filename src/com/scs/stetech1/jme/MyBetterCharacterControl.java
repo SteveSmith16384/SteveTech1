@@ -1,4 +1,4 @@
-package com.scs.stetech1.client;
+package com.scs.stetech1.jme;
 
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.objects.PhysicsRigidBody;

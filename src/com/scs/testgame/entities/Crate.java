@@ -1,4 +1,4 @@
-package com.scs.stetech1.shared.entities;
+package com.scs.testgame.entities;
 
 import java.util.HashMap;
 
@@ -15,23 +15,20 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
+import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
+public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
 
-	private static final float SPEED = 7;
-
-	private Vector3f currDir = new Vector3f(0, 1f, 0);
-
-	public MovingTarget(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, id, EntityTypes.MOVING_TARGET, "MovingTarget");
+	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
+		super(_game, id, EntityTypes.CRATE, "Crate");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("id", id);
+			//creationData.put("id", id);
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
 			//creationData.put("rot", rotDegrees); No, since chances are it will have moved anyway
@@ -41,7 +38,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Crate", box1);
 		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
-			TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
+			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
@@ -66,13 +63,11 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
 		rigidBodyControl = new RigidBodyControl(1f);
-		//rigidBodyControl.setGravity(Vector3f.ZERO); // Floats
-		rigidBodyControl = new RigidBodyControl(1f);
+		main_node.addControl(rigidBodyControl);
 		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
 		} else {
 			rigidBodyControl.setKinematic(true);
 		}
-		main_node.addControl(rigidBodyControl);
 
 		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		game.getRootNode().attachChild(this.main_node);
@@ -90,11 +85,6 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	public void process(ServerMain server, float tpf) {
 		//super.process(tpf);
 		//Settings.p("Pos: " + this.getWorldTranslation());
-		
-		// move around
-		//todo - move randomly if (Settings.r)
-		this.rigidBodyControl.applyCentralForce(currDir.mult(SPEED));
-
 	}
 
 
@@ -102,5 +92,6 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
+
 
 }

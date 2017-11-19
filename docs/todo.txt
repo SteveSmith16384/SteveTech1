@@ -1,8 +1,6 @@
 STETECH1
 
 LINKS
-https://hub.jmonkeyengine.org/t/spidermonkey-crash-on-first-message-from-server/39451/32
-
 https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dynamic-vs-static
 
 
@@ -11,9 +9,11 @@ URGENT
 	Hitscan weapons
 Crates not dropping until knocked
 Player not dropping by grav after warp until movement received - test using SimpleFPS?
+Grenades
 
 
 TODO
+Confirm source timings
 	Warp player if position > 3?
 	Client statuses - connected, in game
 Don't use broadcast()
@@ -24,7 +24,6 @@ Laser bullets
 Add more walls
 Make server & client abstract
 force avatar warp test
-Grenades
 Search for todos
 Todo - am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit

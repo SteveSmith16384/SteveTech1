@@ -1,4 +1,4 @@
-package com.scs.stetech1.client.entities;
+package com.scs.stetech1.entities;
 
 import java.util.List;
 
@@ -17,9 +17,6 @@ import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.AbstractPlayersAvatar;
-import com.scs.stetech1.shared.entities.Entity;
-import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD, IProcessByClient {
 

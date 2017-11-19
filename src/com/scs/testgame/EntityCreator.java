@@ -1,17 +1,18 @@
-package com.scs.stetech1.client;
+package com.scs.testgame;
 
 import com.jme3.math.Vector3f;
-import com.scs.stetech1.client.entities.ClientPlayersAvatar;
-import com.scs.stetech1.client.entities.EnemyPlayersAvatar;
+import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.entities.ClientPlayersAvatar;
+import com.scs.stetech1.entities.DebuggingSphere;
+import com.scs.stetech1.entities.EnemyPlayersAvatar;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
-import com.scs.stetech1.shared.entities.Crate;
-import com.scs.stetech1.shared.entities.DebuggingSphere;
-import com.scs.stetech1.shared.entities.Floor;
-import com.scs.stetech1.shared.entities.LaserBullet;
-import com.scs.stetech1.shared.entities.Wall;
+import com.scs.testgame.entities.Crate;
+import com.scs.testgame.entities.Floor;
+import com.scs.testgame.entities.Grenade;
+import com.scs.testgame.entities.Wall;
 
 /*
  * This is only used client-side.
@@ -76,6 +77,14 @@ public class EntityCreator {
 			LaserBullet laser = new LaserBullet(game, id, msg.pos.x, msg.pos.y, msg.pos.z, w, h, tex, rot);
 			return laser;
 		}*/
+
+		case EntityTypes.GRENADE:
+		{
+			String tex = (String)msg.data.get("tex");
+			//float rot = (Float)msg.data.get("rot");
+			Grenade grenade = new Grenade(game, id, new Vector3f(msg.pos.x, msg.pos.y, msg.pos.z));
+			return grenade;
+		}
 
 		case EntityTypes.DEBUGGING_SPHERE:
 		{

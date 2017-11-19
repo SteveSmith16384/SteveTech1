@@ -27,6 +27,10 @@ import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.entities.AbstractPlayersAvatar;
+import com.scs.stetech1.entities.DebuggingSphere;
+import com.scs.stetech1.entities.PhysicalEntity;
+import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.GeneralCommandMessage;
@@ -39,15 +43,11 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
-import com.scs.stetech1.server.entities.ServerPlayersAvatar;
-import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.shared.entities.Crate;
-import com.scs.stetech1.shared.entities.DebuggingSphere;
-import com.scs.stetech1.shared.entities.Floor;
-import com.scs.stetech1.shared.entities.PhysicalEntity;
-import com.scs.stetech1.shared.entities.Wall;
+import com.scs.testgame.entities.Crate;
+import com.scs.testgame.entities.Floor;
+import com.scs.testgame.entities.Wall;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
@@ -228,7 +228,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 			// Loop through clients
 			/*synchronized (clients) {
 				for (ClientData client : clients.values()) {
-					client.sendMessages(this.myServer);
 				}
 			}*/
 		}

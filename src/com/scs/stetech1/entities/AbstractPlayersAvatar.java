@@ -1,4 +1,4 @@
-package com.scs.stetech1.shared;
+package com.scs.stetech1.entities;
 
 import java.util.HashMap;
 
@@ -10,16 +10,17 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
-import com.scs.stetech1.abilities.IAbility;
+import com.scs.stetech1.IAbility;
 import com.scs.stetech1.client.GenericClient;
-import com.scs.stetech1.client.MyBetterCharacterControl;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
+import com.scs.stetech1.jme.MyBetterCharacterControl;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.entities.PhysicalEntity;
+import com.scs.stetech1.shared.EntityTypes;
+import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.weapons.HitscanRifle;
 
 public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {

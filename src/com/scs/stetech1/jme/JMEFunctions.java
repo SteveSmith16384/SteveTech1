@@ -1,4 +1,4 @@
-package com.scs.stetech1.client;
+package com.scs.stetech1.jme;
 
 import java.io.File;
 import java.io.IOException;

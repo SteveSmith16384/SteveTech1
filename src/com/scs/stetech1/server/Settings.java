@@ -54,7 +54,7 @@ public class Settings {
 
 	public static final Random rnd = new Random();
 
-	public Settings() {
+	static {
 		if (ARTIFICIAL_COMMS_DELAY + SERVER_SEND_UPDATE_INTERVAL_MS >= CLIENT_RENDER_DELAY) {
 			throw new RuntimeException("Data will not be sent in time for the client to use it to render");
 		}

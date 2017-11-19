@@ -1,7 +1,7 @@
 package com.scs.stetech1.shared;
 
 import com.jme3.math.Vector3f;
-import com.scs.stetech1.shared.entities.PhysicalEntity;
+import com.scs.stetech1.entities.PhysicalEntity;
 
 public class HitData {
 

@@ -1,4 +1,4 @@
-package com.scs.stetech1.shared.entities;
+package com.scs.testgame.entities;
 
 import java.util.HashMap;
 
@@ -12,6 +12,7 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;

@@ -3,7 +3,7 @@ package com.scs.stetech1.netmessages;
 import java.util.HashMap;
 
 import com.jme3.network.serializing.Serializable;
-import com.scs.stetech1.shared.entities.PhysicalEntity;
+import com.scs.stetech1.entities.PhysicalEntity;
 
 @Serializable
 public class NewEntityMessage extends EntityUpdateMessage {

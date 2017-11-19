@@ -1,4 +1,4 @@
-package com.scs.stetech1.shared.entities;
+package com.scs.testgame.entities;
 
 import java.util.HashMap;
 
@@ -16,6 +16,7 @@ import com.jme3.util.BufferUtils;
 import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IProcessByClient;
+import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;

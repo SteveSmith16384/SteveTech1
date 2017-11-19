@@ -1,4 +1,4 @@
-package com.scs.stetech1.server.entities;
+package com.scs.stetech1.entities;
 
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.IBullet;
@@ -9,7 +9,6 @@ import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
@@ -55,7 +54,7 @@ public class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamag
 		epd.serverTimestamp = System.currentTimeMillis();
 		epd.rotation = this.getWorldRotation();
 		epd.position = this.getWorldTranslation();
-		addPositionData(epd); // Store the position for use when rewinding.  Todo - cleardown!
+		addPositionData(epd); // Store the position for use when rewinding.
 
 	}
 

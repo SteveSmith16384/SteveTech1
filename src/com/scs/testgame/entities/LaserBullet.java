@@ -1,4 +1,4 @@
-package com.scs.stetech1.shared.entities;
+package com.scs.testgame.entities;
 
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.ColorRGBA;
@@ -8,10 +8,11 @@ import com.jme3.system.JmeContext;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICollideable;
+import com.scs.stetech1.entities.AbstractPlayersAvatar;
+import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.models.BeamLaserModel;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 

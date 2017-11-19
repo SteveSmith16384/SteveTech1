@@ -1,4 +1,4 @@
-package com.scs.stetech1.client.entities;
+package com.scs.stetech1.entities;
 
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
@@ -9,10 +9,8 @@ import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.AbstractPlayersAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.shared.entities.PhysicalEntity;
 
 public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhysics, ICollideable, IProcessByClient {// Need ICollideable so lasers don't bounce off it
 

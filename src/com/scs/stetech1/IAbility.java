@@ -1,4 +1,4 @@
-package com.scs.stetech1.abilities;
+package com.scs.stetech1;
 
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;

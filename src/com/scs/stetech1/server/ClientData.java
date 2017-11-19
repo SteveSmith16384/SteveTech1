@@ -3,8 +3,8 @@ package com.scs.stetech1.server;
 import com.jme3.input.InputManager;
 import com.jme3.network.HostedConnection;
 import com.jme3.renderer.Camera;
+import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.input.RemoteInput;
-import com.scs.stetech1.server.entities.ServerPlayersAvatar;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 
 public class ClientData {

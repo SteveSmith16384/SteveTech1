@@ -1,6 +1,6 @@
 package com.scs.stetech1.weapons;
 
-import com.scs.stetech1.abilities.IAbility;
+import com.scs.stetech1.IAbility;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.shared.IEntityController;
 

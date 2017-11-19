@@ -9,7 +9,7 @@ import com.jme3.light.Light;
 import com.jme3.light.LightList;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Spatial;
-import com.scs.stetech1.client.JMEFunctions;
+import com.scs.stetech1.jme.JMEFunctions;
 
 public class ModelViewer extends SimpleApplication {
 

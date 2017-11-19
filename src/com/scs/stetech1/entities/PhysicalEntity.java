@@ -1,4 +1,4 @@
-package com.scs.stetech1.shared.entities;
+package com.scs.stetech1.entities;
 
 import java.util.HashMap;
 import java.util.List;

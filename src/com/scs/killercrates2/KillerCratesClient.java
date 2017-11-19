@@ -1,4 +1,4 @@
-package com.scs.killercrates2.client;
+package com.scs.killercrates2;
 
 public class KillerCratesClient {
 
