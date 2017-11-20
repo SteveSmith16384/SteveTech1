@@ -14,7 +14,7 @@ public class TestGameServer extends ServerMain {
 		try {
 			ServerMain app = new TestGameServer();
 			app.setPauseOnLostFocus(false);
-			if (Settings.HEADLESS_SERVER) {
+			if (!Settings.STAND_ALONE_SERVER) {
 				app.start(JmeContext.Type.Headless);
 			} else {
 				app.start();				

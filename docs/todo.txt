@@ -52,7 +52,7 @@ Stop client if no comms for a while
 client/server encryption
 Make classes final
 Test with cheating client
-
+User enter name and ip address
 
 
 CLIENT

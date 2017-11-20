@@ -32,7 +32,7 @@ public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, M
 	public SpiderMonkeyServer(IMessageServerListener _listener) throws IOException {
 		listener = _listener;
 		
-		myServer = Network.createServer(Settings.PORT);
+		myServer = Network.createServer(Settings.TCP_PORT);
 
 		Settings.registerMessages();
 

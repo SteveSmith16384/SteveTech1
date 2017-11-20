@@ -20,12 +20,15 @@ import com.scs.stetech1.netmessages.WelcomeClientMessage;
 
 public class Settings {
 
-	public static final boolean HEADLESS_SERVER = true;
+	public static final boolean STAND_ALONE_SERVER = true;
+	
 	public static final boolean DEBUG = true;
 	public static final boolean DEBUG_MSGS = true;
-	//public static final boolean VERBOSE = true;
 
-	public static final int PORT = 6143;
+	public static final String IP_ADDRESS = "localhost";
+	public static final int TCP_PORT = 6143;
+	public static final int UDP_PORT = 6144; // todo - make the same?
+	
 	public static final int SERVER_TICKRATE_MS = 20; // Source: 15ms
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 70; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 
 	public static final int CLIENT_RENDER_DELAY = SERVER_SEND_UPDATE_INTERVAL_MS*3; // How far in past the client should render the view.  Source: 50ms
