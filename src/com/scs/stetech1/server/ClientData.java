@@ -11,19 +11,22 @@ public class ClientData {
 
 	public enum Status { Connected, InGame };
 
-	public HostedConnection conn;
+	public Object networkObj;
+	public int id;
 	public AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	public String playerName;
 	public long latestInputTimestamp;
 	public ServerPlayersAvatar avatar;
-	public RemoteInput remoteInput = new RemoteInput();// For storing message that are translated into input
+	public RemoteInput remoteInput = new RemoteInput(); // For storing message that are translated into input
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
 	public byte side;
 	public Status clientStatus = Status.Connected;
 
-	public ClientData(HostedConnection _conn, Camera cam, InputManager _inputManager) {
-		conn = _conn;
+	public ClientData(int _id, Object _networkObj, Camera cam, InputManager _inputManager) {
+		id = _id;
+		networkObj = _networkObj;
+		//conn = _conn;
 	}
 
 
@@ -33,7 +36,7 @@ public class ClientData {
 
 
 	public int getPlayerID() {
-		return conn.getId();
+		return id;
 	}
 
 }

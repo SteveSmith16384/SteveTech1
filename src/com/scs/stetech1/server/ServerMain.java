@@ -13,11 +13,9 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.math.Vector3f;
-import com.jme3.network.ConnectionListener;
 import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
-import com.jme3.network.MessageListener;
 import com.jme3.network.Server;
 import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
@@ -40,6 +38,7 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
+import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.SpiderMonkeyServer;
 import com.scs.stetech1.shared.EntityTypes;
@@ -51,13 +50,13 @@ import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class ServerMain extends SimpleApplication implements IEntityController, PhysicsCollisionListener  {
+public abstract class ServerMain extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
 	private static AtomicInteger nextEntityID = new AtomicInteger();
 
-	private IMessageServer myServer;
+	public IMessageServer networkServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 	private HashMap<Integer, IEntity> entities = new HashMap<>(100); // EntityID::Entity
 
@@ -67,7 +66,6 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	public BulletAppState bulletAppState;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
-	private ExecutorService executor = Executors.newFixedThreadPool(20);
 	private LogWindow logWindow;
 	private IConsole console;
 
@@ -81,7 +79,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 	@Override
 	public void simpleInitApp() {
 		try {
-			myServer = new SpiderMonkeyServer();
+			networkServer = new SpiderMonkeyServer(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -103,7 +101,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 	public void simpleUpdate(float tpf_secs) { //this.rootNode.getChild(2).getWorldTranslation();
 		StringBuilder strDebug = new StringBuilder();
 
-		if (myServer.hasConnections()) { // this.rootNode
+		if (networkServer.getNumClients() > 0) { // this.rootNode
 
 			// Process all messsages
 			synchronized (unprocessedMessages) {
@@ -115,12 +113,12 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 						client.playerName = newPlayerMessage.name;
 						client.avatar = createPlayersAvatar(client);
 						// Send newplayerconf message
-						broadcast(client.conn, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
+						networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
 						sendEntityListToClient(client);
 						client.clientStatus = ClientData.Status.InGame;
 						
 						// Send them a ping to get ping time
-						broadcast(client.conn, new PingMessage(true));
+						this.networkServer.sendMessageToClient(client, new PingMessage(true));
 
 					} else if (message instanceof UnknownEntityMessage) {
 						UnknownEntityMessage uem = (UnknownEntityMessage) message;
@@ -131,7 +129,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 						this.sendNewEntity(client, e);
 
 					} else if (message instanceof PlayerLeftMessage) {
-						this.connectionRemoved(this.myServer, client.conn);
+						this.connectionRemoved(client.getPlayerID());
 
 					} else if (message instanceof PlayerInputMessage) { // Process these here so the inputs don't change values mid-thread
 						PlayerInputMessage pim = (PlayerInputMessage)message;
@@ -147,7 +145,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 			}
 
 			if (sendPingInt.hitInterval()) {
-				broadcast(new PingMessage(true));
+				this.networkServer.sendMessageToAll(new PingMessage(true));
 			}
 
 			synchronized (this.clients) {
@@ -192,7 +190,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 						}
 						if (sendUpdates) {
 							if (sc.hasMoved()) { // Don't send if not moved (unless Avatar)
-								broadcast(new EntityUpdateMessage(sc, false));
+								networkServer.sendMessageToAll(new EntityUpdateMessage(sc, false));
 								//Settings.p("Sending EntityUpdateMessage for " + sc);
 							}
 						}
@@ -215,17 +213,19 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 
 
 	@Override
-	public void messageReceived(HostedConnection source, Message message) {
+	public void messageReceived(int clientid, MyAbstractMessage message) {
+		if (Settings.DEBUG_MSGS) {
+			Settings.p("Rcvd " + message.getClass().getSimpleName());
+		}
+		
 		ClientData client = null;
 		synchronized (clients) {
-			client = clients.get(source.getId());
+			client = clients.get(clientid);
 		}
 
 		if (client == null) {
 			return;
 		}
-		//Settings.p("Rcvd " + message.getClass().getSimpleName());
-
 		MyAbstractMessage msg = (MyAbstractMessage)message;
 
 		if (message instanceof PingMessage) {
@@ -246,7 +246,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 			} else {
 				// Send it back to the client
 				pingMessage.responseSentTime = System.currentTimeMillis();
-				broadcast(client.conn, pingMessage);
+				this.networkServer.sendMessageToClient(client, pingMessage);
 			}
 
 		} else {
@@ -262,7 +262,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 
 	private ServerPlayersAvatar createPlayersAvatar(ClientData client) {
 		int id = getNextEntityID();
-		ServerPlayersAvatar avatar = new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, id);
+		ServerPlayersAvatar avatar = new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, id); // todo - make abstract
 		avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
 		return avatar;
@@ -275,7 +275,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 				this.sendNewEntity(client, e);
 			}
 			GeneralCommandMessage aes = new GeneralCommandMessage();
-			broadcast(client.conn, aes);
+			this.networkServer.sendMessageToClient(client, aes);
 		}
 	}
 
@@ -285,38 +285,27 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 			PhysicalEntity se = (PhysicalEntity)e;
 			NewEntityMessage nem = new NewEntityMessage(se);
 			nem.force = true;
-			broadcast(client.conn, nem);
+			this.networkServer.sendMessageToClient(client, nem);
 		}
 	}
 
 
-	/*@Override
-	public void handleError(Object obj, Throwable ex) {
-		Settings.p("Network error with " + obj + ": " + ex);
-		ex.printStackTrace();
-
-		// Remove connection
-		this.connectionRemoved(this.myServer, (HostedConnection)obj);
-
-	}*/
-
-
 	@Override
-	public void connectionAdded(Server arg0, HostedConnection conn) {
+	public void connectionAdded(int id, Object net) {
 		Settings.p("Client connected!");
+		ClientData client = new ClientData(id, net, this.getCamera(), this.getInputManager());
 		synchronized (clients) {
-			clients.put(conn.getId(), new ClientData(conn, this.getCamera(), this.getInputManager()));
+			clients.put(id, client);
 		}
-		broadcast(conn, new WelcomeClientMessage());
-
+		this.networkServer.sendMessageToClient(client, new WelcomeClientMessage());
 	}
 
 
 	@Override
-	public void connectionRemoved(Server arg0, HostedConnection source) {
+	public void connectionRemoved(int id) {
 		Settings.p("connectionRemoved()");
 		synchronized (clients) {
-			ClientData client = clients.get(source.getId());
+			ClientData client = clients.get(id);
 			if (client != null) { // For some reason, connectionRemoved() gets called multiple times
 				this.playerLeft(client);
 			}
@@ -354,7 +343,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 				PhysicalEntity se = (PhysicalEntity)e;
 				NewEntityMessage nem = new NewEntityMessage(se);
 				nem.force = true;
-				broadcast(nem);
+				this.networkServer.sendMessageToAll(nem);
 			}
 		}
 
@@ -368,7 +357,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 			synchronized (entities) {
 				this.entities.remove(id);
 			}
-			this.broadcast(new RemoveEntityMessage(id));
+			this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
@@ -436,49 +425,6 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 	}
 
 
-	public void broadcast(final MyAbstractMessage msg) {
-		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
-			myServer.broadcast(msg);
-		}
-		else {
-			Thread t = new Thread() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(Settings.ARTIFICIAL_COMMS_DELAY);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					myServer.broadcast(msg);
-				}
-			};
-			t.start();
-		}
-	}
-
-
-	private void broadcast(final HostedConnection conn, final MyAbstractMessage msg) {
-		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
-			myServer.broadcast(Filters.equalTo(conn), msg);
-		}
-		else {
-			Runnable t = new Runnable() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(Settings.ARTIFICIAL_COMMS_DELAY);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					myServer.broadcast(Filters.equalTo(conn), msg);
-				}
-			};
-			executor.execute(t);
-
-		}
-	}
-
-
 	private void rewindAllAvatars(long toTime) {
 		synchronized (this.clients) {
 			for (ClientData c : this.clients.values()) {
@@ -507,7 +453,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 				}
 			}
 		} else if (cmd.equals("quit")) {
-			this.myServer.close();
+			this.networkServer.close();
 			this.stop();
 		}
 	}

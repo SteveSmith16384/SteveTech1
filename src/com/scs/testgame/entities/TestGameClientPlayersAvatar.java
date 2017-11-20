@@ -16,11 +16,10 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class TestGameClientPlayersAvatar extends ClientPlayersAvatar {
 
-	// Player dimensions - todo - move these
-	private static final float PLAYER_HEIGHT = 0.7f;
+	/*private static final float PLAYER_HEIGHT = 0.7f;
 	private static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
-
+*/
 	public TestGameClientPlayersAvatar(GenericClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
 		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z);
 	}

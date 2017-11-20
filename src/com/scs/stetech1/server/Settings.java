@@ -22,6 +22,7 @@ public class Settings {
 
 	public static final boolean HEADLESS_SERVER = true;
 	public static final boolean DEBUG = true;
+	public static final boolean DEBUG_MSGS = true;
 	//public static final boolean VERBOSE = true;
 
 	public static final int PORT = 6143;

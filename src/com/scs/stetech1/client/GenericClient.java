@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.prefs.BackingStoreException;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
@@ -23,12 +20,6 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.network.Client;
-import com.jme3.network.ClientStateListener;
-import com.jme3.network.ErrorListener;
-import com.jme3.network.Message;
-import com.jme3.network.MessageListener;
-import com.jme3.network.Network;
 import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext.Type;
@@ -52,17 +43,19 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
+import com.scs.stetech1.networking.IMessageClient;
+import com.scs.stetech1.networking.IMessageClientListener;
+import com.scs.stetech1.networking.SpiderMonkeyClient;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
-import com.scs.testgame.TestGameEntityCreator;
 
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class GenericClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickListener, 
+public abstract class GenericClient extends SimpleApplication implements IEntityController, PhysicsCollisionListener, ActionListener, IMessageClientListener { // PhysicsTickListener, 
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -71,11 +64,12 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 
 	public static BitmapFont guiFont_small; // = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 	public static AppSettings settings;
-	private Client myClient;
+	private IMessageClient networkClient;
 	public BulletAppState bulletAppState;
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	public HUD hud;
 	public IInputDevice input;
+	
 	public ClientPlayersAvatar avatar;
 	public int playerID = -1;
 	public long playersAvatarID = -1;
@@ -89,7 +83,6 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
-	private ExecutorService executor = Executors.newFixedThreadPool(20);
 
 	@Override
 	public void simpleInitApp() {
@@ -130,24 +123,7 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 		}
 
 		try {
-			Settings.registerMessages();
-
-			myClient = Network.connectToServer("localhost", Settings.PORT);
-			myClient.addClientStateListener(this);
-			myClient.addErrorListener(this);
-
-			myClient.addMessageListener(this, PingMessage.class);
-			myClient.addMessageListener(this, WelcomeClientMessage.class);
-			myClient.addMessageListener(this, NewEntityMessage.class);
-			myClient.addMessageListener(this, EntityUpdateMessage.class);
-			myClient.addMessageListener(this, NewPlayerRequestMessage.class);
-			myClient.addMessageListener(this, GameSuccessfullyJoinedMessage.class);
-			myClient.addMessageListener(this, RemoveEntityMessage.class);
-			myClient.addMessageListener(this, GeneralCommandMessage.class);
-
-			myClient.start();
-
-			//send(new NewPlayerRequestMessage("Mark Gray", 1));
+			networkClient = new SpiderMonkeyClient(this);
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -186,7 +162,7 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 		try { //this.entities;
 			final long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 
-			if (myClient != null && myClient.isConnected()) {
+			if (networkClient != null && networkClient.isConnected()) {
 				// Process messages in JME thread
 				synchronized (unprocessedMessages) {
 					// Check we don't already know about it
@@ -229,7 +205,7 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 							} else {
 								Settings.p("Unknown entity ID: " + eum.entityID);
 								// Ask the server for entity details since we don't know about it.
-								send(new UnknownEntityMessage(eum.entityID));
+								networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
 							}
 
 						} else if (message instanceof RemoveEntityMessage) {
@@ -247,15 +223,15 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 				}
 
 				if (acceptByServer && sendPingInt.hitInterval()) {
-					send(new PingMessage(false));
+					networkClient.sendMessageToServer(new PingMessage(false));
 				}
 
 				if (gameStarted) {
 					if (this.avatar != null) {
 						// Send inputs
 						if (sendInputsInterval.hitInterval()) {
-							if (myClient.isConnected()) {
-								this.send(new PlayerInputMessage(this.input));
+							if (networkClient.isConnected()) {
+								this.networkClient.sendMessageToServer(new PlayerInputMessage(this.input));
 							}
 						}
 						storeAvatarPosition(serverTime);
@@ -263,9 +239,9 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 
 					long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 
-					if (this.avatar != null) {
+					/*if (this.avatar != null) {
 						//avatar.resetWalkDir(); // todo - do this in one place
-					}
+					}*/
 
 					// Loop through each entity and calc correct position				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
@@ -317,9 +293,11 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 
 
 	@Override
-	public void messageReceived(Client source, Message message) {
-		Settings.p("Rcvd " + message.getClass().getSimpleName());
-
+	public void messageReceived(MyAbstractMessage message) {
+		if (Settings.DEBUG_MSGS) {
+			Settings.p("Rcvd " + message.getClass().getSimpleName());
+		}
+		
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
 			if (!pingMessage.s2c) {
@@ -331,7 +309,7 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 
 			} else {
 				pingMessage.responseSentTime = System.currentTimeMillis();
-				send(message); // Send it straight back
+				networkClient.sendMessageToServer(message); // Send it straight back
 			}
 
 		} else if (message instanceof GameSuccessfullyJoinedMessage) {
@@ -378,34 +356,12 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 		} else if (message instanceof WelcomeClientMessage) {
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
 			acceptByServer = true; // Need to wait until we receive something from the server before we can send to them
-			send(new NewPlayerRequestMessage("Mark Gray", 1));
+			networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
 			
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 
-	}
-
-
-	@Override
-	public void clientConnected(Client arg0) {
-		Settings.p("Connected!");
-
-	}
-
-
-	@Override
-	public void clientDisconnected(Client arg0, DisconnectInfo arg1) {
-		Settings.p("clientDisconnected()");
-
-	}
-
-
-	@Override
-	public void handleError(Object obj, Throwable ex) {
-		Settings.p("Network error with " + obj + ": " + ex);
-		ex.printStackTrace();
-		quit();
 	}
 
 
@@ -483,15 +439,14 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 	private void quit() {
 		Settings.p("quit()");
 		if (playerID >= 0) {
-			this.send(new PlayerLeftMessage(this.playerID));
-			executor.shutdown();
-			try {
+			this.networkClient.sendMessageToServer(new PlayerLeftMessage(this.playerID));
+			/*try {
 				executor.awaitTermination(1, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}
+			}*/
 		}
-		this.myClient.close();
+		this.networkClient.close();
 		this.stop();
 
 	}
@@ -500,28 +455,6 @@ public abstract class GenericClient extends SimpleApplication implements ClientS
 	@Override
 	public boolean isServer() {
 		return false;
-	}
-
-
-	private void send(final Message msg) {
-		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
-			myClient.send(msg);
-		}
-		else {
-			Runnable t = new Runnable() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(Settings.ARTIFICIAL_COMMS_DELAY);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					myClient.send(msg);
-				}
-			};
-			executor.execute(t);
-
-		}
 	}
 
 

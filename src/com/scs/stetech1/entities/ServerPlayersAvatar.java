@@ -134,7 +134,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 		if (invuln) {
 			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
 		}
-		server.broadcast(new EntityUpdateMessage(this, true));
+		server.networkServer.sendMessageToAll(new EntityUpdateMessage(this, true));
 	}
 
 
