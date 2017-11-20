@@ -19,16 +19,8 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 	public HitscanRifle(IEntityController game, ICanShoot _shooter) {
 		super(game, "Hitscan Rifle", _shooter, 200, 500, 10);
 	}
+	
 
-	
-	/*@Override
-	public void process(ServerMain server, float interpol) {
-		// todo ! this.hitThisMoment = null;
-		super.process(server, interpol);
-		
-	}*/
-	
-	
 	@Override
 	public void launchBullet() {
 		if (game.isServer()) {
@@ -36,7 +28,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 			if (hitThisMoment != null) {
 				Settings.p(hitThisMoment + " shot!");
 				Vector3f pos = this.hitThisMoment.pos;//.getWorldTranslation();
-				new DebuggingSphere(game, ServerMain.getNextEntityID(), pos.x, pos.y, pos.z); 
+				new DebuggingSphere(game, ServerMain.getNextEntityID(), pos.x, pos.y, pos.z);
 				// todo
 				
 				this.hitThisMoment = null; // Clear it ready for next loop

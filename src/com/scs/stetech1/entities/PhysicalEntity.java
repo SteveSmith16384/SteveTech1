@@ -196,7 +196,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public void rewindPosition(long serverTimeToUse) {
+	public void rewindPositionTo(long serverTimeToUse) {
 		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse);
 		if (shooterEPD != null) {
 			this.originalPos.set(this.getWorldTranslation());
@@ -224,13 +224,5 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		this.setWorldTranslation(this.getWorldTranslation().add(offset));
 
 	}
-
-
-	/*@Override
-	public void process(GenericClient client, float tpf) {
-		// Override if required
-		// Do nothing
-	}*/
-
 
 }

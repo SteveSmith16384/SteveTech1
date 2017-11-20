@@ -2,14 +2,9 @@ package com.scs.stetech1.entities;
 
 import java.util.HashMap;
 
-import com.jme3.asset.TextureKey;
-import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
-import com.jme3.scene.shape.Box;
-import com.jme3.texture.Texture;
 import com.scs.stetech1.IAbility;
 import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
@@ -21,11 +16,11 @@ import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.weapons.HitscanRifle;
+import com.scs.stetech1.weapons.GrenadeLauncher;
 
 public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
 
-	// Player dimensions - todo - move these
+	// Player dimensions
 	public static final float PLAYER_HEIGHT = 0.7f;
 	public static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
@@ -77,7 +72,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		playerControl.getPhysicsRigidBody().setUserObject(this);
 
-		abilityGun = new HitscanRifle(game, this);
+		//abilityGun = new HitscanRifle(game, this);
+		abilityGun = new GrenadeLauncher(game, this);
 		/* 
 			this.abilityOther = new JetPac(this);// BoostFwd(this);//getRandomAbility(this);
 		}*/
@@ -89,30 +85,13 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	}
 
-
-	public static Spatial getPlayersModel(IEntityController game, int pid) {
-		Box box1 = new Box(PLAYER_RAD, PLAYER_HEIGHT/2, PLAYER_RAD);
-		Geometry playerGeometry = new Geometry("Player", box1);
-		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
-		key3.setGenerateMips(true);
-		Texture tex3 = game.getAssetManager().loadTexture(key3);
-		Material floor_mat = null;
-		if (Settings.LIGHTING) {
-			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			floor_mat.setTexture("DiffuseMap", tex3);
-		} else {
-			floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-			floor_mat.setTexture("ColorMap", tex3);
-		}
-		playerGeometry.setMaterial(floor_mat);
-		return playerGeometry;
-	}
-
+	
+	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
 	protected void serverAndClientProcess(ServerMain server, GenericClient client, float tpf) {
-		if (game.isServer()) { // Client does it before adjusting
+		//if (game.isServer()) { // Client does it before adjusting
 			this.resetWalkDir(); // todo - do this in one place
-		}
+		//}
 
 		abilityGun.process(server, tpf);
 		if (this.abilityOther != null) {

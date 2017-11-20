@@ -13,13 +13,13 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility {
 		super(game, "Laser Rifle", shooter, .2f, 2, 10);
 	}
 
-	
+
 	@Override
 	public void launchBullet() {
 		if (game.isServer()) {
-		//todo - new LaserBullet(game, shooter);
+			//todo - new LaserBullet(game, shooter);
 		}		
 	}
-	
+
 
 }

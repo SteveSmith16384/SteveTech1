@@ -23,7 +23,7 @@ import com.scs.stetech1.shared.IEntityController;
 public class Grenade extends PhysicalEntity implements IBullet {
 
 	public ICanShoot shooter;
-	private float timeLeft = 2f;
+	private float timeLeft = 20f; // todo - check
 
 	/*
 	 * Constructor for server
@@ -32,6 +32,9 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		this(_game, id, new Vector3f(_shooter.getWorldTranslation().add(_shooter.getBulletStartOffset())));
 
 		this.shooter = _shooter;
+
+		// Accelerate the physical ball to shoot it.
+		//rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(15));
 
 	}
 
@@ -65,14 +68,12 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
 		ball_geo.setLocalTranslation(origin);
 		rigidBodyControl = new RigidBodyControl(.2f);
+		ball_geo.addControl(rigidBodyControl);
+		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
-			// Accelerate the physical ball to shoot it.
-			rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(15));
 		} else {
 			rigidBodyControl.setKinematic(true);
 		}
-		ball_geo.addControl(rigidBodyControl);
-		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);
@@ -83,12 +84,13 @@ public class Grenade extends PhysicalEntity implements IBullet {
 
 	@Override
 	public void process(ServerMain server, float tpf) {
-		this.timeLeft -= tpf;
-		if (this.timeLeft < 0) {
-			//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
-			this.remove();
+		if (game.isServer()) {
+			this.timeLeft -= tpf;
+			if (this.timeLeft < 0) {
+				//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
+				this.remove();
+			}
 		}
-
 	}
 
 

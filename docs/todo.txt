@@ -5,15 +5,17 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dyn
 
 
 URGENT
+Option to turn off client sync
+Create TestGamePlayersAvatar
 	When shooting, player is moving
 	Hitscan weapons
 Crates not dropping until knocked
 Player not dropping by grav after warp until movement received - test using SimpleFPS?
 Grenades
+Confirm source timings
 
 
 TODO
-Confirm source timings
 	Warp player if position > 3?
 	Client statuses - connected, in game
 Don't use broadcast()

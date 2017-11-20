@@ -1,7 +1,6 @@
 package com.scs.testgame;
 
 import com.jme3.math.Vector3f;
-import com.scs.stetech1.client.GenericClient;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.DebuggingSphere;
@@ -9,22 +8,26 @@ import com.scs.stetech1.entities.EnemyPlayersAvatar;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
+import com.scs.testgame.entities.TestGameClientPlayersAvatar;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
+import com.scs.testgame.entities.TestGameEnemyPlayersAvatar;
 import com.scs.testgame.entities.Wall;
 
 /*
  * This is only used client-side.
  */
-public class EntityCreator {
+public class TestGameEntityCreator {
 
-	private EntityCreator() {
-
+	private TestGameClient game;
+	
+	public TestGameEntityCreator(TestGameClient _game) {
+		game =_game;
 	}
 
 
-	public static IEntity createEntity(GenericClient game, NewEntityMessage msg) {
+	public IEntity createEntity(NewEntityMessage msg) {
 		Settings.p("Creating " + EntityTypes.getName(msg.type));
 		int id = msg.entityID;// (Integer)msg.data.get("id");
 
@@ -33,12 +36,12 @@ public class EntityCreator {
 		{
 			int playerID = (int)msg.data.get("playerID");
 			if (playerID == game.playerID) {
-				ClientPlayersAvatar avatar = new ClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, id, msg.pos.x, msg.pos.y, msg.pos.z);
+				ClientPlayersAvatar avatar = new TestGameClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, id, msg.pos.x, msg.pos.y, msg.pos.z);
 				game.avatar = avatar;
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				EnemyPlayersAvatar avatar = new EnemyPlayersAvatar(game, playerID, id, msg.pos.x, msg.pos.y, msg.pos.z);
+				EnemyPlayersAvatar avatar = new TestGameEnemyPlayersAvatar(game, playerID, id, msg.pos.x, msg.pos.y, msg.pos.z);
 				return avatar;
 			}
 		}
@@ -80,7 +83,7 @@ public class EntityCreator {
 
 		case EntityTypes.GRENADE:
 		{
-			String tex = (String)msg.data.get("tex");
+			//String tex = (String)msg.data.get("tex");
 			//float rot = (Float)msg.data.get("rot");
 			Grenade grenade = new Grenade(game, id, new Vector3f(msg.pos.x, msg.pos.y, msg.pos.z));
 			return grenade;

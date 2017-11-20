@@ -57,13 +57,12 @@ import com.scs.stetech1.shared.AverageNumberCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
-import com.scs.testgame.EntityCreator;
+import com.scs.testgame.TestGameEntityCreator;
 
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public class GenericClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, 
-IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickListener, 
+public abstract class GenericClient extends SimpleApplication implements ClientStateListener, ErrorListener<Object>, MessageListener<Client>, IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickListener, 
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -91,58 +90,6 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	private ExecutorService executor = Executors.newFixedThreadPool(20);
-
-	public static void main(String[] args) {
-		try {
-			settings = new AppSettings(true);
-			try {
-				settings.load(Settings.NAME);
-			} catch (BackingStoreException e) {
-				e.printStackTrace();
-			}
-			settings.setUseJoysticks(true);
-			settings.setAudioRenderer(null); // Avoid error with no soundcard
-			settings.setTitle(Settings.NAME);// + " (v" + Settings.VERSION + ")");
-			if (Settings.SHOW_LOGO) {
-				//settings.setSettingsDialogImage("/game_logo.png");
-			} else {
-				settings.setSettingsDialogImage(null);
-			}
-
-			GenericClient app = new GenericClient();
-			//instance = app;
-			app.setSettings(settings);
-			app.setPauseOnLostFocus(false); // Needs to always be in sync with server!
-
-			/*File video, audio;
-			if (Settings.RECORD_VID) {
-				//app.setTimer(new IsoTimer(60));
-				video = File.createTempFile("JME-water-video", ".avi");
-				audio = File.createTempFile("JME-water-audio", ".wav");
-				Capture.captureVideo(app, video);
-				Capture.captureAudio(app, audio);
-			}*/
-
-			app.start();
-
-			/*if (Settings.RECORD_VID) {
-				System.out.println("Video saved at " + video.getCanonicalPath());
-				System.out.println("Audio saved at " + audio.getCanonicalPath());
-			}*/
-
-			try {
-				settings.save(Settings.NAME);
-			} catch (BackingStoreException e) {
-				e.printStackTrace();
-			}
-
-		} catch (Exception e) {
-			Settings.p("Error: " + e);
-			e.printStackTrace();
-		}
-
-	}
-
 
 	@Override
 	public void simpleInitApp() {
@@ -183,9 +130,9 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 		}
 
 		try {
-			//Settings.registerMessages();
+			Settings.registerMessages();
 
-			myClient = Network.connectToServer("localhost", Settings.PORT); // todo - say if can't connect
+			myClient = Network.connectToServer("localhost", Settings.PORT);
 			myClient.addClientStateListener(this);
 			myClient.addErrorListener(this);
 
@@ -202,7 +149,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 
 			//send(new NewPlayerRequestMessage("Mark Gray", 1));
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
 		}
 
 		loopTimer.start();
@@ -248,7 +195,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 						if (message instanceof NewEntityMessage) {
 							NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 							if (!this.entities.containsKey(newEntityMessage.entityID)) {
-								IEntity e = EntityCreator.createEntity(this, newEntityMessage);
+								IEntity e = createEntity(newEntityMessage);
 								this.addEntity(e);
 							} else {
 								// We already know about it
@@ -317,7 +264,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 					long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 
 					if (this.avatar != null) {
-						avatar.resetWalkDir(); // todo - do this in one place
+						//avatar.resetWalkDir(); // todo - do this in one place
 					}
 
 					// Loop through each entity and calc correct position				
@@ -355,6 +302,9 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 	}
 
 
+	protected abstract IEntity createEntity(NewEntityMessage msg);
+	
+	
 	private void storeAvatarPosition(long serverTime) {
 		// Store our position
 		EntityPositionData epd = new EntityPositionData();
@@ -368,7 +318,7 @@ IEntityController, PhysicsCollisionListener, ActionListener { // PhysicsTickList
 
 	@Override
 	public void messageReceived(Client source, Message message) {
-		//Settings.p("Rcvd " + message.getClass().getSimpleName());
+		Settings.p("Rcvd " + message.getClass().getSimpleName());
 
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;

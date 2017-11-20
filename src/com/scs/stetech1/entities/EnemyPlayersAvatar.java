@@ -12,7 +12,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhysics, ICollideable, IProcessByClient {// Need ICollideable so lasers don't bounce off it
+public abstract class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhysics, ICollideable, IProcessByClient {// Need ICollideable so lasers don't bounce off it
 
 	//private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
 
@@ -25,7 +25,7 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 			creationData.put("playerID", eid);
 		}*/
 
-		Spatial geometry = AbstractPlayersAvatar.getPlayersModel(game, pid);
+		Spatial geometry = getPlayersModel(game, pid);
 		/*Box box1 = new Box(2, 2, 2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Crate", box1);
@@ -89,6 +89,9 @@ public class EnemyPlayersAvatar extends PhysicalEntity implements IAffectedByPhy
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
 	}
+
+
+	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
 
 	@Override

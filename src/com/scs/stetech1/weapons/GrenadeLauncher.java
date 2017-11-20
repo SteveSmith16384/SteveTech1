@@ -8,8 +8,10 @@ import com.scs.testgame.entities.Grenade;
 
 public class GrenadeLauncher extends AbstractMagazineGun implements IAbility {
 
+	private static final int MAG_SIZE = 1000; // todo - check
+	
 	public GrenadeLauncher(IEntityController game, ICanShoot shooter) {
-		super(game, "GrenadeLauncher", shooter, 1000, 2000, 6);
+		super(game, "GrenadeLauncher", shooter, 1, 3, MAG_SIZE);
 	}
 	
 

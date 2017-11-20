@@ -18,7 +18,7 @@ import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.ServerMain;
 import com.scs.stetech1.server.Settings;
 
-public class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD, IProcessByClient {
+public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD, IProcessByClient {
 
 	public HUD hud;
 	public Camera cam;

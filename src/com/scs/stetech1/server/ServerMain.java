@@ -18,17 +18,14 @@ import com.jme3.network.Filters;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
-import com.jme3.network.Network;
 import com.jme3.network.Server;
 import com.jme3.scene.Spatial;
-import com.jme3.system.JmeContext;
 import com.jme3.system.JmeContext.Type;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.entities.AbstractPlayersAvatar;
-import com.scs.stetech1.entities.DebuggingSphere;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
@@ -43,25 +40,26 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
+import com.scs.stetech1.networking.IMessageServer;
+import com.scs.stetech1.networking.SpiderMonkeyServer;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.Floor;
-import com.scs.testgame.entities.Wall;
+import com.scs.testgame.entities.TestGameServerPlayersAvatar;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public class ServerMain extends SimpleApplication implements IEntityController, ConnectionListener, MessageListener<HostedConnection>, PhysicsCollisionListener  {
+public abstract class ServerMain extends SimpleApplication implements IEntityController, PhysicsCollisionListener  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
 	private static AtomicInteger nextEntityID = new AtomicInteger();
 
-	private Server myServer;
+	private IMessageServer myServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
-	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // EntityID::Entity
+	private HashMap<Integer, IEntity> entities = new HashMap<>(100); // EntityID::Entity
 
 	public static GameProperties properties;
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
@@ -73,21 +71,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	private LogWindow logWindow;
 	private IConsole console;
 
-	public static void main(String[] args) {
-		try {
-			ServerMain app = new ServerMain();
-			app.setPauseOnLostFocus(false);
-			if (Settings.HEADLESS_SERVER) {
-				app.start(JmeContext.Type.Headless);
-			} else {
-				app.start();				
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
 	public ServerMain() throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
@@ -98,25 +81,11 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	@Override
 	public void simpleInitApp() {
 		try {
-			myServer = Network.createServer(Settings.PORT);
+			myServer = new SpiderMonkeyServer();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		Settings.registerMessages();
-
-		myServer.start();
-		myServer.addConnectionListener(this);
-
-		myServer.addMessageListener(this, PingMessage.class);
-		myServer.addMessageListener(this, NewPlayerRequestMessage.class);
-		myServer.addMessageListener(this, GameSuccessfullyJoinedMessage.class);
-		myServer.addMessageListener(this, PlayerInputMessage.class);
-		myServer.addMessageListener(this, UnknownEntityMessage.class);
-		myServer.addMessageListener(this, NewEntityMessage.class);
-		myServer.addMessageListener(this, EntityUpdateMessage.class);
-		myServer.addMessageListener(this, PlayerLeftMessage.class);
-
 		// Set up Physics
 		bulletAppState = new BulletAppState();
 		getStateManager().attach(bulletAppState);
@@ -126,6 +95,9 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 		loopTimer.start();
 	}
 
+	
+	protected abstract void createGame();
+	
 
 	@Override
 	public void simpleUpdate(float tpf_secs) { //this.rootNode.getChild(2).getWorldTranslation();
@@ -152,7 +124,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 					} else if (message instanceof UnknownEntityMessage) {
 						UnknownEntityMessage uem = (UnknownEntityMessage) message;
-						IEntity e = this.entities.get(uem.entityID);
+						IEntity e = null;
+						synchronized (entities) {
+							e = this.entities.get(uem.entityID);
+						}
 						this.sendNewEntity(client, e);
 
 					} else if (message instanceof PlayerLeftMessage) {
@@ -287,7 +262,7 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 	private ServerPlayersAvatar createPlayersAvatar(ClientData client) {
 		int id = getNextEntityID();
-		ServerPlayersAvatar avatar = new ServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, id);
+		ServerPlayersAvatar avatar = new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, id);
 		avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
 		return avatar;
@@ -406,15 +381,6 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 
 
 
-	private void createGame() { // todo - make abstract
-		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
-		//new DebuggingSphere(this, getNextEntityID(), 0, 0, 0);
-		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
-		//new Crate(this, getNextEntityID(), 8, 5, 8, 1, 1, 1f, "Textures/crate.png", 65);
-		new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
-	}
-
-
 	@Override
 	public void collision(PhysicsCollisionEvent event) {
 		String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
@@ -513,10 +479,10 @@ public class ServerMain extends SimpleApplication implements IEntityController, 
 	}
 
 
-	private void rewindAllAvatars(long time) {
+	private void rewindAllAvatars(long toTime) {
 		synchronized (this.clients) {
 			for (ClientData c : this.clients.values()) {
-				c.avatar.rewindPosition(time);
+				c.avatar.rewindPositionTo(toTime);
 			}
 		}
 	}
