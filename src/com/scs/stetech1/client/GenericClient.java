@@ -84,6 +84,11 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
+	protected GenericClient() {
+		super();
+	}
+	
+	
 	@Override
 	public void simpleInitApp() {
 		// Clear existing mappings
@@ -123,7 +128,7 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 		}
 
 		try {
-			networkClient = new SpiderMonkeyClient(this);
+			networkClient = new SpiderMonkeyClient(this); // todo -move to constructor
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}

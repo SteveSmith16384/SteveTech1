@@ -49,7 +49,7 @@ import com.scs.testgame.entities.TestGameServerPlayersAvatar;
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
-
+// todo - rename
 public abstract class ServerMain extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
@@ -79,7 +79,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 	@Override
 	public void simpleInitApp() {
 		try {
-			networkServer = new SpiderMonkeyServer(this);
+			networkServer = new SpiderMonkeyServer(this); // todo - move to constructor
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(-1);

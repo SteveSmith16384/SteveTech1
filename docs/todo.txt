@@ -5,6 +5,10 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dyn
 
 
 URGENT
+Test network code
+Remove physics!
+Copy Xenogeddon
+Game: Space Hulk, aliens can walk through sonme walls, and respawn immed.
 Change networking code
 Try and run server as stand-alone
 Grenades
