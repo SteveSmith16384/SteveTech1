@@ -11,9 +11,9 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -60,20 +60,21 @@ public class Fence extends PhysicalEntity {
 		main_node.rotate(0, rads, 0);
 		main_node.setLocalTranslation(x+(WIDTH/2), height/2, z+0.5f);
 
+		if (Settings.USE_PHYSICS) {
 		rigidBodyControl = new RigidBodyControl(0f);
 		main_node.addControl(rigidBodyControl);
-
 		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+		rigidBodyControl.setUserObject(this);
+		}
 		game.getRootNode().attachChild(this.main_node);
 
 		geometry.setUserData(Settings.ENTITY, this);
-		rigidBodyControl.setUserObject(this);
 
 	}
 
 
 	@Override
-	public void process(ServerMain server, float tpf) {
+	public void process(AbstractGameServer server, float tpf) {
 		// Do nothing
 	}
 

@@ -3,16 +3,16 @@ package com.scs.testgame;
 import java.io.IOException;
 
 import com.jme3.system.JmeContext;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Wall;
 
-public class TestGameServer extends ServerMain {
+public class TestGameServer extends AbstractGameServer {
 	
 	public static void main(String[] args) {
 		try {
-			ServerMain app = new TestGameServer();
+			AbstractGameServer app = new TestGameServer();
 			app.setPauseOnLostFocus(false);
 			if (!Settings.STAND_ALONE_SERVER) {
 				app.start(JmeContext.Type.Headless);

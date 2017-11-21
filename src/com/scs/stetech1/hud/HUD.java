@@ -14,7 +14,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import com.jme3.ui.Picture;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.gui.TextArea;
 
@@ -33,10 +33,10 @@ public class HUD extends Node implements IProcessByClient {
 	private ColorRGBA dam_box_col = new ColorRGBA(1, 0, 0, 0.0f);
 	private boolean process_damage_box;
 	private List<Picture> targetting_reticules = new ArrayList<>();
-	private GenericClient game;
+	private AbstractGameClient game;
 	private BitmapText abilityGun, abilityOther, score, playerID;
 
-	public HUD(GenericClient _game, float xBL, float yBL, float w, float h, BitmapFont font_small, Camera _cam) {
+	public HUD(AbstractGameClient _game, float xBL, float yBL, float w, float h, BitmapFont font_small, Camera _cam) {
 		super("HUD");
 
 		game = _game;
@@ -126,7 +126,7 @@ public class HUD extends Node implements IProcessByClient {
 
 
 	@Override
-	public void process(GenericClient client, float tpf) {
+	public void process(AbstractGameClient client, float tpf) {
 		if (process_damage_box) {
 			this.dam_box_col.a -= (tpf/2);
 			if (dam_box_col.a <= 0) {

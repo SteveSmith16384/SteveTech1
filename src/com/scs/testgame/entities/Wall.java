@@ -13,7 +13,7 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -60,23 +60,25 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		}
 		geometry.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2)); // Never change position of mainNode (unless the whole object is moving)
 
-		rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
-		main_node.addControl(rigidBodyControl);
-		
-		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+		if (Settings.USE_PHYSICS) {
+			rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
+			main_node.addControl(rigidBodyControl);
+
+			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+			rigidBodyControl.setUserObject(this);
+		}
 		game.getRootNode().attachChild(this.main_node);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);
-		rigidBodyControl.setUserObject(this);
 
 		game.addEntity(this);
-		
+
 	}
 
 
 	@Override
-	public void process(ServerMain server, float tpf) {
+	public void process(AbstractGameServer server, float tpf) {
 		//Settings.p("Pos: " + this.getLocation());
 	}
 

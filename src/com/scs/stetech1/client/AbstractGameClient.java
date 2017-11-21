@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
@@ -45,7 +44,7 @@ import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.networking.IMessageClient;
 import com.scs.stetech1.networking.IMessageClientListener;
-import com.scs.stetech1.networking.SpiderMonkeyClient;
+import com.scs.stetech1.networking.KryonetClient;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
@@ -55,13 +54,14 @@ import com.scs.stetech1.shared.PositionCalculator;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class GenericClient extends SimpleApplication implements IEntityController, PhysicsCollisionListener, ActionListener, IMessageClientListener { // PhysicsTickListener, 
+public abstract class AbstractGameClient extends SimpleApplication implements IEntityController, PhysicsCollisionListener, ActionListener, IMessageClientListener { // PhysicsTickListener, 
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
 
-	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
+	public enum Status { NotConnected, Connected, RcvdWelcome, GameStarted };
 
+	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	public static BitmapFont guiFont_small; // = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 	public static AppSettings settings;
 	private IMessageClient networkClient;
@@ -69,26 +69,25 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	public HUD hud;
 	public IInputDevice input;
-	
+
 	public ClientPlayersAvatar avatar;
 	public int playerID = -1;
 	public long playersAvatarID = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
-	public boolean gameStarted = false;
-	private boolean acceptByServer = false;
+	public Status status = Status.NotConnected;
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
-	protected GenericClient() {
+	protected AbstractGameClient() {
 		super();
 	}
-	
-	
+
+
 	@Override
 	public void simpleInitApp() {
 		// Clear existing mappings
@@ -101,12 +100,14 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 		guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 
 		// Set up Physics
-		bulletAppState = new BulletAppState();
-		getStateManager().attach(bulletAppState);
-		bulletAppState.getPhysicsSpace().addCollisionListener(this);
-		//bulletAppState.getPhysicsSpace().addTickListener(this);
-		//bulletAppState.getPhysicsSpace().enableDebug(this.getAssetManager());
-		bulletAppState.setEnabled(false); // Wait until all entities received
+		if (Settings.USE_PHYSICS) {
+			bulletAppState = new BulletAppState();
+			getStateManager().attach(bulletAppState);
+			bulletAppState.getPhysicsSpace().addCollisionListener(this);
+			//bulletAppState.getPhysicsSpace().addTickListener(this);
+			//bulletAppState.getPhysicsSpace().enableDebug(this.getAssetManager());
+			bulletAppState.setEnabled(false); // Wait until all entities received
+		}
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Settings.CAM_DIST);
 
@@ -128,7 +129,7 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 		}
 
 		try {
-			networkClient = new SpiderMonkeyClient(this); // todo -move to constructor
+			networkClient = new KryonetClient(this);// SpiderMonkeyClient(this);
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -218,8 +219,10 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 							this.removeEntity(rem.entityID);
 
 						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
-							this.bulletAppState.setEnabled(true); // Go!
-							gameStarted = true;
+							if (Settings.USE_PHYSICS) {
+								this.bulletAppState.setEnabled(true); // Go!
+							}
+							status = Status.GameStarted;
 
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
@@ -227,11 +230,11 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 					}
 				}
 
-				if (acceptByServer && sendPingInt.hitInterval()) {
+				if (status != Status.NotConnected && sendPingInt.hitInterval()) {
 					networkClient.sendMessageToServer(new PingMessage(false));
 				}
 
-				if (gameStarted) {
+				if (status == Status.GameStarted) {
 					if (this.avatar != null) {
 						// Send inputs
 						if (sendInputsInterval.hitInterval()) {
@@ -245,7 +248,7 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 					long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 
 					/*if (this.avatar != null) {
-						//avatar.resetWalkDir(); // todo - do this in one place
+						//avatar.resetWalkDir();
 					}*/
 
 					// Loop through each entity and calc correct position				
@@ -254,10 +257,10 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
-							if (pe instanceof AbstractPlayersAvatar) {
+							/*if (pe instanceof AbstractPlayersAvatar) {
 								AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
 								strListEnts.append("Walkdir : " + av.playerControl.getWalkDirection() + "\n");
-							}
+							}*/
 							if (pe.canMove()) { // Only bother with things that can move
 								pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
 							}
@@ -284,8 +287,8 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 
 
 	protected abstract IEntity createEntity(NewEntityMessage msg);
-	
-	
+
+
 	private void storeAvatarPosition(long serverTime) {
 		// Store our position
 		EntityPositionData epd = new EntityPositionData();
@@ -302,7 +305,7 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 		if (Settings.DEBUG_MSGS) {
 			Settings.p("Rcvd " + message.getClass().getSimpleName());
 		}
-		
+
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
 			if (!pingMessage.s2c) {
@@ -360,11 +363,17 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 			}
 		} else if (message instanceof WelcomeClientMessage) {
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
-			acceptByServer = true; // Need to wait until we receive something from the server before we can send to them
+			status = Status.RcvdWelcome; // Need to wait until we receive something from the server before we can send to them
 			networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
-			
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
+		}
+
+		if (Settings.DEBUG_MSGS) {
+			if (status == Status.Connected) {
+				Settings.p("Still not received Welcome message");
+			}
 		}
 
 	}
@@ -463,23 +472,23 @@ public abstract class GenericClient extends SimpleApplication implements IEntity
 	}
 
 
-	/*	@Override
-	public void physicsTick(PhysicsSpace arg0, float arg1) {
-
-	}
-
-
-	@Override
-	public void prePhysicsTick(PhysicsSpace arg0, float arg1) {
-		if (avatar != null) {
-			//this.avatar.resetWalkDir();
-		}
-	}
-
-	 */
 	@Override
 	public Type getJmeContext() {
 		return getContext().getType();
+	}
+
+
+	@Override
+	public void connected() {
+		Settings.p("Connected!");
+
+	}
+
+
+	@Override
+	public void disconnected() {
+		Settings.p("Disconnected!");
+
 	}
 
 }

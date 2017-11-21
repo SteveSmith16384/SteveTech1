@@ -8,7 +8,7 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.server.Settings;
@@ -48,7 +48,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	// This is overridden by Avatars to take into account local position
-	public void calcPosition(GenericClient mainApp, long serverTimeToUse) {
+	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
 		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse);
 		if (epd != null) {
 			this.setWorldTranslation(epd.position);
@@ -208,7 +208,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			return;
 		}
 		//return false;
-		throw new RuntimeException("Todo");
+		throw new RuntimeException("Unable to rewind position");
 	}
 
 

@@ -7,7 +7,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
@@ -20,7 +20,7 @@ public class TestGameClientPlayersAvatar extends ClientPlayersAvatar {
 	private static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
 */
-	public TestGameClientPlayersAvatar(GenericClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
+	public TestGameClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
 		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z);
 	}
 

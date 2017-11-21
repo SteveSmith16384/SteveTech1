@@ -7,9 +7,9 @@ import ssmith.swing.Console;
 
 public class ServerConsole extends Console implements IConsole, KeyListener {
 
-	private ServerMain server;
+	private AbstractGameServer server;
 
-	public ServerConsole(ServerMain _server) {
+	public ServerConsole(AbstractGameServer _server) {
 		server = _server;
 
 		super.input.addKeyListener(this);

@@ -9,7 +9,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -60,7 +60,7 @@ public class DebuggingSphere extends PhysicalEntity {
 
 
 	@Override
-	public void process(ServerMain server, float tpf) {
+	public void process(AbstractGameServer server, float tpf) {
 
 	}
 

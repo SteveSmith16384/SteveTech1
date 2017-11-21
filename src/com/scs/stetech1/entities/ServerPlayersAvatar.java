@@ -7,24 +7,24 @@ import com.scs.stetech1.components.IDamagable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
 public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamagable, ICollideable {
 
-	private ServerMain server;
-	
+	private AbstractGameServer server;
+
 	public ServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
 		super(_module, _playerID, _input, eid);
-		
-		server = (ServerMain)_module;
+
+		server = (AbstractGameServer)_module;
 	}
 
 
 	@Override
-	public void process(ServerMain server, float tpf) {
+	public void process(AbstractGameServer server, float tpf) {
 		if (this.restarting) {
 			restartTime -= tpf;
 			if (this.restartTime <= 0) {
@@ -49,7 +49,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 		}
 
 		super.serverAndClientProcess(server, null, tpf);
-		 // Store the position for use when rewinding.
+		// Store the position for use when rewinding.
 		EntityPositionData epd = new EntityPositionData();
 		epd.serverTimestamp = System.currentTimeMillis();
 		epd.rotation = this.getWorldRotation();
@@ -88,7 +88,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 		Settings.p("Player died: " + reason);
 		this.restarting = true;
 		try {
-			this.restartTime = ServerMain.properties.GetRestartTimeSecs();
+			this.restartTime = AbstractGameServer.properties.GetRestartTimeSecs();
 		} catch (NullPointerException ex){
 			ex.printStackTrace();
 		}
@@ -97,7 +97,11 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 		// Move us below the map
 		Vector3f pos = this.getMainNode().getWorldTranslation().clone();//.floor_phy.getPhysicsLocation().clone();
 		pos.y = -10;//-SimpleCity.FLOOR_THICKNESS * 2;
-		playerControl.warp(pos);
+		if (Settings.USE_PHYSICS) {
+			playerControl.warp(pos);
+		} else {
+			super.setWorldTranslation(pos);
+		}
 	}
 
 
@@ -128,9 +132,13 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 
 	public void moveToStartPostion(boolean invuln) {
 		//Point p = module.mapData.getPlayerStartPos(id);
-		Vector3f warpPos = new Vector3f(3f, 15f, 3f + this.playerID);
-		Settings.p("Scheduling player to start position: " + warpPos);
-		this.playerControl.warp(warpPos);
+		Vector3f pos = new Vector3f(3f, 15f, 3f + this.playerID);
+		Settings.p("Scheduling player to start position: " + pos);
+		if (Settings.USE_PHYSICS) {
+			this.playerControl.warp(pos);
+		} else {
+			super.setWorldTranslation(pos);
+		}
 		if (invuln) {
 			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
 		}

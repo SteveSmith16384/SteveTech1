@@ -2,7 +2,7 @@ package com.scs.stetech1.hud;
 
 import com.jme3.scene.Node;
 import com.jme3.ui.Picture;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.shared.IEntityController;
 
@@ -29,7 +29,7 @@ public class AbstractHUDImage extends Picture implements IProcessByClient {
 
 
 	@Override
-	public void process(GenericClient client, float tpf) {
+	public void process(AbstractGameClient client, float tpf) {
 		if (timeLeft > 0) {
 			this.timeLeft -= tpf;
 			if (this.timeLeft <= 0) {

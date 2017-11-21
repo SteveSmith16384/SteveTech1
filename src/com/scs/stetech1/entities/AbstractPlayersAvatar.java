@@ -6,13 +6,14 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.scs.stetech1.IAbility;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.jme.MyBetterCharacterControl;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.jme.MySimpleCharacterControl;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -34,7 +35,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camLeft = new Vector3f();
 
 	//public MyBetterCharacterControl2 playerControl;
-	public MyBetterCharacterControl playerControl;
+	public MyBetterCharacterControl playerControl; // Unused if physics turned off
+	public MySimpleCharacterControl simplePlayerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
@@ -62,15 +64,19 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		this.getMainNode().attachChild(playerGeometry);
 
-		playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
-		playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
-		this.getMainNode().addControl(playerControl);
-
-		game.getBulletAppState().getPhysicsSpace().add(playerControl);
+		if (Settings.USE_PHYSICS) {
+			playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
+			playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
+			this.getMainNode().addControl(playerControl);
+			game.getBulletAppState().getPhysicsSpace().add(playerControl);
+			playerControl.getPhysicsRigidBody().setUserObject(this);
+		} else {
+			simplePlayerControl = new MySimpleCharacterControl(this);//PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
+			
+		}
 		game.getRootNode().attachChild(this.main_node);
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
-		playerControl.getPhysicsRigidBody().setUserObject(this);
 
 		//abilityGun = new HitscanRifle(game, this);
 		abilityGun = new GrenadeLauncher(game, this);
@@ -85,12 +91,12 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	}
 
-	
+
 	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
-	protected void serverAndClientProcess(ServerMain server, GenericClient client, float tpf) {
+	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf) {
 		//if (game.isServer()) { // Client does it before adjusting
-			this.resetWalkDir(); // todo - do this in one place
+		this.resetWalkDir();
 		//}
 
 		abilityGun.process(server, tpf);
@@ -125,8 +131,11 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			shoot();
 		}
 
-		playerControl.setWalkDirection(walkDirection.clone()); // todo - need to clone?
-
+		if (Settings.USE_PHYSICS) {
+			playerControl.setWalkDirection(walkDirection.clone());
+		} else {
+			this.simplePlayerControl.setWalkDirection(walkDirection);
+		}
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 			if (abilityOther != null) {
@@ -137,7 +146,11 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 
 	public boolean isOnGround() {
-		return playerControl.isOnGround();
+		if (Settings.USE_PHYSICS) {
+			return playerControl.isOnGround();
+		} else {
+			return this.simplePlayerControl.isOnGround();
+		}
 	}
 
 
@@ -162,7 +175,11 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public void jump() {
 		//if (this.game.isServer()) { // Let the server do it, and the client copy
 		Settings.p("Jumping!");
+		if (Settings.USE_PHYSICS) {
 		this.playerControl.jump();
+		} else {
+			// todo
+		}
 		//}
 	}
 
@@ -187,7 +204,11 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	@Override
 	public Vector3f getWorldTranslation() {
 		// Need this override since main node is at 0,0,0 at the start
+		if (Settings.USE_PHYSICS) {
 		return this.playerControl.getPhysicsRigidBody().getPhysicsLocation();
+		} else {
+			return super.getWorldTranslation();
+		}
 		//return this.main_node.getWorldTranslation(); 000?
 		//return this.getMainNode().getLocalTranslation();
 	}
@@ -198,7 +219,12 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public void setWorldTranslation(Vector3f pos) {
 		//float dist = pos.distance(this.getWorldTranslation());
 		// We need to warp() players
-		this.playerControl.warp(pos);
+		if (Settings.USE_PHYSICS) {
+			this.playerControl.warp(pos);
+		} else {
+			//this.simplePlayerControl.warp(pos);
+			super.setWorldTranslation(pos);
+		}
 	}
 
 

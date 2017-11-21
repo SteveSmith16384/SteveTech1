@@ -3,6 +3,8 @@ package com.scs.stetech1.networking;
 import java.io.IOException;
 
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.server.Settings;
 
@@ -15,15 +17,40 @@ public class KryonetClient implements IMessageClient {
 		listener = _listener;
 
 		client = new Client();
+		KryonetServer.registerMessages(client.getKryo());
+		client.start();
 		client.connect(1000, Settings.IP_ADDRESS, Settings.TCP_PORT, Settings.UDP_PORT);
 
-		// todo - register messages
+		client.addListener(new Listener() {
+			public void received (Connection connection, Object object) {
+				if (object instanceof MyAbstractMessage) {
+					MyAbstractMessage msg = (MyAbstractMessage)object;
+					listener.messageReceived(msg);
+					//System.out.println(request.text);
+
+					//SomeResponse response = new SomeResponse();
+					//response.text = "Thanks";
+					//connection.sendTCP(response);
+				}
+			}
+
+			public void connected (Connection connection) {
+				listener.connected();
+			}
+
+			public void disconnected (Connection connection) {
+				listener.disconnected();
+			}
+		});
+
 	}
+
 
 	@Override
 	public boolean isConnected() {
 		return client.isConnected();
 	}
+
 
 	@Override
 	public void sendMessageToServer(MyAbstractMessage msg) {
@@ -34,6 +61,7 @@ public class KryonetClient implements IMessageClient {
 		}
 
 	}
+
 
 	@Override
 	public void close() {

@@ -15,7 +15,7 @@ import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.AbstractPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -67,23 +67,26 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		game.getRootNode().attachChild(this.main_node);
 		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
 		ball_geo.setLocalTranslation(origin);
-		rigidBodyControl = new RigidBodyControl(.2f);
-		ball_geo.addControl(rigidBodyControl);
-		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
-		} else {
-			rigidBodyControl.setKinematic(true);
+
+		if (Settings.USE_PHYSICS) {
+			rigidBodyControl = new RigidBodyControl(.2f);
+			ball_geo.addControl(rigidBodyControl);
+			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+			if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
+			} else {
+				rigidBodyControl.setKinematic(true);
+			}
+			rigidBodyControl.setUserObject(this);
 		}
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
-		rigidBodyControl.setUserObject(this);
 		game.addEntity(this);
 
 	}
 
 
 	@Override
-	public void process(ServerMain server, float tpf) {
+	public void process(AbstractGameServer server, float tpf) {
 		if (game.isServer()) {
 			this.timeLeft -= tpf;
 			if (this.timeLeft < 0) {

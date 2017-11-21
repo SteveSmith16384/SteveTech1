@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.app.SimpleApplication;
@@ -13,10 +11,6 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.math.Vector3f;
-import com.jme3.network.Filters;
-import com.jme3.network.HostedConnection;
-import com.jme3.network.Message;
-import com.jme3.network.Server;
 import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
 import com.scs.stetech1.components.ICalcHitInPast;
@@ -38,9 +32,9 @@ import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
-import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.IMessageServer;
-import com.scs.stetech1.networking.SpiderMonkeyServer;
+import com.scs.stetech1.networking.IMessageServerListener;
+import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.testgame.entities.Floor;
@@ -49,8 +43,8 @@ import com.scs.testgame.entities.TestGameServerPlayersAvatar;
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
-// todo - rename
-public abstract class ServerMain extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener  {
+
+public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -69,39 +63,37 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 	private LogWindow logWindow;
 	private IConsole console;
 
-	public ServerMain() throws IOException {
+	public AbstractGameServer() throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
+		networkServer = new KryonetServer(this, Settings.TCP_PORT, Settings.UDP_PORT);// SpiderMonkeyServer(this); // todo - move to constructor
 	}
 
 
 	@Override
 	public void simpleInitApp() {
-		try {
-			networkServer = new SpiderMonkeyServer(this); // todo - move to constructor
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
 		// Set up Physics
-		bulletAppState = new BulletAppState();
-		getStateManager().attach(bulletAppState);
-		bulletAppState.getPhysicsSpace().addCollisionListener(this);
-		//bulletAppState.getPhysicsSpace().addTickListener(this);
+		if (Settings.USE_PHYSICS) {
+			bulletAppState = new BulletAppState();
+			getStateManager().attach(bulletAppState);
+			bulletAppState.getPhysicsSpace().addCollisionListener(this);
+			//bulletAppState.getPhysicsSpace().addTickListener(this);
+		}
 		createGame();
+		console.appendText("Game created");
 		loopTimer.start();
 	}
 
-	
+
 	protected abstract void createGame();
-	
+
 
 	@Override
-	public void simpleUpdate(float tpf_secs) { //this.rootNode.getChild(2).getWorldTranslation();
+	public void simpleUpdate(float tpf_secs) {
 		StringBuilder strDebug = new StringBuilder();
 
-		if (networkServer.getNumClients() > 0) { // this.rootNode
+		if (networkServer.getNumClients() > 0) {
 
 			// Process all messsages
 			synchronized (unprocessedMessages) {
@@ -116,7 +108,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 						networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
 						sendEntityListToClient(client);
 						client.clientStatus = ClientData.Status.InGame;
-						
+
 						// Send them a ping to get ping time
 						this.networkServer.sendMessageToClient(client, new PingMessage(true));
 
@@ -184,10 +176,10 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity sc = (PhysicalEntity)e;
 						strDebug.append(sc.name + " Pos: " + sc.getWorldTranslation() + "\n");
-						if (sc.type == EntityTypes.AVATAR) {
+						/*if (sc.type == EntityTypes.AVATAR) {
 							AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
 							strDebug.append("WalkDir: " + av.playerControl.getWalkDirection() + "   Velocity: " + av.playerControl.getVelocity().length() + "\n");
-						}
+						}*/
 						if (sendUpdates) {
 							if (sc.hasMoved()) { // Don't send if not moved (unless Avatar)
 								networkServer.sendMessageToAll(new EntityUpdateMessage(sc, false));
@@ -217,7 +209,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 		if (Settings.DEBUG_MSGS) {
 			Settings.p("Rcvd " + message.getClass().getSimpleName());
 		}
-		
+
 		ClientData client = null;
 		synchronized (clients) {
 			client = clients.get(clientid);
@@ -373,7 +365,7 @@ public abstract class ServerMain extends SimpleApplication implements IEntityCon
 	@Override
 	public void collision(PhysicsCollisionEvent event) {
 		String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
-		
+
 		if (event.getObjectB().getUserObject() instanceof Floor == false) {
 			System.out.println(s);
 		}

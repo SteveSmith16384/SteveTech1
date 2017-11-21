@@ -11,15 +11,20 @@ import com.jme3.network.Message;
 import com.jme3.network.MessageListener;
 import com.jme3.network.Network;
 import com.jme3.network.Server;
+import com.jme3.network.serializing.Serializer;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
+import com.scs.stetech1.netmessages.GameStatusMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
+import com.scs.stetech1.netmessages.GeneralCommandMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
+import com.scs.stetech1.netmessages.RemoveEntityMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
+import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.server.ClientData;
 import com.scs.stetech1.server.Settings;
 
@@ -34,7 +39,7 @@ public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, M
 		
 		myServer = Network.createServer(Settings.TCP_PORT);
 
-		Settings.registerMessages();
+		registerMessages();
 
 		myServer.start();
 		myServer.addConnectionListener(this);
@@ -47,6 +52,26 @@ public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, M
 		myServer.addMessageListener(this, NewEntityMessage.class);
 		myServer.addMessageListener(this, EntityUpdateMessage.class);
 		myServer.addMessageListener(this, PlayerLeftMessage.class);
+
+	}
+
+
+	public static void registerMessages() {
+		Serializer.registerClass(MyAbstractMessage.class);
+		Serializer.registerClass(WelcomeClientMessage.class);
+		Serializer.registerClass(PingMessage.class);
+		Serializer.registerClass(NewPlayerRequestMessage.class);
+		Serializer.registerClass(GameSuccessfullyJoinedMessage.class);
+		Serializer.registerClass(PlayerInputMessage.class);
+		Serializer.registerClass(UnknownEntityMessage.class);
+		Serializer.registerClass(NewEntityMessage.class);
+		Serializer.registerClass(EntityUpdateMessage.class);
+		Serializer.registerClass(PlayerLeftMessage.class);
+		Serializer.registerClass(RemoveEntityMessage.class);
+		Serializer.registerClass(GeneralCommandMessage.class);
+		Serializer.registerClass(GameStatusMessage.class);
+
+		// If you add any, don't forget to add the listener to the client or server!! 
 
 	}
 

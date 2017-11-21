@@ -16,7 +16,7 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -62,19 +62,20 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 		main_node.rotate(0, rads, 0);
 		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
+		if (Settings.USE_PHYSICS) {
 		rigidBodyControl = new RigidBodyControl(1f);
 		main_node.addControl(rigidBodyControl);
 		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
 		} else {
 			rigidBodyControl.setKinematic(true);
 		}
-
+		rigidBodyControl.setUserObject(this);
+		}
 		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		game.getRootNode().attachChild(this.main_node);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);
-		rigidBodyControl.setUserObject(this);
 
 		game.addEntity(this);
 
@@ -82,7 +83,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 
 
 	@Override
-	public void process(ServerMain server, float tpf) {
+	public void process(AbstractGameServer server, float tpf) {
 		//super.process(tpf);
 		//Settings.p("Pos: " + this.getWorldTranslation());
 	}

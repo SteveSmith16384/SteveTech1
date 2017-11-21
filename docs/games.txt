@@ -5,6 +5,10 @@ What the Box
 
 Moonbase Assault
 
+Space Hulk
+	aliens can walk through sonme walls, and respawn immed.
+	Activate self destruct!
+	
 
 Overwatch Clone
 	Player abilities: vampire - must be underneath something

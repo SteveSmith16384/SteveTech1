@@ -20,10 +20,11 @@ import com.scs.stetech1.netmessages.WelcomeClientMessage;
 
 public class Settings {
 
-	public static final boolean STAND_ALONE_SERVER = true;
+	public static final boolean STAND_ALONE_SERVER = false;
 	
 	public static final boolean DEBUG = true;
-	public static final boolean DEBUG_MSGS = true;
+	public static final boolean DEBUG_MSGS = false;
+	public static final boolean DEBUG_SYNC_POS = false;
 
 	public static final String IP_ADDRESS = "localhost";
 	public static final int TCP_PORT = 6143;
@@ -32,7 +33,7 @@ public class Settings {
 	public static final int SERVER_TICKRATE_MS = 20; // Source: 15ms
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 70; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 
 	public static final int CLIENT_RENDER_DELAY = SERVER_SEND_UPDATE_INTERVAL_MS*3; // How far in past the client should render the view.  Source: 50ms
-	public static final int PING_INTERVAL_MS = 10 * 1000; // How often server sends pings
+	public static final int PING_INTERVAL_MS = 100 * 1000; // How often server sends pings
 	public static final int ARTIFICIAL_COMMS_DELAY = 0;
 	public static final float MAX_CLIENT_POSITION_DISCREP = 0.1f; // Max difference between what client and server think the pos of avatar is, before client is corrected
 	
@@ -41,6 +42,7 @@ public class Settings {
 	public static final boolean RECORD_VID = false;
 	public static final boolean USE_MODEL_FOR_PLAYERS = false;
 	public static final boolean CLIENT_SIDE_PHYSICS = false;
+	public static final boolean USE_PHYSICS = false;
 
 	// DEBUG
 	//public static final boolean DEBUG_HUD = false;
@@ -67,26 +69,6 @@ public class Settings {
 	
 	public static void p(String s) {
 		System.out.println(System.currentTimeMillis() + ": " + s);
-	}
-
-
-	public static void registerMessages() {
-		Serializer.registerClass(MyAbstractMessage.class);
-		Serializer.registerClass(WelcomeClientMessage.class);
-		Serializer.registerClass(PingMessage.class);
-		Serializer.registerClass(NewPlayerRequestMessage.class);
-		Serializer.registerClass(GameSuccessfullyJoinedMessage.class);
-		Serializer.registerClass(PlayerInputMessage.class);
-		Serializer.registerClass(UnknownEntityMessage.class);
-		Serializer.registerClass(NewEntityMessage.class);
-		Serializer.registerClass(EntityUpdateMessage.class);
-		Serializer.registerClass(PlayerLeftMessage.class);
-		Serializer.registerClass(RemoveEntityMessage.class);
-		Serializer.registerClass(GeneralCommandMessage.class);
-		Serializer.registerClass(GameStatusMessage.class);
-
-		// If you add any, don't forget to add the listener to the client or server!! 
-
 	}
 
 

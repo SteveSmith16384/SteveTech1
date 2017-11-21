@@ -3,12 +3,12 @@ package com.scs.testgame;
 import java.util.prefs.BackingStoreException;
 
 import com.jme3.system.AppSettings;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
 
-public class TestGameClient extends GenericClient {
+public class TestGameClient extends AbstractGameClient {
 
 	private TestGameEntityCreator creator;
 	
@@ -29,7 +29,7 @@ public class TestGameClient extends GenericClient {
 				settings.setSettingsDialogImage(null);
 			}
 
-			GenericClient app = new TestGameClient();
+			AbstractGameClient app = new TestGameClient();
 			//instance = app;
 			app.setSettings(settings);
 			app.setPauseOnLostFocus(false); // Needs to always be in sync with server!
@@ -75,5 +75,6 @@ public class TestGameClient extends GenericClient {
 	protected IEntity createEntity(NewEntityMessage msg) {
 		return creator.createEntity(msg);
 	}
-	
+
+
 }

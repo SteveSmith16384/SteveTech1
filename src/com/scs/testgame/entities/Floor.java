@@ -13,11 +13,11 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -76,18 +76,19 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 		this.main_node.attachChild(geometry);
 		geometry.setLocalTranslation(x+(w/2), yTop-(h/2), z+(d/2)); // Move it into position
 
+		if (Settings.USE_PHYSICS) {
 		rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
 		main_node.addControl(rigidBodyControl);
-
 		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-		game.getRootNode().attachChild(this.main_node);
-
-		geometry.setUserData(Settings.ENTITY, this);
-		main_node.setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);
 
 		rigidBodyControl.setFriction(1f);
 		rigidBodyControl.setRestitution(1f);
+		}
+		game.getRootNode().attachChild(this.main_node);
+
+		geometry.setUserData(Settings.ENTITY, this);
+		main_node.setUserData(Settings.ENTITY, this);
 
 		game.addEntity(this);
 
@@ -95,7 +96,7 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 
 
 	@Override
-	public void process(GenericClient client, float tpf) {
+	public void process(AbstractGameClient client, float tpf) {
 		if (texScroll != null) {
 			float diff = tpf*1f;
 			thisScroll.addLocal(diff, diff, diff);
@@ -139,7 +140,7 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 
 
 	@Override
-	public void process(ServerMain server, float tpf_secs) {
+	public void process(AbstractGameServer server, float tpf_secs) {
 		// Do nothing
 		
 	}

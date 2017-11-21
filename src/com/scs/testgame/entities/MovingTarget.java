@@ -16,7 +16,7 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -66,21 +66,23 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		main_node.rotate(0, rads, 0);
 		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
-		rigidBodyControl = new RigidBodyControl(1f);
-		//rigidBodyControl.setGravity(Vector3f.ZERO); // Floats
-		rigidBodyControl = new RigidBodyControl(1f);
-		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
-		} else {
-			rigidBodyControl.setKinematic(true);
-		}
-		main_node.addControl(rigidBodyControl);
+		if (Settings.USE_PHYSICS) {
+			rigidBodyControl = new RigidBodyControl(1f);
+			//rigidBodyControl.setGravity(Vector3f.ZERO); // Floats
+			rigidBodyControl = new RigidBodyControl(1f);
+			if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
+			} else {
+				rigidBodyControl.setKinematic(true);
+			}
+			main_node.addControl(rigidBodyControl);
 
-		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+			rigidBodyControl.setUserObject(this);
+		}
 		game.getRootNode().attachChild(this.main_node);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		main_node.setUserData(Settings.ENTITY, this);
-		rigidBodyControl.setUserObject(this);
 
 		game.addEntity(this);
 
@@ -88,10 +90,10 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 
 	@Override
-	public void process(ServerMain server, float tpf) {
+	public void process(AbstractGameServer server, float tpf) {
 		//super.process(tpf);
 		//Settings.p("Pos: " + this.getWorldTranslation());
-		
+
 		// move around
 		//todo - move randomly if (Settings.r)
 		this.rigidBodyControl.applyCentralForce(currDir.mult(SPEED));

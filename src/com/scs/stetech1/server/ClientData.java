@@ -26,7 +26,6 @@ public class ClientData {
 	public ClientData(int _id, Object _networkObj, Camera cam, InputManager _inputManager) {
 		id = _id;
 		networkObj = _networkObj;
-		//conn = _conn;
 	}
 
 

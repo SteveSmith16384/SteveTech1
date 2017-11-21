@@ -11,7 +11,7 @@ import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.AbstractPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.models.BeamLaserModel;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -35,6 +35,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 		game.getRootNode().attachChild(this.main_node);
 		//laserNode.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*3)));
 		//laserNode.getLocalTranslation().y -= 0.1f; // Drop bullets slightly
+		if (Settings.USE_PHYSICS) {
 		rigidBodyControl = new RigidBodyControl(.1f);
 		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
 		} else {
@@ -46,17 +47,17 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 		// Accelerate the physical ball to shoot it.
 		rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(40));
 		rigidBodyControl.setGravity(Vector3f.ZERO);
-
+		rigidBodyControl.setUserObject(this);
+		}
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		laserNode.setUserData(Settings.ENTITY, this);
-		rigidBodyControl.setUserObject(this);
 		game.addEntity(this);
 
 	}
 
 
 	@Override
-	public void process(ServerMain server, float tpf) {
+	public void process(AbstractGameServer server, float tpf) {
 		if (game.isServer()) {
 			this.timeLeft -= tpf;
 			if (this.timeLeft < 0) {

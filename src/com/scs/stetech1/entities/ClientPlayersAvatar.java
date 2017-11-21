@@ -7,7 +7,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
 import com.scs.stetech1.client.ClientAvatarPositionCalc;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.client.syncposition.AdjustBasedOnDistance;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stetech1.components.IEntity;
@@ -15,17 +15,17 @@ import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 
 public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD, IProcessByClient {
 
 	public HUD hud;
 	public Camera cam;
-	private GenericClient game;
+	private AbstractGameClient game;
 	private ICorrectClientEntityPosition syncPos;
 
-	public ClientPlayersAvatar(GenericClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
+	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
 		super(_module, _playerID, _input, eid);
 
 		game = _module;
@@ -41,7 +41,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 
 
 	@Override
-	public void process(GenericClient client, float tpf) {
+	public void process(AbstractGameClient client, float tpf) {
 		super.serverAndClientProcess(null, client, tpf);
 
 		hud.process(client, tpf);
@@ -69,7 +69,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 
 
 	@Override
-	public void calcPosition(GenericClient mainApp, long serverTimeToUse) {
+	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
 		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 		if (offset != null) {
 			//if (diff > Settings.MAX_CLIENT_POSITION_DISCREP) {
@@ -132,7 +132,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 
 
 	@Override
-	public void process(ServerMain server, float tpf_secs) {
+	public void process(AbstractGameServer server, float tpf_secs) {
 		// Do nothing
 		
 	}

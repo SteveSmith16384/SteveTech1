@@ -30,7 +30,7 @@ public class SpiderMonkeyClient implements IMessageClient, ClientStateListener, 
 	public SpiderMonkeyClient(IMessageClientListener _listener) throws IOException {
 		listener = _listener;
 		
-		Settings.registerMessages();
+		SpiderMonkeyServer.registerMessages();
 
 		myClient = Network.connectToServer("localhost", Settings.TCP_PORT);
 		myClient.addClientStateListener(this);

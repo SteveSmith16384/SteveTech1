@@ -3,7 +3,7 @@ package com.scs.stetech1.weapons;
 import com.scs.stetech1.IAbility;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.shared.IEntityController;
 
 public abstract class AbstractMagazineGun implements IAbility {
@@ -49,7 +49,7 @@ public abstract class AbstractMagazineGun implements IAbility {
 
 
 	@Override
-	public void process(ServerMain server, float tpf_secs) {
+	public void process(AbstractGameServer server, float tpf_secs) {
 		if (game.isServer()) { // Only server can reload
 			if (this.bulletsLeftInMag <= 0) {
 				// Reload

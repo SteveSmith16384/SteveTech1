@@ -1,26 +1,24 @@
 STETECH1
 
 LINKS
+https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.html
 https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dynamic-vs-static
 
 
 URGENT
-Test network code
-Remove physics!
+Cleverer debugging
+	Test network code
+ConcurrentChange error in entities when firing grenade
+Implement network delay in kryo code
+	Remove physics!
 Copy Xenogeddon
-Game: Space Hulk, aliens can walk through sonme walls, and respawn immed.
-Change networking code
 Try and run server as stand-alone
-Grenades
 Option to turn off client sync
-	Create TestGamePlayersAvatar
-	When shooting, player is moving
-	Hitscan weapons
-Crates not dropping until knocked
-Player not dropping by grav after warp until movement received - test using SimpleFPS?
+Hitscan weapons
 
 
 TODO
+Grenades
 Confirm source timings
 	Warp player if position > 3?
 	Client statuses - connected, in game

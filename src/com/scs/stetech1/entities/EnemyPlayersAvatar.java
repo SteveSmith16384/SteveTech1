@@ -3,11 +3,11 @@ package com.scs.stetech1.entities;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import com.scs.stetech1.client.GenericClient;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IProcessByClient;
-import com.scs.stetech1.server.ServerMain;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -95,7 +95,7 @@ public abstract class EnemyPlayersAvatar extends PhysicalEntity implements IAffe
 
 
 	@Override
-	public void process(ServerMain sevrer, float tpf) {
+	public void process(AbstractGameServer sevrer, float tpf) {
 		//Settings.p("Pos: " + this.getLocation());
 	}
 
@@ -113,7 +113,7 @@ public abstract class EnemyPlayersAvatar extends PhysicalEntity implements IAffe
 
 
 	@Override
-	public void process(GenericClient client, float tpf_secs) {
+	public void process(AbstractGameClient client, float tpf_secs) {
 		// Do nothing?
 	}
 
