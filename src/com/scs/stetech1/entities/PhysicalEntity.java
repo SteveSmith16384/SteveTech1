@@ -3,24 +3,33 @@ package com.scs.stetech1.entities;
 import java.util.HashMap;
 import java.util.List;
 
+import com.jme3.bounding.BoundingBox;
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.collision.Collidable;
+import com.jme3.collision.CollisionResults;
+import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.stetech1.client.AbstractGameClient;
+import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.jme.SimpleRigidBody;
+import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.HitData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer {//, IProcessByClient {
+public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ICollideable {
 
-	protected Node main_node;
+	protected Node mainNode;
 	public RigidBodyControl rigidBodyControl;
+	public SimpleRigidBody simpleRigidBody;
 	protected PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
@@ -32,13 +41,20 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
 	private Quaternion originalRot = new Quaternion();
-
-
+	//protected Geometry geometry;
+	//private BoundingVolume bounds;
+	
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name) {
 		super(_game, id, type, _name);
 
 		serverPositionData = new PositionCalculator(true, 100);
-		main_node = new Node(name + "_MainNode");
+		mainNode = new Node(name + "_MainNode");
+	}
+
+
+	@Override
+	public void process(AbstractGameServer server, float tpf) {
+		this.simpleRigidBody.process(tpf);
 	}
 
 
@@ -76,16 +92,16 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			this.game.getBulletAppState().getPhysicsSpace().remove(this.rigidBodyControl);
 		}
 		super.remove();
-		if (this.main_node.getParent() == null) {
+		if (this.mainNode.getParent() == null) {
 			//throw new RuntimeException("No parent!");
 		} else {
-			this.main_node.removeFromParent(); // Don't need to remove left/right nodes as they are attached to the main node
+			this.mainNode.removeFromParent(); // Don't need to remove left/right nodes as they are attached to the main node
 		}
 	}
 
 
 	public Node getMainNode() {
-		return main_node;
+		return mainNode;
 	}
 
 
@@ -152,13 +168,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public boolean canMove() {
-		if (rigidBodyControl != null) {
-			return this.rigidBodyControl.getMass() > 0; // 0 means static, and static doesn't move
-		} else {
-			return true; // ?
-		}
-	}
+	//public abstract boolean canMove();
 
 
 	public boolean hasMoved() {
@@ -203,19 +213,16 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			this.originalRot.set(this.getWorldRotation());
 			this.setWorldTranslation(shooterEPD.position);
 			this.setWorldRotation(shooterEPD.rotation);
-			//this.main_node.updateGeometricState();
-			//return true;
 			return;
 		}
-		//return false;
-		throw new RuntimeException("Unable to rewind position");
+		throw new RuntimeException("Unable to rewind position: no data");
 	}
 
 
 	public void restorePosition() {
 		this.setWorldTranslation(this.originalPos);
 		this.setWorldRotation(this.originalRot);
-		this.main_node.updateGeometricState();
+		this.mainNode.updateGeometricState();
 	}
 
 
@@ -224,5 +231,26 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		this.setWorldTranslation(this.getWorldTranslation().add(offset));
 
 	}
+
+
+	@Override
+	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
+		return mainNode.collideWith(other, results);
+	}
+
+
+	@Override
+	public BoundingVolume getBoundingVolume() { // todo - override in subclasses?
+		return this.getMainNode().getWorldBound();
+	}
+
+
+	@Override
+	public void collidedWith(ICollideable other) {
+		// override if required
+		
+	}
+
+
 
 }

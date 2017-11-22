@@ -261,9 +261,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 								AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
 								strListEnts.append("Walkdir : " + av.playerControl.getWalkDirection() + "\n");
 							}*/
-							if (pe.canMove()) { // Only bother with things that can move
+							//if (pe.canMove()) { // Only bother with things that can move - todo - this?
 								pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
-							}
+							//}
 						}
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;

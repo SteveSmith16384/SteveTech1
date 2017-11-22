@@ -74,7 +74,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			simplePlayerControl = new MySimpleCharacterControl(this);//PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
 			
 		}
-		game.getRootNode().attachChild(this.main_node);
+		game.getRootNode().attachChild(this.mainNode);
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 
@@ -228,11 +228,11 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
-	@Override
+	/*@Override
 	public boolean canMove() {
 		return true; // Always calc for avatars
 	}
-
+*/
 
 	@Override
 	public boolean hasMoved() {

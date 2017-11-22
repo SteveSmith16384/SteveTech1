@@ -3,7 +3,11 @@ package com.scs.testgame.entities;
 import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.collision.Collidable;
+import com.jme3.collision.CollisionResults;
+import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.Vector3f;
@@ -16,12 +20,14 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
+import com.scs.stetech1.jme.ICollisionChecker;
+import com.scs.stetech1.jme.SimpleRigidBody;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
+public class Crate extends PhysicalEntity implements IAffectedByPhysics {// Need ICollideable so lasers don't bounce off it
 
 	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
 		super(_game, id, EntityTypes.CRATE, "Crate");
@@ -57,25 +63,29 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 			geometry.setQueueBucket(Bucket.Transparent);
 		}
 
-		this.main_node.attachChild(geometry);
+		this.mainNode.attachChild(geometry); //This creates the model bounds!  mainNode.getWorldBound();
 		float rads = (float)Math.toRadians(rotDegrees);
-		main_node.rotate(0, rads, 0);
-		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
+		mainNode.rotate(0, rads, 0);
+		mainNode.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
 		if (Settings.USE_PHYSICS) {
-		rigidBodyControl = new RigidBodyControl(1f);
-		main_node.addControl(rigidBodyControl);
-		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
-		} else {
-			rigidBodyControl.setKinematic(true);
+			rigidBodyControl = new RigidBodyControl(1f);
+			mainNode.addControl(rigidBodyControl);
+			if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
+			} else {
+				rigidBodyControl.setKinematic(true);
+			}
+			rigidBodyControl.setUserObject(this);
+			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+		} else if (Settings.USE_SIMPLE_PHYSICS) {
+			if (_game.isServer()) {
+			this.simpleRigidBody = new SimpleRigidBody(this, (ICollisionChecker)game);
+			}
 		}
-		rigidBodyControl.setUserObject(this);
-		}
-		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-		game.getRootNode().attachChild(this.main_node);
+		game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Settings.ENTITY, this);
-		main_node.setUserData(Settings.ENTITY, this);
+		mainNode.setUserData(Settings.ENTITY, this);
 
 		game.addEntity(this);
 
@@ -84,7 +94,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics, ICollid
 
 	@Override
 	public void process(AbstractGameServer server, float tpf) {
-		//super.process(tpf);
+		super.process(server, tpf);
 		//Settings.p("Pos: " + this.getWorldTranslation());
 	}
 

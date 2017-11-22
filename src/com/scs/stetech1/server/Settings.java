@@ -43,6 +43,7 @@ public class Settings {
 	public static final boolean USE_MODEL_FOR_PLAYERS = false;
 	public static final boolean CLIENT_SIDE_PHYSICS = false;
 	public static final boolean USE_PHYSICS = false;
+	public static final boolean USE_SIMPLE_PHYSICS = true;
 
 	// DEBUG
 	//public static final boolean DEBUG_HUD = false;
