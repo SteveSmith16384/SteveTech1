@@ -132,12 +132,12 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 		}
 	}
 
-
+/*
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-
+*/
 
 	@Override
 	public void process(AbstractGameServer server, float tpf_secs) {

@@ -82,10 +82,10 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		//Settings.p("Pos: " + this.getLocation());
 	}
 
-
+/*
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-
+*/
 }

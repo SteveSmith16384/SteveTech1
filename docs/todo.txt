@@ -2,34 +2,29 @@ STETECH1
 
 LINKS
 https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.html
-https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dynamic-vs-static
 
 
 URGENT
-Cleverer debugging
-	Test network code
-ConcurrentChange error in entities when firing grenade
-Implement network delay in kryo code
-	Remove physics!
-Copy Xenogeddon
-Try and run server as stand-alone
+Test simplerigidcontrol with simpleFPS
+Cleverer debugging!
+	Implement network delay in kryo code
+Copy Xenogeddon?
 Option to turn off client sync
 Hitscan weapons
 
 
 TODO
+ConcurrentChange error in entities when firing grenade
+force avatar warp test
 Grenades
 Confirm source timings
-	Warp player if position > 3?
 	Client statuses - connected, in game
-Don't use broadcast()
+Don't use broadcast()?
 Draw map
 Show error if client unable to connect
-	Avatar falling slowly when not moving forwards (just like jetpac?)
 Laser bullets
 Add more walls
-Make server & client abstract
-force avatar warp test
+	Make server & client abstract
 Search for todos
 Todo - am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
@@ -46,7 +41,6 @@ Reduce dependencies between classes
 
 
 LATER
-Split up into separate packages: AbstractClient, Abstractserver, shared, Sorcerers
 Reduce object creation, including calls to clone()
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed
@@ -56,6 +50,7 @@ Make classes final
 Test with cheating client
 User enter name and ip address
 
+=======================================
 
 CLIENT
 Send inputs every "server tickrate"

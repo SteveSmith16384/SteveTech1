@@ -99,13 +99,14 @@ public abstract class EnemyPlayersAvatar extends PhysicalEntity implements IAffe
 		//Settings.p("Pos: " + this.getLocation());
 	}
 
-
+/*
 	@Override
-	public void collidedWith(ICollideable other) {
+	public boolean collidedWith(ICollideable other) {
 		// Do nothing
+		return false;
 	}
 
-
+*/
 	@Override
 	public boolean hasMoved() {
 		return true; // Always calc for avatars

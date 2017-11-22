@@ -102,12 +102,12 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		return shooter;
 	}
 
-
+/*
 	@Override
 	public void collidedWith(ICollideable other) {
 
 	}
-
+*/
 
 	@Override
 	public float getDamageCaused() {

@@ -41,8 +41,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
 	private Quaternion originalRot = new Quaternion();
-	//protected Geometry geometry;
-	//private BoundingVolume bounds;
 	
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name) {
 		super(_game, id, type, _name);
@@ -246,8 +244,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	@Override
-	public void collidedWith(ICollideable other) {
+	public boolean collidedWith(ICollideable other) {
 		// override if required
+		return false;
 		
 	}
 

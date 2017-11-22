@@ -1,8 +1,11 @@
 package com.scs.stetech1.jme;
 
+import com.jme3.math.Ray;
 import com.scs.stetech1.components.ICollideable;
 
 public interface ICollisionChecker {
 
-	void checkForCollisions(ICollideable entity);
+	boolean checkForCollisions(ICollideable entity);
+
+	//boolean checkForCollisions(Ray ray);
 }

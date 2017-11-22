@@ -99,10 +99,11 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {// Need
 	}
 
 
-	@Override
-	public void collidedWith(ICollideable other) {
+/*	@Override
+	public boolean collidedWith(ICollideable other) {
 		// Do nothing
+		return false;
 	}
-
+*/
 
 }

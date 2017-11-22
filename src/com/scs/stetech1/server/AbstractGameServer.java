@@ -10,8 +10,8 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
@@ -459,7 +459,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	@Override
-	public void checkForCollisions(ICollideable entity) {
+	public boolean checkForCollisions(ICollideable entity) {
+		boolean result = true;
 		CollisionResults res = new CollisionResults();
 		synchronized (entities) {
 			// Loop through the entities
@@ -469,14 +470,36 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						ICollideable ic = (ICollideable)e;
 						if (ic.collideWith(entity.getBoundingVolume(), res) > 0) {
 							Settings.p("Collided!");
-							//entity.collidedWith(ic);
+							result = entity.collidedWith(ic) && result; // Return  false if any return false
 						}
 					}
 				}
 			}
 		}
+		return result;
 	}
 
+
+	/*
+	 * Returns false if a hit.
+	 */
+	public boolean checkForCollisions(Ray r) {
+		boolean result = true;
+		CollisionResults res = new CollisionResults();
+		synchronized (entities) {
+			// Loop through the entities
+			for (IEntity e : entities.values()) {
+				if (e instanceof ICollideable) {
+					ICollideable ic = (ICollideable)e;
+					if (r.collideWith(ic.getBoundingVolume(), res) > 0) {
+						Settings.p("Collided!");
+						return false;
+					}
+				}
+			}
+		}
+		return result;
+	}
 
 }
 

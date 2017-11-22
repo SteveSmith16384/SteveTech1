@@ -72,7 +72,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			playerControl.getPhysicsRigidBody().setUserObject(this);
 		} else {
 			simplePlayerControl = new MySimpleCharacterControl(this);//PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
-			
+
 		}
 		game.getRootNode().attachChild(this.mainNode);
 
@@ -176,9 +176,9 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		//if (this.game.isServer()) { // Let the server do it, and the client copy
 		Settings.p("Jumping!");
 		if (Settings.USE_PHYSICS) {
-		this.playerControl.jump();
-		} else {
-			// todo
+			this.playerControl.jump();
+		} else if (Settings.USE_SIMPLE_PHYSICS) {
+			this.simpleRigidBody.jump();
 		}
 		//}
 	}
@@ -205,7 +205,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public Vector3f getWorldTranslation() {
 		// Need this override since main node is at 0,0,0 at the start
 		if (Settings.USE_PHYSICS) {
-		return this.playerControl.getPhysicsRigidBody().getPhysicsLocation();
+			return this.playerControl.getPhysicsRigidBody().getPhysicsLocation();
 		} else {
 			return super.getWorldTranslation();
 		}
@@ -232,7 +232,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public boolean canMove() {
 		return true; // Always calc for avatars
 	}
-*/
+	 */
 
 	@Override
 	public boolean hasMoved() {

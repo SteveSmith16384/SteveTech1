@@ -100,10 +100,10 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 	}
 
-
+/*
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-
+*/
 }

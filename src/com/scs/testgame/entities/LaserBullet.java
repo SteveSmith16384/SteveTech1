@@ -74,7 +74,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 
 
 	@Override
-	public void collidedWith(ICollideable other) {
+	public boolean collidedWith(ICollideable other) {
 		if (other != this.shooter) {
 			//Settings.p("Laser collided with " + other);
 
@@ -88,6 +88,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 			 */
 			this.remove(); // Don't bounce
 		}
+		return false;
 	}
 
 

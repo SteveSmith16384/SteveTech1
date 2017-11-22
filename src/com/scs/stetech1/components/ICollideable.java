@@ -7,12 +7,14 @@ import com.jme3.collision.Collidable;
  * Implement this if you want to run special code when entity collides.
  *
  */
-public interface ICollideable extends Collidable { // todo - rename
+public interface ICollideable extends Collidable {
 	
 	BoundingVolume getBoundingVolume();
 
-	//Collidable getCollidable();
+	/*
+	 * Code to run if the entity collides with another.
+	 * Return false if entity must move back.
+	 */
+	boolean collidedWith(ICollideable other);
 	
-	void collidedWith(ICollideable other);
-		
 }

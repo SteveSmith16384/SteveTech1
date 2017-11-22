@@ -106,7 +106,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 
 
 	@Override
-	public void collidedWith(ICollideable other) {
+	public boolean collidedWith(ICollideable other) {
 		if (other instanceof IBullet) {
 			IBullet bullet = (IBullet)other;
 			if (bullet.getShooter() != null) {
@@ -118,6 +118,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 				}
 			}
 		}
+		return true;
 	}
 
 
