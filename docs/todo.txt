@@ -12,12 +12,12 @@ ConcurrentChange error in entities when firing grenade
 Implement network delay in kryo code
 	Remove physics!
 Copy Xenogeddon
-Try and run server as stand-alone
 Option to turn off client sync
 Hitscan weapons
 
 
 TODO
+Try and run server as stand-alone
 Grenades
 Confirm source timings
 	Warp player if position > 3?
