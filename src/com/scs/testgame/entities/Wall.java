@@ -53,24 +53,24 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 
 			geometry.setMaterial(floor_mat);
 		}
-		this.main_node.attachChild(geometry);
+		this.mainNode.attachChild(geometry);
 		if (rotDegrees != 0) {
 			float rads = (float)Math.toRadians(rotDegrees);
-			main_node.rotate(0, rads, 0);
+			mainNode.rotate(0, rads, 0);
 		}
 		geometry.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2)); // Never change position of mainNode (unless the whole object is moving)
 
 		if (Settings.USE_PHYSICS) {
 			rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
-			main_node.addControl(rigidBodyControl);
+			mainNode.addControl(rigidBodyControl);
 
 			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 			rigidBodyControl.setUserObject(this);
 		}
-		game.getRootNode().attachChild(this.main_node);
+		game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Settings.ENTITY, this);
-		main_node.setUserData(Settings.ENTITY, this);
+		mainNode.setUserData(Settings.ENTITY, this);
 
 		game.addEntity(this);
 
@@ -82,10 +82,10 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		//Settings.p("Pos: " + this.getLocation());
 	}
 
-
+/*
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-
+*/
 }

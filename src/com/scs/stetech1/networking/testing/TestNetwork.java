@@ -21,7 +21,6 @@ public class TestNetwork implements IMessageServerListener, IMessageClientListen
 		server = new KryonetServer(this, Settings.TCP_PORT, Settings.UDP_PORT);
 		client = new KryonetClient(this);
 		
-		server.sendMessageToAll(new TestMessage(1));
 	}
 
 	public static void main(String[] args) {
@@ -41,6 +40,11 @@ public class TestNetwork implements IMessageServerListener, IMessageClientListen
 
 	@Override
 	public void connectionAdded(int id, Object net) {
+		server.sendMessageToAll(new TestMessage(1));
+		server.sendMessageToAll(new TestMessage(1));
+		server.sendMessageToAll(new TestMessage(1));
+		server.sendMessageToAll(new TestMessage(1));
+		server.sendMessageToAll(new TestMessage(1));
 		
 	}
 

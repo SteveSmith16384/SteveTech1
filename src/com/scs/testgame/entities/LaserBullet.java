@@ -31,8 +31,8 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 
 		Node laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(shooter.getShootDir().multLocal(1)), ColorRGBA.Pink, game.getJmeContext() != JmeContext.Type.Headless);
 
-		this.main_node.attachChild(laserNode);
-		game.getRootNode().attachChild(this.main_node);
+		this.mainNode.attachChild(laserNode);
+		game.getRootNode().attachChild(this.mainNode);
 		//laserNode.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*3)));
 		//laserNode.getLocalTranslation().y -= 0.1f; // Drop bullets slightly
 		if (Settings.USE_PHYSICS) {
@@ -74,7 +74,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 
 
 	@Override
-	public void collidedWith(ICollideable other) {
+	public boolean collidedWith(ICollideable other) {
 		if (other != this.shooter) {
 			//Settings.p("Laser collided with " + other);
 
@@ -88,6 +88,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 			 */
 			this.remove(); // Don't bounce
 		}
+		return false;
 	}
 
 

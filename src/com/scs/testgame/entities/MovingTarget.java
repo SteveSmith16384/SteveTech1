@@ -61,10 +61,10 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 			geometry.setQueueBucket(Bucket.Transparent);
 		}
 
-		this.main_node.attachChild(geometry);
+		this.mainNode.attachChild(geometry);
 		float rads = (float)Math.toRadians(rotDegrees);
-		main_node.rotate(0, rads, 0);
-		main_node.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
+		mainNode.rotate(0, rads, 0);
+		mainNode.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
 		if (Settings.USE_PHYSICS) {
 			rigidBodyControl = new RigidBodyControl(1f);
@@ -74,15 +74,15 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 			} else {
 				rigidBodyControl.setKinematic(true);
 			}
-			main_node.addControl(rigidBodyControl);
+			mainNode.addControl(rigidBodyControl);
 
 			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 			rigidBodyControl.setUserObject(this);
 		}
-		game.getRootNode().attachChild(this.main_node);
+		game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Settings.ENTITY, this);
-		main_node.setUserData(Settings.ENTITY, this);
+		mainNode.setUserData(Settings.ENTITY, this);
 
 		game.addEntity(this);
 
@@ -100,10 +100,10 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 	}
 
-
+/*
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-
+*/
 }

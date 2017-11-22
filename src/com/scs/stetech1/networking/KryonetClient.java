@@ -53,11 +53,31 @@ public class KryonetClient implements IMessageClient {
 
 
 	@Override
-	public void sendMessageToServer(MyAbstractMessage msg) {
-		if (msg.isReliable()) {
-			client.sendTCP(msg);
-		} else {
-			client.sendUDP(msg);
+	public void sendMessageToServer(final MyAbstractMessage msg) {
+		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
+			if (msg.isReliable()) {
+				client.sendTCP(msg);
+			} else {
+				client.sendUDP(msg);
+			}
+		}
+		else {
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(Settings.ARTIFICIAL_COMMS_DELAY);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					if (msg.isReliable()) {
+						client.sendTCP(msg);
+					} else {
+						client.sendUDP(msg);
+					}
+				}
+			};
+			t.start();
 		}
 
 	}

@@ -63,8 +63,8 @@ public class Grenade extends PhysicalEntity implements IBullet {
 			ball_geo.setMaterial(floor_mat);
 		}
 
-		this.main_node.attachChild(ball_geo);
-		game.getRootNode().attachChild(this.main_node);
+		this.mainNode.attachChild(ball_geo);
+		game.getRootNode().attachChild(this.mainNode);
 		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
 		ball_geo.setLocalTranslation(origin);
 
@@ -102,12 +102,12 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		return shooter;
 	}
 
-
+/*
 	@Override
 	public void collidedWith(ICollideable other) {
 
 	}
-
+*/
 
 	@Override
 	public float getDamageCaused() {

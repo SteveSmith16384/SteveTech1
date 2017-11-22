@@ -25,6 +25,7 @@ import com.scs.stetech1.netmessages.TestMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.server.ClientData;
+import com.scs.stetech1.server.Settings;
 
 public class KryonetServer implements IMessageServer {
 
@@ -51,7 +52,7 @@ public class KryonetServer implements IMessageServer {
 					//connection.sendTCP(response);
 				}
 			}
-			
+
 			public void connected (Connection connection) {
 				listener.connectionAdded(connection.getID(), connection);
 			}
@@ -62,15 +63,15 @@ public class KryonetServer implements IMessageServer {
 		});
 
 	}
-	
-	
+
+
 	public static void registerMessages(Kryo kryo) {
 		// Classes used in messages
 		kryo.register(Quaternion.class);
 		kryo.register(Vector3f.class);
 		kryo.register(HashMap.class);
 		kryo.register(byte[].class);
-		
+
 		// Messages
 		kryo.register(MyAbstractMessage.class);
 		kryo.register(WelcomeClientMessage.class);
@@ -91,31 +92,71 @@ public class KryonetServer implements IMessageServer {
 		// If you add any, don't forget to add the listener to the client or server!! 
 
 	}
-	
+
 
 	@Override
 	public int getNumClients() {
 		return server.getConnections().length;
 	}
 
-	
+
 	@Override
-	public void sendMessageToAll(MyAbstractMessage msg) {
-		if (msg.isReliable()) {
-			server.sendToAllTCP(msg);
-		} else {
-			server.sendToAllUDP(msg);
-		}		
+	public void sendMessageToAll(final MyAbstractMessage msg) {
+		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
+			if (msg.isReliable()) {
+				server.sendToAllTCP(msg);
+			} else {
+				server.sendToAllUDP(msg);
+			}		
+		}
+		else {
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(Settings.ARTIFICIAL_COMMS_DELAY);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					if (msg.isReliable()) {
+						server.sendToAllTCP(msg);
+					} else {
+						server.sendToAllUDP(msg);
+					}		
+				}
+			};
+			t.start();
+		}
 	}
 
-	
+
 	@Override
-	public void sendMessageToClient(ClientData client, MyAbstractMessage msg) {
-		if (msg.isReliable()) {
-			server.sendToTCP(client.id, msg);
-		} else {
-			server.sendToUDP(client.id, msg);
-		}		
+	public void sendMessageToClient(final ClientData client, final MyAbstractMessage msg) {
+		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
+			if (msg.isReliable()) {
+				server.sendToTCP(client.id, msg);
+			} else {
+				server.sendToUDP(client.id, msg);
+			}		
+		}
+		else {
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(Settings.ARTIFICIAL_COMMS_DELAY);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					if (msg.isReliable()) {
+						server.sendToTCP(client.id, msg);
+					} else {
+						server.sendToUDP(client.id, msg);
+					}		
+				}
+			};
+			t.start();
+		}
 
 	}
 

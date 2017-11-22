@@ -73,22 +73,22 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 			}
 			geometry.setMaterial(floor_mat);
 		}
-		this.main_node.attachChild(geometry);
+		this.mainNode.attachChild(geometry);
 		geometry.setLocalTranslation(x+(w/2), yTop-(h/2), z+(d/2)); // Move it into position
 
 		if (Settings.USE_PHYSICS) {
-		rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
-		main_node.addControl(rigidBodyControl);
-		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-		rigidBodyControl.setUserObject(this);
+			rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
+			mainNode.addControl(rigidBodyControl);
+			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
+			rigidBodyControl.setUserObject(this);
 
-		rigidBodyControl.setFriction(1f);
-		rigidBodyControl.setRestitution(1f);
+			rigidBodyControl.setFriction(1f);
+			rigidBodyControl.setRestitution(1f);
 		}
-		game.getRootNode().attachChild(this.main_node);
+		game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Settings.ENTITY, this);
-		main_node.setUserData(Settings.ENTITY, this);
+		mainNode.setUserData(Settings.ENTITY, this);
 
 		game.addEntity(this);
 
@@ -132,17 +132,17 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 		}
 	}
 
-
+/*
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-
+*/
 
 	@Override
 	public void process(AbstractGameServer server, float tpf_secs) {
 		// Do nothing
-		
+
 	}
 
 }

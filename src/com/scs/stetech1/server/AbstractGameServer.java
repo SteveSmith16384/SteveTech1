@@ -10,6 +10,8 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.collision.CollisionResults;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
@@ -17,9 +19,9 @@ import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
-import com.scs.stetech1.entities.AbstractPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
+import com.scs.stetech1.jme.ICollisionChecker;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.GeneralCommandMessage;
@@ -35,7 +37,6 @@ import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.KryonetServer;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.TestGameServerPlayersAvatar;
@@ -44,7 +45,7 @@ import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener  {
+public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener, ICollisionChecker  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -456,4 +457,49 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		return getContext().getType();
 	}
 
+
+	@Override
+	public boolean checkForCollisions(ICollideable entity) {
+		boolean result = true;
+		CollisionResults res = new CollisionResults();
+		synchronized (entities) {
+			// Loop through the entities
+			for (IEntity e : entities.values()) {
+				if (e != entity) {
+					if (e instanceof ICollideable) {
+						ICollideable ic = (ICollideable)e;
+						if (ic.collideWith(entity.getBoundingVolume(), res) > 0) {
+							Settings.p("Collided!");
+							result = entity.collidedWith(ic) && result; // Return  false if any return false
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+
+	/*
+	 * Returns false if a hit.
+	 */
+	public boolean checkForCollisions(Ray r) {
+		boolean result = true;
+		CollisionResults res = new CollisionResults();
+		synchronized (entities) {
+			// Loop through the entities
+			for (IEntity e : entities.values()) {
+				if (e instanceof ICollideable) {
+					ICollideable ic = (ICollideable)e;
+					if (r.collideWith(ic.getBoundingVolume(), res) > 0) {
+						Settings.p("Collided!");
+						return false;
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 }
+

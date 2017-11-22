@@ -48,7 +48,6 @@ public final class PositionCalculator {
 	public EntityPositionData calcPosition(long serverTimeToUse) {
 		synchronized (positionData) {
 			if (this.positionData.size() > 0) {
-
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
 					long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
 					//Settings.p(startDiff + " too soon");

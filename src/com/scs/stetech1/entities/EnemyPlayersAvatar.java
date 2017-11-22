@@ -69,19 +69,19 @@ public abstract class EnemyPlayersAvatar extends PhysicalEntity implements IAffe
 			geometry.setQueueBucket(Bucket.Transparent);
 		}*/
 
-		this.main_node.attachChild(geometry);
+		this.mainNode.attachChild(geometry);
 		//float rads = (float)Math.toRadians(rotDegrees);
 		//main_node.rotate(0, rads, 0);
 
 		rigidBodyControl = new RigidBodyControl(0f); // Only the server can move them!
-		main_node.addControl(rigidBodyControl);
+		mainNode.addControl(rigidBodyControl);
 		rigidBodyControl.setKinematic(true);
 
 		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-		game.getRootNode().attachChild(this.main_node);
+		game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Settings.ENTITY, this);
-		main_node.setUserData(Settings.ENTITY, this);
+		mainNode.setUserData(Settings.ENTITY, this);
 		rigidBodyControl.setUserObject(this);
 
 		game.addEntity(this);
@@ -99,15 +99,16 @@ public abstract class EnemyPlayersAvatar extends PhysicalEntity implements IAffe
 		//Settings.p("Pos: " + this.getLocation());
 	}
 
-
+/*
 	@Override
-	public void collidedWith(ICollideable other) {
+	public boolean collidedWith(ICollideable other) {
 		// Do nothing
+		return false;
 	}
 
-
+*/
 	@Override
-	public boolean canMove() {
+	public boolean hasMoved() {
 		return true; // Always calc for avatars
 	}
 
