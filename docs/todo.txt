@@ -4,6 +4,11 @@ LINKS
 https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.html
 
 
+
+* A boundingBox for a node is created automatically when a geometry is attached to a node.
+* 
+
+
 URGENT
 Test simplerigidcontrol with simpleFPS
 Cleverer debugging!
@@ -12,6 +17,7 @@ Hitscan weapons
 
 
 TODO
+Collision - always move back
 ConcurrentChange error in entities when firing grenade
 force avatar warp test
 Grenades

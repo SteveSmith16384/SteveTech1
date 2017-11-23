@@ -1,14 +1,20 @@
 package com.scs.stetech1.jme;
 
-import com.jme3.math.Ray;
+import com.jme3.collision.Collidable;
+import com.jme3.collision.CollisionResults;
+import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
 
-public class SimpleRigidBody {
-
+// todo - collision listener
+public class SimpleRigidBody implements Collidable {
+	
+	// todo - bounciness, air friction
 	private ICollisionChecker collChecker;
-	private PhysicalEntity entity;
+	//private PhysicalEntity entity;
+	public Node node;
 	private float gravY = -.01f; // todo - change if falling
 	private Vector3f moveDir = new Vector3f();
 	private Vector3f tmpMoveDir = new Vector3f();
@@ -76,6 +82,13 @@ public class SimpleRigidBody {
 		 if (isOnGround) {
 			 this.gravY = 1f;
 		 }
+	}
+
+
+	@Override
+	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 

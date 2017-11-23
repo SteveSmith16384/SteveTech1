@@ -5,7 +5,7 @@ import com.scs.stetech1.components.ICollideable;
 
 public interface ICollisionChecker {
 
-	boolean checkForCollisions(ICollideable entity);
+	boolean checkForCollisions(SimpleRigidBody entity);
 
 	//boolean checkForCollisions(Ray ray);
 }

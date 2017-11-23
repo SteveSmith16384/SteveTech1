@@ -22,6 +22,7 @@ import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.jme.ICollisionChecker;
+import com.scs.stetech1.jme.SimpleRigidBody;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.GeneralCommandMessage;
@@ -459,7 +460,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	@Override
-	public boolean checkForCollisions(ICollideable entity) {
+	public boolean checkForCollisions(SimpleRigidBody entity) {
 		boolean result = true;
 		CollisionResults res = new CollisionResults();
 		synchronized (entities) {
@@ -468,7 +469,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				if (e != entity) {
 					if (e instanceof ICollideable) {
 						ICollideable ic = (ICollideable)e;
-						if (ic.collideWith(entity.getBoundingVolume(), res) > 0) {
+						if (ic.collideWith(entity.node.getWorldBound(), res) > 0) {
 							Settings.p("Collided!");
 							result = entity.collidedWith(ic) && result; // Return  false if any return false
 						}
