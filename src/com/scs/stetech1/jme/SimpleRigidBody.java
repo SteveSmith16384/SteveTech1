@@ -1,32 +1,35 @@
 package com.scs.stetech1.jme;
 
+import java.util.Iterator;
+
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.scs.stetech1.components.ICollideable;
-import com.scs.stetech1.entities.PhysicalEntity;
 
 // todo - collision listener
 public class SimpleRigidBody implements Collidable {
-	
+
 	// todo - bounciness, air friction
-	private ICollisionChecker collChecker;
-	//private PhysicalEntity entity;
+	private ISimplePhysicsController collChecker;
 	public Node node;
+	public ISimplePhysicsEntity simplePhysicsEntity;
 	private float gravY = -.01f; // todo - change if falling
 	private Vector3f moveDir = new Vector3f();
 	private Vector3f tmpMoveDir = new Vector3f();
-	//private Vector3f tmpPrevPos = new Vector3f();
 	private boolean isOnGround = false;
-	
+
 	private static final Vector3f DOWN = new Vector3f(0, -1, 0);
 
-	public SimpleRigidBody(PhysicalEntity e, ICollisionChecker _collChecker) {
+	public SimpleRigidBody(ISimplePhysicsEntity _entity, ISimplePhysicsController _collChecker) {
 		super();
 
-		entity = e;
+		simplePhysicsEntity = _entity;
+		node = simplePhysicsEntity.getNode();
+		//node.setModelBound(new BoundingBox());
+		//node.updateModelBound();
 		collChecker = _collChecker;
 	}
 
@@ -64,53 +67,62 @@ public class SimpleRigidBody implements Collidable {
 	}
 
 
-	/**
+	/*
 	 * Returns whether the move was completed
 	 */
 	private boolean move(Vector3f offset) {
-		//tmpPrevPos.set(this.entity.getWorldTranslation());
-		this.entity.adjustWorldTranslation(offset);
-		boolean result = collChecker.checkForCollisions((ICollideable)this.entity);
-		if (!result) {
-			this.entity.adjustWorldTranslation(offset.multLocal(-1));
+		this.simplePhysicsEntity.getSimpleRigidBody().node.getLocalTranslation().addLocal(offset);
+		this.simplePhysicsEntity.getSimpleRigidBody().node.updateGeometricState(); // todo - need this?
+		boolean wasCollision = checkForCollisions();
+		if (wasCollision) {
+			this.simplePhysicsEntity.getNode().getLocalTranslation().subtractLocal(offset); // Move back
+			this.simplePhysicsEntity.getSimpleRigidBody().node.updateGeometricState(); // todo - need this?
+			return false;
 		}
-		return result;
+		return true;
 	}
 
 
-	public void jump() {
-		 if (isOnGround) {
-			 this.gravY = 1f;
-		 }
+	/*
+	 * Returns true if there was a collision
+	 */
+	public boolean checkForCollisions() {
+		boolean wasCollision = false; // this
+		CollisionResults res = new CollisionResults();
+		Iterator<Object> it = collChecker.getEntities();
+		//synchronized (entities) {
+		// Loop through the entities
+		while (it.hasNext()) { // todo - sync
+			Object e = it.next();
+			if (e instanceof ISimplePhysicsEntity) {
+				if (e != simplePhysicsEntity) { // Don't check ourselves
+					ISimplePhysicsEntity ic = (ISimplePhysicsEntity)e;
+					if (this.collideWith(ic.getNode().getWorldBound(), res) > 0) {
+						this.collChecker.collisionOccurred(this, e);
+						wasCollision = true;
+					}
+				}
+			}
+		}
+		return wasCollision;
 	}
 
 
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
-		// TODO Auto-generated method stub
-		return 0;
+		//SimpleRigidBody o =(SimpleRigidBody)other;
+		BoundingVolume bv = (BoundingVolume)other;
+		node.updateGeometricState(); // todo - remove?
+		node.updateModelBound(); //node.getLocalTranslation();  // todo - remove?
+		return this.node.collideWith(bv, results);
 	}
 
 
-    /*protected void checkOnGround() {
-        //TempVars vars = TempVars.get();
-        //Vector3f location = vars.vect1;
-        //Vector3f rayVector = vars.vect2;
-        //float height = getFinalHeight();
-        /*location.set(localUp).multLocal(height).addLocal(this.location);
-        rayVector.set(localUp).multLocal(-height - 0.1f).addLocal(location);
-        List<PhysicsRayTestResult> results = space.rayTest(location, rayVector);
-        vars.release();
-        for (PhysicsRayTestResult physicsRayTestResult : results) {
-            if (!physicsRayTestResult.getCollisionObject().equals(rigidBody)) {
-                onGround = true;
-                return;
-            }
-        }
-        onGround = false;*/
-    	/*Ray r = new Ray(this.entity.getWorldTranslation(), DOWN);
-		boolean result = collChecker.checkForCollisions(r);
-		return result;
-    }*/
+	public void jump() {
+		if (isOnGround) {
+			this.gravY = 1f;
+		}
+	}
+
 
 }

@@ -3,7 +3,6 @@ package com.scs.stetech1.entities;
 import java.util.HashMap;
 import java.util.List;
 
-import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -17,6 +16,7 @@ import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.jme.ISimplePhysicsEntity;
 import com.scs.stetech1.jme.SimpleRigidBody;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
@@ -25,7 +25,7 @@ import com.scs.stetech1.shared.HitData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ICollideable {
+public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ICollideable, ISimplePhysicsEntity {
 
 	protected Node mainNode;
 	public RigidBodyControl rigidBodyControl;
@@ -177,7 +177,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			/*if (dist > 10f) {
 				Settings.p(this.toString() + " has moved A LOT " + dist);
 			}*/
-			Settings.p(this.toString() + " has moved " + dist);
+			//Settings.p(this.toString() + " has moved " + dist);
 			this.prevPos.set(currentPos);
 		}
 
@@ -237,10 +237,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	@Override
+	/*@Override
 	public BoundingVolume getBoundingVolume() { // todo - override in subclasses?
 		return this.getMainNode().getWorldBound();
-	}
+	}*/
 
 
 	@Override
@@ -250,6 +250,17 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		
 	}
 
+
+	@Override
+	public Node getNode() {
+		return this.mainNode;
+	}
+
+
+	@Override
+	public SimpleRigidBody getSimpleRigidBody() {
+		return this.simpleRigidBody;
+	}
 
 
 }

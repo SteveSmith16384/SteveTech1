@@ -1,6 +1,5 @@
 package com.scs.stetech1.components;
 
-import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.Collidable;
 
 /*
@@ -9,8 +8,6 @@ import com.jme3.collision.Collidable;
  */
 public interface ICollideable extends Collidable {
 	
-	BoundingVolume getBoundingVolume();
-
 	/*
 	 * Code to run if the entity collides with another.
 	 * Return false if entity must move back.

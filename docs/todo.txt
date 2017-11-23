@@ -4,20 +4,16 @@ LINKS
 https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.html
 
 
-
-* A boundingBox for a node is created automatically when a geometry is attached to a node.
-* 
-
-
 URGENT
-Test simplerigidcontrol with simpleFPS
-Cleverer debugging!
-Option to turn off client sync
-Hitscan weapons
+Test collision with simple test
+Test simplerigidcontrol with simpleFPS - Create stand-alone server?
+Collision - always move back
+Search for todos
 
 
 TODO
-Collision - always move back
+Option to turn off client sync
+Hitscan weapons
 ConcurrentChange error in entities when firing grenade
 force avatar warp test
 Grenades
@@ -29,7 +25,6 @@ Show error if client unable to connect
 Laser bullets
 Add more walls
 	Make server & client abstract
-Search for todos
 Todo - am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
 Use test annotations

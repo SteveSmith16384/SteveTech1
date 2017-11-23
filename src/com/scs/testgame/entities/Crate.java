@@ -13,6 +13,7 @@ import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
@@ -20,7 +21,7 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.jme.ICollisionChecker;
+import com.scs.stetech1.jme.ISimplePhysicsController;
 import com.scs.stetech1.jme.SimpleRigidBody;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
@@ -79,7 +80,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {// Need
 			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		} else if (Settings.USE_SIMPLE_PHYSICS) {
 			if (_game.isServer()) {
-			this.simpleRigidBody = new SimpleRigidBody(this, (ICollisionChecker)game);
+				this.simpleRigidBody = new SimpleRigidBody(this, (ISimplePhysicsController)game);
 			}
 		}
 		game.getRootNode().attachChild(this.mainNode);
@@ -99,11 +100,17 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {// Need
 	}
 
 
-/*	@Override
+	@Override
+	public SimpleRigidBody getSimpleRigidBody() {
+		return this.simpleRigidBody;
+	}
+
+
+	/*	@Override
 	public boolean collidedWith(ICollideable other) {
 		// Do nothing
 		return false;
 	}
-*/
+	 */
 
 }

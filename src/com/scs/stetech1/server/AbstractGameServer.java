@@ -2,6 +2,7 @@ package com.scs.stetech1.server;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,7 +22,7 @@ import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
-import com.scs.stetech1.jme.ICollisionChecker;
+import com.scs.stetech1.jme.ISimplePhysicsController;
 import com.scs.stetech1.jme.SimpleRigidBody;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -46,7 +47,7 @@ import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener, ICollisionChecker  {
+public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener, ISimplePhysicsController  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -459,32 +460,10 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	@Override
-	public boolean checkForCollisions(SimpleRigidBody entity) {
-		boolean result = true;
-		CollisionResults res = new CollisionResults();
-		synchronized (entities) {
-			// Loop through the entities
-			for (IEntity e : entities.values()) {
-				if (e != entity) {
-					if (e instanceof ICollideable) {
-						ICollideable ic = (ICollideable)e;
-						if (ic.collideWith(entity.node.getWorldBound(), res) > 0) {
-							Settings.p("Collided!");
-							result = entity.collidedWith(ic) && result; // Return  false if any return false
-						}
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-
 	/*
 	 * Returns false if a hit.
 	 */
-	public boolean checkForCollisions(Ray r) {
+	/*public boolean checkForCollisions(Ray r) {
 		boolean result = true;
 		CollisionResults res = new CollisionResults();
 		synchronized (entities) {
@@ -500,7 +479,23 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			}
 		}
 		return result;
+	}*/
+
+
+	@Override
+	public Iterator getEntities() {
+		return this.entities.values().iterator();
 	}
+
+
+	@Override
+	public void collisionOccurred(SimpleRigidBody a, Object b) {
+		Settings.p("Collision!");
+		//PhysicalEntity pa = a
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }
 
