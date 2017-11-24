@@ -5,6 +5,9 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
+import com.scs.simplephysics.ICollisionListener;
+import com.scs.simplephysics.SimplePhysicsController;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICollideable;
@@ -35,20 +38,13 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 		game.getRootNode().attachChild(this.mainNode);
 		//laserNode.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*3)));
 		//laserNode.getLocalTranslation().y -= 0.1f; // Drop bullets slightly
-		if (Settings.USE_PHYSICS) {
-		rigidBodyControl = new RigidBodyControl(.1f);
-		if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
-		} else {
-			rigidBodyControl.setKinematic(true);
+		if (_game.isServer()) {
+			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
+			// Accelerate the physical ball to shoot it.
+			simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(40));// todo
+			simpleRigidBody.setGravity(0);
 		}
-		laserNode.addControl(rigidBodyControl);
-		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-
-		// Accelerate the physical ball to shoot it.
-		rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(40));
-		rigidBodyControl.setGravity(Vector3f.ZERO);
-		rigidBodyControl.setUserObject(this);
-		}
+		
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		laserNode.setUserData(Settings.ENTITY, this);
 		game.addEntity(this);

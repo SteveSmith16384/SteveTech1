@@ -73,16 +73,10 @@ public abstract class EnemyPlayersAvatar extends PhysicalEntity implements IAffe
 		//float rads = (float)Math.toRadians(rotDegrees);
 		//main_node.rotate(0, rads, 0);
 
-		rigidBodyControl = new RigidBodyControl(0f); // Only the server can move them!
-		mainNode.addControl(rigidBodyControl);
-		rigidBodyControl.setKinematic(true);
-
-		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
 		game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		mainNode.setUserData(Settings.ENTITY, this);
-		rigidBodyControl.setUserObject(this);
 
 		game.addEntity(this);
 

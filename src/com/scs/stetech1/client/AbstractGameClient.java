@@ -62,10 +62,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public enum Status { NotConnected, Connected, RcvdWelcome, GameStarted };
 
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
-	public static BitmapFont guiFont_small; // = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
+	public static BitmapFont guiFont_small;
 	public static AppSettings settings;
 	private IMessageClient networkClient;
-	public BulletAppState bulletAppState;
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	public HUD hud;
 	public IInputDevice input;
@@ -98,16 +97,6 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
 		guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-
-		// Set up Physics
-		if (Settings.USE_PHYSICS) {
-			bulletAppState = new BulletAppState();
-			getStateManager().attach(bulletAppState);
-			bulletAppState.getPhysicsSpace().addCollisionListener(this);
-			//bulletAppState.getPhysicsSpace().addTickListener(this);
-			//bulletAppState.getPhysicsSpace().enableDebug(this.getAssetManager());
-			bulletAppState.setEnabled(false); // Wait until all entities received
-		}
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Settings.CAM_DIST);
 
@@ -219,9 +208,6 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							this.removeEntity(rem.entityID);
 
 						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
-							if (Settings.USE_PHYSICS) {
-								this.bulletAppState.setEnabled(true); // Go!
-							}
 							status = Status.GameStarted;
 
 						} else {
@@ -435,17 +421,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	}
 
 
-	public BulletAppState getBulletAppState() {
-		return bulletAppState;
-	}
-
-
 	@Override
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(QUIT)) {
 			quit();
 		} else if (name.equalsIgnoreCase(TEST)) {
-			this.avatar.playerControl.warp(new Vector3f(10, 10, 10));
+			this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
 		}
 	}
 

@@ -97,7 +97,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 	}
 
 
-	public Vector3f getPointOnFloor(float range) {
+	/*public Vector3f getPointOnFloor(float range) {
 		Vector3f from = this.cam.getLocation();
 		Vector3f to = this.cam.getDirection().normalize().multLocal(range).addLocal(from);
 		List<PhysicsRayTestResult> results = game.getBulletAppState().getPhysicsSpace().rayTest(from, to);
@@ -122,7 +122,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 		}
 
 		return null;
-	}
+	}*/
 
 
 	public FrustumIntersect getInsideOutside(PhysicalEntity entity) {

@@ -14,7 +14,7 @@ public interface IEntityController {
 	
 	AssetManager getAssetManager();
 	
-	BulletAppState getBulletAppState();
+	//BulletAppState getBulletAppState();
 	
 	Node getRootNode();
 	

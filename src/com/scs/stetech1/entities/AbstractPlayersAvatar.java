@@ -35,7 +35,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camLeft = new Vector3f();
 
 	//public MyBetterCharacterControl2 playerControl;
-	public MyBetterCharacterControl playerControl; // Unused if physics turned off
+	//public MyBetterCharacterControl playerControl; // Unused if physics turned off
 	public MySimpleCharacterControl simplePlayerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
@@ -64,16 +64,9 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		this.getMainNode().attachChild(playerGeometry);
 
-		if (Settings.USE_PHYSICS) {
-			playerControl = new MyBetterCharacterControl(PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
-			playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
-			this.getMainNode().addControl(playerControl);
-			game.getBulletAppState().getPhysicsSpace().add(playerControl);
-			playerControl.getPhysicsRigidBody().setUserObject(this);
-		} else {
-			simplePlayerControl = new MySimpleCharacterControl(this);//PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
+		// todo simplePlayerControl = new MySimpleCharacterControl(this);//PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
+		//todo playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
 
-		}
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
@@ -131,11 +124,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			shoot();
 		}
 
-		if (Settings.USE_PHYSICS) {
-			playerControl.setWalkDirection(walkDirection.clone());
-		} else {
-			this.simplePlayerControl.setWalkDirection(walkDirection);
-		}
+		this.simplePlayerControl.setWalkDirection(walkDirection);
+
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 			if (abilityOther != null) {
@@ -145,13 +135,9 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
-	public boolean isOnGround() {
-		if (Settings.USE_PHYSICS) {
-			return playerControl.isOnGround();
-		} else {
-			return this.simplePlayerControl.isOnGround();
-		}
-	}
+	/*public boolean isOnGround() { // todo - needed?
+		return this.simplePlayerControl.isOnGround();
+	}*/
 
 
 	public void addToWalkDir(Vector3f offset) {
@@ -175,11 +161,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public void jump() {
 		//if (this.game.isServer()) { // Let the server do it, and the client copy
 		Settings.p("Jumping!");
-		if (Settings.USE_PHYSICS) {
-			this.playerControl.jump();
-		} else if (Settings.USE_SIMPLE_PHYSICS) {
-			this.simpleRigidBody.jump();
-		}
+		this.simpleRigidBody.jump();
 		//}
 	}
 
@@ -193,15 +175,15 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	}
 
 
-	@Override
+	/*@Override
 	public void remove() {
 		super.remove();
-		this.game.getBulletAppState().getPhysicsSpace().remove(this.playerControl);
+		//this.game.getBulletAppState().getPhysicsSpace().remove(this.playerControl);
 
 	}
+	 */
 
-
-	@Override
+	/*@Override
 	public Vector3f getWorldTranslation() {
 		// Need this override since main node is at 0,0,0 at the start
 		if (Settings.USE_PHYSICS) {
@@ -213,9 +195,9 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		//return this.getMainNode().getLocalTranslation();
 	}
 
-
+	 */
 	// Do NOT use this to "tweak" players position!
-	@Override
+	/*@Override
 	public void setWorldTranslation(Vector3f pos) {
 		//float dist = pos.distance(this.getWorldTranslation());
 		// We need to warp() players
@@ -227,7 +209,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		}
 	}
 
-
+	 */
 	/*@Override
 	public boolean canMove() {
 		return true; // Always calc for avatars

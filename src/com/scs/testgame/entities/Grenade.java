@@ -68,7 +68,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
 		ball_geo.setLocalTranslation(origin);
 
-		if (Settings.USE_PHYSICS) {
+		/*if (Settings.USE_PHYSICS) {
 			rigidBodyControl = new RigidBodyControl(.2f);
 			ball_geo.addControl(rigidBodyControl);
 			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
@@ -77,7 +77,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 				rigidBodyControl.setKinematic(true);
 			}
 			rigidBodyControl.setUserObject(this);
-		}
+		}*/
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		game.addEntity(this);

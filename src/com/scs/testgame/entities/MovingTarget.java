@@ -13,6 +13,9 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.scs.simplephysics.ICollisionListener;
+import com.scs.simplephysics.SimplePhysicsController;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
@@ -66,19 +69,10 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		mainNode.rotate(0, rads, 0);
 		mainNode.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
-		if (Settings.USE_PHYSICS) {
-			rigidBodyControl = new RigidBodyControl(1f);
-			//rigidBodyControl.setGravity(Vector3f.ZERO); // Floats
-			rigidBodyControl = new RigidBodyControl(1f);
-			if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
-			} else {
-				rigidBodyControl.setKinematic(true);
-			}
-			mainNode.addControl(rigidBodyControl);
-
-			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-			rigidBodyControl.setUserObject(this);
+		if (_game.isServer()) {
+			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
 		}
+
 		game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Settings.ENTITY, this);
@@ -96,7 +90,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		// move around
 		//todo - move randomly if (Settings.r)
-		this.rigidBodyControl.applyCentralForce(currDir.mult(SPEED));
+		//this.rigidBodyControl.applyCentralForce(currDir.mult(SPEED));
 
 	}
 

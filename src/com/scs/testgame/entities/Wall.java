@@ -10,6 +10,9 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.scs.simplephysics.ICollisionListener;
+import com.scs.simplephysics.SimplePhysicsController;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
@@ -60,13 +63,10 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		}
 		geometry.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2)); // Never change position of mainNode (unless the whole object is moving)
 
-		if (Settings.USE_PHYSICS) {
-			rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
-			mainNode.addControl(rigidBodyControl);
-
-			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-			rigidBodyControl.setUserObject(this);
+		if (_game.isServer()) {
+			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
 		}
+
 		game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Settings.ENTITY, this);

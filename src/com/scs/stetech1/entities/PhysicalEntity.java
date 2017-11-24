@@ -1,18 +1,15 @@
 package com.scs.stetech1.entities;
 
 import java.util.HashMap;
-import java.util.List;
 
-import com.jme3.bounding.BoundingVolume;
-import com.jme3.bullet.collision.PhysicsRayTestResult;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.Collidable;
+import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.scs.simplephysics.ISimplePhysicsEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.ICollideable;
@@ -25,7 +22,7 @@ import com.scs.stetech1.shared.HitData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ICollideable, ISimplePhysicsEntity {
+public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ICollideable {
 
 	protected Node mainNode;
 	public SimpleRigidBody simpleRigidBody;
@@ -40,7 +37,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
 	private Quaternion originalRot = new Quaternion();
-	
+
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name) {
 		super(_game, id, type, _name);
 
@@ -85,9 +82,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	@Override
 	public void remove() {
-		if (rigidBodyControl != null) {
-			this.game.getBulletAppState().getPhysicsSpace().remove(this.rigidBodyControl);
-		}
 		super.remove();
 		if (this.mainNode.getParent() == null) {
 			//throw new RuntimeException("No parent!");
@@ -104,24 +98,26 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public float distance(PhysicalEntity o) {
 		//return distance(o.getMainNode().getWorldTranslation());
-		return distance(o.rigidBodyControl.getPhysicsLocation());
+		return distance(o.getWorldTranslation());
 	}
 
 
 	public float distance(Vector3f pos) {
-		//float dist = this.getMainNode().getWorldTranslation().distance(pos);
-		float dist = this.rigidBodyControl.getPhysicsLocation().distance(pos);
+		float dist = this.getWorldTranslation().distance(pos);
 		return dist;
 	}
 
 
 	public HitData calcHitEntity(Vector3f shootDir, float range) {
 		Vector3f from = this.getWorldTranslation();
-		Vector3f to = shootDir.normalize().multLocal(range).addLocal(from);
-		List<PhysicsRayTestResult> results = game.getBulletAppState().getPhysicsSpace().rayTest(from, to);
-		float dist = -1;
-		PhysicsRayTestResult closest = null;
-		for (PhysicsRayTestResult r : results) {
+		//Vector3f to = shootDir.normalize().multLocal(range).addLocal(from);
+		AbstractGameServer server = (AbstractGameServer)game;
+		Ray ray = new Ray(from, shootDir);
+		CollisionResults results = server.checkForCollisions(ray);
+		//List<PhysicsRayTestResult> results = game.getBulletAppState().getPhysicsSpace().rayTest(from, to);
+		/*float dist = -1;
+		CollisionResult closest = null;
+		for (CollisionResult r : results) {
 			if (r.getCollisionObject().getUserObject() != null) {
 				if (closest == null) {
 					closest = r;
@@ -130,12 +126,15 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				}
 				dist = r.getHitFraction();
 			}
-		}
+		}*/
+		CollisionResult closest = results.getClosestCollision();
 		if (closest != null) {
-			PhysicalEntity e = (PhysicalEntity)closest.getCollisionObject().getUserObject();
-			Vector3f hitpoint = to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
-			Settings.p("Hit " + e + " at " + hitpoint);
-			return new HitData(e, hitpoint);
+			if (closest.getDistance() <= range) {
+				PhysicalEntity e = null; // todo (PhysicalEntity)closest..getCollisionObject().getUserObject();
+				Vector3f hitpoint = closest.getContactPoint();// to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
+				Settings.p("Hit " + e + " at " + hitpoint);
+				return new HitData(e, hitpoint);
+			}
 		}
 		return null;
 	}
@@ -156,7 +155,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void applyForce(Vector3f dir) {
-		rigidBodyControl.applyImpulse(dir, Vector3f.ZERO);//.applyCentralForce(dir);
+		//rigidBodyControl.applyImpulse(dir, Vector3f.ZERO);//.applyCentralForce(dir);
 	}
 
 
@@ -240,11 +239,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public boolean collidedWith(ICollideable other) {
 		// override if required
 		return false;
-		
+
 	}
 
 
-	@Override
+	/*@Override
 	public Node getNode() {
 		return this.mainNode;
 	}
@@ -254,6 +253,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public SimpleRigidBody getSimpleRigidBody() {
 		return this.simpleRigidBody;
 	}
-
+*/
 
 }

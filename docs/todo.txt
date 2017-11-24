@@ -74,3 +74,14 @@ Player shooting
 	Server moves players to correct position and checks the client has hit
 	 
 	
+
+	
+	I am trying to cancel my automatic renewal of PSN.  I have tried all of the following:
+
+1) The direct link to "Cancel automatic renewal" in your email "Your PlayStation®Plus annual membership fee is due" only takes me to the account management page.
+
+2) I tried the link in the same email entitled "You can find helpful information on how to cancel your subscription here." which took me to https://www.playstation.com/en-gb/get-help/help-library/store---transactions/payments---refunds/how-to-cancel-a-service-subscription/.  This page says "Go to [Account Management] > [Services List]".  However, there is no wording "services list" on this page.  It also suggests going to the Media tab to find and cancel the subscription service.  However, I could find nothing under the media tab apart from a list of all my games.
+
+3) I then tried the page https://www.playstation.com/en-gb/get-help/help-library/store---transactions/payments---refunds/how-to-cancel-a-service-subscription-using-playstation-app/ since I am doing this on the web.  This tells me to go to the Media Tab, and select Games and "Select the current PS Plus or PS Now".  After scrolling through 9 pages of games (a search feature would be a good idea) the only thing I can find is something called "PS Plus UBS".  However, when I click on this I get the message "An error occurred while performing this operation.".
+
+Please can you tell me how to cancel my automatic renewal of PSN.  

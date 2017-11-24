@@ -1,21 +1,21 @@
 package com.scs.stetech1.server;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.collision.CollisionResults;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
-import com.scs.simplephysics.ISimplePhysicsController;
+import com.scs.simplephysics.ICollisionListener;
+import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICollideable;
@@ -46,7 +46,7 @@ import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener, ISimplePhysicsController  {
+public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener, ICollisionListener  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -60,28 +60,24 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
-	public BulletAppState bulletAppState;
+	//public BulletAppState bulletAppState;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	private LogWindow logWindow;
 	private IConsole console;
-
+	private SimplePhysicsController physicsController;
+	
 	public AbstractGameServer() throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
 		networkServer = new KryonetServer(this, Settings.TCP_PORT, Settings.UDP_PORT);// SpiderMonkeyServer(this); // todo - move to constructor
+		
+		physicsController = new SimplePhysicsController(this);
 	}
 
 
 	@Override
 	public void simpleInitApp() {
-		// Set up Physics
-		if (Settings.USE_PHYSICS) {
-			bulletAppState = new BulletAppState();
-			getStateManager().attach(bulletAppState);
-			bulletAppState.getPhysicsSpace().addCollisionListener(this);
-			//bulletAppState.getPhysicsSpace().addTickListener(this);
-		}
 		createGame();
 		console.appendText("Game created");
 		loopTimer.start();
@@ -358,12 +354,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	public BulletAppState getBulletAppState() {
-		return bulletAppState;
-	}
-
-
-
 	@Override
 	public void collision(PhysicsCollisionEvent event) {
 		String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
@@ -442,7 +432,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			for(ClientData client : this.clients.values()) {
 				if (client.avatar != null) {
 					Settings.p("Warping player");
-					client.avatar.playerControl.warp(new Vector3f(10, 10, 10));
+					client.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
 					break;
 				}
 			}
@@ -462,39 +452,28 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	/*
 	 * Returns false if a hit.
 	 */
-	/*public boolean checkForCollisions(Ray r) {
-		boolean result = true;
+	public CollisionResults checkForCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		synchronized (entities) {
 			// Loop through the entities
 			for (IEntity e : entities.values()) {
-				if (e instanceof ICollideable) {
-					ICollideable ic = (ICollideable)e;
-					if (r.collideWith(ic.getBoundingVolume(), res) > 0) {
-						Settings.p("Collided!");
-						return false;
-					}
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity ic = (PhysicalEntity)e;
+					r.collideWith(ic.getMainNode(), res);
 				}
 			}
 		}
-		return result;
-	}*/
-
-
-	@Override
-	public Collection getEntities() {
-		return Collections.synchronizedCollection(this.entities.values());
-		//return this.entities.values().iterator();
+		return res;
 	}
 
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody a, Object b) {
+	public void collisionOccurred(SimpleRigidBody a, SimpleRigidBody b, Vector3f point) {
 		Settings.p("Collision between " + a + " and " + b);
-		if (b != null && b instanceof ICollideable) {
+		/*if (b != null && b instanceof ICollideable) {
 			PhysicalEntity pa = (PhysicalEntity)a.getSimplePhysicsEntity();
 			pa.collidedWith((ICollideable)b);
-		}
+		}*/
 
 	}
 

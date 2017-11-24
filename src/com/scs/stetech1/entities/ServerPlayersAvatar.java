@@ -97,11 +97,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 		// Move us below the map
 		Vector3f pos = this.getMainNode().getWorldTranslation().clone();//.floor_phy.getPhysicsLocation().clone();
 		pos.y = -10;//-SimpleCity.FLOOR_THICKNESS * 2;
-		if (Settings.USE_PHYSICS) {
-			playerControl.warp(pos);
-		} else {
-			super.setWorldTranslation(pos);
-		}
+		super.setWorldTranslation(pos);
 	}
 
 
@@ -135,11 +131,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 		//Point p = module.mapData.getPlayerStartPos(id);
 		Vector3f pos = new Vector3f(3f, 15f, 3f + this.playerID);
 		Settings.p("Scheduling player to start position: " + pos);
-		if (Settings.USE_PHYSICS) {
-			this.playerControl.warp(pos);
-		} else {
 			super.setWorldTranslation(pos);
-		}
 		if (invuln) {
 			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
 		}

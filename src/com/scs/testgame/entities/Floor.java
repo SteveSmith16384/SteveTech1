@@ -13,6 +13,9 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
+import com.scs.simplephysics.ICollisionListener;
+import com.scs.simplephysics.SimplePhysicsController;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IProcessByClient;
@@ -76,14 +79,8 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 		this.mainNode.attachChild(geometry);
 		geometry.setLocalTranslation(x+(w/2), yTop-(h/2), z+(d/2)); // Move it into position
 
-		if (Settings.USE_PHYSICS) {
-			rigidBodyControl = new RigidBodyControl(0f); // Doesn't move
-			mainNode.addControl(rigidBodyControl);
-			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-			rigidBodyControl.setUserObject(this);
-
-			rigidBodyControl.setFriction(1f);
-			rigidBodyControl.setRestitution(1f);
+		if (_game.isServer()) {
+			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
 		}
 		game.getRootNode().attachChild(this.mainNode);
 
