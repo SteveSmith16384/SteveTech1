@@ -5,14 +5,13 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 
 URGENT
-Test collision with simple test
-Test simplerigidcontrol with simpleFPS
-Create stand-alone server?
-Collision - always move back
+Jumping not working
+Try bouncing a ball
 Search for todos
 
 
 TODO
+Create stand-alone server?
 Option to turn off client sync
 Hitscan weapons
 ConcurrentChange error in entities when firing grenade

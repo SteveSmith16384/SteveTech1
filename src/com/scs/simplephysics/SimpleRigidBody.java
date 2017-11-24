@@ -13,8 +13,8 @@ public class SimpleRigidBody implements Collidable {
 	private static final float AIR_FRICTION = 0.99f;
 	//private static final Vector3f DOWN = new Vector3f(0, -1, 0);
 
-	private float currentGravityYChange = -.02f; // todo - inc if falling
-	private float gravInc = 0.02f;
+	private float currentGravityYChange = -.002f;
+	private float gravInc = -0.002f;
 
 	private SimplePhysicsController physicsController;
 	private Vector3f moveDir = new Vector3f();
@@ -23,6 +23,7 @@ public class SimpleRigidBody implements Collidable {
 	private float bounciness = .5f;
 	private Spatial spatial;
 	public Object tag;
+	public boolean canMove = true;
 
 	private CollisionResults collisionResults = new CollisionResults();
 
@@ -30,9 +31,10 @@ public class SimpleRigidBody implements Collidable {
 		super();
 
 		spatial = s;
-		//simplePhysicsEntity = _entity;
 		physicsController = _controller;
 		tag = _tag;
+
+		physicsController.addSimpleRigidBody(this);
 	}
 
 
@@ -50,52 +52,54 @@ public class SimpleRigidBody implements Collidable {
 		this.gravInc = g;
 	}
 
-	public void process(float tpf_secs) {
-		// Move X
-		if (moveDir.x != 0) {
-			moveDir.x = moveDir.x * AIR_FRICTION;
-			this.tmpMoveDir.set(moveDir.x, 0, 0);
-			SimpleRigidBody collidedWith = this.move(tmpMoveDir);
-			if (collidedWith != null) {
-				//SimpleRigidBody body = collidedWith.getSimpleRigidBody();
-				float bounce = this.bounciness;// * body.bounciness;
-				moveDir.x = moveDir.x * bounce;
-			}
-		}
-		// Move Y
-		isOnGround = false;
-		if (gravInc != 0) {
-			currentGravityYChange -= gravInc;
-		}
-		if (moveDir.y != 0 || currentGravityYChange != 0) {
-			moveDir.y = moveDir.y * AIR_FRICTION;
-			float totalOffset = moveDir.y+currentGravityYChange;
-			this.tmpMoveDir.set(0, totalOffset, 0);
-			SimpleRigidBody collidedWith = this.move(tmpMoveDir);
-			if (collidedWith != null) {
-				//SimpleRigidBody body = collidedWith.getSimpleRigidBody();
-				float bounce = this.bounciness;// * body.bounciness;
-				moveDir.y = moveDir.y * bounce;
-				currentGravityYChange = 0; // reset gravY if not falling
-				if (totalOffset < 0) {
-					isOnGround = true;
+
+	public void process(float tpf_secs) { // todo- use tpf
+		if (this.canMove) {
+			// Move X
+			if (moveDir.x != 0) {
+				moveDir.x = moveDir.x * AIR_FRICTION;
+				this.tmpMoveDir.set(moveDir.x*tpf_secs, 0, 0);
+				SimpleRigidBody collidedWith = this.move(tmpMoveDir); // todo - move a max distance to prevent falling through floors
+				if (collidedWith != null) {
+					float bounce = this.bounciness;// * body.bounciness;
+					moveDir.x = moveDir.x * bounce * -1;
 				}
 			}
 
-		}
+			// Move Y
+			isOnGround = false;
+			currentGravityYChange += gravInc;
+			if (moveDir.y != 0 || currentGravityYChange != 0) {
+				moveDir.y = moveDir.y * AIR_FRICTION;
+				float totalOffset = moveDir.y+currentGravityYChange;
+				this.tmpMoveDir.set(0, totalOffset*tpf_secs, 0);
+				SimpleRigidBody collidedWith = this.move(tmpMoveDir);
+				if (collidedWith != null) {
+					{
+						// Bounce
+						float bounce = this.bounciness;
+						moveDir.y = moveDir.y * bounce * -1;
+						currentGravityYChange = currentGravityYChange * bounce * -1;
+						//currentGravityYChange = 0; // reset gravY if not falling
+					}
+					if (totalOffset < 0) {
+						isOnGround = true;
+					}
+				}
 
-		//Move z
-		if (moveDir.z != 0) {
-			moveDir.z = moveDir.z * AIR_FRICTION;
-			this.tmpMoveDir.set(0, 0, moveDir.z);
-			SimpleRigidBody collidedWith = this.move(tmpMoveDir);
-			if (collidedWith != null) {
-				//SimpleRigidBody body = collidedWith.getSimpleRigidBody();
-				float bounce = this.bounciness;// * body.bounciness;
-				moveDir.z = moveDir.z * bounce;
+			}
+
+			//Move z
+			if (moveDir.z != 0) {
+				moveDir.z = moveDir.z * AIR_FRICTION;
+				this.tmpMoveDir.set(0, 0, moveDir.z*tpf_secs);
+				SimpleRigidBody collidedWith = this.move(tmpMoveDir);
+				if (collidedWith != null) {
+					float bounce = this.bounciness;// * body.bounciness;
+					moveDir.z = moveDir.z * bounce * -1;
+				}
 			}
 		}
-
 	}
 
 
@@ -123,7 +127,7 @@ public class SimpleRigidBody implements Collidable {
 			// Loop through the entities
 			for(SimpleRigidBody e : entities) {
 				if (e != this) { // Don't check ourselves
-					if (this.collideWith(spatial.getWorldBound(), collisionResults) > 0) {
+					if (this.collideWith(e.spatial.getWorldBound(), collisionResults) > 0) {
 						collidedWith = e;
 						this.physicsController.collListener.collisionOccurred(this, e, collisionResults.getClosestCollision().getContactPoint());
 						collisionResults.clear();
@@ -143,12 +147,17 @@ public class SimpleRigidBody implements Collidable {
 
 	public void jump() {
 		if (isOnGround) {
-			this.currentGravityYChange = 1f;
+			this.currentGravityYChange = .1f;
 		}
 	}
 
 
 	public void setBounciness(float b) {
 		this.bounciness = b;
+	}
+
+
+	public String toString() {
+		return "SimpleRigidBody_" + tag;
 	}
 }

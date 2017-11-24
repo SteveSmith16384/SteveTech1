@@ -8,6 +8,7 @@ public class SimplePhysicsController {
 	
 	private ArrayList<SimpleRigidBody> entities = new ArrayList<>();
 	public ICollisionListener collListener; // todo - make private
+	public boolean enabled = true;
 	
 	public SimplePhysicsController(ICollisionListener _collListener) {
 		super();
@@ -28,8 +29,10 @@ public class SimplePhysicsController {
 	
 	
 	public void update(float tpf_secs) {
+		if (this.enabled) {
 		for (SimpleRigidBody srb : this.entities) {
 			srb.process(tpf_secs);
+		}
 		}
 	}
 }

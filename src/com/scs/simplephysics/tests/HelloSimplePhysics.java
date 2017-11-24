@@ -34,7 +34,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	// Our movement speed
 	private Vector3f walkDirection = new Vector3f();
 	private SimplePhysicsController physicsController;
-	
+
 	private float speed;
 	private float strafeSpeed;
 	private float headHeight;
@@ -47,13 +47,15 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		app.start();
 	}
 
+
 	public void simpleInitApp() {
 		physicsController = new SimplePhysicsController(this);
-		
+		physicsController.enabled = false;
+
 		// set player speed
-		speed = 6f;
-		strafeSpeed = 4f;
-		headHeight = 3f;
+		speed = .1f;
+		strafeSpeed = .1f;
+		headHeight = 1f;
 
 		/** Create a box to use as our player model */
 		Box box1 = new Box(1,1,1);
@@ -61,7 +63,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material
 		mat.setColor("Color", ColorRGBA.Blue);   // set color of material to blue
 		playerModel.setMaterial(mat);    
-		playerModel.setLocalTranslation(new Vector3f(0,6,0));
 		playerModel.setLocalTranslation(new Vector3f(0,6,0));
 		playerModel.setCullHint(CullHint.Always);
 		rootNode.attachChild(playerModel);
@@ -76,7 +77,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		setUpKeys();
 		setUpLight();
 
-		player = new SimpleRigidBody(playerModel, this.physicsController, null);
+		player = new SimpleRigidBody(playerModel, this.physicsController, "Player");
 
 		// set basic physical properties:
 		// todo player.setJumpForce(new Vector3f(0,5f,0));
@@ -89,8 +90,9 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		//bulletAppState.getPhysicsSpace().add(landscape);
 
 		this.initFloor();
-		this.addBox(.1f, 3f, 5f, 5f);
-		this.addBox(2f, 1f, 7f, 7f);
+		//this.addBox(.1f, 5f, 5f, 5f);
+		this.addBox(2f, 12f, 7f, 1f, 1f);
+		this.addBox(2f, 15f, 7f, 1f, 1f);
 
 	}
 
@@ -111,31 +113,29 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		floor_geo.setMaterial(floor_mat);
 		floor_geo.setLocalTranslation(0, -0.1f, 0);
 		this.rootNode.attachChild(floor_geo);
-		
-		SimpleRigidBody srb = new SimpleRigidBody(floor_geo, physicsController, null);
-		physicsController.addSimpleRigidBody(srb);
+
+		SimpleRigidBody srb = new SimpleRigidBody(floor_geo, physicsController, "Floor");
+		srb.canMove = false;
 	}
 
 
-	public void addBox(float w, float h, float x, float z) {
-		Box floor = new Box(w, h, w);
-		floor.scaleTextureCoordinates(new Vector2f(3, 6));
+	public void addBox(float x, float y, float z, float w, float h) {
+		Box box = new Box(w/2, h/2, w/2);
+		box.scaleTextureCoordinates(new Vector2f(3, 6));
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		//TextureKey key3 = new TextureKey("Textures/Terrain/Pond/Pond.jpg");
 		TextureKey key3 = new TextureKey("Textures/floor015.png");
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
 		floor_mat.setTexture("ColorMap", tex3);
 
-		Geometry floor_geo = new Geometry("Box", floor);
-		floor_geo.setMaterial(floor_mat);
-		floor_geo.setLocalTranslation(x, h*2, z);
-		this.rootNode.attachChild(floor_geo);
+		Geometry box_geo = new Geometry("Box", box);
+		box_geo.setMaterial(floor_mat);
+		box_geo.setLocalTranslation(x, y, z);
+		this.rootNode.attachChild(box_geo);
 
-		SimpleRigidBody srb = new SimpleRigidBody(floor_geo, physicsController, null);
-		physicsController.addSimpleRigidBody(srb);
+		SimpleRigidBody srb = new SimpleRigidBody(box_geo, physicsController, "Box");
 	}
 
 
@@ -150,6 +150,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
 		rootNode.addLight(dl);
 	}
+
 
 	/** We over-write some navigational key mappings here, so we can
 	 * add physics-controlled walking and jumping: */
@@ -169,6 +170,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		inputManager.addListener(this, "Test");
 	}
 
+	
 	/** These are our custom actions triggered by key presses.
 	 * We do not walk yet, we just keep track of the direction the user pressed. */
 	public void onAction(String binding, boolean isPressed, float tpf) {
@@ -181,10 +183,14 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		} else if (binding.equals("Down")) {
 			down = isPressed;
 		} else if (binding.equals("Jump")) {
-			if (isPressed) { player.jump(); }
+			if (isPressed) { 
+				player.jump(); 
+			}
 		} else if (binding.equals("Test")) {
 			if (isPressed) { 
-				playerModel.setLocalTranslation(new Vector3f(2, 10, 2));
+				//playerModel.setLocalTranslation(new Vector3f(2, 10, 2));
+				physicsController.enabled = true;
+
 			}
 		}
 	}
@@ -199,7 +205,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	@Override
 	public void simpleUpdate(float tpf) {
 		this.physicsController.update(tpf);
-		
+
 		/*
 		 * The direction of character is determined by the camera angle
 		 * the Y direction is set to zero to keep our character from
@@ -227,13 +233,14 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		 * By default the location of the box is on the bottom of the terrain
 		 * we make a slight offset to adjust for head height.
 		 */
-		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x,playerModel.getLocalTranslation().y + headHeight,playerModel.getLocalTranslation().z));
+		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
 
 	}
+	
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody a, SimpleRigidBody b, Vector3f point) {
-		
-		
+		//System.out.println("Collision between " + a.tag + " and " + b.tag);
+
 	}
 }
