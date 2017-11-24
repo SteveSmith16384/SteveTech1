@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import com.jme3.system.JmeContext;
-import com.scs.stetech1.jme.SimpleRigidBody;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.testgame.entities.Crate;

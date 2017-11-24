@@ -1,4 +1,4 @@
-package com.scs.stetech1.jme;
+package com.scs.simplephysics;
 
 import java.util.Collection;
 import java.util.Iterator;

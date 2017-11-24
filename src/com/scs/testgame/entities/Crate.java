@@ -18,17 +18,17 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.scs.simplephysics.ISimplePhysicsController;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.jme.ISimplePhysicsController;
-import com.scs.stetech1.jme.SimpleRigidBody;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Crate extends PhysicalEntity implements IAffectedByPhysics {// Need ICollideable so lasers don't bounce off it
+public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 
 	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
 		super(_game, id, EntityTypes.CRATE, "Crate");

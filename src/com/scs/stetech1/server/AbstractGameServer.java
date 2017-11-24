@@ -15,14 +15,14 @@ import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
+import com.scs.simplephysics.ISimplePhysicsController;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
-import com.scs.stetech1.jme.ISimplePhysicsController;
-import com.scs.stetech1.jme.SimpleRigidBody;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.GeneralCommandMessage;
@@ -490,10 +490,12 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody a, Object b) {
-		Settings.p("Collision!");
-		//PhysicalEntity pa = a
-		// TODO Auto-generated method stub
-		
+		Settings.p("Collision between " + a + " and " + b);
+		if (b != null && b instanceof ICollideable) {
+			PhysicalEntity pa = (PhysicalEntity)a.getSimplePhysicsEntity();
+			pa.collidedWith((ICollideable)b);
+		}
+
 	}
 
 

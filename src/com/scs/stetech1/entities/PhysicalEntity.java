@@ -12,12 +12,12 @@ import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.scs.simplephysics.ISimplePhysicsEntity;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.components.IProcessByServer;
-import com.scs.stetech1.jme.ISimplePhysicsEntity;
-import com.scs.stetech1.jme.SimpleRigidBody;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
@@ -28,7 +28,6 @@ import com.scs.stetech1.shared.PositionCalculator;
 public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ICollideable, ISimplePhysicsEntity {
 
 	protected Node mainNode;
-	public RigidBodyControl rigidBodyControl;
 	public SimpleRigidBody simpleRigidBody;
 	protected PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 
@@ -235,12 +234,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
 		return mainNode.collideWith(other, results);
 	}
-
-
-	/*@Override
-	public BoundingVolume getBoundingVolume() { // todo - override in subclasses?
-		return this.getMainNode().getWorldBound();
-	}*/
 
 
 	@Override

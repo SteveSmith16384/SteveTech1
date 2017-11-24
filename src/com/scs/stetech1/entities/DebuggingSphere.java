@@ -9,7 +9,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
-import com.scs.stetech1.jme.SimpleRigidBody;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;

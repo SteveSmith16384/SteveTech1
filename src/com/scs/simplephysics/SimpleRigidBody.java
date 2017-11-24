@@ -1,4 +1,4 @@
-package com.scs.stetech1.jme;
+package com.scs.simplephysics;
 
 import java.util.Collection;
 
@@ -15,7 +15,7 @@ public class SimpleRigidBody implements Collidable {
 	//private static final Vector3f DOWN = new Vector3f(0, -1, 0);
 
 	private ISimplePhysicsController physicsController;
-	private Node node;
+	//private Node node;
 	private ISimplePhysicsEntity simplePhysicsEntity;
 	private float gravY = -.02f; // todo - change if falling
 	private Vector3f moveDir = new Vector3f();
@@ -29,12 +29,15 @@ public class SimpleRigidBody implements Collidable {
 		super();
 
 		simplePhysicsEntity = _entity;
-		node = simplePhysicsEntity.getNode();
-		//node.setModelBound(new BoundingBox());
-		//node.updateModelBound();
+		//node = simplePhysicsEntity.getNode();
 		physicsController = _collChecker;
 	}
 
+	
+	public ISimplePhysicsEntity getSimplePhysicsEntity() {
+		return this.simplePhysicsEntity;
+	}
+	
 
 	public void process(float tpf_secs) {
 		// Move X
@@ -43,8 +46,8 @@ public class SimpleRigidBody implements Collidable {
 			this.tmpMoveDir.set(moveDir.x, 0, 0);
 			ISimplePhysicsEntity collidedWith = this.move(tmpMoveDir);
 			if (collidedWith != null) {
-				SimpleRigidBody body = collidedWith.getSimpleRigidBody();
-				float bounce = this.bounciness * body.bounciness;
+				//SimpleRigidBody body = collidedWith.getSimpleRigidBody();
+				float bounce = this.bounciness;// * body.bounciness;
 				moveDir.x = moveDir.x * bounce;
 			}
 		}
@@ -56,8 +59,8 @@ public class SimpleRigidBody implements Collidable {
 			this.tmpMoveDir.set(0, totalOffset, 0);
 			ISimplePhysicsEntity collidedWith = this.move(tmpMoveDir);
 			if (collidedWith != null) {
-				SimpleRigidBody body = collidedWith.getSimpleRigidBody();
-				float bounce = this.bounciness * body.bounciness;
+				//SimpleRigidBody body = collidedWith.getSimpleRigidBody();
+				float bounce = this.bounciness;// * body.bounciness;
 				moveDir.y = moveDir.y * bounce;
 				gravY = 0; // reset gravY if not falling
 				if (totalOffset < 0) {
@@ -73,8 +76,8 @@ public class SimpleRigidBody implements Collidable {
 			this.tmpMoveDir.set(0, 0, moveDir.z);
 			ISimplePhysicsEntity collidedWith = this.move(tmpMoveDir);
 			if (collidedWith != null) {
-				SimpleRigidBody body = collidedWith.getSimpleRigidBody();
-				float bounce = this.bounciness * body.bounciness;
+				//SimpleRigidBody body = collidedWith.getSimpleRigidBody();
+				float bounce = this.bounciness;// * body.bounciness;
 				moveDir.z = moveDir.z * bounce;
 			}
 		}
@@ -86,12 +89,10 @@ public class SimpleRigidBody implements Collidable {
 	 * Returns object they collided with
 	 */
 	private ISimplePhysicsEntity move(Vector3f offset) {
-		this.simplePhysicsEntity.getSimpleRigidBody().node.move(offset);
-		//this.simplePhysicsEntity.getSimpleRigidBody().node.updateGeometricState(); // todo - need this?
+		this.simplePhysicsEntity.getNode().move(offset);
 		ISimplePhysicsEntity wasCollision = checkForCollisions();
 		if (wasCollision != null) {
 			this.simplePhysicsEntity.getNode().move(offset.negateLocal()); // Move back
-			//this.simplePhysicsEntity.getSimpleRigidBody().node.updateGeometricState(); // todo - need this?
 		}
 		return wasCollision;
 	}
@@ -101,23 +102,18 @@ public class SimpleRigidBody implements Collidable {
 	 * Returns object they collided with
 	 */
 	public ISimplePhysicsEntity checkForCollisions() {
-		//boolean wasCollision = false; // this
 		collisionResults.clear();
 		ISimplePhysicsEntity collidedWith = null;
-		//Iterator<Object> it = collChecker.getEntities();
 		Collection<Object> entities = physicsController.getEntities();
 		synchronized (entities) {
 			// Loop through the entities
 			for(Object e : entities) {
-				//while (it.hasNext()) {
-				//Object e = it.next();
 				if (e instanceof ISimplePhysicsEntity) {
 					if (e != simplePhysicsEntity) { // Don't check ourselves
 						ISimplePhysicsEntity ic = (ISimplePhysicsEntity)e;
 						if (this.collideWith(ic.getNode().getWorldBound(), collisionResults) > 0) {
 							collidedWith = ic;
 							this.physicsController.collisionOccurred(this, e);
-							//wasCollision = true;
 						}
 					}
 				}
@@ -129,11 +125,7 @@ public class SimpleRigidBody implements Collidable {
 
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
-		//SimpleRigidBody o =(SimpleRigidBody)other;
-		//BoundingVolume bv = (BoundingVolume)other;
-		//node.updateGeometricState(); // todo - remove?
-		//node.updateModelBound(); //node.getLocalTranslation();  // todo - remove?
-		return this.node.collideWith(other, results);
+		return this.simplePhysicsEntity.getNode().collideWith(other, results);
 	}
 
 
