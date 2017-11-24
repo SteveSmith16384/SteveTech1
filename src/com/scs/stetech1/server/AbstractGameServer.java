@@ -1,8 +1,9 @@
 package com.scs.stetech1.server;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,8 +12,6 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.collision.CollisionResults;
-import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
@@ -483,8 +482,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	@Override
-	public Iterator getEntities() {
-		return this.entities.values().iterator();
+	public Collection getEntities() {
+		return Collections.synchronizedCollection(this.entities.values());
+		//return this.entities.values().iterator();
 	}
 
 

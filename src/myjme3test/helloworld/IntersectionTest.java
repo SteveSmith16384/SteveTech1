@@ -19,6 +19,7 @@ public class IntersectionTest extends SimpleApplication {
 		app.showSettings = false;
 
 		app.start();
+		throw new RuntimeException("This class is hardly started");
 	}
 
 

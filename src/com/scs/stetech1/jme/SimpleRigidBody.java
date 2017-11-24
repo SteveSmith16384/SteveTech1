@@ -1,6 +1,6 @@
 package com.scs.stetech1.jme;
 
-import java.util.Iterator;
+import java.util.Collection;
 
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.Collidable;
@@ -9,19 +9,21 @@ import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
-// todo - collision listener
 public class SimpleRigidBody implements Collidable {
+	
+	private static final float AIR_FRICTION = 0.99f;
+	//private static final Vector3f DOWN = new Vector3f(0, -1, 0);
 
-	// todo - bounciness, air friction
-	private ISimplePhysicsController collChecker;
-	public Node node;
-	public ISimplePhysicsEntity simplePhysicsEntity;
-	private float gravY = -.01f; // todo - change if falling
+	private ISimplePhysicsController physicsController;
+	private Node node;
+	private ISimplePhysicsEntity simplePhysicsEntity;
+	private float gravY = -.02f; // todo - change if falling
 	private Vector3f moveDir = new Vector3f();
 	private Vector3f tmpMoveDir = new Vector3f();
 	private boolean isOnGround = false;
+	private float bounciness = .5f;
 
-	private static final Vector3f DOWN = new Vector3f(0, -1, 0);
+	private CollisionResults collisionResults = new CollisionResults();
 
 	public SimpleRigidBody(ISimplePhysicsEntity _entity, ISimplePhysicsController _collChecker) {
 		super();
@@ -30,37 +32,50 @@ public class SimpleRigidBody implements Collidable {
 		node = simplePhysicsEntity.getNode();
 		//node.setModelBound(new BoundingBox());
 		//node.updateModelBound();
-		collChecker = _collChecker;
+		physicsController = _collChecker;
 	}
 
 
 	public void process(float tpf_secs) {
 		// Move X
 		if (moveDir.x != 0) {
+			moveDir.x = moveDir.x * AIR_FRICTION;
 			this.tmpMoveDir.set(moveDir.x, 0, 0);
-			if (!this.move(tmpMoveDir)) {
-				moveDir.x = 0;
+			ISimplePhysicsEntity collidedWith = this.move(tmpMoveDir);
+			if (collidedWith != null) {
+				SimpleRigidBody body = collidedWith.getSimpleRigidBody();
+				float bounce = this.bounciness * body.bounciness;
+				moveDir.x = moveDir.x * bounce;
 			}
 		}
 		// Move Y
 		isOnGround = false;
 		if (moveDir.y != 0 || gravY != 0) {
+			moveDir.y = moveDir.y * AIR_FRICTION;
 			float totalOffset = moveDir.y+gravY;
 			this.tmpMoveDir.set(0, totalOffset, 0);
-			if (!this.move(tmpMoveDir)) {
-				moveDir.y = 0;
+			ISimplePhysicsEntity collidedWith = this.move(tmpMoveDir);
+			if (collidedWith != null) {
+				SimpleRigidBody body = collidedWith.getSimpleRigidBody();
+				float bounce = this.bounciness * body.bounciness;
+				moveDir.y = moveDir.y * bounce;
 				gravY = 0; // reset gravY if not falling
 				if (totalOffset < 0) {
 					isOnGround = true;
 				}
 			}
+
 		}
 
 		//Move z
 		if (moveDir.z != 0) {
+			moveDir.z = moveDir.z * AIR_FRICTION;
 			this.tmpMoveDir.set(0, 0, moveDir.z);
-			if (!this.move(tmpMoveDir)) {
-				moveDir.z = 0;
+			ISimplePhysicsEntity collidedWith = this.move(tmpMoveDir);
+			if (collidedWith != null) {
+				SimpleRigidBody body = collidedWith.getSimpleRigidBody();
+				float bounce = this.bounciness * body.bounciness;
+				moveDir.z = moveDir.z * bounce;
 			}
 		}
 
@@ -68,53 +83,57 @@ public class SimpleRigidBody implements Collidable {
 
 
 	/*
-	 * Returns whether the move was completed
+	 * Returns object they collided with
 	 */
-	private boolean move(Vector3f offset) {
-		this.simplePhysicsEntity.getSimpleRigidBody().node.getLocalTranslation().addLocal(offset);
-		this.simplePhysicsEntity.getSimpleRigidBody().node.updateGeometricState(); // todo - need this?
-		boolean wasCollision = checkForCollisions();
-		if (wasCollision) {
-			this.simplePhysicsEntity.getNode().getLocalTranslation().subtractLocal(offset); // Move back
-			this.simplePhysicsEntity.getSimpleRigidBody().node.updateGeometricState(); // todo - need this?
-			return false;
+	private ISimplePhysicsEntity move(Vector3f offset) {
+		this.simplePhysicsEntity.getSimpleRigidBody().node.move(offset);
+		//this.simplePhysicsEntity.getSimpleRigidBody().node.updateGeometricState(); // todo - need this?
+		ISimplePhysicsEntity wasCollision = checkForCollisions();
+		if (wasCollision != null) {
+			this.simplePhysicsEntity.getNode().move(offset.negateLocal()); // Move back
+			//this.simplePhysicsEntity.getSimpleRigidBody().node.updateGeometricState(); // todo - need this?
 		}
-		return true;
+		return wasCollision;
 	}
 
 
 	/*
-	 * Returns true if there was a collision
+	 * Returns object they collided with
 	 */
-	public boolean checkForCollisions() {
-		boolean wasCollision = false; // this
-		CollisionResults res = new CollisionResults();
-		Iterator<Object> it = collChecker.getEntities();
-		//synchronized (entities) {
-		// Loop through the entities
-		while (it.hasNext()) { // todo - sync
-			Object e = it.next();
-			if (e instanceof ISimplePhysicsEntity) {
-				if (e != simplePhysicsEntity) { // Don't check ourselves
-					ISimplePhysicsEntity ic = (ISimplePhysicsEntity)e;
-					if (this.collideWith(ic.getNode().getWorldBound(), res) > 0) {
-						this.collChecker.collisionOccurred(this, e);
-						wasCollision = true;
+	public ISimplePhysicsEntity checkForCollisions() {
+		//boolean wasCollision = false; // this
+		collisionResults.clear();
+		ISimplePhysicsEntity collidedWith = null;
+		//Iterator<Object> it = collChecker.getEntities();
+		Collection<Object> entities = physicsController.getEntities();
+		synchronized (entities) {
+			// Loop through the entities
+			for(Object e : entities) {
+				//while (it.hasNext()) {
+				//Object e = it.next();
+				if (e instanceof ISimplePhysicsEntity) {
+					if (e != simplePhysicsEntity) { // Don't check ourselves
+						ISimplePhysicsEntity ic = (ISimplePhysicsEntity)e;
+						if (this.collideWith(ic.getNode().getWorldBound(), collisionResults) > 0) {
+							collidedWith = ic;
+							this.physicsController.collisionOccurred(this, e);
+							//wasCollision = true;
+						}
 					}
 				}
 			}
 		}
-		return wasCollision;
+		return collidedWith;
 	}
 
 
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
 		//SimpleRigidBody o =(SimpleRigidBody)other;
-		BoundingVolume bv = (BoundingVolume)other;
-		node.updateGeometricState(); // todo - remove?
-		node.updateModelBound(); //node.getLocalTranslation();  // todo - remove?
-		return this.node.collideWith(bv, results);
+		//BoundingVolume bv = (BoundingVolume)other;
+		//node.updateGeometricState(); // todo - remove?
+		//node.updateModelBound(); //node.getLocalTranslation();  // todo - remove?
+		return this.node.collideWith(other, results);
 	}
 
 

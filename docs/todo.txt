@@ -6,7 +6,8 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 URGENT
 Test collision with simple test
-Test simplerigidcontrol with simpleFPS - Create stand-alone server?
+Test simplerigidcontrol with simpleFPS
+Create stand-alone server?
 Collision - always move back
 Search for todos
 
@@ -24,8 +25,7 @@ Draw map
 Show error if client unable to connect
 Laser bullets
 Add more walls
-	Make server & client abstract
-Todo - am I adjusting rotation?
+Am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
 Use test annotations
 Add lots of comments
