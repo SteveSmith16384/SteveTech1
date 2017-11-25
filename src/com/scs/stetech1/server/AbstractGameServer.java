@@ -7,18 +7,14 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.bullet.collision.PhysicsCollisionEvent;
-import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICalcHitInPast;
-import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.data.PlayerData;
@@ -40,14 +36,13 @@ import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.TestGameServerPlayersAvatar;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, PhysicsCollisionListener, IMessageServerListener, ICollisionListener  {
+public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, IMessageServerListener, ICollisionListener  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -356,50 +351,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
-		}
-	}
-
-
-	@Override
-	public void collision(PhysicsCollisionEvent event) {
-		String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
-
-		if (event.getObjectB().getUserObject() instanceof Floor == false) {
-			System.out.println(s);
-		}
-
-		PhysicalEntity a=null, b=null;
-		Object oa = event.getObjectA().getUserObject(); 
-		if (oa instanceof Spatial) {
-			Spatial ga = (Spatial)event.getObjectA().getUserObject(); 
-			a = ga.getUserData(Settings.ENTITY);
-		} else if (oa instanceof PhysicalEntity) {
-			a = (PhysicalEntity)oa;
-		}
-
-		Object ob = event.getObjectB().getUserObject(); 
-		if (ob instanceof Spatial) {
-			Spatial gb = (Spatial)event.getObjectB().getUserObject(); 
-			b = gb.getUserData(Settings.ENTITY);
-		} else if (oa instanceof PhysicalEntity) {
-			b = (PhysicalEntity)ob;
-		}
-
-		if (a != null && b != null) {
-			if (a instanceof ICollideable && b instanceof ICollideable) {
-				//Settings.p(a + " has collided with " + b);
-				ICollideable ica = (ICollideable)a;
-				ICollideable icb = (ICollideable)b;
-				ica.collidedWith(icb);
-				icb.collidedWith(ica);
-			}
-		} else {
-			if (a == null) {
-				Settings.p(oa + " has no entity data!");
-			}
-			if (b == null) {
-				Settings.p(ob + " has no entity data!");
-			}
 		}
 	}
 

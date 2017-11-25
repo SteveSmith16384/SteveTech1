@@ -9,9 +9,6 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.PhysicsCollisionEvent;
-import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.font.BitmapFont;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -24,7 +21,6 @@ import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext.Type;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByClient;
-import com.scs.stetech1.entities.AbstractPlayersAvatar;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.hud.HUD;
@@ -54,7 +50,7 @@ import com.scs.stetech1.shared.PositionCalculator;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameClient extends SimpleApplication implements IEntityController, PhysicsCollisionListener, ActionListener, IMessageClientListener { // PhysicsTickListener, 
+public abstract class AbstractGameClient extends SimpleApplication implements IEntityController, ActionListener, IMessageClientListener { 
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -362,48 +358,6 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			}
 		}
 
-	}
-
-
-	@Override
-	public void collision(PhysicsCollisionEvent event) {
-		String s = event.getObjectA().getUserObject().toString() + " collided with " + event.getObjectB().getUserObject().toString();
-		//System.out.println(s);
-
-		/*PhysicalEntity a=null, b=null;
-		Object oa = event.getObjectA().getUserObject(); 
-		if (oa instanceof Spatial) {
-			Spatial ga = (Spatial)event.getObjectA().getUserObject(); 
-			a = ga.getUserData(Settings.ENTITY);
-		} else if (oa instanceof PhysicalEntity) {
-			a = (PhysicalEntity)oa;
-		}
-
-		Object ob = event.getObjectB().getUserObject(); 
-		if (ob instanceof Spatial) {
-			Spatial gb = (Spatial)event.getObjectB().getUserObject(); 
-			b = gb.getUserData(Settings.ENTITY);
-		} else if (oa instanceof PhysicalEntity) {
-			b = (PhysicalEntity)ob;
-		}
-
-		if (a != null && b != null) {
-			//CollisionLogic.collision(this, a, b);
-			if (a instanceof ICollideable && b instanceof ICollideable) {
-				//Settings.p(a + " has collided with " + b);
-				ICollideable ica = (ICollideable)a;
-				ICollideable icb = (ICollideable)b;
-				ica.collidedWith(icb);
-				icb.collidedWith(ica);
-			}
-		} else {
-			if (a == null) {
-				Settings.p(oa + " has no entity data!");
-			}
-			if (b == null) {
-				Settings.p(ob + " has no entity data!");
-			}
-		}*/
 	}
 
 

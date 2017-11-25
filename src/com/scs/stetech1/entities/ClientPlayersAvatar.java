@@ -1,13 +1,10 @@
 package com.scs.stetech1.entities;
 
-import java.util.List;
-
-import com.jme3.bullet.collision.PhysicsRayTestResult;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
-import com.scs.stetech1.client.ClientAvatarPositionCalc;
 import com.scs.stetech1.client.AbstractGameClient;
+import com.scs.stetech1.client.ClientAvatarPositionCalc;
 import com.scs.stetech1.client.syncposition.AdjustBasedOnDistance;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stetech1.components.IEntity;
@@ -16,7 +13,6 @@ import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.AbstractGameServer;
-import com.scs.stetech1.server.Settings;
 
 public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD, IProcessByClient {
 

@@ -1,7 +1,6 @@
 package com.scs.stetech1.spidermonkeytest;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.network.ConnectionListener;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.MessageListener;

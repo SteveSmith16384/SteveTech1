@@ -2,7 +2,6 @@ package com.scs.testgame.entities;
 
 
 import com.jme3.asset.TextureKey;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -12,8 +11,6 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
-import com.scs.stetech1.components.ICollideable;
-import com.scs.stetech1.entities.AbstractPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
