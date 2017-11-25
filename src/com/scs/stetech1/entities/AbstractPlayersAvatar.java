@@ -5,17 +5,16 @@ import java.util.HashMap;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
-import com.scs.stetech1.IAbility;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
-import com.scs.stetech1.jme.MyBetterCharacterControl;
-import com.scs.stetech1.jme.MySimpleCharacterControl;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
+import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.weapons.GrenadeLauncher;
 
@@ -34,9 +33,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
-	//public MyBetterCharacterControl2 playerControl;
-	//public MyBetterCharacterControl playerControl; // Unused if physics turned off
-	public MySimpleCharacterControl simplePlayerControl;
+	public SimpleRigidBody simplePlayerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
@@ -124,7 +121,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			shoot();
 		}
 
-		this.simplePlayerControl.setWalkDirection(walkDirection);
+		this.simplePlayerControl.setLinearVelocity(walkDirection);
 
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
@@ -133,11 +130,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			}*/
 
 	}
-
-
-	/*public boolean isOnGround() { // todo - needed?
-		return this.simplePlayerControl.isOnGround();
-	}*/
 
 
 	public void addToWalkDir(Vector3f offset) {

@@ -8,6 +8,7 @@ import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
@@ -63,7 +64,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 		mainNode.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
 		if (_game.isServer()) {
-			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
+			this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, (SimplePhysicsController)game, this);
 		}
 		game.getRootNode().attachChild(this.mainNode);
 

@@ -7,7 +7,7 @@ public class GeneralCommandMessage extends MyAbstractMessage {
 
 	public enum Command {
 		AllEntitiesSent,
-		RequestGameStatus
+		RequestGameData
 	}
 	
 	public Command command;

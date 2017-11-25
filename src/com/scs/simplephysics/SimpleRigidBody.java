@@ -8,7 +8,7 @@ import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
-public class SimpleRigidBody implements Collidable {
+public class SimpleRigidBody<T> implements Collidable {
 
 	private static final float AIR_FRICTION = 0.99f;
 	//private static final Vector3f DOWN = new Vector3f(0, -1, 0);
@@ -21,13 +21,14 @@ public class SimpleRigidBody implements Collidable {
 	private Vector3f tmpMoveDir = new Vector3f();
 	private boolean isOnGround = false;
 	private float bounciness = .5f;
+	private float jumpForce = 0.1f;
 	private Spatial spatial;
-	public Object tag;
+	public T tag;
 	public boolean canMove = true;
 
 	private CollisionResults collisionResults = new CollisionResults();
 
-	public SimpleRigidBody(Spatial s, SimplePhysicsController _controller, Object _tag) {
+	public SimpleRigidBody(Spatial s, SimplePhysicsController _controller, T _tag) {
 		super();
 
 		spatial = s;
@@ -42,6 +43,10 @@ public class SimpleRigidBody implements Collidable {
 		return this.simplePhysicsEntity;
 	}
 	 */
+	
+	public void setJumpForce(float f) {
+		this.jumpForce = f;
+	}
 
 	public void setLinearVelocity(Vector3f dir) {
 		this.moveDir = dir;
@@ -53,7 +58,7 @@ public class SimpleRigidBody implements Collidable {
 	}
 
 
-	public void process(float tpf_secs) { // todo- use tpf
+	public void process(float tpf_secs) {
 		if (this.canMove) {
 			// Move X
 			if (moveDir.x != 0) {
@@ -127,10 +132,12 @@ public class SimpleRigidBody implements Collidable {
 			// Loop through the entities
 			for(SimpleRigidBody e : entities) {
 				if (e != this) { // Don't check ourselves
-					if (this.collideWith(e.spatial.getWorldBound(), collisionResults) > 0) {
-						collidedWith = e;
-						this.physicsController.collListener.collisionOccurred(this, e, collisionResults.getClosestCollision().getContactPoint());
-						collisionResults.clear();
+					if (this.physicsController.getCollisionListener().canCollide(this, e)) {
+						if (this.collideWith(e.spatial.getWorldBound(), collisionResults) > 0) {
+							collidedWith = e;
+							this.physicsController.getCollisionListener().collisionOccurred(this, e, collisionResults.getClosestCollision().getContactPoint());
+							collisionResults.clear();
+						}
 					}
 				}
 			}
@@ -147,7 +154,7 @@ public class SimpleRigidBody implements Collidable {
 
 	public void jump() {
 		if (isOnGround) {
-			this.currentGravityYChange = .1f;
+			this.currentGravityYChange = jumpForce;
 		}
 	}
 

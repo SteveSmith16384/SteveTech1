@@ -12,15 +12,16 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.jme.MySimpleCharacterControl;
 
 public class HelloSimplePhysics extends SimpleApplication implements ActionListener, ICollisionListener {
 
@@ -35,9 +36,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	private Vector3f walkDirection = new Vector3f();
 	private SimplePhysicsController physicsController;
 
-	private float speed;
-	private float strafeSpeed;
-	private float headHeight;
+	private final float speed = 0.1f;
+	private final float headHeight = 1f;
 
 	public static void main(String[] args) {
 		AppSettings settings = new AppSettings(true);
@@ -50,12 +50,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	public void simpleInitApp() {
 		physicsController = new SimplePhysicsController(this);
-		physicsController.enabled = false;
-
-		// set player speed
-		speed = .1f;
-		strafeSpeed = .1f;
-		headHeight = 1f;
+		//physicsController.setEnabled(false);
 
 		/** Create a box to use as our player model */
 		Box box1 = new Box(1,1,1);
@@ -77,23 +72,18 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		setUpKeys();
 		setUpLight();
 
-		player = new SimpleRigidBody(playerModel, this.physicsController, "Player");
+		player = new SimpleRigidBody<Spatial>(playerModel, this.physicsController, this.playerModel);
 
 		// set basic physical properties:
-		// todo player.setJumpForce(new Vector3f(0,5f,0));
-		//player.setGravity(new Vector3f(0,1f,0));
-		playerModel.setLocalTranslation(new Vector3f(0,6,0)); 
-
-		// We attach the scene and the player to the rootnode and the physics space,
-		// to make them appear in the game world.
-		//rootNode.attachChild(sceneModel);
-		//bulletAppState.getPhysicsSpace().add(landscape);
+		player.setJumpForce(.3f);
+		playerModel.setLocalTranslation(new Vector3f(0,4,0)); 
 
 		this.initFloor();
-		//this.addBox(.1f, 5f, 5f, 5f);
 		this.addBox(2f, 12f, 7f, 1f, 1f);
 		this.addBox(2f, 15f, 7f, 1f, 1f);
 
+		this.addBouncingBall(1, 6, 1, .3f, new Vector3f(.1f, 0f, .1f), -0.002f);
+		this.addBouncingBall(1, 6, 1, .3f, new Vector3f(.1f, 0f, .1f), 0);
 	}
 
 
@@ -114,7 +104,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		floor_geo.setLocalTranslation(0, -0.1f, 0);
 		this.rootNode.attachChild(floor_geo);
 
-		SimpleRigidBody srb = new SimpleRigidBody(floor_geo, physicsController, "Floor");
+		SimpleRigidBody srb = new SimpleRigidBody<Spatial>(floor_geo, physicsController, floor_geo);
 		srb.canMove = false;
 	}
 
@@ -135,7 +125,29 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		box_geo.setLocalTranslation(x, y, z);
 		this.rootNode.attachChild(box_geo);
 
-		SimpleRigidBody srb = new SimpleRigidBody(box_geo, physicsController, "Box");
+		SimpleRigidBody srb = new SimpleRigidBody<Spatial>(box_geo, physicsController, box_geo);
+	}
+
+
+	public void addBouncingBall(float x, float y, float z, float diam, Vector3f dir, float grav) {
+		Sphere sphere = new Sphere(8, 8, diam);
+		sphere.scaleTextureCoordinates(new Vector2f(3, 6));
+
+		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+		TextureKey key3 = new TextureKey("Textures/floor015.png");
+		key3.setGenerateMips(true);
+		Texture tex3 = assetManager.loadTexture(key3);
+		tex3.setWrap(WrapMode.Repeat);
+		floor_mat.setTexture("ColorMap", tex3);
+
+		Geometry ball_geo = new Geometry("Sphere", sphere);
+		ball_geo.setMaterial(floor_mat);
+		ball_geo.setLocalTranslation(x, y, z);
+		this.rootNode.attachChild(ball_geo);
+
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(ball_geo, physicsController, ball_geo);
+		srb.setLinearVelocity(dir);
+		srb.setGravity(grav);
 	}
 
 
@@ -189,7 +201,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		} else if (binding.equals("Test")) {
 			if (isPressed) { 
 				//playerModel.setLocalTranslation(new Vector3f(2, 10, 2));
-				physicsController.enabled = true;
+				physicsController.setEnabled(true);
 
 			}
 		}
@@ -213,7 +225,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		 * to Y axis
 		 */
 		camDir.set(cam.getDirection()).multLocal(speed, 0.0f, speed);
-		camLeft.set(cam.getLeft()).multLocal(strafeSpeed);
+		camLeft.set(cam.getLeft()).multLocal(speed);
 		walkDirection.set(0, 0, 0);
 		if (left) {
 			walkDirection.addLocal(camLeft);
@@ -242,5 +254,19 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	public void collisionOccurred(SimpleRigidBody a, SimpleRigidBody b, Vector3f point) {
 		//System.out.println("Collision between " + a.tag + " and " + b.tag);
 
+	}
+
+
+	@Override
+	public void bodyOutOfBounds(SimpleRigidBody a) {
+		Spatial s = (Spatial)a.tag;
+		s.removeFromParent();
+		
+	}
+
+
+	@Override
+	public boolean canCollide(SimpleRigidBody a, SimpleRigidBody b) {
+		return true;
 	}
 }

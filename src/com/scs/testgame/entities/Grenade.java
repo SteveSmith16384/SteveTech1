@@ -34,7 +34,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		this.shooter = _shooter;
 
 		// Accelerate the physical ball to shoot it.
-		//rigidBodyControl.setLinearVelocity(shooter.getShootDir().mult(15));
+		this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(15));
 
 	}
 

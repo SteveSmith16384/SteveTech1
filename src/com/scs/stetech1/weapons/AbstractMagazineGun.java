@@ -1,9 +1,9 @@
 package com.scs.stetech1.weapons;
 
-import com.scs.stetech1.IAbility;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
+import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 
 public abstract class AbstractMagazineGun implements IAbility {
@@ -55,8 +55,7 @@ public abstract class AbstractMagazineGun implements IAbility {
 				// Reload
 				this.bulletsLeftInMag = this.magazineSize;
 				this.timeUntilShoot_secs += this.reloadInterval_secs;
-				// todo - send msg
-				//server.broadcast(msg);
+				server.networkServer.sendMessageToAll(new AbilityUpdateMessage());
 			}
 		}
 		timeUntilShoot_secs -= tpf_secs;

@@ -21,6 +21,7 @@ import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.data.PlayerData;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
@@ -100,7 +101,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					ClientData client = message.client;
 					if (message instanceof NewPlayerRequestMessage) {
 						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-						client.playerName = newPlayerMessage.name;
+						client.playerData = new PlayerData(client.id, newPlayerMessage.name);
 						client.avatar = createPlayersAvatar(client);
 						// Send newplayerconf message
 						networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
@@ -345,6 +346,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		Settings.p("Removing entity " + id);
 		try {
 			synchronized (entities) {
+				IEntity e = this.entities.get(id);
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity pe = (PhysicalEntity)e;
+					this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
+				}
 				this.entities.remove(id);
 			}
 			this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
@@ -477,6 +483,17 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	}
 
+
+	@Override
+	public void bodyOutOfBounds(SimpleRigidBody a) {
+		// Do nothing (yet)
+	}
+
+
+	@Override
+	public boolean canCollide(SimpleRigidBody a, SimpleRigidBody b) {
+		return true; // todo - avatars on the same side don't collide
+	}
 
 }
 

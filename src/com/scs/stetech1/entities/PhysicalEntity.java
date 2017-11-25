@@ -130,7 +130,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		CollisionResult closest = results.getClosestCollision();
 		if (closest != null) {
 			if (closest.getDistance() <= range) {
-				PhysicalEntity e = null; // todo (PhysicalEntity)closest..getCollisionObject().getUserObject();
+				PhysicalEntity e = (PhysicalEntity)closest.getGeometry().getUserData(Settings.ENTITY);
 				Vector3f hitpoint = closest.getContactPoint();// to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
 				Settings.p("Hit " + e + " at " + hitpoint);
 				return new HitData(e, hitpoint);

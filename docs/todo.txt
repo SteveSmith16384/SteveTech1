@@ -5,12 +5,15 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 
 URGENT
+Create better physics demo - bouncing ball, bouncing laser, steps
+Walking up steps
+Remove entities if move out of bounds
 Jumping not working
-Try bouncing a ball
 Search for todos
 
 
 TODO
+Create SimplePhysics project
 Create stand-alone server?
 Option to turn off client sync
 Hitscan weapons
