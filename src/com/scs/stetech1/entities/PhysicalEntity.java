@@ -25,7 +25,7 @@ import com.scs.stetech1.shared.PositionCalculator;
 public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ICollideable {
 
 	protected Node mainNode;
-	public SimpleRigidBody simpleRigidBody;
+	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 	protected PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
@@ -156,6 +156,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public void applyForce(Vector3f dir) {
 		//rigidBodyControl.applyImpulse(dir, Vector3f.ZERO);//.applyCentralForce(dir);
+		// todo this.simpleRigidBody.set
 	}
 
 

@@ -10,5 +10,5 @@ public interface IAffectedByPhysics {
 
 	Vector3f getWorldTranslation();
 	
-	void applyForce(Vector3f dir); 
+	void applyForce(Vector3f dir); // todo - rename to one-off force
 }

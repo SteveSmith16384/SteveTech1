@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
+import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
@@ -33,7 +34,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
-	public SimpleRigidBody simplePlayerControl;
+	public SimpleRigidBody<Spatial> simplePlayerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
@@ -62,6 +63,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		this.getMainNode().attachChild(playerGeometry);
 
 		// todo simplePlayerControl = new MySimpleCharacterControl(this);//PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, (SimplePhysicsController)game, this);
 		//todo playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
 
 		game.getRootNode().attachChild(this.mainNode);
@@ -151,20 +153,18 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 
 	public void jump() {
-		//if (this.game.isServer()) { // Let the server do it, and the client copy
 		Settings.p("Jumping!");
 		this.simpleRigidBody.jump();
-		//}
 	}
 
 
-	@Override
+	/*@Override
 	public void applyForce(Vector3f force) {
 		//playerControl.getPhysicsRigidBody().applyImpulse(force, Vector3f.ZERO);//.applyCentralForce(dir);
 		//playerControl.getPhysicsRigidBody().applyCentralForce(force);
 		Settings.p("Unable to apply force to player:" + force);
 		//this.addWalkDirection.addLocal(force);
-	}
+	}*/
 
 
 	/*@Override
