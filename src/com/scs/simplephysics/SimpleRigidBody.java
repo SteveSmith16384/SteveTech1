@@ -10,21 +10,23 @@ import com.jme3.scene.Spatial;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	private static final float AIR_FRICTION = 0.99f;
-	//private static final Vector3f DOWN = new Vector3f(0, -1, 0);
-
-	//private float currentGravityYChange = -.002f;
-	private float gravInc = -0.002f;
-	public Vector3f otherForce = new Vector3f(); // caught in explosion etc...
+	public static final float DEF_AIR_FRICTION = 1f; // todo re add 0.99f;
+	public static final float DEF_GRAVITY = -0.0002f;
 
 	private SimplePhysicsController physicsController;
-	private Vector3f constantForce = new Vector3f();
+	private Vector3f oneOffForce = new Vector3f();
 	private Vector3f tmpMoveDir = new Vector3f();
-	private float bounciness = .5f;
+	private float bounciness = .2f;
+	private float airResistance = DEF_AIR_FRICTION;
+
+	// Gravity
+	private float gravInc = DEF_GRAVITY; // How powerful is gravity
+	private float currentGravInc = 0; // The change this frame
+
 	private Spatial spatial;
 	public T tag;
-	public boolean canMove = true;
-	
+	private boolean canMove = true;
+
 	private float jumpForce = 0.1f;
 	private boolean isOnGround = false;
 
@@ -43,7 +45,17 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public void setLinearVelocity(Vector3f dir) {
-		this.constantForce = dir;
+		this.oneOffForce = dir;
+	}
+
+
+	public void setMovable(boolean b) {
+		this.canMove = b;
+	}
+
+
+	public void setAirResistance(float f) {
+		this.airResistance = f;
 	}
 
 
@@ -54,7 +66,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	public void jump() {
 		if (isOnGround) {
-			this.otherForce.y += jumpForce;
+			this.oneOffForce.y += jumpForce;
 		}
 	}
 
@@ -65,49 +77,54 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public void process(float tpf_secs) {
+		if (tpf_secs > 1) {
+			tpf_secs = 1;
+		}
 		if (this.canMove) {
 			// Move X
-			if (constantForce.x != 0) {
-				constantForce.x = constantForce.x * AIR_FRICTION;
-				this.tmpMoveDir.set(constantForce.x*tpf_secs, 0, 0);
+			if (oneOffForce.x != 0) {
+				oneOffForce.x = oneOffForce.x * airResistance;
+				this.tmpMoveDir.set(oneOffForce.x*tpf_secs, 0, 0);
 				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir); // todo - move a max distance to prevent falling through floors
 				if (collidedWith != null) {
 					float bounce = this.bounciness;// * body.bounciness;
-					constantForce.x = constantForce.x * bounce * -1;
+					oneOffForce.x = oneOffForce.x * bounce * -1;
 				}
 			}
 
 			// Move Y
 			isOnGround = false;
-			otherForce.y += gravInc;
-			constantForce.y = constantForce.y * AIR_FRICTION;
-			float totalOffset = constantForce.y + this.otherForce.y; // todo - copy to other axis
-			if (totalOffset != 0) {
+			oneOffForce.y += currentGravInc;
+			oneOffForce.y = oneOffForce.y * airResistance;
+			float totalOffset = oneOffForce.y;// + this.constantForce.y; // todo - copy to other axis
+			//if (totalOffset != 0) {
+			{
 				this.tmpMoveDir.set(0, totalOffset*tpf_secs, 0);
 				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 				if (collidedWith != null) {
 					{
 						// Bounce
 						float bounce = this.bounciness;
-						constantForce.y = constantForce.y * bounce * -1;
-						otherForce.y = otherForce.y * bounce * -1;
-						//currentGravityYChange = 0; // reset gravY if not falling
+						oneOffForce.y = oneOffForce.y * bounce * -1;
+						currentGravInc = currentGravInc * bounce * -1; // reset gravY if not falling
 					}
 					if (totalOffset < 0) {
 						isOnGround = true;
 					}
+				} else {
+					currentGravInc = currentGravInc + gravInc; 
 				}
 
 			}
 
 			//Move z
-			if (constantForce.z != 0) {
-				constantForce.z = constantForce.z * AIR_FRICTION;
-				this.tmpMoveDir.set(0, 0, constantForce.z*tpf_secs);
+			if (oneOffForce.z != 0) {
+				oneOffForce.z = oneOffForce.z * airResistance;
+				this.tmpMoveDir.set(0, 0, oneOffForce.z*tpf_secs);
 				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 				if (collidedWith != null) {
 					float bounce = this.bounciness;// * body.bounciness;
-					constantForce.z = constantForce.z * bounce * -1;
+					oneOffForce.z = oneOffForce.z * bounce * -1;
 				}
 			}
 		}
@@ -118,12 +135,15 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * Returns object they collided with
 	 */
 	private SimpleRigidBody<T> move(Vector3f offset) {
-		this.spatial.move(offset);
-		SimpleRigidBody<T> wasCollision = checkForCollisions();
-		if (wasCollision != null) {
-			this.spatial.move(offset.negateLocal()); // Move back
+		if (offset.length() != 0) {
+			this.spatial.move(offset);
+			SimpleRigidBody<T> wasCollision = checkForCollisions();
+			if (wasCollision != null) {
+				this.spatial.move(offset.negateLocal()); // Move back
+			}
+			return wasCollision;
 		}
-		return wasCollision;
+		return null;
 	}
 
 

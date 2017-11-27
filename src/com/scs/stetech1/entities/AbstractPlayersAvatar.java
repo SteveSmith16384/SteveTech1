@@ -5,8 +5,8 @@ import java.util.HashMap;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
+import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimplePhysicsController;
-import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
@@ -34,7 +34,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
-	public SimpleRigidBody<Spatial> simplePlayerControl;
+	public SimpleCharacterControl<PhysicalEntity> simplePlayerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
@@ -62,9 +62,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		this.getMainNode().attachChild(playerGeometry);
 
-		// todo simplePlayerControl = new MySimpleCharacterControl(this);//PLAYER_RAD, PLAYER_HEIGHT, WEIGHT);
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, (SimplePhysicsController)game, this);
-		//todo playerControl.setJumpForce(new Vector3f(0, Settings.JUMP_FORCE, 0)); 
+		this.simplePlayerControl = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, (SimplePhysicsController)game, this);
 
 		game.getRootNode().attachChild(this.mainNode);
 

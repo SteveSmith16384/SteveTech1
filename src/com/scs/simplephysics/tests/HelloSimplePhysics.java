@@ -20,12 +20,13 @@ import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.ICollisionListener;
+import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 
 public class HelloSimplePhysics extends SimpleApplication implements ActionListener, ICollisionListener {
 
-	private SimpleRigidBody player;
+	private SimpleCharacterControl player;
 	private boolean left = false, right = false, up = false, down = false;
 	private Geometry playerModel;
 	//Temporary vectors used on each frame.
@@ -36,7 +37,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	private Vector3f walkDirection = new Vector3f();
 	private SimplePhysicsController physicsController;
 
-	private final float speed = 0.1f;
+	private final float speed = 1f;
 	private final float headHeight = 1f;
 
 	public static void main(String[] args) {
@@ -50,7 +51,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	public void simpleInitApp() {
 		physicsController = new SimplePhysicsController(this);
-		//physicsController.setEnabled(false);
+		physicsController.setEnabled(false);
 
 		/** Create a box to use as our player model */
 		Box box1 = new Box(1,1,1);
@@ -72,18 +73,15 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		setUpKeys();
 		setUpLight();
 
-		player = new SimpleRigidBody<Spatial>(playerModel, this.physicsController, this.playerModel);
-
-		// set basic physical properties:
-		player.setJumpForce(.3f);
+		player = new SimpleCharacterControl<Spatial>(playerModel, this.physicsController, this.playerModel);
+		//player.setJumpForce(.3f);
 		playerModel.setLocalTranslation(new Vector3f(0,4,0)); 
 
 		this.initFloor();
 		this.addBox(2f, 12f, 7f, 1f, 1f);
-		this.addBox(2f, 15f, 7f, 1f, 1f);
-
-		this.addBouncingBall(1, 6, 1, .3f, new Vector3f(.1f, 0f, .1f), -0.002f);
-		this.addBouncingBall(1, 6, 1, .3f, new Vector3f(.1f, 0f, .1f), 0);
+		//this.addBox(2f, 15f, 7f, 1f, 1f);
+		//this.addBall(1, 6, 1, .2f, new Vector3f(.01f, 0f, .01f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION); // Bouncing ball
+		//this.addBall(1, 6, 1, .1f, new Vector3f(.1f, 0f, .1f), 0, 0); // Plasma ball
 	}
 
 
@@ -104,8 +102,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		floor_geo.setLocalTranslation(0, -0.1f, 0);
 		this.rootNode.attachChild(floor_geo);
 
-		SimpleRigidBody srb = new SimpleRigidBody<Spatial>(floor_geo, physicsController, floor_geo);
-		srb.canMove = false;
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floor_geo, physicsController, floor_geo);
+		srb.setMovable(false);
 	}
 
 
@@ -125,12 +123,12 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		box_geo.setLocalTranslation(x, y, z);
 		this.rootNode.attachChild(box_geo);
 
-		SimpleRigidBody srb = new SimpleRigidBody<Spatial>(box_geo, physicsController, box_geo);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(box_geo, physicsController, box_geo);
 	}
 
 
-	public void addBouncingBall(float x, float y, float z, float diam, Vector3f dir, float grav) {
-		Sphere sphere = new Sphere(8, 8, diam);
+	public void addBall(float x, float y, float z, float rad, Vector3f dir, float grav, float airRes) {
+		Sphere sphere = new Sphere(8, 8, rad);
 		sphere.scaleTextureCoordinates(new Vector2f(3, 6));
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -148,6 +146,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(ball_geo, physicsController, ball_geo);
 		srb.setLinearVelocity(dir);
 		srb.setGravity(grav);
+		srb.setAirResistance(airRes);
 	}
 
 
@@ -239,7 +238,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		if (down) {
 			walkDirection.addLocal(camDir.negate());
 		}
-		player.setLinearVelocity(walkDirection);
+		player.setLinearVelocity(walkDirection); // todo - set walk direction!
 
 		/*
 		 * By default the location of the box is on the bottom of the terrain

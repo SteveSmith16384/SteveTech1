@@ -1,0 +1,9 @@
+TYPES OF PHYSICS
+Bouncing ball - one-off force, gravity and air friction
+Laser the goes on forever - one-off force, no air friction, no gravity
+Rocket
+Players avatar - WalkDir, jump
+
+Other: Affected by explosion, self-propelled or one-off
+
+

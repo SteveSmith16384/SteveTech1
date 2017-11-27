@@ -1,19 +1,13 @@
 STETECH1
 
-TYPES OF PHYSICS
-Bouncing ball
-Laser the goes on forever
-Players avatar
-Other: Affected by explosion, self-propelled or one-off
-
-
 LINKS
 https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.html
 
 
 URGENT
+Crates bouncing too much
 Use latest JME libs
-Create better physics demo - bouncing ball, bouncing laser, steps
+	Create better physics demo - bouncing ball, bouncing laser, steps
 Walking up steps
 Remove entities if move out of bounds
 Jumping not working
