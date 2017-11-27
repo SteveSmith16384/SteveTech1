@@ -238,7 +238,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		if (down) {
 			walkDirection.addLocal(camDir.negate());
 		}
-		player.setLinearVelocity(walkDirection); // todo - set walk direction!
+		player.getAdditionalForce().set(walkDirection);
 
 		/*
 		 * By default the location of the box is on the bottom of the terrain

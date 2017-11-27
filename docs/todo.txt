@@ -5,6 +5,7 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 
 URGENT
+Physics test - do explosion
 test Jumping
 Remove entities if move out of bounds
 Use jme example data for physics test

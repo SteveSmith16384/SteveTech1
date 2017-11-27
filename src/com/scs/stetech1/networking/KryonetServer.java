@@ -32,24 +32,23 @@ public class KryonetServer implements IMessageServer {
 	private IMessageServerListener listener;
 	private Server server;
 
-	public KryonetServer(IMessageServerListener _listener, int tcpport, int udpport) throws IOException {
-		listener = _listener;
-
+	public KryonetServer(int tcpport, int udpport) throws IOException {
 		server = new Server();
 		registerMessages(server.getKryo());
 		server.start();
 		server.bind(tcpport, udpport);
+
+	}
+
+
+	public void setListener(IMessageServerListener _listener) {
+		listener = _listener;
 
 		server.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
 				if (object instanceof MyAbstractMessage) {
 					MyAbstractMessage msg = (MyAbstractMessage)object;
 					listener.messageReceived(connection.getID(), msg);
-					//System.out.println(request.text);
-
-					//SomeResponse response = new SomeResponse();
-					//response.text = "Thanks";
-					//connection.sendTCP(response);
 				}
 			}
 
@@ -63,7 +62,6 @@ public class KryonetServer implements IMessageServer {
 		});
 
 	}
-
 
 	public static void registerMessages(Kryo kryo) {
 		// Classes used in messages

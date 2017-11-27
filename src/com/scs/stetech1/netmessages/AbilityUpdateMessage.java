@@ -4,7 +4,7 @@ import com.jme3.network.serializing.Serializable;
 import com.scs.stetech1.entities.AbstractPlayersAvatar;
 
 @Serializable
-public class AbilityUpdateMessage extends MyAbstractMessage { // todo - send these from server to client
+public class AbilityUpdateMessage extends MyAbstractMessage {
 
 	public int bulletsLeftInMag;
 	public float timeUntilShoot = 0;

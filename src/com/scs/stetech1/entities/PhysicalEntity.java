@@ -155,8 +155,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void applyOneOffForce(Vector3f dir) {
-		//rigidBodyControl.applyImpulse(dir, Vector3f.ZERO);//.applyCentralForce(dir);
-		// todo this.simpleRigidBody.set
+		this.simpleRigidBody.getLinearVelocity().addLocal(dir);
 	}
 
 

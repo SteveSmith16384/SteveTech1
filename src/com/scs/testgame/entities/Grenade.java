@@ -20,7 +20,7 @@ import com.scs.stetech1.shared.IEntityController;
 public class Grenade extends PhysicalEntity implements IBullet {
 
 	public ICanShoot shooter;
-	private float timeLeft = 20f; // todo - check
+	private float timeLeft = 4f; // todo - check
 
 	/*
 	 * Constructor for server

@@ -34,9 +34,7 @@ import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
-import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.testgame.entities.TestGameServerPlayersAvatar;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
@@ -56,17 +54,16 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
-	//public BulletAppState bulletAppState;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	private LogWindow logWindow;
 	private IConsole console;
-	private SimplePhysicsController physicsController;
+	private SimplePhysicsController<PhysicalEntity> physicsController;
 	
-	public AbstractGameServer() throws IOException {
+	public AbstractGameServer(IMessageServer _networkServer) throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
-		networkServer = new KryonetServer(this, Settings.TCP_PORT, Settings.UDP_PORT);// SpiderMonkeyServer(this); // todo - move to constructor
+		networkServer = _networkServer;
 		
 		physicsController = new SimplePhysicsController(this);
 	}
@@ -248,13 +245,16 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	private ServerPlayersAvatar createPlayersAvatar(ClientData client) {
 		int id = getNextEntityID();
-		ServerPlayersAvatar avatar = new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, id); // todo - make abstract
+		ServerPlayersAvatar avatar = this.createPlayersAvatar(client, id);
 		avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
 		return avatar;
 	}
 
 
+	protected abstract ServerPlayersAvatar createPlayersAvatar(ClientData client, int entityid);
+	
+	
 	private void sendEntityListToClient(ClientData client) {
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {

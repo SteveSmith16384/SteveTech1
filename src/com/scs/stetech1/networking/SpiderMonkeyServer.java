@@ -34,9 +34,7 @@ public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, M
 	private IMessageServerListener listener;
 	private ExecutorService executor = Executors.newFixedThreadPool(20);
 
-	public SpiderMonkeyServer(IMessageServerListener _listener) throws IOException {
-		listener = _listener;
-		
+	public SpiderMonkeyServer() throws IOException {
 		myServer = Network.createServer(Settings.TCP_PORT);
 
 		registerMessages();
@@ -163,6 +161,13 @@ public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, M
 	@Override
 	public void close() {
 		this.myServer.close();
+		
+	}
+
+
+	@Override
+	public void setListener(IMessageServerListener _listener) {
+		// TODO Auto-generated method stub
 		
 	}
 
