@@ -54,8 +54,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		physicsController.setEnabled(false);
 
 		/** Create a box to use as our player model */
-		Box box1 = new Box(1,1,1);
-		playerModel = new Geometry("Box", box1);
+		Box box1 = new Box(.3f, .9f, .3f);
+		playerModel = new Geometry("Player", box1);
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material
 		mat.setColor("Color", ColorRGBA.Blue);   // set color of material to blue
 		playerModel.setMaterial(mat);    
@@ -78,16 +78,16 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		playerModel.setLocalTranslation(new Vector3f(0,4,0)); 
 
 		this.initFloor();
-		this.addBox(2f, 12f, 7f, 1f, 1f);
-		//this.addBox(2f, 15f, 7f, 1f, 1f);
-		//this.addBall(1, 6, 1, .2f, new Vector3f(.01f, 0f, .01f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION); // Bouncing ball
-		//this.addBall(1, 6, 1, .1f, new Vector3f(.1f, 0f, .1f), 0, 0); // Plasma ball
+		//this.addBox(2f, 8f, 7f, 1f, 1f);
+		//this.addBox(2f, 6f, 7f, 1f, 1f);
+		//this.addBall(10, 6, 10, .2f, new Vector3f(-5f, 0f, -5f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION); // Bouncing ball
+		this.addBall(12, 6, 12, .2f, new Vector3f(-6f, 0f, -6f), 0, 1); // Plasma ball
 	}
 
 
 	/** Make a solid floor and add it to the scene. */
 	public void initFloor() {
-		Box floor = new Box(30f, 0.1f, 15f);
+		Box floor = new Box(30f, 0.1f, 30f);
 		floor.scaleTextureCoordinates(new Vector2f(3, 6));
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -251,7 +251,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody a, SimpleRigidBody b, Vector3f point) {
-		//System.out.println("Collision between " + a.tag + " and " + b.tag);
+		System.out.println("Collision between " + a.tag + " and " + b.tag);
 
 	}
 

@@ -5,7 +5,9 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 
 URGENT
-Crates bouncing too much
+Use jme example data for physics test
+Sphere bounds too big
+	Crates bouncing too much
 Use latest JME libs
 	Create better physics demo - bouncing ball, bouncing laser, steps
 Walking up steps

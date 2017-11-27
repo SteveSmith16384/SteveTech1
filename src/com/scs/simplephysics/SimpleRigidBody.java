@@ -11,7 +11,7 @@ import com.jme3.scene.Spatial;
 public class SimpleRigidBody<T> implements Collidable {
 
 	public static final float DEF_AIR_FRICTION = 1f; // todo re add 0.99f;
-	public static final float DEF_GRAVITY = -0.0002f;
+	public static final float DEF_GRAVITY = -0.00003f;
 
 	private SimplePhysicsController physicsController;
 	private Vector3f oneOffForce = new Vector3f();
