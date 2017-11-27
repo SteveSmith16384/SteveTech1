@@ -10,13 +10,13 @@ import com.jme3.scene.Spatial;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	public static final float DEF_AIR_FRICTION = 1f; // todo re add 0.99f;
-	public static final float DEF_GRAVITY = -0.00003f;
+	public static final float DEF_AIR_FRICTION = .9999f; // todo re add 0.99f;
+	public static final float DEF_GRAVITY = -0.003f;
 
 	private SimplePhysicsController physicsController;
 	private Vector3f oneOffForce = new Vector3f();
 	private Vector3f tmpMoveDir = new Vector3f();
-	private float bounciness = .2f;
+	private float bounciness = .1f;
 	private float airResistance = DEF_AIR_FRICTION;
 
 	// Gravity
@@ -99,7 +99,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			float totalOffset = oneOffForce.y;// + this.constantForce.y; // todo - copy to other axis
 			//if (totalOffset != 0) {
 			{
-				this.tmpMoveDir.set(0, totalOffset*tpf_secs, 0);
+				this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
 				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 				if (collidedWith != null) {
 					{
@@ -112,7 +112,7 @@ public class SimpleRigidBody<T> implements Collidable {
 						isOnGround = true;
 					}
 				} else {
-					currentGravInc = currentGravInc + gravInc; 
+					currentGravInc = currentGravInc + (gravInc * tpf_secs); 
 				}
 
 			}

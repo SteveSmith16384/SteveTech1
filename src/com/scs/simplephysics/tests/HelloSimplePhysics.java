@@ -26,19 +26,19 @@ import com.scs.simplephysics.SimpleRigidBody;
 
 public class HelloSimplePhysics extends SimpleApplication implements ActionListener, ICollisionListener {
 
-	private SimpleCharacterControl player;
+	private SimpleCharacterControl<Spatial> player;
 	private boolean left = false, right = false, up = false, down = false;
 	private Geometry playerModel;
-	//Temporary vectors used on each frame.
-	//They here to avoid instanciating new vectors on each frame
-	private Vector3f camDir = new Vector3f();
-	private Vector3f camLeft = new Vector3f();
 	// Our movement speed
 	private Vector3f walkDirection = new Vector3f();
 	private SimplePhysicsController physicsController;
 
 	private final float speed = 1f;
 	private final float headHeight = 1f;
+
+	//Temporary vectors used on each frame.
+	private Vector3f camDir = new Vector3f();
+	private Vector3f camLeft = new Vector3f();
 
 	public static void main(String[] args) {
 		AppSettings settings = new AppSettings(true);
@@ -80,8 +80,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		this.initFloor();
 		//this.addBox(2f, 8f, 7f, 1f, 1f);
 		//this.addBox(2f, 6f, 7f, 1f, 1f);
-		//this.addBall(10, 6, 10, .2f, new Vector3f(-5f, 0f, -5f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION); // Bouncing ball
-		this.addBall(12, 6, 12, .2f, new Vector3f(-6f, 0f, -6f), 0, 1); // Plasma ball
+		//this.addBall(10, 6, 10, .2f, new Vector3f(-3f, 0f, 0f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION, 0.2f); // Bouncing ball
+		this.addBall(12, 6, 12, .2f, new Vector3f(0, -6f, -6f), 0, 1, 1); // Plasma ball
 	}
 
 
@@ -127,7 +127,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	}
 
 
-	public void addBall(float x, float y, float z, float rad, Vector3f dir, float grav, float airRes) {
+	public void addBall(float x, float y, float z, float rad, Vector3f dir, float grav, float airRes, float bounce) {
 		Sphere sphere = new Sphere(8, 8, rad);
 		sphere.scaleTextureCoordinates(new Vector2f(3, 6));
 
@@ -147,6 +147,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		srb.setLinearVelocity(dir);
 		srb.setGravity(grav);
 		srb.setAirResistance(airRes);
+		srb.setBounciness(bounce);
 	}
 
 
