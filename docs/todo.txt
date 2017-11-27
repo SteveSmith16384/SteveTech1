@@ -5,10 +5,10 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 
 URGENT
+test Jumping
+Remove entities if move out of bounds
 Use jme example data for physics test
 Use latest JME libs
-Remove entities if move out of bounds
-Jumping not working
 Add walls to physics test
 Search for todos
 

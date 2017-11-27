@@ -13,8 +13,8 @@ public class SimpleRigidBody<T> implements Collidable {
 	public static final float DEF_AIR_FRICTION = .9999f; // todo re add 0.99f;
 	public static final float DEF_GRAVITY = -0.003f;
 
-	private SimplePhysicsController physicsController;
-	private Vector3f oneOffForce = new Vector3f();
+	private SimplePhysicsController<T> physicsController;
+	protected Vector3f oneOffForce = new Vector3f();
 	private Vector3f tmpMoveDir = new Vector3f();
 	private float bounciness = .1f;
 	private float airResistance = DEF_AIR_FRICTION;
@@ -26,14 +26,12 @@ public class SimpleRigidBody<T> implements Collidable {
 	private Spatial spatial;
 	public T tag;
 	private boolean canMove = true;
-
-	private float jumpForce = 0.1f;
-	private boolean isOnGround = false;
-
+	protected boolean isOnGround = false;
+	private Vector3f NO_FORCE = new Vector3f();
 
 	private CollisionResults collisionResults = new CollisionResults();
 
-	public SimpleRigidBody(Spatial s, SimplePhysicsController _controller, T _tag) {
+	public SimpleRigidBody(Spatial s, SimplePhysicsController<T> _controller, T _tag) {
 		super();
 
 		spatial = s;
@@ -59,18 +57,6 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	public void setJumpForce(float f) {
-		this.jumpForce = f;
-	}
-
-
-	public void jump() {
-		if (isOnGround) {
-			this.oneOffForce.y += jumpForce;
-		}
-	}
-
-
 	public void setGravity(float g) {
 		this.gravInc = g;
 	}
@@ -81,24 +67,28 @@ public class SimpleRigidBody<T> implements Collidable {
 			tpf_secs = 1;
 		}
 		if (this.canMove) {
+			Vector3f additionalForce = this.getAdditionalForce();
+
 			// Move X
-			if (oneOffForce.x != 0) {
+			{
 				oneOffForce.x = oneOffForce.x * airResistance;
-				this.tmpMoveDir.set(oneOffForce.x*tpf_secs, 0, 0);
-				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir); // todo - move a max distance to prevent falling through floors
-				if (collidedWith != null) {
-					float bounce = this.bounciness;// * body.bounciness;
-					oneOffForce.x = oneOffForce.x * bounce * -1;
+				float totalOffset = oneOffForce.x + additionalForce.x;
+				if (totalOffset != 0) {
+					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
+					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir); // todo - move a max distance to prevent falling through floors
+					if (collidedWith != null) {
+						float bounce = this.bounciness;// * body.bounciness;
+						oneOffForce.x = oneOffForce.x * bounce * -1;
+					}
 				}
 			}
 
 			// Move Y
-			isOnGround = false;
-			oneOffForce.y += currentGravInc;
-			oneOffForce.y = oneOffForce.y * airResistance;
-			float totalOffset = oneOffForce.y;// + this.constantForce.y; // todo - copy to other axis
-			//if (totalOffset != 0) {
 			{
+				isOnGround = false;
+				oneOffForce.y += currentGravInc;
+				oneOffForce.y = oneOffForce.y * airResistance;
+				float totalOffset = oneOffForce.y;// + this.constantForce.y; // todo - copy to other axis
 				this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
 				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 				if (collidedWith != null) {
@@ -118,13 +108,16 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 
 			//Move z
-			if (oneOffForce.z != 0) {
+			{
 				oneOffForce.z = oneOffForce.z * airResistance;
-				this.tmpMoveDir.set(0, 0, oneOffForce.z*tpf_secs);
-				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
-				if (collidedWith != null) {
-					float bounce = this.bounciness;// * body.bounciness;
-					oneOffForce.z = oneOffForce.z * bounce * -1;
+				float totalOffset = oneOffForce.z + additionalForce.z;
+				if (totalOffset != 0) {
+					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
+					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
+					if (collidedWith != null) {
+						float bounce = this.bounciness;// * body.bounciness;
+						oneOffForce.z = oneOffForce.z * bounce * -1;
+					}
 				}
 			}
 		}
@@ -153,7 +146,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public SimpleRigidBody<T> checkForCollisions() {
 		collisionResults.clear();
 		SimpleRigidBody<T> collidedWith = null;
-		Collection<SimpleRigidBody> entities = physicsController.getEntities();
+		Collection<SimpleRigidBody<T>> entities = physicsController.getEntities();
 		synchronized (entities) {
 			// Loop through the entities
 			for(SimpleRigidBody<T> e : entities) {
@@ -186,4 +179,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	public String toString() {
 		return "SimpleRigidBody_" + tag;
 	}
+
+
+	public Vector3f getAdditionalForce() {
+		return NO_FORCE; // Override if required
+	}
+	
 }

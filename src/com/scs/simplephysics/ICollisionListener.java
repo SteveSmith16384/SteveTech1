@@ -2,12 +2,12 @@ package com.scs.simplephysics;
 
 import com.jme3.math.Vector3f;
 
-public interface ICollisionListener {
+public interface ICollisionListener<T> {
 
-	boolean canCollide(SimpleRigidBody a, SimpleRigidBody b);
+	boolean canCollide(SimpleRigidBody<T> a, SimpleRigidBody<T> b);
 	
-	void collisionOccurred(SimpleRigidBody a, SimpleRigidBody b, Vector3f point);
+	void collisionOccurred(SimpleRigidBody<T> a, SimpleRigidBody<T> b, Vector3f point);
 	
-	void bodyOutOfBounds(SimpleRigidBody a);
+	void bodyOutOfBounds(SimpleRigidBody<T> a);
 	
 }

@@ -4,21 +4,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class SimplePhysicsController {
+import com.jme3.scene.Spatial;
 
-	private ArrayList<SimpleRigidBody> entities = new ArrayList<>();
-	private ICollisionListener collListener;
+public class SimplePhysicsController<T> {
+
+	private ArrayList<SimpleRigidBody<T>> entities = new ArrayList<>();
+	private ICollisionListener<T> collListener;
 	private boolean enabled = true;
 	//private Vector3f bounds
 
-	public SimplePhysicsController(ICollisionListener _collListener) {
+	public SimplePhysicsController(ICollisionListener<T> _collListener) {
 		super();
 
 		collListener = _collListener;
 	}
 
 
-	public ICollisionListener getCollisionListener() {
+	public ICollisionListener<T> getCollisionListener() {
 		return this.collListener;
 	}
 
@@ -28,20 +30,20 @@ public class SimplePhysicsController {
 	}
 
 
-	public Collection<SimpleRigidBody> getEntities() {
+	public Collection<SimpleRigidBody<T>> getEntities() {
 		return Collections.synchronizedCollection(this.entities);
 		//return this.entities.values().iterator();
 	}
 
 
-	public void addSimpleRigidBody(SimpleRigidBody srb) {
+	public void addSimpleRigidBody(SimpleRigidBody<T> srb) {
 		synchronized (entities) {
 			this.entities.add(srb);
 		}
 	}
 
 
-	public void removeSimpleRigidBody(SimpleRigidBody srb) {
+	public void removeSimpleRigidBody(SimpleRigidBody<T> srb) {
 		synchronized (entities) {
 			this.entities.remove(srb);
 		}
@@ -51,10 +53,11 @@ public class SimplePhysicsController {
 	public void update(float tpf_secs) {
 		if (this.enabled) {
 			synchronized (entities) {
-				for (SimpleRigidBody srb : this.entities) {
+				for (SimpleRigidBody<T> srb : this.entities) {
 					srb.process(tpf_secs);
 				}
 			}
 		}
 	}
+	
 }

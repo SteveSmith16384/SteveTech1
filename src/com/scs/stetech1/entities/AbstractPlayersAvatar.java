@@ -121,7 +121,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			shoot();
 		}
 
-		this.simplePlayerControl.setLinearVelocity(walkDirection);
+		this.simplePlayerControl.getAdditionalForce().set(walkDirection);
 
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
@@ -152,7 +152,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	public void jump() {
 		Settings.p("Jumping!");
-		this.simpleRigidBody.jump();
+		this.simplePlayerControl.jump();
 	}
 
 

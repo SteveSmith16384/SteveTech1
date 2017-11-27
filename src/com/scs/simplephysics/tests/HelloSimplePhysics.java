@@ -24,14 +24,14 @@ import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 
-public class HelloSimplePhysics extends SimpleApplication implements ActionListener, ICollisionListener {
+public class HelloSimplePhysics extends SimpleApplication implements ActionListener, ICollisionListener<Spatial> {
 
 	private SimpleCharacterControl<Spatial> player;
 	private boolean left = false, right = false, up = false, down = false;
 	private Geometry playerModel;
 	// Our movement speed
 	private Vector3f walkDirection = new Vector3f();
-	private SimplePhysicsController physicsController;
+	private SimplePhysicsController<Spatial> physicsController;
 
 	private final float speed = 1f;
 	private final float headHeight = 1f;
@@ -50,7 +50,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 
 	public void simpleInitApp() {
-		physicsController = new SimplePhysicsController(this);
+		physicsController = new SimplePhysicsController<Spatial>(this);
 		physicsController.setEnabled(false);
 
 		/** Create a box to use as our player model */
@@ -74,7 +74,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		setUpLight();
 
 		player = new SimpleCharacterControl<Spatial>(playerModel, this.physicsController, this.playerModel);
-		//player.setJumpForce(.3f);
 		playerModel.setLocalTranslation(new Vector3f(0,4,0)); 
 
 		this.initFloor();
@@ -251,14 +250,14 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody a, SimpleRigidBody b, Vector3f point) {
+	public void collisionOccurred(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b, Vector3f point) {
 		System.out.println("Collision between " + a.tag + " and " + b.tag);
 
 	}
 
 
 	@Override
-	public void bodyOutOfBounds(SimpleRigidBody a) {
+	public void bodyOutOfBounds(SimpleRigidBody<Spatial> a) {
 		Spatial s = (Spatial)a.tag;
 		s.removeFromParent();
 		
@@ -266,7 +265,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 
 	@Override
-	public boolean canCollide(SimpleRigidBody a, SimpleRigidBody b) {
+	public boolean canCollide(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b) {
 		return true;
 	}
 }
