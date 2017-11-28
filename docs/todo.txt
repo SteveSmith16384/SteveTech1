@@ -5,7 +5,7 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 
 URGENT
-Main game not working
+Main game not working - messages not being sent
 Do spreadsheet of entity positions based on diff speeds
 Record physics vid
 Use latest JME libs

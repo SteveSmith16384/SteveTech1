@@ -17,6 +17,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.data.GameData;
 import com.scs.stetech1.data.PlayerData;
 import com.scs.stetech1.entities.AbstractPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
@@ -59,7 +60,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private LogWindow logWindow;
 	private IConsole console;
 	private SimplePhysicsController<PhysicalEntity> physicsController;
-
+	private GameData gameData;
+	
 	public AbstractGameServer(IMessageServer _networkServer) throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
@@ -87,14 +89,14 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 		if (networkServer.getNumClients() > 0) {
 
-			// Process all messsages
+			// Process all messages
 			synchronized (unprocessedMessages) {
 				while (!this.unprocessedMessages.isEmpty()) {
 					MyAbstractMessage message = this.unprocessedMessages.remove(0);
 					ClientData client = message.client;
 					if (message instanceof NewPlayerRequestMessage) {
 						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-						byte side = 1; // todo
+						byte side = gameData.getSide();
 						client.playerData = new PlayerData(client.id, newPlayerMessage.name, side);
 						client.avatar = createPlayersAvatar(client, side);
 						// Send newplayerconf message
