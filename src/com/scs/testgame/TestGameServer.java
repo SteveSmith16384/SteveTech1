@@ -45,8 +45,8 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	protected ServerPlayersAvatar createPlayersAvatar(ClientData client, int entityid) {
-		return new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, entityid);	
+	protected ServerPlayersAvatar createPlayersAvatar(ClientData client, int entityid, byte side) {
+		return new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);	
 	}
 
 

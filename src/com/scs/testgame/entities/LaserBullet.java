@@ -39,7 +39,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
 			// Accelerate the physical ball to shoot it.
 			simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(40));// todo - check
-			simpleRigidBody.setAirResistance(1);
+			simpleRigidBody.setAerodynamicness(1);
 			simpleRigidBody.setGravity(0);
 		}
 		

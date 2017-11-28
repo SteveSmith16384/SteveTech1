@@ -35,8 +35,9 @@ public class TestGameEntityCreator {
 		case EntityTypes.AVATAR:
 		{
 			int playerID = (int)msg.data.get("playerID");
+			byte side = (byte)msg.data.get("side");
 			if (playerID == game.playerID) {
-				ClientPlayersAvatar avatar = new TestGameClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, id, msg.pos.x, msg.pos.y, msg.pos.z);
+				ClientPlayersAvatar avatar = new TestGameClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, id, msg.pos.x, msg.pos.y, msg.pos.z, side);
 				game.avatar = avatar;
 				return avatar;
 			} else {

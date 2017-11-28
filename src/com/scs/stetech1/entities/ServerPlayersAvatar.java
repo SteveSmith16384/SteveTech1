@@ -16,8 +16,8 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 
 	private AbstractGameServer server;
 
-	public ServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid) {
-		super(_module, _playerID, _input, eid);
+	public ServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, byte side) {
+		super(_module, _playerID, _input, eid, side);
 
 		server = (AbstractGameServer)_module;
 	}

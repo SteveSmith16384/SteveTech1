@@ -167,7 +167,7 @@ public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, M
 
 	@Override
 	public void setListener(IMessageServerListener _listener) {
-		// TODO Auto-generated method stub
+		//myServer.addMessageListener(_listener, classes);
 		
 	}
 

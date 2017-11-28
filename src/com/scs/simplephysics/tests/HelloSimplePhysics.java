@@ -33,7 +33,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	private Vector3f walkDirection = new Vector3f();
 	private SimplePhysicsController<Spatial> physicsController;
 
-	private final float speed = 1f;
+	private final float speed = 8f;
 	private final float headHeight = 1f;
 
 	//Temporary vectors used on each frame.
@@ -80,7 +80,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		//this.addBox(2f, 8f, 7f, 1f, 1f);
 		//this.addBox(2f, 6f, 7f, 1f, 1f);
 		//this.addBall(10, 6, 10, .2f, new Vector3f(-3f, 0f, 0f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION, 0.2f); // Bouncing ball
-		this.addBall(12, 6, 12, .2f, new Vector3f(0, -6f, -6f), 0, 1, 1); // Plasma ball
+		//this.addBall(12, 6, 12, .2f, new Vector3f(0, -6f, -6f), 0, 1, 1); // Plasma ball
 	}
 
 
@@ -145,7 +145,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(ball_geo, physicsController, ball_geo);
 		srb.setLinearVelocity(dir);
 		srb.setGravity(grav);
-		srb.setAirResistance(airRes);
+		srb.setAerodynamicness(airRes);
 		srb.setBounciness(bounce);
 	}
 
@@ -251,7 +251,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b, Vector3f point) {
-		System.out.println("Collision between " + a.tag + " and " + b.tag);
+		//System.out.println("Collision between " + a.tag + " and " + b.tag);
 
 	}
 

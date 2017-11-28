@@ -21,8 +21,8 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 	private AbstractGameClient game;
 	private ICorrectClientEntityPosition syncPos;
 
-	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
-		super(_module, _playerID, _input, eid);
+	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, byte side) {
+		super(_module, _playerID, _input, eid, side);
 
 		game = _module;
 		cam = _cam;

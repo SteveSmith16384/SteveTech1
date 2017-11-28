@@ -20,8 +20,8 @@ public class TestGameClientPlayersAvatar extends ClientPlayersAvatar {
 	private static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
 */
-	public TestGameClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z) {
-		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z);
+	public TestGameClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, byte side) {
+		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z, side);
 	}
 
 

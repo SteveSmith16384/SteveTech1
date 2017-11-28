@@ -18,6 +18,7 @@ import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.data.PlayerData;
+import com.scs.stetech1.entities.AbstractPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
@@ -40,7 +41,7 @@ import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, IMessageServerListener, ICollisionListener  {
+public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, IMessageServerListener, ICollisionListener<PhysicalEntity>  {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -58,14 +59,14 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private LogWindow logWindow;
 	private IConsole console;
 	private SimplePhysicsController<PhysicalEntity> physicsController;
-	
+
 	public AbstractGameServer(IMessageServer _networkServer) throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
 		networkServer = _networkServer;
-		
-		physicsController = new SimplePhysicsController(this);
+
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 	}
 
 
@@ -93,8 +94,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					ClientData client = message.client;
 					if (message instanceof NewPlayerRequestMessage) {
 						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-						client.playerData = new PlayerData(client.id, newPlayerMessage.name);
-						client.avatar = createPlayersAvatar(client);
+						byte side = 1; // todo
+						client.playerData = new PlayerData(client.id, newPlayerMessage.name, side);
+						client.avatar = createPlayersAvatar(client, side);
 						// Send newplayerconf message
 						networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
 						sendEntityListToClient(client);
@@ -243,18 +245,18 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	private ServerPlayersAvatar createPlayersAvatar(ClientData client) {
+	private ServerPlayersAvatar createPlayersAvatar(ClientData client, byte side) {
 		int id = getNextEntityID();
-		ServerPlayersAvatar avatar = this.createPlayersAvatar(client, id);
+		ServerPlayersAvatar avatar = this.createPlayersAvatar(client, id, side);
 		avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
 		return avatar;
 	}
 
 
-	protected abstract ServerPlayersAvatar createPlayersAvatar(ClientData client, int entityid);
-	
-	
+	protected abstract ServerPlayersAvatar createPlayersAvatar(ClientData client, int entityid, byte side);
+
+
 	private void sendEntityListToClient(ClientData client) {
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {
@@ -425,7 +427,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody a, SimpleRigidBody b, Vector3f point) {
+	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
 		Settings.p("Collision between " + a + " and " + b);
 		/*if (b != null && b instanceof ICollideable) {
 			PhysicalEntity pa = (PhysicalEntity)a.getSimplePhysicsEntity();
@@ -436,14 +438,24 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	@Override
-	public void bodyOutOfBounds(SimpleRigidBody a) {
+	public void bodyOutOfBounds(SimpleRigidBody<PhysicalEntity> a) {
 		// Do nothing (yet)
 	}
 
 
 	@Override
-	public boolean canCollide(SimpleRigidBody a, SimpleRigidBody b) {
-		return true; // todo - avatars on the same side don't collide
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+		PhysicalEntity pa = a.tag;
+		PhysicalEntity pb = b.tag;
+		if (pa instanceof AbstractPlayersAvatar && pb instanceof AbstractPlayersAvatar) {
+			// Avatars on the same side don't collide
+			AbstractPlayersAvatar aa = (AbstractPlayersAvatar)pa;
+			AbstractPlayersAvatar ab = (AbstractPlayersAvatar)pb;
+			if (aa.side == ab.side) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

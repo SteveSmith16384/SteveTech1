@@ -8,11 +8,14 @@ import com.jme3.scene.Spatial;
  */
 public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 	
-	private Vector3f walkDir;
+	private Vector3f walkDir = new Vector3f();
 	private float jumpForce = 0.1f;
 
 	public SimpleCharacterControl(Spatial s, SimplePhysicsController<T> _controller, T _tag) {
 		super(s, _controller, _tag);
+		
+		this.setBounciness(0);
+		this.setAerodynamicness(1);
 	}
 	
 
@@ -23,12 +26,14 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
 	public void jump() {
 		if (isOnGround) {
+			System.out.println("Jump!");
 			this.oneOffForce.y += jumpForce;
 		}
 	}
 
 
 	public Vector3f getAdditionalForce() {
+		walkDir.y = 0;
 		return walkDir;
 	}
 	

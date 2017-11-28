@@ -43,9 +43,10 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private int numShots = 0;
 	private int numShotsHit = 0;
 	public IAbility abilityGun, abilityOther;
+	public byte side;
 
 
-	public AbstractPlayersAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid) {
+	public AbstractPlayersAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, byte _side) {
 		super(_game, eid, EntityTypes.AVATAR, "Player");
 
 		if (game.isServer()) {
@@ -56,7 +57,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		playerID = _playerID;
 		input = _input;
-
+		side =_side;
+		
 		playerGeometry = getPlayersModel(game, playerID);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves - yet?
 
