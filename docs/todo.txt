@@ -5,26 +5,26 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 
 URGENT
-Remove entities if move out of bounds
-Add walls to physics test
+Main game not working
+Do spreadsheet of entity positions based on diff speeds
 Record physics vid
-Use jme example data for physics test
 Use latest JME libs
 Search for todos
+Create sep projects for physics, test game, killer crates
 
 
 TODO
+Grenades
+Hello Physics - Remove entities if move out of bounds
 Create game lobby
 Walking up steps
-Create SimplePhysics project
 Hitscan weapons
 	ConcurrentChange error in entities when firing grenade
-force avatar warp test
+Avatar warp test
 Physics test - do explosion
-Grenades
 Confirm source timings
 	Client statuses - connected, in game
-Don't use broadcast()?
+Don't use broadcast()?s
 Draw map
 Show error if client unable to connect
 Laser bullets

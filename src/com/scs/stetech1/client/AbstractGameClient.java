@@ -19,6 +19,9 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeContext.Type;
+import com.scs.simplephysics.ICollisionListener;
+import com.scs.simplephysics.SimplePhysicsController;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
@@ -50,7 +53,7 @@ import com.scs.stetech1.shared.PositionCalculator;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameClient extends SimpleApplication implements IEntityController, ActionListener, IMessageClientListener { 
+public abstract class AbstractGameClient extends SimpleApplication implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -77,9 +80,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
+	private SimplePhysicsController<PhysicalEntity> physicsController;
 
 	protected AbstractGameClient() {
 		super();
+
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 	}
 
 
@@ -425,5 +431,25 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		Settings.p("Disconnected!");
 
 	}
+
+
+	@Override
+	public SimplePhysicsController<PhysicalEntity> getPhysicsController() {
+		return physicsController;
+	}
+
+
+	@Override
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+		return true;
+	}
+
+
+	@Override
+	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
+		// Do nothing
+		
+	}
+
 
 }

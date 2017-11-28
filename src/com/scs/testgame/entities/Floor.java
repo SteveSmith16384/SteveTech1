@@ -78,7 +78,7 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 		geometry.setLocalTranslation(x+(w/2), yTop-(h/2), z+(d/2)); // Move it into position
 
 		if (_game.isServer()) {
-			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
+			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, game.getPhysicsController(), this);
 		}
 		game.getRootNode().attachChild(this.mainNode);
 

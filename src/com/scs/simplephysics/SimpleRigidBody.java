@@ -10,8 +10,8 @@ import com.jme3.scene.Spatial;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	public static final float DEFAULT_AERODYNAMICNESS = 0.999f;
-	public static final float DEFAULT_GRAVITY = -0.2f;
+	public static final float DEFAULT_AERODYNAMICNESS = 1f; // scs todo 0.999f;
+	public static final float DEFAULT_GRAVITY = -0.02f;
 
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f();
@@ -77,13 +77,9 @@ public class SimpleRigidBody<T> implements Collidable {
 			tpf_secs = 1;
 		}
 		if (this.canMove) {
-			// Check if OOB
-			//Vector3f pos = this.spatial.getWorldTranslation();
-			
-			
 			Vector3f additionalForce = this.getAdditionalForce();
 
-			// Move X
+			// Move along X
 			{
 				float totalOffset = oneOffForce.x + additionalForce.x;
 				if (totalOffset != 0) {
@@ -97,11 +93,12 @@ public class SimpleRigidBody<T> implements Collidable {
 				oneOffForce.x = oneOffForce.x * aerodynamicness; // Slow down
 			}
 
-			// Move Y
+			// Move along Y
 			{
-				this.oneOffForce.y += currentGravInc;
-				float totalOffset = oneOffForce.y + additionalForce.y;
-				this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
+				//this.oneOffForce.y += currentGravInc;
+				float totalOffset = (oneOffForce.y + additionalForce.y + currentGravInc) * tpf_secs;
+				//totalOffset += currentGravInc;
+				this.tmpMoveDir.set(0, totalOffset, 0);
 				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 				if (collidedWith != null) {
 					{
@@ -115,7 +112,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					}
 				} else {
 					// Not hit anything
-					currentGravInc = currentGravInc + (gravInc * tpf_secs);
+					currentGravInc = currentGravInc + (gravInc * tpf_secs); // Fall faster
 					if (totalOffset != 0) { 
 						this.isOnGround = true;
 					} else {
@@ -126,7 +123,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				this.oneOffForce.y = oneOffForce.y * aerodynamicness; // Slow down
 			}
 
-			//Move z
+			//Move along Z
 			{
 				float totalOffset = oneOffForce.z + additionalForce.z;
 				if (totalOffset != 0) {

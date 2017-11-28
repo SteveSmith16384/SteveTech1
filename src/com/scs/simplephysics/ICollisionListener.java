@@ -8,6 +8,6 @@ public interface ICollisionListener<T> {
 	
 	void collisionOccurred(SimpleRigidBody<T> a, SimpleRigidBody<T> b, Vector3f point);
 	
-	void bodyOutOfBounds(SimpleRigidBody<T> a);
+	//void bodyOutOfBounds(SimpleRigidBody<T> a);
 	
 }

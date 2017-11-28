@@ -41,7 +41,7 @@ import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, IMessageServerListener, ICollisionListener<PhysicalEntity>  {
+public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, IMessageServerListener, ICollisionListener<PhysicalEntity> {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -438,12 +438,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	@Override
-	public void bodyOutOfBounds(SimpleRigidBody<PhysicalEntity> a) {
-		// Do nothing (yet)
-	}
-
-
-	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pa = a.userObject;
 		PhysicalEntity pb = b.userObject;
@@ -457,6 +451,13 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		}
 		return true;
 	}
+
+
+	@Override
+	public SimplePhysicsController<PhysicalEntity> getPhysicsController() {
+		return physicsController;
+	}
+
 
 }
 
