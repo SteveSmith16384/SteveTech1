@@ -9,7 +9,7 @@ import com.jme3.scene.Spatial;
 public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 	
 	private Vector3f walkDir = new Vector3f();
-	private float jumpForce = 0.1f;
+	private float jumpForce = 3f;
 
 	public SimpleCharacterControl(Spatial s, SimplePhysicsController<T> _controller, T _tag) {
 		super(s, _controller, _tag);

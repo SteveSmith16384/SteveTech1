@@ -10,8 +10,8 @@ import com.jme3.scene.Spatial;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	public static final float DEFAULT_AERODYNAMICNESS = .9999f;
-	public static final float DEFAULT_GRAVITY = -0.003f;
+	public static final float DEFAULT_AERODYNAMICNESS = 0.999f;
+	public static final float DEFAULT_GRAVITY = -0.2f;
 
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f();
@@ -24,7 +24,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	private float currentGravInc = 0; // The change this frame
 
 	private Spatial spatial;
-	public T tag;
+	public T userObject;
 	private boolean canMove = true;
 	protected boolean isOnGround = false;
 	private Vector3f NO_FORCE = new Vector3f();
@@ -36,7 +36,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 		spatial = s;
 		physicsController = _controller;
-		tag = _tag;
+		userObject = _tag;
 
 		physicsController.addSimpleRigidBody(this);
 	}
@@ -46,7 +46,12 @@ public class SimpleRigidBody<T> implements Collidable {
 		this.oneOffForce = dir;
 	}
 
+	
+	public Spatial getSpatial() {
+		return this.spatial;
+	}
 
+	
 	public Vector3f getLinearVelocity() {
 		return this.oneOffForce;
 	}
@@ -72,6 +77,10 @@ public class SimpleRigidBody<T> implements Collidable {
 			tpf_secs = 1;
 		}
 		if (this.canMove) {
+			// Check if OOB
+			//Vector3f pos = this.spatial.getWorldTranslation();
+			
+			
 			Vector3f additionalForce = this.getAdditionalForce();
 
 			// Move X
@@ -85,14 +94,13 @@ public class SimpleRigidBody<T> implements Collidable {
 						oneOffForce.x = oneOffForce.x * bounce * -1;
 					}
 				}
-				oneOffForce.x = oneOffForce.x * aerodynamicness;
+				oneOffForce.x = oneOffForce.x * aerodynamicness; // Slow down
 			}
 
 			// Move Y
 			{
-				//this.isOnGround = false;
 				this.oneOffForce.y += currentGravInc;
-				float totalOffset = oneOffForce.y + additionalForce.x;
+				float totalOffset = oneOffForce.y + additionalForce.y;
 				this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
 				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 				if (collidedWith != null) {
@@ -115,7 +123,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					}
 				}
 				//System.out.println("Is on ground: " + this.isOnGround);
-				this.oneOffForce.y = oneOffForce.y * aerodynamicness;
+				this.oneOffForce.y = oneOffForce.y * aerodynamicness; // Slow down
 			}
 
 			//Move z
@@ -129,7 +137,7 @@ public class SimpleRigidBody<T> implements Collidable {
 						oneOffForce.z = oneOffForce.z * bounce * -1;
 					}
 				}
-				oneOffForce.z = oneOffForce.z * aerodynamicness;
+				oneOffForce.z = oneOffForce.z * aerodynamicness; // Slow down
 			}
 		}
 	}
@@ -188,7 +196,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public String toString() {
-		return "SimpleRigidBody_" + tag;
+		return "SimpleRigidBody_" + userObject;
 	}
 
 

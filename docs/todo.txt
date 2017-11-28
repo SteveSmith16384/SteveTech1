@@ -5,23 +5,22 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 
 URGENT
-Physics test - do explosion
-test Jumping
 Remove entities if move out of bounds
+Add walls to physics test
+Record physics vid
 Use jme example data for physics test
 Use latest JME libs
-Add walls to physics test
 Search for todos
 
 
 TODO
+Create game lobby
 Walking up steps
 Create SimplePhysics project
-Create stand-alone server?
-Option to turn off client sync
 Hitscan weapons
-ConcurrentChange error in entities when firing grenade
+	ConcurrentChange error in entities when firing grenade
 force avatar warp test
+Physics test - do explosion
 Grenades
 Confirm source timings
 	Client statuses - connected, in game
@@ -36,8 +35,7 @@ Use test annotations
 Add lots of comments
 Unit test rewind avatars
 Spectator mode
-Create game lobby
-Send ability updates to client, to confirm ammo etc...
+	Send ability updates to client, to confirm ammo etc...
 Show where players are according to server (in realtime)
 Create server-controlled moving item to check interpol
 Create generic classes and test them

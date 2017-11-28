@@ -1,10 +1,12 @@
 package com.scs.simplephysics.tests;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.TextureKey;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
@@ -23,22 +25,23 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stetech1.server.Settings;
 
 public class HelloSimplePhysics extends SimpleApplication implements ActionListener, ICollisionListener<Spatial> {
 
+	private SimplePhysicsController<Spatial> physicsController;
 	private SimpleCharacterControl<Spatial> player;
+	private Vector3f walkDirection = new Vector3f();
+
 	private boolean left = false, right = false, up = false, down = false;
 	private Geometry playerModel;
-	// Our movement speed
-	private Vector3f walkDirection = new Vector3f();
-	private SimplePhysicsController<Spatial> physicsController;
-
 	private final float speed = 8f;
 	private final float headHeight = 1f;
 
 	//Temporary vectors used on each frame.
 	private Vector3f camDir = new Vector3f();
 	private Vector3f camLeft = new Vector3f();
+
 
 	public static void main(String[] args) {
 		AppSettings settings = new AppSettings(true);
@@ -52,13 +55,14 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	public void simpleInitApp() {
 		physicsController = new SimplePhysicsController<Spatial>(this);
 		physicsController.setEnabled(false);
+		//physicsController.setBounds(new Vector3f(), new Vector3f(30, 10, 30));
 
 		/** Create a box to use as our player model */
 		Box box1 = new Box(.3f, .9f, .3f);
 		playerModel = new Geometry("Player", box1);
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material
-		mat.setColor("Color", ColorRGBA.Blue);   // set color of material to blue
-		playerModel.setMaterial(mat);    
+		mat.setColor("Color", ColorRGBA.Blue);
+		playerModel.setMaterial(mat);
 		playerModel.setLocalTranslation(new Vector3f(0,6,0));
 		playerModel.setCullHint(CullHint.Always);
 		rootNode.attachChild(playerModel);
@@ -77,10 +81,16 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		playerModel.setLocalTranslation(new Vector3f(0,4,0)); 
 
 		this.initFloor();
-		//this.addBox(2f, 8f, 7f, 1f, 1f);
-		//this.addBox(2f, 6f, 7f, 1f, 1f);
+		this.addBox(2f, 8f, 7f, 1f, 1f);
+		this.addBox(2f, 6f, 7f, 1f, 1f);
 		//this.addBall(10, 6, 10, .2f, new Vector3f(-3f, 0f, 0f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION, 0.2f); // Bouncing ball
 		//this.addBall(12, 6, 12, .2f, new Vector3f(0, -6f, -6f), 0, 1, 1); // Plasma ball
+
+		/*
+		Settings.p("Recording video");
+		VideoRecorderAppState video_recorder = new VideoRecorderAppState();
+		stateManager.attach(video_recorder);
+		 */
 	}
 
 
@@ -90,7 +100,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		floor.scaleTextureCoordinates(new Vector2f(3, 6));
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
+		//Texture grass = assetManager.loadTexture("Textures/Terrain/splat/grass.jpg");
+		TextureKey key3 = new TextureKey("Textures/grass.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
@@ -108,10 +119,11 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	public void addBox(float x, float y, float z, float w, float h) {
 		Box box = new Box(w/2, h/2, w/2);
-		box.scaleTextureCoordinates(new Vector2f(3, 6));
+		//box.scaleTextureCoordinates(new Vector2f(3, 6));
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		TextureKey key3 = new TextureKey("Textures/floor015.png");
+		TextureKey key3 = new TextureKey("Textures/crate.png");
+		//floor_mat.setTexture("ColorMap", assetManager.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
@@ -131,7 +143,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		sphere.scaleTextureCoordinates(new Vector2f(3, 6));
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		TextureKey key3 = new TextureKey("Textures/floor015.png");
+		TextureKey key3 = new TextureKey("Textures/greensun.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
@@ -177,11 +189,16 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		inputManager.addListener(this, "Down");
 		inputManager.addListener(this, "Jump");
 
+		inputManager.addMapping("Shoot0", new MouseButtonTrigger(0));
+		inputManager.addListener(this, "Shoot0");
+		inputManager.addMapping("Shoot1", new MouseButtonTrigger(1));
+		inputManager.addListener(this, "Shoot1");
+
 		inputManager.addMapping("Test", new KeyTrigger(KeyInput.KEY_T));
 		inputManager.addListener(this, "Test");
 	}
 
-	
+
 	/** These are our custom actions triggered by key presses.
 	 * We do not walk yet, we just keep track of the direction the user pressed. */
 	public void onAction(String binding, boolean isPressed, float tpf) {
@@ -196,6 +213,18 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		} else if (binding.equals("Jump")) {
 			if (isPressed) { 
 				player.jump(); 
+			}
+		} else if (binding.equals("Shoot0")) {
+			if (isPressed) { 
+				Vector3f startPos = new Vector3f(cam.getLocation());
+				startPos.addLocal(cam.getDirection().mult(2));
+				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(15f), SimpleRigidBody.DEFAULT_GRAVITY, SimpleRigidBody.DEFAULT_AERODYNAMICNESS, 0.2f); // Bouncing ball
+			}
+		} else if (binding.equals("Shoot1")) {
+			if (isPressed) { 
+				Vector3f startPos = new Vector3f(cam.getLocation());
+				startPos.addLocal(cam.getDirection().mult(4));
+				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(25f), 0, 1, 0.2f); // Bouncing ball
 			}
 		} else if (binding.equals("Test")) {
 			if (isPressed) { 
@@ -215,8 +244,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	 */
 	@Override
 	public void simpleUpdate(float tpf) {
-		this.physicsController.update(tpf);
-
 		/*
 		 * The direction of character is determined by the camera angle
 		 * the Y direction is set to zero to keep our character from
@@ -237,8 +264,10 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		}
 		if (down) {
 			walkDirection.addLocal(camDir.negate());
-		}
+		} walkDirection.y = 0;
 		player.getAdditionalForce().set(walkDirection);
+
+		this.physicsController.update(tpf);
 
 		/*
 		 * By default the location of the box is on the bottom of the terrain
@@ -246,21 +275,28 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		 */
 		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
 
+		/*try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 	}
-	
+
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b, Vector3f point) {
-		//System.out.println("Collision between " + a.tag + " and " + b.tag);
+		//System.out.println("Collision between " + a.userObject + " and " + b.userObject);
 
 	}
 
 
 	@Override
 	public void bodyOutOfBounds(SimpleRigidBody<Spatial> a) {
-		Spatial s = (Spatial)a.tag;
+		Spatial s = a.userObject;
 		s.removeFromParent();
-		
+		System.out.println("Removed " + s);
+
 	}
 
 

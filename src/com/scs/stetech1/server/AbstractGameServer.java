@@ -445,8 +445,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
-		PhysicalEntity pa = a.tag;
-		PhysicalEntity pb = b.tag;
+		PhysicalEntity pa = a.userObject;
+		PhysicalEntity pb = b.userObject;
 		if (pa instanceof AbstractPlayersAvatar && pb instanceof AbstractPlayersAvatar) {
 			// Avatars on the same side don't collide
 			AbstractPlayersAvatar aa = (AbstractPlayersAvatar)pa;
