@@ -21,6 +21,7 @@ import com.scs.stetech1.netmessages.WelcomeClientMessage;
 public class Settings {
 
 	public static final boolean STAND_ALONE_SERVER = false;
+	public static final boolean CLIENT_SIDE_PHYSICS = false;
 	
 	public static final boolean DEBUG = true;
 	public static final boolean DEBUG_MSGS = false;
@@ -41,9 +42,6 @@ public class Settings {
 	public static final boolean SHOW_LOGO = false;
 	public static final boolean RECORD_VID = false;
 	public static final boolean USE_MODEL_FOR_PLAYERS = false;
-	public static final boolean CLIENT_SIDE_PHYSICS = false;
-	//public static final boolean USE_PHYSICS = false;
-	//public static final boolean USE_SIMPLE_PHYSICS = true;
 
 	// DEBUG
 	//public static final boolean DEBUG_HUD = false;

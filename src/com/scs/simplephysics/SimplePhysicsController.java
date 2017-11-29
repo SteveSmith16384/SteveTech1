@@ -55,7 +55,6 @@ public class SimplePhysicsController<T> {
 		if (this.enabled) {
 			synchronized (entities) {
 				Iterator<SimpleRigidBody<T>> it = this.entities.iterator();
-				//for (SimpleRigidBody<T> srb : this.entities) {
 				while (it.hasNext()) {
 					SimpleRigidBody<T> srb = it.next();
 					srb.process(tpf_secs);

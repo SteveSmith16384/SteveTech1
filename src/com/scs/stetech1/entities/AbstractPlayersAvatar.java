@@ -34,7 +34,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
-	public SimpleCharacterControl<PhysicalEntity> simplePlayerControl;
+	//public SimpleCharacterControl<PhysicalEntity> simplePlayerControl;
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
@@ -53,6 +53,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			creationData = new HashMap<String, Object>();
 			creationData.put("id", eid); this.getID();
 			creationData.put("playerID", _playerID);
+			creationData.put("side", _side);
 		}
 
 		playerID = _playerID;
@@ -64,7 +65,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		this.getMainNode().attachChild(playerGeometry);
 
-		this.simplePlayerControl = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, (SimplePhysicsController)game, this);
+		//this.simplePlayerControl = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 
 		game.getRootNode().attachChild(this.mainNode);
 
@@ -123,7 +125,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			shoot();
 		}
 
-		this.simplePlayerControl.getAdditionalForce().set(walkDirection);
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.getAdditionalForce().set(walkDirection);
 
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
@@ -154,7 +157,8 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	public void jump() {
 		Settings.p("Jumping!");
-		this.simplePlayerControl.jump();
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.jump();
 	}
 
 

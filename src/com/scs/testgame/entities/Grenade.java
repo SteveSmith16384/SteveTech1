@@ -9,6 +9,7 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.entities.PhysicalEntity;
@@ -31,7 +32,9 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		this.shooter = _shooter;
 
 		// Accelerate the physical ball to shoot it.
-		this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(15));
+		if (_game.isServer()) {
+			this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(15));
+		}
 
 	}
 
@@ -65,16 +68,9 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
 		ball_geo.setLocalTranslation(origin);
 
-		/*if (Settings.USE_PHYSICS) {
-			rigidBodyControl = new RigidBodyControl(.2f);
-			ball_geo.addControl(rigidBodyControl);
-			game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-			if (_game.isServer() || Settings.CLIENT_SIDE_PHYSICS) {
-			} else {
-				rigidBodyControl.setKinematic(true);
-			}
-			rigidBodyControl.setUserObject(this);
-		}*/
+		//if (_game.isServer()) {
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		//}
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		game.addEntity(this);

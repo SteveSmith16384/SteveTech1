@@ -58,7 +58,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
 
-	public enum Status { NotConnected, Connected, RcvdWelcome, GameStarted };
+	// Statuses
+	public static final int STATUS_NOT_CONNECTED = 0;
+	public static final int STATUS_CONNECTED = 1;
+	public static final int STATUS_RCVD_WELCOME = 2;
+	public static final int STATUS_SENT_JOIN_REQUEST = 3;
+	public static final int STATUS_JOINED_GAME = 4;
+	public static final int STATUS_GAME_STARTED = 5;
 
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	public static BitmapFont guiFont_small;
@@ -74,7 +80,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
-	public Status status = Status.NotConnected;
+	public int status = STATUS_NOT_CONNECTED;
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
@@ -202,7 +208,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							} else {
 								Settings.p("Unknown entity ID: " + eum.entityID);
 								// Ask the server for entity details since we don't know about it.
-								networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
+								// No, since we might jave not joined the gane yet! (server uses broadcast()
+								// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
 							}
 
 						} else if (message instanceof RemoveEntityMessage) {
@@ -210,7 +217,10 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							this.removeEntity(rem.entityID);
 
 						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
-							status = Status.GameStarted;
+							GeneralCommandMessage msg = (GeneralCommandMessage)message;
+							if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) {
+								status = this.STATUS_GAME_STARTED;
+							}
 
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
@@ -218,11 +228,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					}
 				}
 
-				if (status != Status.NotConnected && sendPingInt.hitInterval()) {
+				if (status >= this.STATUS_CONNECTED && sendPingInt.hitInterval()) {
 					networkClient.sendMessageToServer(new PingMessage(false));
 				}
 
-				if (status == Status.GameStarted) {
+				if (status == this.STATUS_GAME_STARTED) {
 					if (this.avatar != null) {
 						// Send inputs
 						if (sendInputsInterval.hitInterval()) {
@@ -351,15 +361,19 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			}
 		} else if (message instanceof WelcomeClientMessage) {
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
-			status = Status.RcvdWelcome; // Need to wait until we receive something from the server before we can send to them
-			networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
+			if (status < this.STATUS_RCVD_WELCOME) {
+				status = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
+				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
+			} else {
+				throw new RuntimeException("todo");
+			}
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 
 		if (Settings.DEBUG_MSGS) {
-			if (status == Status.Connected) {
+			if (status < this.STATUS_RCVD_WELCOME) {
 				Settings.p("Still not received Welcome message");
 			}
 		}
@@ -441,7 +455,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
-		return true;
+		return true; // todo - only player collides?
 	}
 
 

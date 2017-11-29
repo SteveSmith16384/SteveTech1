@@ -61,9 +61,10 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		}
 		geometry.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2)); // Never change position of mainNode (unless the whole object is moving)
 
-		if (_game.isServer()) {
-			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, game.getPhysicsController(), this);
-		}
+		//if (_game.isServer()) {
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody.setMovable(false);
+		//}
 
 		game.getRootNode().attachChild(this.mainNode);
 
@@ -80,10 +81,10 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics, ICollide
 		//Settings.p("Pos: " + this.getLocation());
 	}
 
-/*
+	/*
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-*/
+	 */
 }

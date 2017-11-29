@@ -60,13 +60,14 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private LogWindow logWindow;
 	private IConsole console;
 	private SimplePhysicsController<PhysicalEntity> physicsController;
-	private GameData gameData;
+	private GameData gameData = new GameData();
 	
 	public AbstractGameServer(IMessageServer _networkServer) throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
 		networkServer = _networkServer;
+		networkServer.setListener(this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 	}
@@ -430,7 +431,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		Settings.p("Collision between " + a + " and " + b);
+		//Settings.p("Collision between " + a + " and " + b);
 		/*if (b != null && b instanceof ICollideable) {
 			PhysicalEntity pa = (PhysicalEntity)a.getSimplePhysicsEntity();
 			pa.collidedWith((ICollideable)b);

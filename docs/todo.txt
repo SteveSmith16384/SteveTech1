@@ -1,25 +1,23 @@
 STETECH1
 
-LINKS
-https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.html
-
-
 URGENT
-Player cannot jump
+	Mark entiities as "canmove" or not
+Hello Pyhsics - drop lots of crates with diff bounciness
+Create sep physics project, but copy (not move) source
+	Player cannot jump
 Hello physics - better textures
-Player can jmup multiple times
-	Is JME's tfp consistent
-	Add shadows
+	Player can jmup multiple times
 Main game not working - messages not being sent
-Record physics vid
+Record better physics vid
 Use latest JME libs
 Search for todos
 Create sep projects for physics, test game, killer crates
 
 
 TODO
+Client side physics?
+Only send entity messages to players that have joined the game
 Grenades
-Hello Physics - Remove entities if move out of bounds
 Create game lobby
 Walking up steps
 Hitscan weapons

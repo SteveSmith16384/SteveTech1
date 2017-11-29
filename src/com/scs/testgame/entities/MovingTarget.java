@@ -67,9 +67,9 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		mainNode.rotate(0, rads, 0);
 		mainNode.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
-		if (_game.isServer()) {
+		//if (_game.isServer()) {
 			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
-		}
+		//}
 
 		game.getRootNode().attachChild(this.mainNode);
 

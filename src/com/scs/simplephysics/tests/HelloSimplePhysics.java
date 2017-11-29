@@ -194,11 +194,10 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 
 	public void addBall(float x, float y, float z, float rad, Vector3f dir, float grav, float airRes, float bounce) {
-		Sphere sphere = new Sphere(8, 8, rad);
-		sphere.scaleTextureCoordinates(new Vector2f(3, 6));
+		Sphere sphere = new Sphere(16, 16, rad);
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		TextureKey key3 = new TextureKey("Textures/greensun.jpg");
+		TextureKey key3 = new TextureKey("Textures/football.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);

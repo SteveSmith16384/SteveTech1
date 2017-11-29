@@ -1,9 +1,17 @@
-TYPES OF PHYSICS
-Bouncing ball - one-off force, gravity and air friction
-Laser the goes on forever - one-off force, no air friction, no gravity
-Rocket
-Players avatar - WalkDir, jump
+FEATURES:
+Configurable parameters for entities: Bounciness, Air resistance, gravity.
+Gravity
+Full collision detection between all entities.
+Entities will bounce off each other (unless bounciness set to 0).
+Can configure it that certain entites should not collide with others (e.g. prevent entry into enemy spawn points).
+Runs inside the main JME thread.
+A character control for first-person movement, including jumping.
 
-Other: Affected by explosion, self-propelled or one-off
+
+
+TYPES OF PHYSICS CATERED FOR
+Bouncing ball
+Laser bolt the goes on forever in the same direction (unless it collides of course)
+Players avatar - Walking, jumping
 
 
