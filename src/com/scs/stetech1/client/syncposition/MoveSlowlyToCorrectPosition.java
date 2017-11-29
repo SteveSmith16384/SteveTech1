@@ -16,7 +16,7 @@ public class MoveSlowlyToCorrectPosition implements ICorrectClientEntityPosition
 		float diff = offset.length();
 		if (diff > 0.01f) { // Avoid lots of small movements
 			if (diff > MAX_DIST) {
-				offset.normalizeLocal().multLocal(MAX_DIST);
+				offset.normalizeLocal().multLocal(MAX_DIST); // Move a smaller amount
 			}
 			pe.adjustWorldTranslation(offset);
 			//pe.setWorldTranslation(pe.getWorldTranslation().add(offset)); No!

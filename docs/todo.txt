@@ -2,10 +2,8 @@ STETECH1
 
 URGENT
 	Mark entiities as "canmove" or not
-Hello Pyhsics - drop lots of crates with diff bounciness
+	Hello Pyhsics - drop lots of crates with diff bounciness
 Create sep physics project, but copy (not move) source
-	Player cannot jump
-Hello physics - better textures
 	Player can jmup multiple times
 Main game not working - messages not being sent
 Record better physics vid

@@ -21,7 +21,7 @@ import com.scs.stetech1.netmessages.WelcomeClientMessage;
 public class Settings {
 
 	public static final boolean STAND_ALONE_SERVER = false;
-	public static final boolean CLIENT_SIDE_PHYSICS = false;
+	public static final boolean CLIENT_SIDE_PHYSICS = false; // unused ATM
 	
 	public static final boolean DEBUG = true;
 	public static final boolean DEBUG_MSGS = false;
@@ -42,9 +42,6 @@ public class Settings {
 	public static final boolean SHOW_LOGO = false;
 	public static final boolean RECORD_VID = false;
 	public static final boolean USE_MODEL_FOR_PLAYERS = false;
-
-	// DEBUG
-	//public static final boolean DEBUG_HUD = false;
 
 	// Our movement speed
 	public static final float PLAYER_MOVE_SPEED = 3f;

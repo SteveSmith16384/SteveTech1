@@ -38,7 +38,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	private SimplePhysicsController<Spatial> physicsController;
 	private SimpleCharacterControl<Spatial> player;
-	private Vector3f walkDirection = new Vector3f();
+	private final Vector3f walkDirection = new Vector3f();
 
 	private boolean left = false, right = false, up = false, down = false;
 	private Geometry playerModel;
@@ -62,7 +62,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	public void simpleInitApp() {
 		physicsController = new SimplePhysicsController<Spatial>(this);
 		physicsController.setEnabled(false);
-		//physicsController.setBounds(new Vector3f(), new Vector3f(30, 10, 30));
 
 		/** Create a box to use as our player model */
 		Box box1 = new Box(.3f, .9f, .3f);
@@ -75,7 +74,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		rootNode.attachChild(playerModel);
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, 1000f);
-		cam.setLocation(new Vector3f(0,6,0));
+		//cam.setLocation(new Vector3f(0,6,0));
 
 		viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
@@ -87,8 +86,12 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 		this.addFloor();
 		this.addWall();
-		this.addBox(2f, 8f, 7f, 1f, 1f);
-		this.addBox(2f, 6f, 7f, 1f, 1f);
+		this.addBox(2f, 8f, 7f, 1f, 1f, .1f);
+		this.addBox(2f, 6f, 7f, 1f, 1f, .3f);
+		
+		for (int i=0 ; i<10 ; i++) {
+			this.addBox(4f+i, 7f, 9f, 1f, 1f, (i/10f));
+		}
 		//this.addBall(10, 6, 10, .2f, new Vector3f(-3f, 0f, 0f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION, 0.2f); // Bouncing ball
 		//this.addBall(12, 6, 12, .2f, new Vector3f(0, -6f, -6f), 0, 1, 1); // Plasma ball
 
@@ -99,30 +102,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
 
-		/*DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
-        dlsr.setLight(sun);
-        dlsr.setLambda(0.55f);
-        dlsr.setShadowIntensity(0.8f);
-        dlsr.setEdgeFilteringMode(EdgeFilteringMode.Nearest);
-        //dlsr.displayDebug();
-        viewPort.addProcessor(dlsr);
-
-        /*DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
-        dlsf.setLight(sun);
-        dlsf.setLambda(0.55f);
-        dlsf.setShadowIntensity(0.8f);
-        dlsf.setEdgeFilteringMode(EdgeFilteringMode.Nearest);
-        dlsf.setEnabled(false);
-
-        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-        fpp.addFilter(dlsf);
-
-        viewPort.addProcessor(fpp);*/
-
-        /*Settings.p("Recording video");
-		VideoRecorderAppState video_recorder = new VideoRecorderAppState();
-		stateManager.attach(video_recorder);
-*/
 	}
 
 
@@ -151,7 +130,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	public void addWall() {
 		Box floor = new Box(5f, 5f, .1f);
-		//floor.scaleTextureCoordinates(new Vector2f(3, 6));
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		TextureKey key3 = new TextureKey("Textures/seamless_bricks/bricks2.png");
@@ -171,7 +149,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	}
 
 
-	public void addBox(float x, float y, float z, float w, float h) {
+	public void addBox(float x, float y, float z, float w, float h, float bounciness) {
 		Box box = new Box(w/2, h/2, w/2);
 		//box.scaleTextureCoordinates(new Vector2f(3, 6));
 
@@ -190,6 +168,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		this.rootNode.attachChild(box_geo);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(box_geo, physicsController, box_geo);
+		srb.setBounciness(bounciness);
 	}
 
 
@@ -342,7 +321,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			walkDirection.addLocal(camDir.negate());
 		} 
 		walkDirection.y = 0; // Prevent us walking up or down
-		player.getAdditionalForce().set(walkDirection);
+		//scs todo? player.getAdditionalForce().set(walkDirection);
 
 		this.physicsController.update(tpf_secs);
 

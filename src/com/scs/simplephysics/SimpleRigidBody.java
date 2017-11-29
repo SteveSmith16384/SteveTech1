@@ -207,7 +207,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	
 	public void setAdditionalForce(Vector3f force) {
-		this.additionalForce = force; // Override if required
+		this.additionalForce = force;
 	}
 
 	

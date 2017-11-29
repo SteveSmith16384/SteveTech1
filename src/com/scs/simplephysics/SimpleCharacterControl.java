@@ -17,6 +17,7 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
 		this.setBounciness(0);
 		//this.setAerodynamicness(1);  Don't set to 1, otherwise an explosions keeps moving us forever
+		super.setAdditionalForce(walkDir);
 	}
 
 
