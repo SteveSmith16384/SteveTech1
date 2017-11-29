@@ -5,8 +5,12 @@ https://jmonkeyengine.github.io/wiki/jme3/advanced/collision_and_intersection.ht
 
 
 URGENT
+Player cannot jump
+Hello physics - better textures
+Player can jmup multiple times
+	Is JME's tfp consistent
+	Add shadows
 Main game not working - messages not being sent
-Do spreadsheet of entity positions based on diff speeds
 Record physics vid
 Use latest JME libs
 Search for todos

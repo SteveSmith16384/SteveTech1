@@ -10,8 +10,9 @@ import com.jme3.scene.Spatial;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	public static final float DEFAULT_AERODYNAMICNESS = 1f; // scs todo 0.999f;
-	public static final float DEFAULT_GRAVITY = -0.02f;
+	public static final float DEFAULT_AERODYNAMICNESS = 0.99f;
+	public static final float DEFAULT_GRAVITY = -4f;
+	private static Vector3f NO_FORCE = new Vector3f();
 
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f();
@@ -21,13 +22,12 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	// Gravity
 	private float gravInc = DEFAULT_GRAVITY; // How powerful is gravity
-	private float currentGravInc = 0; // The change this frame
+	public float currentGravInc = 0; // The change this frame
 
 	private Spatial spatial;
 	public T userObject;
 	private boolean canMove = true;
 	protected boolean isOnGround = false;
-	private Vector3f NO_FORCE = new Vector3f();
 
 	private CollisionResults collisionResults = new CollisionResults();
 
@@ -112,6 +112,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					}
 				} else {
 					// Not hit anything
+					// No currentGravInc = currentGravInc + (gravInc);// * tpf_secs); // Fall faster
 					currentGravInc = currentGravInc + (gravInc * tpf_secs); // Fall faster
 					if (totalOffset != 0) { 
 						this.isOnGround = true;

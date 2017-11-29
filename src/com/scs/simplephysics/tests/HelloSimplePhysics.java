@@ -1,5 +1,7 @@
 package com.scs.simplephysics.tests;
 
+import java.util.Collection;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.TextureKey;
@@ -13,11 +15,16 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
+import com.jme3.shadow.DirectionalLightShadowFilter;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
+import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
@@ -41,7 +48,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	//Temporary vectors used on each frame.
 	private Vector3f camDir = new Vector3f();
 	private Vector3f camLeft = new Vector3f();
-
+	private DirectionalLight sun;
 
 	public static void main(String[] args) {
 		AppSettings settings = new AppSettings(true);
@@ -69,9 +76,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, 1000f);
 		cam.setLocation(new Vector3f(0,6,0));
-		/** Set up Physics */
 
-		// We re-use the flyby camera for rotation, while positioning is handled by physics
 		viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
 		setUpKeys();
@@ -87,11 +92,37 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		//this.addBall(10, 6, 10, .2f, new Vector3f(-3f, 0f, 0f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION, 0.2f); // Bouncing ball
 		//this.addBall(12, 6, 12, .2f, new Vector3f(0, -6f, -6f), 0, 1, 1); // Plasma ball
 
-		/*
-		Settings.p("Recording video");
+		final int SHADOWMAP_SIZE = 1024;
+		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
+		//dlsr.setShadowIntensity(1f);
+		//dlsr.setShadowZFadeLength(10f);
+		dlsr.setLight(sun);
+		this.viewPort.addProcessor(dlsr);
+
+		/*DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(assetManager, SHADOWMAP_SIZE, 3);
+        dlsr.setLight(sun);
+        dlsr.setLambda(0.55f);
+        dlsr.setShadowIntensity(0.8f);
+        dlsr.setEdgeFilteringMode(EdgeFilteringMode.Nearest);
+        //dlsr.displayDebug();
+        viewPort.addProcessor(dlsr);
+
+        /*DirectionalLightShadowFilter dlsf = new DirectionalLightShadowFilter(assetManager, SHADOWMAP_SIZE, 3);
+        dlsf.setLight(sun);
+        dlsf.setLambda(0.55f);
+        dlsf.setShadowIntensity(0.8f);
+        dlsf.setEdgeFilteringMode(EdgeFilteringMode.Nearest);
+        dlsf.setEnabled(false);
+
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        fpp.addFilter(dlsf);
+
+        viewPort.addProcessor(fpp);*/
+
+        /*Settings.p("Recording video");
 		VideoRecorderAppState video_recorder = new VideoRecorderAppState();
 		stateManager.attach(video_recorder);
-		 */
+*/
 	}
 
 
@@ -101,7 +132,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		floor.scaleTextureCoordinates(new Vector2f(3, 6));
 
 		Material floor_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		//Texture grass = assetManager.loadTexture("Textures/Terrain/splat/grass.jpg");
 		TextureKey key3 = new TextureKey("Textures/grass.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
@@ -111,6 +141,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		Geometry floor_geo = new Geometry("Floor", floor);
 		floor_geo.setMaterial(floor_mat);
 		floor_geo.setLocalTranslation(0, -0.1f, 0);
+		floor_geo.setShadowMode(ShadowMode.Receive);
 		this.rootNode.attachChild(floor_geo);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floor_geo, physicsController, floor_geo);
@@ -132,6 +163,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		Geometry floor_geo = new Geometry("Wall", floor);
 		floor_geo.setMaterial(floor_mat);
 		floor_geo.setLocalTranslation(3, 2.5f, 20);
+		floor_geo.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(floor_geo);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floor_geo, physicsController, floor_geo);
@@ -154,6 +186,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		Geometry box_geo = new Geometry("Box", box);
 		box_geo.setMaterial(floor_mat);
 		box_geo.setLocalTranslation(x, y, z);
+		box_geo.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(box_geo);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(box_geo, physicsController, box_geo);
@@ -174,6 +207,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		Geometry ball_geo = new Geometry("Sphere", sphere);
 		ball_geo.setMaterial(floor_mat);
 		ball_geo.setLocalTranslation(x, y, z);
+		ball_geo.setShadowMode(ShadowMode.Cast);
 		this.rootNode.attachChild(ball_geo);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(ball_geo, physicsController, ball_geo);
@@ -185,20 +219,23 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 
 	private void setUpLight() {
+		// Remove existing lights
+		getRootNode().getWorldLightList().clear();
+		getRootNode().getLocalLightList().clear();
+
 		// We add light so we see the scene
 		AmbientLight al = new AmbientLight();
-		al.setColor(ColorRGBA.White.mult(1.3f));
+		al.setColor(ColorRGBA.White.mult(.2f));
 		rootNode.addLight(al);
 
-		DirectionalLight dl = new DirectionalLight();
-		dl.setColor(ColorRGBA.White);
-		dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-		rootNode.addLight(dl);
+		sun = new DirectionalLight();
+		sun.setColor(ColorRGBA.Yellow);
+		//sun.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+		sun.setDirection(new Vector3f(0, -1f, 0).normalizeLocal());
+		rootNode.addLight(sun);
 	}
 
 
-	/** We over-write some navigational key mappings here, so we can
-	 * add physics-controlled walking and jumping: */
 	private void setUpKeys() {
 		inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
@@ -216,8 +253,11 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		inputManager.addMapping("Shoot1", new MouseButtonTrigger(1));
 		inputManager.addListener(this, "Shoot1");
 
-		inputManager.addMapping("Test", new KeyTrigger(KeyInput.KEY_T));
-		inputManager.addListener(this, "Test");
+		inputManager.addMapping("Blow", new KeyTrigger(KeyInput.KEY_B));
+		inputManager.addListener(this, "Blow");
+
+		inputManager.addMapping("Start", new KeyTrigger(KeyInput.KEY_T));
+		inputManager.addListener(this, "Start");
 	}
 
 
@@ -240,23 +280,38 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			if (isPressed) { 
 				Vector3f startPos = new Vector3f(cam.getLocation());
 				startPos.addLocal(cam.getDirection().mult(2));
-				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(15f), SimpleRigidBody.DEFAULT_GRAVITY, SimpleRigidBody.DEFAULT_AERODYNAMICNESS, 0.4f); // Bouncing ball
+				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(25f), SimpleRigidBody.DEFAULT_GRAVITY, SimpleRigidBody.DEFAULT_AERODYNAMICNESS, 0.4f); // Bouncing ball
 			}
 		} else if (binding.equals("Shoot1")) {
 			if (isPressed) { 
 				Vector3f startPos = new Vector3f(cam.getLocation());
 				startPos.addLocal(cam.getDirection().mult(4));
-				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(25f), 0, 1, 0.2f); // Laser ball
+				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(35f), 0, 1, 0.2f); // Laser ball
 			}
-		} else if (binding.equals("Test")) {
+		} else if (binding.equals("Start")) {
 			if (isPressed) { 
-				//playerModel.setLocalTranslation(new Vector3f(2, 10, 2));
 				physicsController.setEnabled(true);
-
+			}
+		} else if (binding.equals("Blow")) {
+			if (isPressed) {
+				blow();
 			}
 		}
 	}
 
+
+	private void blow() {
+		Collection<SimpleRigidBody<Spatial>> entities = physicsController.getEntities();
+		synchronized (entities) {
+			// Loop through the entities
+			for(SimpleRigidBody<Spatial> e : entities) {
+				e.getLinearVelocity().addLocal(5, 0, 0);
+			}
+		}
+
+	}
+
+	
 	/**
 	 * This is the main event loop--walking happens here.
 	 * We check in which direction the player is walking by interpreting
@@ -265,11 +320,11 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	 * We also make sure here that the camera moves with player.
 	 */
 	@Override
-	public void simpleUpdate(float tpf) {
+	public void simpleUpdate(float tpf_secs) {
 		/*
 		 * The direction of character is determined by the camera angle
 		 * the Y direction is set to zero to keep our character from
-		 * lifting of terrain. For free flying games simply ad speed 
+		 * lifting of terrain. For free flying games simply add speed 
 		 * to Y axis
 		 */
 		camDir.set(cam.getDirection()).multLocal(speed, 0.0f, speed);
@@ -286,23 +341,25 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		}
 		if (down) {
 			walkDirection.addLocal(camDir.negate());
-		} walkDirection.y = 0;
+		} 
+		walkDirection.y = 0; // Prevent us walking up or down
 		player.getAdditionalForce().set(walkDirection);
 
-		this.physicsController.update(tpf);
+		this.physicsController.update(tpf_secs);
 
-		/*
-		 * By default the location of the box is on the bottom of the terrain
-		 * we make a slight offset to adjust for head height.
-		 */
 		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
 
-		/*try {
+		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
+	}
+
+
+	public static void p(String s) {
+		//System.out.println(System.currentTimeMillis() + ": " + s);
+		System.out.println(s);
 	}
 
 
@@ -313,15 +370,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	}
 
 
-	/*@Override
-	public void bodyOutOfBounds(SimpleRigidBody<Spatial> a) {
-		Spatial s = a.userObject;
-		s.removeFromParent();
-		System.out.println("Removed " + s);
-	}*/
-
-
-	@Override
 	public boolean canCollide(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b) {
 		return true;
 	}

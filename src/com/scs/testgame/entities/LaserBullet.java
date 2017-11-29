@@ -36,7 +36,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 		//laserNode.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*3)));
 		//laserNode.getLocalTranslation().y -= 0.1f; // Drop bullets slightly
 		if (_game.isServer()) {
-			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
+			this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 			// Accelerate the physical ball to shoot it.
 			simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(40));// todo - check
 			simpleRigidBody.setAerodynamicness(1);
