@@ -453,13 +453,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
-		return true; // todo - only player collides?
+		return true;
 	}
 
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		// Do nothing
+		//Settings.p("Collision between " + a.userObject + " and " + b.userObject);
 
 	}
 

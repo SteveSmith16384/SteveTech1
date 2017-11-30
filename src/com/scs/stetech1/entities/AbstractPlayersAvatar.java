@@ -65,15 +65,15 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 		this.getMainNode().attachChild(playerGeometry);
 
-		//this.simplePlayerControl = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 
-		//abilityGun = new HitscanRifle(game, this);
-		abilityGun = new GrenadeLauncher(game, this);
+		abilityGun = new HitscanRifle(game, this);
+		//abilityGun = new GrenadeLauncher(game, this);
+		
 		/* 
 			this.abilityOther = new JetPac(this);// BoostFwd(this);//getRandomAbility(this);
 		}*/

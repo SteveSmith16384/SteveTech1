@@ -2,7 +2,12 @@ STETECH1
 
 
 URGENT
+Add lighting to hellophysics: floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+
+
 How is client avatar getting so low?
+	Remove gravity when warping player?
+Player doesn't move when looking down - is this the same in simplephysics?
 	Reset forces when warping player
 	Turn off gravity on client side?
 Max fall speed

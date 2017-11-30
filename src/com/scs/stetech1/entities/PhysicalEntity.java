@@ -148,8 +148,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void setWorldTranslation(Vector3f pos) {
-		// This is overridden by avatars, as they need to warp
-		// this.rigidBodyControl.setPhysicsLocation(pos.clone()); Don't need this according to https://jmonkeyengine.github.io/wiki/jme3/advanced/physics.html#kinematic-vs-dynamic-vs-static
 		this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
 	}
 
@@ -162,9 +160,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public Quaternion getWorldRotation() {
 		return this.getMainNode().getLocalRotation();
 	}
-
-
-	//public abstract boolean canMove();
 
 
 	public boolean hasMoved() {

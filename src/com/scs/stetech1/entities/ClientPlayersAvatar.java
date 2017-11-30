@@ -5,8 +5,8 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.client.ClientAvatarPositionCalc;
-import com.scs.stetech1.client.syncposition.AdjustBasedOnDistance;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
+import com.scs.stetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.components.IShowOnHUD;
@@ -30,9 +30,12 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
-		//syncPos = new InstantPositionAdjustment(); Problems
+		syncPos = new InstantPositionAdjustment();
 		//syncPos = new MoveSlowlyToCorrectPosition(0.1f);
-		syncPos = new AdjustBasedOnDistance();
+		//syncPos = new AdjustBasedOnDistance();
+		
+		this.simpleRigidBody.setGravity(0); // scs todo
+		
 	}
 
 
@@ -43,9 +46,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 		hud.process(client, tpf);
 
 		// Position camera at node
-		Vector3f vec = this.getWorldTranslation();// getMainNode().getWorldTranslation();
-		// cam.setLocation(new Vector3f(vec.x, vec.y + (PLAYER_HEIGHT/2), vec.z));
-		// Avoid creating new Vector3f
+		Vector3f vec = this.getWorldTranslation();
 		cam.getLocation().x = vec.x;
 		cam.getLocation().y = vec.y + PLAYER_HEIGHT;
 		cam.getLocation().z = vec.z;
@@ -68,9 +69,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
 		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 		if (offset != null) {
-			//if (diff > Settings.MAX_CLIENT_POSITION_DISCREP) {
 			this.syncPos.adjustPosition(this, offset);
-			//}
 		}
 
 	}
