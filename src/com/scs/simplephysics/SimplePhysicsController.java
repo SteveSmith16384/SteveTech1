@@ -63,4 +63,9 @@ public class SimplePhysicsController<T> {
 		}
 	}
 
+
+	public boolean getEnabled() {
+		return this.enabled;
+	}
+
 }

@@ -228,7 +228,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					}
 				}
 
-				if (status >= this.STATUS_CONNECTED && sendPingInt.hitInterval()) {
+				if (status >= STATUS_CONNECTED && sendPingInt.hitInterval()) {
 					networkClient.sendMessageToServer(new PingMessage(false));
 				}
 
@@ -242,12 +242,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						}
 						storeAvatarPosition(serverTime);
 					}
+					physicsController.update(tpf_secs);
 
 					long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
-
-					/*if (this.avatar != null) {
-						//avatar.resetWalkDir();
-					}*/
 
 					// Loop through each entity and calc correct position				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
@@ -260,7 +257,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 								strListEnts.append("Walkdir : " + av.playerControl.getWalkDirection() + "\n");
 							}*/
 							//if (pe.canMove()) { // Only bother with things that can move
-								pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
+							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
 							//}
 						}
 						if (e instanceof IProcessByClient) {
@@ -462,7 +459,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
 		// Do nothing
-		
+
 	}
 
 

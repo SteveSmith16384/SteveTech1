@@ -1,30 +1,26 @@
 STETECH1
+Post to JME forums
+Post to JavaGaming
+Copy physics code back to stetech
 
 URGENT
-	Mark entiities as "canmove" or not
-	Hello Pyhsics - drop lots of crates with diff bounciness
-Create sep physics project, but copy (not move) source
-	Player can jmup multiple times
-Main game not working - messages not being sent
-Record better physics vid
-Use latest JME libs
+Reduce jump height
+Try jumping against a wall
 Search for todos
-Create sep projects for physics, test game, killer crates
+Create sep projects for test game, killer crates
+Hitscan weapons
 
 
 TODO
+Use latest JME libs
 Client side physics?
-Only send entity messages to players that have joined the game
 Grenades
 Create game lobby
 Walking up steps
-Hitscan weapons
 	ConcurrentChange error in entities when firing grenade
 Avatar warp test
 Physics test - do explosion
 Confirm source timings
-	Client statuses - connected, in game
-Don't use broadcast()?s
 Draw map
 Show error if client unable to connect
 Laser bullets
@@ -44,6 +40,7 @@ Reduce dependencies between classes
 
 LATER
 Reduce object creation, including calls to clone()
+Don't use broadcast()?s
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
@@ -51,6 +48,8 @@ client/server encryption
 Make classes final
 Test with cheating client
 User enter name and ip address
+Only send entity messages to players that have joined the game
+
 
 =======================================
 
@@ -77,14 +76,3 @@ Player shooting
 	Server moves players to correct position and checks the client has hit
 	 
 	
-
-	
-	I am trying to cancel my automatic renewal of PSN.  I have tried all of the following:
-
-1) The direct link to "Cancel automatic renewal" in your email "Your PlayStation®Plus annual membership fee is due" only takes me to the account management page.
-
-2) I tried the link in the same email entitled "You can find helpful information on how to cancel your subscription here." which took me to https://www.playstation.com/en-gb/get-help/help-library/store---transactions/payments---refunds/how-to-cancel-a-service-subscription/.  This page says "Go to [Account Management] > [Services List]".  However, there is no wording "services list" on this page.  It also suggests going to the Media tab to find and cancel the subscription service.  However, I could find nothing under the media tab apart from a list of all my games.
-
-3) I then tried the page https://www.playstation.com/en-gb/get-help/help-library/store---transactions/payments---refunds/how-to-cancel-a-service-subscription-using-playstation-app/ since I am doing this on the web.  This tells me to go to the Media Tab, and select Games and "Select the current PS Plus or PS Now".  After scrolling through 9 pages of games (a search feature would be a good idea) the only thing I can find is something called "PS Plus UBS".  However, when I click on this I get the message "An error occurred while performing this operation.".
-
-Please can you tell me how to cancel my automatic renewal of PSN.  

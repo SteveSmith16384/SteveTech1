@@ -159,6 +159,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					this.restoreAllAvatarPositions();
 				}
 			}
+			
+			physicsController.update(tpf_secs);
 
 			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
 			synchronized (entities) {

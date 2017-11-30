@@ -12,7 +12,6 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	public static final float DEFAULT_AERODYNAMICNESS = 0.99f;
 	public static final float DEFAULT_GRAVITY = -4f;
-	//private static Vector3f NO_FORCE = new Vector3f();
 
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f();
@@ -75,7 +74,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	public void process(float tpf_secs) {
 		if (tpf_secs > 1) {
-			tpf_secs = 1;
+			tpf_secs = 1; // Prevent stepping too far
 		}
 		if (this.canMove) {
 			Vector3f additionalForce = this.getAdditionalForce();
@@ -202,7 +201,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public Vector3f getAdditionalForce() {
-		return additionalForce; // Override if required
+		return additionalForce;
 	}
 
 	

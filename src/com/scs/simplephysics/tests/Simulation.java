@@ -7,11 +7,15 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 
+/*
+ * Call for "simulating" physics without actually drawing anything.
+ * 
+ */
 public class Simulation implements ICollisionListener<String> {
 
-	private static final float LOOP_INTERVAL = .0001f;
-	private static final int REPORT_INTERVAL = 10;
-	private static final float TOTAL_DURATION = 100;
+	private static final float LOOP_INTERVAL_SECS = .001f;
+	private static final int REPORT_INTERVAL_SECS = 10;
+	private static final float TOTAL_DURATION_SECS = 100;
 	
 	private SimplePhysicsController<String> physicsController;
 
@@ -24,32 +28,25 @@ public class Simulation implements ICollisionListener<String> {
 		physicsController = new SimplePhysicsController<String>(this);
 
 		Sphere sphere = new Sphere(8, 8, .5f);
-		Geometry ball_geo = new Geometry("Sphere", sphere);
-		ball_geo.setLocalTranslation(0, 10f, 0);
-		//this.rootNode.attachChild(ball_geo);
+		Geometry ballGeometry = new Geometry("Sphere", sphere);
+		ballGeometry.setLocalTranslation(0, 10f, 0);
 
-		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(ball_geo, physicsController, "");
+		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(ballGeometry, physicsController, "Sphere");
 		
 		float time = 1;
 		int prevReport = 0;
-		while (time <= TOTAL_DURATION) {
-			this.physicsController.update(LOOP_INTERVAL);
+		while (time <= TOTAL_DURATION_SECS) {
+			this.physicsController.update(LOOP_INTERVAL_SECS);
 			if (time > prevReport) {
-				p("Time: " + time + "  Pos: " + ball_geo.getWorldTranslation() + "  GravInc:" + srb.currentGravInc);
-				prevReport += REPORT_INTERVAL;
+				p("Time: " + time + "  Pos: " + ballGeometry.getWorldTranslation() + "  Gravity offset:" + srb.currentGravInc);
+				prevReport += REPORT_INTERVAL_SECS;
 			}
-			time += LOOP_INTERVAL;
-			/*try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/		
+			time += LOOP_INTERVAL_SECS;
 		}
 	}
 
 
 	public static void p(String s) {
-		//System.out.println(System.currentTimeMillis() + ": " + s);
 		System.out.println(s);
 	}
 
