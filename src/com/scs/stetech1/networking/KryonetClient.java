@@ -18,6 +18,7 @@ public class KryonetClient implements IMessageClient {
 
 		client = new Client();
 		KryonetServer.registerMessages(client.getKryo());
+		client.setIdleThreshold(0); // todo
 		client.start();
 		client.connect(1000, Settings.IP_ADDRESS, Settings.TCP_PORT, Settings.UDP_PORT);
 
@@ -26,11 +27,6 @@ public class KryonetClient implements IMessageClient {
 				if (object instanceof MyAbstractMessage) {
 					MyAbstractMessage msg = (MyAbstractMessage)object;
 					listener.messageReceived(msg);
-					//System.out.println(request.text);
-
-					//SomeResponse response = new SomeResponse();
-					//response.text = "Thanks";
-					//connection.sendTCP(response);
 				}
 			}
 
@@ -40,6 +36,10 @@ public class KryonetClient implements IMessageClient {
 
 			public void disconnected (Connection connection) {
 				listener.disconnected();
+			}
+			
+			public void idle(Connection connection) {
+				Settings.p("Idle!"); // todo
 			}
 		});
 

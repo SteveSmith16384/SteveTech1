@@ -30,6 +30,7 @@ public class Settings {
 	public static final String IP_ADDRESS = "localhost";
 	public static final int TCP_PORT = 6143;
 	public static final int UDP_PORT = 6144; // todo - make the same?
+	public static final float CONNECTION_IDLE_THRESH = 1000000;
 	
 	public static final int SERVER_TICKRATE_MS = 20; // Source: 15ms
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 70; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 

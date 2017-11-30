@@ -39,7 +39,6 @@ import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
-import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.networking.IMessageClient;
 import com.scs.stetech1.networking.IMessageClientListener;
@@ -76,7 +75,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	public ClientPlayersAvatar avatar;
 	public int playerID = -1;
-	public long playersAvatarID = -1;
+	public int playersAvatarID = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
@@ -329,6 +328,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					}
 				}
 				Settings.p("We are player " + playerID);
+				status = STATUS_JOINED_GAME;
 			} else {
 				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
 			}
@@ -361,6 +361,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			if (status < this.STATUS_RCVD_WELCOME) {
 				status = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
 				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
+				status = this.STATUS_SENT_JOIN_REQUEST;
 			} else {
 				throw new RuntimeException("todo");
 			}

@@ -53,11 +53,16 @@ public class KryonetServer implements IMessageServer {
 			}
 
 			public void connected (Connection connection) {
+				connection.setIdleThreshold(0); // todo
 				listener.connectionAdded(connection.getID(), connection);
 			}
 
 			public void disconnected (Connection connection) {
 				listener.connectionRemoved(connection.getID());
+			}
+
+			public void idle(Connection connection) {
+				Settings.p("Idle!"); // todo
 			}
 		});
 

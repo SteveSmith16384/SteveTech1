@@ -267,7 +267,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			for (IEntity e : entities.values()) {
 				this.sendNewEntity(client, e);
 			}
-			GeneralCommandMessage aes = new GeneralCommandMessage();
+			GeneralCommandMessage aes = new GeneralCommandMessage(GeneralCommandMessage.Command.AllEntitiesSent);
 			this.networkServer.sendMessageToClient(client, aes);
 		}
 	}

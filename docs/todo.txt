@@ -1,11 +1,13 @@
 STETECH1
-Post to JME forums
-Post to JavaGaming
-Copy physics code back to stetech
+
 
 URGENT
-Reduce jump height
-Try jumping against a wall
+How is client avatar getting so low?
+	Reset forces when warping player
+	Turn off gravity on client side?
+Max fall speed
+	Reduce jump height
+	Try jumping against a wall
 Search for todos
 Create sep projects for test game, killer crates
 Hitscan weapons
