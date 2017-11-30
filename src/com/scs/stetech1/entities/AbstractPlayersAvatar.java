@@ -6,7 +6,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.scs.simplephysics.SimpleCharacterControl;
-import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
@@ -17,7 +16,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.weapons.GrenadeLauncher;
+import com.scs.stetech1.weapons.HitscanRifle;
 
 public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
 

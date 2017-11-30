@@ -31,7 +31,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	public TestGameServer() throws IOException {
-		super(new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT));// SpiderMonkeyServer(this);
+		super();// SpiderMonkeyServer(this);
 	}
 
 

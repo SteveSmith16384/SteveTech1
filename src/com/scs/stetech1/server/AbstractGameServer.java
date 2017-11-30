@@ -36,6 +36,7 @@ import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
+import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.shared.IEntityController;
 
 import ssmith.swing.LogWindow;
@@ -62,12 +63,12 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private SimplePhysicsController<PhysicalEntity> physicsController;
 	private GameData gameData = new GameData();
 	
-	public AbstractGameServer(IMessageServer _networkServer) throws IOException {
+	public AbstractGameServer() throws IOException {
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
-		networkServer = _networkServer;
-		networkServer.setListener(this);
+		networkServer = new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT, this);//_networkServer;
+		//networkServer.setListener(this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 	}

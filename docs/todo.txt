@@ -16,6 +16,7 @@ Max fall speed
 Search for todos
 Create sep projects for test game, killer crates
 Hitscan weapons
+Avatar warp test
 
 
 TODO
@@ -25,7 +26,6 @@ Grenades
 Create game lobby
 Walking up steps
 	ConcurrentChange error in entities when firing grenade
-Avatar warp test
 Physics test - do explosion
 Confirm source timings
 Draw map

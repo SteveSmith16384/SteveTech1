@@ -165,11 +165,11 @@ public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, M
 	}
 
 
-	@Override
+	/*@Override
 	public void setListener(IMessageServerListener _listener) {
 		//myServer.addMessageListener(_listener, classes);
 		
 	}
 
-
+*/
 }

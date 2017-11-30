@@ -32,9 +32,10 @@ public class KryonetServer implements IMessageServer {
 	private IMessageServerListener listener;
 	private Server server;
 
-	public KryonetServer(int tcpport, int udpport) throws IOException {
+	public KryonetServer(int tcpport, int udpport, IMessageServerListener _listener) throws IOException {
 		server = new Server();
 		registerMessages(server.getKryo());
+		setListener(_listener);
 		server.start();
 		server.bind(tcpport, udpport);
 

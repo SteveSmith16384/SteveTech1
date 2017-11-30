@@ -5,7 +5,7 @@ import com.scs.stetech1.server.ClientData;
 
 public interface IMessageServer {
 
-	void setListener(IMessageServerListener _listener);
+	//void setListener(IMessageServerListener _listener);
 	
 	int getNumClients();
 	
