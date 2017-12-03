@@ -1,5 +1,7 @@
 package com.scs.stetech1.lobby;
 
+import java.io.IOException;
+
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.networking.IMessageClientListener;
 import com.scs.stetech1.networking.IMessageServer;
@@ -12,12 +14,16 @@ public class LobbyMain implements IMessageServerListener, IMessageClientListener
 	private IMessageServer networkServer;
 
 	public static void main(String[] args) {
-		new LobbyMain();
+		try {
+			new LobbyMain();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
 
-	public LobbyMain() {
+	public LobbyMain() throws IOException {
 		networkServer = new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT, this);//_networkServer;
 	}
 
@@ -45,7 +51,7 @@ public class LobbyMain implements IMessageServerListener, IMessageClientListener
 
 	@Override
 	public void connected() {
-		// TODO Auto-generated method stub
+		// Do nothing?
 		
 	}
 
@@ -59,7 +65,7 @@ public class LobbyMain implements IMessageServerListener, IMessageClientListener
 
 	@Override
 	public void disconnected() {
-		// TODO Auto-generated method stub
+		// Do nothing?
 		
 	}
 

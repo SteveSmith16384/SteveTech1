@@ -363,7 +363,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
 				status = this.STATUS_SENT_JOIN_REQUEST;
 			} else {
-				throw new RuntimeException("todo");
+				throw new RuntimeException("Received second welcome message");
 			}
 
 		} else {

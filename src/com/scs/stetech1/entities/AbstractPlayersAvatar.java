@@ -42,10 +42,10 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	private int numShots = 0;
 	private int numShotsHit = 0;
 	public IAbility abilityGun, abilityOther;
-	public byte side;
+	public int side;
 
 
-	public AbstractPlayersAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, byte _side) {
+	public AbstractPlayersAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side) {
 		super(_game, eid, EntityTypes.AVATAR, "Player");
 
 		if (game.isServer()) {

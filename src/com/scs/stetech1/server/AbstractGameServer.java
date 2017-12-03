@@ -58,10 +58,10 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
-	private LogWindow logWindow;
-	private IConsole console;
+	protected LogWindow logWindow;
+	protected IConsole console;
 	private SimplePhysicsController<PhysicalEntity> physicsController;
-	private GameData gameData = new GameData();
+	protected GameData gameData = new GameData();
 	
 	public AbstractGameServer() throws IOException {
 		properties = new GameProperties(PROPS_FILE);
@@ -98,14 +98,15 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					ClientData client = message.client;
 					if (message instanceof NewPlayerRequestMessage) {
 						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-						byte side = gameData.getSide();
+						int side = getSide(client);
 						client.playerData = new PlayerData(client.id, newPlayerMessage.name, side);
 						client.avatar = createPlayersAvatar(client, side);
+						gameData.addPlayer(client.avatar);
 						// Send newplayerconf message
 						networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
 						sendEntityListToClient(client);
 						client.clientStatus = ClientData.Status.InGame;
-
+						this.playerJoined(client);
 						// Send them a ping to get ping time
 						this.networkServer.sendMessageToClient(client, new PingMessage(true));
 
@@ -202,7 +203,13 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		loopTimer.start();
 	}
 
-
+	protected void playerJoined(ClientData client) {
+	}
+	
+	
+	protected abstract int getSide(ClientData client);
+	
+	
 	@Override
 	public void messageReceived(int clientid, MyAbstractMessage message) {
 		if (Settings.DEBUG_MSGS) {
@@ -260,7 +267,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	protected abstract ServerPlayersAvatar createPlayersAvatar(ClientData client, int entityid, byte side);
+	protected abstract ServerPlayersAvatar createPlayersAvatar(ClientData client, int entityid, int side);
 
 
 	private void sendEntityListToClient(ClientData client) {
@@ -307,7 +314,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	private void playerLeft(ClientData client) {
+	protected void playerLeft(ClientData client) {
 		try {
 			Settings.p("Removing player " + client.getPlayerID());
 			synchronized (clients) {
@@ -316,6 +323,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			// Remove avatar
 			if (client.avatar != null) {
 				this.removeEntity(client.avatar.id);
+				gameData.removePlayer(client.avatar);
 			}
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
@@ -464,6 +472,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		return physicsController;
 	}
 
+	
 
 }
 

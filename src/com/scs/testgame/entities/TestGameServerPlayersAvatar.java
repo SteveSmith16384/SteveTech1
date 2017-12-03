@@ -7,7 +7,7 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class TestGameServerPlayersAvatar extends ServerPlayersAvatar {
 
-	public TestGameServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, byte side) {
+	public TestGameServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side) {
 		super(_module, _playerID, _input, eid, side);
 	}
 	

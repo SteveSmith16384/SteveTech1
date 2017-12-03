@@ -9,7 +9,7 @@ import com.scs.stetech1.shared.AverageNumberCalculator;
 
 public class ClientData {
 
-	public enum Status { Connected, InGame };
+	public enum Status { Connected, InGame }; // todo - Rename to "Accepted"
 
 	public Object networkObj;
 	public int id;

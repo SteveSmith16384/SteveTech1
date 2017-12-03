@@ -3,8 +3,8 @@ STETECH1
 
 URGENT
 Add lighting to hellophysics: floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-
-
+Hello physics - set settings in constructor
+Game settings: num players per side, max sides
 How is client avatar getting so low?
 	Remove gravity when warping player?
 Player doesn't move when looking down - is this the same in simplephysics?
@@ -17,9 +17,12 @@ Search for todos
 Create sep projects for test game, killer crates
 Hitscan weapons
 Avatar warp test
+Show current game time
 
 
 TODO
+Physics - stop moving if offset < 0.0001
+Physics - pushing
 Use latest JME libs
 Client side physics?
 Grenades

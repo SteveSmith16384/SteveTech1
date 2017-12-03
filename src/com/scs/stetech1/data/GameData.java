@@ -8,17 +8,20 @@ public class GameData {
 
 	public enum Status {WaitingForPlayers, Started }
 
-	public Status status;
+	private Status status;
 	public String name;
-	public ArrayList[] players = new ArrayList[2]; // By side // <AbstractPlayersAvatar> 
+	private long gameStartTime;
+	public ArrayList<AbstractPlayersAvatar> players = new ArrayList<AbstractPlayersAvatar>();
 	
 	
 	public GameData() {
-		players[0] = new ArrayList();
-		players[1] = new ArrayList();
+	}
+				
+	public void setName(String n) {			
+		name = n;
 	}
 
-
+/*
 	public byte getSide() {
 		if (players[0].size() <= players[1].size()) {
 			return 0;
@@ -26,16 +29,29 @@ public class GameData {
 			return 1;
 		}
 	}
+	*/
+	
+	public Status getStatus() {
+		return status;
+	}
+	
+	
+	public void setStatus(Status s) {
+		if (status != s) {
+			if (status == Status.WaitingForPlayers && s == Status.Started) {
+				gameStartTime = System.currentTimeMillis();
+			}
+		}
+	}
 	
 	
 	public void addPlayer(AbstractPlayersAvatar avatar) {
-		players[avatar.side].add(avatar);
+		players.add(avatar);
 	}
 	
 
-	public void removePlayer(AbstractPlayersAvatar avatar) {// todo - remove players from lists when they leave
-		players[avatar.side].remove(avatar);
-		// todo - check there are still ernough players
+	public void removePlayer(AbstractPlayersAvatar avatar) {
+		players.remove(avatar);
 	}
 	
 }
