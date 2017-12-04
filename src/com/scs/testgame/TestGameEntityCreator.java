@@ -21,7 +21,7 @@ import com.scs.testgame.entities.Wall;
 public class TestGameEntityCreator {
 
 	private TestGameClient game;
-	
+
 	public TestGameEntityCreator(TestGameClient _game) {
 		game =_game;
 	}
@@ -34,17 +34,19 @@ public class TestGameEntityCreator {
 		switch (msg.type) {
 		case EntityTypes.AVATAR:
 		{
-			int playerID = (int)msg.data.get("playerID");
-			byte side = (byte)msg.data.get("side");
-			if (playerID == game.playerID) {
-				ClientPlayersAvatar avatar = new TestGameClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, id, msg.pos.x, msg.pos.y, msg.pos.z, side);
-				game.avatar = avatar;
-				return avatar;
-			} else {
-				// Create a simple avatar since we don't control these
-				EnemyPlayersAvatar avatar = new TestGameEnemyPlayersAvatar(game, playerID, id, msg.pos.x, msg.pos.y, msg.pos.z);
-				return avatar;
-			}
+			//if (game.playerID >= 0) { // Only create avatar if we know our id.  Otherwise, create it later
+				int playerID = (int)msg.data.get("playerID");
+				int side = (int)msg.data.get("side");
+				if (playerID == game.playerID) {
+					ClientPlayersAvatar avatar = new TestGameClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, id, msg.pos.x, msg.pos.y, msg.pos.z, side);
+					game.avatar = avatar;
+					return avatar;
+				} else {
+					// Create a simple avatar since we don't control these
+					EnemyPlayersAvatar avatar = new TestGameEnemyPlayersAvatar(game, playerID, id, msg.pos.x, msg.pos.y, msg.pos.z);
+					return avatar;
+				}
+			//}
 		}
 
 		case EntityTypes.FLOOR:

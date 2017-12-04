@@ -2,29 +2,23 @@ STETECH1
 
 
 URGENT
-Add lighting to hellophysics: floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-Hello physics - set settings in constructor
-Game settings: num players per side, max sides
-How is client avatar getting so low?
-	Remove gravity when warping player?
+	Check jump force
+Crate falling through floor
+Only raise flags in onAction()
 Player doesn't move when looking down - is this the same in simplephysics?
-	Reset forces when warping player
-	Turn off gravity on client side?
-Max fall speed
-	Reduce jump height
-	Try jumping against a wall
 Search for todos
-Create sep projects for test game, killer crates
 Hitscan weapons
 Avatar warp test
-Show current game time
 
 
 TODO
-Physics - stop moving if offset < 0.0001
-Physics - pushing
+Hello physics - set max move dist,
+Create sep projects for test game, killer crates
+Game settings: num players per side, max sides
+Show current game time
+Add lighting to hellophysics: floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+Separate into AbstractEntityServer, AbstractGameServer, TestGameServer
 Use latest JME libs
-Client side physics?
 Grenades
 Create game lobby
 Walking up steps
@@ -34,7 +28,6 @@ Confirm source timings
 Draw map
 Show error if client unable to connect
 Laser bullets
-Add more walls
 Am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
 Use test annotations
@@ -46,6 +39,7 @@ Show where players are according to server (in realtime)
 Create server-controlled moving item to check interpol
 Create generic classes and test them
 Reduce dependencies between classes
+Make vars private/protected
 
 
 LATER
@@ -56,6 +50,7 @@ Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
 client/server encryption
 Make classes final
+Physics - pushing
 Test with cheating client
 User enter name and ip address
 Only send entity messages to players that have joined the game

@@ -42,9 +42,9 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	private SimplePhysicsController<Spatial> physicsController;
 	private SimpleCharacterControl<Spatial> player;
-	private final Vector3f walkDirection = new Vector3f();
+	//private final Vector3f walkDirection = new Vector3f();
 
-	private boolean left = false, right = false, up = false, down = false;
+	private boolean left = false, right = false, up = false, down = false, jump = false;;
 	private Geometry playerModel;
 	private final float playerSpeed = 8f;
 	private final float headHeight = 1f;
@@ -83,7 +83,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		setUpLight();
 
 		player = new SimpleCharacterControl<Spatial>(playerModel, this.physicsController, this.playerModel);
-		playerModel.setLocalTranslation(new Vector3f(0,4,0)); 
+		playerModel.setLocalTranslation(new Vector3f(1f, 4f, 1f)); 
 
 		this.addFloor();
 		this.addWall();
@@ -94,21 +94,17 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		for (int i=0 ; i<10 ; i++) {
 			this.addBox(4f+(i*2), 7f, 9f, 1f, 1f, (i/10f));
 		}
-		//this.addBall(10, 6, 10, .2f, new Vector3f(-3f, 0f, 0f), SimpleRigidBody.DEF_GRAVITY, SimpleRigidBody.DEF_AIR_FRICTION, 0.2f); // Bouncing ball
-		//this.addBall(12, 6, 12, .2f, new Vector3f(0, -6f, -6f), 0, 1, 1); // Plasma ball
 
 		// Add shadows
 		final int SHADOWMAP_SIZE = 1024;
 		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
-		//dlsr.setShadowIntensity(1f);
-		//dlsr.setShadowZFadeLength(10f);
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
-/*
+		/*
 		p("Recording video");
 		VideoRecorderAppState video_recorder = new VideoRecorderAppState();
 		stateManager.attach(video_recorder);
-		*/
+		 */
 	}
 
 
@@ -116,6 +112,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		Box floor = new Box(30f, 0.1f, 30f);
 		floor.scaleTextureCoordinates(new Vector2f(3, 6));
 
+		//Material floorMaterial = new Material(getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 		Material floorMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		TextureKey key3 = new TextureKey("Textures/grass.jpg");
 		key3.setGenerateMips(true);
@@ -157,11 +154,10 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	public void addBox(float x, float y, float z, float w, float h, float bounciness) {
 		Box box = new Box(w/2, h/2, w/2);
-		//box.scaleTextureCoordinates(new Vector2f(3, 6));
 
+		//Material material = new Material(getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 		Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		TextureKey key3 = new TextureKey("Textures/crate.png");
-		//floor_mat.setTexture("ColorMap", assetManager.loadTexture("Textures/Terrain/BrickWall/BrickWall.jpg"));
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
@@ -256,14 +252,12 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		} else if (binding.equals("Down")) {
 			down = isPressed;
 		} else if (binding.equals("Jump")) {
-			if (isPressed) { 
-				player.jump(); 
-			}
+			jump = isPressed;
 		} else if (binding.equals("Shoot0")) {
 			if (isPressed) { 
 				Vector3f startPos = new Vector3f(cam.getLocation());
 				startPos.addLocal(cam.getDirection().mult(2));
-				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(25f), SimpleRigidBody.DEFAULT_GRAVITY, SimpleRigidBody.DEFAULT_AERODYNAMICNESS, 0.4f); // Bouncing ball
+				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(25f), physicsController.getGravity(), physicsController.getAerodynamicness(), 0.4f); // Bouncing ball
 			}
 		} else if (binding.equals("Shoot1")) {
 			if (isPressed) { 
@@ -299,6 +293,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	public void simpleUpdate(float tpf_secs) {
 		camDir.set(cam.getDirection()).multLocal(playerSpeed, 0.0f, playerSpeed);
 		camLeft.set(cam.getLeft()).multLocal(playerSpeed);
+		Vector3f walkDirection = new Vector3f(); // todo - don't create
 		walkDirection.set(0, 0, 0);
 		if (left) {
 			walkDirection.addLocal(camLeft);
@@ -311,26 +306,35 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		}
 		if (down) {
 			walkDirection.addLocal(camDir.negate());
-		} 
+		}
+		if (jump) {
+			player.jump();
+		}
 		walkDirection.y = 0; // Prevent us walking up or down
-		//scs todo? player.getAdditionalForce().set(walkDirection);
-		player.setAdditionalForce(this.walkDirection);
+
+		p("Walk dir:" + walkDirection);
+
+		//player.setAdditionalForce(walkDirection);
+		player.walkDir.set(walkDirection);
 
 		this.physicsController.update(tpf_secs);
 
 		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
 
+		//--------------------------------------------
+
 		try {
-			Thread.sleep(5); // If the FPS is wayyy to high (> 1000 FPS), things get a bit crazy
+			Thread.sleep(5); // If the FPS is waaayyy to high (> 1000 FPS), things get a bit crazy, caused by floating point rounding
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b, Vector3f point) {
-		p("Collision between " + a.userObject + " and " + b.userObject);
+		//p("Collision between " + a.userObject + " and " + b.userObject);
 
 	}
 

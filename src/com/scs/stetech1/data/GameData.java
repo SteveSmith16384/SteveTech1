@@ -3,6 +3,7 @@ package com.scs.stetech1.data;
 import java.util.ArrayList;
 
 import com.scs.stetech1.entities.AbstractPlayersAvatar;
+import com.scs.stetech1.server.ClientData;
 
 public class GameData {
 
@@ -11,8 +12,7 @@ public class GameData {
 	private Status status;
 	public String name;
 	private long gameStartTime;
-	public ArrayList<AbstractPlayersAvatar> players = new ArrayList<AbstractPlayersAvatar>();
-	
+	public ArrayList<ClientData> players = new ArrayList<ClientData>(); // todo - use ClientData instead?
 	
 	public GameData() {
 	}
@@ -45,12 +45,12 @@ public class GameData {
 	}
 	
 	
-	public void addPlayer(AbstractPlayersAvatar avatar) {
+	public void addPlayer(ClientData avatar) {
 		players.add(avatar);
 	}
 	
 
-	public void removePlayer(AbstractPlayersAvatar avatar) {
+	public void removePlayer(ClientData avatar) {
 		players.remove(avatar);
 	}
 	

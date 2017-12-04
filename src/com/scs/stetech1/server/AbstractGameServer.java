@@ -38,11 +38,12 @@ import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.entities.Floor;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
-
+// Todo - rename to AbstractEntityServer
 public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, IMessageServerListener, ICollisionListener<PhysicalEntity> {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
@@ -67,8 +68,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
-		networkServer = new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT, this);//_networkServer;
-		//networkServer.setListener(this);
+		networkServer = new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 	}
@@ -96,14 +96,14 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				while (!this.unprocessedMessages.isEmpty()) {
 					MyAbstractMessage message = this.unprocessedMessages.remove(0);
 					ClientData client = message.client;
+					
 					if (message instanceof NewPlayerRequestMessage) {
 						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 						int side = getSide(client);
 						client.playerData = new PlayerData(client.id, newPlayerMessage.name, side);
+						networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID()));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
 						client.avatar = createPlayersAvatar(client, side);
-						gameData.addPlayer(client.avatar);
-						// Send newplayerconf message
-						networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.avatar.id));
+						gameData.addPlayer(client);
 						sendEntityListToClient(client);
 						client.clientStatus = ClientData.Status.InGame;
 						this.playerJoined(client);
@@ -258,16 +258,16 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	private ServerPlayersAvatar createPlayersAvatar(ClientData client, byte side) {
+	private ServerPlayersAvatar createPlayersAvatar(ClientData client, int side) {
 		int id = getNextEntityID();
-		ServerPlayersAvatar avatar = this.createPlayersAvatar(client, id, side);
+		ServerPlayersAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
 		avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
 		return avatar;
 	}
 
 
-	protected abstract ServerPlayersAvatar createPlayersAvatar(ClientData client, int entityid, int side);
+	protected abstract ServerPlayersAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
 
 
 	private void sendEntityListToClient(ClientData client) {
@@ -323,7 +323,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			// Remove avatar
 			if (client.avatar != null) {
 				this.removeEntity(client.avatar.id);
-				gameData.removePlayer(client.avatar);
+				gameData.removePlayer(client);
 			}
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
@@ -442,12 +442,10 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		//Settings.p("Collision between " + a + " and " + b);
-		/*if (b != null && b instanceof ICollideable) {
-			PhysicalEntity pa = (PhysicalEntity)a.getSimplePhysicsEntity();
-			pa.collidedWith((ICollideable)b);
-		}*/
-
+		if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
+			Settings.p("Collision between " + a.userObject + " and " + b.userObject);
+		}
+		CollisionLogic.Collision(a.userObject,  b.userObject);
 	}
 
 

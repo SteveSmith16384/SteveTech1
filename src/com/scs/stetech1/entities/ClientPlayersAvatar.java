@@ -13,18 +13,22 @@ import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.AbstractGameServer;
+import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.EntityPositionData;
+import com.scs.stetech1.shared.PositionCalculator;
 
 public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implements IShowOnHUD, IProcessByClient {
 
 	public HUD hud;
 	public Camera cam;
-	private AbstractGameClient game;
+	//private AbstractGameClient game;
 	private ICorrectClientEntityPosition syncPos;
+	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 
-	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, byte side) {
+	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
 		super(_module, _playerID, _input, eid, side);
 
-		game = _module;
+		//game = _module;
 		cam = _cam;
 		hud = _hud;
 
@@ -33,14 +37,18 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 		syncPos = new InstantPositionAdjustment();
 		//syncPos = new MoveSlowlyToCorrectPosition(0.1f);
 		//syncPos = new AdjustBasedOnDistance();
-		
+
 		this.simpleRigidBody.setGravity(0); // scs todo
-		
+
 	}
 
 
 	@Override
 	public void process(AbstractGameClient client, float tpf) {
+		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
+		
+		storeAvatarPosition(serverTime);
+
 		super.serverAndClientProcess(null, client, tpf);
 
 		hud.process(client, tpf);
@@ -65,13 +73,26 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 	}
 
 
+	public void storeAvatarPosition(long serverTime) {
+		// Store our position
+		EntityPositionData epd = new EntityPositionData();
+		epd.serverTimestamp = serverTime;
+		epd.position = getWorldTranslation().clone();
+		//epd.rotation not required
+		this.clientAvatarPositionData.addPositionData(epd);
+
+	}
+
+
+	// Avatars have their own special position calculator
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
-		Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, game.clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
-		if (offset != null) {
-			this.syncPos.adjustPosition(this, offset);
+		if (Settings.SYNC_CLIENT_POS) {
+			Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+			if (offset != null) {
+				this.syncPos.adjustPosition(this, offset);
+			}
 		}
-
 	}
 
 
@@ -129,7 +150,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 	@Override
 	public void process(AbstractGameServer server, float tpf_secs) {
 		// Do nothing
-		
+
 	}
 
 

@@ -41,14 +41,16 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 		if (!this.restarting) {
 			// Have we fallen off the edge
 			if (this.getWorldTranslation().y < -5f) {
-				//this.getMainNode().getWorldTranslation();
 				Settings.p("playerID " + this.playerID + " has died due to falling off the edge (pos " + this.getWorldTranslation() + ")");
 				died("Too low");
 				return;
 			}
 		}
 
+		this.resetWalkDir();
+
 		super.serverAndClientProcess(server, null, tpf);
+
 		// Store the position for use when rewinding.
 		EntityPositionData epd = new EntityPositionData();
 		epd.serverTimestamp = System.currentTimeMillis();
@@ -131,7 +133,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 		//Point p = module.mapData.getPlayerStartPos(id);
 		Vector3f pos = new Vector3f(3f, 15f, 3f + this.playerID);
 		Settings.p("Scheduling player to start position: " + pos);
-			super.setWorldTranslation(pos);
+		super.setWorldTranslation(pos);
 		if (invuln) {
 			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
 		}

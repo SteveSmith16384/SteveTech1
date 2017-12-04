@@ -45,14 +45,14 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	protected ServerPlayersAvatar createPlayersAvatar(ClientData client, int entityid, int side) {
+	protected ServerPlayersAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
 		return new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);	
 	}
 
 
 	@Override
 	protected void playerJoined(ClientData client) {
-		super.playerLeft(client);
+		super.playerJoined(client);
 		
 		checkGameStatus();
 	}
@@ -69,6 +69,12 @@ public class TestGameServer extends AbstractGameServer {
 		//if (this.gameData.players[0].size() == 0 || this.gameData.players[1].size() == 0) {
 			// todo
 		//}
+	}
+
+
+	@Override
+	protected int getSide(ClientData client) {
+		return 0; // All the same side
 	}
 
 }

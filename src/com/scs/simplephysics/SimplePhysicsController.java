@@ -10,14 +10,31 @@ import com.jme3.scene.Spatial;
 
 public class SimplePhysicsController<T> {
 
+	public static final float MIN_MOVE_DIST = 0.0001f;
+	public static final float MAX_MOVE_DIST = 0.2f;
+	public static final float DEFAULT_AERODYNAMICNESS = 0.99f;
+	public static final float DEFAULT_GRAVITY = -4f;
+
 	private ArrayList<SimpleRigidBody<T>> entities = new ArrayList<>();
 	private ICollisionListener<T> collListener;
 	private boolean enabled = true;
+	
+	// Settings
+	private float gravity;
+	private float aerodynamicness;
+	private float maxMoveDist; // todo - use this
 
 	public SimplePhysicsController(ICollisionListener<T> _collListener) {
+		this(_collListener, DEFAULT_GRAVITY, DEFAULT_AERODYNAMICNESS);
+	}
+	
+	
+	public SimplePhysicsController(ICollisionListener<T> _collListener, float _gravity, float _aerodynamicness) {
 		super();
 
 		collListener = _collListener;
+		gravity = _gravity;
+		aerodynamicness = _aerodynamicness;
 	}
 
 
@@ -33,7 +50,6 @@ public class SimplePhysicsController<T> {
 
 	public Collection<SimpleRigidBody<T>> getEntities() {
 		return Collections.synchronizedCollection(this.entities);
-		//return this.entities.values().iterator();
 	}
 
 
@@ -66,6 +82,16 @@ public class SimplePhysicsController<T> {
 
 	public boolean getEnabled() {
 		return this.enabled;
+	}
+	
+	
+	public float getGravity() {
+		return this.gravity;
+	}
+	
+	
+	public float getAerodynamicness() {
+		return this.aerodynamicness;
 	}
 
 }

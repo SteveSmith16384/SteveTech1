@@ -24,6 +24,7 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByClient;
+import com.scs.stetech1.entities.AbstractPlayersAvatar;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.hud.HUD;
@@ -47,7 +48,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.shared.PositionCalculator;
+import com.scs.testgame.entities.Floor;
 
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
@@ -75,7 +76,6 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	public ClientPlayersAvatar avatar;
 	public int playerID = -1;
-	public int playersAvatarID = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
@@ -83,14 +83,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
-	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	private SimplePhysicsController<PhysicalEntity> physicsController;
 
 	protected AbstractGameClient() {
 		super();
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, SimplePhysicsController.DEFAULT_GRAVITY, SimplePhysicsController.DEFAULT_AERODYNAMICNESS);
 	}
 
 
@@ -196,8 +195,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 									pe.setWorldRotation(epd.rotation);
 									pe.clearPositiondata();
 									if (pe == this.avatar) {
-										this.clientAvatarPositionData.clearPositiondata(); // Clear our local data as well
-										storeAvatarPosition(serverTime);
+										avatar.clientAvatarPositionData.clearPositiondata(); // Clear our local data as well
+										avatar.storeAvatarPosition(serverTime);
 										// Stop us walking!
 										this.avatar.resetWalkDir();
 									}
@@ -207,7 +206,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							} else {
 								Settings.p("Unknown entity ID: " + eum.entityID);
 								// Ask the server for entity details since we don't know about it.
-								// No, since we might jave not joined the gane yet! (server uses broadcast()
+								// No, since we might not have joined the game yet! (server uses broadcast()
 								// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
 							}
 
@@ -231,7 +230,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					networkClient.sendMessageToServer(new PingMessage(false));
 				}
 
-				if (status == this.STATUS_GAME_STARTED) {
+				if (status == STATUS_GAME_STARTED) {
+					
 					if (this.avatar != null) {
 						// Send inputs
 						if (sendInputsInterval.hitInterval()) {
@@ -239,10 +239,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 								this.networkClient.sendMessageToServer(new PlayerInputMessage(this.input));
 							}
 						}
-						storeAvatarPosition(serverTime);
 					}
-					physicsController.update(tpf_secs);
-
+					
 					long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 
 					// Loop through each entity and calc correct position				
@@ -251,23 +249,23 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
-							/*if (pe instanceof AbstractPlayersAvatar) {
+							if (pe instanceof AbstractPlayersAvatar) {
 								AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
-								strListEnts.append("Walkdir : " + av.playerControl.getWalkDirection() + "\n");
-							}*/
-							//if (pe.canMove()) { // Only bother with things that can move
+								av.resetWalkDir(); // Do it before we process them!
+							}
+							//if (pe.canMove()) { // Todo - Only bother with things that can move
 							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
 							//}
 						}
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
-							pbc.process(this, tpf_secs);
+							pbc.process(this, tpf_secs); // Mainly to process client-side movement of the avatar
 						}
 					}
+					
+					physicsController.update(tpf_secs); // Do this after we've processed them to take into account adjustments
+
 					this.hud.log_ta.setText(strListEnts.toString());
-					/*if (this.avatar != null) {
-						avatar.process(this, tpf_secs);
-					}*/
 				}
 			}
 
@@ -281,17 +279,6 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 
 	protected abstract IEntity createEntity(NewEntityMessage msg);
-
-
-	private void storeAvatarPosition(long serverTime) {
-		// Store our position
-		EntityPositionData epd = new EntityPositionData();
-		epd.serverTimestamp = serverTime;
-		epd.position = avatar.getWorldTranslation().clone();
-		//epd.rotation not required
-		this.clientAvatarPositionData.addPositionData(epd);
-
-	}
 
 
 	@Override
@@ -318,15 +305,15 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
-				this.playersAvatarID = npcm.avatarEntityID;
+				//this.playersAvatarID = npcm.avatarEntityID;
 				this.hud.setPlayerID(this.playerID);
 
-				synchronized (this.entities) {
+				/*synchronized (this.entities) {
 					// Set avatar if we already have it
 					if (this.entities.containsKey(playersAvatarID)) {
 						this.avatar = (ClientPlayersAvatar)entities.get(playersAvatarID);
 					}
-				}
+				}*/
 				Settings.p("We are player " + playerID);
 				status = STATUS_JOINED_GAME;
 			} else {
@@ -398,7 +385,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		if (name.equalsIgnoreCase(QUIT)) {
 			quit();
 		} else if (name.equalsIgnoreCase(TEST)) {
-			this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
+			//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
+			Settings.SYNC_CLIENT_POS = !Settings.SYNC_CLIENT_POS;
+			this.hud.log_ta.addLine("Client sync is " + Settings.SYNC_CLIENT_POS);
 		}
 	}
 
@@ -459,7 +448,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		//Settings.p("Collision between " + a.userObject + " and " + b.userObject);
+		if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
+			Settings.p("Collision between " + a.userObject + " and " + b.userObject);
+		}
 
 	}
 

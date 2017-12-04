@@ -46,11 +46,15 @@ public class Settings {
 
 	// Our movement speed
 	public static final float PLAYER_MOVE_SPEED = 3f;
-	public static final float JUMP_FORCE = 6f;
+	//public static final float JUMP_FORCE = 6f;
+	public static final float SMALLEST_MOVE_DIST = 0.01f;
 
 	public static final float CAM_DIST = 50f;
 	public static final boolean LIGHTING = true;
 	public static final String NAME = "SteTech1";
+	
+	// Changing settings
+	public static boolean SYNC_CLIENT_POS = true;
 
 	// User Data
 	public static final String ENTITY = "Entity";

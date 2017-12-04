@@ -8,8 +8,8 @@ import com.jme3.scene.Spatial;
  */
 public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
-	private Vector3f walkDir = new Vector3f();
-	private float jumpForce = 6f;
+	public final Vector3f walkDir = new Vector3f();
+	private float jumpForce = 5f;
 	private long lastJumpTime = 0;
 
 	public SimpleCharacterControl(Spatial s, SimplePhysicsController<T> _controller, T _tag) {
@@ -17,7 +17,7 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
 		this.setBounciness(0);
 		//this.setAerodynamicness(1);  Don't set to 1, otherwise an explosion will keep moving us forever
-		super.setAdditionalForce(walkDir);
+		//super.setAdditionalForce(walkDir);
 	}
 
 
@@ -36,10 +36,11 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 		}
 	}
 
-/*
+
+	@Override
 	public Vector3f getAdditionalForce() {
 		return walkDir; // Set this to be the direction to walk in.
 	}
-*/
+
 
 }

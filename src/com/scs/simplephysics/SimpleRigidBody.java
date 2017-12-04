@@ -10,17 +10,14 @@ import com.jme3.scene.Spatial;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	public static final float DEFAULT_AERODYNAMICNESS = 0.99f;
-	public static final float DEFAULT_GRAVITY = -4f;
-
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f();
 	private Vector3f tmpMoveDir = new Vector3f();
 	private float bounciness = .1f;
-	private float aerodynamicness = DEFAULT_AERODYNAMICNESS; // 0=stops immediately, 1=goes on forever
+	private float aerodynamicness;// = DEFAULT_AERODYNAMICNESS; // 0=stops immediately, 1=goes on forever
 
 	// Gravity
-	private float gravInc = DEFAULT_GRAVITY; // How powerful is gravity
+	private float gravInc;// = DEFAULT_GRAVITY; // How powerful is gravity
 	public float currentGravInc = 0; // The change this frame
 
 	private Spatial spatial;
@@ -38,6 +35,9 @@ public class SimpleRigidBody<T> implements Collidable {
 		physicsController = _controller;
 		userObject = _tag;
 
+		this.gravInc = physicsController.getGravity(); 
+		this.aerodynamicness = physicsController.getAerodynamicness();
+
 		physicsController.addSimpleRigidBody(this);
 	}
 
@@ -46,12 +46,12 @@ public class SimpleRigidBody<T> implements Collidable {
 		this.oneOffForce = dir;
 	}
 
-	
+
 	public Spatial getSpatial() {
 		return this.spatial;
 	}
 
-	
+
 	public Vector3f getLinearVelocity() {
 		return this.oneOffForce;
 	}
@@ -73,8 +73,8 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public void process(float tpf_secs) {
-		if (tpf_secs > 1) {
-			tpf_secs = 1; // Prevent stepping too far
+		if (tpf_secs > 0.1f) {
+			tpf_secs = 0.1f; // Prevent stepping too far
 		}
 		if (this.canMove) {
 			Vector3f additionalForce = this.getAdditionalForce();
@@ -85,7 +85,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			// Move along X
 			{
 				float totalOffset = oneOffForce.x + additionalForce.x;
-				if (totalOffset != 0) {
+				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
 					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir); // todo - move a max distance to prevent falling through floors
 					if (collidedWith != null) {
@@ -98,22 +98,25 @@ public class SimpleRigidBody<T> implements Collidable {
 
 			// Move along Y
 			{
-				//this.oneOffForce.y += currentGravInc;
-				float totalOffset = (oneOffForce.y + additionalForce.y + currentGravInc) * tpf_secs;
-				//totalOffset += currentGravInc;
-				this.tmpMoveDir.set(0, totalOffset, 0);
-				SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
-				if (collidedWith != null) {
-					{
-						// Bounce
-						float bounce = this.bounciness;
-						oneOffForce.y = oneOffForce.y * bounce * -1;
-						currentGravInc = currentGravInc * bounce * -1;
+				float totalOffset = (oneOffForce.y + additionalForce.y + currentGravInc);
+				boolean collided = false; 
+				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
+					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
+					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
+					if (collidedWith != null) {
+						{
+							collided = true;
+							// Bounce
+							float bounce = this.bounciness;
+							oneOffForce.y = oneOffForce.y * bounce * -1;
+							currentGravInc = currentGravInc * bounce * -1;
+						}
+						if (totalOffset < 0) { // Going down?
+							isOnGround = true;
+						}
 					}
-					if (totalOffset < 0) { // Going down?
-						isOnGround = true;
-					}
-				} else {
+				}
+				if (!collided) {
 					// Not hit anything
 					// No currentGravInc = currentGravInc + (gravInc);// * tpf_secs); // Fall faster
 					currentGravInc = currentGravInc + (gravInc * tpf_secs); // Fall faster
@@ -129,7 +132,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			//Move along Z
 			{
 				float totalOffset = oneOffForce.z + additionalForce.z;
-				if (totalOffset != 0) {
+				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
 					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 					if (collidedWith != null) {
@@ -148,6 +151,9 @@ public class SimpleRigidBody<T> implements Collidable {
 	 */
 	private SimpleRigidBody<T> move(Vector3f offset) {
 		if (offset.length() != 0) {
+			if (offset.length() > SimplePhysicsController.MAX_MOVE_DIST) {
+				offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
+			}
 			this.spatial.move(offset);
 			SimpleRigidBody<T> wasCollision = checkForCollisions();
 			if (wasCollision != null) {
@@ -200,16 +206,19 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
+	/*
+	 * Override if required to set additional movement force, e.g. walking.
+	 */
 	public Vector3f getAdditionalForce() {
 		return additionalForce;
 	}
 
-	
+
 	public void setAdditionalForce(Vector3f force) {
 		this.additionalForce = force;
 	}
 
-	
+
 	public boolean isOnGround() {
 		return this.isOnGround;
 	}
