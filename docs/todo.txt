@@ -2,21 +2,20 @@ STETECH1
 
 
 URGENT
-	Check jump force
-Crate falling through floor
-Only raise flags in onAction()
-Player doesn't move when looking down - is this the same in simplephysics?
+Player jumping very high - don't jump client side?
+	Crate falling through floor
 Search for todos
 Hitscan weapons
 Avatar warp test
+	Hello physics - set max move dist,
 
 
 TODO
-Hello physics - set max move dist,
+Player doesn't move when looking down - is this the same in simplephysics?
+IsOnGround not always correct
 Create sep projects for test game, killer crates
 Game settings: num players per side, max sides
 Show current game time
-Add lighting to hellophysics: floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 Separate into AbstractEntityServer, AbstractGameServer, TestGameServer
 Use latest JME libs
 Grenades

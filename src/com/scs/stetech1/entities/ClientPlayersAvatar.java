@@ -21,21 +21,19 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 
 	public HUD hud;
 	public Camera cam;
-	//private AbstractGameClient game;
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
 
 	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
 		super(_module, _playerID, _input, eid, side);
 
-		//game = _module;
 		cam = _cam;
 		hud = _hud;
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
 		syncPos = new InstantPositionAdjustment();
-		//syncPos = new MoveSlowlyToCorrectPosition(0.1f);
+		//syncPos = new MoveSlowlyToCorrectPosition();
 		//syncPos = new AdjustBasedOnDistance();
 
 		this.simpleRigidBody.setGravity(0); // scs todo
