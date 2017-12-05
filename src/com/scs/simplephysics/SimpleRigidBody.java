@@ -142,6 +142,8 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				oneOffForce.z = oneOffForce.z * aerodynamicness; // Slow down
 			}
+			
+			this.getAdditionalForce().set(0, 0, 0);
 		}
 	}
 

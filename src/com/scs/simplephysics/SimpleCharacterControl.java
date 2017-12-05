@@ -8,7 +8,7 @@ import com.jme3.scene.Spatial;
  */
 public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
-	public final Vector3f walkDir = new Vector3f();
+	private final Vector3f additionalMoveDir = new Vector3f();
 	private float jumpForce = 5f;
 	private long lastJumpTime = 0;
 
@@ -39,7 +39,7 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
 	@Override
 	public Vector3f getAdditionalForce() {
-		return walkDir; // Set this to be the direction to walk in.
+		return additionalMoveDir; // Set this to be the direction to walk in.
 	}
 
 

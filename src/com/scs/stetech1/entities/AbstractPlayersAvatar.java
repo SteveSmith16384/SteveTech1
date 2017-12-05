@@ -24,7 +24,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public static final float PLAYER_HEIGHT = 0.7f;
 	public static final float PLAYER_RAD = 0.2f;
 
-	//private final Vector3f walkDirection = new Vector3f();
+	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	public final float moveSpeed = Settings.PLAYER_MOVE_SPEED;
 	protected IInputDevice input;
 
@@ -86,12 +86,12 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf) {
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		Vector3f walkDirection = simplePlayerControl.walkDir;
+		//SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		//Vector3f walkDirection = simplePlayerControl.additionalMoveDir;
 		
-		/*if (game.isServer()) { // Client does it before adjusting
+		if (game.isServer()) { // Client does it before adjusting
 			this.resetWalkDir();
-		}*/
+		}
 
 		abilityGun.process(server, tpf);
 		if (this.abilityOther != null) {
@@ -137,23 +137,23 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	
 	
-	private Vector3f getWalkDir() {
+	/*private Vector3f getWalkDir() {
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-		return simplePlayerControl.walkDir;		
-	}
+		return simplePlayerControl.additionalMoveDir;		
+	}*/
 	
 
 	public void addToWalkDir(Vector3f offset) {
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-		simplePlayerControl.walkDir.addLocal(offset);
-		//this.walkDirection.addLocal(offset);
+		//SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
+		//simplePlayerControl.additionalMoveDir.addLocal(offset);
+		this.walkDirection.addLocal(offset);
 	}
 
 
 	public void resetWalkDir() {
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-		simplePlayerControl.walkDir.set(0, 0, 0);
-		//this.walkDirection.set(0, 0, 0);
+		//SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
+		//simplePlayerControl.additionalMoveDir.set(0, 0, 0);
+		this.walkDirection.set(0, 0, 0);
 	}
 
 
@@ -180,14 +180,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		//this.addWalkDirection.addLocal(force);
 	}*/
 
-
-	/*@Override
-	public void remove() {
-		super.remove();
-		//this.game.getBulletAppState().getPhysicsSpace().remove(this.playerControl);
-
-	}
-	 */
 
 	/*@Override
 	public Vector3f getWorldTranslation() {
@@ -241,7 +233,9 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	@Override
 	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
 		//if (offset.length() > 0.01f) { Already checked this
-		this.getWalkDir().addLocal(offset);//.multLocal(moveSpeed)); 
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.getAdditionalForce().add(offset);
+		//this.getWalkDir().addLocal(offset);//.multLocal(moveSpeed)); 
 		//}
 	}
 

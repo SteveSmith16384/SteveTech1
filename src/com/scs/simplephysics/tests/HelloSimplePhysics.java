@@ -255,12 +255,14 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			jump = isPressed;
 		} else if (binding.equals("Shoot0")) {
 			if (isPressed) { 
+				// todo - don't do this is input thread
 				Vector3f startPos = new Vector3f(cam.getLocation());
 				startPos.addLocal(cam.getDirection().mult(2));
 				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(25f), physicsController.getGravity(), physicsController.getAerodynamicness(), 0.4f); // Bouncing ball
 			}
 		} else if (binding.equals("Shoot1")) {
-			if (isPressed) { 
+			if (isPressed) {
+				// todo - don't do this is input thread
 				Vector3f startPos = new Vector3f(cam.getLocation());
 				startPos.addLocal(cam.getDirection().mult(4));
 				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(35f), 0, 1, 0.2f); // "Laser" ball
@@ -311,11 +313,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			player.jump();
 		}
 		walkDirection.y = 0; // Prevent us walking up or down
-
+		player.getAdditionalForce().addLocal(walkDirection);
 		p("Walk dir:" + walkDirection);
-
-		//player.setAdditionalForce(walkDirection);
-		player.walkDir.set(walkDirection);
 
 		this.physicsController.update(tpf_secs);
 
@@ -324,7 +323,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		//--------------------------------------------
 
 		try {
-			Thread.sleep(5); // If the FPS is waaayyy to high (> 1000 FPS), things get a bit crazy, caused by floating point rounding
+			Thread.sleep(5); // If the FPS is waaayyy to high (i.e. > 1000 FPS), things get a bit crazy, caused by floating point rounding
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
