@@ -61,8 +61,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 		// Rotate us to point in the direction of the camera
 		Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
 		lookAtPoint.y = cam.getLocation().y; // Look horizontal
-		this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
-		//this.getMainNode().lookAt(lookAtPoint.clone(), Vector3f.UNIT_Y);  This won't rotate the model since it's locked to the physics controller
+		//todo -readd? But rotating spatial makes us stick to the floor   this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
 
 		// Move cam fwd so we don't see ourselves
 		//cam.setLocation(cam.getLocation().add(cam.getDirection().mult(PLAYER_RAD)));

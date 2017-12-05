@@ -87,11 +87,11 @@ public class Console extends WindowAdapter implements WindowListener, ActionList
 
 		// Starting two seperate threads to read from the PipedInputStreams
 		//
-		reader = new Thread(this);
+		reader = new Thread(this, "ConsoleReader");
 		reader.setDaemon(true);
 		reader.start();
 		//
-		reader2 = new Thread(this);
+		reader2 = new Thread(this, "ConsoleReader2");
 		reader2.setDaemon(true);
 		reader2.start();
 

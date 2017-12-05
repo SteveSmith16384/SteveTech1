@@ -391,7 +391,7 @@ public class Client extends Connection implements EndPoint {
 			} catch (InterruptedException ignored) {
 			}
 		}
-		updateThread = new Thread(this, "Client");
+		updateThread = new Thread(this, "KryonetClient");
 		updateThread.setDaemon(true);
 		updateThread.start();
 	}

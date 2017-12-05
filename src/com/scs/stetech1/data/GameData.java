@@ -12,7 +12,7 @@ public class GameData {
 	private Status status;
 	public String name;
 	private long gameStartTime;
-	public ArrayList<ClientData> players = new ArrayList<ClientData>(); // todo - use ClientData instead?
+	public ArrayList<ClientData> players = new ArrayList<ClientData>();
 	
 	public GameData() {
 	}

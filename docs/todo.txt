@@ -2,17 +2,18 @@ STETECH1
 
 
 URGENT
+Log more server stuff
+	Name the threads
+Second player can't join
 Show game state on hud
-Player doesn't move when looking down - rotating spatial?
+	Player doesn't move when looking down - rotating spatial?
 	Why client not dropping to floor immediately?
-	Always adjusting client pos
-Player jumping very high - don't jump client side?
-	Crate falling through floor
 Search for todos
-Avatar warp test
+	Avatar warp test
 
 
 TODO
+Player jumping very high - don't jump client side?
 Hitscan weapons
 Check all entities if y < 0 to prevent falling forever
 IsOnGround not always correct

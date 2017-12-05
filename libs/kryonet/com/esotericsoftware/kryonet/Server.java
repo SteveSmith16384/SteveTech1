@@ -397,7 +397,7 @@ public class Server implements EndPoint {
 	}
 
 	public void start () {
-		new Thread(this, "Server").start();
+		new Thread(this, "KryonetServer").start();
 	}
 
 	public void stop () {

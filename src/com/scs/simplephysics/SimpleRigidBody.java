@@ -87,7 +87,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.x + additionalForce.x;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
-					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir); // todo - move a max distance to prevent falling through floors
+					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 					if (collidedWith != null) {
 						float bounce = this.bounciness;// * body.bounciness; // Combine bounciness?
 						oneOffForce.x = oneOffForce.x * bounce * -1;

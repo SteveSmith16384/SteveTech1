@@ -62,7 +62,7 @@ public class KryonetClient implements IMessageClient {
 			}
 		}
 		else {
-			Thread t = new Thread() {
+			Thread t = new Thread("CommsDelayThread") {
 				@Override
 				public void run() {
 					try {

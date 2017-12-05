@@ -33,7 +33,7 @@ public class LogWindow extends JFrame {
 
 		//textArea.setDoubleBuffered(true);
 
-		Thread t = new Thread() {
+		Thread t = new Thread("LogWindow") {
 			@Override
 			public void run() {
 				try {

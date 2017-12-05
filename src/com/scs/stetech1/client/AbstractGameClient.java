@@ -243,7 +243,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 					long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 
-					// Loop through each entity and calc correct position				
+					// Loop through each entity and process them				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
 					for (IEntity e : this.entities.values()) {
 						if (e instanceof IProcessByClient) {
@@ -257,11 +257,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							//}
 							pe.simpleRigidBody.process(tpf_secs);
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
-							
+
 							if (Settings.DEBUG) {
-							if (pe instanceof AbstractPlayersAvatar) {
-								AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
-							}
+								if (pe instanceof AbstractPlayersAvatar) {
+									AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
+									strListEnts.append("Bounds: " + av.getMainNode().getWorldBound() + "\n");
+								}
 							}
 						}
 					}

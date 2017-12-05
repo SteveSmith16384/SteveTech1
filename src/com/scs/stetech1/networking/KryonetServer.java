@@ -114,7 +114,7 @@ public class KryonetServer implements IMessageServer {
 			}		
 		}
 		else {
-			Thread t = new Thread() {
+			Thread t = new Thread("CommsDelayThread") {
 				@Override
 				public void run() {
 					try {
@@ -144,7 +144,7 @@ public class KryonetServer implements IMessageServer {
 			}		
 		}
 		else {
-			Thread t = new Thread() {
+			Thread t = new Thread("CommsDelayThread") {
 				@Override
 				public void run() {
 					try {

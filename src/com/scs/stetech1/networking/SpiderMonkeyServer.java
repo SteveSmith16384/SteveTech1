@@ -79,7 +79,7 @@ public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, M
 			myServer.broadcast(msg);
 		}
 		else {
-			Thread t = new Thread() {
+			Thread t = new Thread("CommsDelayThread") {
 				@Override
 				public void run() {
 					try {

@@ -69,6 +69,7 @@ public class TestGameServer extends AbstractGameServer {
 		//if (this.gameData.players[0].size() == 0 || this.gameData.players[1].size() == 0) {
 			// todo
 		//}
+		// todo - send update if status changed
 	}
 
 

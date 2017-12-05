@@ -43,7 +43,7 @@ import com.scs.testgame.entities.Floor;
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
-// Todo - rename to AbstractEntityServer
+
 public abstract class AbstractGameServer extends SimpleApplication implements IEntityController, IMessageServerListener, ICollisionListener<PhysicalEntity> {
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
@@ -105,7 +105,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						client.avatar = createPlayersAvatar(client, side);
 						gameData.addPlayer(client);
 						sendEntityListToClient(client);
-						client.clientStatus = ClientData.Status.InGame;
+						client.clientStatus = ClientData.Status.Accepted;
 						this.playerJoined(client);
 						// Send them a ping to get ping time
 						this.networkServer.sendMessageToClient(client, new PingMessage(true));
@@ -356,7 +356,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	@Override
 	public void removeEntity(int id) {
 		Settings.p("Removing entity " + id);
-		try {
+		//try {
 			synchronized (entities) {
 				IEntity e = this.entities.get(id);
 				if (e instanceof PhysicalEntity) {
@@ -366,9 +366,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				this.entities.remove(id);
 			}
 			this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
-		} catch (NullPointerException ex) { // todo - remove this
+		/*} catch (NullPointerException ex) {
 			ex.printStackTrace();
-		}
+		}*/
 	}
 
 

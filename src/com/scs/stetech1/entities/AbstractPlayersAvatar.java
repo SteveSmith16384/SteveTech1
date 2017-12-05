@@ -128,7 +128,6 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 			shoot();
 		}
 
-		//scs todo? simplePlayerControl.getAdditionalForce().set(walkDirection);
 		simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
 
 		// These must be after we might use them, so the hud is correct 
