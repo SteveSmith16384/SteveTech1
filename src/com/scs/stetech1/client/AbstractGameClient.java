@@ -179,6 +179,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							}
 
 						} else if (message instanceof EntityUpdateMessage) {
+							if (status >= this.STATUS_JOINED_GAME) {
 							EntityUpdateMessage eum = (EntityUpdateMessage)message;
 							IEntity e = this.entities.get(eum.entityID);
 							if (e != null) {
@@ -208,6 +209,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 								// Ask the server for entity details since we don't know about it.
 								// No, since we might not have joined the game yet! (server uses broadcast()
 								// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
+							}
 							}
 
 						} else if (message instanceof RemoveEntityMessage) {
@@ -309,15 +311,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
-				//this.playersAvatarID = npcm.avatarEntityID;
 				this.hud.setPlayerID(this.playerID);
-
-				/*synchronized (this.entities) {
-					// Set avatar if we already have it
-					if (this.entities.containsKey(playersAvatarID)) {
-						this.avatar = (ClientPlayersAvatar)entities.get(playersAvatarID);
-					}
-				}*/
 				Settings.p("We are player " + playerID);
 				status = STATUS_JOINED_GAME;
 			} else {
@@ -433,7 +427,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	@Override
 	public void disconnected() {
-		Settings.p("Disconnected!");
+		Settings.p("Disconnected!"); // todo - quit
 
 	}
 

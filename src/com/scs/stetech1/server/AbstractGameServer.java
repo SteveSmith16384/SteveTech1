@@ -426,18 +426,20 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	/*
 	 * Returns false if a hit.
 	 */
-	public CollisionResults checkForCollisions(Ray r) {
-		CollisionResults res = new CollisionResults();
+	public CollisionResults checkForCollisions(Ray r) { // todo - use SimplePhysics?
+		return this.physicsController.checkForCollisions(r);
+		/*CollisionResults res = new CollisionResults();
 		synchronized (entities) {
 			// Loop through the entities
 			for (IEntity e : entities.values()) {
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity ic = (PhysicalEntity)e;
-					r.collideWith(ic.getMainNode(), res);
+					//r.collideWith(ic.getMainNode().getWorldBound(), res);
+					ic.getMainNode().collideWith(r, res);
 				}
 			}
 		}
-		return res;
+		return res;*/
 	}
 
 

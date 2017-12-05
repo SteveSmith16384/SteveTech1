@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
 import com.scs.stetech1.server.Settings;
+import com.sun.media.jfxmedia.logging.Logger;
 
 public class KryonetClient implements IMessageClient {
 
@@ -19,11 +20,17 @@ public class KryonetClient implements IMessageClient {
 		client = new Client();
 		KryonetServer.registerMessages(client.getKryo());
 		client.setIdleThreshold(0); // todo
+		client.setTimeout(0); // todo
 		client.start();
 		client.connect(1000, Settings.IP_ADDRESS, Settings.TCP_PORT, Settings.UDP_PORT);
+		
+		Logger.setLevel(Logger.DEBUG); // todo?
 
 		client.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
+				if (Settings.DEBUG_MSGS) {
+					Settings.p("Rcvd " + object);
+				}
 				if (object instanceof MyAbstractMessage) {
 					MyAbstractMessage msg = (MyAbstractMessage)object;
 					listener.messageReceived(msg);
@@ -54,6 +61,10 @@ public class KryonetClient implements IMessageClient {
 
 	@Override
 	public void sendMessageToServer(final MyAbstractMessage msg) {
+		if (Settings.DEBUG_MSGS) {
+			Settings.p("Sending to server: " + msg);
+		}
+
 		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				client.sendTCP(msg);

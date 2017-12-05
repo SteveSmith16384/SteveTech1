@@ -2,19 +2,18 @@ STETECH1
 
 
 URGENT
-Log more server stuff
-	Name the threads
+Show kryonet logging
+Prevent shooters hitting themselves with ray test
+Hitscan weapons
+	No user data on player entity
 Second player can't join
-Show game state on hud
-	Player doesn't move when looking down - rotating spatial?
-	Why client not dropping to floor immediately?
 Search for todos
-	Avatar warp test
 
 
 TODO
+Show game state on hud
+Log more server stuff
 Player jumping very high - don't jump client side?
-Hitscan weapons
 Check all entities if y < 0 to prevent falling forever
 IsOnGround not always correct
 Create sep projects for test game, killer crates

@@ -81,7 +81,7 @@ public final class PositionCalculator {
 					firstEPD = secondEPD;
 					pos++;
 				}
-				throw new RuntimeException("Should not get here!");
+				//throw new RuntimeException("Should not get here!");
 			}
 			//Settings.p("No position data (" + positionData.size() + " entries)");
 		}

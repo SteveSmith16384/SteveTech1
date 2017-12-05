@@ -36,8 +36,8 @@ public class KryonetServer implements IMessageServer {
 		server = new Server();
 		registerMessages(server.getKryo());
 		setListener(_listener);
-		server.start();
 		server.bind(tcpport, udpport);
+		server.start();
 
 	}
 
@@ -47,6 +47,9 @@ public class KryonetServer implements IMessageServer {
 
 		server.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
+				if (Settings.DEBUG_MSGS) {
+					Settings.p("Rcvd " + object);
+				}
 				if (object instanceof MyAbstractMessage) {
 					MyAbstractMessage msg = (MyAbstractMessage)object;
 					listener.messageReceived(connection.getID(), msg);
@@ -55,6 +58,8 @@ public class KryonetServer implements IMessageServer {
 
 			public void connected (Connection connection) {
 				connection.setIdleThreshold(0); // todo
+				connection.setTimeout(0); // todo
+
 				listener.connectionAdded(connection.getID(), connection);
 			}
 
@@ -106,6 +111,10 @@ public class KryonetServer implements IMessageServer {
 
 	@Override
 	public void sendMessageToAll(final MyAbstractMessage msg) {
+		if (Settings.DEBUG_MSGS) {
+			Settings.p("Sending to all " + msg);
+		}
+		
 		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				server.sendToAllTCP(msg);
@@ -136,7 +145,10 @@ public class KryonetServer implements IMessageServer {
 
 	@Override
 	public void sendMessageToClient(final ClientData client, final MyAbstractMessage msg) {
-		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
+		if (Settings.DEBUG_MSGS) {
+			Settings.p("Sending to client: " + msg);
+		}
+ 		if (Settings.ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				server.sendToTCP(client.id, msg);
 			} else {
