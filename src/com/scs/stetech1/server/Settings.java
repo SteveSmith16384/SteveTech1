@@ -20,8 +20,8 @@ import com.scs.stetech1.netmessages.WelcomeClientMessage;
 
 public class Settings {
 
-	public static final boolean STAND_ALONE_SERVER = false;
-	public static final boolean CLIENT_SIDE_PHYSICS = false; // unused ATM
+	//public static final boolean STAND_ALONE_SERVER = false;
+	//public static final boolean CLIENT_SIDE_PHYSICS = false; // unused ATM
 	
 	public static final boolean DEBUG = true;
 	public static final boolean DEBUG_MSGS = false;
@@ -36,7 +36,7 @@ public class Settings {
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 70; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 
 	public static final int CLIENT_RENDER_DELAY = SERVER_SEND_UPDATE_INTERVAL_MS*3; // How far in past the client should render the view.  Source: 50ms
 	public static final int PING_INTERVAL_MS = 100 * 1000; // How often server sends pings
-	public static final int ARTIFICIAL_COMMS_DELAY = 100;
+	public static final int ARTIFICIAL_COMMS_DELAY = 0;
 	public static final float MAX_CLIENT_POSITION_DISCREP = 0.1f; // Max difference between what client and server think the pos of avatar is, before client is corrected
 	
 	public static final String VERSION_ = "0.01";
@@ -47,7 +47,7 @@ public class Settings {
 	// Our movement speed
 	public static final float PLAYER_MOVE_SPEED = 3f;
 	//public static final float JUMP_FORCE = 6f;
-	public static final float SMALLEST_MOVE_DIST = 0.01f;
+	public static final float SMALLEST_MOVE_DIST = 0.02f;
 
 	public static final float CAM_DIST = 50f;
 	public static final boolean LIGHTING = true;

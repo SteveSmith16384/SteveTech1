@@ -42,7 +42,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	private SimplePhysicsController<Spatial> physicsController;
 	private SimpleCharacterControl<Spatial> player;
-	//private final Vector3f walkDirection = new Vector3f();
+	private final Vector3f walkDirection = new Vector3f();
 
 	private boolean left = false, right = false, up = false, down = false, jump = false;;
 	private Geometry playerModel;
@@ -295,7 +295,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	public void simpleUpdate(float tpf_secs) {
 		camDir.set(cam.getDirection()).multLocal(playerSpeed, 0.0f, playerSpeed);
 		camLeft.set(cam.getLeft()).multLocal(playerSpeed);
-		Vector3f walkDirection = new Vector3f(); // todo - don't create
 		walkDirection.set(0, 0, 0);
 		if (left) {
 			walkDirection.addLocal(camLeft);
@@ -313,10 +312,12 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			player.jump();
 		}
 		walkDirection.y = 0; // Prevent us walking up or down
-		player.getAdditionalForce().addLocal(walkDirection);
-		p("Walk dir:" + walkDirection);
+		player.getAdditionalForce().set(walkDirection);
+		//p("Walk dir:" + walkDirection);
 
 		this.physicsController.update(tpf_secs);
+		
+		//player.getAdditionalForce().set(0, 0, 0); // Stop us moving
 
 		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
 

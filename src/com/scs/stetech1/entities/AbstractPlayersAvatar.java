@@ -89,9 +89,12 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		//SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		//Vector3f walkDirection = simplePlayerControl.additionalMoveDir;
 		
-		if (game.isServer()) { // Client does it before adjusting
+		//if (game.isServer()) { // Client does it before adjusting
 			this.resetWalkDir();
-		}
+			// Reset addition force
+			SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+			simplePlayerControl.getAdditionalForce().set(0, 0, 0);
+		//}
 
 		abilityGun.process(server, tpf);
 		if (this.abilityOther != null) {
@@ -126,6 +129,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 		}
 
 		//scs todo? simplePlayerControl.getAdditionalForce().set(walkDirection);
+		simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
 
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
@@ -234,7 +238,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
 		//if (offset.length() > 0.01f) { Already checked this
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.getAdditionalForce().add(offset);
+		simplePlayerControl.getAdditionalForce().addLocal(offset);
 		//this.getWalkDir().addLocal(offset);//.multLocal(moveSpeed)); 
 		//}
 	}

@@ -47,7 +47,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 			}
 		}
 
-		this.resetWalkDir();
+		//this.resetWalkDir();
 
 		super.serverAndClientProcess(server, null, tpf);
 

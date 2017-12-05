@@ -2,16 +2,19 @@ STETECH1
 
 
 URGENT
+Show game state on hud
+Player doesn't move when looking down - rotating spatial?
+	Why client not dropping to floor immediately?
+	Always adjusting client pos
 Player jumping very high - don't jump client side?
 	Crate falling through floor
 Search for todos
-Hitscan weapons
 Avatar warp test
-	Hello physics - set max move dist,
 
 
 TODO
-Player doesn't move when looking down - is this the same in simplephysics?
+Hitscan weapons
+Check all entities if y < 0 to prevent falling forever
 IsOnGround not always correct
 Create sep projects for test game, killer crates
 Game settings: num players per side, max sides

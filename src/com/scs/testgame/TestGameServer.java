@@ -19,11 +19,11 @@ public class TestGameServer extends AbstractGameServer {
 		try {
 			AbstractGameServer app = new TestGameServer();
 			app.setPauseOnLostFocus(false);
-			if (!Settings.STAND_ALONE_SERVER) {
+			//if (!Settings.STAND_ALONE_SERVER) {
 				app.start(JmeContext.Type.Headless);
-			} else {
+			/*} else {
 				app.start();				
-			}
+			}*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

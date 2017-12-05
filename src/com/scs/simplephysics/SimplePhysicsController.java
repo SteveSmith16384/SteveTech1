@@ -22,7 +22,6 @@ public class SimplePhysicsController<T> {
 	// Settings
 	private float gravity;
 	private float aerodynamicness;
-	private float maxMoveDist; // todo - use this
 
 	public SimplePhysicsController(ICollisionListener<T> _collListener) {
 		this(_collListener, DEFAULT_GRAVITY, DEFAULT_AERODYNAMICNESS);
@@ -67,6 +66,9 @@ public class SimplePhysicsController<T> {
 	}
 
 
+	/*
+	 * You can either call this method, or call SimpleRigidBody.proces() on each entity.
+	 */
 	public void update(float tpf_secs) {
 		if (this.enabled) {
 			synchronized (entities) {

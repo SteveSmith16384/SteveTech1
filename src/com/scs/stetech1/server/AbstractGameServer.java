@@ -162,7 +162,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				}
 			}
 			
-			physicsController.update(tpf_secs);
+			//physicsController.update(tpf_secs);
 
 			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
 			synchronized (entities) {
@@ -175,6 +175,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity sc = (PhysicalEntity)e;
+						sc.simpleRigidBody.process(tpf_secs);
 						strDebug.append(sc.name + " Pos: " + sc.getWorldTranslation() + "\n");
 						/*if (sc.type == EntityTypes.AVATAR) {
 							AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
@@ -365,7 +366,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				this.entities.remove(id);
 			}
 			this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
-		} catch (NullPointerException ex) {
+		} catch (NullPointerException ex) { // todo - remove this
 			ex.printStackTrace();
 		}
 	}

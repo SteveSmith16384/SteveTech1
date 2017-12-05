@@ -160,7 +160,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {  //this.rootNode.getChild(3).getWorldTranslation();
-		try { //this.entities;
+		try {
 			final long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 
 			if (networkClient != null && networkClient.isConnected()) {
@@ -217,7 +217,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
 							GeneralCommandMessage msg = (GeneralCommandMessage)message;
 							if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) {
-								status = this.STATUS_GAME_STARTED;
+								status = STATUS_GAME_STARTED;
 							}
 
 						} else {
@@ -231,7 +231,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				}
 
 				if (status == STATUS_GAME_STARTED) {
-					
+
 					if (this.avatar != null) {
 						// Send inputs
 						if (sendInputsInterval.hitInterval()) {
@@ -240,30 +240,33 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							}
 						}
 					}
-					
+
 					long serverTimePast = serverTime - Settings.CLIENT_RENDER_DELAY; // Render from history
 
 					// Loop through each entity and calc correct position				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
 					for (IEntity e : this.entities.values()) {
-						if (e instanceof PhysicalEntity) {
-							PhysicalEntity pe = (PhysicalEntity)e;
-							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
-							if (pe instanceof AbstractPlayersAvatar) {
-								AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
-								av.resetWalkDir(); // Do it before we process them!
-							}
-							//if (pe.canMove()) { // Todo - Only bother with things that can move
-							pe.calcPosition(this, serverTimePast); //pe.getWorldTranslation();
-							//}
-						}
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
 							pbc.process(this, tpf_secs); // Mainly to process client-side movement of the avatar
 						}
+						if (e instanceof PhysicalEntity) {
+							PhysicalEntity pe = (PhysicalEntity)e;
+							//if (pe.canMove()) { // Todo - Only bother with things that can move
+							pe.calcPosition(this, serverTimePast); // Must be before we process physics as this calcs additionalForce
+							//}
+							pe.simpleRigidBody.process(tpf_secs);
+							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
+							
+							if (Settings.DEBUG) {
+							if (pe instanceof AbstractPlayersAvatar) {
+								AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
+							}
+							}
+						}
 					}
-					
-					physicsController.update(tpf_secs); // Do this after we've processed them to take into account adjustments
+
+					//physicsController.update(tpf_secs); // Do this after we've processed them to take into account adjustments
 
 					this.hud.log_ta.setText(strListEnts.toString());
 				}
@@ -345,10 +348,10 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			}
 		} else if (message instanceof WelcomeClientMessage) {
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
-			if (status < this.STATUS_RCVD_WELCOME) {
+			if (status < STATUS_RCVD_WELCOME) {
 				status = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
 				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
-				status = this.STATUS_SENT_JOIN_REQUEST;
+				status = STATUS_SENT_JOIN_REQUEST;
 			} else {
 				throw new RuntimeException("Received second welcome message");
 			}

@@ -24,7 +24,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public T userObject; // Attach any object
 	private boolean canMove = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
-	private Vector3f additionalForce = null;
+	private Vector3f additionalForce = new Vector3f();
 
 	private CollisionResults collisionResults = new CollisionResults();
 
@@ -143,7 +143,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				oneOffForce.z = oneOffForce.z * aerodynamicness; // Slow down
 			}
 			
-			this.getAdditionalForce().set(0, 0, 0);
+			//this.getAdditionalForce().set(0, 0, 0);
 		}
 	}
 

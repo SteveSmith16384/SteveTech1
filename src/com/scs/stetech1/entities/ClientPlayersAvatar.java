@@ -22,7 +22,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 	public HUD hud;
 	public Camera cam;
 	private ICorrectClientEntityPosition syncPos;
-	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500);
+	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
 	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
 		super(_module, _playerID, _input, eid, side);
@@ -36,7 +36,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 		//syncPos = new MoveSlowlyToCorrectPosition();
 		//syncPos = new AdjustBasedOnDistance();
 
-		this.simpleRigidBody.setGravity(0); // scs todo
+		this.simpleRigidBody.setGravity(0); // scs todo?
 
 	}
 
@@ -45,7 +45,7 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 	public void process(AbstractGameClient client, float tpf) {
 		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
 		
-		storeAvatarPosition(serverTime);
+		storeAvatarPosition(serverTime); // todo - don't have sep list, use serverPositionData client-side
 
 		super.serverAndClientProcess(null, client, tpf);
 
@@ -109,34 +109,6 @@ public abstract class ClientPlayersAvatar extends AbstractPlayersAvatar implemen
 	public Camera getCamera() {
 		return this.cam;
 	}
-
-
-	/*public Vector3f getPointOnFloor(float range) {
-		Vector3f from = this.cam.getLocation();
-		Vector3f to = this.cam.getDirection().normalize().multLocal(range).addLocal(from);
-		List<PhysicsRayTestResult> results = game.getBulletAppState().getPhysicsSpace().rayTest(from, to);
-		float dist = -1;
-		PhysicsRayTestResult closest = null;
-		for (PhysicsRayTestResult r : results) {
-			if (r.getCollisionObject().getUserObject() != null) {
-				if (closest == null) {
-					closest = r;
-				} else if (r.getHitFraction() < dist) {
-					closest = r;
-				}
-				dist = r.getHitFraction();
-			}
-		}
-		if (closest != null) {
-			Entity e = (Entity)closest.getCollisionObject().getUserObject();
-			Vector3f hitpoint = to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
-			Settings.p("Hit " + e + " at " + hitpoint);
-			//module.doExplosion(from, null);
-			return hitpoint;
-		}
-
-		return null;
-	}*/
 
 
 	public FrustumIntersect getInsideOutside(PhysicalEntity entity) {
