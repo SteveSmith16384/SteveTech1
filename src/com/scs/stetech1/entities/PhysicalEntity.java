@@ -1,10 +1,9 @@
 package com.scs.stetech1.entities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.jme3.collision.Collidable;
-import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Quaternion;
@@ -18,6 +17,7 @@ import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.server.AbstractGameServer;
+import com.scs.stetech1.server.RayCollisionData;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.HitData;
@@ -114,22 +114,23 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		Vector3f from = this.getWorldTranslation().add(shootDir.mult(1f)); // Prevent us shooting ourselves
 		AbstractGameServer server = (AbstractGameServer)game;
 		Ray ray = new Ray(from, shootDir);
-		CollisionResults results = server.checkForCollisions(ray);
-		Iterator<CollisionResult> it = results.iterator();
+		ArrayList<RayCollisionData> results = server.checkForCollisions(ray);
+		/*Iterator<CollisionResult> it = results.iterator();
 		while (it.hasNext()) {
-			CollisionResult closest = it.next();// results.getClosestCollision();
+			CollisionResult closest = it.next();// results.getClosestCollision();*/
+		for(RayCollisionData closest : results) {
 			//if (closest != null) {
-			if (closest.getDistance() <= range) {
-				Spatial s = closest.getGeometry();
+			if (closest.distance <= range) {
+				/*Spatial s = closest.getGeometry();
 				while (s != null && s.getUserData(Settings.ENTITY) == null) {
 					s = s.getParent();
 				}
-				if (s != null) {
-					PhysicalEntity e = (PhysicalEntity)s.getUserData(Settings.ENTITY);
-					Vector3f hitpoint = closest.getContactPoint();// to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
-					Settings.p("Hit " + e + " at " + hitpoint);
-					return new HitData(e, hitpoint);
-				}
+				if (s != null) {*/
+				PhysicalEntity e = closest.pe;//(PhysicalEntity)s.getUserData(Settings.ENTITY);
+				Vector3f hitpoint = closest.point;//.getContactPoint();// to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
+				Settings.p("Hit " + e + " at " + hitpoint);
+				return new HitData(e, hitpoint);
+				//}
 			} else {
 				break; // No more in range
 			}

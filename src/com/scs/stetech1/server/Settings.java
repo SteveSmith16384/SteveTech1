@@ -24,7 +24,7 @@ public class Settings {
 	//public static final boolean CLIENT_SIDE_PHYSICS = false; // unused ATM
 	
 	public static final boolean DEBUG = true;
-	public static final boolean DEBUG_MSGS = true;
+	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SYNC_POS = false;
 
 	public static final String IP_ADDRESS = "localhost";

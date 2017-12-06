@@ -3,6 +3,7 @@ package com.scs.stetech1.weapons;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
+import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 
@@ -53,6 +54,7 @@ public abstract class AbstractMagazineGun implements IAbility {
 		if (game.isServer()) { // Only server can reload
 			if (this.bulletsLeftInMag <= 0) {
 				// Reload
+				Settings.p("Reloading");
 				this.bulletsLeftInMag = this.magazineSize;
 				this.timeUntilShoot_secs += this.reloadInterval_secs;
 				server.networkServer.sendMessageToAll(new AbilityUpdateMessage());

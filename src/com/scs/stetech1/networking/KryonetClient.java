@@ -17,14 +17,12 @@ public class KryonetClient implements IMessageClient {
 	public KryonetClient(IMessageClientListener _listener) throws IOException {
 		listener = _listener;
 
+		Logger.setLevel(Logger.DEBUG); // todo?
+
 		client = new Client();
 		KryonetServer.registerMessages(client.getKryo());
 		client.setIdleThreshold(0); // todo
 		client.setTimeout(0); // todo
-		client.start();
-		client.connect(1000, Settings.IP_ADDRESS, Settings.TCP_PORT, Settings.UDP_PORT);
-		
-		Logger.setLevel(Logger.DEBUG); // todo?
 
 		client.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
@@ -50,6 +48,8 @@ public class KryonetClient implements IMessageClient {
 			}
 		});
 
+		client.start();
+		client.connect(1000, Settings.IP_ADDRESS, Settings.TCP_PORT, Settings.UDP_PORT);
 	}
 
 

@@ -5,12 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
-import com.scs.stetech1.components.IEntity;
-import com.scs.stetech1.entities.PhysicalEntity;
 
 public class SimplePhysicsController<T> {
 
@@ -107,7 +104,7 @@ public class SimplePhysicsController<T> {
 		return this.aerodynamicness;
 	}
 
-
+/*
 	public CollisionResults checkForCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		synchronized (entities) {
@@ -120,8 +117,6 @@ public class SimplePhysicsController<T> {
 		}
 		return res;
 	}
-
-
-
+*/
 
 }

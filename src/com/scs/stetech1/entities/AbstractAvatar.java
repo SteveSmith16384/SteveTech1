@@ -176,42 +176,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 
 	/*@Override
-	public void applyForce(Vector3f force) {
-		//playerControl.getPhysicsRigidBody().applyImpulse(force, Vector3f.ZERO);//.applyCentralForce(dir);
-		//playerControl.getPhysicsRigidBody().applyCentralForce(force);
-		Settings.p("Unable to apply force to player:" + force);
-		//this.addWalkDirection.addLocal(force);
-	}*/
-
-
-	/*@Override
-	public Vector3f getWorldTranslation() {
-		// Need this override since main node is at 0,0,0 at the start
-		if (Settings.USE_PHYSICS) {
-			return this.playerControl.getPhysicsRigidBody().getPhysicsLocation();
-		} else {
-			return super.getWorldTranslation();
-		}
-		//return this.main_node.getWorldTranslation(); 000?
-		//return this.getMainNode().getLocalTranslation();
-	}
-
-	 */
-	// Do NOT use this to "tweak" players position!
-	/*@Override
-	public void setWorldTranslation(Vector3f pos) {
-		//float dist = pos.distance(this.getWorldTranslation());
-		// We need to warp() players
-		if (Settings.USE_PHYSICS) {
-			this.playerControl.warp(pos);
-		} else {
-			//this.simplePlayerControl.warp(pos);
-			super.setWorldTranslation(pos);
-		}
-	}
-
-	 */
-	/*@Override
 	public boolean canMove() {
 		return true; // Always calc for avatars
 	}

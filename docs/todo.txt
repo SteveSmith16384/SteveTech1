@@ -2,8 +2,7 @@ STETECH1
 
 
 URGENT
-Prevent shooters hitting themselves with ray test
-Kryonet - need to pause before sending message?
+	COncurrentMod when shooting
 	HelloPhysics - look at entities at start
 	Send multiple entity updates in one message
 Hitscan weapons

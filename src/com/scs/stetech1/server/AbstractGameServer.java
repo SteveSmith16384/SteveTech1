@@ -1,12 +1,15 @@
 package com.scs.stetech1.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
@@ -53,7 +56,10 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	public IMessageServer networkServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
+
 	private HashMap<Integer, IEntity> entities = new HashMap<>(100); // EntityID::Entity
+	private LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
+	private LinkedList<Integer> toRemove = new LinkedList<Integer>(); 
 
 	public static GameProperties properties;
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
@@ -173,7 +179,19 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			if (sendUpdates) {
 				eum = new EntityUpdateMessage();
 			}
+
 			synchronized (entities) {
+				// Add and remove entities
+				for(IEntity e : this.toAdd) {
+					this.actuallyAddEntity(e);
+				}
+				this.toAdd.clear();
+
+				for(Integer i : this.toRemove) {
+					this.actuallyRemoveEntity(i);
+				}
+				this.toRemove.clear();
+
 				// Loop through the entities
 				for (IEntity e : entities.values()) {
 					if (e instanceof IProcessByServer) {
@@ -308,12 +326,12 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		synchronized (clients) {
 			clients.put(id, client);
 		}
-		try {
+		/*try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} // For some reason, need to pause a sec
+		}*/ // For some reason, need to pause a sec
 		this.networkServer.sendMessageToClient(client, new WelcomeClientMessage());
 	}
 
@@ -359,6 +377,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	@Override
 	public void addEntity(IEntity e) {
+		this.toAdd.add(e);
+	}
+	
+
+	public void actuallyAddEntity(IEntity e) {
 		synchronized (entities) {
 			//Settings.p("Trying to add " + e + " (id " + e.getID() + ")");
 			if (this.entities.containsKey(e.getID())) {
@@ -386,8 +409,12 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	@Override
 	public void removeEntity(int id) {
+		this.toRemove.add(id);
+	}
+	
+	
+	private void actuallyRemoveEntity(int id) {
 		Settings.p("Removing entity " + id);
-		//try {
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
 			if (e instanceof PhysicalEntity) {
@@ -398,9 +425,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			this.console.appendText("Removed " + e);
 		}
 		this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
-		/*} catch (NullPointerException ex) {
-			ex.printStackTrace();
-		}*/
 	}
 
 
@@ -468,20 +492,29 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	/*
 	 * Returns false if a hit.
 	 */
-	public CollisionResults checkForCollisions(Ray r) { // todo - use SimplePhysics?
-		return this.physicsController.checkForCollisions(r);
-		/*CollisionResults res = new CollisionResults();
+	public ArrayList<RayCollisionData> checkForCollisions(Ray r) {
+		//return this.physicsController.checkForCollisions(r);
+
+		CollisionResults res = new CollisionResults();
+		ArrayList<RayCollisionData> myList = new ArrayList<RayCollisionData>(); 
 		synchronized (entities) {
 			// Loop through the entities
 			for (IEntity e : entities.values()) {
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity ic = (PhysicalEntity)e;
 					//r.collideWith(ic.getMainNode().getWorldBound(), res);
-					ic.getMainNode().collideWith(r, res);
+					res.clear();
+					int c = ((PhysicalEntity) e).getMainNode().getWorldBound().collideWith(r, res);
+					if (c > 0) {
+						CollisionResult cr = res.getClosestCollision();
+						RayCollisionData rcd = new RayCollisionData(ic, cr.getContactPoint(), cr.getDistance());
+						myList.add(rcd);
+					}
 				}
 			}
 		}
-		return res;*/
+		Collections.sort(myList);
+		return myList;
 	}
 
 

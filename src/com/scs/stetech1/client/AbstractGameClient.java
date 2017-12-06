@@ -280,7 +280,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			loopTimer.start();
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			this.quit();
+			this.quit("Error: " + ex);
 		}
 	}
 
@@ -382,7 +382,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	@Override
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(QUIT)) {
-			quit();
+			quit("User chose to");
 		} else if (name.equalsIgnoreCase(TEST)) {
 			//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
 			Settings.SYNC_CLIENT_POS = !Settings.SYNC_CLIENT_POS;
@@ -391,8 +391,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	}
 
 
-	private void quit() {
-		Settings.p("quit()");
+	private void quit(String reason) {
+		Settings.p("quitting: " + reason);
 		if (playerID >= 0) {
 			this.networkClient.sendMessageToServer(new PlayerLeftMessage(this.playerID));
 			/*try {
@@ -428,8 +428,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	@Override
 	public void disconnected() {
-		Settings.p("Disconnected!"); // todo - quit
-
+		Settings.p("Disconnected!");
+		this.quit("Server disappeared?");
 	}
 
 

@@ -100,9 +100,8 @@ public class KryonetServer implements IMessageServer {
 		kryo.register(Command.class);
 		kryo.register(GameStatusMessage.class);
 		kryo.register(TestMessage.class);
-
-		// If you add any, don't forget to add the listener to the client or server!! 
-
+		kryo.register(com.scs.stetech1.netmessages.AbilityUpdateMessage.class);
+		
 	}
 
 
