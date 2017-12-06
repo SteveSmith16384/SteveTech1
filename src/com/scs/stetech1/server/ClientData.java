@@ -2,14 +2,14 @@ package com.scs.stetech1.server;
 
 import com.jme3.input.InputManager;
 import com.jme3.renderer.Camera;
-import com.scs.stetech1.data.PlayerData;
+import com.scs.stetech1.data.SimplePlayerData;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.input.RemoteInput;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 
 public class ClientData {
 
-	public enum Status { Connected, Accepted }; // Accepted == has avatar and is in-game
+	public enum ClientStatus { Connected, Accepted }; // Accepted == has avatar and is in-game
 
 	public Object networkObj;
 	public int id;
@@ -19,8 +19,8 @@ public class ClientData {
 	public ServerPlayersAvatar avatar;
 	public RemoteInput remoteInput = new RemoteInput(); // For storing message that are translated into input
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
-	public PlayerData playerData;
-	public Status clientStatus = Status.Connected;
+	public SimplePlayerData playerData;
+	public ClientStatus clientStatus = ClientStatus.Connected;
 
 	public ClientData(int _id, Object _networkObj, Camera cam, InputManager _inputManager) {
 		id = _id;

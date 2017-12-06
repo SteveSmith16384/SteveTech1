@@ -104,19 +104,4 @@ public class SimplePhysicsController<T> {
 		return this.aerodynamicness;
 	}
 
-/*
-	public CollisionResults checkForCollisions(Ray r) {
-		CollisionResults res = new CollisionResults();
-		synchronized (entities) {
-			Iterator<SimpleRigidBody<T>> it = this.entities.iterator();
-			while (it.hasNext()) {
-				SimpleRigidBody<T> srb = it.next();
-				//r.collideWith(ic.getMainNode().getWorldBound(), res);
-				srb.getSpatial().getWorldBound().collideWith(r, res); // todo - simply collision checks to just check main node and create my own collision results which is just a list of entities
-			}
-		}
-		return res;
-	}
-*/
-
 }

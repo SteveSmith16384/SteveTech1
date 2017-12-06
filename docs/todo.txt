@@ -8,6 +8,7 @@ URGENT
 Hitscan weapons
 Second player can't join
 Search for todos
+Warn on client if no recent positiondata
 
 
 TODO

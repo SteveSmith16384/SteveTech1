@@ -124,7 +124,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 					s = s.getParent();
 				}
 				if (s != null) {*/
-				PhysicalEntity e = closest.pe;//(PhysicalEntity)s.getUserData(Settings.ENTITY);
+				PhysicalEntity e = closest.entity;//(PhysicalEntity)s.getUserData(Settings.ENTITY);
 				Vector3f hitpoint = closest.point;//.getContactPoint();// to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
 				Settings.p("Hit " + e + " at " + hitpoint);
 				return closest;//new HitData(e, hitpoint);

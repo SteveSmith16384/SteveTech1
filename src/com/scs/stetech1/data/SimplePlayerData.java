@@ -1,12 +1,12 @@
 package com.scs.stetech1.data;
 
-public class PlayerData { // POJO
+public class SimplePlayerData { // POJO
 
 	public int id;
 	public String playerName;
 	public int side;
 	
-	public PlayerData(int _id, String name, int _side) {
+	public SimplePlayerData(int _id, String name, int _side) {
 		super();
 		
 		this.playerName = name;

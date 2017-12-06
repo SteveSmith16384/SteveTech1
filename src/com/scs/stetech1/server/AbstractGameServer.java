@@ -21,7 +21,7 @@ import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.data.GameData;
-import com.scs.stetech1.data.PlayerData;
+import com.scs.stetech1.data.SimplePlayerData;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
@@ -40,7 +40,7 @@ import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.KryonetServer;
-import com.scs.stetech1.server.ClientData.Status;
+import com.scs.stetech1.server.ClientData.ClientStatus;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.testgame.entities.Floor;
 
@@ -78,7 +78,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
 
-		gameData = new GameData(_maxPlayersPerSide, _maxSides);
+		gameData = new GameData(this, _maxPlayersPerSide, _maxSides);
 		networkServer = new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
@@ -110,12 +110,12 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					if (message instanceof NewPlayerRequestMessage) {
 						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 						int side = getSide(client);
-						client.playerData = new PlayerData(client.id, newPlayerMessage.name, side);
+						client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, side);
 						networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID()));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
 						client.avatar = createPlayersAvatar(client, side);
 						gameData.addPlayer(client);
 						sendEntityListToClient(client);
-						client.clientStatus = ClientData.Status.Accepted;
+						client.clientStatus = ClientData.ClientStatus.Accepted;
 						this.playerJoined(client);
 						// Send them a ping to get ping time
 						this.networkServer.sendMessageToClient(client, new PingMessage(true));
@@ -217,7 +217,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			}
 			if (sendUpdates) {
 				for (ClientData client : this.clients.values()) {
-					if (client.clientStatus == Status.Accepted) {
+					if (client.clientStatus == ClientStatus.Accepted) {
 						networkServer.sendMessageToClient(client, eum);	
 					}
 				}
@@ -232,7 +232,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 	protected void playerJoined(ClientData client) {
-		checkGameStatus();
+		// todo - send player list to all clients
+		gameData.checkGameStatus();
 	}
 
 
@@ -326,12 +327,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		synchronized (clients) {
 			clients.put(id, client);
 		}
-		/*try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/ // For some reason, need to pause a sec
 		this.networkServer.sendMessageToClient(client, new WelcomeClientMessage());
 	}
 
@@ -349,7 +344,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	protected void playerLeft(ClientData client) {
-		//try {
 		Settings.p("Removing player " + client.getPlayerID());
 		synchronized (clients) {
 			this.clients.remove(client.getPlayerID());
@@ -359,19 +353,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			this.removeEntity(client.avatar.id);
 			gameData.removePlayer(client);
 		}
-		checkGameStatus();
-		/*} catch (NullPointerException npe) {
-			npe.printStackTrace();
-		}*/
-	}
-
-
-	private void checkGameStatus() {
+		// todo - send player list to all clients
 		gameData.checkGameStatus();
-		//if (this.gameData.players[0].size() == 0 || this.gameData.players[1].size() == 0) {
-		// todo
-		//}
-		// todo - send update if status changed
 	}
 
 
@@ -394,7 +377,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				PhysicalEntity se = (PhysicalEntity)e;
 				NewEntityMessage nem = new NewEntityMessage(se);
 				for (ClientData client : this.clients.values()) {
-					if (client.clientStatus == Status.Accepted) {
+					if (client.clientStatus == ClientStatus.Accepted) {
 						networkServer.sendMessageToClient(client, nem);	
 					}
 				}
@@ -549,6 +532,19 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-
+	public void gameStatusChanged(GameData.GameStatus newStatus) {
+		// todo
+		switch (newStatus) {
+		case Finished:
+			break;
+		case Started:
+			break;
+		case WaitingForPlayers:
+			break;
+		default:
+			break;
+		
+		}
+	}
 }
 

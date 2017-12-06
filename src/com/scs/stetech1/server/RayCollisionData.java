@@ -5,12 +5,12 @@ import com.scs.stetech1.entities.PhysicalEntity;
 
 public class RayCollisionData implements Comparable<RayCollisionData> {
 
-	public PhysicalEntity pe; // todo - rename these
+	public PhysicalEntity entity;
 	public float distance;
 	public Vector3f point;
 	
 	public RayCollisionData(PhysicalEntity _pe, Vector3f _point, float _dist) {
-		pe = _pe;
+		entity = _pe;
 		point = _point;
 		distance = _dist;
 	}

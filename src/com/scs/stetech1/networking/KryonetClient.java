@@ -44,7 +44,7 @@ public class KryonetClient implements IMessageClient {
 			}
 			
 			public void idle(Connection connection) {
-				Settings.p("Idle!"); // todo
+				Settings.p("Idle!");
 			}
 		});
 

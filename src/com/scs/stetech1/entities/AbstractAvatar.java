@@ -140,22 +140,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 	
 	
-	/*private Vector3f getWalkDir() {
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-		return simplePlayerControl.additionalMoveDir;		
-	}*/
-	
-
 	public void addToWalkDir(Vector3f offset) {
-		//SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-		//simplePlayerControl.additionalMoveDir.addLocal(offset);
 		this.walkDirection.addLocal(offset);
 	}
 
 
 	public void resetWalkDir() {
-		//SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-		//simplePlayerControl.additionalMoveDir.set(0, 0, 0);
 		this.walkDirection.set(0, 0, 0);
 	}
 
