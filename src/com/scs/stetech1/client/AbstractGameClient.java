@@ -179,8 +179,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							}
 
 						} else if (message instanceof EntityUpdateMessage) {
-							if (status >= this.STATUS_JOINED_GAME) {
+							if (status >= STATUS_JOINED_GAME) {
 							EntityUpdateMessage eum = (EntityUpdateMessage)message;
+							for(EntityUpdateMessage.UpdateData data : eum.data) {
 							IEntity e = this.entities.get(eum.entityID);
 							if (e != null) {
 								//Settings.p("Received EntityUpdateMessage for " + e);
@@ -211,7 +212,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 								// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
 							}
 							}
-
+							}
 						} else if (message instanceof RemoveEntityMessage) {
 							RemoveEntityMessage rem = (RemoveEntityMessage)message;
 							this.removeEntity(rem.entityID);
