@@ -1,6 +1,5 @@
 package com.scs.stetech1.server;
 
-import com.jme3.collision.CollisionResult;
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.entities.PhysicalEntity;
 

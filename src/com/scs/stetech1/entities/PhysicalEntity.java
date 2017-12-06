@@ -10,7 +10,6 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.ICollideable;
@@ -20,7 +19,6 @@ import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.RayCollisionData;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
-import com.scs.stetech1.shared.HitData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 
@@ -110,7 +108,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public HitData calcHitEntity(Vector3f shootDir, float range) {
+	public RayCollisionData calcHitEntity(Vector3f shootDir, float range) {
 		Vector3f from = this.getWorldTranslation().add(shootDir.mult(1f)); // Prevent us shooting ourselves
 		AbstractGameServer server = (AbstractGameServer)game;
 		Ray ray = new Ray(from, shootDir);
@@ -129,7 +127,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				PhysicalEntity e = closest.pe;//(PhysicalEntity)s.getUserData(Settings.ENTITY);
 				Vector3f hitpoint = closest.point;//.getContactPoint();// to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
 				Settings.p("Hit " + e + " at " + hitpoint);
-				return new HitData(e, hitpoint);
+				return closest;//new HitData(e, hitpoint);
 				//}
 			} else {
 				break; // No more in range
