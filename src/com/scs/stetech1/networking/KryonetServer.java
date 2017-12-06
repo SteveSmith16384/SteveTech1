@@ -10,6 +10,7 @@ import com.esotericsoftware.kryonet.Server;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
+import com.scs.stetech1.netmessages.EntityUpdateMessage.UpdateData;
 import com.scs.stetech1.netmessages.GameStatusMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.GeneralCommandMessage;
@@ -80,7 +81,8 @@ public class KryonetServer implements IMessageServer {
 		kryo.register(Vector3f.class);
 		kryo.register(HashMap.class);
 		kryo.register(byte[].class);
-
+		kryo.register(java.util.LinkedList.class);
+		
 		// Messages
 		kryo.register(MyAbstractMessage.class);
 		kryo.register(WelcomeClientMessage.class);
@@ -91,6 +93,7 @@ public class KryonetServer implements IMessageServer {
 		kryo.register(UnknownEntityMessage.class);
 		kryo.register(NewEntityMessage.class);
 		kryo.register(EntityUpdateMessage.class);
+		kryo.register(UpdateData.class);
 		kryo.register(PlayerLeftMessage.class);
 		kryo.register(RemoveEntityMessage.class);
 		kryo.register(GeneralCommandMessage.class);

@@ -1,6 +1,7 @@
 package com.scs.stetech1.entities;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResult;
@@ -110,26 +111,29 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public HitData calcHitEntity(Vector3f shootDir, float range) {
-		Vector3f from = this.getWorldTranslation();
+		Vector3f from = this.getWorldTranslation().add(shootDir.mult(1f)); // Prevent us shooting ourselves
 		AbstractGameServer server = (AbstractGameServer)game;
 		Ray ray = new Ray(from, shootDir);
 		CollisionResults results = server.checkForCollisions(ray);
-		CollisionResult closest = results.getClosestCollision();
-		if (closest != null) {
+		Iterator<CollisionResult> it = results.iterator();
+		while (it.hasNext()) {
+			CollisionResult closest = it.next();// results.getClosestCollision();
+			//if (closest != null) {
 			if (closest.getDistance() <= range) {
 				Spatial s = closest.getGeometry();
 				while (s != null && s.getUserData(Settings.ENTITY) == null) {
 					s = s.getParent();
 				}
 				if (s != null) {
-					PhysicalEntity e = (PhysicalEntity)closest.getGeometry().getUserData(Settings.ENTITY);
+					PhysicalEntity e = (PhysicalEntity)s.getUserData(Settings.ENTITY);
 					Vector3f hitpoint = closest.getContactPoint();// to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
 					Settings.p("Hit " + e + " at " + hitpoint);
 					return new HitData(e, hitpoint);
-				} else {
-					// todo
 				}
+			} else {
+				break; // No more in range
 			}
+			//}
 		}
 		return null;
 	}

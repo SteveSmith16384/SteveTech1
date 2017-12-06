@@ -4,7 +4,7 @@ import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.DebuggingSphere;
-import com.scs.stetech1.entities.EnemyPlayersAvatar;
+import com.scs.stetech1.entities.AbstractEnemyAvatar;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
@@ -43,7 +43,7 @@ public class TestGameEntityCreator {
 					return avatar;
 				} else {
 					// Create a simple avatar since we don't control these
-					EnemyPlayersAvatar avatar = new TestGameEnemyPlayersAvatar(game, playerID, id, msg.pos.x, msg.pos.y, msg.pos.z);
+					AbstractEnemyAvatar avatar = new TestGameEnemyPlayersAvatar(game, playerID, id, msg.pos.x, msg.pos.y, msg.pos.z);
 					return avatar;
 				}
 			//}

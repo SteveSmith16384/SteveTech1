@@ -56,6 +56,13 @@ public class SimplePhysicsController<T> {
 	}
 
 
+	public void removeAllEntities() {
+		synchronized (entities) {
+			this.entities.clear();
+		}
+	}
+	
+	
 	public void addSimpleRigidBody(SimpleRigidBody<T> srb) {
 		synchronized (entities) {
 			this.entities.add(srb);
@@ -101,14 +108,14 @@ public class SimplePhysicsController<T> {
 	}
 
 
-	public CollisionResults checkForCollisions(Ray r) { // todo - use this?
+	public CollisionResults checkForCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		synchronized (entities) {
 			Iterator<SimpleRigidBody<T>> it = this.entities.iterator();
 			while (it.hasNext()) {
 				SimpleRigidBody<T> srb = it.next();
 				//r.collideWith(ic.getMainNode().getWorldBound(), res);
-				srb.getSpatial().collideWith(r, res);
+				srb.getSpatial().getWorldBound().collideWith(r, res); // todo - simply collision checks to just check main node and create my own collision results which is just a list of entities
 			}
 		}
 		return res;

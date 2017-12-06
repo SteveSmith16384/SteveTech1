@@ -57,7 +57,7 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 				w, 0, w, d, 0, d, 0, 0  // bottom
 		}));
 
-		Geometry geometry = new Geometry("Crate", box1);
+		Geometry geometry = new Geometry("FloorGeom", box1);
 		if (_game.getJmeContext() != JmeContext.Type.Headless) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
@@ -77,12 +77,10 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 		this.mainNode.attachChild(geometry);
 		geometry.setLocalTranslation(x+(w/2), yTop-(h/2), z+(d/2)); // Move it into position
 
-		//if (_game.isServer()) {
-			this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-			this.simpleRigidBody.setMovable(false);
-		//}
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody.setMovable(false);
 
-			game.getRootNode().attachChild(this.mainNode);
+		game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		mainNode.setUserData(Settings.ENTITY, this);
@@ -129,12 +127,12 @@ public class Floor extends PhysicalEntity implements ICollideable, IProcessByCli
 		}
 	}
 
-/*
+	/*
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-*/
+	 */
 
 	@Override
 	public void process(AbstractGameServer server, float tpf_secs) {

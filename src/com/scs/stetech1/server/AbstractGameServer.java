@@ -19,7 +19,7 @@ import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.data.GameData;
 import com.scs.stetech1.data.PlayerData;
-import com.scs.stetech1.entities.AbstractPlayersAvatar;
+import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
@@ -37,6 +37,7 @@ import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.KryonetServer;
+import com.scs.stetech1.server.ClientData.Status;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.testgame.entities.Floor;
 
@@ -62,12 +63,16 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	protected LogWindow logWindow;
 	protected IConsole console;
 	private SimplePhysicsController<PhysicalEntity> physicsController;
-	protected GameData gameData = new GameData();
-	
-	public AbstractGameServer() throws IOException {
+	protected GameData gameData;
+
+	public AbstractGameServer(int _maxPlayersPerSide, int _maxSides) throws IOException {
+		super();
+
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
+
+		gameData = new GameData(_maxPlayersPerSide, _maxSides);
 		networkServer = new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
@@ -90,13 +95,12 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		StringBuilder strDebug = new StringBuilder();
 
 		if (networkServer.getNumClients() > 0) {
-
 			// Process all messages
 			synchronized (unprocessedMessages) {
 				while (!this.unprocessedMessages.isEmpty()) {
 					MyAbstractMessage message = this.unprocessedMessages.remove(0);
 					ClientData client = message.client;
-					
+
 					if (message instanceof NewPlayerRequestMessage) {
 						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 						int side = getSide(client);
@@ -161,10 +165,14 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					this.restoreAllAvatarPositions();
 				}
 			}
-			
+
 			//physicsController.update(tpf_secs);
 
 			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
+			EntityUpdateMessage eum = null;
+			if (sendUpdates) {
+				eum = new EntityUpdateMessage();
+			}
 			synchronized (entities) {
 				// Loop through the entities
 				for (IEntity e : entities.values()) {
@@ -183,19 +191,20 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						}*/
 						if (sendUpdates) {
 							if (sc.hasMoved()) { // Don't send if not moved (unless Avatar)
-								networkServer.sendMessageToAll(new EntityUpdateMessage(sc, false));
-								//Settings.p("Sending EntityUpdateMessage for " + sc);
+								eum.addEntityData(sc, false);
 							}
 						}
 					}
 				}
 			}
-
-			// Loop through clients
-			/*synchronized (clients) {
-				for (ClientData client : clients.values()) {
+			if (sendUpdates) {
+				for (ClientData client : this.clients.values()) {
+					if (client.clientStatus == Status.Accepted) {
+						networkServer.sendMessageToClient(client, eum);	
+					}
 				}
-			}*/
+				//networkServer.sendMessageToAll(eum);
+			}
 		}
 
 		this.logWindow.setText(strDebug.toString());
@@ -205,12 +214,13 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 	protected void playerJoined(ClientData client) {
+		checkGameStatus();
 	}
-	
-	
+
+
 	protected abstract int getSide(ClientData client);
-	
-	
+
+
 	@Override
 	public void messageReceived(int clientid, MyAbstractMessage message) {
 		if (Settings.DEBUG_MSGS) {
@@ -286,7 +296,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		if (e instanceof PhysicalEntity) {
 			PhysicalEntity se = (PhysicalEntity)e;
 			NewEntityMessage nem = new NewEntityMessage(se);
-			nem.force = true;
 			this.networkServer.sendMessageToClient(client, nem);
 		}
 	}
@@ -299,6 +308,12 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		synchronized (clients) {
 			clients.put(id, client);
 		}
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // For some reason, need to pause a sec
 		this.networkServer.sendMessageToClient(client, new WelcomeClientMessage());
 	}
 
@@ -316,19 +331,29 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	protected void playerLeft(ClientData client) {
-		try {
-			Settings.p("Removing player " + client.getPlayerID());
-			synchronized (clients) {
-				this.clients.remove(client.getPlayerID());
-			}
-			// Remove avatar
-			if (client.avatar != null) {
-				this.removeEntity(client.avatar.id);
-				gameData.removePlayer(client);
-			}
-		} catch (NullPointerException npe) {
-			npe.printStackTrace();
+		//try {
+		Settings.p("Removing player " + client.getPlayerID());
+		synchronized (clients) {
+			this.clients.remove(client.getPlayerID());
 		}
+		// Remove avatar
+		if (client.avatar != null) {
+			this.removeEntity(client.avatar.id);
+			gameData.removePlayer(client);
+		}
+		checkGameStatus();
+		/*} catch (NullPointerException npe) {
+			npe.printStackTrace();
+		}*/
+	}
+
+
+	private void checkGameStatus() {
+		gameData.checkGameStatus();
+		//if (this.gameData.players[0].size() == 0 || this.gameData.players[1].size() == 0) {
+		// todo
+		//}
+		// todo - send update if status changed
 	}
 
 
@@ -345,9 +370,15 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity se = (PhysicalEntity)e;
 				NewEntityMessage nem = new NewEntityMessage(se);
-				nem.force = true;
-				this.networkServer.sendMessageToAll(nem);
+				for (ClientData client : this.clients.values()) {
+					if (client.clientStatus == Status.Accepted) {
+						networkServer.sendMessageToClient(client, nem);	
+					}
+				}
+
+				//this.networkServer.sendMessageToAll(nem);
 			}
+			this.console.appendText("Created " + e);
 		}
 
 	}
@@ -357,15 +388,16 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	public void removeEntity(int id) {
 		Settings.p("Removing entity " + id);
 		//try {
-			synchronized (entities) {
-				IEntity e = this.entities.get(id);
-				if (e instanceof PhysicalEntity) {
-					PhysicalEntity pe = (PhysicalEntity)e;
-					this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
-				}
-				this.entities.remove(id);
+		synchronized (entities) {
+			IEntity e = this.entities.get(id);
+			if (e instanceof PhysicalEntity) {
+				PhysicalEntity pe = (PhysicalEntity)e;
+				this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
 			}
-			this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
+			this.entities.remove(id);
+			this.console.appendText("Removed " + e);
+		}
+		this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
 		/*} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}*/
@@ -410,10 +442,20 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					break;
 				}
 			}
+		} else if (cmd.equals("restart")) {
+			restartGame();
 		} else if (cmd.equals("quit")) {
 			this.networkServer.close();
 			this.stop();
 		}
+	}
+
+
+	private void restartGame() {
+		// todo removeAllEntities();
+		// todo - remove all avatars from players
+		this.getRootNode().detachAllChildren();
+		this.getPhysicsController().removeAllEntities();
 	}
 
 
@@ -456,10 +498,10 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pa = a.userObject;
 		PhysicalEntity pb = b.userObject;
-		if (pa instanceof AbstractPlayersAvatar && pb instanceof AbstractPlayersAvatar) {
+		if (pa instanceof AbstractAvatar && pb instanceof AbstractAvatar) {
 			// Avatars on the same side don't collide
-			AbstractPlayersAvatar aa = (AbstractPlayersAvatar)pa;
-			AbstractPlayersAvatar ab = (AbstractPlayersAvatar)pb;
+			AbstractAvatar aa = (AbstractAvatar)pa;
+			AbstractAvatar ab = (AbstractAvatar)pb;
 			if (aa.side == ab.side) {
 				return false;
 			}
@@ -473,7 +515,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		return physicsController;
 	}
 
-	
+
 
 }
 

@@ -31,7 +31,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	public TestGameServer() throws IOException {
-		super();// SpiderMonkeyServer(this);
+		super(999, 999);// SpiderMonkeyServer(this);
 	}
 
 
@@ -47,29 +47,6 @@ public class TestGameServer extends AbstractGameServer {
 	@Override
 	protected ServerPlayersAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
 		return new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);	
-	}
-
-
-	@Override
-	protected void playerJoined(ClientData client) {
-		super.playerJoined(client);
-		
-		checkGameStatus();
-	}
-
-	@Override
-	protected void playerLeft(ClientData client) {
-		super.playerLeft(client);
-		
-		checkGameStatus();
-	}
-	
-	
-	private void checkGameStatus() {
-		//if (this.gameData.players[0].size() == 0 || this.gameData.players[1].size() == 0) {
-			// todo
-		//}
-		// todo - send update if status changed
 	}
 
 

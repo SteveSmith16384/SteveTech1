@@ -18,7 +18,7 @@ public class ServerConsole extends Console implements IConsole, KeyListener {
 
 	@Override
 	public void appendText(String text) {
-		super.appendText(text);
+		super.appendText(text + "\n");
 
 	}
 

@@ -24,7 +24,7 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByClient;
-import com.scs.stetech1.entities.AbstractPlayersAvatar;
+import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.hud.HUD;
@@ -180,38 +180,38 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 						} else if (message instanceof EntityUpdateMessage) {
 							if (status >= STATUS_JOINED_GAME) {
-							EntityUpdateMessage eum = (EntityUpdateMessage)message;
-							for(EntityUpdateMessage.UpdateData data : eum.data) {
-							IEntity e = this.entities.get(eum.entityID);
-							if (e != null) {
-								//Settings.p("Received EntityUpdateMessage for " + e);
-								EntityPositionData epd = new EntityPositionData();
-								epd.serverTimestamp = eum.timestamp;// + clientToServerDiffTime;
-								epd.rotation = eum.dir;
-								epd.position = eum.pos;
+								EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
+								for(EntityUpdateMessage.UpdateData eum : mainmsg.data) {
+									IEntity e = this.entities.get(eum.entityID);
+									if (e != null) {
+										//Settings.p("Received EntityUpdateMessage for " + e);
+										EntityPositionData epd = new EntityPositionData();
+										epd.serverTimestamp = mainmsg.timestamp;// + clientToServerDiffTime;
+										epd.rotation = eum.dir;
+										epd.position = eum.pos;
 
-								PhysicalEntity pe = (PhysicalEntity)e;
-								if (eum.force) {
-									// Set it now!
-									pe.setWorldTranslation(epd.position);
-									pe.setWorldRotation(epd.rotation);
-									pe.clearPositiondata();
-									if (pe == this.avatar) {
-										avatar.clientAvatarPositionData.clearPositiondata(); // Clear our local data as well
-										avatar.storeAvatarPosition(serverTime);
-										// Stop us walking!
-										this.avatar.resetWalkDir();
+										PhysicalEntity pe = (PhysicalEntity)e;
+										if (eum.force) {
+											// Set it now!
+											pe.setWorldTranslation(epd.position);
+											pe.setWorldRotation(epd.rotation);
+											pe.clearPositiondata();
+											if (pe == this.avatar) {
+												avatar.clientAvatarPositionData.clearPositiondata(); // Clear our local data as well
+												avatar.storeAvatarPosition(serverTime);
+												// Stop us walking!
+												this.avatar.resetWalkDir();
+											}
+										}
+										pe.addPositionData(epd); // Store the position for use later
+										//Settings.p("New position for " + e + ": " + eum.pos);
+									} else {
+										Settings.p("Unknown entity ID: " + eum.entityID);
+										// Ask the server for entity details since we don't know about it.
+										// No, since we might not have joined the game yet! (server uses broadcast()
+										// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
 									}
 								}
-								pe.addPositionData(epd); // Store the position for use later
-								//Settings.p("New position for " + e + ": " + eum.pos);
-							} else {
-								Settings.p("Unknown entity ID: " + eum.entityID);
-								// Ask the server for entity details since we don't know about it.
-								// No, since we might not have joined the game yet! (server uses broadcast()
-								// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
-							}
-							}
 							}
 						} else if (message instanceof RemoveEntityMessage) {
 							RemoveEntityMessage rem = (RemoveEntityMessage)message;
@@ -262,8 +262,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 
 							if (Settings.DEBUG) {
-								if (pe instanceof AbstractPlayersAvatar) {
-									AbstractPlayersAvatar av = (AbstractPlayersAvatar)pe;
+								if (pe instanceof AbstractAvatar) {
+									AbstractAvatar av = (AbstractAvatar)pe;
 									strListEnts.append("Bounds: " + av.getMainNode().getWorldBound() + "\n");
 								}
 							}

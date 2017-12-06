@@ -18,7 +18,7 @@ import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.weapons.HitscanRifle;
 
-public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
+public abstract class AbstractAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
 
 	// Player dimensions
 	public static final float PLAYER_HEIGHT = 0.7f;
@@ -43,7 +43,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 	public int side;
 
 
-	public AbstractPlayersAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side) {
+	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side) {
 		super(_game, eid, EntityTypes.AVATAR, "Player");
 
 		if (game.isServer()) {
@@ -245,7 +245,7 @@ public abstract class AbstractPlayersAvatar extends PhysicalEntity implements IP
 
 	@Override
 	public Vector3f getBulletStartOffset() {
-		Vector3f offset = this.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*3);
+		Vector3f offset = this.getShootDir().multLocal(AbstractAvatar.PLAYER_RAD*3);
 		offset.y -= 0.1f; // Drop bullets slightly
 		return offset;
 	}

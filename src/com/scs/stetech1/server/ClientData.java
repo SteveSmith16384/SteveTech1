@@ -9,7 +9,7 @@ import com.scs.stetech1.shared.AverageNumberCalculator;
 
 public class ClientData {
 
-	public enum Status { Connected, Accepted };
+	public enum Status { Connected, Accepted }; // Accepted == has avatar and is in-game
 
 	public Object networkObj;
 	public int id;

@@ -2,18 +2,19 @@ STETECH1
 
 
 URGENT
-HelloPhysics - look at entities at start
-Kryonet test - send lots of other random msgs
-Send multiple entity updates in one message
-Show kryonet logging
 Prevent shooters hitting themselves with ray test
+Kryonet - need to pause before sending message?
+	HelloPhysics - look at entities at start
+	Send multiple entity updates in one message
 Hitscan weapons
-	No user data on player entity
 Second player can't join
 Search for todos
 
 
 TODO
+Only rotate entities left/right
+Show kryonet logging
+Kryonet test - send lots of other random msgs
 Show game state on hud
 Log more server stuff
 Player jumping very high - don't jump client side?

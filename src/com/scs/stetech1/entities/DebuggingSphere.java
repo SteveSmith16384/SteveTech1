@@ -1,10 +1,7 @@
 package com.scs.stetech1.entities;
 
-import java.util.HashMap;
-
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
@@ -49,12 +46,10 @@ public class DebuggingSphere extends PhysicalEntity {
 		game.getRootNode().attachChild(this.mainNode);
 		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
 		
-		/*rigidBodyControl = new RigidBodyControl(0f);
-		ball_geo.addControl(rigidBodyControl);
-		game.getBulletAppState().getPhysicsSpace().add(rigidBodyControl);
-*/
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody.setMovable(false);
+
 		this.getMainNode().setUserData(Settings.ENTITY, this);
-		//rigidBodyControl.setUserObject(this);
 		game.addEntity(this);
 
 	}

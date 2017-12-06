@@ -62,11 +62,9 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 		float rads = (float)Math.toRadians(rotDegrees);
 		mainNode.rotate(0, rads, 0);
 		mainNode.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
-
-		//if (_game.isServer()) {
-			this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-		//}
 		game.getRootNode().attachChild(this.mainNode);
+
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 
 		geometry.setUserData(Settings.ENTITY, this);
 		mainNode.setUserData(Settings.ENTITY, this);
@@ -82,12 +80,12 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 		//Settings.p("Pos: " + this.getWorldTranslation());
 	}
 
-/*
+	/*
 	@Override
 	public SimpleRigidBody getSimpleRigidBody() {
 		return this.simpleRigidBody;
 	}
-*/
+	 */
 
 	/*	@Override
 	public boolean collidedWith(ICollideable other) {

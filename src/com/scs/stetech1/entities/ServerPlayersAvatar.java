@@ -12,7 +12,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
-public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implements IDamagable, ICollideable {
+public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDamagable, ICollideable {
 
 	private AbstractGameServer server;
 
@@ -109,7 +109,7 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 			IBullet bullet = (IBullet)other;
 			if (bullet.getShooter() != null) {
 				if (bullet.getShooter() != this) {
-					if (!(bullet.getShooter() instanceof AbstractPlayersAvatar)) {
+					if (!(bullet.getShooter() instanceof AbstractAvatar)) {
 						this.hitByBullet(bullet);
 						bullet.getShooter().hasSuccessfullyHit(this);
 					}
@@ -137,7 +137,9 @@ public abstract class ServerPlayersAvatar extends AbstractPlayersAvatar implemen
 		if (invuln) {
 			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
 		}
-		server.networkServer.sendMessageToAll(new EntityUpdateMessage(this, true));
+		EntityUpdateMessage eum = new EntityUpdateMessage();
+		eum.addEntityData(this, true);
+		server.networkServer.sendMessageToAll(eum);
 	}
 
 

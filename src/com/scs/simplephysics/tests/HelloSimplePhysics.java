@@ -64,6 +64,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	public void simpleInitApp() {
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, 1000f);
+		cam.lookAt(new Vector3f(3, 1f, 20f), Vector3f.UNIT_Y);
 		viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
 		physicsController = new SimplePhysicsController<Spatial>(this);
@@ -317,8 +318,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 		this.physicsController.update(tpf_secs);
 		
-		//player.getAdditionalForce().set(0, 0, 0); // Stop us moving
-
 		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
 
 		//--------------------------------------------
