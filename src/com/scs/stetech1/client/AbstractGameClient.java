@@ -393,15 +393,17 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	private void quit(String reason) {
 		Settings.p("quitting: " + reason);
-		if (playerID >= 0) {
-			this.networkClient.sendMessageToServer(new PlayerLeftMessage(this.playerID));
-			/*try {
+		if (this.networkClient.isConnected()) {
+			if (playerID >= 0) {
+				this.networkClient.sendMessageToServer(new PlayerLeftMessage(this.playerID));
+				/*try {
 				executor.awaitTermination(1, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}*/
+			}
+			this.networkClient.close();
 		}
-		this.networkClient.close();
 		this.stop();
 
 	}
@@ -429,7 +431,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	@Override
 	public void disconnected() {
 		Settings.p("Disconnected!");
-		this.quit("Server disappeared?");
+		quit("");
 	}
 
 

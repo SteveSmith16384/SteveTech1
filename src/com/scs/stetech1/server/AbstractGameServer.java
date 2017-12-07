@@ -566,5 +566,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		
 		}
 	}
+	
+	
+	public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
 }
 

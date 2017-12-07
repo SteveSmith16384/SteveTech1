@@ -14,7 +14,7 @@ public class SimplePhysicsController<T> {
 	public static final float MIN_MOVE_DIST = 0.0001f;
 	public static final float MAX_MOVE_DIST = 0.5f;
 	public static final float DEFAULT_AERODYNAMICNESS = 0.99f;
-	public static final float DEFAULT_GRAVITY = -4f;
+	public static final float DEFAULT_GRAVITY = -5f;
 
 	private ArrayList<SimpleRigidBody<T>> entities = new ArrayList<>();
 	private ICollisionListener<T> collListener;

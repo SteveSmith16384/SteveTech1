@@ -1,5 +1,6 @@
 package com.scs.stetech1.weapons;
 
+import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;

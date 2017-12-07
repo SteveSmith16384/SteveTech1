@@ -11,20 +11,20 @@ import com.jme3.scene.Spatial;
 public class SimpleRigidBody<T> implements Collidable {
 
 	private SimplePhysicsController<T> physicsController;
-	protected Vector3f oneOffForce = new Vector3f();
+	protected Vector3f oneOffForce = new Vector3f(); // Gets reduced by air resistance each frame
 	private Vector3f tmpMoveDir = new Vector3f();
-	private float bounciness = .1f;
-	private float aerodynamicness;// = DEFAULT_AERODYNAMICNESS; // 0=stops immediately, 1=goes on forever
+	private float bounciness = .2f;
+	private float aerodynamicness; // 0=stops immediately, 1=goes on forever
 
 	// Gravity
-	private float gravInc;// = DEFAULT_GRAVITY; // How powerful is gravity
-	public float currentGravInc = 0; // The change this frame
+	private float gravInc; // How powerful is gravity
+	public float currentGravInc = 0; // The y-axis change this frame from gravity
 
 	private Spatial spatial;
 	public T userObject; // Attach any object
 	private boolean canMove = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
-	private Vector3f additionalForce = new Vector3f();
+	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.
 
 	private CollisionResults collisionResults = new CollisionResults();
 
@@ -108,8 +108,8 @@ public class SimpleRigidBody<T> implements Collidable {
 							collided = true;
 							// Bounce
 							float bounce = this.bounciness;
-							oneOffForce.y = oneOffForce.y * bounce * -1;
-							currentGravInc = currentGravInc * bounce * -1;
+							oneOffForce.y = oneOffForce.y * bounce * -1; // Reverse direction
+							currentGravInc = currentGravInc = 0; // scs todo? * bounce * -1;
 						}
 						if (totalOffset < 0) { // Going down?
 							isOnGround = true;
@@ -118,7 +118,6 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				if (!collided) {
 					// Not hit anything
-					// No currentGravInc = currentGravInc + (gravInc);// * tpf_secs); // Fall faster
 					currentGravInc = currentGravInc + (gravInc * tpf_secs); // Fall faster
 					if (totalOffset != 0) { 
 						this.isOnGround = true;
@@ -137,13 +136,11 @@ public class SimpleRigidBody<T> implements Collidable {
 					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 					if (collidedWith != null) {
 						float bounce = this.bounciness;// * body.bounciness;
-						oneOffForce.z = oneOffForce.z * bounce * -1;
+						oneOffForce.z = oneOffForce.z * bounce * -1; // Reverse direction
 					}
 				}
 				oneOffForce.z = oneOffForce.z * aerodynamicness; // Slow down
 			}
-			
-			//this.getAdditionalForce().set(0, 0, 0);
 		}
 	}
 

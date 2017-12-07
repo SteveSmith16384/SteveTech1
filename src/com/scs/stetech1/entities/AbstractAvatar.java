@@ -199,7 +199,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 	@Override
 	public Vector3f getBulletStartOffset() {
 		// Don't forget the origin is on the floor
-		Vector3f offset = this.getShootDir().multLocal(AbstractAvatar.PLAYER_RAD*3);
+		Vector3f offset = this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2);
 		offset.y += PLAYER_HEIGHT - 0.1f; // Drop bullets slightly
 		return offset;
 	}

@@ -2,21 +2,21 @@ STETECH1
 
 
 URGENT
-Check camera pos
+Test: Set gravity offset to 0 when colliding?
+Grenades freezing until they get movement data
 Not removed enemy avatar when player left
 Create server-controlled moving item to check interpol
-PositionCalc - don't cleardown all entries as server won't send updates for entities that haven't moved
-	Player jumping very high - don't jump client side?
+	Player jumping very high
 	Check collisions against root!
-	COncurrentMod when shooting
 Grenades
 Hitscan weapons
-	Second player can't join
 Search for todos
 	Check all entities if y < 0 to prevent falling forever
 
 
 TODO
+Laser bullets
+Check camera pos
 Origin of entities should be floor 
 Only rotate entities left/right
 Show game state on hud
@@ -34,7 +34,6 @@ Physics test - do explosion
 Confirm source timings
 Draw map
 Show error if client unable to connect
-Laser bullets
 Am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
 Use test annotations

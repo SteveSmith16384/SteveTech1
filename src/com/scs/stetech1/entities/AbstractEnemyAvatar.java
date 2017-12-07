@@ -14,8 +14,6 @@ import com.scs.stetech1.shared.IEntityController;
 
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, ICollideable, IProcessByClient {// Need ICollideable so lasers don't bounce off it
 
-	//private HashMap<String, Object> creationData;// = new HashMap<String, Object>();
-
 	public AbstractEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
 		super(game, eid, EntityTypes.AVATAR, "EnemyAvatar");
 

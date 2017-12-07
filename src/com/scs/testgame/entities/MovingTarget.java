@@ -24,9 +24,11 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
 
+	private static final float DURATION = 3;
 	private static final float SPEED = 7;
 
-	private Vector3f currDir = new Vector3f(0, 1f, 0);
+	private Vector3f currDir = new Vector3f(1f, 0, 0);
+	private float timeUntilTurn = DURATION;
 
 	public MovingTarget(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
 		super(_game, id, EntityTypes.MOVING_TARGET, "MovingTarget");
@@ -42,8 +44,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Crate", box1);
-		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
-			TextureKey key3 = new TextureKey(tex);//Settings.getCrateTex());//"Textures/boxes and crates/" + i + ".png");
+		if (_game.getJmeContext() != JmeContext.Type.Headless) {
+			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
@@ -58,18 +60,16 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 			}
 
 			geometry.setMaterial(floor_mat);
-			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-			geometry.setQueueBucket(Bucket.Transparent);
+			//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			//geometry.setQueueBucket(Bucket.Transparent);
 		}
-
+		geometry.setLocalTranslation(0, h/2, 0); // Origin is at the bottom
 		this.mainNode.attachChild(geometry);
 		float rads = (float)Math.toRadians(rotDegrees);
 		mainNode.rotate(0, rads, 0);
-		mainNode.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
+		mainNode.setLocalTranslation(x, y, z);
 
-		//if (_game.isServer()) {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-		//}
 
 		game.getRootNode().attachChild(this.mainNode);
 
@@ -83,13 +83,13 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 	@Override
 	public void process(AbstractGameServer server, float tpf) {
-		//super.process(tpf);
-		//Settings.p("Pos: " + this.getWorldTranslation());
+		this.timeUntilTurn -= tpf;
+		if (this.timeUntilTurn <= 0) {
+			this.timeUntilTurn = DURATION;
+			this.currDir.multLocal(-1);
+		}
 
-		// move around
-		//todo - move randomly if (Settings.r)
-		//this.rigidBodyControl.applyCentralForce(currDir.mult(SPEED));
-
+		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
 	}
 
 	/*

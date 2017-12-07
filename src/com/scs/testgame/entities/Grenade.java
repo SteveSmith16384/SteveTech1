@@ -21,7 +21,7 @@ import com.scs.stetech1.shared.IEntityController;
 public class Grenade extends PhysicalEntity implements IBullet {
 
 	public ICanShoot shooter;
-	private float timeLeft = 40f; // todo - check
+	private float timeLeft = 4f;
 
 	/*
 	 * Constructor for server
@@ -32,9 +32,11 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		this.shooter = _shooter;
 
 		// Accelerate the physical ball to shoot it.
-		if (_game.isServer()) {
+		//if (_game.isServer()) {
 			this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
-		}
+			//this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(5));
+			this.simpleRigidBody.setBounciness(.6f);
+		//}
 
 	}
 

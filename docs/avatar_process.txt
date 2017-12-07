@@ -1,4 +1,0 @@
-ACTION								CLIENT	SERVER
-Reset walk dir & additionalforce	x		x
-process inputs						x		x
-process physics						x		x

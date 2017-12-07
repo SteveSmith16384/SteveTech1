@@ -2,28 +2,25 @@ package com.scs.testgame;
 
 import java.io.IOException;
 
+import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
+import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
-import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.ClientData;
-import com.scs.stetech1.server.Settings;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.Floor;
+import com.scs.testgame.entities.MovingTarget;
 import com.scs.testgame.entities.TestGameServerPlayersAvatar;
 import com.scs.testgame.entities.Wall;
 
 public class TestGameServer extends AbstractGameServer {
-	
+
 	public static void main(String[] args) {
 		try {
 			AbstractGameServer app = new TestGameServer();
 			app.setPauseOnLostFocus(false);
-			//if (!Settings.STAND_ALONE_SERVER) {
-				app.start(JmeContext.Type.Headless);
-			/*} else {
-				app.start();				
-			}*/
+			app.start(JmeContext.Type.Headless);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -35,12 +32,20 @@ public class TestGameServer extends AbstractGameServer {
 	}
 
 
+	@Override
+	public Vector3f getAvatarStartPosition(AbstractAvatar avatar) {
+		return new Vector3f(3f, 15f, 3f + avatar.playerID);	
+	}
+
+
 	protected void createGame() {
 		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		//new DebuggingSphere(this, getNextEntityID(), 0, 0, 0);
 		new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 		//new Crate(this, getNextEntityID(), 8, 5, 8, 1, 1, 1f, "Textures/crate.png", 65);
 		new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
+
+		new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 	}
 
 
@@ -54,5 +59,6 @@ public class TestGameServer extends AbstractGameServer {
 	protected int getSide(ClientData client) {
 		return 0; // All the same side
 	}
+
 
 }

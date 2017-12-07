@@ -131,7 +131,8 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 
 	public void moveToStartPostion(boolean invuln) {
 		//Point p = module.mapData.getPlayerStartPos(id);
-		Vector3f pos = new Vector3f(3f, 15f, 3f + this.playerID);
+		//Vector3f pos =  new Vector3f(3f, 15f, 3f + this.playerID);
+		Vector3f pos = server.getAvatarStartPosition(this);
 		Settings.p("Scheduling player to start position: " + pos);
 		super.setWorldTranslation(pos);
 		if (invuln) {
@@ -145,7 +146,7 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 
 	@Override
 	public Vector3f getShootDir() {
-		return input.getDirection();
+		return input.getDirection();// this.ca
 	}
 
 

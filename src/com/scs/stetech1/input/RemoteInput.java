@@ -2,6 +2,7 @@ package com.scs.stetech1.input;
 
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
+import com.scs.stetech1.server.Settings;
 
 public class RemoteInput implements IInputDevice {
 
@@ -14,6 +15,8 @@ public class RemoteInput implements IInputDevice {
 
 	public void decodeMessage(PlayerInputMessage _pim) {
 		pim = _pim;
+		
+		//Settings.p("Shoot dir=" + this.getDirection());
 
 	}
 

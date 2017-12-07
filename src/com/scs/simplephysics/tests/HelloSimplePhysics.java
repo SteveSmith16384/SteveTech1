@@ -44,7 +44,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	private SimpleCharacterControl<Spatial> player;
 	private final Vector3f walkDirection = new Vector3f();
 
-	private boolean left = false, right = false, up = false, down = false, jump = false;;
+	private boolean left = false, right = false, up = false, down = false, jump = false;
 	private Geometry playerModel;
 	private final float playerSpeed = 8f;
 	private final float headHeight = 1f;
