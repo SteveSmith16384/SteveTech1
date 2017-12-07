@@ -112,34 +112,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		Vector3f from = this.getWorldTranslation().add(shootDir.mult(1f)); // Prevent us shooting ourselves
 		AbstractGameServer server = (AbstractGameServer)game;
 		Ray ray = new Ray(from, shootDir);
-		ArrayList<RayCollisionData> results = server.checkForCollisions(ray);
-		/*Iterator<CollisionResult> it = results.iterator();
-		while (it.hasNext()) {
-			CollisionResult closest = it.next();// results.getClosestCollision();*/
-		for(RayCollisionData closest : results) {
-			//if (closest != null) {
-			if (closest.distance <= range) {
-				/*Spatial s = closest.getGeometry();
-				while (s != null && s.getUserData(Settings.ENTITY) == null) {
-					s = s.getParent();
-				}
-				if (s != null) {*/
-				PhysicalEntity e = closest.entity;//(PhysicalEntity)s.getUserData(Settings.ENTITY);
-				Vector3f hitpoint = closest.point;//.getContactPoint();// to.subtract(from).multLocal(closest.getHitFraction()).addLocal(from);
-				Settings.p("Hit " + e + " at " + hitpoint);
-				return closest;//new HitData(e, hitpoint);
-				//}
-			} else {
-				break; // No more in range
-			}
-			//}
-		}
-		return null;
+		return server.checkForCollisions(ray);
 	}
 
 
 	public Vector3f getWorldTranslation() {
-		//return this.rigidBodyControl.getPhysicsLocation();
 		//return this.main_node.getWorldTranslation();  // 000?
 		return this.getMainNode().getLocalTranslation();
 	}
@@ -236,16 +213,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	/*@Override
-	public Node getNode() {
-		return this.mainNode;
+	public void fallenOffEdge() {
+		// Override for avatars
+		this.remove();
 	}
-
-
-	@Override
-	public SimpleRigidBody getSimpleRigidBody() {
-		return this.simpleRigidBody;
-	}
-	 */
-
 }

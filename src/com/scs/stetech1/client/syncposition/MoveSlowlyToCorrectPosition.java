@@ -19,7 +19,9 @@ public class MoveSlowlyToCorrectPosition implements ICorrectClientEntityPosition
 			if (diff > MAX_DIST) {
 				offset.normalizeLocal().multLocal(MAX_DIST); // Move a smaller amount
 			}
+			if (Settings.DEBUG_SYNC_POS) {
 			Settings.p("Adjusting client avatar by " + offset);
+			}
 			pe.adjustWorldTranslation(offset);
 		}
 	}

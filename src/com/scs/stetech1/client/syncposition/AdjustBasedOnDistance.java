@@ -21,7 +21,9 @@ public class AdjustBasedOnDistance implements ICorrectClientEntityPosition {
 			// They're so far out, just move them
 			pe.setWorldTranslation(pe.getWorldTranslation().add(offset)); 
 		} else if (diff > Settings.SMALLEST_MOVE_DIST) { // Avoid lots of small movements
-			Settings.p("Adjusting client avatar by " + offset);
+			if (Settings.DEBUG_SYNC_POS) {
+				Settings.p("Adjusting client avatar by " + offset);
+			}
 			pe.adjustWorldTranslation(offset);
 		}
 	}

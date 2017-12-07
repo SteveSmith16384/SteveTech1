@@ -21,7 +21,7 @@ public class TestGameClientPlayersAvatar extends ClientPlayersAvatar {
 	/*private static final float PLAYER_HEIGHT = 0.7f;
 	private static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
-*/
+	 */
 	public TestGameClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
 		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z, side);
 	}
@@ -30,20 +30,22 @@ public class TestGameClientPlayersAvatar extends ClientPlayersAvatar {
 	public static Spatial getPlayersModel_Static(IEntityController game, int pid) {
 		Box box1 = new Box(PLAYER_RAD, PLAYER_HEIGHT/2, PLAYER_RAD);
 		Geometry playerGeometry = new Geometry("Player", box1);
-		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
-		key3.setGenerateMips(true);
-		Texture tex3 = game.getAssetManager().loadTexture(key3);
-		Material floor_mat = null;
-		if (Settings.LIGHTING) {
-			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			floor_mat.setTexture("DiffuseMap", tex3);
-		} else {
-			floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-			floor_mat.setTexture("ColorMap", tex3);
+		if (!game.isServer()) {
+			TextureKey key3 = new TextureKey("Textures/neon1.jpg");
+			key3.setGenerateMips(true);
+			Texture tex3 = game.getAssetManager().loadTexture(key3);
+			Material floor_mat = null;
+			if (Settings.LIGHTING) {
+				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+				floor_mat.setTexture("DiffuseMap", tex3);
+			} else {
+				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+				floor_mat.setTexture("ColorMap", tex3);
+			}
+			playerGeometry.setMaterial(floor_mat);
 		}
-		playerGeometry.setMaterial(floor_mat);
-		return playerGeometry;
-		
+		playerGeometry.setLocalTranslation(0, PLAYER_HEIGHT/2, 0); // make our origin the bottom
+		return playerGeometry;		
 	}
 
 

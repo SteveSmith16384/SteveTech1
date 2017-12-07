@@ -21,7 +21,7 @@ import com.scs.stetech1.shared.IEntityController;
 public class Grenade extends PhysicalEntity implements IBullet {
 
 	public ICanShoot shooter;
-	private float timeLeft = 4f;
+	private float timeLeft = 40f; // todo - check
 
 	/*
 	 * Constructor for server
@@ -33,7 +33,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 
 		// Accelerate the physical ball to shoot it.
 		if (_game.isServer()) {
-			this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(15));
+			this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
 		}
 
 	}
@@ -65,12 +65,9 @@ public class Grenade extends PhysicalEntity implements IBullet {
 
 		this.mainNode.attachChild(ball_geo);
 		game.getRootNode().attachChild(this.mainNode);
-		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
-		ball_geo.setLocalTranslation(origin);
+		mainNode.setLocalTranslation(origin);
 
-		//if (_game.isServer()) {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-		//}
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		game.addEntity(this);
@@ -95,12 +92,12 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		return shooter;
 	}
 
-/*
+	/*
 	@Override
 	public void collidedWith(ICollideable other) {
 
 	}
-*/
+	 */
 
 	@Override
 	public float getDamageCaused() {

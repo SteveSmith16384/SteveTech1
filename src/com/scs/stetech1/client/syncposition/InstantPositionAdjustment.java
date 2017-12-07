@@ -14,7 +14,9 @@ public class InstantPositionAdjustment implements ICorrectClientEntityPosition {
 	@Override
 	public void adjustPosition(IPhysicalEntity pe, Vector3f offset) {
 		if (offset.length() > Settings.SMALLEST_MOVE_DIST) {
+			if (Settings.DEBUG_SYNC_POS) {
 			Settings.p("Adjusting client avatar by " + offset);
+			}
 			pe.adjustWorldTranslation(offset);
 		}
 	}

@@ -16,7 +16,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.weapons.HitscanRifle;
+import com.scs.stetech1.weapons.GrenadeLauncher;
 
 public abstract class AbstractAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
 
@@ -56,7 +56,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 		playerID = _playerID;
 		input = _input;
 		side =_side;
-		
+
 		playerGeometry = getPlayersModel(game, playerID);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves - yet?
 
@@ -68,9 +68,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 
-		abilityGun = new HitscanRifle(game, this);
-		//abilityGun = new GrenadeLauncher(game, this);
-		
+		//abilityGun = new HitscanRifle(game, this);
+		abilityGun = new GrenadeLauncher(game, this);
+
 		/* 
 			this.abilityOther = new JetPac(this);// BoostFwd(this);//getRandomAbility(this);
 		}*/
@@ -86,14 +86,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf) {
-		//SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		//Vector3f walkDirection = simplePlayerControl.additionalMoveDir;
-		
 		//if (game.isServer()) { // Client does it before adjusting
-			this.resetWalkDir();
-			// Reset addition force
-			SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-			simplePlayerControl.getAdditionalForce().set(0, 0, 0);
+		this.resetWalkDir();
+		// Reset addition force
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 		//}
 
 		abilityGun.process(server, tpf);
@@ -138,8 +135,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 	}
 
-	
-	
+
+
 	public void addToWalkDir(Vector3f offset) {
 		this.walkDirection.addLocal(offset);
 	}
@@ -160,8 +157,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 	public void jump() {
 		Settings.p("Jumping!");
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.jump();
+		//if (this.game.isServer()) { Too much of a delay
+			SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+			simplePlayerControl.jump();
+		//}
 	}
 
 
@@ -199,8 +198,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 	@Override
 	public Vector3f getBulletStartOffset() {
+		// Don't forget the origin is on the floor
 		Vector3f offset = this.getShootDir().multLocal(AbstractAvatar.PLAYER_RAD*3);
-		offset.y -= 0.1f; // Drop bullets slightly
+		offset.y += PLAYER_HEIGHT - 0.1f; // Drop bullets slightly
 		return offset;
 	}
 

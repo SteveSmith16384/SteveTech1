@@ -57,4 +57,10 @@ public abstract class Entity implements IEntity, Savable {
 		return type;
 	}
 
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
 }

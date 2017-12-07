@@ -38,14 +38,14 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 			invulnerableTime -= tpf;
 		}
 
-		if (!this.restarting) {
+		/*if (!this.restarting) {
 			// Have we fallen off the edge
 			if (this.getWorldTranslation().y < -5f) {
 				Settings.p("playerID " + this.playerID + " has died due to falling off the edge (pos " + this.getWorldTranslation() + ")");
 				died("Too low");
 				return;
 			}
-		}
+		}*/
 
 		//this.resetWalkDir();
 
@@ -149,4 +149,13 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 	}
 
 
+	@Override
+	public void fallenOffEdge() {
+		if (!this.restarting) {
+			Settings.p("playerID " + this.playerID + " has died due to falling off the edge (pos " + this.getWorldTranslation() + ")");
+			died("Too low");
+		}
+	}
+
+	
 }

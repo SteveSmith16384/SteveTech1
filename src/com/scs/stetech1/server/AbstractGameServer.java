@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,6 +14,7 @@ import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
@@ -165,14 +167,12 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						ServerPlayersAvatar avatar = c.avatar;
 						if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 							ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
-							chip.setTarget(avatar.calcHitEntity(avatar.getShootDir(), chip.getRange())); // This damage etc.. is calculated later
+							chip.setTarget(avatar.calcHitEntity(avatar.getShootDir(), chip.getRange())); // Damage etc.. is calculated later
 						}
 					}
 					this.restoreAllAvatarPositions();
 				}
 			}
-
-			//physicsController.update(tpf_secs);
 
 			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
 			EntityUpdateMessage eum = null;
@@ -200,13 +200,17 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					}
 
 					if (e instanceof PhysicalEntity) {
-						PhysicalEntity sc = (PhysicalEntity)e;
+						PhysicalEntity sc = (PhysicalEntity)e; // todo - rename
 						sc.simpleRigidBody.process(tpf_secs);
 						strDebug.append(sc.name + " Pos: " + sc.getWorldTranslation() + "\n");
 						/*if (sc.type == EntityTypes.AVATAR) {
 							AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
 							strDebug.append("WalkDir: " + av.playerControl.getWalkDirection() + "   Velocity: " + av.playerControl.getVelocity().length() + "\n");
 						}*/
+						if (sc.getWorldTranslation().y < -1) {
+							// Dropped away?
+							sc.fallenOffEdge();
+						}
 						if (sendUpdates) {
 							if (sc.hasMoved()) { // Don't send if not moved (unless Avatar)
 								eum.addEntityData(sc, false);
@@ -397,9 +401,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	
 	
 	private void actuallyRemoveEntity(int id) {
-		Settings.p("Removing entity " + id);
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
+			Settings.p("Removing entity " + e.getName() + " / ID:" + id);
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
@@ -472,10 +476,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	/*
-	 * Returns false if a hit.
-	 */
-	public ArrayList<RayCollisionData> checkForCollisions(Ray r) {
+	public ArrayList<RayCollisionData> checkForEntityCollisions(Ray r) {
 		//return this.physicsController.checkForCollisions(r);
 
 		CollisionResults res = new CollisionResults();
@@ -498,6 +499,25 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		}
 		Collections.sort(myList);
 		return myList;
+	}
+
+
+	public RayCollisionData checkForCollisions(Ray r) {
+		CollisionResults res = new CollisionResults();
+		int c = this.getRootNode().collideWith(r, res);
+		Iterator<CollisionResult> it = res.iterator();
+		while (it.hasNext()) {
+			CollisionResult col = it.next();
+			Spatial s = col.getGeometry();
+			while (s == null || s.getUserData(Settings.ENTITY) == null) {
+				s = s.getParent();
+			}
+			if (s != null && s.getUserData(Settings.ENTITY) != null) {
+				return new RayCollisionData((PhysicalEntity)s.getUserData(Settings.ENTITY), col.getContactPoint(), col.getDistance());
+			}
+		}
+		
+		return null;
 	}
 
 

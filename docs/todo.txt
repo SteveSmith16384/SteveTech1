@@ -2,30 +2,31 @@ STETECH1
 
 
 URGENT
+Check camera pos
+Not removed enemy avatar when player left
+Create server-controlled moving item to check interpol
+PositionCalc - don't cleardown all entries as server won't send updates for entities that haven't moved
+	Player jumping very high - don't jump client side?
+	Check collisions against root!
 	COncurrentMod when shooting
-	HelloPhysics - look at entities at start
-	Send multiple entity updates in one message
+Grenades
 Hitscan weapons
-Second player can't join
+	Second player can't join
 Search for todos
-Warn on client if no recent positiondata
+	Check all entities if y < 0 to prevent falling forever
 
 
 TODO
+Origin of entities should be floor 
 Only rotate entities left/right
-Show kryonet logging
-Kryonet test - send lots of other random msgs
 Show game state on hud
 Log more server stuff
-Player jumping very high - don't jump client side?
-Check all entities if y < 0 to prevent falling forever
 IsOnGround not always correct
 Create sep projects for test game, killer crates
-Game settings: num players per side, max sides
+	Game settings: num players per side, max sides
 Show current game time
 Separate into AbstractEntityServer, AbstractGameServer, TestGameServer
 Use latest JME libs
-Grenades
 Create game lobby
 Walking up steps
 	ConcurrentChange error in entities when firing grenade
@@ -42,13 +43,15 @@ Unit test rewind avatars
 Spectator mode
 	Send ability updates to client, to confirm ammo etc...
 Show where players are according to server (in realtime)
-Create server-controlled moving item to check interpol
 Create generic classes and test them
 Reduce dependencies between classes
 Make vars private/protected
 
 
 LATER
+Player reconnect and get same avatar
+Show kryonet logging
+Kryonet test - send lots of other random msgs
 Reduce object creation, including calls to clone()
 Don't use broadcast()?s
 Kick players who don't move

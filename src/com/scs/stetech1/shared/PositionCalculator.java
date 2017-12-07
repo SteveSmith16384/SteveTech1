@@ -18,11 +18,6 @@ public final class PositionCalculator {
 	}
 
 
-	/*public PositionCalculator(int _maxEntries) {
-		this(false, _maxEntries);
-	}
-*/
-
 	public void addPositionData(EntityPositionData newData) {
 		synchronized (positionData) {
 			boolean added = false;
@@ -49,6 +44,7 @@ public final class PositionCalculator {
 		synchronized (positionData) {
 			if (this.positionData.size() > 0) {
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
+					// Requested time is too soon
 					long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
 					//Settings.p(startDiff + " too soon");
 					//Settings.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));

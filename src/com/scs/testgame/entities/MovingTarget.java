@@ -68,7 +68,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		mainNode.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
 
 		//if (_game.isServer()) {
-			this.simpleRigidBody = new SimpleRigidBody(this.mainNode, (SimplePhysicsController)game, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 		//}
 
 		game.getRootNode().attachChild(this.mainNode);
@@ -92,10 +92,10 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 	}
 
-/*
+	/*
 	@Override
 	public void collidedWith(ICollideable other) {
 		// Do nothing
 	}
-*/
+	 */
 }
