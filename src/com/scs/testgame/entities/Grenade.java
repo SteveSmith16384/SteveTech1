@@ -27,7 +27,7 @@ public class Grenade extends PhysicalEntity implements IBullet {
 	 * Constructor for server
 	 */
 	public Grenade(IEntityController _game, int id, ICanShoot _shooter) {
-		this(_game, id, new Vector3f(_shooter.getWorldTranslation().add(_shooter.getBulletStartOffset())));
+		this(_game, id, new Vector3f(_shooter.getBulletStartPos()));//getWorldTranslation().add(_shooter.getBulletStartOffset())));
 
 		this.shooter = _shooter;
 

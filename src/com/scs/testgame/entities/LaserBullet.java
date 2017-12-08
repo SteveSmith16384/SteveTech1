@@ -26,8 +26,8 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 
 		this.shooter = _shooter;
 
-		Vector3f origin = shooter.getWorldTranslation().clone();
-		origin.addLocal(shooter.getBulletStartOffset());
+		Vector3f origin = shooter.getBulletStartPos().clone();//getWorldTranslation().clone();
+		//origin.addLocal(shooter.getBulletStartOffset());
 
 		Node laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(shooter.getShootDir().multLocal(1)), ColorRGBA.Pink, game.getJmeContext() != JmeContext.Type.Headless);
 
@@ -38,7 +38,7 @@ public class LaserBullet extends PhysicalEntity implements IBullet {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 		if (_game.isServer()) {
 			// Accelerate the physical ball to shoot it.
-			simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(40));// todo - check
+			simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(30));
 			simpleRigidBody.setAerodynamicness(1);
 			simpleRigidBody.setGravity(0);
 		}

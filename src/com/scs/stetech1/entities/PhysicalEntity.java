@@ -108,13 +108,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public RayCollisionData calcHitEntity(Vector3f shootDir, float range) {
+/*	public RayCollisionData calcHitEntity(Vector3f shootDir, float range) {
 		Vector3f from = this.getWorldTranslation().add(shootDir.mult(1f)); // Prevent us shooting ourselves
 		AbstractGameServer server = (AbstractGameServer)game;
 		Ray ray = new Ray(from, shootDir);
 		return server.checkForCollisions(ray);
 	}
-
+*/
 
 	public Vector3f getWorldTranslation() {
 		//return this.main_node.getWorldTranslation();  // 000?

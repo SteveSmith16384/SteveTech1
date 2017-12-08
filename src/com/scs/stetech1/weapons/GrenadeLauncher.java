@@ -1,6 +1,7 @@
 package com.scs.stetech1.weapons;
 
-import com.jme3.math.Vector3f;
+import java.util.LinkedList;
+
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.shared.IAbility;
@@ -11,8 +12,20 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility {
 
 	private static final int MAG_SIZE = 1000; // todo - check
 	
-	public GrenadeLauncher(IEntityController game, ICanShoot shooter) {
-		super(game, "GrenadeLauncher", shooter, 1, 3, MAG_SIZE);
+	private LinkedList<Grenade> ammoCache = new LinkedList<Grenade>(); 
+	
+	public GrenadeLauncher(IEntityController game, int num, ICanShoot shooter) {
+		super(game, num, "GrenadeLauncher", shooter, 1, 3, MAG_SIZE);
+	}
+	
+
+	@Override
+	public void process(float tpf_secs) {
+		super.process(tpf_secs);
+		
+		if (this.ammoCache.size() <= 2) {
+			
+		}
 	}
 	
 

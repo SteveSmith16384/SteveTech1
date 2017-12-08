@@ -29,7 +29,6 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("id", id);
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
 			//creationData.put("rot", rotDegrees); No, since chances are it will have moved anyway
@@ -60,8 +59,9 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 		}
 		this.mainNode.attachChild(geometry); //This creates the model bounds!  mainNode.getWorldBound();
 		float rads = (float)Math.toRadians(rotDegrees);
+		geometry.setLocalTranslation(0, h/2, 0);
 		mainNode.rotate(0, rads, 0);
-		mainNode.setLocalTranslation(x+(w/2), y+(h/2), z+(d/2));
+		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);

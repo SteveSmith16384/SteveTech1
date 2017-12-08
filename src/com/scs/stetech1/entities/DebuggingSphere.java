@@ -16,6 +16,10 @@ import com.scs.stetech1.shared.IEntityController;
  * Simple sphere to help show points in the world
  */
 public class DebuggingSphere extends PhysicalEntity {
+	
+	private static final float DURATION = 10;
+	
+	private float timeLeft = DURATION;
 
 	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, EntityTypes.DEBUGGING_SPHERE, "DebuggingSphere");
@@ -46,8 +50,8 @@ public class DebuggingSphere extends PhysicalEntity {
 		game.getRootNode().attachChild(this.mainNode);
 		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
 		
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-		this.simpleRigidBody.setMovable(false);
+		//this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		//this.simpleRigidBody.setMovable(false);
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		game.addEntity(this);
@@ -57,7 +61,12 @@ public class DebuggingSphere extends PhysicalEntity {
 
 	@Override
 	public void process(AbstractGameServer server, float tpf) {
-
+		if (game.isServer()) {
+			this.timeLeft -= tpf;
+			if (this.timeLeft <= 0) {
+				this.remove();
+			}
+		}
 	}
 
 

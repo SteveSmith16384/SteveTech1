@@ -16,7 +16,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.weapons.GrenadeLauncher;
+import com.scs.stetech1.weapons.HitscanRifle;
 
 public abstract class AbstractAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
 
@@ -39,7 +39,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 	protected float restartTime, invulnerableTime;
 	private int numShots = 0;
 	private int numShotsHit = 0;
-	public IAbility abilityGun, abilityOther;
+	public IAbility abilityGun, abilityOther; // todo - have list of abilities
 	public int side;
 
 
@@ -68,11 +68,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 
-		//abilityGun = new HitscanRifle(game, this);
-		abilityGun = new GrenadeLauncher(game, this);
+		abilityGun = new HitscanRifle(game, 0, this);
+		//abilityGun = new GrenadeLauncher(game, 0, this);
 
 		/* 
-			this.abilityOther = new JetPac(this);// BoostFwd(this);//getRandomAbility(this);
+			this.abilityOther = new JetPac(this, 1);// BoostFwd(this, 1);//getRandomAbility(this);
 		}*/
 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
@@ -86,16 +86,15 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf) {
-		//if (game.isServer()) { // Client does it before adjusting
 		this.resetWalkDir();
+
 		// Reset addition force
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
-		//}
 
-		abilityGun.process(server, tpf);
+		abilityGun.process(tpf);
 		if (this.abilityOther != null) {
-			abilityOther.process(server, tpf);
+			abilityOther.process(tpf);
 		}
 
 		if (this.abilityOther != null) {
@@ -195,7 +194,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 		//}
 	}
 
-
+/*
 	@Override
 	public Vector3f getBulletStartOffset() {
 		// Don't forget the origin is on the floor
@@ -203,6 +202,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 		offset.y += PLAYER_HEIGHT - 0.1f; // Drop bullets slightly
 		return offset;
 	}
+*/
+	
+	@Override
+	public Vector3f getBulletStartPos() {
+		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0).addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));
+	}
+
+
 
 
 }

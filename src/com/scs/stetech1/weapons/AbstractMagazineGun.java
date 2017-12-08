@@ -1,7 +1,7 @@
 package com.scs.stetech1.weapons;
 
-import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.ICanShoot;
+import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
@@ -15,16 +15,18 @@ public abstract class AbstractMagazineGun implements IAbility {
 	protected ICanShoot shooter;
 	protected String name;
 
+	private int num;
 	protected float timeUntilShoot_secs = 0;
 	protected int magazineSize;
 	protected int bulletsLeftInMag;
 	protected float shotInterval_secs, reloadInterval_secs;
 
 
-	public AbstractMagazineGun(IEntityController _game, String _name, ICanShoot _shooter, float shotInt, float reloadInt, int magSize) {
+	public AbstractMagazineGun(IEntityController _game, int _num, String _name, ICanShoot _shooter, float shotInt, float reloadInt, int magSize) {
 		super();
 
 		game = _game;
+		num = _num; // 0 =main
 		name = _name;
 		shooter = _shooter;
 		this.shotInterval_secs = shotInt;
@@ -51,14 +53,15 @@ public abstract class AbstractMagazineGun implements IAbility {
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf_secs) {
+	public void process(float tpf_secs) {
 		if (game.isServer()) { // Only server can reload
 			if (this.bulletsLeftInMag <= 0) {
 				// Reload
 				Settings.p("Reloading");
 				this.bulletsLeftInMag = this.magazineSize;
 				this.timeUntilShoot_secs += this.reloadInterval_secs;
-				server.networkServer.sendMessageToAll(new AbilityUpdateMessage());
+				AbstractGameServer server = (AbstractGameServer)game; 
+				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, (AbstractAvatar)this.shooter, num));
 			}
 		}
 		timeUntilShoot_secs -= tpf_secs;

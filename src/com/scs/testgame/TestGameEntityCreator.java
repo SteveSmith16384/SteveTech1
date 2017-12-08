@@ -2,16 +2,17 @@ package com.scs.testgame;
 
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.entities.AbstractEnemyAvatar;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.DebuggingSphere;
-import com.scs.stetech1.entities.AbstractEnemyAvatar;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
-import com.scs.testgame.entities.TestGameClientPlayersAvatar;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
+import com.scs.testgame.entities.MovingTarget;
+import com.scs.testgame.entities.TestGameClientPlayersAvatar;
 import com.scs.testgame.entities.TestGameEnemyPlayersAvatar;
 import com.scs.testgame.entities.Wall;
 
@@ -95,6 +96,15 @@ public class TestGameEntityCreator {
 		case EntityTypes.DEBUGGING_SPHERE:
 		{
 			DebuggingSphere laser = new DebuggingSphere(game, id, msg.pos.x, msg.pos.y, msg.pos.z);
+			return laser;
+		}
+
+		case EntityTypes.MOVING_TARGET:
+		{
+			Vector3f size = (Vector3f) msg.data.get("size");
+			String tex = (String)msg.data.get("tex");
+			//float rot = (Float)msg.data.get("rot");
+			MovingTarget laser = new MovingTarget(game, id, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex, 0);
 			return laser;
 		}
 

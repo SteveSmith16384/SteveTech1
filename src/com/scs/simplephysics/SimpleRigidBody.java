@@ -109,7 +109,7 @@ public class SimpleRigidBody<T> implements Collidable {
 							// Bounce
 							float bounce = this.bounciness;
 							oneOffForce.y = oneOffForce.y * bounce * -1; // Reverse direction
-							currentGravInc = currentGravInc = 0; // scs todo? * bounce * -1;
+							currentGravInc = currentGravInc * bounce * -1;
 						}
 						if (totalOffset < 0) { // Going down?
 							isOnGround = true;

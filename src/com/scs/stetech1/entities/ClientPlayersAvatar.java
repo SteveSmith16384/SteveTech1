@@ -12,9 +12,11 @@ import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.components.IShowOnHUD;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
+import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
+import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.PositionCalculator;
 
 public abstract class ClientPlayersAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
@@ -44,7 +46,7 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 	@Override
 	public void process(AbstractGameClient client, float tpf) {
 		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
-		
+
 		storeAvatarPosition(serverTime); // todo - don't have sep list, use serverPositionData client-side
 
 		super.serverAndClientProcess(null, client, tpf);
@@ -123,4 +125,16 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 	}
 
 
+	public void updateAbility(AbilityUpdateMessage aum) {
+		IAbility a = null;
+		if (aum.abilityNum == 0) {
+			a = this.abilityGun;
+		} else if (aum.abilityNum == 1) {
+			a = this.abilityOther;
+		} else {
+			throw new RuntimeException("Unknown ability: " + aum.abilityNum);
+		}
+		a.decode(aum);
+	}
+	
 }

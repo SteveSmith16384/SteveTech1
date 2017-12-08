@@ -20,6 +20,7 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICalcHitInPast;
+import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.data.GameData;
@@ -167,7 +168,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						ServerPlayersAvatar avatar = c.avatar;
 						if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 							ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
-							chip.setTarget(avatar.calcHitEntity(avatar.getShootDir(), chip.getRange())); // Damage etc.. is calculated later
+							chip.setTarget(calcHitEntity(avatar, chip.getRange())); // Damage etc.. is calculated later
 						}
 					}
 					this.restoreAllAvatarPositions();
@@ -200,20 +201,23 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					}
 
 					if (e instanceof PhysicalEntity) {
-						PhysicalEntity sc = (PhysicalEntity)e; // todo - rename
-						sc.simpleRigidBody.process(tpf_secs);
-						strDebug.append(sc.name + " Pos: " + sc.getWorldTranslation() + "\n");
+						PhysicalEntity physicalEntity = (PhysicalEntity)e;
+						if (physicalEntity.simpleRigidBody != null) {
+							physicalEntity.simpleRigidBody.process(tpf_secs);
+						}
+						strDebug.append(physicalEntity.name + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 						/*if (sc.type == EntityTypes.AVATAR) {
 							AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
 							strDebug.append("WalkDir: " + av.playerControl.getWalkDirection() + "   Velocity: " + av.playerControl.getVelocity().length() + "\n");
 						}*/
-						if (sc.getWorldTranslation().y < -1) {
+						if (physicalEntity.getWorldTranslation().y < -1) {
 							// Dropped away?
-							sc.fallenOffEdge();
+							this.console.appendText(e.getName() + " has fallen off the edge");
+							physicalEntity.fallenOffEdge();
 						}
 						if (sendUpdates) {
-							if (sc.hasMoved()) { // Don't send if not moved (unless Avatar)
-								eum.addEntityData(sc, false);
+							if (physicalEntity.hasMoved()) { // Don't send if not moved (unless Avatar)
+								eum.addEntityData(physicalEntity, false);
 							}
 						}
 					}
@@ -366,7 +370,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	public void addEntity(IEntity e) {
 		this.toAdd.add(e);
 	}
-	
+
 
 	public void actuallyAddEntity(IEntity e) {
 		synchronized (entities) {
@@ -398,8 +402,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	public void removeEntity(int id) {
 		this.toRemove.add(id);
 	}
-	
-	
+
+
 	private void actuallyRemoveEntity(int id) {
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
@@ -505,6 +509,10 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	public RayCollisionData checkForCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		int c = this.getRootNode().collideWith(r, res);
+		if (c == 0) {
+			Settings.p("No Ray collisions");
+			return null;
+		}
 		Iterator<CollisionResult> it = res.iterator();
 		while (it.hasNext()) {
 			CollisionResult col = it.next();
@@ -513,10 +521,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				s = s.getParent();
 			}
 			if (s != null && s.getUserData(Settings.ENTITY) != null) {
+				Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
 				return new RayCollisionData((PhysicalEntity)s.getUserData(Settings.ENTITY), col.getContactPoint(), col.getDistance());
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -553,7 +562,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	public void gameStatusChanged(GameData.GameStatus newStatus) {
-		// todo
 		switch (newStatus) {
 		case Finished:
 			break;
@@ -563,11 +571,19 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			break;
 		default:
 			break;
-		
+
 		}
 	}
-	
-	
+
+
+	public RayCollisionData calcHitEntity(ICanShoot shooter, float range) {
+		Vector3f from = shooter.getBulletStartPos();//getWorldTranslation().add(shooter.getShootDir().mult(1f)); // Prevent us shooting ourselves
+		//AbstractGameServer server = (AbstractGameServer)game;
+		Ray ray = new Ray(from, shooter.getShootDir());
+		return checkForCollisions(ray);
+	}
+
+
 	public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
 }
 

@@ -30,6 +30,7 @@ import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
+import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.GeneralCommandMessage;
@@ -89,7 +90,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	protected AbstractGameClient() {
 		super();
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, SimplePhysicsController.DEFAULT_GRAVITY, SimplePhysicsController.DEFAULT_AERODYNAMICNESS);
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this);//, SimplePhysicsController.DEFAULT_GRAVITY, SimplePhysicsController.DEFAULT_AERODYNAMICNESS);
 	}
 
 
@@ -258,15 +259,17 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							//if (pe.canMove()) { // Todo - Only bother with things that can move
 							pe.calcPosition(this, serverTimePast); // Must be before we process physics as this calcs additionalForce
 							//}
-							pe.simpleRigidBody.process(tpf_secs);
+							if (pe.simpleRigidBody != null) {
+								pe.simpleRigidBody.process(tpf_secs);
+							}
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 
-							if (Settings.DEBUG) {
+							/*if (Settings.DEBUG) {
 								if (pe instanceof AbstractAvatar) {
 									AbstractAvatar av = (AbstractAvatar)pe;
 									strListEnts.append("Bounds: " + av.getMainNode().getWorldBound() + "\n");
 								}
-							}
+							}*/
 						}
 					}
 
@@ -352,6 +355,14 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				throw new RuntimeException("Received second welcome message");
 			}
 
+		} else if (message instanceof AbilityUpdateMessage) {
+			AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
+			if (aum.avatarId == this.avatar.id) {
+				avatar.updateAbility(aum);
+			} else {
+				throw new RuntimeException("Received update for wrong avatar");
+			}
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
@@ -374,7 +385,18 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	public void removeEntity(int id) {
 		synchronized (entities) {
-			this.entities.remove(id);
+			IEntity e = this.entities.get(id);
+			if (e != null) {
+				Settings.p("Removing " + e.getName());
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity pe =(PhysicalEntity)e;
+					if (pe.simpleRigidBody != null) {
+						this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
+					}
+					pe.getMainNode().removeFromParent();
+				}
+				this.entities.remove(id);
+			}
 		}
 	}
 

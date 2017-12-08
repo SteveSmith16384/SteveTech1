@@ -3,17 +3,14 @@ package com.scs.stetech1.shared;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 
-public interface IAbility extends IProcessByServer {
+public interface IAbility {//extends IProcessByServer {
 
 	/**
-	 * Called every interval.
-	 */
-	//void process(float interpol);
-	
-	/**
-	 * Called when activated.  Returns whether it was successfully activated.
+	 * Called when activated/used.  Returns whether it was successfully used.
 	 */
 	boolean activate(float interpol);
+	
+	void process(float tpf_secs);
 	
 	String getHudText();
 	

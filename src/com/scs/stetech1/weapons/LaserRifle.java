@@ -9,8 +9,8 @@ import com.scs.stetech1.shared.IEntityController;
  */
 public class LaserRifle extends AbstractMagazineGun implements IAbility {
 
-	public LaserRifle(IEntityController game, ICanShoot shooter) {
-		super(game, "Laser Rifle", shooter, .2f, 2, 10);
+	public LaserRifle(IEntityController game, int num, ICanShoot shooter) {
+		super(game, num, "Laser Rifle", shooter, .2f, 2, 10);
 	}
 
 

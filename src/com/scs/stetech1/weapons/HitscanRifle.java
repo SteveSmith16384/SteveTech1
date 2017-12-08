@@ -15,8 +15,8 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 	
 	public RayCollisionData hitThisMoment = null; // Only used server-side
 
-	public HitscanRifle(IEntityController game, ICanShoot _shooter) {
-		super(game, "Hitscan Rifle", _shooter, .2f, 1f, 10);
+	public HitscanRifle(IEntityController game, int num, ICanShoot _shooter) {
+		super(game, num, "Hitscan Rifle", _shooter, .2f, 1f, 10);
 	}
 	
 

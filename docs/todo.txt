@@ -2,25 +2,24 @@ STETECH1
 
 
 URGENT
-Test: Set gravity offset to 0 when colliding?
-Grenades freezing until they get movement data
-Not removed enemy avatar when player left
-Create server-controlled moving item to check interpol
-	Player jumping very high
+Show debugging sphere's on client side to show where shooting occurred
+Check game status changes when player joins
+	Debugging spheres not appearing in the right place
 	Check collisions against root!
-Grenades
-Hitscan weapons
+	Hitscan weapons
 Search for todos
 	Check all entities if y < 0 to prevent falling forever
 
 
 TODO
+Grenades
+Simple physics - pushing
+Grenades freezing until they get movement data
 Laser bullets
 Check camera pos
 Origin of entities should be floor 
 Only rotate entities left/right
 Show game state on hud
-Log more server stuff
 IsOnGround not always correct
 Create sep projects for test game, killer crates
 	Game settings: num players per side, max sides
@@ -29,11 +28,9 @@ Separate into AbstractEntityServer, AbstractGameServer, TestGameServer
 Use latest JME libs
 Create game lobby
 Walking up steps
-	ConcurrentChange error in entities when firing grenade
 Physics test - do explosion
 Confirm source timings
 Draw map
-Show error if client unable to connect
 Am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
 Use test annotations
