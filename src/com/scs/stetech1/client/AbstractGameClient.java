@@ -67,11 +67,14 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public static final int STATUS_JOINED_GAME = 4;
 	public static final int STATUS_GAME_STARTED = 5;
 
+	private HashMap<Integer, IEntity> entities = new HashMap<>(100);
+	private LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
+	private LinkedList<Integer> toRemove = new LinkedList<Integer>(); 
+
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	public static BitmapFont guiFont_small;
 	public static AppSettings settings;
 	private IMessageClient networkClient;
-	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	public HUD hud;
 	public IInputDevice input;
 
@@ -249,6 +252,18 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 					// Loop through each entity and process them				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
+
+					// Add and remove entities
+					for(IEntity e : this.toAdd) {
+						this.actuallyAddEntity(e);
+					}
+					this.toAdd.clear();
+
+					for(Integer i : this.toRemove) {
+						this.actuallyRemoveEntity(i);
+					}
+					this.toRemove.clear();
+
 					for (IEntity e : this.entities.values()) {
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
@@ -368,7 +383,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		}
 
 		if (Settings.DEBUG_MSGS) {
-			if (status < this.STATUS_RCVD_WELCOME) {
+			if (status < STATUS_RCVD_WELCOME) {
 				Settings.p("Still not received Welcome message");
 			}
 		}
@@ -376,14 +391,26 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	}
 
 
+	@Override
 	public void addEntity(IEntity e) {
+		this.toAdd.add(e);
+	}
+
+
+	private void actuallyAddEntity(IEntity e) {
 		synchronized (entities) {
 			this.entities.put(e.getID(), e);
 		}
 	}
 
 
+	@Override
 	public void removeEntity(int id) {
+		this.toRemove.add(id);
+	}
+
+
+	private void actuallyRemoveEntity(int id) {
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
 			if (e != null) {
