@@ -89,11 +89,4 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
 	}
 
-
-	@Override
-	public boolean collidedWith(ICollideable other) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }

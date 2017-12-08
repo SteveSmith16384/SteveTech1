@@ -66,14 +66,15 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	public static GameProperties properties;
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
-	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
-	private RealtimeInterval sendEntityUpdatesInt = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
+	private RealtimeInterval sendPingInterval = new RealtimeInterval(Settings.PING_INTERVAL_MS);
+	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	protected LogWindow logWindow;
 	protected IConsole console;
-	private SimplePhysicsController<PhysicalEntity> physicsController;
+	private SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected GameData gameData;
-
+	private CollisionLogic collisionLogic;
+	
 	public AbstractGameServer(int _maxPlayersPerSide, int _maxSides) throws IOException {
 		super();
 
@@ -147,7 +148,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				}
 			}
 
-			if (sendPingInt.hitInterval()) {
+			if (sendPingInterval.hitInterval()) {
 				this.networkServer.sendMessageToAll(new PingMessage(true));
 			}
 
@@ -170,7 +171,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
 							Vector3f from = avatar.getBulletStartPos();
 							Ray ray = new Ray(from, avatar.getShootDir());
-							RayCollisionData rcd = avatar.checkForCollisions(ray, 99); // todo - get range
+							RayCollisionData rcd = avatar.checkForCollisions(ray, chip.getRange());
 							chip.setTarget(rcd); // Damage etc.. is calculated later
 						}
 					}
@@ -178,7 +179,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				}
 			}
 
-			boolean sendUpdates = sendEntityUpdatesInt.hitInterval();
+			boolean sendUpdates = sendEntityUpdatesInterval.hitInterval();
 			EntityUpdateMessage eum = null;
 			if (sendUpdates) {
 				eum = new EntityUpdateMessage();
@@ -538,7 +539,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
 			Settings.p("Collision between " + a.userObject + " and " + b.userObject);
 		}
-		CollisionLogic.Collision(a.userObject,  b.userObject);
+		collisionLogic.collision(a.userObject,  b.userObject);
 	}
 
 

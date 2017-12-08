@@ -8,7 +8,7 @@ import com.scs.stetech1.server.RayCollisionData;
  */
 public interface ICalcHitInPast {
 
-	//float getRange();
+	float getRange();
 	
 	void setTarget(RayCollisionData pe);
 	

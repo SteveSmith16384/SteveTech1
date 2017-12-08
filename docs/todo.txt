@@ -2,10 +2,9 @@ STETECH1
 
 
 URGENT
-ConcurrentMod in client
+Less damage from hitscan over distance
+	ConcurrentMod in client
 Collisions needs rewriting
-	Show debugging sphere's on client side to show where shooting occurred
-	Debugging spheres not appearing in the right place
 Search for todos
 Check game status changes when player joins
 

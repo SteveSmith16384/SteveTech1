@@ -10,7 +10,7 @@ import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.components.IBullet;
+import com.scs.stetech1.components.ICausesHarmOnContact;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.AbstractGameServer;

@@ -1,7 +1,7 @@
 package com.scs.stetech1.entities;
 
 import com.jme3.math.Vector3f;
-import com.scs.stetech1.components.IBullet;
+import com.scs.stetech1.components.ICausesHarmOnContact;
 import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IDamagable;
 import com.scs.stetech1.components.IEntity;
@@ -67,7 +67,7 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 	}
 
 
-	public void hitByBullet(IBullet bullet) {
+	public void hitByBullet_(ICausesHarmOnContact bullet) {
 		if (invulnerableTime <= 0) {
 			float dam = bullet.getDamageCaused();
 			if (dam > 0) {
@@ -102,7 +102,7 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 		super.setWorldTranslation(pos);
 	}
 
-
+/*
 	@Override
 	public boolean collidedWith(ICollideable other) {
 		if (other instanceof IBullet) {
@@ -118,7 +118,7 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 		}
 		return true;
 	}
-
+*/
 
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {

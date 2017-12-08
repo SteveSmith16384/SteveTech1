@@ -4,11 +4,11 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
-import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.components.IBullet;
 import com.scs.stetech1.components.ICanShoot;
+import com.scs.stetech1.components.ICausesHarmOnContact;
 import com.scs.stetech1.components.ICollideable;
+import com.scs.stetech1.components.IRemoveOnContact;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.models.BeamLaserModel;
 import com.scs.stetech1.server.AbstractGameServer;
@@ -16,7 +16,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class LaserBullet extends PhysicalEntity implements IBullet, ICollideable {
+public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact, ICollideable, IRemoveOnContact {
 
 	public ICanShoot shooter;
 	private float timeLeft = 3;
@@ -60,35 +60,33 @@ public class LaserBullet extends PhysicalEntity implements IBullet, ICollideable
 		}
 	}
 
-
+/*
 	@Override
 	public ICanShoot getShooter() {
 		return shooter;
 	}
 
-
+/*
 	@Override
 	public boolean collidedWith(ICollideable other) {
 		if (other != this.shooter) {
 			//Settings.p("Laser collided with " + other);
 
-			/*if (Settings.SHOW_FLASH_EXPLOSIONS) {
-				Explosion expl = new Explosion(module, game.getRootNode(), game.getAssetManager(), game.getRenderManager(), .05f);
-				expl.setLocalTranslation(this.getLocation());
-				module.addEntity(expl);
-			}
-
-			CubeExplosionShard.Factory(game, module, this.getLocation(), 3);
-			 */
 			this.remove(); // Don't bounce
 		}
 		return false;
 	}
 
-
+*/
 	@Override
 	public float getDamageCaused() {
 		return 10;
+	}
+
+
+	@Override
+	public int getSide() {
+		return shooter.getSide();
 	}
 
 

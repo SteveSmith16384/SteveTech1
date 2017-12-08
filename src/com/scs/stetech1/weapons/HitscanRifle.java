@@ -12,7 +12,7 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast {
 
-	private static final float RANGE = 30f;
+	private static final float RANGE = 99f;
 
 	public RayCollisionData hitThisMoment = null; // Only used server-side
 
@@ -26,7 +26,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 		if (game.isServer()) {
 			// We have already calculated the hit as part of ICalcHitInPast
 			if (hitThisMoment != null) {
-				Settings.p(hitThisMoment + " shot!");
+				Settings.p(hitThisMoment + " has been shot!");
 				Vector3f pos = this.hitThisMoment.point;
 				new DebuggingSphere(game, AbstractGameServer.getNextEntityID(), pos.x, pos.y, pos.z, true);
 				// todo
@@ -37,7 +37,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 			// todo - nozzle flash or something
 			Vector3f from = shooter.getBulletStartPos();
 			Ray ray = new Ray(from, shooter.getShootDir());
-			RayCollisionData rcd = shooter.checkForCollisions(ray, 99); // todo - get range
+			RayCollisionData rcd = shooter.checkForCollisions(ray, RANGE);
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
 				new DebuggingSphere(game, AbstractGameServer.getNextEntityID(), pos.x, pos.y, pos.z, false);
@@ -53,11 +53,10 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 
 	}
 
-	/*
+
 	@Override
 	public float getRange() {
 		return RANGE;
 	}
 
-	 */
 }

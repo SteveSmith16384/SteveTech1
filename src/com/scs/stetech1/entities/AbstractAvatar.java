@@ -221,4 +221,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 */
 
+	@Override
+	public int getSide() {
+		return side;
+	}
+
+
 }
