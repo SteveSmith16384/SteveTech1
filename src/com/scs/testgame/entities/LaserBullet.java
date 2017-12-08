@@ -16,7 +16,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class LaserBullet extends PhysicalEntity implements IBullet {
+public class LaserBullet extends PhysicalEntity implements IBullet, ICollideable {
 
 	public ICanShoot shooter;
 	private float timeLeft = 3;

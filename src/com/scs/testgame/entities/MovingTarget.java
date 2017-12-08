@@ -4,15 +4,12 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
@@ -22,7 +19,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, ICollideable {// Need ICollideable so lasers don't bounce off it
+public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, ICollideable {
 
 	private static final float DURATION = 3;
 	private static final float SPEED = 7;
@@ -92,10 +89,11 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
 	}
 
-	/*
+
 	@Override
-	public void collidedWith(ICollideable other) {
-		// Do nothing
+	public boolean collidedWith(ICollideable other) {
+		// TODO Auto-generated method stub
+		return false;
 	}
-	 */
+
 }

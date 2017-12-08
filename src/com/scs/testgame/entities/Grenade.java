@@ -18,7 +18,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Grenade extends PhysicalEntity implements IBullet {
+public class Grenade extends PhysicalEntity { //implements IBullet {
 
 	public ICanShoot shooter;
 	private float timeLeft = 4f;
@@ -88,23 +88,16 @@ public class Grenade extends PhysicalEntity implements IBullet {
 		}
 	}
 
-
+/*
 	@Override
 	public ICanShoot getShooter() {
 		return shooter;
 	}
 
-	/*
-	@Override
-	public void collidedWith(ICollideable other) {
-
-	}
-	 */
-
 	@Override
 	public float getDamageCaused() {
 		return 0;
 	}
-
+*/
 
 }

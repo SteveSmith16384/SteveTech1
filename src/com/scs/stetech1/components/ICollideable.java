@@ -3,10 +3,10 @@ package com.scs.stetech1.components;
 import com.jme3.collision.Collidable;
 
 /*
- * Implement this if you want to run special code when entity collides.  It also marks an entity as not passing through each other.
+ * Implement this if you want to run special code when entity collides.
  *
  */
-public interface ICollideable extends Collidable {
+public interface ICollideable {//extends Collidable {
 	
 	/*
 	 * Code to run if the entity collides with another.

@@ -162,13 +162,16 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					}
 				}
 				if (areAnyPlayersShooting) {
-					this.rewindAllAvatars(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY); // todo - is time correct?
+					this.rewindAllAvatars(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY);
 					this.rootNode.updateGeometricState();
 					for (ClientData c : this.clients.values()) {
 						ServerPlayersAvatar avatar = c.avatar;
 						if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 							ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
-							chip.setTarget(calcHitEntity(avatar, chip.getRange())); // Damage etc.. is calculated later
+							Vector3f from = avatar.getBulletStartPos();
+							Ray ray = new Ray(from, avatar.getShootDir());
+							RayCollisionData rcd = avatar.checkForCollisions(ray, 99); // todo - get range
+							chip.setTarget(rcd); // Damage etc.. is calculated later
 						}
 					}
 					this.restoreAllAvatarPositions();
@@ -505,7 +508,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		return myList;
 	}
 
-
+/*
 	public RayCollisionData checkForCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		int c = this.getRootNode().collideWith(r, res);
@@ -528,7 +531,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 		return null;
 	}
-
+*/
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
@@ -575,14 +578,14 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		}
 	}
 
-
-	public RayCollisionData calcHitEntity(ICanShoot shooter, float range) {
+/*
+	public RayCollisionData calcHitEntity_(ICanShoot shooter, float range) {
 		Vector3f from = shooter.getBulletStartPos();//getWorldTranslation().add(shooter.getShootDir().mult(1f)); // Prevent us shooting ourselves
 		//AbstractGameServer server = (AbstractGameServer)game;
 		Ray ray = new Ray(from, shooter.getShootDir());
 		return checkForCollisions(ray);
 	}
-
+*/
 
 	public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
 }

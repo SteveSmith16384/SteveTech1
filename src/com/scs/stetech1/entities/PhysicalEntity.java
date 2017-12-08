@@ -1,18 +1,19 @@
 package com.scs.stetech1.entities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.jme3.collision.Collidable;
+import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
-import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.server.AbstractGameServer;
@@ -22,7 +23,7 @@ import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ICollideable {
+public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer {//, Collidable {
 
 	protected Node mainNode;
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
@@ -198,12 +199,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	}
 
-
+/*
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
 		return mainNode.collideWith(other, results);
 	}
-
+/*
 
 	@Override
 	public boolean collidedWith(ICollideable other) {
@@ -211,10 +212,42 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return false;
 
 	}
-
+*/
 
 	public void fallenOffEdge() {
 		// Override for avatars
 		this.remove();
 	}
+
+
+	public RayCollisionData checkForCollisions(Ray r, float range) {
+		CollisionResults res = new CollisionResults();
+		int c = game.getRootNode().collideWith(r, res);
+		if (c == 0) {
+			Settings.p("No Ray collisions");
+			return null;
+		}
+		Iterator<CollisionResult> it = res.iterator();
+		while (it.hasNext()) {
+			CollisionResult col = it.next();
+			if (col.getDistance() > range) {
+				break;
+			}
+			Spatial s = col.getGeometry();
+			while (s == null || s.getUserData(Settings.ENTITY) == null) {
+				s = s.getParent();
+			}
+			if (s != null && s.getUserData(Settings.ENTITY) != null) {
+				Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
+				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Settings.ENTITY);
+				if (pe != this) {
+					return new RayCollisionData(pe, col.getContactPoint(), col.getDistance());
+				}
+			}
+		}
+
+		return null;
+	}
+
+
 }

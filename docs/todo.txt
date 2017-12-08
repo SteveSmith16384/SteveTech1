@@ -2,13 +2,12 @@ STETECH1
 
 
 URGENT
-Show debugging sphere's on client side to show where shooting occurred
-Check game status changes when player joins
+ConcurrentMod in client
+Collisions needs rewriting
+	Show debugging sphere's on client side to show where shooting occurred
 	Debugging spheres not appearing in the right place
-	Check collisions against root!
-	Hitscan weapons
 Search for todos
-	Check all entities if y < 0 to prevent falling forever
+Check game status changes when player joins
 
 
 TODO

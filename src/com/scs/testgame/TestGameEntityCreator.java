@@ -95,7 +95,7 @@ public class TestGameEntityCreator {
 
 		case EntityTypes.DEBUGGING_SPHERE:
 		{
-			DebuggingSphere laser = new DebuggingSphere(game, id, msg.pos.x, msg.pos.y, msg.pos.z);
+			DebuggingSphere laser = new DebuggingSphere(game, id, msg.pos.x, msg.pos.y, msg.pos.z, true);
 			return laser;
 		}
 

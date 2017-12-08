@@ -23,7 +23,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Floor extends PhysicalEntity implements ICollideable, IProcessByClient {
+public class Floor extends PhysicalEntity implements IProcessByClient {
 
 	private Box box1;
 	private Vector3f texScroll, thisScroll;

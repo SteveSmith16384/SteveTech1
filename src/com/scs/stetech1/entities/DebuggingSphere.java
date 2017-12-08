@@ -21,7 +21,7 @@ public class DebuggingSphere extends PhysicalEntity {
 	
 	private float timeLeft = DURATION;
 
-	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z) {
+	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z, boolean server) {
 		super(_game, id, EntityTypes.DEBUGGING_SPHERE, "DebuggingSphere");
 
 		/*if (_game.isServer()) {
@@ -33,7 +33,12 @@ public class DebuggingSphere extends PhysicalEntity {
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("cannon ball", sphere);
 
-		TextureKey key3 = new TextureKey( "Textures/sun.jpg");
+		TextureKey key3 = null;
+		if (server) {
+			key3 = new TextureKey( "Textures/sun.jpg");
+		} else {
+			key3 = new TextureKey( "Textures/greensun.jpg");
+		}
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
 		Material floor_mat = null;
 		if (Settings.LIGHTING) {

@@ -9,6 +9,7 @@ import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
+import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.AbstractGameServer;
@@ -206,10 +207,18 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 	
 	@Override
 	public Vector3f getBulletStartPos() {
-		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0).addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));
+		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0);//.addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));
 	}
 
 
+/*
+	public RayCollisionData calcHitEntity(float range) {
+		Vector3f from = this.getBulletStartPos();
+		//AbstractGameServer server = (AbstractGameServer)game;
+		Ray ray = new Ray(from, this.getShootDir());
+		return checkForCollisions(ray);
+	}
 
+*/
 
 }
