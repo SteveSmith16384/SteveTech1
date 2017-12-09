@@ -10,14 +10,19 @@ import com.scs.stetech1.server.ClientData;
  */
 public class GameData {
 
-	public enum GameStatus {WaitingForPlayers, Started, Finished } // todo - create statusChanged listener
-
+	//public enum GameStatus {WaitingForPlayers, Started, Finished }
+	public static final int ST_WAITING_FOR_PLAYERS = 0;
+	public static final int ST_DEPLOYING = 1;
+	public static final int ST_STARTED = 2;
+	public static final int ST_FINISHED = 3;
+	
+	
 	private AbstractGameServer server;
 	private int maxPlayersPerSide;
 	private int maxSides;
-	private GameStatus status;
+	private int status;
 	public String name;
-	private long gameStartTime;
+	public long statusStartTime;
 	public ArrayList<ClientData> players = new ArrayList<ClientData>();
 	
 	public GameData(AbstractGameServer _server, int _maxPlayersPerSide, int _maxSides) {
@@ -39,16 +44,17 @@ public class GameData {
 	}
 
 
-	public GameStatus getStatus() {
+	public int getStatus() {
 		return status;
 	}
 	
 	
-	private void setStatus(GameStatus newStatus) {
+	public void setGameStatus(int newStatus) {
 		if (status != newStatus) {
-			if (status == GameStatus.WaitingForPlayers && newStatus == GameStatus.Started) {
-				gameStartTime = System.currentTimeMillis();
-			}
+			status = newStatus;
+			//if (status == ST_WAITING_FOR_PLAYERS && newStatus == GameStatus.Started) {
+				statusStartTime = System.currentTimeMillis();
+			//}
 			server.gameStatusChanged(newStatus);
 		}
 	}

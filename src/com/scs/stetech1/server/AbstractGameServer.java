@@ -27,6 +27,7 @@ import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
+import com.scs.stetech1.netmessages.GameStatusMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.GeneralCommandMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
@@ -72,7 +73,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected GameData gameData;
 	public CollisionLogic collisionLogic;
-	
+
 	public AbstractGameServer(int _maxPlayersPerSide, int _maxSides) throws IOException {
 		super();
 
@@ -161,7 +162,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					}
 				}
 				if (areAnyPlayersShooting) {
-					this.rewindAllAvatars(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY);
+					this.rewindEntities(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY);
 					this.rootNode.updateGeometricState();
 					for (ClientData c : this.clients.values()) {
 						ServerPlayersAvatar avatar = c.avatar;
@@ -173,7 +174,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							chip.setTarget(rcd); // Damage etc.. is calculated later
 						}
 					}
-					this.restoreAllAvatarPositions();
+					this.restoreEntityPositions();
 				}
 			}
 
@@ -242,7 +243,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 	protected void playerJoined(ClientData client) {
-		// todo - send player list to all clients
+		GameStatusMessage msg = new GameStatusMessage();
+		this.networkServer.sendMessageToAll(msg);
 		gameData.checkGameStatus();
 	}
 
@@ -363,7 +365,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			this.removeEntity(client.avatar.id);
 			gameData.removePlayer(client);
 		}
-		// todo - send player list to all clients
+		GameStatusMessage msg = new GameStatusMessage();
+		this.networkServer.sendMessageToAll(msg);
 		gameData.checkGameStatus();
 	}
 
@@ -440,7 +443,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		}
 	}
 
-	private void rewindAllAvatars(long toTime) { // todo  - rename
+	private void rewindEntities(long toTime) {
 		synchronized (this.clients) {
 			for (IEntity e : entities.values()) {
 				if (e instanceof IRewindable) {
@@ -452,10 +455,13 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	private void restoreAllAvatarPositions() {
+	private void restoreEntityPositions() {
 		synchronized (this.clients) {
-			for (ClientData c : this.clients.values()) {
-				c.avatar.restorePosition();
+			for (IEntity e : entities.values()) {
+				if (e instanceof IRewindable) {
+					IRewindable r = (IRewindable)e;
+					r.restorePosition();
+				}
 			}
 		}
 	}
@@ -480,10 +486,25 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	private void restartGame() {
-		// todo removeAllEntities();
-		// todo - remove all avatars from players
+		// remove All Entities
+		synchronized (this.clients) {
+			for (ClientData c : this.clients.values()) {
+				ServerPlayersAvatar avatar = c.avatar;
+				if (avatar != null) {
+					avatar.remove();
+					c.avatar = null;
+				}
+			}
+		}
+		
+		for (IEntity e : this.entities.values()) {
+			e.remove();
+		}
+
 		this.getRootNode().detachAllChildren();
 		this.getPhysicsController().removeAllEntities();
+		
+		gameData.setGameStatus(GameData.ST_WAITING_FOR_PLAYERS);
 	}
 
 
@@ -518,7 +539,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		return myList;
 	}
 
-/*
+	/*
 	public RayCollisionData checkForCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		int c = this.getRootNode().collideWith(r, res);
@@ -541,7 +562,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 		return null;
 	}
-*/
+	 */
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
@@ -574,8 +595,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	public void gameStatusChanged(GameData.GameStatus newStatus) {
-		switch (newStatus) {
+	public void gameStatusChanged(int newStatus) {
+		/*switch (newStatus) {
 		case Finished:
 			break;
 		case Started:
@@ -584,18 +605,18 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			break;
 		default:
 			break;
-
-		}
+		}*/
+		this.networkServer.sendMessageToAll(new GameStatusMessage(this.gameData));
 	}
 
-/*
+	/*
 	public RayCollisionData calcHitEntity_(ICanShoot shooter, float range) {
 		Vector3f from = shooter.getBulletStartPos();//getWorldTranslation().add(shooter.getShootDir().mult(1f)); // Prevent us shooting ourselves
 		//AbstractGameServer server = (AbstractGameServer)game;
 		Ray ray = new Ray(from, shooter.getShootDir());
 		return checkForCollisions(ray);
 	}
-*/
+	 */
 
 	public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
 }

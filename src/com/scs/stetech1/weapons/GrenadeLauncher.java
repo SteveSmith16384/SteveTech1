@@ -24,7 +24,7 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility {
 		super.process(tpf_secs);
 		
 		if (this.ammoCache.size() <= 2) {
-			
+			// todo
 		}
 	}
 	

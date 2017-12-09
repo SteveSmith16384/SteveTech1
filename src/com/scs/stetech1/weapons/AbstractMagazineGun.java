@@ -55,7 +55,6 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 				this.bulletsLeftInMag = this.magazineSize;
 				this.timeUntilShoot_secs += this.reloadInterval_secs;
 				AbstractGameServer server = (AbstractGameServer)game;
-				// todo - send msg intermittently as well
 				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, (AbstractAvatar)this.shooter, num));
 			}
 		}

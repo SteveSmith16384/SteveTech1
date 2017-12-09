@@ -27,7 +27,7 @@ public abstract class AbstractAbility implements IAbility {
 			timeUntilNextSend -= tpf_secs;
 			if (timeUntilNextSend <= 0) {
 				AbstractGameServer server = (AbstractGameServer)game;
-				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, this.owner, num));
+				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(false, this.owner, num));
 				timeUntilNextSend = SEND_INT;
 			}
 		}

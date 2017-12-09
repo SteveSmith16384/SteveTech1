@@ -8,4 +8,6 @@ public interface IEntity {
 	
 	int getType();
 	
+	void remove();
+	
 }
