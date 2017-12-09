@@ -2,14 +2,15 @@ STETECH1
 
 
 URGENT
-Less damage from hitscan over distance
-	ConcurrentMod in client
-Collisions needs rewriting
+Log position of moving target on client and server at the point it is hit
+	Rewind moving enemy
+	Collisions needs rewriting
 Search for todos
 Check game status changes when player joins
 
 
 TODO
+Less damage from hitscan over distance
 Grenades
 Simple physics - pushing
 Grenades freezing until they get movement data

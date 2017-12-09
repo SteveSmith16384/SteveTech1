@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,15 +13,14 @@ import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 import com.jme3.system.JmeContext.Type;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICalcHitInPast;
-import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.components.IRewindable;
 import com.scs.stetech1.data.GameData;
 import com.scs.stetech1.data.SimplePlayerData;
 import com.scs.stetech1.entities.AbstractAvatar;
@@ -73,7 +71,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	protected IConsole console;
 	private SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected GameData gameData;
-	private CollisionLogic collisionLogic;
+	public CollisionLogic collisionLogic;
 	
 	public AbstractGameServer(int _maxPlayersPerSide, int _maxSides) throws IOException {
 		super();
@@ -434,10 +432,21 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	private void rewindAllAvatars(long toTime) {
+	private void rewindAllAvatars_OLD(long toTime) {
 		synchronized (this.clients) {
 			for (ClientData c : this.clients.values()) {
 				c.avatar.rewindPositionTo(toTime);
+			}
+		}
+	}
+
+	private void rewindAllAvatars(long toTime) { // todo  - rename
+		synchronized (this.clients) {
+			for (IEntity e : entities.values()) {
+				if (e instanceof IRewindable) {
+					IRewindable r = (IRewindable)e;
+					r.rewindPositionTo(toTime);
+				}
 			}
 		}
 	}

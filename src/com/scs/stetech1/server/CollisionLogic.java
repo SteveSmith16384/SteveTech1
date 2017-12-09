@@ -11,7 +11,7 @@ public class CollisionLogic {
 	}
 
 	
-	public void collision(PhysicalEntity a, PhysicalEntity b) {
+	public void collision(Object a, Object b) {
 		if (a instanceof ICausesHarmOnContact && b instanceof IDamagable) {
 			ICausesHarmOnContact choc = (ICausesHarmOnContact)a;
 			IDamagable id = (IDamagable)b;

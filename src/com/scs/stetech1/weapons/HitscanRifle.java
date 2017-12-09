@@ -4,13 +4,14 @@ import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICanShoot;
+import com.scs.stetech1.components.ICausesHarmOnContact;
 import com.scs.stetech1.entities.DebuggingSphere;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.RayCollisionData;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.IEntityController;
 
-public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast {
+public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
 	private static final float RANGE = 99f;
 
@@ -26,11 +27,11 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 		if (game.isServer()) {
 			// We have already calculated the hit as part of ICalcHitInPast
 			if (hitThisMoment != null) {
-				Settings.p(hitThisMoment + " has been shot!");
+				Settings.p(hitThisMoment.entity + " has been shot!");
 				Vector3f pos = this.hitThisMoment.point;
 				new DebuggingSphere(game, AbstractGameServer.getNextEntityID(), pos.x, pos.y, pos.z, true);
-				// todo
-
+				AbstractGameServer server = (AbstractGameServer)game;
+				server.collisionLogic.collision(hitThisMoment.entity, this);
 				this.hitThisMoment = null; // Clear it ready for next loop
 			}
 		} else {
@@ -57,6 +58,18 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast 
 	@Override
 	public float getRange() {
 		return RANGE;
+	}
+
+
+	@Override
+	public float getDamageCaused() {
+		return 1;
+	}
+
+
+	@Override
+	public int getSide() {
+		return this.shooter.getSide();
 	}
 
 }

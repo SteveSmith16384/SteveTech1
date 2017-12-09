@@ -13,13 +13,14 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICollideable;
+import com.scs.stetech1.components.IRewindable;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, ICollideable {
+public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, ICollideable, IRewindable {
 
 	private static final float DURATION = 3;
 	private static final float SPEED = 7;

@@ -5,17 +5,13 @@ import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.AbstractAbility;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 
-public abstract class AbstractMagazineGun implements IAbility {
-
-	protected IEntityController game;
+public abstract class AbstractMagazineGun extends AbstractAbility implements IAbility {
 
 	protected ICanShoot shooter;
-	protected String name;
-
-	private int num;
 	protected float timeUntilShoot_secs = 0;
 	protected int magazineSize;
 	protected int bulletsLeftInMag;
@@ -23,16 +19,12 @@ public abstract class AbstractMagazineGun implements IAbility {
 
 
 	public AbstractMagazineGun(IEntityController _game, int _num, String _name, ICanShoot _shooter, float shotInt, float reloadInt, int magSize) {
-		super();
+		super(_game, (AbstractAvatar)_shooter, _num, _name);
 
-		game = _game;
-		num = _num; // 0 =main
-		name = _name;
 		shooter = _shooter;
 		this.shotInterval_secs = shotInt;
 		this.reloadInterval_secs = reloadInt;
 		this.magazineSize = magSize;
-
 		this.bulletsLeftInMag = this.magazineSize;
 	}
 
@@ -54,13 +46,16 @@ public abstract class AbstractMagazineGun implements IAbility {
 
 	@Override
 	public void process(float tpf_secs) {
+		super.process(tpf_secs);
+		
 		if (game.isServer()) { // Only server can reload
 			if (this.bulletsLeftInMag <= 0) {
 				// Reload
 				Settings.p("Reloading");
 				this.bulletsLeftInMag = this.magazineSize;
 				this.timeUntilShoot_secs += this.reloadInterval_secs;
-				AbstractGameServer server = (AbstractGameServer)game; 
+				AbstractGameServer server = (AbstractGameServer)game;
+				// todo - send msg intermittently as well
 				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, (AbstractAvatar)this.shooter, num));
 			}
 		}
@@ -82,7 +77,7 @@ public abstract class AbstractMagazineGun implements IAbility {
 	public void encode(AbilityUpdateMessage aum) {
 		aum.bulletsLeftInMag = bulletsLeftInMag;
 		aum.timeUntilShoot = timeUntilShoot_secs;
-		
+
 	}
 
 
