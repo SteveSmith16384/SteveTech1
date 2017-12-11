@@ -22,6 +22,7 @@ import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.components.IRewindable;
 import com.scs.stetech1.data.GameData;
+import com.scs.stetech1.data.GameOptions;
 import com.scs.stetech1.data.SimplePlayerData;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
@@ -74,14 +75,14 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	protected GameData gameData;
 	public CollisionLogic collisionLogic = new CollisionLogic();
 
-	public AbstractGameServer(int _maxPlayersPerSide, int _maxSides) throws IOException {
+	public AbstractGameServer(GameOptions gameOptions) throws IOException {
 		super();
 
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
 
-		gameData = new GameData(this, _maxPlayersPerSide, _maxSides);
+		gameData = new GameData(this, gameOptions);
 		networkServer = new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
@@ -434,14 +435,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		return nextEntityID.getAndAdd(1);
 	}
 
-
-	private void rewindAllAvatars_OLD(long toTime) {
-		synchronized (this.clients) {
-			for (ClientData c : this.clients.values()) {
-				c.avatar.rewindPositionTo(toTime);
-			}
-		}
-	}
 
 	private void rewindEntities(long toTime) {
 		synchronized (this.clients) {

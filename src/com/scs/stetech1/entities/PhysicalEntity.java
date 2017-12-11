@@ -27,7 +27,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	protected Node mainNode;
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 	protected PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
-
+	public boolean collideable = true;
+	
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
 	private Quaternion prevRot = new Quaternion();
 
@@ -262,7 +263,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			}
 			if (s != null && s.getUserData(Settings.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Settings.ENTITY);
-				if (pe != this) {
+				if (pe != this && pe.collideable) {
 					Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
 					return new RayCollisionData(pe, col.getContactPoint(), col.getDistance());
 				}

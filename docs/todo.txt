@@ -1,17 +1,18 @@
 STETECH1
 
 
+
+
 URGENT
-MovingEntity turning into a sphere
-Should dummy sphere's always be in the same place
-Log position of moving target on client and server at the point it is hit
-	Rewind moving enemy
-Prevent debugging sphere colliding
+	Game option - one player per side
+	Should dummy sphere's always be in the same place
+	Prevent debugging sphere colliding
 Search for todos
 Check game status changes when player joins
 
 
 TODO
+Log position of moving target on client and server at the point it is hit
 Create preprocess()
 Only adjust players position when moving?
 Make floor a single quad

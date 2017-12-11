@@ -41,7 +41,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			RayCollisionData rcd = shooter.checkForCollisions(ray, RANGE);
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
-				new DebuggingSphere(game, AbstractGameServer.getNextEntityID(), pos.x, pos.y, pos.z, false);
+				new DebuggingSphere(game, -1, pos.x, pos.y, pos.z, false);
 			}
 		}
 

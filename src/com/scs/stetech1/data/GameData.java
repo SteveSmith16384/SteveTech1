@@ -16,21 +16,17 @@ public class GameData {
 	public static final int ST_STARTED = 2;
 	public static final int ST_FINISHED = 3;
 	
-	
+	private GameOptions gameOptions;
 	private AbstractGameServer server;
-	private int maxPlayersPerSide;
-	private int maxSides;
 	private int status;
-	public String name;
 	public long statusStartTime;
-	public ArrayList<ClientData> players = new ArrayList<ClientData>();
+	//public ArrayList<ClientData> players = new ArrayList<ClientData>();
 	
-	public GameData(AbstractGameServer _server, int _maxPlayersPerSide, int _maxSides) {
+	public GameData(AbstractGameServer _server, GameOptions _gameOptions) {
 		super();
 		
 		server = _server;
-		maxPlayersPerSide = _maxPlayersPerSide;
-		maxSides = _maxSides;
+		gameOptions = _gameOptions;
 	}
 
 	
@@ -39,11 +35,6 @@ public class GameData {
 	}
 	
 	
-	public void setName(String n) {			
-		name = n;
-	}
-
-
 	public int getStatus() {
 		return status;
 	}
@@ -61,12 +52,12 @@ public class GameData {
 	
 	
 	public void addPlayer(ClientData clientData) {
-		players.add(clientData);
+		//players.add(clientData);
 	}
 	
 
 	public void removePlayer(ClientData clientData) {
-		players.remove(clientData);
+		//players.remove(clientData);
 	}
 	
 }

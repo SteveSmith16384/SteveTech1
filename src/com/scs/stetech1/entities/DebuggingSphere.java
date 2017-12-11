@@ -29,6 +29,8 @@ public class DebuggingSphere extends PhysicalEntity {
 			creationData.put("id", id);
 		}*/
 		
+		this.collideable = false;
+		
 		Sphere sphere = new Sphere(8, 8, 0.2f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("DebuggingSphere", sphere);
