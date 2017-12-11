@@ -11,5 +11,10 @@ public class GameOptions {
 		maxSides = _maxSides;
 		allPlayersOnDifferentSides = (maxPlayersPerSide == 1);
 	}
+	
+	
+	public boolean areAllPlayersOnDifferentSides() {
+		return this.allPlayersOnDifferentSides;
+	}
 
 }

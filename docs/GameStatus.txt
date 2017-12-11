@@ -1,0 +1,5 @@
+Start Game
+
+Player Joined: Check num players, start game if enough
+
+Player left:  Check num players, pause game if not enough

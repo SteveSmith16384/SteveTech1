@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -74,15 +75,18 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected GameData gameData;
 	public CollisionLogic collisionLogic = new CollisionLogic();
+	private GameOptions gameOptions;
 
-	public AbstractGameServer(GameOptions gameOptions) throws IOException {
+	public AbstractGameServer(GameOptions _gameOptions) throws IOException {
 		super();
+
+		gameOptions = _gameOptions;
 
 		properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
 
-		gameData = new GameData(this, gameOptions);
+		gameData = new GameData(this);
 		networkServer = new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
@@ -112,17 +116,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					ClientData client = message.client;
 
 					if (message instanceof NewPlayerRequestMessage) {
-						NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-						int side = getSide(client);
-						client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, side);
-						networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID()));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
-						client.avatar = createPlayersAvatar(client, side);
-						gameData.addPlayer(client);
-						sendEntityListToClient(client);
-						client.clientStatus = ClientData.ClientStatus.Accepted;
-						this.playerJoined(client);
-						// Send them a ping to get ping time
-						this.networkServer.sendMessageToClient(client, new PingMessage(true));
+						this.playerJoined(client, message);
 
 					} else if (message instanceof UnknownEntityMessage) {
 						UnknownEntityMessage uem = (UnknownEntityMessage) message;
@@ -243,14 +237,65 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		loopTimer.start();
 	}
 
-	protected void playerJoined(ClientData client) {
+	protected void playerJoined(ClientData client, MyAbstractMessage message) {
+		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
+		int side = getSide(client);
+		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, side);
+		networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID()));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
+		client.avatar = createPlayersAvatar(client, side);
+		gameData.addPlayer(client);
+		sendEntityListToClient(client);
+		client.clientStatus = ClientData.ClientStatus.Accepted;
+		// Send them a ping to get ping time
+		this.networkServer.sendMessageToClient(client, new PingMessage(true));
+
 		GameStatusMessage msg = new GameStatusMessage();
 		this.networkServer.sendMessageToAll(msg);
 		gameData.checkGameStatus();
 	}
 
 
-	protected abstract int getSide(ClientData client);
+	private int getSide(ClientData client) {
+		if (this.gameOptions.areAllPlayersOnDifferentSides()) {
+			return client.id;
+		} else {
+			HashMap<Integer, Integer> map = getPlayersPerSide();
+			// Get lowest amount
+			int lowest = 999;
+			for (int i : map.values()) {
+				if (i < lowest) {
+					i = lowest;
+				}
+			}
+			// Get the side
+			Iterator<Integer> it = map.keySet().iterator();
+			while (it.hasNext()) {
+				int i = it.next();
+				int val = map.get(i);
+				if (val <= lowest) {
+					return i;
+				}
+			}
+			throw new RuntimeException("todo");
+		}
+	}
+
+
+	private HashMap<Integer, Integer> getPlayersPerSide() {
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (ClientData client : this.clients.values()) {
+			if (client.avatar != null) {
+				if (!map.containsKey(client.avatar.side)) {
+					map.put(client.avatar.side, 0);
+				}
+				int val = map.get(client.avatar.side);
+				val++;
+				map.put(client.avatar.side, val);
+			}
+		}
+		return map;
+	}
+
 
 
 	@Override
@@ -563,7 +608,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			Settings.p("Collision between " + a.userObject + " and " + b.userObject);
 		}
 		//if (a != null && b != null) {
-			collisionLogic.collision(a.userObject,  b.userObject);
+		collisionLogic.collision(a.userObject,  b.userObject);
 		/*} else {
 			Settings.p("null object in collision");
 		}*/

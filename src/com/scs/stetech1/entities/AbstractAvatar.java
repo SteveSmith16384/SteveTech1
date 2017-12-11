@@ -41,7 +41,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 	private int numShots = 0;
 	private int numShotsHit = 0;
 	public IAbility abilityGun, abilityOther; // todo - have list of abilities
-	public int side;
+	public int side = -1;
 
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side) {

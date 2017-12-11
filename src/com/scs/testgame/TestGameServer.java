@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
+import com.scs.stetech1.data.GameOptions;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.ServerPlayersAvatar;
 import com.scs.stetech1.server.AbstractGameServer;
@@ -28,7 +29,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	public TestGameServer() throws IOException {
-		super(999, 999);
+		super(new GameOptions(1, 999));
 	}
 
 
@@ -53,11 +54,11 @@ public class TestGameServer extends AbstractGameServer {
 		return new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);	
 	}
 
-
+/*
 	@Override
 	protected int getSide(ClientData client) {
 		return 0; // All the same side
 	}
-
+*/
 
 }
