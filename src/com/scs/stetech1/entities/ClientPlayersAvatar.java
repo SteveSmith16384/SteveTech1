@@ -3,6 +3,7 @@ package com.scs.stetech1.entities;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
+import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.client.ClientAvatarPositionCalc;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
@@ -86,6 +87,8 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 	// Avatars have their own special position calculator
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 		if (Settings.SYNC_CLIENT_POS) {
 			Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 			if (offset != null) {

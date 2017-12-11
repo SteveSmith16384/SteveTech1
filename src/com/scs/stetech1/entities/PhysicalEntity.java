@@ -3,10 +3,8 @@ package com.scs.stetech1.entities;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
-import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
@@ -16,6 +14,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IPhysicalEntity;
 import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.components.IRewindable;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.RayCollisionData;
 import com.scs.stetech1.server.Settings;
@@ -48,13 +47,36 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf) {
-		this.simpleRigidBody.process(tpf);
+	public void process(AbstractGameServer server, float tpf_secs) {
+		if (simpleRigidBody != null) {
+			simpleRigidBody.process(tpf_secs);
+		}
+
+		if (getWorldTranslation().y < -1) {
+			// Dropped away?
+			server.console.appendText(getName() + " has fallen off the edge");
+			fallenOffEdge();
+		}
+
+		if (this instanceof IRewindable) {
+			addPositionData();
+		}
 	}
 
 
-	public void addPositionData(EntityPositionData newData) {
-		this.serverPositionData.addPositionData(newData);
+	private void addPositionData() {
+		// Store the position for use when rewinding.
+		EntityPositionData epd = new EntityPositionData();
+		epd.serverTimestamp = System.currentTimeMillis();
+		epd.rotation = this.getWorldRotation();
+		epd.position = this.getWorldTranslation();
+
+		this.serverPositionData.addPositionData(epd);
+	}
+
+
+	public void addPositionData(EntityPositionData epd) {
+		this.serverPositionData.addPositionData(epd);
 	}
 
 
@@ -109,13 +131,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-/*	public RayCollisionData calcHitEntity(Vector3f shootDir, float range) {
+	/*	public RayCollisionData calcHitEntity(Vector3f shootDir, float range) {
 		Vector3f from = this.getWorldTranslation().add(shootDir.mult(1f)); // Prevent us shooting ourselves
 		AbstractGameServer server = (AbstractGameServer)game;
 		Ray ray = new Ray(from, shootDir);
 		return server.checkForCollisions(ray);
 	}
-*/
+	 */
 
 	public Vector3f getWorldTranslation() {
 		//return this.main_node.getWorldTranslation();  // 000?
@@ -181,8 +203,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			this.setWorldTranslation(shooterEPD.position);
 			this.setWorldRotation(shooterEPD.rotation);
 			return;
+		} else {
+			Settings.p("Unable to rewind position: no data");
 		}
-		throw new RuntimeException("Unable to rewind position: no data");
 	}
 
 
@@ -199,7 +222,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	}
 
-/*
+	/*
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
 		return mainNode.collideWith(other, results);
@@ -212,7 +235,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return false;
 
 	}
-*/
+	 */
 
 	public void fallenOffEdge() {
 		// Override for avatars

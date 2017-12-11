@@ -48,16 +48,9 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 			}
 		}*/
 
-		//this.resetWalkDir();
-
 		super.serverAndClientProcess(server, null, tpf);
 
-		// Store the position for use when rewinding.
-		EntityPositionData epd = new EntityPositionData();
-		epd.serverTimestamp = System.currentTimeMillis();
-		epd.rotation = this.getWorldRotation();
-		epd.position = this.getWorldTranslation();
-		addPositionData(epd);
+		//addPositionData();
 
 	}
 

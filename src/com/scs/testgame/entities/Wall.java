@@ -75,7 +75,7 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 
 	}
 
-
+/*
 	@Override
 	public void process(AbstractGameServer server, float tpf) {
 		//Settings.p("Pos: " + this.getLocation());

@@ -69,10 +69,10 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	protected LogWindow logWindow;
-	protected IConsole console;
+	public IConsole console;
 	private SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected GameData gameData;
-	public CollisionLogic collisionLogic;
+	public CollisionLogic collisionLogic = new CollisionLogic();
 
 	public AbstractGameServer(int _maxPlayersPerSide, int _maxSides) throws IOException {
 		super();
@@ -205,19 +205,19 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity physicalEntity = (PhysicalEntity)e;
-						if (physicalEntity.simpleRigidBody != null) {
+						/*if (physicalEntity.simpleRigidBody != null) {
 							physicalEntity.simpleRigidBody.process(tpf_secs);
-						}
+						}*/
 						strDebug.append(physicalEntity.name + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 						/*if (sc.type == EntityTypes.AVATAR) {
 							AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
 							strDebug.append("WalkDir: " + av.playerControl.getWalkDirection() + "   Velocity: " + av.playerControl.getVelocity().length() + "\n");
 						}*/
-						if (physicalEntity.getWorldTranslation().y < -1) {
+						/*if (physicalEntity.getWorldTranslation().y < -1) {
 							// Dropped away?
 							this.console.appendText(e.getName() + " has fallen off the edge");
 							physicalEntity.fallenOffEdge();
-						}
+						}*/
 						if (sendUpdates) {
 							if (physicalEntity.hasMoved()) { // Don't send if not moved (unless Avatar)
 								eum.addEntityData(physicalEntity, false);
@@ -496,14 +496,14 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				}
 			}
 		}
-		
+
 		for (IEntity e : this.entities.values()) {
 			e.remove();
 		}
 
 		this.getRootNode().detachAllChildren();
 		this.getPhysicsController().removeAllEntities();
-		
+
 		gameData.setGameStatus(GameData.ST_WAITING_FOR_PLAYERS);
 	}
 
@@ -569,7 +569,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
 			Settings.p("Collision between " + a.userObject + " and " + b.userObject);
 		}
-		collisionLogic.collision(a.userObject,  b.userObject);
+		//if (a != null && b != null) {
+			collisionLogic.collision(a.userObject,  b.userObject);
+		/*} else {
+			Settings.p("null object in collision");
+		}*/
 	}
 
 

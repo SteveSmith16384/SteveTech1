@@ -78,14 +78,15 @@ public class Grenade extends PhysicalEntity { //implements IBullet {
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf) {
+	public void process(AbstractGameServer server, float tpf_secs) {
 		if (game.isServer()) {
-			this.timeLeft -= tpf;
+			this.timeLeft -= tpf_secs;
 			if (this.timeLeft < 0) {
 				//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
 				this.remove();
 			}
 		}
+		super.process(server, tpf_secs);
 	}
 
 /*

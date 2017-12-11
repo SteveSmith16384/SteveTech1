@@ -24,7 +24,6 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByClient;
-import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.hud.HUD;
@@ -32,6 +31,7 @@ import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.input.MouseAndKeyboardCamera;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
+import com.scs.stetech1.netmessages.GameStatusMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stetech1.netmessages.GeneralCommandMessage;
 import com.scs.stetech1.netmessages.MyAbstractMessage;
@@ -265,18 +265,14 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					this.toRemove.clear();
 
 					for (IEntity e : this.entities.values()) {
-						if (e instanceof IProcessByClient) {
-							IProcessByClient pbc = (IProcessByClient)e;
-							pbc.process(this, tpf_secs); // Mainly to process client-side movement of the avatar
-						}
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
 							//if (pe.canMove()) { // Todo - Only bother with things that can move
 							pe.calcPosition(this, serverTimePast); // Must be before we process physics as this calcs additionalForce
 							//}
-							if (pe.simpleRigidBody != null) {
+							/*if (pe.simpleRigidBody != null) {
 								pe.simpleRigidBody.process(tpf_secs);
-							}
+							}*/
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 
 							/*if (Settings.DEBUG) {
@@ -285,6 +281,10 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 									strListEnts.append("Bounds: " + av.getMainNode().getWorldBound() + "\n");
 								}
 							}*/
+						}
+						if (e instanceof IProcessByClient) {
+							IProcessByClient pbc = (IProcessByClient)e;
+							pbc.process(this, tpf_secs); // Mainly to process client-side movement of the avatar
 						}
 					}
 
@@ -372,11 +372,15 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 		} else if (message instanceof AbilityUpdateMessage) {
 			AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
-			if (aum.avatarId == this.avatar.id) {
-				avatar.updateAbility(aum);
-			} else {
-				throw new RuntimeException("Received update for wrong avatar");
+			if (this.avatar != null) {
+				if (aum.avatarId == this.avatar.id) {
+					avatar.updateAbility(aum);
+				} else {
+					throw new RuntimeException("Received update for wrong avatar");
+				}
 			}
+		} else if (message instanceof GameStatusMessage) {
+			// todo
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);

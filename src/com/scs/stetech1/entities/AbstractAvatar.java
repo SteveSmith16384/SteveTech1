@@ -86,22 +86,25 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
-	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf) {
+	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs) {
 		this.resetWalkDir();
 
-		// Reset addition force
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 
-		abilityGun.process(tpf);
+		// Reset addition force
+		if (server != null) { // Only do this server-side, since it contains sync adjustments
+			simplePlayerControl.getAdditionalForce().set(0, 0, 0);
+		}
+		
+		abilityGun.process(tpf_secs);
 		if (this.abilityOther != null) {
-			abilityOther.process(tpf);
+			abilityOther.process(tpf_secs);
 		}
 
 		if (this.abilityOther != null) {
 			if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
 				//Settings.p("Using " + this.ability.toString());
-				this.abilityOther.activate(tpf);
+				this.abilityOther.activate(tpf_secs);
 			}
 		}
 
@@ -125,14 +128,20 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 			shoot();
 		}
 
-		simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
-
+		if (this.walkDirection.length() != 0) {
+			simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
+		}
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 			if (abilityOther != null) {
 				this.hud.setAbilityOtherText(this.abilityOther.getHudText());
 			}*/
-
+		
+		super.process(server, tpf_secs);
+		
+		/*if (this.walkDirection.length() != 0) {
+			Settings.p("Pos=" + this.getWorldTranslation());
+		}*/
 	}
 
 
@@ -189,22 +198,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 	@Override
 	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
 		//if (offset.length() > 0.01f) { Already checked this
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
 		simplePlayerControl.getAdditionalForce().addLocal(offset);
-		//this.getWalkDir().addLocal(offset);//.multLocal(moveSpeed)); 
+		//simplePlayerControl.getAdditionalForce().set(offset); // scs new
 		//}
 	}
 
-/*
-	@Override
-	public Vector3f getBulletStartOffset() {
-		// Don't forget the origin is on the floor
-		Vector3f offset = this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2);
-		offset.y += PLAYER_HEIGHT - 0.1f; // Drop bullets slightly
-		return offset;
-	}
-*/
-	
 	@Override
 	public Vector3f getBulletStartPos() {
 		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0);//.addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));

@@ -80,18 +80,4 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 		//Settings.p("Pos: " + this.getWorldTranslation());
 	}
 
-	/*
-	@Override
-	public SimpleRigidBody getSimpleRigidBody() {
-		return this.simpleRigidBody;
-	}
-	 */
-
-	/*	@Override
-	public boolean collidedWith(ICollideable other) {
-		// Do nothing
-		return false;
-	}
-	 */
-
 }

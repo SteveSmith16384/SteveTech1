@@ -87,7 +87,10 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 			this.currDir.multLocal(-1);
 		}
 
-		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
-	}
+		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // this.getMainNode();
+		
+		super.process(server, tpf);
+
+}
 
 }

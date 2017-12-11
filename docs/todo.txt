@@ -2,14 +2,17 @@ STETECH1
 
 
 URGENT
+Create preprocess()
+Should dummy sphere's always be in the same place
 Log position of moving target on client and server at the point it is hit
 	Rewind moving enemy
-	Collisions needs rewriting
 Search for todos
 Check game status changes when player joins
 
 
 TODO
+Only adjust players position when moving?
+Make floor a single quad
 Less damage from hitscan over distance
 Grenades
 Simple physics - pushing
