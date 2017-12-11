@@ -239,7 +239,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public void fallenOffEdge() {
 		// Override for avatars
-		this.remove();
+		this.remove(); // todo - respawn moving entity
 	}
 
 
@@ -261,9 +261,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				s = s.getParent();
 			}
 			if (s != null && s.getUserData(Settings.ENTITY) != null) {
-				Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Settings.ENTITY);
 				if (pe != this) {
+					Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
 					return new RayCollisionData(pe, col.getContactPoint(), col.getDistance());
 				}
 			}

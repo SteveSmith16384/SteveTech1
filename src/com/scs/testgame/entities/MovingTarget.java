@@ -58,8 +58,6 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 			}
 
 			geometry.setMaterial(floor_mat);
-			//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-			//geometry.setQueueBucket(Bucket.Transparent);
 		}
 		geometry.setLocalTranslation(0, h/2, 0); // Origin is at the bottom
 		this.mainNode.attachChild(geometry);
@@ -80,8 +78,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf) {
-		this.timeUntilTurn -= tpf;
+	public void process(AbstractGameServer server, float tpf_secs) {
+		this.timeUntilTurn -= tpf_secs;
 		if (this.timeUntilTurn <= 0) {
 			this.timeUntilTurn = DURATION;
 			this.currDir.multLocal(-1);
@@ -89,7 +87,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // this.getMainNode();
 		
-		super.process(server, tpf);
+		super.process(server, tpf_secs);
 
 }
 

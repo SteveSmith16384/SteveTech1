@@ -31,7 +31,7 @@ public class DebuggingSphere extends PhysicalEntity {
 		
 		Sphere sphere = new Sphere(8, 8, 0.2f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
-		Geometry ball_geo = new Geometry("cannon ball", sphere);
+		Geometry ball_geo = new Geometry("DebuggingSphere", sphere);
 
 		TextureKey key3 = null;
 		if (server) {
