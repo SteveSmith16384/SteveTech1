@@ -9,12 +9,9 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IAffectedByPhysics;
-import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
@@ -75,16 +72,11 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 
 	}
 
-/*
+	
 	@Override
-	public void process(AbstractGameServer server, float tpf) {
-		//Settings.p("Pos: " + this.getLocation());
+	public boolean canMove() {
+		return false;
 	}
 
-	/*
-	@Override
-	public void collidedWith(ICollideable other) {
-		// Do nothing
-	}
-	 */
+
 }

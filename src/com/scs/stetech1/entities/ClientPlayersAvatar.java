@@ -26,7 +26,8 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 	public Camera cam;
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
-
+	private long lastAbilityUpdateMsgTime;
+	
 	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
 		super(_module, _playerID, _input, eid, side);
 
@@ -39,7 +40,7 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 		//syncPos = new MoveSlowlyToCorrectPosition();
 		//syncPos = new AdjustBasedOnDistance();
 
-		this.simpleRigidBody.setGravity(0); // scs todo?
+		this.simpleRigidBody.setGravity(0);
 
 	}
 
@@ -65,10 +66,6 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 		Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
 		lookAtPoint.y = cam.getLocation().y; // Look horizontal
 		//todo -readd? But rotating spatial makes us stick to the floor   this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
-
-		// Move cam fwd so we don't see ourselves
-		//cam.setLocation(cam.getLocation().add(cam.getDirection().mult(PLAYER_RAD)));
-		//cam.update();
 
 	}
 
@@ -129,15 +126,18 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 
 
 	public void updateAbility(AbilityUpdateMessage aum) {
-		IAbility a = null;
-		if (aum.abilityNum == 0) {
-			a = this.abilityGun;
-		} else if (aum.abilityNum == 1) {
-			a = this.abilityOther;
-		} else {
-			throw new RuntimeException("Unknown ability: " + aum.abilityNum);
+		if (aum.timestamp > lastAbilityUpdateMsgTime) {
+			IAbility a = null;
+			if (aum.abilityNum == 0) {
+				a = this.abilityGun;
+			} else if (aum.abilityNum == 1) {
+				a = this.abilityOther;
+			} else {
+				throw new RuntimeException("Unknown ability: " + aum.abilityNum);
+			}
+			a.decode(aum);
+			lastAbilityUpdateMsgTime = aum.timestamp;
 		}
-		a.decode(aum);
 	}
-	
+
 }

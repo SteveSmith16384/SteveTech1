@@ -10,7 +10,7 @@ import com.scs.testgame.entities.Grenade;
 
 public class GrenadeLauncher extends AbstractMagazineGun implements IAbility {
 
-	private static final int MAG_SIZE = 1000; // todo - check
+	private static final int MAG_SIZE = 6;
 	
 	private LinkedList<Grenade> ammoCache = new LinkedList<Grenade>(); 
 	

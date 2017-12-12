@@ -6,10 +6,9 @@ import com.scs.stetech1.shared.IAbility;
 
 @Serializable
 public class AbilityUpdateMessage extends MyAbstractMessage {
-	// todo - add and check timestamp
+
 	public int bulletsLeftInMag;
 	public float timeUntilShoot = 0;
-	//public transient AbstractAvatar avatar;
 	public int avatarId;
 	public int abilityNum; // 0 = main etc...
 	

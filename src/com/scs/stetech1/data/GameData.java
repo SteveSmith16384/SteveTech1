@@ -16,22 +16,14 @@ public class GameData {
 	public static final int ST_STARTED = 2;
 	public static final int ST_FINISHED = 3;
 
-	//private GameOptions gameOptions;
 	private AbstractGameServer server;
 	private int status;
 	public long statusStartTime;
-	//public ArrayList<ClientData> players = new ArrayList<ClientData>();
 
-	public GameData(AbstractGameServer _server) {//, GameOptions _gameOptions) {
+	public GameData(AbstractGameServer _server) {
 		super();
 
 		server = _server;
-		//gameOptions = _gameOptions;
-	}
-
-
-	public void checkGameStatus() {
-		// todo
 	}
 
 
@@ -40,17 +32,20 @@ public class GameData {
 	}
 
 
+	public boolean isInGame() {
+		return status == GameData.ST_DEPLOYING || status == GameData.ST_STARTED;
+	}
+
+
 	public void setGameStatus(int newStatus) {
 		if (status != newStatus) {
 			status = newStatus;
-			//if (status == ST_WAITING_FOR_PLAYERS && newStatus == GameStatus.Started) {
 			statusStartTime = System.currentTimeMillis();
-			//}
 			server.gameStatusChanged(newStatus);
 		}
 	}
 
-
+/*
 	public void addPlayer(ClientData clientData) {
 		//players.add(clientData);
 	}
@@ -59,5 +54,5 @@ public class GameData {
 	public void removePlayer(ClientData clientData) {
 		//players.remove(clientData);
 	}
-
+*/
 }

@@ -68,6 +68,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	public static GameProperties properties;
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Settings.PING_INTERVAL_MS);
+	private RealtimeInterval checkStatusInterval = new RealtimeInterval(1000);
 	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Settings.SERVER_SEND_UPDATE_INTERVAL_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	protected LogWindow logWindow;
@@ -229,6 +230,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				}
 				//networkServer.sendMessageToAll(eum);
 			}
+			if (checkStatusInterval.hitInterval()) {
+				this.checkGameStatus(false);
+			}
 		}
 
 		this.logWindow.setText(strDebug.toString());
@@ -239,19 +243,47 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	protected void playerJoined(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-		int side = getSide(client);
-		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, side);
+		client.side = getSide(client);
+		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, client.side);
 		networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID()));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
-		client.avatar = createPlayersAvatar(client, side);
-		gameData.addPlayer(client);
+		client.avatar = createPlayersAvatar(client, client.side);
+		//gameData.addPlayer(client);
 		sendEntityListToClient(client);
 		client.clientStatus = ClientData.ClientStatus.Accepted;
 		// Send them a ping to get ping time
 		this.networkServer.sendMessageToClient(client, new PingMessage(true));
 
+		checkGameStatus(true);
+
 		GameStatusMessage msg = new GameStatusMessage();
 		this.networkServer.sendMessageToAll(msg);
-		gameData.checkGameStatus();
+	}
+
+
+	private void checkGameStatus(boolean playersChanged) {
+		if (playersChanged) {
+			boolean enoughPlayers = areThereEnoughPlayers();
+			if (!enoughPlayers && gameData.isInGame()) {
+				gameData.setGameStatus(GameData.ST_WAITING_FOR_PLAYERS);
+			} else if (enoughPlayers && gameData.getStatus() == GameData.ST_WAITING_FOR_PLAYERS) {
+				gameData.setGameStatus(GameData.ST_DEPLOYING);
+			}
+		}
+
+		long duration = System.currentTimeMillis() - gameData.statusStartTime;
+		if (gameData.getStatus() == GameData.ST_DEPLOYING) {
+			if (duration >= this.gameOptions.deployDuration) {
+				gameData.setGameStatus(GameData.ST_STARTED);
+			}
+		} else if (gameData.getStatus() == GameData.ST_STARTED) {
+			if (duration >= this.gameOptions.gameDuration) {
+				gameData.setGameStatus(GameData.ST_FINISHED);
+			}
+		} else if (gameData.getStatus() == GameData.ST_FINISHED) {
+			if (duration >= this.gameOptions.finishedDuration) {
+				gameData.setGameStatus(GameData.ST_DEPLOYING);
+			}
+		}
 	}
 
 
@@ -259,6 +291,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		if (this.gameOptions.areAllPlayersOnDifferentSides()) {
 			return client.id;
 		} else {
+			// todo - Check maxPlayersPerside, maxSides
 			HashMap<Integer, Integer> map = getPlayersPerSide();
 			// Get lowest amount
 			int lowest = 999;
@@ -276,8 +309,25 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					return i;
 				}
 			}
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Should not get here");
 		}
+	}
+
+
+	private boolean areThereEnoughPlayers() {
+		/*if (this.gameOptions.areAllPlayersOnDifferentSides()) {
+			return clients.values().size() >= 2;
+		} else {*/
+		ArrayList<Integer> map = new ArrayList<Integer>();
+		for (ClientData client : this.clients.values()) {
+			if (client.avatar != null) {
+				if (!map.contains(client.avatar.side)) {
+					map.add(client.avatar.side);
+				}
+			}
+		}
+		return map.size() >= 2;
+		//}
 	}
 
 
@@ -409,11 +459,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		// Remove avatar
 		if (client.avatar != null) {
 			this.removeEntity(client.avatar.id);
-			gameData.removePlayer(client);
+			//gameData.removePlayer(client);
 		}
+		checkGameStatus(true);
 		GameStatusMessage msg = new GameStatusMessage();
 		this.networkServer.sendMessageToAll(msg);
-		gameData.checkGameStatus();
 	}
 
 

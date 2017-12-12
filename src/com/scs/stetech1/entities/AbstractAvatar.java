@@ -9,7 +9,6 @@ import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
-import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.AbstractGameServer;

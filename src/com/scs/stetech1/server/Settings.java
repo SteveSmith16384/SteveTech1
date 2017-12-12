@@ -20,16 +20,13 @@ import com.scs.stetech1.netmessages.WelcomeClientMessage;
 
 public class Settings {
 
-	//public static final boolean STAND_ALONE_SERVER = false;
-	//public static final boolean CLIENT_SIDE_PHYSICS = false; // unused ATM
-	
 	public static final boolean DEBUG = true;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SYNC_POS = false;
 
 	public static final String IP_ADDRESS = "localhost";
 	public static final int TCP_PORT = 6143;
-	public static final int UDP_PORT = 6144; // todo - make the same?
+	public static final int UDP_PORT = 6143; // scs new
 	public static final float CONNECTION_IDLE_THRESH = 1000000;
 	
 	public static final int SERVER_TICKRATE_MS = 20; // Source: 15ms

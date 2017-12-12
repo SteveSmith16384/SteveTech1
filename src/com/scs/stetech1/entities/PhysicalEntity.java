@@ -223,24 +223,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	}
 
-	/*
-	@Override
-	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
-		return mainNode.collideWith(other, results);
-	}
-/*
-
-	@Override
-	public boolean collidedWith(ICollideable other) {
-		// override if required
-		return false;
-
-	}
-	 */
 
 	public void fallenOffEdge() {
 		// Override for avatars
-		this.remove(); // todo - respawn moving entity
+		this.remove();
 	}
 
 
@@ -271,6 +257,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		}
 
 		return null;
+	}
+	
+	
+	public boolean canMove() {
+		return true;
 	}
 
 

@@ -12,10 +12,8 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
-import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
-import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.AbstractGameServer;
@@ -127,17 +125,18 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 		}
 	}
 
-	/*
-	@Override
-	public void collidedWith(ICollideable other) {
-		// Do nothing
-	}
-	 */
 
 	@Override
 	public void process(AbstractGameServer server, float tpf_secs) {
 		// Do nothing
 
 	}
+
+
+	@Override
+	public boolean canMove() {
+		return false;
+	}
+
 
 }

@@ -7,7 +7,6 @@ import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICausesHarmOnContact;
-import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IRemoveOnContact;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.models.BeamLaserModel;
@@ -16,7 +15,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact, ICollideable, IRemoveOnContact {
+public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact, IRemoveOnContact {
 
 	public ICanShoot shooter;
 	private float timeLeft = 3;

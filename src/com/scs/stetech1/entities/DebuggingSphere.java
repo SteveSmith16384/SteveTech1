@@ -77,4 +77,10 @@ public class DebuggingSphere extends PhysicalEntity {
 	}
 
 
+	@Override
+	public boolean canMove() {
+		return false;
+	}
+
+
 }

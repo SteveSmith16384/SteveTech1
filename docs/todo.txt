@@ -4,11 +4,11 @@ STETECH1
 
 
 URGENT
+	Check game status changes when player joins
 	Game option - one player per side
 	Should dummy sphere's always be in the same place
 	Prevent debugging sphere colliding
 Search for todos
-Check game status changes when player joins
 
 
 TODO

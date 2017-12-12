@@ -5,7 +5,6 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
-import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;

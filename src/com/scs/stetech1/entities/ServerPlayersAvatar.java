@@ -2,7 +2,6 @@ package com.scs.stetech1.entities;
 
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.ICausesHarmOnContact;
-import com.scs.stetech1.components.ICollideable;
 import com.scs.stetech1.components.IDamagable;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IRewindable;
@@ -10,10 +9,9 @@ import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 
-public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDamagable, ICollideable, IRewindable {
+public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDamagable, IRewindable {
 
 	private AbstractGameServer server;
 

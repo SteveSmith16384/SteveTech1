@@ -65,7 +65,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public static final int STATUS_RCVD_WELCOME = 2;
 	public static final int STATUS_SENT_JOIN_REQUEST = 3;
 	public static final int STATUS_JOINED_GAME = 4;
-	public static final int STATUS_GAME_STARTED = 5;
+	public static final int STATUS_GAME_STARTED = 5; // Have received all entities
 
 	private HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	private LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
@@ -267,9 +267,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					for (IEntity e : this.entities.values()) {
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
-							//if (pe.canMove()) { // Todo - Only bother with things that can move
-							pe.calcPosition(this, serverTimePast); // Must be before we process physics as this calcs additionalForce
-							//}
+							if (pe.canMove()) { // Only bother with things that can move
+								pe.calcPosition(this, serverTimePast); // Must be before we process physics as this calcs additionalForce
+							}
 							/*if (pe.simpleRigidBody != null) {
 								pe.simpleRigidBody.process(tpf_secs);
 							}*/

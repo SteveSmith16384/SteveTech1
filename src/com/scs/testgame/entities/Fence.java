@@ -69,11 +69,12 @@ public class Fence extends PhysicalEntity {
 
 	}
 
-/*
+
 	@Override
-	public void process(AbstractGameServer server, float tpf) {
-		// Do nothing
+	public boolean canMove() {
+		return false;
 	}
-*/
+
+
 
 }
