@@ -17,18 +17,13 @@ import com.scs.stetech1.shared.IEntityController;
  */
 public class DebuggingSphere extends PhysicalEntity {
 	
-	private static final float DURATION = 10;
+	private static final float DURATION = 1;
 	
 	private float timeLeft = DURATION;
 
 	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z, boolean server) {
 		super(_game, id, EntityTypes.DEBUGGING_SPHERE, "DebuggingSphere");
 
-		/*if (_game.isServer()) {
-			creationData = new HashMap<String, Object>();
-			creationData.put("id", id);
-		}*/
-		
 		this.collideable = false;
 		
 		Sphere sphere = new Sphere(8, 8, 0.2f, true, false);

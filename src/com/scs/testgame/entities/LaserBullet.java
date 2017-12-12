@@ -48,7 +48,13 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 
 	}
 
-
+/*
+	@Override
+	public boolean hasMoved() {
+		return false; // We don't want to send updates to the client since it's impossible to keep them in sync
+	}
+	*/
+	
 	@Override
 	public void process(AbstractGameServer server, float tpf_secs) {
 		if (game.isServer()) {
@@ -60,24 +66,7 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 		super.process(server, tpf_secs);
 	}
 
-/*
-	@Override
-	public ICanShoot getShooter() {
-		return shooter;
-	}
 
-/*
-	@Override
-	public boolean collidedWith(ICollideable other) {
-		if (other != this.shooter) {
-			//Settings.p("Laser collided with " + other);
-
-			this.remove(); // Don't bounce
-		}
-		return false;
-	}
-
-*/
 	@Override
 	public float getDamageCaused() {
 		return 10;

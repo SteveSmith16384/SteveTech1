@@ -16,7 +16,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.weapons.HitscanRifle;
+import com.scs.stetech1.weapons.GrenadeLauncher;
 
 public abstract class AbstractAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
 
@@ -68,8 +68,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 
-		abilityGun = new HitscanRifle(game, 0, this);
-		//abilityGun = new GrenadeLauncher(game, 0, this);
+		//abilityGun = new HitscanRifle(game, 0, this);
+		abilityGun = new GrenadeLauncher(game, 0, this);
 
 		/* 
 			this.abilityOther = new JetPac(this, 1);// BoostFwd(this, 1);//getRandomAbility(this);
@@ -85,6 +85,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
+	
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs) {
 		this.resetWalkDir();
 
@@ -208,16 +209,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0);//.addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));
 	}
 
-
-/*
-	public RayCollisionData calcHitEntity(float range) {
-		Vector3f from = this.getBulletStartPos();
-		//AbstractGameServer server = (AbstractGameServer)game;
-		Ray ray = new Ray(from, this.getShootDir());
-		return checkForCollisions(ray);
-	}
-
-*/
 
 	@Override
 	public int getSide() {

@@ -250,7 +250,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			if (s != null && s.getUserData(Settings.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Settings.ENTITY);
 				if (pe != this && pe.collideable) {
-					Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
+					//Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
 					return new RayCollisionData(pe, col.getContactPoint(), col.getDistance());
 				}
 			}

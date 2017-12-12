@@ -23,6 +23,7 @@ public class Settings {
 	public static final boolean DEBUG = true;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SYNC_POS = false;
+	public static final boolean DEBUG_SHOOTING_POS = false;
 
 	public static final String IP_ADDRESS = "localhost";
 	public static final int TCP_PORT = 6143;

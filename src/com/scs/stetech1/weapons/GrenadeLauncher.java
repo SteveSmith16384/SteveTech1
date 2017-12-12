@@ -33,6 +33,8 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility {
 	public void launchBullet() {
 		if (game.isServer()) { // Client gets told to create as per typical entity
 			new Grenade(game, AbstractGameServer.getNextEntityID(), shooter);
+		} else { // Client gets told to create as per typical entity
+			new Grenade(game, -1, shooter);
 		}
 	}
 

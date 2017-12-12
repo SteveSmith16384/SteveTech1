@@ -37,6 +37,9 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 		} else {
 			// todo - nozzle flash or something
 			Vector3f from = shooter.getBulletStartPos();
+			if (Settings.DEBUG_SHOOTING_POS) {
+				Settings.p("Client shooting from " + from);
+			}
 			Ray ray = new Ray(from, shooter.getShootDir());
 			RayCollisionData rcd = shooter.checkForCollisions(ray, RANGE);
 			if (rcd != null) {

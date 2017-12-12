@@ -9,8 +9,13 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
+import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICausesHarmOnContact;
+import com.scs.stetech1.client.AbstractGameClient;
+import com.scs.stetech1.client.ClientAvatarPositionCalc;
+import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
+import com.scs.stetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.AbstractGameServer;
@@ -18,8 +23,9 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Grenade extends PhysicalEntity { //implements IBullet {
+public class Grenade extends PhysicalEntity {
 
+	private ICorrectClientEntityPosition syncPos;
 	public ICanShoot shooter;
 	private float timeLeft = 4f;
 
@@ -30,6 +36,7 @@ public class Grenade extends PhysicalEntity { //implements IBullet {
 		this(_game, id, new Vector3f(_shooter.getBulletStartPos()));//getWorldTranslation().add(_shooter.getBulletStartOffset())));
 
 		this.shooter = _shooter;
+		syncPos = new InstantPositionAdjustment();
 
 		// Accelerate the physical ball to shoot it.
 		//if (_game.isServer()) {
@@ -49,7 +56,7 @@ public class Grenade extends PhysicalEntity { //implements IBullet {
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
-		Geometry ball_geo = new Geometry("cannon ball", sphere);
+		Geometry ball_geo = new Geometry("grenade", sphere);
 
 		if (game.getJmeContext() != JmeContext.Type.Headless) { // Not running in server
 			TextureKey key3 = new TextureKey( "Textures/grenade.png");
@@ -78,27 +85,36 @@ public class Grenade extends PhysicalEntity { //implements IBullet {
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf_secs) {
-		if (game.isServer()) {
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
-				//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
-				this.remove();
-			}
+	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
+		if (Settings.SYNC_CLIENT_POS) {
+			/*todo Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+			if (offset != null) {
+				this.syncPos.adjustPosition(this, offset);
+			}*/
 		}
-		super.process(server, tpf_secs);
 	}
+
 
 /*
 	@Override
-	public ICanShoot getShooter() {
-		return shooter;
+	public boolean hasMoved() {
+		return false; // We don't want to send updates to the client since it's impossible to keep them in sync
 	}
-
+	*/
+	
 	@Override
-	public float getDamageCaused() {
-		return 0;
+	public void process(AbstractGameServer server, float tpf_secs) {
+			this.timeLeft -= tpf_secs;
+			if (this.timeLeft < 0) {
+				if (game.isServer()) {
+					// todo - damage surrounding entities
+				}
+				//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
+				this.remove();
+			}
+		super.process(server, tpf_secs);
 	}
-*/
 
 }

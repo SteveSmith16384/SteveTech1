@@ -165,6 +165,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 							ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
 							Vector3f from = avatar.getBulletStartPos();
+							if (Settings.DEBUG_SHOOTING_POS) {
+								Settings.p("Server shooting from " + from);
+							}
 							Ray ray = new Ray(from, avatar.getShootDir()); // todo - use prev rotation?
 							RayCollisionData rcd = avatar.checkForCollisions(ray, chip.getRange());
 							chip.setTarget(rcd); // Damage etc.. is calculated later

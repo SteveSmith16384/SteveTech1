@@ -8,6 +8,7 @@ public class GameOptions {
 	public long deployDuration = 10 * 1000; // todo
 	public long gameDuration = 60 * 1000; // todo
 	public long finishedDuration = 5 * 1000; // todo
+	public String ourExternalIPAddress, lobbyServerIPAddress;
 
 	public GameOptions(int _maxPlayersPerSide, int _maxSides) {
 		maxPlayersPerSide = _maxPlayersPerSide;

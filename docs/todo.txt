@@ -1,23 +1,20 @@
 STETECH1
 
 URGENT
-DebuggingSphere in wrong place when falling
-	Check game status changes when player joins
-	Game option - one player per side
-	Should dummy sphere's always be in the same place
-	Prevent debugging sphere colliding
+Adjust grenades in the same way that avatars are adjusted
+Check game status changes when player joins
 Search for todos
 
 
 TODO
+	Grenades freezing until they get movement data
+Use new models
 Log position of moving target on client and server at the point it is hit
 Create preprocess()
-Only adjust players position when moving?
 Make floor a single quad
 Less damage from hitscan over distance
 Grenades
 Simple physics - pushing
-Grenades freezing until they get movement data
 Laser bullets
 Check camera pos
 Origin of entities should be floor 
