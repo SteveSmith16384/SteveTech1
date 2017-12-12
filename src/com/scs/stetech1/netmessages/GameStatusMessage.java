@@ -17,13 +17,14 @@ public class GameStatusMessage extends MyAbstractMessage {
 		super(true);
 	}
 
-	public GameStatusMessage(GameData gameData) {
+	public GameStatusMessage(GameData gameData, ArrayList<SimplePlayerData> _players) {
 		super(true);
 		// todo - fill these in
 		
 		this.gameStatus = gameData.getStatus();
 		this.gameTimeMS = System.currentTimeMillis() - gameData.statusStartTime;
-		
+		players = _players;
 	}
-
+	
+	
 }

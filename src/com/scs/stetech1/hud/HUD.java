@@ -34,7 +34,7 @@ public class HUD extends Node implements IProcessByClient {
 	private boolean process_damage_box;
 	private List<Picture> targetting_reticules = new ArrayList<>();
 	private AbstractGameClient game;
-	private BitmapText abilityGun, abilityOther, score, playerID;
+	private BitmapText abilityGun, abilityOther, score, playerID, gameStatus, gameTime;
 
 	public HUD(AbstractGameClient _game, float xBL, float yBL, float w, float h, BitmapFont font_small, Camera _cam) {
 		super("HUD");
@@ -69,6 +69,14 @@ public class HUD extends Node implements IProcessByClient {
 		playerID = new BitmapText(font_small, false);
 		playerID.setLocalTranslation(10, hud_height-60, 0);
 		this.attachChild(playerID);
+
+		gameStatus = new BitmapText(font_small, false);
+		gameStatus.setLocalTranslation(10, hud_height-75, 0);
+		this.attachChild(gameStatus);
+
+		gameTime = new BitmapText(font_small, false);
+		gameTime.setLocalTranslation(10, hud_height-90, 0);
+		this.attachChild(gameTime);
 
 		// Damage box
 		{
@@ -152,6 +160,16 @@ public class HUD extends Node implements IProcessByClient {
 
 	public void setPlayerID(int id) {
 		this.playerID.setText("PlayerID: " + id);
+	}
+	
+	
+	public void setGameStatus(String s) {
+		this.gameStatus.setText(s);
+	}
+
+
+	public void setGameTime(String s) {
+		this.gameTime.setText(s);
 	}
 
 

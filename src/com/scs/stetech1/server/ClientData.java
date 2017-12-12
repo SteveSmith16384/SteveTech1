@@ -14,14 +14,13 @@ public class ClientData {
 	public Object networkObj;
 	public int id;
 	public AverageNumberCalculator pingCalc = new AverageNumberCalculator();
-	public long pingRTT;
+	public long pingRTT; // todo - move to simpleplayerdata
 	public long latestInputTimestamp;
 	public ServerPlayersAvatar avatar;
 	public RemoteInput remoteInput = new RemoteInput(); // For storing message that are translated into input
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
 	public SimplePlayerData playerData;
 	public ClientStatus clientStatus = ClientStatus.Connected;
-	public int side;
 
 	public ClientData(int _id, Object _networkObj, Camera cam, InputManager _inputManager) {
 		id = _id;

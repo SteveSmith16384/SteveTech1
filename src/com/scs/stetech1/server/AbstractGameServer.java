@@ -243,20 +243,18 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	protected void playerJoined(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-		client.side = getSide(client);
-		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, client.side);
+		int side = getSide(client);
+		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, side);
 		networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID()));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
-		client.avatar = createPlayersAvatar(client, client.side);
-		//gameData.addPlayer(client);
+		client.avatar = createPlayersAvatar(client, side);
 		sendEntityListToClient(client);
 		client.clientStatus = ClientData.ClientStatus.Accepted;
-		// Send them a ping to get ping time
+
+		this.sendGameStatusMessage();
 		this.networkServer.sendMessageToClient(client, new PingMessage(true));
 
 		checkGameStatus(true);
 
-		GameStatusMessage msg = new GameStatusMessage();
-		this.networkServer.sendMessageToAll(msg);
 	}
 
 
@@ -461,9 +459,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			this.removeEntity(client.avatar.id);
 			//gameData.removePlayer(client);
 		}
+		this.sendGameStatusMessage();
 		checkGameStatus(true);
-		GameStatusMessage msg = new GameStatusMessage();
-		this.networkServer.sendMessageToAll(msg);
 	}
 
 
@@ -698,17 +695,19 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		default:
 			break;
 		}*/
-		this.networkServer.sendMessageToAll(new GameStatusMessage(this.gameData));
+		this.sendGameStatusMessage();
 	}
 
-	/*
-	public RayCollisionData calcHitEntity_(ICanShoot shooter, float range) {
-		Vector3f from = shooter.getBulletStartPos();//getWorldTranslation().add(shooter.getShootDir().mult(1f)); // Prevent us shooting ourselves
-		//AbstractGameServer server = (AbstractGameServer)game;
-		Ray ray = new Ray(from, shooter.getShootDir());
-		return checkForCollisions(ray);
+	
+	private void sendGameStatusMessage() {
+		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
+		for(ClientData client : this.clients.values()) {
+			players.add(client.playerData);
+		}
+		this.networkServer.sendMessageToAll(new GameStatusMessage(this.gameData, players));
+
 	}
-	 */
+	
 
 	public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
 }

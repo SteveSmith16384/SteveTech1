@@ -31,7 +31,18 @@ public class GameData {
 		return status;
 	}
 
+	
+	public static String getStatusDesc(int s) {
+		switch (s) {
+		case ST_WAITING_FOR_PLAYERS: return "Waiting for players";
+		case ST_DEPLOYING: return "Deploying";
+		case ST_STARTED: return "Started";
+		case ST_FINISHED: return "Started";
+		default: throw new RuntimeException("Unknown status: " + s);
+		}
+	}
 
+	
 	public boolean isInGame() {
 		return status == GameData.ST_DEPLOYING || status == GameData.ST_STARTED;
 	}
@@ -45,14 +56,4 @@ public class GameData {
 		}
 	}
 
-/*
-	public void addPlayer(ClientData clientData) {
-		//players.add(clientData);
-	}
-
-
-	public void removePlayer(ClientData clientData) {
-		//players.remove(clientData);
-	}
-*/
 }

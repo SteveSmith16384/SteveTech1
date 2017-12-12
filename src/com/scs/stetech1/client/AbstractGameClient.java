@@ -24,6 +24,7 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByClient;
+import com.scs.stetech1.data.GameData;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.hud.HUD;
@@ -380,7 +381,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				}
 			}
 		} else if (message instanceof GameStatusMessage) {
-			// todo
+			GameStatusMessage gsm = (GameStatusMessage)message;
+			this.hud.setGameStatus(GameData.getStatusDesc(gsm.gameStatus));
+			this.hud.setGameTime(""+gsm.gameTimeMS/1000);
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
