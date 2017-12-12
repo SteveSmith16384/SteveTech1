@@ -137,7 +137,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 				this.hud.setAbilityOtherText(this.abilityOther.getHudText());
 			}*/
 		
-		super.process(server, tpf_secs);
+		super.processByServer(server, tpf_secs);
 		
 		/*if (this.walkDirection.length() != 0) {
 			Settings.p("Pos=" + this.getWorldTranslation());

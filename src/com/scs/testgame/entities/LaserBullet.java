@@ -56,14 +56,14 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 	*/
 	
 	@Override
-	public void process(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (game.isServer()) {
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft < 0) {
 				this.remove();
 			}
 		}
-		super.process(server, tpf_secs);
+		super.processByServer(server, tpf_secs);
 	}
 
 

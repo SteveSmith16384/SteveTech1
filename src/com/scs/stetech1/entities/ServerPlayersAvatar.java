@@ -23,7 +23,7 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf) {
+	public void processByServer(AbstractGameServer server, float tpf) {
 		if (this.restarting) {
 			restartTime -= tpf;
 			if (this.restartTime <= 0) {

@@ -46,7 +46,7 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 
 
 	@Override
-	public void process(AbstractGameServer sevrer, float tpf) {
+	public void processByServer(AbstractGameServer sevrer, float tpf) {
 		//Settings.p("Pos: " + this.getLocation());
 	}
 
@@ -65,8 +65,8 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 
 
 	@Override
-	public void process(AbstractGameClient client, float tpf_secs) {
-		// Do nothing
+	public void processByClient(AbstractGameClient client, float tpf_secs) {
+		// Animate?
 	}
 
 

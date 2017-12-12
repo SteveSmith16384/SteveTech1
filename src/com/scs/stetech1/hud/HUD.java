@@ -134,7 +134,7 @@ public class HUD extends Node implements IProcessByClient {
 
 
 	@Override
-	public void process(AbstractGameClient client, float tpf) {
+	public void processByClient(AbstractGameClient client, float tpf) {
 		if (process_damage_box) {
 			this.dam_box_col.a -= (tpf/2);
 			if (dam_box_col.a <= 0) {

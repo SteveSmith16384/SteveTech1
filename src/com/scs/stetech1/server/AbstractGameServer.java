@@ -199,7 +199,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				for (IEntity e : entities.values()) {
 					if (e instanceof IProcessByServer) {
 						IProcessByServer p = (IProcessByServer)e;
-						p.process(this, tpf_secs);
+						p.processByServer(this, tpf_secs);
 					}
 
 					if (e instanceof PhysicalEntity) {

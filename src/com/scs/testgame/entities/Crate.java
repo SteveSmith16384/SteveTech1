@@ -75,8 +75,8 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf) {
-		super.process(server, tpf);
+	public void processByServer(AbstractGameServer server, float tpf) {
+		super.processByServer(server, tpf);
 		//Settings.p("Pos: " + this.getWorldTranslation());
 	}
 

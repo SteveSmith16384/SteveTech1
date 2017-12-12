@@ -62,7 +62,7 @@ public class DebuggingSphere extends PhysicalEntity {
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf) {
+	public void processByServer(AbstractGameServer server, float tpf) {
 		if (game.isServer()) {
 			this.timeLeft -= tpf;
 			if (this.timeLeft <= 0) {

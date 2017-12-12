@@ -46,14 +46,14 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 
 
 	@Override
-	public void process(AbstractGameClient client, float tpf) {
+	public void processByClient(AbstractGameClient client, float tpf) {
 		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
 
 		storeAvatarPosition(serverTime);
 
 		super.serverAndClientProcess(null, client, tpf);
 
-		hud.process(client, tpf);
+		hud.processByClient(client, tpf);
 
 		// Position camera at node
 		Vector3f vec = this.getWorldTranslation();
@@ -119,7 +119,7 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		// Do nothing
 
 	}

@@ -29,7 +29,7 @@ public class AbstractHUDImage extends Picture implements IProcessByClient {
 
 
 	@Override
-	public void process(AbstractGameClient client, float tpf) {
+	public void processByClient(AbstractGameClient client, float tpf) {
 		if (timeLeft > 0) {
 			this.timeLeft -= tpf;
 			if (this.timeLeft <= 0) {

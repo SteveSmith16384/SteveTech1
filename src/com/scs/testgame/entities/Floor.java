@@ -89,7 +89,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 
 
 	@Override
-	public void process(AbstractGameClient client, float tpf) {
+	public void processByClient(AbstractGameClient client, float tpf) {
 		if (texScroll != null) {
 			float diff = tpf*1f;
 			thisScroll.addLocal(diff, diff, diff);
@@ -127,7 +127,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		// Do nothing
 
 	}

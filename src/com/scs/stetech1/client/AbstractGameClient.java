@@ -285,7 +285,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						}
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
-							pbc.process(this, tpf_secs); // Mainly to process client-side movement of the avatar
+							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
 						}
 					}
 

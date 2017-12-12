@@ -4,6 +4,6 @@ import com.scs.stetech1.client.AbstractGameClient;
 
 public interface IProcessByClient {
 
-	void process(AbstractGameClient client, float tpf_secs); // todo - rename to processByClient
+	void processByClient(AbstractGameClient client, float tpf_secs); // todo - rename to processByClient
 
 }

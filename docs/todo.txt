@@ -1,7 +1,8 @@
 STETECH1
 
 URGENT
-Respawn moving target - force movement!
+Log position of player when shooting, on both client and server
+	Respawn moving target - force movement!
 Adjust grenades in the same way that avatars are adjusted
 Check game status changes when player joins
 Search for todos

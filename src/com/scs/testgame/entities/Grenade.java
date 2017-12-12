@@ -23,12 +23,15 @@ import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.shared.PositionCalculator;
 
 public class Grenade extends PhysicalEntity implements IProcessByClient {
 
-	private ICorrectClientEntityPosition syncPos;
 	public ICanShoot shooter;
 	private float timeLeft = 4f;
+
+	private ICorrectClientEntityPosition syncPos;
+	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
 	/*
 	 * Constructor for server
@@ -90,10 +93,10 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 		if (Settings.SYNC_CLIENT_POS) {
-			/*todo Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+			Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 			if (offset != null) {
 				this.syncPos.adjustPosition(this, offset);
-			}*/
+			}
 		}
 	}
 
@@ -106,18 +109,18 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	 */
 
 	@Override
-	public void process(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		this.timeLeft -= tpf_secs;
 		if (this.timeLeft < 0) {
 			// todo - damage surrounding entities
 			this.remove();
 		}
-		super.process(server, tpf_secs);
+		super.processByServer(server, tpf_secs);
 	}
 
 
 	@Override
-	public void process(AbstractGameClient client, float tpf_secs) {
+	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		simpleRigidBody.process(tpf_secs);
 
 		this.timeLeft -= tpf_secs;
@@ -125,7 +128,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 			//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
 			this.remove();
 		}
-		super.process(null, tpf_secs);
+		super.processByServer(null, tpf_secs);
 
 	}
 

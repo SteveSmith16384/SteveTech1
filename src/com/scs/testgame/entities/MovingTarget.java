@@ -78,7 +78,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		this.timeUntilTurn -= tpf_secs;
 		if (this.timeUntilTurn <= 0) {
 			this.timeUntilTurn = DURATION;
@@ -87,7 +87,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // this.getMainNode();
 
-		super.process(server, tpf_secs);
+		super.processByServer(server, tpf_secs);
 
 	}
 
