@@ -14,6 +14,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.IRewindable;
 import com.scs.stetech1.entities.PhysicalEntity;
+import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
@@ -94,6 +95,11 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	@Override
 	public void fallenOffEdge() {
 		this.setWorldTranslation(new Vector3f(10, 10, 10));
+
+		EntityUpdateMessage eum = new EntityUpdateMessage();
+		eum.addEntityData(this, true);
+		AbstractGameServer server = (AbstractGameServer)this.game;
+		server.networkServer.sendMessageToAll(eum);
 	}
 
 

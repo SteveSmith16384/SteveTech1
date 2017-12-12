@@ -48,7 +48,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	@Override
-	public void process(AbstractGameServer server, float tpf_secs) {
+	public void process(AbstractGameServer server, float tpf_secs) { // todo - pass IEntityController?
 		if (simpleRigidBody != null) {
 			simpleRigidBody.process(tpf_secs);
 		}

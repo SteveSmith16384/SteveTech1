@@ -49,7 +49,7 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 	public void process(AbstractGameClient client, float tpf) {
 		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
 
-		storeAvatarPosition(serverTime); // todo - don't have sep list, use serverPositionData client-side
+		storeAvatarPosition(serverTime);
 
 		super.serverAndClientProcess(null, client, tpf);
 

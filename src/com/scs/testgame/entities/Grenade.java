@@ -12,6 +12,7 @@ import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICausesHarmOnContact;
+import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.client.ClientAvatarPositionCalc;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
@@ -23,7 +24,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class Grenade extends PhysicalEntity {
+public class Grenade extends PhysicalEntity implements IProcessByClient {
 
 	private ICorrectClientEntityPosition syncPos;
 	public ICanShoot shooter;
@@ -40,9 +41,9 @@ public class Grenade extends PhysicalEntity {
 
 		// Accelerate the physical ball to shoot it.
 		//if (_game.isServer()) {
-			this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
-			//this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(5));
-			this.simpleRigidBody.setBounciness(.6f);
+		this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
+		//this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(5));
+		this.simpleRigidBody.setBounciness(.6f);
 		//}
 
 	}
@@ -97,24 +98,35 @@ public class Grenade extends PhysicalEntity {
 	}
 
 
-/*
+	/*
 	@Override
 	public boolean hasMoved() {
 		return false; // We don't want to send updates to the client since it's impossible to keep them in sync
 	}
-	*/
-	
+	 */
+
 	@Override
 	public void process(AbstractGameServer server, float tpf_secs) {
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
-				if (game.isServer()) {
-					// todo - damage surrounding entities
-				}
-				//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
-				this.remove();
-			}
+		this.timeLeft -= tpf_secs;
+		if (this.timeLeft < 0) {
+			// todo - damage surrounding entities
+			this.remove();
+		}
 		super.process(server, tpf_secs);
+	}
+
+
+	@Override
+	public void process(AbstractGameClient client, float tpf_secs) {
+		simpleRigidBody.process(tpf_secs);
+
+		this.timeLeft -= tpf_secs;
+		if (this.timeLeft < 0) {
+			//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
+			this.remove();
+		}
+		super.process(null, tpf_secs);
+
 	}
 
 }
