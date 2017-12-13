@@ -1,0 +1,29 @@
+CLIENT
+Send inputs every "server tickrate"
+Render others from history - ~100ms ago, lerp between historical positions
+
+
+SERVER
+Receive player inputs and pass the to avatar (if later than prev)
+Run game loop every 20ms
+	Send entity positions for changed entities
+
+
+PLAYER CONTROL
+Turning is handled entirely by the client
+Player moves and their avatar is moved immediately
+	Client sends input to server
+	Server calcs position of the client
+	Server sends back position of all entities
+	Client corrects itself based on servers position
+Player shooting
+	Client sends shot msg with timestamp and direction
+	Server moves players to correct position and checks the client has hit
+	 
+	
+PLAYER SHOOTING
+Players gets sent a cache of "unshot" bullets
+If player shoots, client "shoots" the bullets immediately
+The client then keeps the bullets in sync in the same way as for their avatar, by adjusting position
+
+

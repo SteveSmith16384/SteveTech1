@@ -22,7 +22,7 @@ import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer {//, Collidable {
+public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer {
 
 	protected Node mainNode;
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
@@ -31,9 +31,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
 	private Quaternion prevRot = new Quaternion();
-
-	// Server-only vars
-	protected HashMap<String, Object> creationData;
 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
@@ -48,7 +45,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) { // todo - pass IEntityController?
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (simpleRigidBody != null) {
 			simpleRigidBody.process(tpf_secs);
 		}
@@ -191,11 +188,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public HashMap<String, Object> getCreationData() {
-		return creationData;
-	}
-
-
 	public void rewindPositionTo(long serverTimeToUse) {
 		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse);
 		if (shooterEPD != null) {
@@ -262,6 +254,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	
 	public boolean canMove() {
 		return true;
+	}
+
+
+	@Override
+	public HashMap<String, Object> getCreationData() {
+		creationData.put("pos", this.getWorldTranslation());
+		return super.getCreationData();
 	}
 
 

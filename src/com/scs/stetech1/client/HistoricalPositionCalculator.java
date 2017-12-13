@@ -5,9 +5,9 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public class ClientAvatarPositionCalc { // todo - rename to HistoricalPositionCalc
+public class HistoricalPositionCalculator {
 
-	public ClientAvatarPositionCalc() {
+	public HistoricalPositionCalculator() {
 
 	}
 

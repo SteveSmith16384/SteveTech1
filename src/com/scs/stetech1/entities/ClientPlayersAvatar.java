@@ -5,7 +5,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stetech1.client.AbstractGameClient;
-import com.scs.stetech1.client.ClientAvatarPositionCalc;
+import com.scs.stetech1.client.HistoricalPositionCalculator;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stetech1.components.IEntity;
@@ -42,6 +42,8 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 
 		this.simpleRigidBody.setGravity(0);
 
+		_module.avatar = this;
+		
 	}
 
 
@@ -87,7 +89,7 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 		if (Settings.SYNC_CLIENT_POS) {
-			Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 			if (offset != null) {
 				this.syncPos.adjustPosition(this, offset);
 			}

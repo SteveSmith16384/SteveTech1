@@ -37,19 +37,7 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 			invulnerableTime -= tpf;
 		}
 
-		/*if (!this.restarting) {
-			// Have we fallen off the edge
-			if (this.getWorldTranslation().y < -5f) {
-				Settings.p("playerID " + this.playerID + " has died due to falling off the edge (pos " + this.getWorldTranslation() + ")");
-				died("Too low");
-				return;
-			}
-		}*/
-
 		super.serverAndClientProcess(server, null, tpf);
-
-		//addPositionData();
-
 	}
 
 
@@ -58,7 +46,7 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 		died(reason);
 	}
 
-
+/*
 	public void hitByBullet_(ICausesHarmOnContact bullet) {
 		if (invulnerableTime <= 0) {
 			float dam = bullet.getDamageCaused();
@@ -76,7 +64,7 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 			Settings.p("Player hit but is currently invulnerable");
 		}
 	}
-
+*/
 
 	private void died(String reason) {
 		Settings.p("Player died: " + reason);
@@ -94,23 +82,6 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 		super.setWorldTranslation(pos);
 	}
 
-/*
-	@Override
-	public boolean collidedWith(ICollideable other) {
-		if (other instanceof IBullet) {
-			IBullet bullet = (IBullet)other;
-			if (bullet.getShooter() != null) {
-				if (bullet.getShooter() != this) {
-					if (!(bullet.getShooter() instanceof AbstractAvatar)) {
-						this.hitByBullet(bullet);
-						bullet.getShooter().hasSuccessfullyHit(this);
-					}
-				}
-			}
-		}
-		return true;
-	}
-*/
 
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {
@@ -122,10 +93,8 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 
 
 	public void moveToStartPostion(boolean invuln) {
-		//Point p = module.mapData.getPlayerStartPos(id);
-		//Vector3f pos =  new Vector3f(3f, 15f, 3f + this.playerID);
 		Vector3f pos = server.getAvatarStartPosition(this);
-		Settings.p("Scheduling player to start position: " + pos);
+		//Settings.p("Scheduling player to start position: " + pos);
 		super.setWorldTranslation(pos);
 		if (invuln) {
 			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
@@ -138,7 +107,7 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 
 	@Override
 	public Vector3f getShootDir() {
-		return input.getDirection();// this.ca
+		return input.getDirection();
 	}
 
 

@@ -33,7 +33,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("id", id);
+			//creationData.put("id", id);
+			//creationData.put("pos", new Vector3f(x, y, z));
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
 			//creationData.put("rot", rotDegrees); No, since chances are it will have moved anyway

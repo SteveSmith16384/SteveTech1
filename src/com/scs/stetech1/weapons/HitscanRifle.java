@@ -1,14 +1,18 @@
 package com.scs.stetech1.weapons;
 
+import java.util.HashMap;
+
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.ICausesHarmOnContact;
+import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.DebuggingSphere;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.RayCollisionData;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
@@ -17,8 +21,15 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 	public RayCollisionData hitThisMoment = null; // Only used server-side
 
-	public HitscanRifle(IEntityController game, int num, ICanShoot _shooter) {
-		super(game, num, "Hitscan Rifle", _shooter, .2f, 1f, 10);
+	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
+		super(game, id, EntityTypes.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, 10);
+
+		if (game.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("ownerid", owner.id);
+			creationData.put("num", num);
+		}
+
 	}
 
 
@@ -36,6 +47,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			}
 		} else {
 			// todo - nozzle flash or something
+			ICanShoot shooter = (ICanShoot)owner; 
 			Vector3f from = shooter.getBulletStartPos();
 			if (Settings.DEBUG_SHOOTING_POS) {
 				Settings.p("Client shooting from " + from);
@@ -72,7 +84,14 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 	@Override
 	public int getSide() {
-		return this.shooter.getSide();
+		return this.owner.getSide();
 	}
+
+
+	@Override
+	public HashMap<String, Object> getCreationData() {
+		return super.creationData;
+	}
+
 
 }

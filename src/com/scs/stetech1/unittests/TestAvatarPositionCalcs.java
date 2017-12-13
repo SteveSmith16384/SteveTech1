@@ -1,7 +1,7 @@
 package com.scs.stetech1.unittests;
 
 import com.jme3.math.Vector3f;
-import com.scs.stetech1.client.ClientAvatarPositionCalc;
+import com.scs.stetech1.client.HistoricalPositionCalculator;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.PositionCalculator;
@@ -31,7 +31,7 @@ public class TestAvatarPositionCalcs {
 		//Vector3f currentClientPos = new Vector3f(11, 0, 0);
 		long time = 800;
 		Settings.p(clientPositions.toString(time));
-		Vector3f newPos = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositions, clientPositions, time, ping);
+		Vector3f newPos = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositions, clientPositions, time, ping);
 		Vector3f correctDiff = new Vector3f(0f, 0, 0); 
 		
 		float diff = correctDiff.distance(newPos); 

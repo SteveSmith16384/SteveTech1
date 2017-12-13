@@ -1,6 +1,6 @@
 package com.scs.killercrates2;
 
-public class KillerCratesClient { // todo
+public class KillerCratesClient {
 
 	public KillerCratesClient() {
 		super();

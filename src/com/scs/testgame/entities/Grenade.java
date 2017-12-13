@@ -1,6 +1,8 @@
 package com.scs.testgame.entities;
 
 
+import java.util.HashMap;
+
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
@@ -14,7 +16,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICausesHarmOnContact;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.client.AbstractGameClient;
-import com.scs.stetech1.client.ClientAvatarPositionCalc;
+import com.scs.stetech1.client.HistoricalPositionCalculator;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stetech1.components.ICanShoot;
@@ -36,15 +38,17 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	public Grenade(IEntityController _game, int id, ICanShoot _shooter) {
 		this(_game, id, new Vector3f(_shooter.getBulletStartPos()));//getWorldTranslation().add(_shooter.getBulletStartOffset())));
 
+		if (_game.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("side", _shooter.getSide());
+		}
+		
 		this.shooter = _shooter;
 		syncPos = new InstantPositionAdjustment();
 
-		// Accelerate the physical ball to shoot it.
-		//if (_game.isServer()) {
-		this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
-		//this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(5));
+		// Accelerate the physical ball to shoot it.  NO!  Do when launched
+		//this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
 		this.simpleRigidBody.setBounciness(.6f);
-		//}
 
 	}
 
@@ -81,13 +85,19 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 
 	}
 
+	
+	public void launch() {
+		// todo - set start pos
+		this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
+
+	}
 
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 		if (Settings.SYNC_CLIENT_POS) {
-			Vector3f offset = ClientAvatarPositionCalc.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 			if (offset != null) {
 				this.syncPos.adjustPosition(this, offset);
 			}

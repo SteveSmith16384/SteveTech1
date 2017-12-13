@@ -1,6 +1,7 @@
 package com.scs.stetech1.entities;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
@@ -14,6 +15,9 @@ public abstract class Entity implements IEntity, Savable {
 	public final int type;
 	protected transient IEntityController game;
 	public final String name;
+
+	// Server-only vars
+	protected HashMap<String, Object> creationData;
 
 	public Entity(IEntityController _module, int _id, int _type, String _name) {
 		id = _id;
@@ -62,5 +66,11 @@ public abstract class Entity implements IEntity, Savable {
 	public String getName() {
 		return name;
 	}
+
+
+	public HashMap<String, Object> getCreationData() {
+		return creationData;
+	}
+
 
 }

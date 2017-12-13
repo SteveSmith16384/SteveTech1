@@ -45,7 +45,9 @@ import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.server.ClientData.ClientStatus;
+import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Floor;
 
 import ssmith.swing.LogWindow;
@@ -168,7 +170,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							if (Settings.DEBUG_SHOOTING_POS) {
 								Settings.p("Server shooting from " + from);
 							}
-							Ray ray = new Ray(from, avatar.getShootDir()); // todo - use prev rotation?
+							Ray ray = new Ray(from, avatar.getShootDir());
 							RayCollisionData rcd = avatar.checkForCollisions(ray, chip.getRange());
 							chip.setTarget(rcd); // Damage etc.. is calculated later
 						}
@@ -222,6 +224,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 								eum.addEntityData(physicalEntity, false);
 							}
 						}
+					} else {
+						strDebug.append(e.getName() + "\n");
 					}
 				}
 			}
@@ -248,9 +252,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 		int side = getSide(client);
 		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, side);
-		networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID()));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
+		networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
 		client.avatar = createPlayersAvatar(client, side);
-		sendEntityListToClient(client);
+		sendAllEntitiesToClient(client);
 		client.clientStatus = ClientData.ClientStatus.Accepted;
 
 		this.sendGameStatusMessage();
@@ -400,8 +404,19 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	private ServerPlayersAvatar createPlayersAvatar(ClientData client, int side) {
 		int id = getNextEntityID();
 		ServerPlayersAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
-		avatar.moveToStartPostion(true);
+		avatar.setWorldTranslation(this.getAvatarStartPosition(avatar));
+		//avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
+
+		IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
+		//IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
+		this.addEntity(abilityGun);
+		
+		/* 
+			this.abilityOther = new JetPac(this, 1);// BoostFwd(this, 1);//getRandomAbility(this);
+		game.addEntity(abilityOther);
+		}*/
+
 		return avatar;
 	}
 
@@ -409,7 +424,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	protected abstract ServerPlayersAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
 
 
-	private void sendEntityListToClient(ClientData client) {
+	private void sendAllEntitiesToClient(ClientData client) {
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {
 				this.sendNewEntity(client, e);
@@ -482,9 +497,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			this.entities.put(e.getID(), e);
 
 			// Tell clients
-			if (e instanceof PhysicalEntity) {
-				PhysicalEntity se = (PhysicalEntity)e;
-				NewEntityMessage nem = new NewEntityMessage(se);
+			//if (e instanceof PhysicalEntity) {
+				//PhysicalEntity se = (PhysicalEntity)e;
+				NewEntityMessage nem = new NewEntityMessage(e);
 				for (ClientData client : this.clients.values()) {
 					if (client.clientStatus == ClientStatus.Accepted) {
 						networkServer.sendMessageToClient(client, nem);	
@@ -492,7 +507,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				}
 
 				//this.networkServer.sendMessageToAll(nem);
-			}
+			//}
 			this.console.appendText("Created " + e);
 		}
 

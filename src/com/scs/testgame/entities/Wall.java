@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
@@ -23,6 +24,7 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
+			//creationData.put("pos", new Vector3f(x, yBottom, z));
 			creationData.put("w", w);
 			creationData.put("h", h);
 			creationData.put("tex", tex);
@@ -58,10 +60,8 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 		}
 		geometry.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2)); // Never change position of mainNode (unless the whole object is moving)
 
-		//if (_game.isServer()) {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 		this.simpleRigidBody.setMovable(false);
-		//}
 
 		game.getRootNode().attachChild(this.mainNode);
 

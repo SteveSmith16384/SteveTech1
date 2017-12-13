@@ -1,17 +1,17 @@
 STETECH1
 
 URGENT
-Move entity functionalityto controllerd
-Pass owner with grneade so we know if it's ours so don't create it
+Should not have a generic "process()" method?
+Move entity functionality to systems - ECS!
+Pass owner with grenade so we know if it's ours for the cache
 	Respawn moving target - force movement!
 Adjust grenades in the same way that avatars are adjusted
-Check game status changes when player joins
 Search for todos
-Log position of player when shooting, on both client and server
 
 
 TODO
-	Grenades freezing until they get movement data
+Check game status changes when player joins
+Log position of player when shooting, on both client and server
 Use new models
 Log position of moving target on client and server at the point it is hit
 Create preprocess()
@@ -64,29 +64,3 @@ Test with cheating client
 User enter name and ip address
 Only send entity messages to players that have joined the game
 
-
-=======================================
-
-CLIENT
-Send inputs every "server tickrate"
-Render others from history - 100ms ago, lerp between historical positions
-
-
-SERVER
-Receive player inputs and pass the to avatar (if later than prev)
-Run game loop every 20ms
-	Send entity positions for changed entities
-
-
-PLAYER CONTROL
-Turning is handled entirely by the client
-Player moves and their avatar is moved immediately
-	Client sends input to server
-	Server calcs position of the client
-	Server sends back position of all entities
-	Client corrects itself based on servers position
-Player shooting
-	Client sends shot msg with timestamp and direction
-	Server moves players to correct position and checks the client has hit
-	 
-	

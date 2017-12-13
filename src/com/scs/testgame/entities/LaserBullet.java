@@ -48,13 +48,7 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 
 	}
 
-/*
-	@Override
-	public boolean hasMoved() {
-		return false; // We don't want to send updates to the client since it's impossible to keep them in sync
-	}
-	*/
-	
+
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (game.isServer()) {

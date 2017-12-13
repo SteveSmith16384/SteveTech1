@@ -5,7 +5,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class GameSuccessfullyJoinedMessage extends MyAbstractMessage {
 
-	//public int avatarEntityID;
+	public int side;
 	public int playerID;
 
 	public GameSuccessfullyJoinedMessage() {
@@ -13,11 +13,11 @@ public class GameSuccessfullyJoinedMessage extends MyAbstractMessage {
 	}
 	
 	
-	public GameSuccessfullyJoinedMessage(int _playerID) {//, int _avatarEntityID) {
+	public GameSuccessfullyJoinedMessage(int _playerID, int _side) {
 		super(true);
 		
 		playerID = _playerID;
-		//avatarEntityID = _avatarEntityID;
+		side =_side;
 	}
 
 }

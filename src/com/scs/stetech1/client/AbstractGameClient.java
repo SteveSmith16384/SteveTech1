@@ -68,7 +68,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public static final int STATUS_JOINED_GAME = 4;
 	public static final int STATUS_GAME_STARTED = 5; // Have received all entities
 
-	private HashMap<Integer, IEntity> entities = new HashMap<>(100);
+	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	private LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
 	private LinkedList<Integer> toRemove = new LinkedList<Integer>(); 
 
@@ -81,6 +81,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	public ClientPlayersAvatar avatar;
 	public int playerID = -1;
+	public int side = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
@@ -94,7 +95,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	protected AbstractGameClient() {
 		super();
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this);//, SimplePhysicsController.DEFAULT_GRAVITY, SimplePhysicsController.DEFAULT_AERODYNAMICNESS);
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 	}
 
 
@@ -178,7 +179,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 							if (!this.entities.containsKey(newEntityMessage.entityID)) {
 								IEntity e = createEntity(newEntityMessage);
-								this.addEntity(e);
+								//this.addEntity(e);
+								this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launche to
 							} else {
 								// We already know about it
 							}
@@ -228,6 +230,16 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 								status = STATUS_GAME_STARTED;
 							}
 
+						} else if (message instanceof AbilityUpdateMessage) {
+							AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
+							if (this.avatar != null) {
+								if (aum.avatarId == this.avatar.id) {
+									avatar.updateAbility(aum);
+								} else {
+									throw new RuntimeException("Received update for wrong avatar");
+								}
+							}
+							
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
@@ -331,6 +343,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
+				this.side = npcm.side;
 				this.hud.setPlayerID(this.playerID);
 				Settings.p("We are player " + playerID);
 				status = STATUS_JOINED_GAME;
@@ -373,13 +386,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 		} else if (message instanceof AbilityUpdateMessage) {
 			AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
-			if (this.avatar != null) {
-				if (aum.avatarId == this.avatar.id) {
-					avatar.updateAbility(aum);
-				} else {
-					throw new RuntimeException("Received update for wrong avatar");
-				}
-			}
+			unprocessedMessages.add(aum);
+			
 		} else if (message instanceof GameStatusMessage) {
 			GameStatusMessage gsm = (GameStatusMessage)message;
 			this.hud.setGameStatus(GameData.getStatusDesc(gsm.gameStatus));

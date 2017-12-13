@@ -68,13 +68,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 
-		//abilityGun = new HitscanRifle(game, 0, this);
-		abilityGun = new GrenadeLauncher(game, 0, this);
-
-		/* 
-			this.abilityOther = new JetPac(this, 1);// BoostFwd(this, 1);//getRandomAbility(this);
-		}*/
-
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 		if (abilityOther != null) {
 			this.hud.setAbilityOtherText(this.abilityOther.getHudText());
@@ -96,10 +89,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 			simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 		}
 		
-		abilityGun.process(tpf_secs);
+		/*abilityGun.process(tpf_secs);
 		if (this.abilityOther != null) {
 			abilityOther.process(tpf_secs);
-		}
+		}*/
 
 		if (this.abilityOther != null) {
 			if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
@@ -215,5 +208,15 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 		return side;
 	}
 
+	
+	public void addAbility(IAbility a, int num) {
+		if (num == 0) {
+			this.abilityGun = a;
+		} else if (num == 1) {
+			this.abilityOther = a;
+		} else {
+			throw new RuntimeException("todo");
+		}
+	}
 
 }

@@ -32,7 +32,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("id", id);
+			//creationData.put("pos", new Vector3f(x, yTop, z));
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
 		}

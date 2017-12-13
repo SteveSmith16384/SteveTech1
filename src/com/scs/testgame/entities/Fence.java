@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
@@ -27,8 +28,7 @@ public class Fence extends PhysicalEntity {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("id", id);
-			//creationData.put("rot", rot);
+			//creationData.put("pos", new Vector3f(x, 0, z));
 			creationData.put("tex", tex);
 		}
 

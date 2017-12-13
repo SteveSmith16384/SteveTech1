@@ -10,6 +10,12 @@ import com.scs.stetech1.entities.PhysicalEntity;
 public interface IEntityController {
 
 	boolean isServer();
+
+	//int getNextId();
+	
+	void addEntity(IEntity e);
+	
+	void removeEntity(int id);
 	
 	JmeContext.Type getJmeContext();
 	
@@ -18,9 +24,5 @@ public interface IEntityController {
 	SimplePhysicsController<PhysicalEntity> getPhysicsController();
 	
 	Node getRootNode();
-	
-	void addEntity(IEntity e);
-	
-	void removeEntity(int id);
 	
 }

@@ -2,12 +2,15 @@ package com.scs.testgame;
 
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.AbstractEnemyAvatar;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.DebuggingSphere;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
+import com.scs.stetech1.weapons.GrenadeLauncher;
+import com.scs.stetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
@@ -35,77 +38,116 @@ public class TestGameEntityCreator {
 		switch (msg.type) {
 		case EntityTypes.AVATAR:
 		{
-			//if (game.playerID >= 0) { // Only create avatar if we know our id.  Otherwise, create it later
-				int playerID = (int)msg.data.get("playerID");
-				int side = (int)msg.data.get("side");
-				if (playerID == game.playerID) {
-					ClientPlayersAvatar avatar = new TestGameClientPlayersAvatar(game, msg.entityID, game.input, game.getCamera(), game.hud, id, msg.pos.x, msg.pos.y, msg.pos.z, side);
-					game.avatar = avatar;
-					return avatar;
-				} else {
-					// Create a simple avatar since we don't control these
-					AbstractEnemyAvatar avatar = new TestGameEnemyPlayersAvatar(game, playerID, id, msg.pos.x, msg.pos.y, msg.pos.z);
-					return avatar;
-				}
-			//}
+			int playerID = (int)msg.data.get("playerID");
+			int side = (int)msg.data.get("side");
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+
+			if (playerID == game.playerID) {
+				ClientPlayersAvatar avatar = new TestGameClientPlayersAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
+				//game.avatar = avatar;
+				return avatar;
+			} else {
+				// Create a simple avatar since we don't control these
+				AbstractEnemyAvatar avatar = new TestGameEnemyPlayersAvatar(game, playerID, id, pos.x, pos.y, pos.z);
+				return avatar;
+			}
 		}
 
 		case EntityTypes.FLOOR:
 		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
-			Floor floor = new Floor(game, id, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex, null);
+			Floor floor = new Floor(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, null);
 			return floor;
 		}
 
 		case EntityTypes.CRATE:
 		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
 			//float rot = (Float)msg.data.get("rot");
-			Crate crate = new Crate(game, id, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex, 0); // Give def rotation of 0, since it will get rotated anyway
+			Crate crate = new Crate(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, 0); // Give def rotation of 0, since it will get rotated anyway
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case EntityTypes.WALL:
 		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
 			float w = (float)msg.data.get("w");
 			float h = (float)msg.data.get("h");
 			String tex = (String)msg.data.get("tex");
 			float rot = (Float)msg.data.get("rot");
-			Wall wall = new Wall(game, id, msg.pos.x, msg.pos.y, msg.pos.z, w, h, tex, rot);
+			Wall wall = new Wall(game, id, pos.x, pos.y, pos.z, w, h, tex, rot);
 			return wall;
 		}
 
-		/*case EntityTypes.LASER_BULLET:
+		/*case EntityTypes.LASER_BULLET: todo
 		{
 			String tex = (String)msg.data.get("tex");
 			float rot = (Float)msg.data.get("rot");
-			LaserBullet laser = new LaserBullet(game, id, msg.pos.x, msg.pos.y, msg.pos.z, w, h, tex, rot);
+			LaserBullet laser = new LaserBullet(game, id, pos.x, pos.y, pos.z, w, h, tex, rot);
 			return laser;
 		}*/
 
 		case EntityTypes.GRENADE:
 		{
-			// This is only needed for creating grenades thrown by other players
-			Grenade grenade = new Grenade(game, id, new Vector3f(msg.pos.x, msg.pos.y, msg.pos.z));
+			//int side = (int) msg.data.get("side");
+			// todo - store in grenade cache?
+			Grenade grenade = new Grenade(game, id, new Vector3f(0, 0, 0));//new Vector3f(msg.pos.x, msg.pos.y, msg.pos.z));
 			return grenade;
 		}
 
 		case EntityTypes.DEBUGGING_SPHERE:
 		{
-			DebuggingSphere laser = new DebuggingSphere(game, id, msg.pos.x, msg.pos.y, msg.pos.z, true);
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			DebuggingSphere laser = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true);
 			return laser;
 		}
 
 		case EntityTypes.MOVING_TARGET:
 		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f) msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
 			//float rot = (Float)msg.data.get("rot");
-			MovingTarget laser = new MovingTarget(game, id, msg.pos.x, msg.pos.y, msg.pos.z, size.x, size.y, size.z, tex, 0);
+			MovingTarget laser = new MovingTarget(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, 0);
 			return laser;
 		}
+
+		case EntityTypes.GRENADE_LAUNCHER: 
+		{
+			int ownerid = (int)msg.data.get("ownerid");
+			if (ownerid == game.avatar.id) { // Don't care about other's abilities?
+				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+				int num = (int)msg.data.get("num");
+				GrenadeLauncher gl = new GrenadeLauncher(game, id, owner, num);
+				owner.addAbility(gl, num);
+				return gl;
+			}
+			return null;
+		}
+
+		case EntityTypes.LASER_RIFLE:
+		{
+			// todo
+		}
+
+		case EntityTypes.HITSCAN_RIFLE:
+		{
+			int ownerid = (int)msg.data.get("ownerid");
+			if (ownerid == game.avatar.id) { // Don't care about other's abilities?
+				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+				int num = (int)msg.data.get("num");
+				HitscanRifle gl = new HitscanRifle(game, id, owner, num);
+				owner.addAbility(gl, num);
+				return gl;
+			}
+			return null;
+
+		}
+
 
 		default:
 			throw new RuntimeException("Unknown entity type: " + EntityTypes.getName(msg.type));
