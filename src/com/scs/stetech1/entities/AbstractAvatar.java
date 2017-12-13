@@ -97,7 +97,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 		if (this.abilityOther != null) {
 			if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
 				//Settings.p("Using " + this.ability.toString());
-				this.abilityOther.activate(tpf_secs);
+				this.abilityOther.activate();
 			}
 		}
 
@@ -150,7 +150,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 
 	public void shoot() {
-		if (this.abilityGun.activate(0)) {
+		if (this.abilityGun.activate()) {
 			this.numShots++;
 		}
 	}
@@ -215,7 +215,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 		} else if (num == 1) {
 			this.abilityOther = a;
 		} else {
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Unknown ability num: " + num);
 		}
 	}
 

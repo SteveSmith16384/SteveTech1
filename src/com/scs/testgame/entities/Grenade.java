@@ -35,12 +35,13 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
-	public Grenade(IEntityController _game, int id, ICanShoot _shooter) {
-		this(_game, id, new Vector3f(_shooter.getBulletStartPos()));//getWorldTranslation().add(_shooter.getBulletStartOffset())));
+	public Grenade(IEntityController _game, int id, ICanShoot _shooter, int containerID) {
+		this(_game, id, containerID);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", _shooter.getSide());
+			creationData.put("containerID", containerID);
 		}
 		
 		this.shooter = _shooter;
@@ -53,7 +54,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	}
 
 
-	public Grenade(IEntityController _game, int id, Vector3f origin) {
+	public Grenade(IEntityController _game, int id, int containerID) {//, Vector3f origin) {
 		super(_game, id, EntityTypes.GRENADE, "Grenade");
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
@@ -75,8 +76,8 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 		}
 
 		this.mainNode.attachChild(ball_geo);
-		game.getRootNode().attachChild(this.mainNode);
-		mainNode.setLocalTranslation(origin);
+		//game.getRootNode().attachChild(this.mainNode); // No!  Add when launched
+		//mainNode.setLocalTranslation(origin);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 
@@ -87,11 +88,12 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 
 	
 	public void launch() {
-		// todo - set start pos
+		game.getRootNode().attachChild(this.mainNode);
+		this.setWorldTranslation(this.shooter.getBulletStartPos());
 		this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
-
 	}
 
+	
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 

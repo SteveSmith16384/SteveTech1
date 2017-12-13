@@ -12,7 +12,7 @@ import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.testgame.entities.Grenade;
 
-public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache {
+public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache<Grenade> {
 
 	private static final int MAG_SIZE = 6;
 
@@ -51,6 +51,13 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 	@Override
 	public HashMap<String, Object> getCreationData() {
 		return super.creationData;
+	}
+
+
+	@Override
+	public void addToCache(Grenade o) {
+		this.ammoCache.add(o);
+		
 	}
 
 

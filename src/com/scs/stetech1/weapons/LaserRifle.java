@@ -8,12 +8,13 @@ import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.entities.Grenade;
 import com.scs.testgame.entities.LaserBullet;
 
 /*
  * This gun shoots physical laser bolts
  */
-public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache {
+public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache<LaserBullet> {
 
 	private LinkedList<LaserBullet> ammoCache = new LinkedList<LaserBullet>(); 
 	
@@ -31,8 +32,11 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 
 	@Override
 	public void launchBullet() {
-		// todo
+		LaserBullet g = ammoCache.remove();
+		g.launch();
 	}
+
+
 
 
 	@Override
@@ -50,6 +54,12 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 	@Override
 	public HashMap<String, Object> getCreationData() {
 		return super.creationData;
+	}
+
+
+	@Override
+	public void addToCache(LaserBullet o) {
+		this.ammoCache.add(o);
 	}
 
 

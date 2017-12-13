@@ -2,6 +2,7 @@ package com.scs.testgame;
 
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.AbstractEnemyAvatar;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
@@ -93,9 +94,16 @@ public class TestGameEntityCreator {
 
 		case EntityTypes.GRENADE:
 		{
-			//int side = (int) msg.data.get("side");
-			// todo - store in grenade cache?
-			Grenade grenade = new Grenade(game, id, new Vector3f(0, 0, 0));//new Vector3f(msg.pos.x, msg.pos.y, msg.pos.z));
+			int side = (int) msg.data.get("side");
+			int containerID = (int) msg.data.get("containerID");
+			Grenade grenade = new Grenade(game, id, containerID);//new Vector3f(msg.pos.x, msg.pos.y, msg.pos.z));
+			if (side == game.side) {
+				IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
+				irac.addToCache(grenade);
+			} else {
+				// todo - if it's not ours, store in a generic cache, so we can remove it when obsolete
+				
+			}
 			return grenade;
 		}
 
@@ -145,9 +153,7 @@ public class TestGameEntityCreator {
 				return gl;
 			}
 			return null;
-
 		}
-
 
 		default:
 			throw new RuntimeException("Unknown entity type: " + EntityTypes.getName(msg.type));

@@ -9,9 +9,7 @@ public interface IAbility extends IEntity {
 	/**
 	 * Called when activated/used.  Returns whether it was successfully used.
 	 */
-	boolean activate(float interpol); // todo - remove interpol
-	
-	//void process(float tpf_secs);
+	boolean activate();
 	
 	String getHudText();
 	

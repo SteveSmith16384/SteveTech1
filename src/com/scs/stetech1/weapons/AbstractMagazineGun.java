@@ -32,7 +32,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 
 
 	@Override
-	public final boolean activate(float interpol) {
+	public final boolean activate() {
 		if (this.timeUntilShoot_secs <= 0 && bulletsLeftInMag > 0) {
 			this.launchBullet();
 			timeUntilShoot_secs = this.shotInterval_secs;

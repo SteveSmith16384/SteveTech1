@@ -179,8 +179,10 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 							if (!this.entities.containsKey(newEntityMessage.entityID)) {
 								IEntity e = createEntity(newEntityMessage);
-								//this.addEntity(e);
-								this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launche to
+								if (e != null) {
+									//this.addEntity(e);
+									this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launche to
+								}
 							} else {
 								// We already know about it
 							}
