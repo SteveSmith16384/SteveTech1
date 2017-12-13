@@ -1,5 +1,5 @@
 package com.scs.killercrates2;
 
-public class KillerCratesEntityCreator {
+public class KillerCratesEntityCreator { // todo
 
 }

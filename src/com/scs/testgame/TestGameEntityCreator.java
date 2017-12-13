@@ -87,8 +87,7 @@ public class TestGameEntityCreator {
 
 		case EntityTypes.GRENADE:
 		{
-			//String tex = (String)msg.data.get("tex");
-			//float rot = (Float)msg.data.get("rot");
+			// This is only needed for creating grenades thrown by other players
 			Grenade grenade = new Grenade(game, id, new Vector3f(msg.pos.x, msg.pos.y, msg.pos.z));
 			return grenade;
 		}

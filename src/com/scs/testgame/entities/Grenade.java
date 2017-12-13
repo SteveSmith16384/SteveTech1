@@ -33,9 +33,6 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
-	/*
-	 * Constructor for server
-	 */
 	public Grenade(IEntityController _game, int id, ICanShoot _shooter) {
 		this(_game, id, new Vector3f(_shooter.getBulletStartPos()));//getWorldTranslation().add(_shooter.getBulletStartOffset())));
 
@@ -52,9 +49,6 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	}
 
 
-	/*
-	 * Constructor for client
-	 */
 	public Grenade(IEntityController _game, int id, Vector3f origin) {
 		super(_game, id, EntityTypes.GRENADE, "Grenade");
 
