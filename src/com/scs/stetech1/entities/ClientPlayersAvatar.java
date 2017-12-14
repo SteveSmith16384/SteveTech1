@@ -127,19 +127,4 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 	}
 
 
-	public void updateAbility(AbilityUpdateMessage aum) {
-		if (aum.timestamp > lastAbilityUpdateMsgTime) {
-			IAbility a = null;
-			if (aum.abilityNum == 0) {
-				a = this.abilityGun;
-			} else if (aum.abilityNum == 1) {
-				a = this.abilityOther;
-			} else {
-				throw new RuntimeException("Unknown ability: " + aum.abilityNum);
-			}
-			a.decode(aum);
-			lastAbilityUpdateMsgTime = aum.timestamp;
-		}
-	}
-
 }

@@ -1,11 +1,11 @@
 STETECH1
 
 URGENT
-No need to refer to ability by num
+	No need to refer to ability by num
 Move entity functionality to systems - ECS!
 	Pass owner with grenade so we know if it's ours for the cache
 	Respawn moving target - force movement!
-Adjust grenades in the same way that avatars are adjusted
+	Adjust grenades in the same way that avatars are adjusted
 Search for todos
 
 

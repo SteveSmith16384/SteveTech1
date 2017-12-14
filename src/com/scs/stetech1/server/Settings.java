@@ -53,6 +53,7 @@ public class Settings {
 	
 	// Changing settings
 	public static boolean SYNC_CLIENT_POS = true;
+	public static boolean SYNC_GRENADE_POS = true;
 
 	// User Data
 	public static final String ENTITY = "Entity";

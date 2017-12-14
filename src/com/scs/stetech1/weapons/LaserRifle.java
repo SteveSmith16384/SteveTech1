@@ -21,12 +21,6 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 	public LaserRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
 		super(game, id, EntityTypes.LASER_RIFLE, owner, num, "Laser Rifle", .2f, 2, 10);
 
-		if (game.isServer()) {
-			creationData = new HashMap<String, Object>();
-			creationData.put("ownerid", owner.id);
-			creationData.put("num", num);
-		}
-
 	}
 
 

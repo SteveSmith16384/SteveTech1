@@ -100,9 +100,6 @@ public class TestGameEntityCreator {
 			if (side == game.side) {
 				IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
 				irac.addToCache(grenade);
-			} else {
-				// todo - if it's not ours, store in a generic cache, so we can remove it when obsolete
-				
 			}
 			return grenade;
 		}

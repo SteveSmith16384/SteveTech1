@@ -24,12 +24,6 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
 		super(game, id, EntityTypes.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, 10);
 
-		if (game.isServer()) {
-			creationData = new HashMap<String, Object>();
-			creationData.put("ownerid", owner.id);
-			creationData.put("num", num);
-		}
-
 	}
 
 

@@ -1,6 +1,5 @@
 package com.scs.stetech1.weapons;
 
-import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
@@ -17,10 +16,9 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	protected float shotInterval_secs, reloadInterval_secs;
 
 
-	public AbstractMagazineGun(IEntityController _game, int id, int type, AbstractAvatar owner, int _num, String _name, float shotInt, float reloadInt, int magSize) { // ICanShoot _shooter, 
-		super(_game, id, type, owner, _num, _name);
+	public AbstractMagazineGun(IEntityController _game, int id, int type, AbstractAvatar owner, int num, String _name, float shotInt, float reloadInt, int magSize) { // ICanShoot _shooter, 
+		super(_game, id, type, owner, num, _name);
 
-		//shooter = _shooter;
 		this.shotInterval_secs = shotInt;
 		this.reloadInterval_secs = reloadInt;
 		this.magazineSize = magSize;
@@ -54,7 +52,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 				this.bulletsLeftInMag = this.magazineSize;
 				this.timeUntilShoot_secs += this.reloadInterval_secs;
 				//AbstractGameServer server = (AbstractGameServer)game;
-				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, this.owner, num, this));
+				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 			}
 		}
 		timeUntilShoot_secs -= tpf_secs;

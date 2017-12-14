@@ -96,9 +96,9 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
-		if (Settings.SYNC_CLIENT_POS) {
+		//SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		//simplePlayerControl.getAdditionalForce().set(0, 0, 0);
+		if (Settings.SYNC_GRENADE_POS) {
 			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 			if (offset != null) {
 				this.syncPos.adjustPosition(this, offset);

@@ -21,12 +21,6 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 	public GrenadeLauncher(IEntityController game, int id, AbstractAvatar owner, int num) {
 		super(game, id, EntityTypes.GRENADE_LAUNCHER, owner, num, "GrenadeLauncher", 1, 3, MAG_SIZE);
 
-		if (game.isServer()) {
-			creationData = new HashMap<String, Object>();
-			creationData.put("ownerid", owner.id);
-			creationData.put("num", num);
-		}
-
 	}
 
 

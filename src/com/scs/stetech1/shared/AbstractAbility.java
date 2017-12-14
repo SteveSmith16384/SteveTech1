@@ -1,6 +1,7 @@
 package com.scs.stetech1.shared;
 
-import com.scs.stetech1.components.IProcessByClient;
+import java.util.HashMap;
+
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.Entity;
@@ -11,12 +12,9 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 	private static final float SEND_INT = 5;
 
-	//protected IEntityController game;
 	protected AbstractAvatar owner;
-	//protected String name;
-	protected int num_;
+	public int num;
 	private float timeUntilNextSend = SEND_INT;
-	//private int id;
 
 	public AbstractAbility(IEntityController _game, int _id, int type, AbstractAvatar _owner, int _num, String _name) {
 		super(_game, _id, type, _name);
@@ -25,12 +23,16 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 			throw new RuntimeException("No owner for ability");
 		}
 		
-		//id = _id;
-		//game = _game;
-		num =_num;
-		//name = _name;
 		owner = _owner;
-	}
+		num = _num;
+
+		if (game.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("ownerid", owner.id);
+			creationData.put("num", num);
+		}
+
+}
 	
 
 	@Override
@@ -39,7 +41,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 			timeUntilNextSend -= tpf_secs;
 			if (timeUntilNextSend <= 0) {
 				//AbstractGameServer server = (AbstractGameServer)game;
-				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(false, this.owner, num, this));
+				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(false, this));
 				timeUntilNextSend = SEND_INT;
 			}
 		//}

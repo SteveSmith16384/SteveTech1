@@ -50,6 +50,7 @@ import com.scs.stetech1.networking.KryonetClient;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
+import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.systems.UpdateAmmoCacheSystem;
 import com.scs.testgame.entities.Floor;
@@ -239,13 +240,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 						} else if (message instanceof AbilityUpdateMessage) {
 							AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
-							if (this.avatar != null) {
-								if (aum.avatarId == this.avatar.id) {
-									avatar.updateAbility(aum);
-								} else {
-									throw new RuntimeException("Received update for wrong avatar");
-								}
-							}
+								//todo if (aum.timestamp > lastAbilityUpdateMsgTime) {
+									//AbstractGameClient client = (AbstractGameClient)game;
+									IAbility a = (IAbility)entities.get(aum.entityID);
+									a.decode(aum);
+									//lastAbilityUpdateMsgTime = aum.timestamp;
+							//}
 
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);

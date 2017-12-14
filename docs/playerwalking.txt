@@ -1,0 +1,3 @@
+1. Reset AdditionForce
+2. Get input
+3. Process physics
