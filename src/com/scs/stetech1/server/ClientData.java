@@ -14,7 +14,7 @@ public class ClientData {
 	public Object networkObj;
 	public int id;
 	public AverageNumberCalculator pingCalc = new AverageNumberCalculator();
-	public long pingRTT; // todo - move to simpleplayerdata
+	//public long pingRTT; // todo - move to simpleplayerdata
 	public long latestInputTimestamp;
 	public ServerPlayersAvatar avatar;
 	public RemoteInput remoteInput = new RemoteInput(); // For storing message that are translated into input

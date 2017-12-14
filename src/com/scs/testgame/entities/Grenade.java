@@ -107,13 +107,6 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	}
 
 
-	/*
-	@Override
-	public boolean hasMoved() {
-		return false; // We don't want to send updates to the client since it's impossible to keep them in sync
-	}
-	 */
-
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		this.timeLeft -= tpf_secs;
@@ -134,7 +127,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 			//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
 			this.remove();
 		}
-		super.processByServer(null, tpf_secs);
+		//super.processByServer(null, tpf_secs);
 
 	}
 

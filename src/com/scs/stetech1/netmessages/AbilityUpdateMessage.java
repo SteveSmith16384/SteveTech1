@@ -7,7 +7,6 @@ import com.scs.stetech1.shared.IAbility;
 @Serializable
 public class AbilityUpdateMessage extends MyAbstractMessage {
 	
-	// todo - store these in a hashmap?
 	public int bulletsLeftInMag;
 	public float timeUntilShoot = 0;
 	

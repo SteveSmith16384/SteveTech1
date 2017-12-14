@@ -6,6 +6,8 @@ Test Game
 
 What the Box
 
+Secret Agent
+	Like What the Box, but people are walking around.  Who is the other agent?
 
 Moonbase Assault
 

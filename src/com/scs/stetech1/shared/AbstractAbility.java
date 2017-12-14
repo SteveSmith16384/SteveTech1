@@ -14,7 +14,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	//protected IEntityController game;
 	protected AbstractAvatar owner;
 	//protected String name;
-	protected int num;
+	protected int num_;
 	private float timeUntilNextSend = SEND_INT;
 	//private int id;
 

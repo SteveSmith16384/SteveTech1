@@ -8,7 +8,8 @@ public class SimplePlayerData { // POJO
 	public int id;
 	public String playerName;
 	public int side;
-	
+	public long pingRTT;
+
 	public SimplePlayerData() {
 		// need empty constructor for deserialization
 	}

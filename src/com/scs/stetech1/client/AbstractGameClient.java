@@ -24,6 +24,7 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByClient;
+import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.data.GameData;
 import com.scs.stetech1.entities.ClientPlayersAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
@@ -50,6 +51,7 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.stetech1.systems.UpdateAmmoCacheSystem;
 import com.scs.testgame.entities.Floor;
 
 import ssmith.util.FixedLoopTime;
@@ -75,7 +77,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	public static BitmapFont guiFont_small;
 	public static AppSettings settings;
-	private IMessageClient networkClient;
+	public IMessageClient networkClient;
 	public HUD hud;
 	public IInputDevice input;
 
@@ -92,10 +94,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	private SimplePhysicsController<PhysicalEntity> physicsController;
 
+	private UpdateAmmoCacheSystem updateAmmoSystem;
+
 	protected AbstractGameClient() {
 		super();
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
+		updateAmmoSystem = new UpdateAmmoCacheSystem(this);
 	}
 
 
@@ -241,7 +246,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 									throw new RuntimeException("Received update for wrong avatar");
 								}
 							}
-							
+
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
@@ -280,6 +285,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					this.toRemove.clear();
 
 					for (IEntity e : this.entities.values()) {
+						if (e instanceof IRequiresAmmoCache) {
+							updateAmmoSystem.process(e, tpf_secs);
+						}
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
 							if (pe.canMove()) { // Only bother with things that can move
@@ -389,7 +397,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		} else if (message instanceof AbilityUpdateMessage) {
 			AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
 			unprocessedMessages.add(aum);
-			
+
 		} else if (message instanceof GameStatusMessage) {
 			GameStatusMessage gsm = (GameStatusMessage)message;
 			this.hud.setGameStatus(GameData.getStatusDesc(gsm.gameStatus));

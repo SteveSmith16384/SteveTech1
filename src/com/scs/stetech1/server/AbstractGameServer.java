@@ -374,11 +374,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			if (pingMessage.s2c) {
 				try {
 					long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
-					client.pingRTT = client.pingCalc.add(rttDuration);
-					client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
+					client.playerData.pingRTT = client.pingCalc.add(rttDuration);
+					client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.playerData.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
 					//Settings.p("Client rtt = " + client.pingRTT);
 					//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
-					if ((client.pingRTT/2) + Settings.SERVER_SEND_UPDATE_INTERVAL_MS > Settings.CLIENT_RENDER_DELAY) {
+					if ((client.playerData.pingRTT/2) + Settings.SERVER_SEND_UPDATE_INTERVAL_MS > Settings.CLIENT_RENDER_DELAY) {
 						Settings.p("Warning: client ping is longer than client render delay!");
 					}
 				} catch (NullPointerException npe) {
