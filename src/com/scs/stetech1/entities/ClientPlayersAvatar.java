@@ -26,7 +26,6 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 	public Camera cam;
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
-	private long lastAbilityUpdateMsgTime; // todo - move to ability entit
 	
 	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
 		super(_module, _playerID, _input, eid, side);

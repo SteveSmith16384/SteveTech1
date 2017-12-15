@@ -39,16 +39,19 @@ import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
+import com.scs.stetech1.netmessages.RequestNewBulletMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.server.ClientData.ClientStatus;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Floor;
+import com.scs.testgame.entities.Grenade;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
@@ -138,6 +141,19 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							client.remoteInput.decodeMessage(pim);
 							client.latestInputTimestamp = pim.timestamp;
 						}
+						
+					} else if (message instanceof RequestNewBulletMessage) {
+						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
+						switch (rnbe.type) {
+						case EntityTypes.GRENADE:
+							Grenade g = new Grenade(this, getNextEntityID(), null, rnbe.ownerEntityID);
+							break;
+							
+						case EntityTypes.LASER_BULLET:
+							break;
+							default:
+								throw new RuntimeException("todo");
+						}
 
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
@@ -209,7 +225,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						/*if (physicalEntity.simpleRigidBody != null) {
 							physicalEntity.simpleRigidBody.process(tpf_secs);
 						}*/
-						strDebug.append(physicalEntity.name + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
+						strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 						/*if (sc.type == EntityTypes.AVATAR) {
 							AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
 							strDebug.append("WalkDir: " + av.playerControl.getWalkDirection() + "   Velocity: " + av.playerControl.getVelocity().length() + "\n");
@@ -225,7 +241,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							}
 						}
 					} else {
-						strDebug.append(e.getName() + "\n");
+						strDebug.append(e.getID() + ": " + e.getName() + "\n");
 					}
 				}
 			}

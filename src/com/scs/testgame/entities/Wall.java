@@ -58,7 +58,8 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 			float rads = (float)Math.toRadians(rotDegrees);
 			mainNode.rotate(0, rads, 0);
 		}
-		geometry.setLocalTranslation(x+(w/2), yBottom+(h/2), z+(d/2)); // Never change position of mainNode (unless the whole object is moving)
+		geometry.setLocalTranslation(w/2, h/2, d/2); // Never change position of mainNode (unless the whole object is moving)
+		mainNode.setLocalTranslation(x, yBottom, z); // Never change position of mainNode (unless the whole object is moving)
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 		this.simpleRigidBody.setMovable(false);

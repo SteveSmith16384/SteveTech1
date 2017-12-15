@@ -145,6 +145,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 
 	public void shoot() {
+		if (abilityGun == null) {
+			throw new RuntimeException("todo");
+		}
 		if (this.abilityGun.activate()) {
 			this.numShots++;
 		}
@@ -194,7 +197,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 	@Override
 	public Vector3f getBulletStartPos() {
-		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0);//.addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));
+		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0); //.addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));
 	}
 
 

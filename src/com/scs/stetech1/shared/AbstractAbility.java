@@ -15,14 +15,15 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	protected AbstractAvatar owner;
 	public int num;
 	private float timeUntilNextSend = SEND_INT;
+	private long lastUpdateMsgTime;
 
 	public AbstractAbility(IEntityController _game, int _id, int type, AbstractAvatar _owner, int _num, String _name) {
 		super(_game, _id, type, _name);
-		
+
 		if (_owner == null) {
 			throw new RuntimeException("No owner for ability");
 		}
-		
+
 		owner = _owner;
 		num = _num;
 
@@ -31,20 +32,41 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 			creationData.put("ownerid", owner.id);
 			creationData.put("num", num);
 		}
+		
+		// Add to avatar
+		if (num == 0) {
+			owner.abilityGun = this;
+		} else if (num == 1) {
+			owner.abilityOther = this;
+		} else {
+			throw new RuntimeException("todo");
+		}
 
-}
-	
+	}
+
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		//if (game.isServer()) {
-			timeUntilNextSend -= tpf_secs;
-			if (timeUntilNextSend <= 0) {
-				//AbstractGameServer server = (AbstractGameServer)game;
-				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(false, this));
-				timeUntilNextSend = SEND_INT;
-			}
+		timeUntilNextSend -= tpf_secs;
+		if (timeUntilNextSend <= 0) {
+			//AbstractGameServer server = (AbstractGameServer)game;
+			server.networkServer.sendMessageToAll(new AbilityUpdateMessage(false, this));
+			timeUntilNextSend = SEND_INT;
+		}
 		//}
+	}
+
+
+	@Override
+	public long getLastUpdateTime() {
+		return this.lastUpdateMsgTime;
+	}
+
+
+	@Override
+	public void setLastUpdateTime(long l) {
+		this.lastUpdateMsgTime = l;
 	}
 
 }

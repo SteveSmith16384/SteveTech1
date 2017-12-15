@@ -259,6 +259,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	@Override
 	public HashMap<String, Object> getCreationData() {
+		if (creationData == null) {
+			//creationData = new HashMap<String, Object>();
+			throw new RuntimeException("creationData needs creating for " + this.getName());
+		}
 		creationData.put("pos", this.getWorldTranslation());
 		return super.getCreationData();
 	}

@@ -24,7 +24,7 @@ public class NewEntityMessage extends MyAbstractMessage {
 		
 		type = e.getType();
 		entityID = e.getID();
-		//pos = e.getWorldTranslation();
+		//pos = e.getWorldTranslation(); These get added
 		//dir = e.getWorldRotation();
 		data = e.getCreationData();
 	}
