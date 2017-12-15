@@ -1,11 +1,14 @@
 STETECH1
 
 URGENT
-	No need to refer to ability by num
+Wall seems to be always at 0,0,0
+Add walls along edge to aid shooting tests
+	Draw crosshairs
+Client should remove its own debugging spheres
 Move entity functionality to systems - ECS!
 	Pass owner with grenade so we know if it's ours for the cache
-	Respawn moving target - force movement!
 	Adjust grenades in the same way that avatars are adjusted
+Why does player slow down when falling?
 Search for todos
 
 

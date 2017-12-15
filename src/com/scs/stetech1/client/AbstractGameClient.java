@@ -148,15 +148,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	private HUD createHUD(Camera c) {
 		BitmapFont guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-		// HUD coords are full screen co-ords!
-		// cam.getWidth() = 640x480, cam.getViewPortLeft() = 0.5f
-		float xBL = c.getWidth() * c.getViewPortLeft();
-		//float y = (c.getHeight() * c.getViewPortTop())-(c.getHeight()/2);
-		float yBL = c.getHeight() * c.getViewPortBottom();
-
-		float w = c.getWidth() * (c.getViewPortRight()-c.getViewPortLeft());
-		float h = c.getHeight() * (c.getViewPortTop()-c.getViewPortBottom());
-		HUD hud = new HUD(this, xBL, yBL, w, h, guiFont_small, c);
+		HUD hud = new HUD(this, guiFont_small, c);
 		getGuiNode().attachChild(hud);
 		return hud;
 
@@ -241,6 +233,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						} else if (message instanceof AbilityUpdateMessage) {
 							AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
 							IAbility a = (IAbility)entities.get(aum.entityID);
+							if (a == null) {
+								throw new RuntimeException("todo");
+							}
 							if (aum.timestamp > a.getLastUpdateTime()) {
 								a.decode(aum);
 								a.setLastUpdateTime(aum.timestamp);

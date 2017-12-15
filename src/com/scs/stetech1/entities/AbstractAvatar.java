@@ -202,7 +202,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 	@Override
 	public Vector3f getBulletStartPos() {
-		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0);//.addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));
+		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0); //.addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));
 	}
 
 

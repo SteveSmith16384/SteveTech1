@@ -225,7 +225,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						/*if (physicalEntity.simpleRigidBody != null) {
 							physicalEntity.simpleRigidBody.process(tpf_secs);
 						}*/
-						strDebug.append(physicalEntity.name + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
+						strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 						/*if (sc.type == EntityTypes.AVATAR) {
 							AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
 							strDebug.append("WalkDir: " + av.playerControl.getWalkDirection() + "   Velocity: " + av.playerControl.getVelocity().length() + "\n");
@@ -241,7 +241,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							}
 						}
 					} else {
-						strDebug.append(e.getName() + "\n");
+						strDebug.append(e.getID() + ": " + e.getName() + "\n");
 					}
 				}
 			}

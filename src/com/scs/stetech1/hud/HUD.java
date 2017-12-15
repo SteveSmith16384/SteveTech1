@@ -32,29 +32,21 @@ public class HUD extends Node implements IProcessByClient {
 	private Geometry damage_box;
 	private ColorRGBA dam_box_col = new ColorRGBA(1, 0, 0, 0.0f);
 	private boolean process_damage_box;
-	private List<Picture> targetting_reticules = new ArrayList<>();
+	//private List<Picture> targetting_reticules = new ArrayList<>();
 	private AbstractGameClient game;
-	private BitmapText abilityGun, abilityOther, score, playerID, gameStatus, gameTime;
+	private BitmapText abilityGun, abilityOther, playerID, gameStatus, gameTime;
 
-	public HUD(AbstractGameClient _game, float xBL, float yBL, float w, float h, BitmapFont font_small, Camera _cam) {
+	public HUD(AbstractGameClient _game, BitmapFont font_small, Camera _cam) {
 		super("HUD");
 
 		game = _game;
-		hud_width = w;
-		hud_height = h;
+		hud_width = _cam.getWidth();
+		hud_height = _cam.getHeight();
 		cam = _cam;
+		
+		this.addTargetter();
 
-		super.setLocalTranslation(xBL, yBL, 0);
-
-		/*health = new BitmapText(font_small, false);
-		health.setLocalTranslation(10, hud_height-20, 0);
-		this.attachChild(health);
-		this.setHealth(100);*/
-
-		score = new BitmapText(font_small, false);
-		score.setLocalTranslation(10, hud_height-15, 0);
-		//this.attachChild(score);
-		this.setScore(0);
+		//super.setLocalTranslation(xBL, yBL, 0);
 
 		abilityGun = new BitmapText(font_small, false);
 		abilityGun.setColor(ColorRGBA.Green);
@@ -83,7 +75,7 @@ public class HUD extends Node implements IProcessByClient {
 			Material mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 			mat.setColor("Color", this.dam_box_col);
 			mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-			damage_box = new Geometry("damagebox", new Quad(w, h));
+			damage_box = new Geometry("damagebox", new Quad(hud_width, hud_height));
 			damage_box.move(0, 0, 0);
 			damage_box.setMaterial(mat);
 			this.attachChild(damage_box);
@@ -153,11 +145,6 @@ public class HUD extends Node implements IProcessByClient {
 	}
 
 
-	public void setScore(float s) {
-		this.score.setText("SCORE: " + (int)s);
-	}
-
-
 	public void setPlayerID(int id) {
 		this.playerID.setText("PlayerID: " + id);
 	}
@@ -217,8 +204,9 @@ public class HUD extends Node implements IProcessByClient {
 		targetting_reticule.setWidth(crosshairs_w);
 		float crosshairs_h = cam.getHeight()/10;
 		targetting_reticule.setHeight(crosshairs_h);
+		this.setLocalTranslation((cam.getWidth() - crosshairs_w)/2, (cam.getHeight() - crosshairs_h)/2, 0);
 		this.attachChild(targetting_reticule);
 
-		this.targetting_reticules.add(targetting_reticule);
+		//this.targetting_reticules.add(targetting_reticule);
 	}
 }
