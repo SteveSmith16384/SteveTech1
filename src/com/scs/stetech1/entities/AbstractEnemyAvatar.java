@@ -50,14 +50,7 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 		//Settings.p("Pos: " + this.getLocation());
 	}
 
-/*
-	@Override
-	public boolean collidedWith(ICollideable other) {
-		// Do nothing
-		return false;
-	}
 
-*/
 	@Override
 	public boolean hasMoved() {
 		return true; // Always calc for avatars
