@@ -29,14 +29,14 @@ import com.scs.stetech1.shared.PositionCalculator;
 
 public class Grenade extends PhysicalEntity implements IProcessByClient {
 
-	public ICanShoot shooter;
+	//public ICanShoot shooter;
 	private float timeLeft = 4f;
 
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
-	public Grenade(IEntityController _game, int id, ICanShoot _shooter, int containerID) {
-		this(_game, id, containerID);
+	public Grenade(IEntityController _game, int id, ICanShoot _shooter, int containerID) { // todo - remove shooter?
+		this(_game, id);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -44,17 +44,15 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 			creationData.put("containerID", containerID);
 		}
 		
-		this.shooter = _shooter;
+		//this.shooter = _shooter;
 		syncPos = new InstantPositionAdjustment();
 
-		// Accelerate the physical ball to shoot it.  NO!  Do when launched
-		//this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
 		this.simpleRigidBody.setBounciness(.6f);
 
 	}
 
 
-	public Grenade(IEntityController _game, int id, int containerID) {//, Vector3f origin) {
+	private Grenade(IEntityController _game, int id) {
 		super(_game, id, EntityTypes.GRENADE, "Grenade");
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
@@ -87,9 +85,9 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	}
 
 	
-	public void launch() {
+	public void launch(ICanShoot shooter) {
 		game.getRootNode().attachChild(this.mainNode);
-		this.setWorldTranslation(this.shooter.getBulletStartPos());
+		this.setWorldTranslation(shooter.getBulletStartPos());
 		this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
 	}
 

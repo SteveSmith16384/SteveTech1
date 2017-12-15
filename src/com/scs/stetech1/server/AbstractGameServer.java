@@ -39,16 +39,19 @@ import com.scs.stetech1.netmessages.PingMessage;
 import com.scs.stetech1.netmessages.PlayerInputMessage;
 import com.scs.stetech1.netmessages.PlayerLeftMessage;
 import com.scs.stetech1.netmessages.RemoveEntityMessage;
+import com.scs.stetech1.netmessages.RequestNewBulletMessage;
 import com.scs.stetech1.netmessages.UnknownEntityMessage;
 import com.scs.stetech1.netmessages.WelcomeClientMessage;
 import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.server.ClientData.ClientStatus;
+import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Floor;
+import com.scs.testgame.entities.Grenade;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
@@ -137,6 +140,19 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						if (pim.timestamp > client.latestInputTimestamp) {
 							client.remoteInput.decodeMessage(pim);
 							client.latestInputTimestamp = pim.timestamp;
+						}
+						
+					} else if (message instanceof RequestNewBulletMessage) {
+						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
+						switch (rnbe.type) {
+						case EntityTypes.GRENADE:
+							Grenade g = new Grenade(this, getNextEntityID(), null, rnbe.ownerEntityID);
+							break;
+							
+						case EntityTypes.LASER_BULLET:
+							break;
+							default:
+								throw new RuntimeException("todo");
 						}
 
 					} else {

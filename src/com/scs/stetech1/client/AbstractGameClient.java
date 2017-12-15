@@ -240,12 +240,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 						} else if (message instanceof AbilityUpdateMessage) {
 							AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
-								//todo if (aum.timestamp > lastAbilityUpdateMsgTime) {
-									//AbstractGameClient client = (AbstractGameClient)game;
-									IAbility a = (IAbility)entities.get(aum.entityID);
-									a.decode(aum);
-									//lastAbilityUpdateMsgTime = aum.timestamp;
-							//}
+							IAbility a = (IAbility)entities.get(aum.entityID);
+							if (aum.timestamp > a.getLastUpdateTime()) {
+								a.decode(aum);
+								a.setLastUpdateTime(aum.timestamp);
+							}
 
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);

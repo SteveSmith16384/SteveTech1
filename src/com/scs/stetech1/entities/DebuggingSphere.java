@@ -1,5 +1,7 @@
 package com.scs.stetech1.entities;
 
+import java.util.HashMap;
+
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.scene.Geometry;
@@ -24,6 +26,10 @@ public class DebuggingSphere extends PhysicalEntity {
 	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z, boolean server) {
 		super(_game, id, EntityTypes.DEBUGGING_SPHERE, "DebuggingSphere");
 
+		if (_game.isServer()) {
+			creationData = new HashMap<String, Object>();
+		}
+		
 		this.collideable = false;
 		
 		Sphere sphere = new Sphere(8, 8, 0.2f, true, false);

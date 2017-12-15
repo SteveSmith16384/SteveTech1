@@ -3,10 +3,9 @@ package com.scs.stetech1.weapons;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.jme3.math.Vector3f;
+import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.entities.AbstractAvatar;
-import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
@@ -27,7 +26,7 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 	@Override
 	public void launchBullet() {
 		Grenade g = ammoCache.remove();
-		g.launch();
+		g.launch((ICanShoot)owner);
 	}
 
 

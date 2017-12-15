@@ -96,7 +96,7 @@ public class TestGameEntityCreator {
 		{
 			int side = (int) msg.data.get("side");
 			int containerID = (int) msg.data.get("containerID");
-			Grenade grenade = new Grenade(game, id, containerID);//new Vector3f(msg.pos.x, msg.pos.y, msg.pos.z));
+			Grenade grenade = new Grenade(game, id, null, containerID);
 			if (side == game.side) {
 				IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
 				irac.addToCache(grenade);

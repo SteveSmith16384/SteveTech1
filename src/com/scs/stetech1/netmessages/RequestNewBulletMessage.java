@@ -5,6 +5,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class RequestNewBulletMessage extends MyAbstractMessage {
 
+	public int ownerEntityID;
 	public int type;
 	
 	public RequestNewBulletMessage() {
@@ -12,10 +13,11 @@ public class RequestNewBulletMessage extends MyAbstractMessage {
 	}
 	
 
-	public RequestNewBulletMessage(int _type) {
+	public RequestNewBulletMessage(int _type, int _entityID) {
 		this();
 		
 		type = _type;
+		ownerEntityID = _entityID;
 	}
 
 }
