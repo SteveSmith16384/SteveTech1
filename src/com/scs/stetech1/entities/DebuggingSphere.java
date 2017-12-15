@@ -8,7 +8,8 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
-import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stetech1.client.AbstractGameClient;
+import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
@@ -17,7 +18,7 @@ import com.scs.stetech1.shared.IEntityController;
 /*
  * Simple sphere to help show points in the world
  */
-public class DebuggingSphere extends PhysicalEntity {
+public class DebuggingSphere extends PhysicalEntity implements IProcessByClient {
 	
 	private static final float DURATION = 1;
 	
@@ -68,9 +69,9 @@ public class DebuggingSphere extends PhysicalEntity {
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (game.isServer()) {
-			this.timeLeft -= tpf;
+			this.timeLeft -= tpf_secs;
 			if (this.timeLeft <= 0) {
 				this.remove();
 			}
@@ -81,6 +82,19 @@ public class DebuggingSphere extends PhysicalEntity {
 	@Override
 	public boolean canMove() {
 		return false;
+	}
+
+
+	@Override
+	public void processByClient(AbstractGameClient client, float tpf_secs) {
+		if (this.getID() <= 0) { // Client-controlled
+			this.timeLeft -= tpf_secs;
+			if (this.timeLeft <= 0) {
+				this.remove();
+			}
+
+		}
+		
 	}
 
 

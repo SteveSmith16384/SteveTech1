@@ -1,10 +1,13 @@
 STETECH1
 
 URGENT
-Wall seems to be always at 0,0,0
+Can't seem to shoot movingentity correctly
+Log position of player when shooting, on both client and server
+Log position of moving target on client and server at the point it is hit
+	Wall seems to be always at 0,0,0
 Add walls along edge to aid shooting tests
-	Draw crosshairs
-Client should remove its own debugging spheres
+	Client should remove its own debugging spheres
+Create test ECS system
 Move entity functionality to systems - ECS!
 	Pass owner with grenade so we know if it's ours for the cache
 	Adjust grenades in the same way that avatars are adjusted
@@ -14,13 +17,11 @@ Search for todos
 
 TODO
 Should not have a generic "process()" method?
+Grenades
 Check game status changes when player joins
-Log position of player when shooting, on both client and server
 Use new models
-Log position of moving target on client and server at the point it is hit
 Make floor a single quad
 Less damage from hitscan over distance
-Simple physics - pushing
 Laser bullets
 Check camera pos
 Origin of entities should be floor 
@@ -51,7 +52,7 @@ Make vars private/protected
 
 
 LATER
-Grenades
+Simple physics - pushing
 Player reconnect and get same avatar
 Show kryonet logging
 Kryonet test - send lots of other random msgs
