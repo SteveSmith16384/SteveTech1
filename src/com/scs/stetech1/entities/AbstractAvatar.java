@@ -89,11 +89,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 			simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 		}
 		
-		/*abilityGun.process(tpf_secs);
-		if (this.abilityOther != null) {
-			abilityOther.process(tpf_secs);
-		}*/
-
 		if (this.abilityOther != null) {
 			if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
 				//Settings.p("Using " + this.ability.toString());
