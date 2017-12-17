@@ -145,9 +145,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 
 	public void shoot() {
-		if (abilityGun == null) {
+		/*if (abilityGun == null) {
 			throw new RuntimeException("todo");
-		}
+		}*/
 		if (this.abilityGun.activate()) {
 			this.numShots++;
 		}

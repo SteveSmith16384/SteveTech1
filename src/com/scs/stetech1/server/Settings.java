@@ -24,17 +24,18 @@ public class Settings {
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SYNC_POS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
-
+	public static final boolean DEBUG_REWIND_POS = true;
+	
 	public static final String IP_ADDRESS = "localhost";
 	public static final int TCP_PORT = 6143;
-	public static final int UDP_PORT = 6143; // scs new
+	public static final int UDP_PORT = 6143;
 	public static final int TCP_LOBBY_PORT = 6144;
 	public static final int UDP_LOBBY_PORT = 6144;
 	public static final float CONNECTION_IDLE_THRESH = 1000000;
 	
 	public static final int SERVER_TICKRATE_MS = 20; // Source: 15ms
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 70; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 
-	public static final int CLIENT_RENDER_DELAY = SERVER_SEND_UPDATE_INTERVAL_MS*3; // How far in past the client should render the view.  Source: 50ms
+	public static final int CLIENT_RENDER_DELAY = 1000; //SERVER_SEND_UPDATE_INTERVAL_MS*3; // How far in past the client should render the view.  Source: 50ms
 	public static final int PING_INTERVAL_MS = 100 * 1000; // How often server sends pings
 	public static final int ARTIFICIAL_COMMS_DELAY = 0;
 	public static final float MAX_CLIENT_POSITION_DISCREP = 0.1f; // Max difference between what client and server think the pos of avatar is, before client is corrected

@@ -39,7 +39,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 		} else if (num == 1) {
 			owner.abilityOther = this;
 		} else {
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Unknown ability num: " + num);
 		}
 
 	}

@@ -14,6 +14,7 @@ import com.scs.stetech1.server.RayCollisionData;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.entities.MovingTarget;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
@@ -35,6 +36,11 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				Settings.p(hitThisMoment.entity + " has been shot!");
 				Vector3f pos = this.hitThisMoment.point;
 				new DebuggingSphere(game, AbstractGameServer.getNextEntityID(), pos.x, pos.y, pos.z, true);
+
+				if (hitThisMoment.entity instanceof MovingTarget && Settings.DEBUG_REWIND_POS) {
+					Settings.p("Moving target hit at " + hitThisMoment.entity.getWorldTranslation());
+				}
+
 				AbstractGameServer server = (AbstractGameServer)game;
 				server.collisionLogic.collision(hitThisMoment.entity, this);
 				this.hitThisMoment = null; // Clear it ready for next loop
@@ -51,6 +57,9 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
 				new DebuggingSphere(game, -1, pos.x, pos.y, pos.z, false);
+				if (rcd.entity instanceof MovingTarget && Settings.DEBUG_REWIND_POS) {
+					Settings.p("Moving target hit at " + rcd.entity.getWorldTranslation());
+				}
 			}
 		}
 

@@ -152,7 +152,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						case EntityTypes.LASER_BULLET:
 							break;
 							default:
-								throw new RuntimeException("todo");
+								throw new RuntimeException("Unknown bullet type: " + rnbe.type);
 						}
 
 					} else {
