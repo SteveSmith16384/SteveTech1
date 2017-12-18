@@ -9,6 +9,7 @@ import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.ICanShoot;
+import com.scs.stetech1.components.IPreprocess;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.AbstractGameServer;
@@ -16,9 +17,8 @@ import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.weapons.GrenadeLauncher;
 
-public abstract class AbstractAvatar extends PhysicalEntity implements IProcessByServer, ICanShoot, IAffectedByPhysics {
+public abstract class AbstractAvatar extends PhysicalEntity implements IPreprocess, IProcessByServer, ICanShoot, IAffectedByPhysics {
 
 	// Player dimensions
 	public static final float PLAYER_HEIGHT = 0.7f;
@@ -78,17 +78,15 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 
 	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
-	
+
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs) {
 		this.resetWalkDir();
 
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-
 		// Reset addition force
-		if (server != null) { // Only do this server-side, since it contains sync adjustments
+		/*if (server != null) { // Only do this server-side, since it contains sync adjustments
 			simplePlayerControl.getAdditionalForce().set(0, 0, 0);
-		}
-		
+		}*/
+
 		if (this.abilityOther != null) {
 			if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
 				//Settings.p("Using " + this.ability.toString());
@@ -117,6 +115,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 		}
 
 		if (this.walkDirection.length() != 0) {
+			SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 			simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
 		}
 		// These must be after we might use them, so the hud is correct 
@@ -124,9 +123,15 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 			if (abilityOther != null) {
 				this.hud.setAbilityOtherText(this.abilityOther.getHudText());
 			}*/
-		
-		super.processByServer(server, tpf_secs);
-		
+
+		/*if (server != null) {
+			super.processByServer(server, tpf_secs);
+		} else {
+			if (simpleRigidBody != null) {*/
+		simpleRigidBody.process(tpf_secs);
+		//}
+
+		//}
 		/*if (this.walkDirection.length() != 0) {
 			Settings.p("Pos=" + this.getWorldTranslation());
 		}*/
@@ -158,8 +163,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 	public void jump() {
 		Settings.p("Jumping!");
 		//if (this.game.isServer()) { Too much of a delay
-			SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-			simplePlayerControl.jump();
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.jump();
 		//}
 	}
 
@@ -206,7 +211,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 		return side;
 	}
 
-	
+
 	public void addAbility(IAbility a, int num) {
 		if (num == 0) {
 			this.abilityGun = a;
@@ -216,5 +221,13 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IProcessB
 			throw new RuntimeException("Unknown ability num: " + num);
 		}
 	}
+
+
+	@Override
+	public void preprocess() {
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
+		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
+	}
+
 
 }

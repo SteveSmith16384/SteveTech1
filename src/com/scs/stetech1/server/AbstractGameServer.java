@@ -20,7 +20,9 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.ICalcHitInPast;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.components.IPreprocess;
 import com.scs.stetech1.components.IProcessByServer;
+import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.components.IRewindable;
 import com.scs.stetech1.data.GameData;
 import com.scs.stetech1.data.GameOptions;
@@ -144,9 +146,10 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						
 					} else if (message instanceof RequestNewBulletMessage) {
 						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
+						IRequiresAmmoCache irac =(IRequiresAmmoCache)this.entities.get(rnbe.ownerEntityID);
 						switch (rnbe.type) {
 						case EntityTypes.GRENADE:
-							Grenade g = new Grenade(this, getNextEntityID(), null, rnbe.ownerEntityID);
+							Grenade g = new Grenade(this, getNextEntityID(), irac);
 							break;
 							
 						case EntityTypes.LASER_BULLET:
@@ -215,6 +218,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 				// Loop through the entities
 				for (IEntity e : entities.values()) {
+					if (e instanceof IPreprocess) {
+						IPreprocess p = (IPreprocess)e;
+						p.preprocess();
+					}
+
 					if (e instanceof IProcessByServer) {
 						IProcessByServer p = (IProcessByServer)e;
 						p.processByServer(this, tpf_secs);
@@ -222,18 +230,10 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity physicalEntity = (PhysicalEntity)e;
-						/*if (physicalEntity.simpleRigidBody != null) {
-							physicalEntity.simpleRigidBody.process(tpf_secs);
-						}*/
 						strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 						/*if (sc.type == EntityTypes.AVATAR) {
 							AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
 							strDebug.append("WalkDir: " + av.playerControl.getWalkDirection() + "   Velocity: " + av.playerControl.getVelocity().length() + "\n");
-						}*/
-						/*if (physicalEntity.getWorldTranslation().y < -1) {
-							// Dropped away?
-							this.console.appendText(e.getName() + " has fallen off the edge");
-							physicalEntity.fallenOffEdge();
 						}*/
 						if (sendUpdates) {
 							if (physicalEntity.hasMoved()) { // Don't send if not moved (unless Avatar)

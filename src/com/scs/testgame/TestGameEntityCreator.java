@@ -94,13 +94,14 @@ public class TestGameEntityCreator {
 
 		case EntityTypes.GRENADE:
 		{
-			int side = (int) msg.data.get("side");
+			//int side = (int) msg.data.get("side");
 			int containerID = (int) msg.data.get("containerID");
-			Grenade grenade = new Grenade(game, id, null, containerID);
-			if (side == game.side) {
+			IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
+			Grenade grenade = new Grenade(game, id, irac);
+			/*if (side == game.side) {
 				IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
 				irac.addToCache(grenade);
-			}
+			}*/
 			return grenade;
 		}
 

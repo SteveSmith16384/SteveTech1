@@ -46,6 +46,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
+		if (this instanceof AbstractAvatar) {
+			throw new RuntimeException("Do not call this for avatars!");
+		}
+		
 		if (simpleRigidBody != null) {
 			simpleRigidBody.process(tpf_secs);
 		}
@@ -62,7 +66,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	private void addPositionData() {
+	protected void addPositionData() {
 		// Store the position for use when rewinding.
 		EntityPositionData epd = new EntityPositionData();
 		epd.serverTimestamp = System.currentTimeMillis();

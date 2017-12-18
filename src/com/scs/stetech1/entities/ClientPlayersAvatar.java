@@ -47,14 +47,18 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf) {
+	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
 
 		storeAvatarPosition(serverTime);
 
-		super.serverAndClientProcess(null, client, tpf);
+		super.serverAndClientProcess(null, client, tpf_secs);
 
-		hud.processByClient(client, tpf);
+/*		if (simpleRigidBody != null) {
+			simpleRigidBody.process(tpf_secs);
+		}
+*/
+		hud.processByClient(client, tpf_secs);
 
 		// Position camera at node
 		Vector3f vec = this.getWorldTranslation();
@@ -66,7 +70,7 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 		// Rotate us to point in the direction of the camera
 		Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
 		lookAtPoint.y = cam.getLocation().y; // Look horizontal
-		//todo -readd? But rotating spatial makes us stick to the floor   this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
+		//todo -re-add? But rotating spatial makes us stick to the floor   this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
 
 	}
 

@@ -38,7 +38,17 @@ public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDam
 		}
 
 		super.serverAndClientProcess(server, null, tpf);
-	}
+
+		if (getWorldTranslation().y < -1) {
+			// Dropped away?
+			server.console.appendText(getName() + " has fallen off the edge");
+			fallenOffEdge();
+		}
+
+		if (this instanceof IRewindable) {
+			addPositionData();
+		}
+}
 
 
 	@Override

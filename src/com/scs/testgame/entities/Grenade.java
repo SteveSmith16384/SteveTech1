@@ -11,15 +11,14 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
-import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.components.ICausesHarmOnContact;
-import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.client.HistoricalPositionCalculator;
 import com.scs.stetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stetech1.components.ICanShoot;
+import com.scs.stetech1.components.IProcessByClient;
+import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
@@ -29,32 +28,27 @@ import com.scs.stetech1.shared.PositionCalculator;
 
 public class Grenade extends PhysicalEntity implements IProcessByClient {
 
-	//public ICanShoot shooter;
 	private float timeLeft = 4f;
 
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
-	public Grenade(IEntityController _game, int id, int side, int containerID) {
-		this(_game, id);
+	public Grenade(IEntityController _game, int id, IRequiresAmmoCache<Grenade> owner) {
+		super(_game, id, EntityTypes.GRENADE, "Grenade");
+		//this(_game, id);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("side", side);
-			creationData.put("containerID", containerID);
+			//creationData.put("side", side);
+			creationData.put("containerID", owner.getID());
 		}
 		
-		//this.shooter = _shooter;
-		syncPos = new InstantPositionAdjustment();
-
-		this.simpleRigidBody.setBounciness(.6f);
-
+/*
 	}
 
 
 	private Grenade(IEntityController _game, int id) {
-		super(_game, id, EntityTypes.GRENADE, "Grenade");
-
+*/
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("grenade", sphere);
@@ -74,14 +68,14 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 		}
 
 		this.mainNode.attachChild(ball_geo);
-		//game.getRootNode().attachChild(this.mainNode); // No!  Add when launched
-		//mainNode.setLocalTranslation(origin);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody.setBounciness(.6f);
 
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		game.addEntity(this);
 
+		syncPos = new InstantPositionAdjustment();
 	}
 
 	

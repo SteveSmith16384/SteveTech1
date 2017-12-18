@@ -23,6 +23,7 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.components.IPreprocess;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.data.GameData;
@@ -279,25 +280,21 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					this.toRemove.clear();
 
 					for (IEntity e : this.entities.values()) {
+						if (e instanceof IPreprocess) {
+							IPreprocess p = (IPreprocess)e;
+							p.preprocess();
+						}
+
 						if (e instanceof IRequiresAmmoCache) {
 							updateAmmoSystem.process(e, tpf_secs);
 						}
+						
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
 							if (pe.canMove()) { // Only bother with things that can move
 								pe.calcPosition(this, serverTimePast); // Must be before we process physics as this calcs additionalForce
 							}
-							/*if (pe.simpleRigidBody != null) {
-								pe.simpleRigidBody.process(tpf_secs);
-							}*/
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
-
-							/*if (Settings.DEBUG) {
-								if (pe instanceof AbstractAvatar) {
-									AbstractAvatar av = (AbstractAvatar)pe;
-									strListEnts.append("Bounds: " + av.getMainNode().getWorldBound() + "\n");
-								}
-							}*/
 						}
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
@@ -305,14 +302,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						}
 					}
 
-					//physicsController.update(tpf_secs); // Do this after we've processed them to take into account adjustments
-
 					this.hud.log_ta.setText(strListEnts.toString());
 				}
 			}
 
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			this.quit("Error: " + ex);
