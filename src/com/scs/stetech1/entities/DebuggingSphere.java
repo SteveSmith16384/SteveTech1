@@ -20,7 +20,7 @@ import com.scs.stetech1.shared.IEntityController;
  */
 public class DebuggingSphere extends PhysicalEntity implements IProcessByClient {
 	
-	private static final float DURATION = 1;
+	private static final float DURATION = 5;
 	
 	private float timeLeft = DURATION;
 

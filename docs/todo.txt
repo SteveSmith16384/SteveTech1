@@ -1,24 +1,24 @@
 STETECH1
+
+http://the-witness.net/news/2011/06/how-to-program-independent-games/
 https://gamedevelopment.tutsplus.com/tutorials/create-a-simple-asteroids-game-using-component-based-entities--gamedev-1324
 
+
 URGENT
+HUD text not in correct place
+Moving target origin is 0.5
+Check game status changes when player joins
 Can't seem to shoot movingentity correctly
-	Log position of player when shooting, on both client and server
-	Log position of moving target on client and server at the point it is hit
-	Add walls along edge to aid shooting tests
-	Client should remove its own debugging spheres
-	Create test ECS system
-Move entity functionality to systems - ECS!
 	Adjust grenades in the same way that avatars are adjusted
-Why does player slow down when falling?
+	Why does player slow down when falling?
+	Show game state on hud
 Search for todos
-Show game state on hud
 
 
 TODO
-Should not have a generic "process()" method?
+Move entity functionality to systems - ECS?
+Should not have a generic "process()" or preprocess() method?
 Grenades
-Check game status changes when player joins
 Use new models
 Make floor a single quad
 Less damage from hitscan over distance
@@ -47,13 +47,12 @@ Show where players are according to server (in realtime)
 Create generic classes and test them
 Reduce dependencies between classes
 Make vars private/protected
+Test with cheating client
 
 
 LATER
 Simple physics - pushing
-Player reconnect and get same avatar
 Show kryonet logging
-Kryonet test - send lots of other random msgs
 Reduce object creation, including calls to clone()
 Don't use broadcast()?s
 Kick players who don't move
@@ -61,8 +60,6 @@ Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
 client/server encryption
 Make classes final
-Physics - pushing
-Test with cheating client
 User enter name and ip address
 Only send entity messages to players that have joined the game
 

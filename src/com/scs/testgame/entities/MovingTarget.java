@@ -11,17 +11,20 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.IDamagable;
+import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.components.IRewindable;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, IRewindable, IDamagable {
+public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, IRewindable, IDamagable, IProcessByClient {
 
 	private static final float DURATION = 3;
 	private static final float SPEED = 7;
@@ -34,11 +37,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("id", id);
-			//creationData.put("pos", new Vector3f(x, y, z));
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
-			//creationData.put("rot", rotDegrees); No, since chances are it will have moved anyway
 		}
 
 		Box box1 = new Box(w/2, h/2, d/2);
@@ -91,6 +91,10 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		super.processByServer(server, tpf_secs);
 
+		if (Settings.DEBUG_ENTITY_SYNC_POS) {
+			Settings.appendToFile("ServerMovingtarget.csv", "ServerMovingTarget," + System.currentTimeMillis() + "," + this.getWorldTranslation());
+		}
+		
 	}
 
 
@@ -119,8 +123,23 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 	@Override
 	public int getSide() {
-		// TODO Auto-generated method stub
 		return 0;
+	}
+
+
+	@Override
+	public void processByClient(AbstractGameClient client, float tpf_secs) {
+	}
+
+
+	// This is overridden by Avatars to take into account local position
+	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
+		super.calcPosition(mainApp, serverTimeToUse);
+		
+		if (Settings.DEBUG_ENTITY_SYNC_POS) {
+			Settings.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + serverTimeToUse + "," + this.getWorldTranslation());
+		}
+		
 	}
 
 

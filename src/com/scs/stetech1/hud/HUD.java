@@ -27,12 +27,11 @@ public class HUD extends Node implements IProcessByClient {
 	public TextArea log_ta;
 	public float hud_width, hud_height;
 
-	private int playerId;
+	//private int playerId;
 	private Camera cam;
 	private Geometry damage_box;
 	private ColorRGBA dam_box_col = new ColorRGBA(1, 0, 0, 0.0f);
 	private boolean process_damage_box;
-	//private List<Picture> targetting_reticules = new ArrayList<>();
 	private AbstractGameClient game;
 	private BitmapText abilityGun, abilityOther, playerID, gameStatus, gameTime;
 
@@ -46,7 +45,14 @@ public class HUD extends Node implements IProcessByClient {
 		
 		this.addTargetter();
 
-		//super.setLocalTranslation(xBL, yBL, 0);
+		super.setLocalTranslation(0, 0, 0);
+
+		BitmapText deleteme = new BitmapText(font_small, false);
+		deleteme.setColor(ColorRGBA.White);
+		deleteme.setLocalTranslation(10, 10, 0);
+		this.attachChild(deleteme);
+		deleteme.setText("12334455");
+
 
 		abilityGun = new BitmapText(font_small, false);
 		abilityGun.setColor(ColorRGBA.Green);
@@ -70,6 +76,10 @@ public class HUD extends Node implements IProcessByClient {
 		gameTime.setLocalTranslation(10, hud_height-90, 0);
 		this.attachChild(gameTime);
 
+		log_ta = new TextArea("log", font_small, 6, "Entities");
+		log_ta.setLocalTranslation(0, hud_height/2, 0);
+		this.attachChild(log_ta);
+
 		// Damage box
 		{
 			Material mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -80,10 +90,6 @@ public class HUD extends Node implements IProcessByClient {
 			damage_box.setMaterial(mat);
 			this.attachChild(damage_box);
 		}
-
-		log_ta = new TextArea("log", font_small, 6, "Entities");
-		log_ta.setLocalTranslation(0, hud_height/2, 0);
-		this.attachChild(log_ta);
 
 		/*if (Settings.DEBUG_HUD) {
 			Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -158,15 +164,6 @@ public class HUD extends Node implements IProcessByClient {
 	public void setGameTime(String s) {
 		this.gameTime.setText(s);
 	}
-
-
-	/*public void setHealth(float h) {
-		if (!Settings.DEBUG_HUD) {
-			this.health.setText("HEALTH: " + (int)h);
-		} else {
-			this.health.setText("THIS IS PLAYER " + playerId);
-		}
-	}*/
 
 
 	public void setAbilityGunText(String s) {

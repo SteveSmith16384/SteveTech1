@@ -33,12 +33,13 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 		if (game.isServer()) {
 			// We have already calculated the hit as part of ICalcHitInPast
 			if (hitThisMoment != null) {
-				Settings.p(hitThisMoment.entity + " has been shot!");
+				//Settings.p(hitThisMoment.entity + " has been shot!");
 				Vector3f pos = this.hitThisMoment.point;
-				new DebuggingSphere(game, AbstractGameServer.getNextEntityID(), pos.x, pos.y, pos.z, true);
 
+				new DebuggingSphere(game, AbstractGameServer.getNextEntityID(), pos.x, pos.y, pos.z, true);
 				if (hitThisMoment.entity instanceof MovingTarget && Settings.DEBUG_REWIND_POS) {
-					Settings.p("Moving target hit at " + hitThisMoment.entity.getWorldTranslation());
+					//Settings.p(hitThisMoment.entity.name + " is at " + hitThisMoment.entity.getWorldTranslation() + " at " + hitThisMoment.timestamp);
+					Settings.appendToFile("ServerMovingtarget.csv", "ServerMovingtarget," + hitThisMoment.timestamp + "," + hitThisMoment.entity.getWorldTranslation());
 				}
 
 				AbstractGameServer server = (AbstractGameServer)game;
@@ -58,7 +59,9 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				Vector3f pos = rcd.point;
 				new DebuggingSphere(game, -1, pos.x, pos.y, pos.z, false);
 				if (rcd.entity instanceof MovingTarget && Settings.DEBUG_REWIND_POS) {
-					Settings.p("Moving target hit at " + rcd.entity.getWorldTranslation());
+					//Settings.p("Moving target hit at " + rcd.entity.getWorldTranslation());
+					Settings.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + (System.currentTimeMillis()-Settings.CLIENT_RENDER_DELAY) + "," + rcd.entity.getWorldTranslation());
+
 				}
 			}
 		}

@@ -194,7 +194,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 									if (e != null) {
 										//Settings.p("Received EntityUpdateMessage for " + e);
 										EntityPositionData epd = new EntityPositionData();
-										epd.serverTimestamp = mainmsg.timestamp;// + clientToServerDiffTime;
+										epd.serverTimestamp = mainmsg.timestamp;
 										epd.rotation = eum.dir;
 										epd.position = eum.pos;
 
@@ -208,7 +208,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 												avatar.clientAvatarPositionData.clearPositiondata(); // Clear our local data as well
 												avatar.storeAvatarPosition(serverTime);
 												// Stop us walking!
-												this.avatar.resetWalkDir();
+												//this.avatar.resetWalkDir();
 											}
 										}
 										pe.addPositionData(epd); // Store the position for use later
@@ -234,9 +234,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						} else if (message instanceof AbilityUpdateMessage) {
 							AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
 							IAbility a = (IAbility)entities.get(aum.entityID);
-							if (a == null) {
+							/*if (a == null) {
 								throw new RuntimeException("todo");
-							}
+							}*/
 							if (aum.timestamp > a.getLastUpdateTime()) {
 								a.decode(aum);
 								a.setLastUpdateTime(aum.timestamp);

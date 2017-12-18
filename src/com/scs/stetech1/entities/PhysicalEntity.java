@@ -57,6 +57,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		if (getWorldTranslation().y < -1) {
 			// Dropped away?
 			server.console.appendText(getName() + " has fallen off the edge");
+			Settings.p(getName() + " has fallen off the edge");
 			fallenOffEdge();
 		}
 
@@ -199,7 +200,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			this.originalRot.set(this.getWorldRotation());
 			this.setWorldTranslation(shooterEPD.position);
 			this.setWorldRotation(shooterEPD.rotation);
-			return;
 		} else {
 			Settings.p("Unable to rewind position: no data");
 		}
@@ -268,6 +268,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			throw new RuntimeException("creationData needs creating for " + this.getName());
 		}
 		creationData.put("pos", this.getWorldTranslation());
+		creationData.put("quat", this.getWorldRotation());
 		return super.getCreationData();
 	}
 

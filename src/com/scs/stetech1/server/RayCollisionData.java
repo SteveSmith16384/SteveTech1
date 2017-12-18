@@ -8,6 +8,7 @@ public class RayCollisionData implements Comparable<RayCollisionData> {
 	public PhysicalEntity entity;
 	public float distance;
 	public Vector3f point;
+	public long timestamp; // for debugging
 	
 	public RayCollisionData(PhysicalEntity _pe, Vector3f _point, float _dist) {
 		entity = _pe;

@@ -1,5 +1,6 @@
 package com.scs.testgame;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IRequiresAmmoCache;
@@ -68,7 +69,7 @@ public class TestGameEntityCreator {
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
-			//float rot = (Float)msg.data.get("rot");
+			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
 			Crate crate = new Crate(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, 0); // Give def rotation of 0, since it will get rotated anyway
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}
@@ -117,6 +118,7 @@ public class TestGameEntityCreator {
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f) msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
+			Quaternion quat = (Quaternion)msg.data.get("quat"); // todo - use this
 			//float rot = (Float)msg.data.get("rot");
 			MovingTarget laser = new MovingTarget(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, 0);
 			return laser;

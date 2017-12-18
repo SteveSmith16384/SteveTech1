@@ -17,7 +17,7 @@ public class GameData {
 	public static final int ST_FINISHED = 3;
 
 	private AbstractGameServer server;
-	private int status;
+	private int status = ST_WAITING_FOR_PLAYERS;
 	public long statusStartTime;
 
 	public GameData(AbstractGameServer _server) {

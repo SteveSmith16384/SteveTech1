@@ -179,7 +179,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					}
 				}
 				if (areAnyPlayersShooting) {
-					this.rewindEntities(System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY);
+					long timeTo = System.currentTimeMillis() - Settings.CLIENT_RENDER_DELAY;
+					this.rewindEntities(timeTo);
 					this.rootNode.updateGeometricState();
 					for (ClientData c : this.clients.values()) {
 						ServerPlayersAvatar avatar = c.avatar;
@@ -191,6 +192,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							}
 							Ray ray = new Ray(from, avatar.getShootDir());
 							RayCollisionData rcd = avatar.checkForCollisions(ray, chip.getRange());
+							rcd.timestamp = timeTo;
 							chip.setTarget(rcd); // Damage etc.. is calculated later
 						}
 					}
