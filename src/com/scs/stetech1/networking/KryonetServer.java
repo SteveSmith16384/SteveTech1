@@ -9,6 +9,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.scs.stetech1.data.SimpleGameData;
 import com.scs.stetech1.data.SimplePlayerData;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
@@ -105,6 +106,7 @@ public class KryonetServer implements IMessageServer {
 		kryo.register(TestMessage.class);
 		kryo.register(AbilityUpdateMessage.class);
 		kryo.register(SimplePlayerData.class);
+		kryo.register(SimpleGameData.class);
 		
 	}
 

@@ -5,8 +5,9 @@ import java.util.HashMap;
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
+import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
-import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IProcessByClient;
@@ -33,8 +34,13 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 		
 		this.collideable = false;
 		
-		Sphere sphere = new Sphere(8, 8, 0.2f, true, false);
-		sphere.setTextureMode(TextureMode.Projected);
+		Mesh sphere = null;
+		if (server) {
+			sphere = new Sphere(8, 8, 0.2f, true, false);
+		} else {
+			sphere = new Box(0.2f, 0.2f, 0.2f);
+		}
+		//sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("DebuggingSphere", sphere);
 
 		TextureKey key3 = null;

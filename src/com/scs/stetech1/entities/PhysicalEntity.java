@@ -69,11 +69,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	protected void addPositionData() {
 		// Store the position for use when rewinding.
-		EntityPositionData epd = new EntityPositionData();
-		epd.serverTimestamp = System.currentTimeMillis();
+		EntityPositionData epd = new EntityPositionData(this.getWorldTranslation().clone(), this.getWorldRotation(), System.currentTimeMillis());
+		/*epd.serverTimestamp = System.currentTimeMillis();
 		epd.rotation = this.getWorldRotation();
 		epd.position = this.getWorldTranslation();
-
+*/
 		this.serverPositionData.addPositionData(epd);
 	}
 
@@ -193,7 +193,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public void rewindPositionTo(long serverTimeToUse) {
+	public void rewindPositionTo(long serverTimeToUse) { //this.getWorldTranslation()
 		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse);
 		if (shooterEPD != null) {
 			this.originalPos.set(this.getWorldTranslation());

@@ -10,14 +10,14 @@ import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
-import com.scs.stetech1.entities.ClientPlayersAvatar;
+import com.scs.stetech1.entities.AbstractClientAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.IEntityController;
 
-public class TestGameClientPlayersAvatar extends ClientPlayersAvatar {
+public class TestGameClientPlayersAvatar extends AbstractClientAvatar {
 
 	/*private static final float PLAYER_HEIGHT = 0.7f;
 	private static final float PLAYER_RAD = 0.2f;

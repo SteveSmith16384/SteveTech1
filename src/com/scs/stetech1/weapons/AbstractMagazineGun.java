@@ -1,5 +1,6 @@
 package com.scs.stetech1.weapons;
 
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
@@ -36,6 +37,12 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			timeUntilShoot_secs = this.shotInterval_secs;
 			bulletsLeftInMag--;
 			return true;
+		} else {
+			if (bulletsLeftInMag <= 0) {
+				Settings.p("No bullets");
+			} else if (timeUntilShoot_secs > 0) {
+				Settings.p("Shooting too soon");
+			}
 		}
 		return false;
 	}
@@ -44,18 +51,24 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
-		
+
 		if (game.isServer()) { // Only server can reload
 			if (this.bulletsLeftInMag <= 0) {
 				// Reload
 				Settings.p("Reloading");
 				this.bulletsLeftInMag = this.magazineSize;
 				this.timeUntilShoot_secs += this.reloadInterval_secs;
-				//AbstractGameServer server = (AbstractGameServer)game;
 				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 			}
 		}
 		timeUntilShoot_secs -= tpf_secs;
+	}
+
+
+	@Override
+	public void processByClient(AbstractGameClient client, float tpf_secs) {
+		timeUntilShoot_secs -= tpf_secs;
+		
 	}
 
 

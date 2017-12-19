@@ -57,12 +57,15 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			RayCollisionData rcd = shooter.checkForCollisions(ray, RANGE);
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
+				Settings.p("Hit " + rcd.entity.getName() + " at " + pos);
 				new DebuggingSphere(game, -1, pos.x, pos.y, pos.z, false);
 				if (rcd.entity instanceof MovingTarget && Settings.DEBUG_REWIND_POS1) {
 					//Settings.p("Moving target hit at " + rcd.entity.getWorldTranslation());
 					Settings.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + (System.currentTimeMillis()-Settings.CLIENT_RENDER_DELAY) + "," + rcd.entity.getWorldTranslation());
 
 				}
+			} else {
+				Settings.p("Not hit anything");
 			}
 		}
 

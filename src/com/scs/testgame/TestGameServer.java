@@ -6,7 +6,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.stetech1.data.GameOptions;
 import com.scs.stetech1.entities.AbstractAvatar;
-import com.scs.stetech1.entities.ServerPlayersAvatar;
+import com.scs.stetech1.entities.AbstractServerAvatar;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.ClientData;
 import com.scs.testgame.entities.Crate;
@@ -52,7 +52,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	protected ServerPlayersAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
+	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
 		return new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);	
 	}
 

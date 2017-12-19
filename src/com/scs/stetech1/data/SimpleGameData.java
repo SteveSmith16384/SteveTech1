@@ -1,34 +1,29 @@
 package com.scs.stetech1.data;
 
-import java.util.ArrayList;
-
-import com.scs.stetech1.server.AbstractGameServer;
-import com.scs.stetech1.server.ClientData;
+import com.jme3.network.serializing.Serializable;
 
 /*
  * This should only contain stuff that is completely replaced when a new "mission" starts.
  */
-public class GameData {
+@Serializable
+public class SimpleGameData { // pojo
 
-	//public enum GameStatus {WaitingForPlayers, Started, Finished }
 	public static final int ST_WAITING_FOR_PLAYERS = 0;
 	public static final int ST_DEPLOYING = 1;
 	public static final int ST_STARTED = 2;
 	public static final int ST_FINISHED = 3;
 
-	private AbstractGameServer server;
-	private int status = ST_WAITING_FOR_PLAYERS;
-	public long statusStartTime;
+	private int gameStatus = ST_WAITING_FOR_PLAYERS;
+	public long statusStartTime, statusEndTime; // todo - use statusEndTime
 
-	public GameData(AbstractGameServer _server) {
+	public SimpleGameData() {
 		super();
 
-		server = _server;
 	}
 
 
-	public int getStatus() {
-		return status;
+	public int getGameStatus() {
+		return gameStatus;
 	}
 
 	
@@ -44,16 +39,21 @@ public class GameData {
 
 	
 	public boolean isInGame() {
-		return status == GameData.ST_DEPLOYING || status == GameData.ST_STARTED;
+		return gameStatus == SimpleGameData.ST_DEPLOYING || gameStatus == SimpleGameData.ST_STARTED;
 	}
 
 
 	public void setGameStatus(int newStatus) {
-		if (status != newStatus) {
-			status = newStatus;
+		if (gameStatus != newStatus) {
+			gameStatus = newStatus;
 			statusStartTime = System.currentTimeMillis();
-			server.gameStatusChanged(newStatus);
+			//server.gameStatusChanged(newStatus);
 		}
+	}
+	
+	
+	public String getTime() {
+		return "todo"; // show either time left or time going
 	}
 
 }

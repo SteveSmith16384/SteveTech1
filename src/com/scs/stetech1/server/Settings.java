@@ -8,12 +8,13 @@ import java.util.Random;
 
 public class Settings {
 
-	public static final boolean DEBUG_REWIND_POS1 = true;
+	public static final boolean DEBUG_REWIND_POS1 = false;
 	public static final boolean DEBUG_HUD = false;
 	public static final boolean DEBUG_ENTITY_SYNC_POS = false;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SYNC_POS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
+	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 
 	public static final String IP_ADDRESS = "localhost";
 	public static final int TCP_PORT = 6143;
@@ -74,15 +75,16 @@ public class Settings {
 			bw.flush();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-		} finally {                       // always close the file
-			if (bw != null) try {
-				bw.close();
-			} catch (IOException ioe2) {
-				// just ignore it
+		} finally { // always close the file
+			if (bw != null) {
+				try {
+					bw.close();
+				} catch (IOException ioe2) {
+					// just ignore it
+				}
 			}
+
 		}
-
 	}
-
 
 }

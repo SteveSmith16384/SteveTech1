@@ -9,7 +9,7 @@ public class EntityPositionData {
 	public Vector3f position;	
 	public Quaternion rotation;
 
-	public EntityPositionData() {
+	private EntityPositionData() {
 		super();
 	}
 
@@ -40,6 +40,11 @@ public class EntityPositionData {
 		epd.rotation = newRot2;
 		epd.serverTimestamp = time;
 		return epd;
+	}
+	
+	
+	public String toString() {
+		return super.toString() + ": " + this.position.toString();
 	}
 
 }

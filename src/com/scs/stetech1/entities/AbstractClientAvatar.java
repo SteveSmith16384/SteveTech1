@@ -20,14 +20,14 @@ import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.PositionCalculator;
 
-public abstract class ClientPlayersAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
+public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
 
 	public HUD hud;
 	public Camera cam;
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	
-	public ClientPlayersAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
+	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
 		super(_module, _playerID, _input, eid, side);
 
 		cam = _cam;
@@ -77,10 +77,10 @@ public abstract class ClientPlayersAvatar extends AbstractAvatar implements ISho
 
 	public void storeAvatarPosition(long serverTime) {
 		// Store our position
-		EntityPositionData epd = new EntityPositionData();
-		epd.serverTimestamp = serverTime;
+		EntityPositionData epd = new EntityPositionData(getWorldTranslation().clone(), null, serverTime);
+		/*epd.serverTimestamp = serverTime;
 		epd.position = getWorldTranslation().clone();
-		//epd.rotation not required
+		//epd.rotation not required*/
 		this.clientAvatarPositionData.addPositionData(epd);
 
 	}

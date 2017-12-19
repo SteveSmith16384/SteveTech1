@@ -5,21 +5,18 @@ https://gamedevelopment.tutsplus.com/tutorials/create-a-simple-asteroids-game-us
 
 
 URGENT
-	HUD text not in correct place
 Client countdown game time itself
-Store collisions and process at end
-Move messagereceiver to another class
 	HUD text not in correct place
 Moving target origin is 0.5
-Check game status changes when player joins
+	Check game status changes when player joins
 Can't seem to shoot movingentity correctly
 	Adjust grenades in the same way that avatars are adjusted
-	Why does player slow down when falling?
-	Show game state on hud
 Search for todos
 
 
 TODO
+Store collisions and process at end
+Move messagereceiver to another class
 Move entity functionality to systems - ECS?
 Should not have a generic "process()" or preprocess() method?
 Grenades

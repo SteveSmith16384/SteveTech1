@@ -11,11 +11,11 @@ import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
 import com.scs.stetech1.shared.IEntityController;
 
-public abstract class ServerPlayersAvatar extends AbstractAvatar implements IDamagable, IRewindable {
+public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable {
 
 	private AbstractGameServer server;
 
-	public ServerPlayersAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side) {
+	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side) {
 		super(_module, _playerID, _input, eid, side);
 
 		server = (AbstractGameServer)_module;

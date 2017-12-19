@@ -24,12 +24,12 @@ import com.scs.stetech1.components.IPreprocess;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.components.IRewindable;
-import com.scs.stetech1.data.GameData;
+import com.scs.stetech1.data.SimpleGameData;
 import com.scs.stetech1.data.GameOptions;
 import com.scs.stetech1.data.SimplePlayerData;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.entities.ServerPlayersAvatar;
+import com.scs.stetech1.entities.AbstractServerAvatar;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.GameStatusMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -81,7 +81,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	protected LogWindow logWindow;
 	public IConsole console;
 	private SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
-	protected GameData gameData;
+	protected SimpleGameData gameData;
 	public CollisionLogic collisionLogic = new CollisionLogic();
 	private GameOptions gameOptions;
 
@@ -94,7 +94,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
 
-		gameData = new GameData(this);
+		gameData = new SimpleGameData();
 		networkServer = new KryonetServer(Settings.TCP_PORT, Settings.UDP_PORT, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
@@ -172,7 +172,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 				// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
 				boolean areAnyPlayersShooting = false;
 				for (ClientData c : this.clients.values()) {
-					ServerPlayersAvatar avatar = c.avatar;
+					AbstractServerAvatar avatar = c.avatar;
 					if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 						areAnyPlayersShooting = true;
 						break;
@@ -183,7 +183,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					this.rewindEntities(timeTo);
 					this.rootNode.updateGeometricState();
 					for (ClientData c : this.clients.values()) {
-						ServerPlayersAvatar avatar = c.avatar;
+						AbstractServerAvatar avatar = c.avatar;
 						if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 							ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
 							Vector3f from = avatar.getBulletStartPos();
@@ -192,7 +192,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							}
 							Ray ray = new Ray(from, avatar.getShootDir());
 							RayCollisionData rcd = avatar.checkForCollisions(ray, chip.getRange());
+							if (rcd != null) {
 							rcd.timestamp = timeTo; // For debugging
+							}
 							chip.setTarget(rcd); // Damage etc.. is calculated later
 						}
 					}
@@ -284,28 +286,32 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	private void checkGameStatus(boolean playersChanged) {
+		int oldStatus = gameData.getGameStatus();
 		if (playersChanged) {
 			boolean enoughPlayers = areThereEnoughPlayers();
 			if (!enoughPlayers && gameData.isInGame()) {
-				gameData.setGameStatus(GameData.ST_WAITING_FOR_PLAYERS);
-			} else if (enoughPlayers && gameData.getStatus() == GameData.ST_WAITING_FOR_PLAYERS) {
-				gameData.setGameStatus(GameData.ST_DEPLOYING);
+				gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS);
+			} else if (enoughPlayers && gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
+				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING);
 			}
 		}
 
 		long duration = System.currentTimeMillis() - gameData.statusStartTime;
-		if (gameData.getStatus() == GameData.ST_DEPLOYING) {
+		if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
 			if (duration >= this.gameOptions.deployDuration) {
-				gameData.setGameStatus(GameData.ST_STARTED);
+				gameData.setGameStatus(SimpleGameData.ST_STARTED);
 			}
-		} else if (gameData.getStatus() == GameData.ST_STARTED) {
+		} else if (gameData.getGameStatus() == SimpleGameData.ST_STARTED) {
 			if (duration >= this.gameOptions.gameDuration) {
-				gameData.setGameStatus(GameData.ST_FINISHED);
+				gameData.setGameStatus(SimpleGameData.ST_FINISHED);
 			}
-		} else if (gameData.getStatus() == GameData.ST_FINISHED) {
+		} else if (gameData.getGameStatus() == SimpleGameData.ST_FINISHED) {
 			if (duration >= this.gameOptions.finishedDuration) {
-				gameData.setGameStatus(GameData.ST_DEPLOYING);
+				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING);
 			}
+		}
+		if (oldStatus != gameData.getGameStatus()) {
+			sendGameStatusMessage();
 		}
 	}
 
@@ -419,9 +425,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	private ServerPlayersAvatar createPlayersAvatar(ClientData client, int side) {
+	private AbstractServerAvatar createPlayersAvatar(ClientData client, int side) {
 		int id = getNextEntityID();
-		ServerPlayersAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
+		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
 		avatar.setWorldTranslation(this.getAvatarStartPosition(avatar));
 		//avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
@@ -439,7 +445,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	protected abstract ServerPlayersAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
+	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
 
 
 	private void sendAllEntitiesToClient(ClientData client) {
@@ -610,7 +616,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		// remove All Entities
 		synchronized (this.clients) {
 			for (ClientData c : this.clients.values()) {
-				ServerPlayersAvatar avatar = c.avatar;
+				AbstractServerAvatar avatar = c.avatar;
 				if (avatar != null) {
 					avatar.remove();
 					c.avatar = null;
@@ -625,7 +631,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		this.getRootNode().detachAllChildren();
 		this.getPhysicsController().removeAllEntities();
 
-		gameData.setGameStatus(GameData.ST_WAITING_FOR_PLAYERS);
+		gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS);
 	}
 
 
@@ -660,30 +666,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		return myList;
 	}
 
-	/*
-	public RayCollisionData checkForCollisions(Ray r) {
-		CollisionResults res = new CollisionResults();
-		int c = this.getRootNode().collideWith(r, res);
-		if (c == 0) {
-			Settings.p("No Ray collisions");
-			return null;
-		}
-		Iterator<CollisionResult> it = res.iterator();
-		while (it.hasNext()) {
-			CollisionResult col = it.next();
-			Spatial s = col.getGeometry();
-			while (s == null || s.getUserData(Settings.ENTITY) == null) {
-				s = s.getParent();
-			}
-			if (s != null && s.getUserData(Settings.ENTITY) != null) {
-				Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
-				return new RayCollisionData((PhysicalEntity)s.getUserData(Settings.ENTITY), col.getContactPoint(), col.getDistance());
-			}
-		}
-
-		return null;
-	}
-	 */
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
@@ -720,21 +702,6 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	public void gameStatusChanged(int newStatus) {
-		/*switch (newStatus) {
-		case Finished:
-			break;
-		case Started:
-			break;
-		case WaitingForPlayers:
-			break;
-		default:
-			break;
-		}*/
-		this.sendGameStatusMessage();
-	}
-
-	
 	private void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
 		for(ClientData client : this.clients.values()) {

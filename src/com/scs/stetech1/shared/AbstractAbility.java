@@ -2,13 +2,14 @@ package com.scs.stetech1.shared;
 
 import java.util.HashMap;
 
+import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.Entity;
 import com.scs.stetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
 
-public abstract class AbstractAbility extends Entity implements IAbility, IProcessByServer {//, IProcessByClient {
+public abstract class AbstractAbility extends Entity implements IAbility, IProcessByServer, IProcessByClient {
 
 	private static final float SEND_INT = 5;
 
@@ -47,14 +48,12 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
-		//if (game.isServer()) {
 		timeUntilNextSend -= tpf_secs;
 		if (timeUntilNextSend <= 0) {
 			//AbstractGameServer server = (AbstractGameServer)game;
 			server.networkServer.sendMessageToAll(new AbilityUpdateMessage(false, this));
 			timeUntilNextSend = SEND_INT;
 		}
-		//}
 	}
 
 

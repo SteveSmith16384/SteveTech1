@@ -24,7 +24,7 @@ import com.scs.stetech1.shared.EntityPositionData;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 
-public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, IRewindable, IDamagable, IProcessByClient {
+public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, IRewindable, IDamagable {
 
 	private static final float DURATION = 3;
 	private static final float SPEED = 7;
@@ -61,7 +61,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 			geometry.setMaterial(floor_mat);
 		}
-		geometry.setLocalTranslation(0, h/2, 0); // Origin is at the bottom
+		geometry.setLocalTranslation(0, h, 0); // Origin is at the bottom
 		this.mainNode.attachChild(geometry);
 		float rads = (float)Math.toRadians(rotDegrees);
 		mainNode.rotate(0, rads, 0);
@@ -117,18 +117,13 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	
 	@Override
 	public void damaged(float amt, String reason) {
-		this.respawn();
+		//this.respawn();
 	}
 
 
 	@Override
 	public int getSide() {
 		return 0;
-	}
-
-
-	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
 	}
 
 

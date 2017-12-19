@@ -44,9 +44,9 @@ public class HUD extends Node implements IProcessByClient {
 		hud_height = _cam.getHeight();
 		cam = _cam;
 
-		this.addTargetter();
-
 		super.setLocalTranslation(0, 0, 0);
+
+		this.addTargetter();
 
 		if (Settings.DEBUG_HUD) {
 			for (int i=0; i<100 ; i+=10) {

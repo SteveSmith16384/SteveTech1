@@ -3,6 +3,7 @@ package com.scs.stetech1.weapons;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.ICanShoot;
 import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.entities.AbstractAvatar;

@@ -3,7 +3,7 @@ package com.scs.stetech1.server;
 import com.jme3.input.InputManager;
 import com.jme3.renderer.Camera;
 import com.scs.stetech1.data.SimplePlayerData;
-import com.scs.stetech1.entities.ServerPlayersAvatar;
+import com.scs.stetech1.entities.AbstractServerAvatar;
 import com.scs.stetech1.input.RemoteInput;
 import com.scs.stetech1.shared.AverageNumberCalculator;
 
@@ -15,7 +15,7 @@ public class ClientData {
 	public int id;
 	public AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long latestInputTimestamp;
-	public ServerPlayersAvatar avatar;
+	public AbstractServerAvatar avatar;
 	public RemoteInput remoteInput = new RemoteInput(); // For storing message that are translated into input
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
 	public SimplePlayerData playerData;

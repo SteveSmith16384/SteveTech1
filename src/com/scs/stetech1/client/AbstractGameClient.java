@@ -26,8 +26,8 @@ import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IPreprocess;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.components.IRequiresAmmoCache;
-import com.scs.stetech1.data.GameData;
-import com.scs.stetech1.entities.ClientPlayersAvatar;
+import com.scs.stetech1.data.SimpleGameData;
+import com.scs.stetech1.entities.AbstractClientAvatar;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.hud.HUD;
 import com.scs.stetech1.input.IInputDevice;
@@ -83,13 +83,14 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public HUD hud;
 	public IInputDevice input;
 
-	public ClientPlayersAvatar avatar;
+	public AbstractClientAvatar avatar;
 	public int playerID = -1;
 	public int side = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
-	public int status = STATUS_NOT_CONNECTED;
+	public int status = STATUS_NOT_CONNECTED; // todo - rename
+	public SimpleGameData gameData;
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
@@ -193,11 +194,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 									IEntity e = this.entities.get(eum.entityID);
 									if (e != null) {
 										//Settings.p("Received EntityUpdateMessage for " + e);
-										EntityPositionData epd = new EntityPositionData();
-										epd.serverTimestamp = mainmsg.timestamp;
+										EntityPositionData epd = new EntityPositionData(eum.pos, eum.dir, mainmsg.timestamp);
+										/*epd.serverTimestamp = mainmsg.timestamp;
 										epd.rotation = eum.dir;
 										epd.position = eum.pos;
-
+*/
 										PhysicalEntity pe = (PhysicalEntity)e;
 										if (eum.force) {
 											// Set it now!
@@ -234,14 +235,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						} else if (message instanceof AbilityUpdateMessage) {
 							AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
 							IAbility a = (IAbility)entities.get(aum.entityID);
-							/*if (a == null) {
-								throw new RuntimeException("todo");
-							}*/
-							if (aum.timestamp > a.getLastUpdateTime()) {
-								a.decode(aum);
-								a.setLastUpdateTime(aum.timestamp);
+							if (a != null) {
+								if (aum.timestamp > a.getLastUpdateTime()) {
+									a.decode(aum);
+									a.setLastUpdateTime(aum.timestamp);
+								}
 							}
-
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
@@ -288,7 +287,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						if (e instanceof IRequiresAmmoCache) {
 							updateAmmoSystem.process(e, tpf_secs);
 						}
-						
+
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
 							if (pe.canMove()) { // Only bother with things that can move
@@ -296,6 +295,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							}
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 						}
+
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
 							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
@@ -308,7 +308,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			this.quit("Error: " + ex);
@@ -390,8 +390,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 		} else if (message instanceof GameStatusMessage) {
 			GameStatusMessage gsm = (GameStatusMessage)message;
-			this.hud.setGameStatus(GameData.getStatusDesc(gsm.gameStatus));
-			this.hud.setGameTime(""+gsm.gameTimeMS/1000);
+			this.gameData = gsm.gameData;
+			this.hud.setGameStatus(SimpleGameData.getStatusDesc(gameData.getGameStatus()));
+			//todo this.hud.setGameTime(""+gsm.gameTimeMS/1000);
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
@@ -429,7 +430,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
 			if (e != null) {
-				Settings.p("Removing " + e.getName());
+				if (Settings.DEBUG_ENTITY_ADD_REMOVE) {
+					Settings.p("Removing " + e.getName());
+				}
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe =(PhysicalEntity)e;
 					if (pe.simpleRigidBody != null) {

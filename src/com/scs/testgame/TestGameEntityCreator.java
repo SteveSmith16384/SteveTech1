@@ -6,7 +6,7 @@ import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.AbstractEnemyAvatar;
-import com.scs.stetech1.entities.ClientPlayersAvatar;
+import com.scs.stetech1.entities.AbstractClientAvatar;
 import com.scs.stetech1.entities.DebuggingSphere;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
@@ -34,8 +34,10 @@ public class TestGameEntityCreator {
 
 
 	public IEntity createEntity(NewEntityMessage msg) {
-		Settings.p("Creating " + EntityTypes.getName(msg.type));
-		int id = msg.entityID;// (Integer)msg.data.get("id");
+		if (Settings.DEBUG_ENTITY_ADD_REMOVE) {
+			Settings.p("Creating " + EntityTypes.getName(msg.type));
+		}
+		int id = msg.entityID;
 
 		switch (msg.type) {
 		case EntityTypes.AVATAR:
@@ -45,7 +47,7 @@ public class TestGameEntityCreator {
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 
 			if (playerID == game.playerID) {
-				ClientPlayersAvatar avatar = new TestGameClientPlayersAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
+				AbstractClientAvatar avatar = new TestGameClientPlayersAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
 				//game.avatar = avatar;
 				return avatar;
 			} else {
