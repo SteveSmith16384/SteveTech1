@@ -37,7 +37,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				Vector3f pos = this.hitThisMoment.point;
 
 				new DebuggingSphere(game, AbstractGameServer.getNextEntityID(), pos.x, pos.y, pos.z, true);
-				if (hitThisMoment.entity instanceof MovingTarget && Settings.DEBUG_REWIND_POS) {
+				if (hitThisMoment.entity instanceof MovingTarget && Settings.DEBUG_REWIND_POS1) {
 					//Settings.p(hitThisMoment.entity.name + " is at " + hitThisMoment.entity.getWorldTranslation() + " at " + hitThisMoment.timestamp);
 					Settings.appendToFile("ServerMovingtarget.csv", "ServerMovingtarget," + hitThisMoment.timestamp + "," + hitThisMoment.entity.getWorldTranslation());
 				}
@@ -58,7 +58,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
 				new DebuggingSphere(game, -1, pos.x, pos.y, pos.z, false);
-				if (rcd.entity instanceof MovingTarget && Settings.DEBUG_REWIND_POS) {
+				if (rcd.entity instanceof MovingTarget && Settings.DEBUG_REWIND_POS1) {
 					//Settings.p("Moving target hit at " + rcd.entity.getWorldTranslation());
 					Settings.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + (System.currentTimeMillis()-Settings.CLIENT_RENDER_DELAY) + "," + rcd.entity.getWorldTranslation());
 
