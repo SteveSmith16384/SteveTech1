@@ -8,13 +8,13 @@ import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.TestGameEntityCreator;
 
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IProcessByClient {
 
 	public AbstractEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
-		super(game, eid, EntityTypes.AVATAR, "EnemyAvatar");
+		super(game, eid, TestGameEntityCreator.AVATAR, "EnemyAvatar");
 
 		/*if (game.isServer()) {
 			creationData = new HashMap<String, Object>();

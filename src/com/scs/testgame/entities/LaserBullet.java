@@ -12,8 +12,8 @@ import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.models.BeamLaserModel;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.TestGameEntityCreator;
 
 public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact, IRemoveOnContact {
 
@@ -21,7 +21,7 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 	private float timeLeft = 3;
 
 	public LaserBullet(IEntityController _game, int id, ICanShoot _shooter, float x, float y, float z) {
-		super(_game, id, EntityTypes.LASER_BULLET, "LaserBullet");
+		super(_game, id, TestGameEntityCreator.LASER_BULLET, "LaserBullet");
 
 		this.shooter = _shooter;
 

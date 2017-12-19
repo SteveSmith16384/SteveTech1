@@ -12,8 +12,8 @@ import com.scs.stetech1.entities.DebuggingSphere;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.RayCollisionData;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.TestGameEntityCreator;
 import com.scs.testgame.entities.MovingTarget;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
@@ -23,7 +23,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	public RayCollisionData hitThisMoment = null; // Only used server-side
 
 	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
-		super(game, id, EntityTypes.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, 10);
+		super(game, id, TestGameEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, 10);
 
 	}
 

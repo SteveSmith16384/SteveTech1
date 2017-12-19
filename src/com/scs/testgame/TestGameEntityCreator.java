@@ -10,7 +10,6 @@ import com.scs.stetech1.entities.AbstractClientAvatar;
 import com.scs.stetech1.entities.DebuggingSphere;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.weapons.GrenadeLauncher;
 import com.scs.stetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
@@ -24,10 +23,25 @@ import com.scs.testgame.entities.Wall;
 /*
  * This is only used client-side.
  */
-public class TestGameEntityCreator {
+public class TestGameEntityCreator { // todo - extend abstract class that has buit-in types, e.g. grenade, avatar
 
 	private TestGameClient game;
 
+	public static final int AVATAR = 1;
+	public static final int CRATE = 2;
+	public static final int FLOOR = 3;
+	public static final int FENCE = 4;
+	public static final int WALL = 5;
+	public static final int DEBUGGING_SPHERE = 6;
+	public static final int MOVING_TARGET = 7;
+	public static final int LASER_BULLET = 8;
+	public static final int GRENADE = 9;
+	public static final int GRENADE_LAUNCHER = 10;
+	public static final int HITSCAN_RIFLE = 11;
+	public static final int LASER_RIFLE = 12;
+	public static final int FLAT_FLOOR = 13;
+	
+	
 	public TestGameEntityCreator(TestGameClient _game) {
 		game =_game;
 	}
@@ -35,12 +49,12 @@ public class TestGameEntityCreator {
 
 	public IEntity createEntity(NewEntityMessage msg) {
 		if (Settings.DEBUG_ENTITY_ADD_REMOVE) {
-			Settings.p("Creating " + EntityTypes.getName(msg.type));
+			Settings.p("Creating " + getName(msg.type));
 		}
 		int id = msg.entityID;
 
 		switch (msg.type) {
-		case EntityTypes.AVATAR:
+		case AVATAR:
 		{
 			int playerID = (int)msg.data.get("playerID");
 			int side = (int)msg.data.get("side");
@@ -57,7 +71,7 @@ public class TestGameEntityCreator {
 			}
 		}
 
-		case EntityTypes.FLOOR:
+		case FLOOR:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
@@ -66,7 +80,7 @@ public class TestGameEntityCreator {
 			return floor;
 		}
 
-		case EntityTypes.CRATE:
+		case CRATE:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
@@ -76,7 +90,7 @@ public class TestGameEntityCreator {
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}
 
-		case EntityTypes.WALL:
+		case WALL:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			float w = (float)msg.data.get("w");
@@ -95,7 +109,7 @@ public class TestGameEntityCreator {
 			return laser;
 		}*/
 
-		case EntityTypes.GRENADE:
+		case GRENADE:
 		{
 			//int side = (int) msg.data.get("side");
 			int containerID = (int) msg.data.get("containerID");
@@ -108,14 +122,14 @@ public class TestGameEntityCreator {
 			return grenade;
 		}
 
-		case EntityTypes.DEBUGGING_SPHERE:
+		case DEBUGGING_SPHERE:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			DebuggingSphere laser = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true);
 			return laser;
 		}
 
-		case EntityTypes.MOVING_TARGET:
+		case MOVING_TARGET:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f) msg.data.get("size");
@@ -126,7 +140,7 @@ public class TestGameEntityCreator {
 			return laser;
 		}
 
-		case EntityTypes.GRENADE_LAUNCHER: 
+		case GRENADE_LAUNCHER: 
 		{
 			int ownerid = (int)msg.data.get("ownerid");
 			if (ownerid == game.avatar.id) { // Don't care about other's abilities?
@@ -139,12 +153,12 @@ public class TestGameEntityCreator {
 			return null;
 		}
 
-		case EntityTypes.LASER_RIFLE:
+		case LASER_RIFLE:
 		{
 			// todo
 		}
 
-		case EntityTypes.HITSCAN_RIFLE:
+		case HITSCAN_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
 			if (ownerid == game.avatar.id) { // Don't care about other's abilities?
@@ -158,7 +172,27 @@ public class TestGameEntityCreator {
 		}
 
 		default:
-			throw new RuntimeException("Unknown entity type: " + EntityTypes.getName(msg.type));
+			throw new RuntimeException("Unknown entity type: " + getName(msg.type));
 		}
 	}
+	
+	
+	public static String getName(int type) {
+		switch (type) {
+		case AVATAR: return "Avatar";
+		case CRATE: return "CRATE";
+		case FLOOR: return "FLOOR";
+		case FENCE: return "FENCE";
+		case WALL: return "WALL";
+		case DEBUGGING_SPHERE: return "DEBUGGING_SPHERE";
+		case MOVING_TARGET: return "MOVING_TARGET";
+		case LASER_BULLET: return "LASER_BULLET";
+		case GRENADE: return "GRENADE";
+		case GRENADE_LAUNCHER: return "GRENADE_LAUNCHER";
+		case LASER_RIFLE: return "LASER_RIFLE";
+		case HITSCAN_RIFLE: return "HITSCAN_RIFLE";
+		default: return "UNKNOWN (" + type + ")";
+		}
+	}
+
 }

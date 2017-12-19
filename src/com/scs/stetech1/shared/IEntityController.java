@@ -11,8 +11,6 @@ public interface IEntityController {
 
 	boolean isServer();
 
-	//int getNextId();
-	
 	void addEntity(IEntity e);
 	
 	void removeEntity(int id);

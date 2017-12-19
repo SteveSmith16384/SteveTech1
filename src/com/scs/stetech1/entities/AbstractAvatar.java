@@ -14,9 +14,9 @@ import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.input.IInputDevice;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.TestGameEntityCreator;
 
 public abstract class AbstractAvatar extends PhysicalEntity implements IPreprocess, IProcessByServer, ICanShoot, IAffectedByPhysics {
 
@@ -44,7 +44,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side) {
-		super(_game, eid, EntityTypes.AVATAR, "Player");
+		super(_game, eid, TestGameEntityCreator.AVATAR, "Player");
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();

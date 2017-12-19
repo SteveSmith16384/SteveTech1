@@ -22,9 +22,9 @@ import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.shared.PositionCalculator;
+import com.scs.testgame.TestGameEntityCreator;
 
 public class Grenade extends PhysicalEntity implements IProcessByClient {
 
@@ -34,7 +34,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
 	public Grenade(IEntityController _game, int id, IRequiresAmmoCache<Grenade> owner) {
-		super(_game, id, EntityTypes.GRENADE, "Grenade");
+		super(_game, id, TestGameEntityCreator.GRENADE, "Grenade");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

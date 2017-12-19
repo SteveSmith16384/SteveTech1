@@ -5,7 +5,6 @@ import java.util.HashMap;
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.JmeContext;
@@ -14,17 +13,16 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.TestGameEntityCreator;
 
 public class Fence extends PhysicalEntity {
 
 	private static final float WIDTH = 2f;
 
 	public Fence(IEntityController _game, int id, float x, float height, float z, float rot, String tex) {
-		super(_game, id, EntityTypes.FENCE, "Fence");
+		super(_game, id, TestGameEntityCreator.FENCE, "Fence");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

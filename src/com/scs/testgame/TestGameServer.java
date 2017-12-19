@@ -10,6 +10,7 @@ import com.scs.stetech1.entities.AbstractServerAvatar;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.ClientData;
 import com.scs.testgame.entities.Crate;
+import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.MovingTarget;
 import com.scs.testgame.entities.TestGameServerAvatar;
@@ -48,6 +49,8 @@ public class TestGameServer extends AbstractGameServer {
 		new Wall(this, getNextEntityID(), 20, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 
 		new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
+		
+		new FlatFloor(this, getNextEntityID(), 3, .1f, 3, 2, 2, "Textures/crate.png");
 	}
 
 

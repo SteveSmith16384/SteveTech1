@@ -14,15 +14,13 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IAffectedByPhysics;
 import com.scs.stetech1.components.IDamagable;
-import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.components.IRewindable;
 import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityPositionData;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.TestGameEntityCreator;
 
 public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, IRewindable, IDamagable {
 
@@ -33,7 +31,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	private float timeUntilTurn = DURATION;
 
 	public MovingTarget(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, id, EntityTypes.MOVING_TARGET, "MovingTarget");
+		super(_game, id, TestGameEntityCreator.MOVING_TARGET, "MovingTarget");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

@@ -48,10 +48,10 @@ import com.scs.stetech1.networking.IMessageServer;
 import com.scs.stetech1.networking.IMessageServerListener;
 import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.server.ClientData.ClientStatus;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.weapons.GrenadeLauncher;
+import com.scs.testgame.TestGameEntityCreator;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
 
@@ -146,13 +146,13 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 						
 					} else if (message instanceof RequestNewBulletMessage) {
 						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
-						IRequiresAmmoCache irac =(IRequiresAmmoCache)this.entities.get(rnbe.ownerEntityID);
-						switch (rnbe.type) {
-						case EntityTypes.GRENADE:
+						IRequiresAmmoCache irac = (IRequiresAmmoCache)this.entities.get(rnbe.ownerEntityID);
+						switch (rnbe.type) { // todo - call method in TestGameEntityCreator
+						case TestGameEntityCreator.GRENADE:
 							Grenade g = new Grenade(this, getNextEntityID(), irac);
 							break;
 							
-						case EntityTypes.LASER_BULLET:
+						case TestGameEntityCreator.LASER_BULLET:
 							break;
 							default:
 								throw new RuntimeException("Unknown bullet type: " + rnbe.type);

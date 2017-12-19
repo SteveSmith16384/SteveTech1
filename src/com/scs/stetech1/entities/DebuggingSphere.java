@@ -13,8 +13,8 @@ import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IEntityController;
+import com.scs.testgame.TestGameEntityCreator;
 
 /*
  * Simple sphere to help show points in the world
@@ -26,7 +26,7 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 	private float timeLeft = DURATION;
 
 	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z, boolean server) {
-		super(_game, id, EntityTypes.DEBUGGING_SPHERE, "DebuggingSphere");
+		super(_game, id, TestGameEntityCreator.DEBUGGING_SPHERE, "DebuggingSphere");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
