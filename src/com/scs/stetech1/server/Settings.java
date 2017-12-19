@@ -8,8 +8,9 @@ import java.util.Random;
 
 public class Settings {
 
+	public static final boolean DEBUG_REWIND_POS1 = true;
+	public static final boolean DEBUG_HUD = false;
 	public static final boolean DEBUG_ENTITY_SYNC_POS = false;
-	public static final boolean DEBUG_REWIND_POS = true;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SYNC_POS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;

@@ -192,7 +192,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							}
 							Ray ray = new Ray(from, avatar.getShootDir());
 							RayCollisionData rcd = avatar.checkForCollisions(ray, chip.getRange());
-							rcd.timestamp = timeTo;
+							rcd.timestamp = timeTo; // For debugging
 							chip.setTarget(rcd); // Damage etc.. is calculated later
 						}
 					}

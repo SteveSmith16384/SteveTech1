@@ -17,6 +17,7 @@ import com.jme3.ui.Picture;
 import com.scs.stetech1.client.AbstractGameClient;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.gui.TextArea;
+import com.scs.stetech1.server.Settings;
 
 /*
  * Positioning text = the co-ords of BitmapText are for the top-left of the first line of text, and they go down from there.
@@ -42,17 +43,20 @@ public class HUD extends Node implements IProcessByClient {
 		hud_width = _cam.getWidth();
 		hud_height = _cam.getHeight();
 		cam = _cam;
-		
+
 		this.addTargetter();
 
 		super.setLocalTranslation(0, 0, 0);
 
-		BitmapText deleteme = new BitmapText(font_small, false);
-		deleteme.setColor(ColorRGBA.White);
-		deleteme.setLocalTranslation(10, 10, 0);
-		this.attachChild(deleteme);
-		deleteme.setText("12334455");
-
+		if (Settings.DEBUG_HUD) {
+			for (int i=0; i<100 ; i+=10) {
+				BitmapText deleteme = new BitmapText(font_small, false);
+				deleteme.setColor(ColorRGBA.White);
+				deleteme.setLocalTranslation(i, i, 0);
+				this.attachChild(deleteme);
+				deleteme.setText("x" + i);
+			}
+		}
 
 		abilityGun = new BitmapText(font_small, false);
 		abilityGun.setColor(ColorRGBA.Green);
@@ -154,8 +158,8 @@ public class HUD extends Node implements IProcessByClient {
 	public void setPlayerID(int id) {
 		this.playerID.setText("PlayerID: " + id);
 	}
-	
-	
+
+
 	public void setGameStatus(String s) {
 		this.gameStatus.setText(s);
 	}
