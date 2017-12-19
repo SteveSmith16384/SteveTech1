@@ -5,10 +5,9 @@ https://gamedevelopment.tutsplus.com/tutorials/create-a-simple-asteroids-game-us
 
 
 URGENT
-Client countdown game time itself
+Jumping is a bit high
+	Client countdown game time itself
 	HUD text not in correct place
-Moving target origin is 0.5
-	Check game status changes when player joins
 Can't seem to shoot movingentity correctly
 	Adjust grenades in the same way that avatars are adjusted
 Search for todos

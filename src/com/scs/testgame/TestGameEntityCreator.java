@@ -17,7 +17,7 @@ import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
 import com.scs.testgame.entities.MovingTarget;
-import com.scs.testgame.entities.TestGameClientPlayersAvatar;
+import com.scs.testgame.entities.TestGameClientAvatar;
 import com.scs.testgame.entities.TestGameEnemyPlayersAvatar;
 import com.scs.testgame.entities.Wall;
 
@@ -47,7 +47,7 @@ public class TestGameEntityCreator {
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 
 			if (playerID == game.playerID) {
-				AbstractClientAvatar avatar = new TestGameClientPlayersAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
+				AbstractClientAvatar avatar = new TestGameClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
 				//game.avatar = avatar;
 				return avatar;
 			} else {

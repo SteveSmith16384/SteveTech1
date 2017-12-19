@@ -12,7 +12,7 @@ import com.scs.stetech1.server.ClientData;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.MovingTarget;
-import com.scs.testgame.entities.TestGameServerPlayersAvatar;
+import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
 
 public class TestGameServer extends AbstractGameServer {
@@ -53,7 +53,7 @@ public class TestGameServer extends AbstractGameServer {
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
-		return new TestGameServerPlayersAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);	
+		return new TestGameServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);	
 	}
 
 

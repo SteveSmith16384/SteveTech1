@@ -89,10 +89,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	public long clientToServerDiffTime; // Add to current time to get server time
-	public int status = STATUS_NOT_CONNECTED; // todo - rename
+	public int clientStatus = STATUS_NOT_CONNECTED;
 	public SimpleGameData gameData;
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Settings.SERVER_TICKRATE_MS);
+	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
 	private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	private SimplePhysicsController<PhysicalEntity> physicsController;
@@ -188,7 +189,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							}
 
 						} else if (message instanceof EntityUpdateMessage) {
-							if (status >= STATUS_JOINED_GAME) {
+							if (clientStatus >= STATUS_JOINED_GAME) {
 								EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
 								for(EntityUpdateMessage.UpdateData eum : mainmsg.data) {
 									IEntity e = this.entities.get(eum.entityID);
@@ -229,7 +230,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
 							GeneralCommandMessage msg = (GeneralCommandMessage)message;
 							if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) {
-								status = STATUS_GAME_STARTED;
+								clientStatus = STATUS_GAME_STARTED;
 							}
 
 						} else if (message instanceof AbilityUpdateMessage) {
@@ -247,11 +248,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					}
 				}
 
-				if (status >= STATUS_CONNECTED && sendPingInt.hitInterval()) {
+				if (clientStatus >= STATUS_CONNECTED && sendPingInt.hitInterval()) {
 					networkClient.sendMessageToServer(new PingMessage(false));
 				}
 
-				if (status == STATUS_GAME_STARTED) {
+				if (clientStatus == STATUS_GAME_STARTED) {
 
 					if (this.avatar != null) {
 						// Send inputs
@@ -306,6 +307,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				}
 			}
 
+			if (showGameTimeInterval.hitInterval()) {
+				if (this.gameData != null) {
+					this.hud.setGameStatus(SimpleGameData.getStatusDesc(gameData.getGameStatus()));
+					this.hud.setGameTime(this.gameData.getTime(serverTime));
+					
+				}
+			}
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
 
@@ -346,7 +354,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				this.side = npcm.side;
 				this.hud.setPlayerID(this.playerID);
 				Settings.p("We are player " + playerID);
-				status = STATUS_JOINED_GAME;
+				clientStatus = STATUS_JOINED_GAME;
 			} else {
 				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
 			}
@@ -376,10 +384,10 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			}
 		} else if (message instanceof WelcomeClientMessage) {
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
-			if (status < STATUS_RCVD_WELCOME) {
-				status = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
+			if (clientStatus < STATUS_RCVD_WELCOME) {
+				clientStatus = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
 				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
-				status = STATUS_SENT_JOIN_REQUEST;
+				clientStatus = STATUS_SENT_JOIN_REQUEST;
 			} else {
 				throw new RuntimeException("Received second welcome message");
 			}
@@ -391,15 +399,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		} else if (message instanceof GameStatusMessage) {
 			GameStatusMessage gsm = (GameStatusMessage)message;
 			this.gameData = gsm.gameData;
-			this.hud.setGameStatus(SimpleGameData.getStatusDesc(gameData.getGameStatus()));
-			//todo this.hud.setGameTime(""+gsm.gameTimeMS/1000);
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 
 		if (Settings.DEBUG_MSGS) {
-			if (status < STATUS_RCVD_WELCOME) {
+			if (clientStatus < STATUS_RCVD_WELCOME) {
 				Settings.p("Still not received Welcome message");
 			}
 		}

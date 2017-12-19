@@ -14,7 +14,7 @@ public class SimpleGameData { // pojo
 	public static final int ST_FINISHED = 3;
 
 	private int gameStatus = ST_WAITING_FOR_PLAYERS;
-	public long statusStartTime, statusEndTime; // todo - use statusEndTime
+	public long statusStartTimeMS, statusDurationMS; // todo - use statusDuration
 
 	public SimpleGameData() {
 		super();
@@ -46,14 +46,24 @@ public class SimpleGameData { // pojo
 	public void setGameStatus(int newStatus) {
 		if (gameStatus != newStatus) {
 			gameStatus = newStatus;
-			statusStartTime = System.currentTimeMillis();
+			statusStartTimeMS = System.currentTimeMillis();
 			//server.gameStatusChanged(newStatus);
 		}
 	}
 	
 	
-	public String getTime() {
-		return "todo"; // show either time left or time going
+	public String getTime(long now) {
+		switch (this.gameStatus) {
+		case ST_WAITING_FOR_PLAYERS: 
+			return (now-statusStartTimeMS)/1000 + " seconds";
+		case ST_DEPLOYING: 
+		case ST_STARTED: 
+		case ST_FINISHED:
+			long endTime = statusStartTimeMS + statusDurationMS;
+			return (endTime-now)/1000 + " seconds";
+		default: 
+			throw new RuntimeException("Unknown status: " + gameStatus);
+		}
 	}
 
 }

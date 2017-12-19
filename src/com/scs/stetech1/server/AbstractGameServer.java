@@ -24,12 +24,12 @@ import com.scs.stetech1.components.IPreprocess;
 import com.scs.stetech1.components.IProcessByServer;
 import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.components.IRewindable;
-import com.scs.stetech1.data.SimpleGameData;
 import com.scs.stetech1.data.GameOptions;
+import com.scs.stetech1.data.SimpleGameData;
 import com.scs.stetech1.data.SimplePlayerData;
 import com.scs.stetech1.entities.AbstractAvatar;
-import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.entities.AbstractServerAvatar;
+import com.scs.stetech1.entities.PhysicalEntity;
 import com.scs.stetech1.netmessages.EntityUpdateMessage;
 import com.scs.stetech1.netmessages.GameStatusMessage;
 import com.scs.stetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -51,7 +51,7 @@ import com.scs.stetech1.server.ClientData.ClientStatus;
 import com.scs.stetech1.shared.EntityTypes;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.weapons.HitscanRifle;
+import com.scs.stetech1.weapons.GrenadeLauncher;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
 
@@ -296,7 +296,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			}
 		}
 
-		long duration = System.currentTimeMillis() - gameData.statusStartTime;
+		long duration = System.currentTimeMillis() - gameData.statusStartTimeMS;
 		if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
 			if (duration >= this.gameOptions.deployDuration) {
 				gameData.setGameStatus(SimpleGameData.ST_STARTED);
@@ -432,8 +432,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		//avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
 
-		IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
-		//IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
+		//IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
+		IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
 		this.addEntity(abilityGun);
 		
 		/* 

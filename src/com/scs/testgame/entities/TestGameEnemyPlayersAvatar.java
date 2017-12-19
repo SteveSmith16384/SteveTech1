@@ -13,7 +13,7 @@ public class TestGameEnemyPlayersAvatar extends AbstractEnemyAvatar {
 	
 	@Override
 	protected Spatial getPlayersModel(IEntityController game, int pid) {
-		return TestGameClientPlayersAvatar.getPlayersModel_Static(game, pid);
+		return TestGameClientAvatar.getPlayersModel_Static(game, pid);
 	}
 
 }
