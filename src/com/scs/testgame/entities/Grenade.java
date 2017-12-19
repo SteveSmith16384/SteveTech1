@@ -35,7 +35,6 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 
 	public Grenade(IEntityController _game, int id, IRequiresAmmoCache<Grenade> owner) {
 		super(_game, id, EntityTypes.GRENADE, "Grenade");
-		//this(_game, id);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -43,12 +42,6 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 			creationData.put("containerID", owner.getID());
 		}
 		
-/*
-	}
-
-
-	private Grenade(IEntityController _game, int id) {
-*/
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("grenade", sphere);

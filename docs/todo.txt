@@ -5,7 +5,9 @@ https://gamedevelopment.tutsplus.com/tutorials/create-a-simple-asteroids-game-us
 
 
 URGENT
-HUD text not in correct place
+Store collisions and process at end
+Move messagereceiver to another class
+	HUD text not in correct place
 Moving target origin is 0.5
 Check game status changes when player joins
 Can't seem to shoot movingentity correctly
