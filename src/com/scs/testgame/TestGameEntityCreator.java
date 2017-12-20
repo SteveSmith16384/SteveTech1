@@ -144,7 +144,6 @@ public class TestGameEntityCreator extends AbstractEntityCreator { // todo - add
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				GrenadeLauncher gl = new GrenadeLauncher(game, id, owner, num);
-				//scs new owner.addAbility(gl, num);
 				return gl;
 			}
 			return null;

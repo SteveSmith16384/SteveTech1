@@ -50,7 +50,7 @@ import com.scs.stetech1.networking.KryonetServer;
 import com.scs.stetech1.server.ClientData.ClientStatus;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
-import com.scs.stetech1.weapons.GrenadeLauncher;
+import com.scs.stetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Floor;
 
 import ssmith.swing.LogWindow;
@@ -421,9 +421,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		avatar.setWorldTranslation(this.getAvatarStartPosition(avatar));
 		//avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
-
-		//IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
-		IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
+		
+		this.equipAvatar(avatar);
+/*
+		IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
+		//IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
 		this.addEntity(abilityGun);
 		
 		/* 
@@ -436,6 +438,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
+	
+	protected abstract void equipAvatar(AbstractServerAvatar avatar);
 
 	protected abstract IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac);
 
@@ -557,7 +561,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	}
 
 
-	public static int getNextEntityID() {
+	@Override
+	public int getNextEntityID() {
 		return nextEntityID.getAndAdd(1);
 	}
 

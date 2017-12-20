@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
@@ -71,6 +72,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public static final int STATUS_SENT_JOIN_REQUEST = 3;
 	public static final int STATUS_JOINED_GAME = 4;
 	public static final int STATUS_GAME_STARTED = 5; // Have received all entities
+
+	private static AtomicInteger nextEntityID = new AtomicInteger(1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	private LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
@@ -538,6 +541,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	}
 
 	
+	//@Override
 	public void addClientOnlyEntity(IEntity e) {
 		this.clientOnlyEntities.put(e.getID(), e); // todo - create toAdd
 	}
@@ -546,5 +550,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public void removeClientOnlyEntity(IEntity e) {
 		this.clientOnlyEntities.remove(e.getID());
 	}
+
+
+	@Override
+	public int getNextEntityID() {
+		return nextEntityID.getAndAdd(1);
+	}
+
 
 }

@@ -86,8 +86,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	// Avatars have their own special position calculator
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		//scs new simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 		if (Settings.SYNC_CLIENT_POS) {
 			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 			if (offset != null) {

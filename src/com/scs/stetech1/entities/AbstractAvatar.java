@@ -193,7 +193,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		//if (offset.length() > 0.01f) { Already checked this
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
 		simplePlayerControl.getAdditionalForce().addLocal(offset);
-		//simplePlayerControl.getAdditionalForce().set(offset); // scs new
 		//}
 	}
 

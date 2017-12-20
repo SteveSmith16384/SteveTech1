@@ -4,10 +4,10 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 
 URGENT
-Grenades
+Grenade hitting thrower
+Player is springing back
 Make floor a single quad
 	Client-side only entities
-	Grenades colliding
 	Cache position history vectors
 Jumping is a bit high
 	Client countdown game time itself
@@ -17,6 +17,7 @@ Search for todos
 
 
 TODO
+Grenades
 Readme - Features
 Check code compiles without any game-specific code
 Kryonet encryption?

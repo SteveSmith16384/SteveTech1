@@ -11,6 +11,8 @@ import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.AbstractServerAvatar;
 import com.scs.stetech1.server.AbstractGameServer;
 import com.scs.stetech1.server.ClientData;
+import com.scs.stetech1.shared.IAbility;
+import com.scs.stetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
@@ -53,13 +55,13 @@ public class TestGameServer extends AbstractGameServer {
 
 		new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 		
-		new FlatFloor(this, getNextEntityID(), 3, .1f, 3, 2, 2, "Textures/crate.png");
+		//new FlatFloor(this, getNextEntityID(), 3, .1f, 3, 2, 2, "Textures/crate.png");
 	}
 
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
-		return new TestGameServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);	
+		return new TestGameServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
 	}
 
 
@@ -71,6 +73,21 @@ public class TestGameServer extends AbstractGameServer {
 		default:
 			throw new RuntimeException("Unknown entity type: " + type);
 		}
+	}
+
+
+	@Override
+	protected void equipAvatar(AbstractServerAvatar avatar) {
+		IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
+		//IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
+		this.addEntity(abilityGun);
+		
+		/* 
+			this.abilityOther = new JetPac(this, 1);// BoostFwd(this, 1);//getRandomAbility(this);
+		game.addEntity(abilityOther);
+		}*/
+
+		
 	}
 
 }
