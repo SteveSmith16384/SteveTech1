@@ -141,7 +141,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							client.remoteInput.decodeMessage(pim);
 							client.latestInputTimestamp = pim.timestamp;
 						}
-						
+
 					} else if (message instanceof RequestNewBulletMessage) {
 						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
 						IRequiresAmmoCache irac = (IRequiresAmmoCache)this.entities.get(rnbe.ownerEntityID);
@@ -183,7 +183,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							Ray ray = new Ray(from, avatar.getShootDir());
 							RayCollisionData rcd = avatar.checkForCollisions(ray, chip.getRange());
 							if (rcd != null) {
-							rcd.timestamp = timeTo; // For debugging
+								rcd.timestamp = timeTo; // For debugging
 							}
 							chip.setTarget(rcd); // Damage etc.. is calculated later
 						}
@@ -421,13 +421,13 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		avatar.setWorldTranslation(this.getAvatarStartPosition(avatar));
 		//avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
-		
+
 		this.equipAvatar(avatar);
-/*
+		/*
 		IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
 		//IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
 		this.addEntity(abilityGun);
-		
+
 		/* 
 			this.abilityOther = new JetPac(this, 1);// BoostFwd(this, 1);//getRandomAbility(this);
 		game.addEntity(abilityOther);
@@ -438,7 +438,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
-	
+
 	protected abstract void equipAvatar(AbstractServerAvatar avatar);
 
 	protected abstract IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac);
@@ -517,17 +517,12 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 			this.entities.put(e.getID(), e);
 
 			// Tell clients
-			//if (e instanceof PhysicalEntity) {
-				//PhysicalEntity se = (PhysicalEntity)e;
-				NewEntityMessage nem = new NewEntityMessage(e);
-				for (ClientData client : this.clients.values()) {
-					if (client.clientStatus == ClientStatus.Accepted) {
-						networkServer.sendMessageToClient(client, nem);	
-					}
+			NewEntityMessage nem = new NewEntityMessage(e);
+			for (ClientData client : this.clients.values()) {
+				if (client.clientStatus == ClientStatus.Accepted) {
+					networkServer.sendMessageToClient(client, nem);	
 				}
-
-				//this.networkServer.sendMessageToAll(nem);
-			//}
+			}
 			this.console.appendText("Created " + e);
 		}
 
@@ -681,11 +676,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pa = a.userObject;
 		PhysicalEntity pb = b.userObject;
-		
+
 		if (!pa.collideable || !pb.collideable) {
 			return false;
 		}
-		
+
 		if (pa instanceof AbstractAvatar && pb instanceof AbstractAvatar) {
 			// Avatars on the same side don't collide
 			AbstractAvatar aa = (AbstractAvatar)pa;
@@ -712,7 +707,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		this.networkServer.sendMessageToAll(new GameStatusMessage(this.gameData, players));
 
 	}
-	
+
 
 	public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
 }

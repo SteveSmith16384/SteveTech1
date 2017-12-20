@@ -4,11 +4,11 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 
 URGENT
+Show current server position of players avatar
 Grenade hitting thrower
 Player is springing back
-Make floor a single quad
+Make floor a single quad - needs rotating
 	Client-side only entities
-	Cache position history vectors
 Jumping is a bit high
 	Client countdown game time itself
 	HUD text not in correct place
