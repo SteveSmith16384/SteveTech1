@@ -1,12 +1,15 @@
 package com.scs.stetech1.hud;
 
+import java.util.HashMap;
+
 import com.jme3.scene.Node;
 import com.jme3.ui.Picture;
 import com.scs.stetech1.client.AbstractGameClient;
+import com.scs.stetech1.components.IEntity;
 import com.scs.stetech1.components.IProcessByClient;
 import com.scs.stetech1.shared.IEntityController;
 
-public class AbstractHUDImage extends Picture implements IProcessByClient {
+public class AbstractHUDImage extends Picture implements IEntity, IProcessByClient {
 
 	private IEntityController game;
 	private float timeLeft;
@@ -23,7 +26,7 @@ public class AbstractHUDImage extends Picture implements IProcessByClient {
 		//this.setPosition(w/2, h/2);
 
 		guiNode.attachChild(this);
-		//todo ? game.addEntity(this);
+		game.addEntity(this);
 
 	}
 
@@ -33,10 +36,35 @@ public class AbstractHUDImage extends Picture implements IProcessByClient {
 		if (timeLeft > 0) {
 			this.timeLeft -= tpf;
 			if (this.timeLeft <= 0) {
-				this.removeFromParent();
-				//todo game.removeEntity(this);
+				this.remove();
 			}
 		}
+	}
+
+
+	@Override
+	public int getID() {
+		return 0; // todo
+	}
+
+
+	@Override
+	public int getType() {
+		return -1;
+	}
+
+
+	@Override
+	public HashMap<String, Object> getCreationData() {
+		return null;
+	}
+
+
+	@Override
+	public void remove() {
+		this.removeFromParent();
+		game.removeEntity(this.getID());
+		
 	}
 
 }

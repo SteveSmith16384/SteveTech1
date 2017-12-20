@@ -77,11 +77,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	public void storeAvatarPosition(long serverTime) {
 		// Store our position
-		EntityPositionData epd = new EntityPositionData(getWorldTranslation().clone(), null, serverTime);
-		/*epd.serverTimestamp = serverTime;
-		epd.position = getWorldTranslation().clone();
-		//epd.rotation not required*/
-		this.clientAvatarPositionData.addPositionData(epd);
+		//EntityPositionData epd = new EntityPositionData(getWorldTranslation().clone(), null, serverTime);
+		this.clientAvatarPositionData.addPositionData(getWorldTranslation(), null, serverTime);
 
 	}
 

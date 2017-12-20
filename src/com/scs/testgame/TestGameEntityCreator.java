@@ -3,16 +3,17 @@ package com.scs.testgame;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.IEntity;
-import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.entities.AbstractAvatar;
-import com.scs.stetech1.entities.AbstractEnemyAvatar;
 import com.scs.stetech1.entities.AbstractClientAvatar;
+import com.scs.stetech1.entities.AbstractEnemyAvatar;
 import com.scs.stetech1.entities.DebuggingSphere;
 import com.scs.stetech1.netmessages.NewEntityMessage;
 import com.scs.stetech1.server.Settings;
+import com.scs.stetech1.shared.AbstractEntityCreator;
 import com.scs.stetech1.weapons.GrenadeLauncher;
 import com.scs.stetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
+import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
 import com.scs.testgame.entities.MovingTarget;
@@ -23,7 +24,7 @@ import com.scs.testgame.entities.Wall;
 /*
  * This is only used client-side.
  */
-public class TestGameEntityCreator { // todo - extend abstract class that has buit-in types, e.g. grenade, avatar
+public class TestGameEntityCreator extends AbstractEntityCreator {
 
 	private TestGameClient game;
 
@@ -112,9 +113,9 @@ public class TestGameEntityCreator { // todo - extend abstract class that has bu
 		case GRENADE:
 		{
 			//int side = (int) msg.data.get("side");
-			int containerID = (int) msg.data.get("containerID");
-			IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
-			Grenade grenade = new Grenade(game, id, irac);
+			//int containerID = (int) msg.data.get("containerID");
+			//IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
+			Grenade grenade = new Grenade(game, id);//, irac);
 			/*if (side == game.side) {
 				IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
 				irac.addToCache(grenade);
@@ -147,7 +148,7 @@ public class TestGameEntityCreator { // todo - extend abstract class that has bu
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				GrenadeLauncher gl = new GrenadeLauncher(game, id, owner, num);
-				owner.addAbility(gl, num);
+				//scs new owner.addAbility(gl, num);
 				return gl;
 			}
 			return null;
@@ -171,6 +172,16 @@ public class TestGameEntityCreator { // todo - extend abstract class that has bu
 			return null;
 		}
 
+		case FLAT_FLOOR:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Vector3f size = (Vector3f)msg.data.get("size");
+			String tex = (String)msg.data.get("tex");
+			FlatFloor floor = new FlatFloor(game, id, pos.x, pos.y, pos.z, size.x, size.z, tex);
+			return floor;
+		}
+
+
 		default:
 			throw new RuntimeException("Unknown entity type: " + getName(msg.type));
 		}
@@ -191,6 +202,7 @@ public class TestGameEntityCreator { // todo - extend abstract class that has bu
 		case GRENADE_LAUNCHER: return "GRENADE_LAUNCHER";
 		case LASER_RIFLE: return "LASER_RIFLE";
 		case HITSCAN_RIFLE: return "HITSCAN_RIFLE";
+		case FLAT_FLOOR: return "Flat Floor";
 		default: return "UNKNOWN (" + type + ")";
 		}
 	}

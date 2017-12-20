@@ -9,12 +9,12 @@ public class EntityPositionData {
 	public Vector3f position;	
 	public Quaternion rotation;
 
-	private EntityPositionData() {
+	public EntityPositionData() {
 		super();
 	}
 
 
-	public EntityPositionData(Vector3f pos, Quaternion rot, long time) {
+	private EntityPositionData(Vector3f pos, Quaternion rot, long time) {
 		this();
 
 		this.position = pos;

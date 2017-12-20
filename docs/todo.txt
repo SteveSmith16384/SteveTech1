@@ -5,6 +5,10 @@ https://gamedevelopment.tutsplus.com/tutorials/create-a-simple-asteroids-game-us
 
 
 URGENT
+Readme - Features
+Cache position history vectors
+Client-side only entities?
+Kryonet encryption?
 Jumping is a bit high
 	Client countdown game time itself
 	HUD text not in correct place
@@ -14,9 +18,9 @@ Search for todos
 
 
 TODO
+Check code compiles without any game-specific code
 Store collisions and process at end
 Move messagereceiver to another class
-Move entity functionality to systems - ECS?
 Should not have a generic "process()" or preprocess() method?
 Grenades
 Use new models

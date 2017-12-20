@@ -5,8 +5,8 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class RequestNewBulletMessage extends MyAbstractMessage {
 
-	public int ownerEntityID;
-	public int type;
+	public int ownerEntityID = -1;
+	public int type = -1;
 	
 	public RequestNewBulletMessage() {
 		super(true);

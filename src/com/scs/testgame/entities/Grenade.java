@@ -33,13 +33,13 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
-	public Grenade(IEntityController _game, int id, IRequiresAmmoCache<Grenade> owner) {
+	public Grenade(IEntityController _game, int id) {//, IRequiresAmmoCache<Grenade> owner) {
 		super(_game, id, TestGameEntityCreator.GRENADE, "Grenade");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			//creationData.put("side", side);
-			creationData.put("containerID", owner.getID());
+			//creationData.put("containerID", owner.getID());
 		}
 		
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);

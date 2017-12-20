@@ -147,7 +147,9 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					} else if (message instanceof RequestNewBulletMessage) {
 						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
 						IRequiresAmmoCache irac = (IRequiresAmmoCache)this.entities.get(rnbe.ownerEntityID);
-						switch (rnbe.type) { // todo - call method in TestGameEntityCreator
+						IEntity e = this.createEntity(rnbe.type, getNextEntityID(), -1);
+						irac.addToCache(e);
+						/*switch (rnbe.type) { // todo - call method in TestGameEntityCreator
 						case TestGameEntityCreator.GRENADE:
 							Grenade g = new Grenade(this, getNextEntityID(), irac);
 							break;
@@ -156,7 +158,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 							break;
 							default:
 								throw new RuntimeException("Unknown bullet type: " + rnbe.type);
-						}
+						}*/
 
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
@@ -290,24 +292,24 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		if (playersChanged) {
 			boolean enoughPlayers = areThereEnoughPlayers();
 			if (!enoughPlayers && gameData.isInGame()) {
-				gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS);
+				gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 			} else if (enoughPlayers && gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
-				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING);
+				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDuration);
 			}
 		}
 
 		long duration = System.currentTimeMillis() - gameData.statusStartTimeMS;
 		if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
 			if (duration >= this.gameOptions.deployDuration) {
-				gameData.setGameStatus(SimpleGameData.ST_STARTED);
+				gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDuration);
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_STARTED) {
 			if (duration >= this.gameOptions.gameDuration) {
-				gameData.setGameStatus(SimpleGameData.ST_FINISHED);
+				gameData.setGameStatus(SimpleGameData.ST_FINISHED, gameOptions.finishedDuration);
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_FINISHED) {
 			if (duration >= this.gameOptions.finishedDuration) {
-				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING);
+				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDuration);
 			}
 		}
 		if (oldStatus != gameData.getGameStatus()) {
@@ -446,6 +448,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
+
+	protected abstract IEntity createEntity(int type, int entityid, int side);
 
 
 	private void sendAllEntitiesToClient(ClientData client) {
@@ -631,7 +635,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 		this.getRootNode().detachAllChildren();
 		this.getPhysicsController().removeAllEntities();
 
-		gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS);
+		gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 	}
 
 

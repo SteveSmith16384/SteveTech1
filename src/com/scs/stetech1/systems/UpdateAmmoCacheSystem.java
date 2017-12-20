@@ -20,7 +20,7 @@ public class UpdateAmmoCacheSystem extends AbstractSystem {
 	public void process(IEntity entity, float tpf_secs) {
 		if (entity instanceof IRequiresAmmoCache) {
 			IRequiresAmmoCache irac = (IRequiresAmmoCache)entity;
-			RequestNewBulletMessage rnbm = new RequestNewBulletMessage();
+			RequestNewBulletMessage rnbm = new RequestNewBulletMessage(irac.getAmmoType(), entity.getID());
 			server.networkClient.sendMessageToServer(rnbm);
 		}
 		

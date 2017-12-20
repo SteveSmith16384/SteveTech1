@@ -2,11 +2,13 @@ package com.scs.stetech1.shared;
 
 import java.util.LinkedList;
 
-import com.scs.stetech1.server.Settings;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 
 public final class PositionCalculator {
 
 	private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // Newest entry is at the start
+	private LinkedList<EntityPositionData> oldPositionData = new LinkedList<>();
 	private int maxEntries;
 	private boolean cleardown;
 
@@ -18,7 +20,18 @@ public final class PositionCalculator {
 	}
 
 
-	public void addPositionData(EntityPositionData newData) {
+	//public void addPositionData(EntityPositionData newData) {
+	public void addPositionData(Vector3f pos, Quaternion q, long time) {
+		EntityPositionData newData = null;
+		if (this.oldPositionData.size() > 0) {
+			newData = this.oldPositionData.removeLast();
+		} else {
+			newData = new EntityPositionData();
+		}
+		newData.position = pos;
+		newData.rotation = q;
+		newData.serverTimestamp = time;
+		
 		synchronized (positionData) {
 			boolean added = false;
 			for(int i=0 ; i<this.positionData.size() ; i++) { // Goes backwards in time, number gets smaller
@@ -88,13 +101,15 @@ public final class PositionCalculator {
 
 	private void cleardown(int num) {
 		while (this.positionData.size() > num) {
-			this.positionData.removeLast();
+			EntityPositionData epd = this.positionData.removeLast();
+			this.oldPositionData.add(epd);
 		}
 
 	}
 
 
 	public void clearPositiondata() {
+		this.oldPositionData.addAll(this.positionData);
 		synchronized (positionData) {
 			positionData.clear();
 		}

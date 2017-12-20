@@ -86,7 +86,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		}
 		//invulnerableTime = RESTART_DUR*3;
 
-		// Move us below the map
+		// Move us below the map - todo - no!
 		Vector3f pos = this.getMainNode().getWorldTranslation().clone();//.floor_phy.getPhysicsLocation().clone();
 		pos.y = -10;//-SimpleCity.FLOOR_THICKNESS * 2;
 		super.setWorldTranslation(pos);

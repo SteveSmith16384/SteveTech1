@@ -14,7 +14,7 @@ import com.scs.testgame.TestGameEntityCreator;
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IProcessByClient {
 
 	public AbstractEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
-		super(game, eid, TestGameEntityCreator.AVATAR, "EnemyAvatar");
+		super(game, eid, 1, "EnemyAvatar");
 
 		/*if (game.isServer()) {
 			creationData = new HashMap<String, Object>();

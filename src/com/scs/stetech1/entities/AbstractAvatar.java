@@ -44,7 +44,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side) {
-		super(_game, eid, TestGameEntityCreator.AVATAR, "Player");
+		super(_game, eid, 1, "Player");
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();

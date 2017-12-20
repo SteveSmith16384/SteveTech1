@@ -69,20 +69,21 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	protected void addPositionData() {
 		// Store the position for use when rewinding.
-		EntityPositionData epd = new EntityPositionData(this.getWorldTranslation().clone(), this.getWorldRotation(), System.currentTimeMillis());
-		/*epd.serverTimestamp = System.currentTimeMillis();
-		epd.rotation = this.getWorldRotation();
-		epd.position = this.getWorldTranslation();
-*/
-		this.serverPositionData.addPositionData(epd);
+		//EntityPositionData epd = new EntityPositionData(this.getWorldTranslation().clone(), this.getWorldRotation(), System.currentTimeMillis());
+		this.serverPositionData.addPositionData(this.getWorldTranslation(), this.getWorldRotation(), System.currentTimeMillis());
 	}
 
-
+/*
 	public void addPositionData(EntityPositionData epd) {
 		this.serverPositionData.addPositionData(epd);
 	}
+*/
+	
+	public void addPositionData(Vector3f pos, Quaternion q, long time) {
+		this.serverPositionData.addPositionData(pos, q, time);	
+	}
 
-
+	
 	// This is overridden by Avatars to take into account local position
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
 		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse);

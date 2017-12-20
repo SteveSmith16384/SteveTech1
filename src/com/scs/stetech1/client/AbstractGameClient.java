@@ -195,16 +195,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 									IEntity e = this.entities.get(eum.entityID);
 									if (e != null) {
 										//Settings.p("Received EntityUpdateMessage for " + e);
-										EntityPositionData epd = new EntityPositionData(eum.pos, eum.dir, mainmsg.timestamp);
-										/*epd.serverTimestamp = mainmsg.timestamp;
-										epd.rotation = eum.dir;
-										epd.position = eum.pos;
-*/
+										//EntityPositionData epd = new EntityPositionData(eum.pos, eum.dir, mainmsg.timestamp);
 										PhysicalEntity pe = (PhysicalEntity)e;
 										if (eum.force) {
 											// Set it now!
-											pe.setWorldTranslation(epd.position);
-											pe.setWorldRotation(epd.rotation);
+											pe.setWorldTranslation(eum.pos);
+											pe.setWorldRotation(eum.dir);
 											pe.clearPositiondata();
 											if (pe == this.avatar) {
 												avatar.clientAvatarPositionData.clearPositiondata(); // Clear our local data as well
@@ -213,7 +209,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 												//this.avatar.resetWalkDir();
 											}
 										}
-										pe.addPositionData(epd); // Store the position for use later
+										pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
 										//Settings.p("New position for " + e + ": " + eum.pos);
 									} else {
 										Settings.p("Unknown entity ID: " + eum.entityID);

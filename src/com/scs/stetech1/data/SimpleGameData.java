@@ -43,10 +43,11 @@ public class SimpleGameData { // pojo
 	}
 
 
-	public void setGameStatus(int newStatus) {
+	public void setGameStatus(int newStatus, long duration) {
 		if (gameStatus != newStatus) {
 			gameStatus = newStatus;
 			statusStartTimeMS = System.currentTimeMillis();
+			statusDurationMS = duration;
 			//server.gameStatusChanged(newStatus);
 		}
 	}
