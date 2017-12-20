@@ -14,7 +14,7 @@ public class SimpleGameData { // pojo
 	public static final int ST_FINISHED = 3;
 
 	private int gameStatus = ST_WAITING_FOR_PLAYERS;
-	public long statusStartTimeMS, statusDurationMS; // todo - use statusDuration
+	public long statusStartTimeMS, statusDurationMS;
 
 	public SimpleGameData() {
 		super();

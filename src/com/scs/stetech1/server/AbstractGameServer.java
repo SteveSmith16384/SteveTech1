@@ -51,9 +51,7 @@ import com.scs.stetech1.server.ClientData.ClientStatus;
 import com.scs.stetech1.shared.IAbility;
 import com.scs.stetech1.shared.IEntityController;
 import com.scs.stetech1.weapons.GrenadeLauncher;
-import com.scs.testgame.TestGameEntityCreator;
 import com.scs.testgame.entities.Floor;
-import com.scs.testgame.entities.Grenade;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.FixedLoopTime;
@@ -63,7 +61,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	private static final String PROPS_FILE = Settings.NAME.replaceAll(" ", "") + "_settings.txt";
 
-	private static AtomicInteger nextEntityID = new AtomicInteger();
+	private static AtomicInteger nextEntityID = new AtomicInteger(1);
 
 	public IMessageServer networkServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
@@ -147,18 +145,8 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 					} else if (message instanceof RequestNewBulletMessage) {
 						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
 						IRequiresAmmoCache irac = (IRequiresAmmoCache)this.entities.get(rnbe.ownerEntityID);
-						IEntity e = this.createEntity(rnbe.type, getNextEntityID(), -1);
-						irac.addToCache(e);
-						/*switch (rnbe.type) { // todo - call method in TestGameEntityCreator
-						case TestGameEntityCreator.GRENADE:
-							Grenade g = new Grenade(this, getNextEntityID(), irac);
-							break;
-							
-						case TestGameEntityCreator.LASER_BULLET:
-							break;
-							default:
-								throw new RuntimeException("Unknown bullet type: " + rnbe.type);
-						}*/
+						IEntity e = this.createEntity(rnbe.type, getNextEntityID(), -1, irac);
+						//irac.addToCache(e);
 
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
@@ -449,7 +437,7 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
 
-	protected abstract IEntity createEntity(int type, int entityid, int side);
+	protected abstract IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac);
 
 
 	private void sendAllEntitiesToClient(ClientData client) {
@@ -688,6 +676,11 @@ public abstract class AbstractGameServer extends SimpleApplication implements IE
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pa = a.userObject;
 		PhysicalEntity pb = b.userObject;
+		
+		if (!pa.collideable || !pb.collideable) {
+			return false;
+		}
+		
 		if (pa instanceof AbstractAvatar && pb instanceof AbstractAvatar) {
 			// Avatars on the same side don't collide
 			AbstractAvatar aa = (AbstractAvatar)pa;

@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.data.GameOptions;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.AbstractServerAvatar;
@@ -32,7 +33,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	public TestGameServer() throws IOException {
-		super(new GameOptions(1, 999));
+		super(new GameOptions(1, 999, 10*1000, 5*60*1000, 10*1000));
 	}
 
 
@@ -63,14 +64,13 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	protected IEntity createEntity(int type, int entityid, int side) {
+	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
 		case TestGameEntityCreator.GRENADE:
-			return new Grenade(this, entityid);
+			return new Grenade(this, entityid, irac);
 		default:
 			throw new RuntimeException("Unknown entity type: " + type);
 		}
 	}
-
 
 }

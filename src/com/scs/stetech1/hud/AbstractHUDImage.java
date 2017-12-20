@@ -11,12 +11,14 @@ import com.scs.stetech1.shared.IEntityController;
 
 public class AbstractHUDImage extends Picture implements IEntity, IProcessByClient {
 
-	private IEntityController game;
+	private AbstractGameClient game;
 	private float timeLeft;
+	private int id;
 
-	public AbstractHUDImage(IEntityController _game, Node guiNode, String tex, float w, float h, float dur) {
+	public AbstractHUDImage(AbstractGameClient _game, int _id, Node guiNode, String tex, float w, float h, float dur) {
 		super("AbstractHUDImage");
 
+		id = _id;
 		game = _game;
 		this.timeLeft = dur;
 
@@ -26,7 +28,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 		//this.setPosition(w/2, h/2);
 
 		guiNode.attachChild(this);
-		game.addEntity(this);
+		game.addClientOnlyEntity(this);
 
 	}
 
@@ -44,7 +46,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 
 	@Override
 	public int getID() {
-		return 0; // todo
+		return id;
 	}
 
 
@@ -63,7 +65,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 	@Override
 	public void remove() {
 		this.removeFromParent();
-		game.removeEntity(this.getID());
+		game.removeClientOnlyEntity(this);
 		
 	}
 

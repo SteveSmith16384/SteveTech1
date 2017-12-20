@@ -32,16 +32,19 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
+	private boolean launched = false;
 
-	public Grenade(IEntityController _game, int id) {//, IRequiresAmmoCache<Grenade> owner) {
+	public Grenade(IEntityController _game, int id, IRequiresAmmoCache<Grenade> owner) {
 		super(_game, id, TestGameEntityCreator.GRENADE, "Grenade");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			//creationData.put("side", side);
-			//creationData.put("containerID", owner.getID());
+			creationData.put("containerID", owner.getID());
 		}
-		
+
+		owner.addToCache(this);
+
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("grenade", sphere);
@@ -62,31 +65,37 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 
 		this.mainNode.attachChild(ball_geo);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-		this.simpleRigidBody.setBounciness(.6f);
-
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		game.addEntity(this);
 
 		syncPos = new InstantPositionAdjustment();
+
+		this.collideable = false;
 	}
 
-	
+
 	public void launch(ICanShoot shooter) {
+		launched = true;
+
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody.setBounciness(.6f);
+
 		game.getRootNode().attachChild(this.mainNode);
 		this.setWorldTranslation(shooter.getBulletStartPos());
 		this.simpleRigidBody.setLinearVelocity(shooter.getShootDir().normalize().mult(5));
+		this.collideable = true;
+
 	}
 
-	
+
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
-		//SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		//simplePlayerControl.getAdditionalForce().set(0, 0, 0);
-		if (Settings.SYNC_GRENADE_POS) {
-			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
-			if (offset != null) {
-				this.syncPos.adjustPosition(this, offset);
+		if (launched) {
+			if (Settings.SYNC_GRENADE_POS) {
+				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+				if (offset != null) {
+					this.syncPos.adjustPosition(this, offset);
+				}
 			}
 		}
 	}
@@ -94,23 +103,27 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
-		this.timeLeft -= tpf_secs;
-		if (this.timeLeft < 0) {
-			// todo - damage surrounding entities
-			this.remove();
+		if (launched) {
+			this.timeLeft -= tpf_secs;
+			if (this.timeLeft < 0) {
+				// todo - damage surrounding entities
+				this.remove();
+			}
+			super.processByServer(server, tpf_secs);
 		}
-		super.processByServer(server, tpf_secs);
 	}
 
 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
-		simpleRigidBody.process(tpf_secs);
+		if (launched) {
+			simpleRigidBody.process(tpf_secs);
 
-		this.timeLeft -= tpf_secs;
-		if (this.timeLeft < 0) {
-			//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
-			this.remove();
+			this.timeLeft -= tpf_secs;
+			if (this.timeLeft < 0) {
+				//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
+				this.remove();
+			}
 		}
 		//super.processByServer(null, tpf_secs);
 

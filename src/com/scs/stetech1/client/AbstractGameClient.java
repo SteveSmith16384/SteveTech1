@@ -75,6 +75,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	private LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
 	private LinkedList<Integer> toRemove = new LinkedList<Integer>(); 
+	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
 
 	private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	public static BitmapFont guiFont_small;
@@ -298,6 +299,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
 						}
 					}
+					
+					for (IEntity e : this.clientOnlyEntities.values()) {
+						if (e instanceof IProcessByClient) {
+							IProcessByClient pbc = (IProcessByClient)e;
+							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
+						}
+					}
 
 					this.hud.log_ta.setText(strListEnts.toString());
 				}
@@ -349,7 +357,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				this.playerID = npcm.playerID;
 				this.side = npcm.side;
 				this.hud.setPlayerID(this.playerID);
-				Settings.p("We are player " + playerID);
+				//Settings.p("We are player " + playerID);
 				clientStatus = STATUS_JOINED_GAME;
 			} else {
 				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
@@ -382,7 +390,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
 			if (clientStatus < STATUS_RCVD_WELCOME) {
 				clientStatus = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
-				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
+				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1)); // todo - get name from user
 				clientStatus = STATUS_SENT_JOIN_REQUEST;
 			} else {
 				throw new RuntimeException("Received second welcome message");
@@ -411,12 +419,18 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	@Override
 	public void addEntity(IEntity e) {
+		if (e.getID() <= 0) {
+			throw new RuntimeException("todo");
+		}
 		this.toAdd.add(e);
 	}
 
 
 	private void actuallyAddEntity(IEntity e) {
 		synchronized (entities) {
+			if (e.getID() <= 0) {
+				throw new RuntimeException("todo");
+			}
 			this.entities.put(e.getID(), e);
 		}
 	}
@@ -521,8 +535,16 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
 			Settings.p("Collision between " + a.userObject + " and " + b.userObject);
 		}
-
 	}
 
+	
+	public void addClientOnlyEntity(IEntity e) {
+		this.clientOnlyEntities.put(e.getID(), e); // todo - create toAdd
+	}
+
+
+	public void removeClientOnlyEntity(IEntity e) {
+		this.clientOnlyEntities.remove(e.getID());
+	}
 
 }

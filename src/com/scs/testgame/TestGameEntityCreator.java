@@ -3,6 +3,7 @@ package com.scs.testgame;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stetech1.components.IEntity;
+import com.scs.stetech1.components.IRequiresAmmoCache;
 import com.scs.stetech1.entities.AbstractAvatar;
 import com.scs.stetech1.entities.AbstractClientAvatar;
 import com.scs.stetech1.entities.AbstractEnemyAvatar;
@@ -24,7 +25,7 @@ import com.scs.testgame.entities.Wall;
 /*
  * This is only used client-side.
  */
-public class TestGameEntityCreator extends AbstractEntityCreator {
+public class TestGameEntityCreator extends AbstractEntityCreator { // todo - add word Client
 
 	private TestGameClient game;
 
@@ -112,14 +113,9 @@ public class TestGameEntityCreator extends AbstractEntityCreator {
 
 		case GRENADE:
 		{
-			//int side = (int) msg.data.get("side");
-			//int containerID = (int) msg.data.get("containerID");
-			//IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
-			Grenade grenade = new Grenade(game, id);//, irac);
-			/*if (side == game.side) {
-				IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
-				irac.addToCache(grenade);
-			}*/
+			int containerID = (int) msg.data.get("containerID");
+			IRequiresAmmoCache<Grenade> irac = (IRequiresAmmoCache<Grenade>)game.entities.get(containerID);
+			Grenade grenade = new Grenade(game, id, irac);
 			return grenade;
 		}
 

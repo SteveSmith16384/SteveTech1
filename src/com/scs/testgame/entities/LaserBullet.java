@@ -33,14 +33,15 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 		this.mainNode.attachChild(laserNode);
 		//game.getRootNode().attachChild(this.mainNode);
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-		//if (_game.isServer()) {
 			simpleRigidBody.setAerodynamicness(1);
 			simpleRigidBody.setGravity(0);
-		//}
 		
 		this.getMainNode().setUserData(Settings.ENTITY, this);
 		laserNode.setUserData(Settings.ENTITY, this);
 		game.addEntity(this);
+		
+		this.collideable = false;
+
 
 	}
 
@@ -62,6 +63,7 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 		this.setWorldTranslation(this.shooter.getBulletStartPos());
 		// Accelerate the physical ball to shoot it.
 		simpleRigidBody.setLinearVelocity(shooter.getShootDir().mult(30));
+		this.collideable = true;
 	}
 
 	
