@@ -3,10 +3,10 @@ package com.scs.testgame;
 import java.util.prefs.BackingStoreException;
 
 import com.jme3.system.AppSettings;
-import com.scs.stetech1.client.AbstractGameClient;
-import com.scs.stetech1.components.IEntity;
-import com.scs.stetech1.netmessages.NewEntityMessage;
-import com.scs.stetech1.server.Settings;
+import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.server.Globals;
 
 public class TestGameClient extends AbstractGameClient {
 
@@ -16,14 +16,14 @@ public class TestGameClient extends AbstractGameClient {
 		try {
 			settings = new AppSettings(true);
 			try {
-				settings.load(Settings.NAME);
+				settings.load(Globals.NAME);
 			} catch (BackingStoreException e) {
 				e.printStackTrace();
 			}
 			settings.setUseJoysticks(true);
 			settings.setAudioRenderer(null); // Avoid error with no soundcard
-			settings.setTitle(Settings.NAME);// + " (v" + Settings.VERSION + ")");
-			if (Settings.SHOW_LOGO) {
+			settings.setTitle(Globals.NAME);// + " (v" + Settings.VERSION + ")");
+			if (Globals.SHOW_LOGO) {
 				//settings.setSettingsDialogImage("/game_logo.png");
 			} else {
 				settings.setSettingsDialogImage(null);
@@ -51,13 +51,13 @@ public class TestGameClient extends AbstractGameClient {
 			}*/
 
 			try {
-				settings.save(Settings.NAME);
+				settings.save(Globals.NAME);
 			} catch (BackingStoreException e) {
 				e.printStackTrace();
 			}
 
 		} catch (Exception e) {
-			Settings.p("Error: " + e);
+			Globals.p("Error: " + e);
 			e.printStackTrace();
 		}
 

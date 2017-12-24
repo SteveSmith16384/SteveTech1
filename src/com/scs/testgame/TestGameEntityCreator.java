@@ -2,17 +2,17 @@ package com.scs.testgame;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.scs.stetech1.components.IEntity;
-import com.scs.stetech1.components.IRequiresAmmoCache;
-import com.scs.stetech1.entities.AbstractAvatar;
-import com.scs.stetech1.entities.AbstractClientAvatar;
-import com.scs.stetech1.entities.AbstractEnemyAvatar;
-import com.scs.stetech1.entities.DebuggingSphere;
-import com.scs.stetech1.netmessages.NewEntityMessage;
-import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.AbstractEntityCreator;
-import com.scs.stetech1.weapons.GrenadeLauncher;
-import com.scs.stetech1.weapons.HitscanRifle;
+import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.AbstractClientAvatar;
+import com.scs.stevetech1.entities.AbstractEnemyAvatar;
+import com.scs.stevetech1.entities.DebuggingSphere;
+import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractEntityCreator;
+import com.scs.stevetech1.weapons.GrenadeLauncher;
+import com.scs.stevetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
@@ -50,8 +50,8 @@ public class TestGameEntityCreator extends AbstractEntityCreator { // todo - add
 
 
 	public IEntity createEntity(NewEntityMessage msg) {
-		if (Settings.DEBUG_ENTITY_ADD_REMOVE) {
-			Settings.p("Creating " + getName(msg.type));
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			Globals.p("Creating " + getName(msg.type));
 		}
 		int id = msg.entityID;
 

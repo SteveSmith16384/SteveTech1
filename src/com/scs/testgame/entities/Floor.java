@@ -13,12 +13,12 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.client.AbstractGameClient;
-import com.scs.stetech1.components.IProcessByClient;
-import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.AbstractGameServer;
-import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.IEntityController;
+import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameEntityCreator;
 
 public class Floor extends PhysicalEntity implements IProcessByClient {
@@ -63,7 +63,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 			tex3.setWrap(WrapMode.Repeat);
 
 			Material floor_mat = null;
-			if (Settings.LIGHTING) {
+			if (Globals.LIGHTING) {
 				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 				floor_mat.setTexture("DiffuseMap", tex3);
 			} else {
@@ -81,8 +81,8 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 
 		game.getRootNode().attachChild(this.mainNode);
 
-		geometry.setUserData(Settings.ENTITY, this);
-		mainNode.setUserData(Settings.ENTITY, this);
+		geometry.setUserData(Globals.ENTITY, this);
+		mainNode.setUserData(Globals.ENTITY, this);
 
 		game.addEntity(this);
 

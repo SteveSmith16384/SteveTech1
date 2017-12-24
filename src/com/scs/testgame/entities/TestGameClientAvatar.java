@@ -9,13 +9,13 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.client.AbstractGameClient;
-import com.scs.stetech1.entities.AbstractClientAvatar;
-import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.hud.HUD;
-import com.scs.stetech1.input.IInputDevice;
-import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.IEntityController;
+import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.entities.AbstractClientAvatar;
+import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.hud.HUD;
+import com.scs.stevetech1.input.IInputDevice;
+import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.IEntityController;
 
 public class TestGameClientAvatar extends AbstractClientAvatar {
 
@@ -36,7 +36,7 @@ public class TestGameClientAvatar extends AbstractClientAvatar {
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			Material floor_mat = null;
-			if (Settings.LIGHTING) {
+			if (Globals.LIGHTING) {
 				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 				floor_mat.setTexture("DiffuseMap", tex3);
 			} else {

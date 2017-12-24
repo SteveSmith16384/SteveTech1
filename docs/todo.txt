@@ -4,8 +4,9 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 
 URGENT
-Show current server position of players avatar
-Grenade hitting thrower
+	Show current server position of players avatar
+Tell player they have died
+	Grenade hitting thrower
 Player is springing back
 Make floor a single quad - needs rotating
 	Client-side only entities
@@ -14,9 +15,12 @@ Jumping is a bit high
 	HUD text not in correct place
 	Adjust grenades in the same way that avatars are adjusted
 Search for todos
+Rename to SteveTRech1
 
 
 TODO
+Games - "powered by SteveTech"
+Animate messages?
 Grenades
 Readme - Features
 Check code compiles without any game-specific code

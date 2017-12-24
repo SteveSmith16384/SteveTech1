@@ -11,15 +11,15 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.client.AbstractGameClient;
-import com.scs.stetech1.components.IAffectedByPhysics;
-import com.scs.stetech1.components.IDamagable;
-import com.scs.stetech1.components.IRewindable;
-import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.netmessages.EntityUpdateMessage;
-import com.scs.stetech1.server.AbstractGameServer;
-import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.IEntityController;
+import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.IAffectedByPhysics;
+import com.scs.stevetech1.components.IDamagable;
+import com.scs.stevetech1.components.IRewindable;
+import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.netmessages.EntityUpdateMessage;
+import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameEntityCreator;
 
 public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, IRewindable, IDamagable {
@@ -49,7 +49,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 			tex3.setWrap(WrapMode.Repeat);
 
 			Material floor_mat = null;
-			if (Settings.LIGHTING) {
+			if (Globals.LIGHTING) {
 				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 				floor_mat.setTexture("DiffuseMap", tex3);
 			} else {
@@ -69,8 +69,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		game.getRootNode().attachChild(this.mainNode);
 
-		geometry.setUserData(Settings.ENTITY, this);
-		mainNode.setUserData(Settings.ENTITY, this);
+		geometry.setUserData(Globals.ENTITY, this);
+		mainNode.setUserData(Globals.ENTITY, this);
 
 		game.addEntity(this);
 
@@ -89,8 +89,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		super.processByServer(server, tpf_secs);
 
-		if (Settings.DEBUG_ENTITY_SYNC_POS) {
-			Settings.appendToFile("ServerMovingtarget.csv", "ServerMovingTarget," + System.currentTimeMillis() + "," + this.getWorldTranslation());
+		if (Globals.DEBUG_ENTITY_SYNC_POS) {
+			Globals.appendToFile("ServerMovingtarget.csv", "ServerMovingTarget," + System.currentTimeMillis() + "," + this.getWorldTranslation());
 		}
 		
 	}
@@ -129,8 +129,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
 		super.calcPosition(mainApp, serverTimeToUse);
 		
-		if (Settings.DEBUG_ENTITY_SYNC_POS) {
-			Settings.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + serverTimeToUse + "," + this.getWorldTranslation());
+		if (Globals.DEBUG_ENTITY_SYNC_POS) {
+			Globals.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + serverTimeToUse + "," + this.getWorldTranslation());
 		}
 		
 	}

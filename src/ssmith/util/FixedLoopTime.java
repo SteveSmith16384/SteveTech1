@@ -1,6 +1,6 @@
 package ssmith.util;
 
-import com.scs.stetech1.server.Settings;
+import com.scs.stevetech1.server.Globals;
 
 public class FixedLoopTime {
 
@@ -31,7 +31,7 @@ public class FixedLoopTime {
 				//e.printStackTrace();
 			}
 		} else {
-			Settings.p("Too slow! " + diff);
+			Globals.p("Too slow! " + diff);
 		}
 	}
 

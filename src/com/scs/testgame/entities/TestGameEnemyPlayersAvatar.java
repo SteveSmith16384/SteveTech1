@@ -1,8 +1,8 @@
 package com.scs.testgame.entities;
 
 import com.jme3.scene.Spatial;
-import com.scs.stetech1.entities.AbstractEnemyAvatar;
-import com.scs.stetech1.shared.IEntityController;
+import com.scs.stevetech1.entities.AbstractEnemyAvatar;
+import com.scs.stevetech1.shared.IEntityController;
 
 public class TestGameEnemyPlayersAvatar extends AbstractEnemyAvatar {
 

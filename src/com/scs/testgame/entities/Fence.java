@@ -12,9 +12,9 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.IEntityController;
+import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameEntityCreator;
 
 public class Fence extends PhysicalEntity {
@@ -41,7 +41,7 @@ public class Fence extends PhysicalEntity {
 			tex3.setWrap(WrapMode.Repeat);
 
 			Material floor_mat = null;
-			if (Settings.LIGHTING) {
+			if (Globals.LIGHTING) {
 				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 				floor_mat.setTexture("DiffuseMap", tex3);
 			} else {
@@ -64,7 +64,7 @@ public class Fence extends PhysicalEntity {
 
 		game.getRootNode().attachChild(this.mainNode);
 
-		geometry.setUserData(Settings.ENTITY, this);
+		geometry.setUserData(Globals.ENTITY, this);
 
 	}
 

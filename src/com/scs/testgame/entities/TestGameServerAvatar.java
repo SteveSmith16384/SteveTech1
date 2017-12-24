@@ -1,9 +1,9 @@
 package com.scs.testgame.entities;
 
 import com.jme3.scene.Spatial;
-import com.scs.stetech1.entities.AbstractServerAvatar;
-import com.scs.stetech1.input.IInputDevice;
-import com.scs.stetech1.shared.IEntityController;
+import com.scs.stevetech1.entities.AbstractServerAvatar;
+import com.scs.stevetech1.input.IInputDevice;
+import com.scs.stevetech1.shared.IEntityController;
 
 public class TestGameServerAvatar extends AbstractServerAvatar {
 

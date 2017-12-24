@@ -13,11 +13,11 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.components.IAffectedByPhysics;
-import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.server.AbstractGameServer;
-import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.IEntityController;
+import com.scs.stevetech1.components.IAffectedByPhysics;
+import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameEntityCreator;
 
 public class Crate extends PhysicalEntity implements IAffectedByPhysics {
@@ -44,7 +44,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 			tex3.setWrap(WrapMode.Repeat);
 
 			Material floor_mat = null;
-			if (Settings.LIGHTING) {
+			if (Globals.LIGHTING) {
 				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 				floor_mat.setTexture("DiffuseMap", tex3);
 			} else {
@@ -65,8 +65,8 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 
-		geometry.setUserData(Settings.ENTITY, this);
-		mainNode.setUserData(Settings.ENTITY, this);
+		geometry.setUserData(Globals.ENTITY, this);
+		mainNode.setUserData(Globals.ENTITY, this);
 
 		game.addEntity(this);
 

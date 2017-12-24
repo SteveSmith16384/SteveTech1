@@ -5,14 +5,14 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stetech1.components.ICanShoot;
-import com.scs.stetech1.components.ICausesHarmOnContact;
-import com.scs.stetech1.components.IRemoveOnContact;
-import com.scs.stetech1.entities.PhysicalEntity;
-import com.scs.stetech1.models.BeamLaserModel;
-import com.scs.stetech1.server.AbstractGameServer;
-import com.scs.stetech1.server.Settings;
-import com.scs.stetech1.shared.IEntityController;
+import com.scs.stevetech1.components.ICanShoot;
+import com.scs.stevetech1.components.ICausesHarmOnContact;
+import com.scs.stevetech1.components.IRemoveOnContact;
+import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.models.BeamLaserModel;
+import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameEntityCreator;
 
 public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact, IRemoveOnContact {
@@ -36,8 +36,8 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 			simpleRigidBody.setAerodynamicness(1);
 			simpleRigidBody.setGravity(0);
 		
-		this.getMainNode().setUserData(Settings.ENTITY, this);
-		laserNode.setUserData(Settings.ENTITY, this);
+		this.getMainNode().setUserData(Globals.ENTITY, this);
+		laserNode.setUserData(Globals.ENTITY, this);
 		game.addEntity(this);
 		
 		this.collideable = false;

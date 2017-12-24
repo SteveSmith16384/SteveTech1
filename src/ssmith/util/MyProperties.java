@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.scs.stetech1.server.Settings;
+import com.scs.stevetech1.server.Globals;
 
 public class MyProperties {
 
@@ -35,7 +35,7 @@ public class MyProperties {
 			String filepath = filename;
 			File propsFile = new File(filepath);
 			try {
-				properties.store(new FileOutputStream(propsFile), Settings.NAME + " settings file");
+				properties.store(new FileOutputStream(propsFile), Globals.NAME + " settings file");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

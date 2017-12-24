@@ -1,6 +1,6 @@
 package com.scs.testecs;
 
-import com.scs.stetech1.server.Settings;
+import com.scs.stevetech1.server.Globals;
 import com.scs.testecs.components.PositionData;
 import com.scs.testecs.systems.ISystem;
 import com.scs.testecs.systems.MovementSystem;
@@ -13,9 +13,9 @@ public class Main {
 		
 		ISystem ms = new MovementSystem();
 		PositionData mc = (PositionData)e.components.get(PositionData.class);
-		Settings.p("Pos: " + mc.pos);
+		Globals.p("Pos: " + mc.pos);
 		ms.process(e);
-		Settings.p("Pos: " + mc.pos);
+		Globals.p("Pos: " + mc.pos);
 	}
 
 	public static void main(String[] args) {

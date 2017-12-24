@@ -9,6 +9,7 @@ What the Box
 Secret Agent
 	Like What the Box, but people are walking around.  Who is the other agent?
 
+
 Moonbase Assault
 
 
@@ -20,6 +21,13 @@ Space Hulk
 Overwatch Clone
 	Player abilities: vampire - must be underneath something
 	Invisible - turns invisible if keep still for a while
+	Secret Agent - spoon is the deadliest weapon
+	
 
 FTL
+	Assign jobs to drones - repair
+
+	
+Battle of Wizards
+
 	

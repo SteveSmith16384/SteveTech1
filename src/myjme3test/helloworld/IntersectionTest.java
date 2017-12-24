@@ -9,8 +9,8 @@ import com.jme3.light.Light;
 import com.jme3.light.LightList;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Spatial;
-import com.scs.stetech1.jme.JMEFunctions;
-import com.scs.stetech1.misc.ModelViewer;
+import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.misc.ModelViewer;
 
 public class IntersectionTest extends SimpleApplication {
 
