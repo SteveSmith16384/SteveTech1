@@ -4,6 +4,7 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 
 URGENT
+Lobby queue players
 	Show current server position of players avatar
 Tell player they have died
 	Grenade hitting thrower
@@ -36,7 +37,6 @@ IsOnGround not always correct
 Create sep projects for test game, killer crates
 	Game settings: num players per side, max sides
 Show current game time
-Separate into AbstractEntityServer, AbstractGameServer, TestGameServer
 Use latest JME libs
 Create game lobby
 Walking up steps
