@@ -305,7 +305,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					for (IEntity e : this.clientOnlyEntities.values()) {
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
-							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
+							pbc.processByClient(this, tpf_secs);
 						}
 					}
 
@@ -475,8 +475,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
 
 				// Toggle client sync
-				Globals.SYNC_CLIENT_POS = !Globals.SYNC_CLIENT_POS;
-				Globals.p("Client sync is " + Globals.SYNC_CLIENT_POS);
+				Globals.SYNC_AVATAR_POS = !Globals.SYNC_AVATAR_POS;
+				Globals.p("Client sync is " + Globals.SYNC_AVATAR_POS);
 			}
 		}
 	}

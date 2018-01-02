@@ -82,9 +82,14 @@ public class TestPositionCalculator {
 			posCalc.addPositionData(new Vector3f(i, 0, 0), null, 100+(i*100));
 		}
 		EntityPositionData after2000 = posCalc.calcPosition(2000);
-		if (after2000 != null) {
-			throw new RuntimeException("basicPositionCalc_TooEarly Failed: Should be null");
+		Vector3f correctPos = new Vector3f(10, 0, 0);
+		float diff = after2000.position.distance(correctPos); 
+		if (diff != 0) {
+			throw new RuntimeException("basicPositionCalc_TooEarly Failed: Diff is " + diff);
 		}
+		/*if (after2000 != null) {
+			throw new RuntimeException("basicPositionCalc_TooEarly Failed: Should be null");
+		}*/
 	}
 
 
@@ -94,9 +99,14 @@ public class TestPositionCalculator {
 			posCalc.addPositionData(new Vector3f(i, 0, 0), null, 100+(i*100));
 		}
 		EntityPositionData after0 = posCalc.calcPosition(0);
-		if (after0 != null) {
-			throw new RuntimeException("basicPositionCalc_TooEarly Failed: Should be null");
+		Vector3f correctPos = new Vector3f(1, 0, 0);
+		float diff = after0.position.distance(correctPos); 
+		if (diff != 0) {
+			throw new RuntimeException("basicPositionCalc2_LateInSegment Failed: Diff is " + diff);
 		}
+		/*if (after0 != null) {
+			throw new RuntimeException("basicPositionCalc_TooEarly Failed: Should be null");
+		}*/
 	}
 
 

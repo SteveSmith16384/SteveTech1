@@ -87,6 +87,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
+		
+		storeAvatarPosition(serverTime);
+
 		super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 
 		hud.processByClient(client, tpf_secs);
@@ -103,14 +106,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		lookAtPoint.y = cam.getLocation().y; // Look horizontal
 		//todo -re-add? But rotating spatial makes us stick to the floor   this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
 
-		storeAvatarPosition(serverTime);
-
 		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
 			long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
-			EntityPositionData epd = serverPositionData.calcPosition(serverTimePast);
+			//EntityPositionData epd = serverPositionData.calcPosition(serverTimePast); // todo - try System.currentTimeMillis() for server time to show latest pos?
+			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis());
 			if (epd != null) {
 				debugNode.setLocalTranslation(epd.position);
-				//debugNode.setWorldRotation(epd.rotation);
 			}
 		}
 
@@ -125,7 +126,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	// Avatars have their own special position calculator
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
-		if (Globals.SYNC_CLIENT_POS) {
+		if (Globals.SYNC_AVATAR_POS) {
 			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 			if (offset != null) {
 				this.syncPos.adjustPosition(this, offset);

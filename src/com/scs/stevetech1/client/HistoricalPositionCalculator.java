@@ -24,8 +24,8 @@ public class HistoricalPositionCalculator {
 			EntityPositionData clientEPD = clientAvatarPositionData.calcPosition(clientTimeToUse);
 			if (clientEPD != null) {
 				// Is there a difference
-				float diff = serverEPD.position.distance(clientEPD.position);
-				/*if (diff > 0.1) {
+				/*float diff = serverEPD.position.distance(clientEPD.position);
+				if (diff > 0.1) {
 					// There should be no difference!
 					Settings.p("Server " + serverPositionData.toString(serverTimeToUse));
 					Settings.p("Client " + clientAvatarPositionData.toString(clientTimeToUse));
