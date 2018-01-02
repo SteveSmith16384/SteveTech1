@@ -8,12 +8,13 @@ import java.util.Random;
 
 public class Globals {
 
-	public static final boolean DEBUG_AVATAR_POS = true;
+	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
+	public static final boolean SHOW_SERVER_POS_ON_CLIENT = true;
+	public static final boolean SHOW_AVATAR_WALK_DIR = true;
 	public static final boolean DEBUG_REWIND_POS1 = false;
 	public static final boolean DEBUG_HUD = false;
-	public static final boolean DEBUG_ENTITY_SYNC_POS = false;
+	public static final boolean LOG_MOVING_TARGET_POS = false;
 	public static final boolean DEBUG_MSGS = false;
-	public static final boolean DEBUG_SYNC_POS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 

@@ -13,7 +13,7 @@ import com.scs.stevetech1.models.BeamLaserModel;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact, IRemoveOnContact {
 
@@ -21,7 +21,7 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 	private float timeLeft = 3;
 
 	public LaserBullet(IEntityController _game, int id, ICanShoot _shooter, float x, float y, float z) {
-		super(_game, id, TestGameEntityCreator.LASER_BULLET, "LaserBullet");
+		super(_game, id, TestGameClientEntityCreator.LASER_BULLET, "LaserBullet");
 
 		this.shooter = _shooter;
 

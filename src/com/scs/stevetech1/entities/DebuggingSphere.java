@@ -14,7 +14,7 @@ import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 /*
  * Simple sphere to help show points in the world
@@ -26,7 +26,7 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 	private float timeLeft = DURATION;
 
 	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z, boolean server) {
-		super(_game, id, TestGameEntityCreator.DEBUGGING_SPHERE, "DebuggingSphere");
+		super(_game, id, TestGameClientEntityCreator.DEBUGGING_SPHERE, "DebuggingSphere");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

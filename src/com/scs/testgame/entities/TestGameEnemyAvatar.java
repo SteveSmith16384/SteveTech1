@@ -4,9 +4,9 @@ import com.jme3.scene.Spatial;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class TestGameEnemyPlayersAvatar extends AbstractEnemyAvatar {
+public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 
-	public TestGameEnemyPlayersAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
+	public TestGameEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
 		super(game, pid, eid, x, y, z);
 	}
 

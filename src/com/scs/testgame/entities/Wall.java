@@ -14,12 +14,12 @@ import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 
 	public Wall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
-		super(_game, id, TestGameEntityCreator.WALL, "Wall");
+		super(_game, id, TestGameClientEntityCreator.WALL, "Wall");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

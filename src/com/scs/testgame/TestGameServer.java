@@ -53,9 +53,9 @@ public class TestGameServer extends AbstractGameServer {
 		new Wall(this, getNextEntityID(), 10, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 		new Wall(this, getNextEntityID(), 20, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 
-		new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
+		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 		
-		//new FlatFloor(this, getNextEntityID(), 3, .1f, 3, 2, 2, "Textures/crate.png");
+		//new FlatFloor(this, getNextEntityID(), 3, .1f, 3, 2, 2, "Textures/crate.png"); todo - use this
 	}
 
 
@@ -68,7 +68,7 @@ public class TestGameServer extends AbstractGameServer {
 	@Override
 	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
-		case TestGameEntityCreator.GRENADE:
+		case TestGameClientEntityCreator.GRENADE:
 			return new Grenade(this, entityid, irac);
 		default:
 			throw new RuntimeException("Unknown entity type: " + type);

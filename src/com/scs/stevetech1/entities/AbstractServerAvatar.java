@@ -37,7 +37,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			invulnerableTime -= tpf;
 		}
 
-		super.serverAndClientProcess(server, null, tpf);
+		super.serverAndClientProcess(server, null, tpf, System.currentTimeMillis());
 
 		if (getWorldTranslation().y < -1) {
 			// Dropped away?

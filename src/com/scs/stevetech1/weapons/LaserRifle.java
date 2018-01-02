@@ -7,7 +7,7 @@ import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 import com.scs.testgame.entities.LaserBullet;
 
 /*
@@ -18,7 +18,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 	private LinkedList<LaserBullet> ammoCache = new LinkedList<LaserBullet>(); 
 	
 	public LaserRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
-		super(game, id, TestGameEntityCreator.LASER_RIFLE, owner, num, "Laser Rifle", .2f, 2, 10);
+		super(game, id, TestGameClientEntityCreator.LASER_RIFLE, owner, num, "Laser Rifle", .2f, 2, 10);
 
 	}
 
@@ -34,7 +34,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 
 	@Override
 	public int getAmmoType() {
-		return TestGameEntityCreator.LASER_BULLET;
+		return TestGameClientEntityCreator.LASER_BULLET;
 	}
 
 

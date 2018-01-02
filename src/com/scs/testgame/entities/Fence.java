@@ -15,14 +15,14 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class Fence extends PhysicalEntity {
 
 	private static final float WIDTH = 2f;
 
 	public Fence(IEntityController _game, int id, float x, float height, float z, float rot, String tex) {
-		super(_game, id, TestGameEntityCreator.FENCE, "Fence");
+		super(_game, id, TestGameClientEntityCreator.FENCE, "Fence");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

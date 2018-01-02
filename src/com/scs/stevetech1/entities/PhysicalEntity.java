@@ -67,18 +67,19 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
+	/*
+	 * Called by the server 
+	 */
 	protected void addPositionData() {
 		// Store the position for use when rewinding.
 		//EntityPositionData epd = new EntityPositionData(this.getWorldTranslation().clone(), this.getWorldRotation(), System.currentTimeMillis());
 		this.serverPositionData.addPositionData(this.getWorldTranslation(), this.getWorldRotation(), System.currentTimeMillis());
 	}
 
-/*
-	public void addPositionData(EntityPositionData epd) {
-		this.serverPositionData.addPositionData(epd);
-	}
-*/
-	
+
+	/*
+	 * Called by the client 
+	 */
 	public void addPositionData(Vector3f pos, Quaternion q, long time) {
 		this.serverPositionData.addPositionData(pos, q, time);	
 	}
@@ -241,8 +242,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				break;
 			}
 			Spatial s = col.getGeometry();
-			while (s == null || s.getUserData(Globals.ENTITY) == null) {
+			while (s.getUserData(Globals.ENTITY) == null) {
 				s = s.getParent();
+				if (s == null) {
+					break;
+				}
 			}
 			if (s != null && s.getUserData(Globals.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);

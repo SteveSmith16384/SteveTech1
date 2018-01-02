@@ -10,7 +10,7 @@ import com.scs.stevetech1.server.Globals;
 
 public class TestGameClient extends AbstractGameClient {
 
-	private TestGameEntityCreator creator;
+	private TestGameClientEntityCreator creator;
 	
 	public static void main(String[] args) {
 		try {
@@ -67,7 +67,7 @@ public class TestGameClient extends AbstractGameClient {
 	public TestGameClient() {
 		super();
 		
-		creator = new TestGameEntityCreator(this);
+		creator = new TestGameClientEntityCreator(this);
 	}
 
 

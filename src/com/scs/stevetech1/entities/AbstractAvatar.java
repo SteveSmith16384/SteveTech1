@@ -16,7 +16,7 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public abstract class AbstractAvatar extends PhysicalEntity implements IPreprocess, IProcessByServer, ICanShoot, IAffectedByPhysics {
 
@@ -42,6 +42,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	public IAbility abilityGun, abilityOther; // todo - have list of abilities
 	public int side = -1;
 
+	//private int num = 0;
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side) {
 		super(_game, eid, 1, "Player");
@@ -79,7 +80,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
 
-	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs) {
+	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
 		this.resetWalkDir();
 
 		// Reset addition force
@@ -117,6 +118,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		if (this.walkDirection.length() != 0) {
 			SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 			simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
+			if (Globals.SHOW_AVATAR_WALK_DIR) {
+				Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());// + "  walkDirection=" + walkDirection);
+			}
 		}
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
@@ -196,9 +200,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		//}
 	}
 
+	
 	@Override
 	public Vector3f getBulletStartPos() {
-		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0); //.addLocal(this.getShootDir().mult(AbstractAvatar.PLAYER_RAD*2));
+		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0);
 	}
 
 

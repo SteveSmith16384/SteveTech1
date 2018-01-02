@@ -4,26 +4,24 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 
 URGENT
-Lobby queue players
-	Show current server position of players avatar
-Tell player they have died
-	Grenade hitting thrower
 Player is springing back
+	Grenade hitting thrower
 Make floor a single quad - needs rotating
-	Client-side only entities
 Jumping is a bit high
 	Client countdown game time itself
-	HUD text not in correct place
 	Adjust grenades in the same way that avatars are adjusted
 Search for todos
 Rename to SteveTRech1
 
 
 TODO
+Simulate game?
+Tell player they have died - hide entity
+Lobby queue players
 Games - "powered by SteveTech"
 Animate messages?
 Grenades
-Readme - Features
+Add Features to readme
 Check code compiles without any game-specific code
 Kryonet encryption?
 Move messagereceiver to another class

@@ -9,7 +9,7 @@ import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IProcessByClient {
 

@@ -10,7 +10,7 @@ import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractEntityCreator;
+import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.weapons.GrenadeLauncher;
 import com.scs.stevetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
@@ -19,13 +19,13 @@ import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
 import com.scs.testgame.entities.MovingTarget;
 import com.scs.testgame.entities.TestGameClientAvatar;
-import com.scs.testgame.entities.TestGameEnemyPlayersAvatar;
+import com.scs.testgame.entities.TestGameEnemyAvatar;
 import com.scs.testgame.entities.Wall;
 
 /*
  * This is only used client-side.
  */
-public class TestGameEntityCreator extends AbstractEntityCreator { // todo - add word Client
+public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 
 	private TestGameClient game;
 
@@ -44,7 +44,7 @@ public class TestGameEntityCreator extends AbstractEntityCreator { // todo - add
 	public static final int FLAT_FLOOR = 13;
 	
 	
-	public TestGameEntityCreator(TestGameClient _game) {
+	public TestGameClientEntityCreator(TestGameClient _game) {
 		game =_game;
 	}
 
@@ -68,7 +68,7 @@ public class TestGameEntityCreator extends AbstractEntityCreator { // todo - add
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				AbstractEnemyAvatar avatar = new TestGameEnemyPlayersAvatar(game, playerID, id, pos.x, pos.y, pos.z);
+				AbstractEnemyAvatar avatar = new TestGameEnemyAvatar(game, playerID, id, pos.x, pos.y, pos.z);
 				return avatar;
 			}
 		}
@@ -103,7 +103,7 @@ public class TestGameEntityCreator extends AbstractEntityCreator { // todo - add
 			return wall;
 		}
 
-		/*case EntityTypes.LASER_BULLET: todo
+		/*case EntityTypes.LASER_BULLET:
 		{
 			String tex = (String)msg.data.get("tex");
 			float rot = (Float)msg.data.get("rot");
@@ -149,10 +149,10 @@ public class TestGameEntityCreator extends AbstractEntityCreator { // todo - add
 			return null;
 		}
 
-		case LASER_RIFLE:
+		/*case LASER_RIFLE:
 		{
-			// todo
-		}
+
+		}*/
 
 		case HITSCAN_RIFLE:
 		{

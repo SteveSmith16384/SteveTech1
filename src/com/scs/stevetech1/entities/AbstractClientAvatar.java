@@ -49,7 +49,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		_module.avatar = this;
 
-		if (Globals.DEBUG_AVATAR_POS) {
+		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
 			createDebugBox();
 		}
 	}
@@ -59,7 +59,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		Box box1 = new Box(.5f, .5f, .5f);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry g = new Geometry("Crate", box1);
-		TextureKey key3 = new TextureKey("todo");
+		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
@@ -87,15 +87,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
+		super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 
-		storeAvatarPosition(serverTime);
-
-		super.serverAndClientProcess(null, client, tpf_secs);
-
-		/*		if (simpleRigidBody != null) {
-			simpleRigidBody.process(tpf_secs);
-		}
-		 */
 		hud.processByClient(client, tpf_secs);
 
 		// Position camera at node
@@ -110,14 +103,14 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		lookAtPoint.y = cam.getLocation().y; // Look horizontal
 		//todo -re-add? But rotating spatial makes us stick to the floor   this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
 
-		if (Globals.DEBUG_AVATAR_POS) {
+		storeAvatarPosition(serverTime);
+
+		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
 			long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = serverPositionData.calcPosition(serverTimePast);
 			if (epd != null) {
 				debugNode.setLocalTranslation(epd.position);
 				//debugNode.setWorldRotation(epd.rotation);
-			} else {
-				//Settings.p("No position data for " + this);
 			}
 		}
 
@@ -125,10 +118,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 
 	public void storeAvatarPosition(long serverTime) {
-		// Store our position
-		//EntityPositionData epd = new EntityPositionData(getWorldTranslation().clone(), null, serverTime);
 		this.clientAvatarPositionData.addPositionData(getWorldTranslation(), null, serverTime);
-
 	}
 
 

@@ -18,12 +18,12 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 
 	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, id, TestGameEntityCreator.CRATE, "Crate");
+		super(_game, id, TestGameClientEntityCreator.CRATE, "Crate");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

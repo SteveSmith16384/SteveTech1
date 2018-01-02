@@ -15,12 +15,12 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class FlatFloor extends PhysicalEntity {
 
 	public FlatFloor(IEntityController _game, int id, float x, float y, float z, float w, float d, String tex) {
-		super(_game, id, TestGameEntityCreator.FLAT_FLOOR, "Floor");
+		super(_game, id, TestGameClientEntityCreator.FLAT_FLOOR, "Floor");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

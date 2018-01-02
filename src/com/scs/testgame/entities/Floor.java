@@ -19,7 +19,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class Floor extends PhysicalEntity implements IProcessByClient {
 
@@ -28,7 +28,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 	private float w, h, d;
 
 	public Floor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
-		super(_game, id, TestGameEntityCreator.FLOOR, "Floor");
+		super(_game, id, TestGameClientEntityCreator.FLOOR, "Floor");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

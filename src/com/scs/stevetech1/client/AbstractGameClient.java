@@ -86,7 +86,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public HUD hud;
 	public IInputDevice input;
 
-	public AbstractClientAvatar avatar;
+	public AbstractClientAvatar avatar; // Current avatar
 	public int playerID = -1;
 	public int side = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
@@ -301,7 +301,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
 						}
 					}
-					
+
 					for (IEntity e : this.clientOnlyEntities.values()) {
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
@@ -317,7 +317,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				if (this.gameData != null) {
 					this.hud.setGameStatus(SimpleGameData.getStatusDesc(gameData.getGameStatus()));
 					this.hud.setGameTime(this.gameData.getTime(serverTime));
-					
+
 				}
 			}
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
@@ -422,7 +422,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	@Override
 	public void addEntity(IEntity e) {
 		if (e.getID() <= 0) {
-			throw new RuntimeException("todo");
+			throw new RuntimeException("No entity id!");
 		}
 		this.toAdd.add(e);
 	}
@@ -431,7 +431,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private void actuallyAddEntity(IEntity e) {
 		synchronized (entities) {
 			if (e.getID() <= 0) {
-				throw new RuntimeException("todo");
+				throw new RuntimeException("No entity id!");
 			}
 			this.entities.put(e.getID(), e);
 		}
@@ -467,11 +467,17 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	@Override
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(QUIT)) {
-			quit("User chose to");
+			if (value) {
+				quit("User chose to");
+			}
 		} else if (name.equalsIgnoreCase(TEST)) {
-			//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
-			Globals.SYNC_CLIENT_POS = !Globals.SYNC_CLIENT_POS;
-			this.hud.log_ta.addLine("Client sync is " + Globals.SYNC_CLIENT_POS);
+			if (value) {
+				//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
+
+				// Toggle client sync
+				Globals.SYNC_CLIENT_POS = !Globals.SYNC_CLIENT_POS;
+				Globals.p("Client sync is " + Globals.SYNC_CLIENT_POS);
+			}
 		}
 	}
 
@@ -539,7 +545,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 	}
 
-	
+
 	//@Override
 	public void addClientOnlyEntity(IEntity e) {
 		this.clientOnlyEntities.put(e.getID(), e); // todo - create toAdd

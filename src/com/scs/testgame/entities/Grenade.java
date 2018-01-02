@@ -25,7 +25,7 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
-import com.scs.testgame.TestGameEntityCreator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class Grenade extends PhysicalEntity implements IProcessByClient {
 
@@ -37,7 +37,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	public IEntity shooter; // So we know who not to collide with
 
 	public Grenade(IEntityController _game, int id, IRequiresAmmoCache<Grenade> owner) {
-		super(_game, id, TestGameEntityCreator.GRENADE, "Grenade");
+		super(_game, id, TestGameClientEntityCreator.GRENADE, "Grenade");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
