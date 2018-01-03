@@ -4,6 +4,7 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 
 URGENT
+Return null from position calc
 Player is springing back
 	Grenade hitting thrower
 Make floor a single quad - needs rotating
