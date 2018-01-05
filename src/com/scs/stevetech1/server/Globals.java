@@ -8,8 +8,8 @@ import java.util.Random;
 
 public class Globals {
 
-	public static final boolean SHOW_SERVER_POS_ON_CLIENT = true;
-	public static final boolean SHOW_AVATAR_WALK_DIR = true;
+	public static final boolean SHOW_SERVER_POS_ON_CLIENT = false;
+	public static final boolean SHOW_AVATAR_WALK_DIR = false;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
 	public static final boolean DEBUG_REWIND_POS1 = false;
 	public static final boolean DEBUG_HUD = false;
@@ -47,7 +47,7 @@ public class Globals {
 	public static final String NAME = "SteTech1";
 
 	// Changing settings
-	public static boolean SYNC_AVATAR_POS = false;
+	public static boolean SYNC_AVATAR_POS = true;
 	public static boolean SYNC_GRENADE_POS = true;
 
 	// User Data

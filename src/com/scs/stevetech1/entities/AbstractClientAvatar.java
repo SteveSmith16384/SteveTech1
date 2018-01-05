@@ -108,7 +108,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
 			long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
-			//EntityPositionData epd = serverPositionData.calcPosition(serverTimePast); // todo - try System.currentTimeMillis() for server time to show latest pos?
 			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis());
 			if (epd != null) {
 				debugNode.setLocalTranslation(epd.position);
@@ -119,7 +118,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 
 	public void storeAvatarPosition(long serverTime) {
-		this.clientAvatarPositionData.addPositionData(getWorldTranslation(), null, serverTime);
+		Vector3f pos = getWorldTranslation();
+		//Globals.p("Storing pos " + pos);
+		this.clientAvatarPositionData.addPositionData(pos, null, serverTime);
 	}
 
 
@@ -127,6 +128,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
 		if (Globals.SYNC_AVATAR_POS) {
+			/*if (clientAvatarPositionData.positionData.size() > 30) {
+				//Globals.p(clientAvatarPositionData.toString(0));
+			}*/
 			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 			if (offset != null) {
 				this.syncPos.adjustPosition(this, offset);

@@ -12,7 +12,7 @@ import com.jme3.math.Ray;
 public class SimplePhysicsController<T> {
 
 	public static final float MIN_MOVE_DIST = 0.0001f;
-	public static final float MAX_MOVE_DIST = 990.5f; // todo - check
+	public static final float MAX_MOVE_DIST = 0.5f;
 	public static final float DEFAULT_AERODYNAMICNESS = 0.99f;
 	public static final float DEFAULT_GRAVITY = -5f;
 

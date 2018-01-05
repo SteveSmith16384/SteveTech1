@@ -185,7 +185,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 								IEntity e = createEntity(newEntityMessage);
 								if (e != null) {
 									//this.addEntity(e);
-									this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launche to
+									this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to
 								}
 							} else {
 								// We already know about it
@@ -262,7 +262,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						}
 					}
 
-					long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
+					final long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 
 					// Loop through each entity and process them				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities

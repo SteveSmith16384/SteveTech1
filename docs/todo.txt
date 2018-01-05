@@ -4,38 +4,38 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 
 URGENT
-Return null from position calc
-Player is springing back
+Walking aliens
+Check for packet loss
+Show current game time
+Grenades
 	Grenade hitting thrower
-Make floor a single quad - needs rotating
 Jumping is a bit high
 	Client countdown game time itself
 	Adjust grenades in the same way that avatars are adjusted
 Search for todos
-Rename to SteveTRech1
 
 
 TODO
-Simulate game?
+Less damage from hitscan over distance
+Make floor a single quad - needs rotating
+Strict mode - check if position already exists in positioncalc!
+Simulate client?
 Tell player they have died - hide entity
 Lobby queue players
 Games - "powered by SteveTech"
 Animate messages?
-Grenades
 Add Features to readme
 Check code compiles without any game-specific code
 Kryonet encryption?
 Move messagereceiver to another class
 Should not have a generic "process()" or preprocess() method?
 Use new models
-Less damage from hitscan over distance
 Laser bullets
-Origin of entities should be floor 
+	Origin of entities should be floor 
 Only rotate entities left/right
 IsOnGround not always correct
 Create sep projects for test game, killer crates
 	Game settings: num players per side, max sides
-Show current game time
 Use latest JME libs
 Create game lobby
 Walking up steps
@@ -48,8 +48,6 @@ Use test annotations
 Add lots of comments
 Unit test rewind avatars
 Spectator mode
-	Send ability updates to client, to confirm ammo etc...
-Show where players are according to server (in realtime)
 Create generic classes and test them
 Reduce dependencies between classes
 Make vars private/protected

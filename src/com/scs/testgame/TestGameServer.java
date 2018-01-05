@@ -41,7 +41,7 @@ public class TestGameServer extends AbstractGameServer {
 
 	@Override
 	public Vector3f getAvatarStartPosition(AbstractAvatar avatar) {
-		return new Vector3f(3f, 15f, 3f + avatar.playerID);	
+		return new Vector3f(3f, 0.6f, 3f + avatar.playerID);	
 	}
 
 
@@ -55,7 +55,7 @@ public class TestGameServer extends AbstractGameServer {
 
 		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 		
-		//new FlatFloor(this, getNextEntityID(), 3, .1f, 3, 2, 2, "Textures/crate.png"); todo - use this
+		new FlatFloor(this, getNextEntityID(), 5, .1f, 5, 3, 3, "Textures/crate.png"); // todo - use this
 	}
 
 

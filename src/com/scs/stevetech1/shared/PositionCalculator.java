@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.server.Globals;
 
 public final class PositionCalculator {
 
@@ -28,8 +29,10 @@ public final class PositionCalculator {
 		} else {
 			newData = new EntityPositionData();
 		}
-		newData.position = pos;
-		newData.rotation = q;
+		newData.position.set(pos);
+		if (q != null) {
+			newData.rotation.set(q);
+		}
 		newData.serverTimestamp = time;
 		
 		synchronized (positionData) {
@@ -59,11 +62,12 @@ public final class PositionCalculator {
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
 					// Requested time is too soon
 					long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
-					//Settings.p(startDiff + " too soon");
-					//Settings.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));
+					Globals.p("Warning: Requested time is " + startDiff + " too soon");
+					//Globals.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));
 					return this.positionData.getFirst(); // Our selected time is too soon!
 				} else if (this.positionData.getLast().serverTimestamp > serverTimeToUse) {
-					//Settings.p(this.toString(serverTimeToUse));
+					//Globals.p(this.toString(serverTimeToUse));
+					Globals.p("Warning: Requested time is too late");
 					return this.positionData.getLast(); // Our selected time is too late!
 				}
 

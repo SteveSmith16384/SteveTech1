@@ -32,8 +32,7 @@ public class ModelViewer extends SimpleApplication {
 		
 		setupLight();
 
-		//Spatial model = assetManager.loadModel("Models/AbstractRTSModels/Player.obj");
-		Spatial model = assetManager.loadModel("Models/elvis/tinker.obj");
+		Spatial model = assetManager.loadModel("Models/tyrant/tris.MD2");
 		//model.updateModelBound();
 		model.scale(.1f);
 		

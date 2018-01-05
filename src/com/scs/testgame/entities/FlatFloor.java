@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Quad;
@@ -51,6 +52,7 @@ public class FlatFloor extends PhysicalEntity {
 		}
 		this.mainNode.attachChild(geometry);
 		geometry.setLocalTranslation((w/2), 0, (d/2)); // Move it into position
+		geometry.setLocalRotation(new Quaternion(0, 0, 1, 1)); // todo
 		mainNode.setLocalTranslation(x, y, z); // Move it into position
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
