@@ -67,3 +67,12 @@ Make classes final
 User enter name and ip address
 Only send entity messages to players that have joined the game
 
+
+MODELS
+https://free3d.com/3d-model/genestealer-tyranid-93377.html
+https://free3d.com/3d-model/female-zumbi-51687.html
+https://free3d.com/3d-model/engel-officer-tactic-cadian-warhammer-40k-95098.html
+https://free3d.com/user/damianb
+https://www.patreon.com/posts/16031258
+https://opengameart.org/content/animated-3d-models-0
+https://opengameart.org/content/female-npc
