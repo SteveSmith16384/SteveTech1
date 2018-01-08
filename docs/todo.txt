@@ -2,8 +2,11 @@ STETECH1
 
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
+Animate - send with update pos mail?
 
 URGENT
+Look for models?
+Origin of entities should be floor 
 Walking aliens
 Check for packet loss
 Show current game time
@@ -16,6 +19,7 @@ Search for todos
 
 
 TODO
+Animate messages?
 Less damage from hitscan over distance
 Make floor a single quad - needs rotating
 Strict mode - check if position already exists in positioncalc!
@@ -23,21 +27,16 @@ Simulate client?
 Tell player they have died - hide entity
 Lobby queue players
 Games - "powered by SteveTech"
-Animate messages?
 Add Features to readme
-Check code compiles without any game-specific code
-Kryonet encryption?
-Move messagereceiver to another class
 Should not have a generic "process()" or preprocess() method?
 Use new models
 Laser bullets
-	Origin of entities should be floor 
 Only rotate entities left/right
 IsOnGround not always correct
 Create sep projects for test game, killer crates
 	Game settings: num players per side, max sides
 Use latest JME libs
-Create game lobby
+Game lobby
 Walking up steps
 Physics test - do explosion
 Confirm source timings
@@ -49,20 +48,20 @@ Add lots of comments
 Unit test rewind avatars
 Spectator mode
 Create generic classes and test them
-Reduce dependencies between classes
 Make vars private/protected
 Test with cheating client
+Reduce object creation, including calls to clone()
 
 
 LATER
+Check code compiles without any game-specific code
 Simple physics - pushing
 Show kryonet logging
-Reduce object creation, including calls to clone()
 Don't use broadcast()?s
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
-client/server encryption
+Kryonet encryption?
 Make classes final
 User enter name and ip address
 Only send entity messages to players that have joined the game
