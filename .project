@@ -3,6 +3,8 @@
 	<name>SteTech1</name>
 	<comment></comment>
 	<projects>
+		<project>jme3-blender</project>
+		<project>jmonkeyengine</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
