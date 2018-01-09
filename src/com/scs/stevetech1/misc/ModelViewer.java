@@ -95,14 +95,12 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 	@Override
 	public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
-		// TODO Auto-generated method stub
 		
 	}
 
 
 	@Override
 	public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
-		// TODO Auto-generated method stub
 		
 	}
 

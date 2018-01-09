@@ -54,7 +54,7 @@ public class TestGameServer extends AbstractGameServer {
 
 		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 		
-		//new FlatFloor(this, getNextEntityID(), 5, .1f, 5, 3, 3, "Textures/crate.png"); // todo - use this
+		//new FlatFloor(this, getNextEntityID(), 5, .1f, 5, 3, 3, "Textures/crate.png");
 		
 		new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
 	}

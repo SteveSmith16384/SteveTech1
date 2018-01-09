@@ -17,7 +17,7 @@ public class HistoricalPositionCalculator {
 	 * so this can be added to the clients current position to get the correct position
 	 */
 	public static Vector3f calcHistoricalPositionOffset(PositionCalculator serverPositionData, PositionCalculator clientAvatarPositionData, long serverTimeToUse, long ping) {
-		long serverTimeDiff = System.currentTimeMillis() - serverTimeToUse;
+		//long serverTimeDiff = System.currentTimeMillis() - serverTimeToUse;
 		EntityPositionData serverEPD = serverPositionData.calcPosition(serverTimeToUse, true);
 		if (serverEPD != null) {
 			long clientTimeToUse = serverTimeToUse - ping;

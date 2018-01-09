@@ -40,13 +40,13 @@ public class ChronologicalLookup<T extends ITimeStamped> {
 	}
 
 
-	public T calcPosition(long serverTimeToUse, boolean warn) { // todo - rename
+	public T get(long serverTimeToUse, boolean warn) {
 		synchronized (positionData) {
 			if (this.positionData.size() > 0) {
 				if (this.positionData.getFirst().getTimestamp() < serverTimeToUse) {
 					// Requested time is too soon
 					if (warn) {
-						//long diff = System.currentTimeMillis() - serverTimeToUse; // todo - remove
+						//long diff = System.currentTimeMillis() - serverTimeToUse;
 						long startDiff = serverTimeToUse - positionData.getFirst().getTimestamp();
 						Globals.p("Warning: Requested time is " + startDiff + " too soon");
 						//Globals.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));

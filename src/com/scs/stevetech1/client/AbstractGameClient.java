@@ -95,7 +95,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	//private SimplePhysicsController<PhysicalEntity> physicsController;
 	
-	public long serverTime, serverTimePast; // todo - rename to renderTime
+	public long serverTime, renderTime;
 
 	private UpdateAmmoCacheSystem updateAmmoSystem;
 
@@ -262,7 +262,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						}
 					}
 
-					serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
+					renderTime = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 
 					// Loop through each entity and process them				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
@@ -291,7 +291,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
 							if (pe.canMove()) { // Only bother with things that can move
-								pe.calcPosition(this, serverTimePast); // Must be before we process physics as this calcs additionalForce
+								pe.calcPosition(this, renderTime); // Must be before we process physics as this calcs additionalForce
 							}
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 						}

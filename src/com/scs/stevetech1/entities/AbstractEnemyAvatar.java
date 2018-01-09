@@ -6,21 +6,18 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameClientEntityCreator;
 
+/*
+ * This is only used client-side
+ */
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IProcessByClient {
 
 	public AbstractEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
 		super(game, eid, 1, "EnemyAvatar");
-
-		/*if (game.isServer()) {
-			creationData = new HashMap<String, Object>();
-			creationData.put("id", eid);
-			creationData.put("playerID", eid);
-		}*/
 
 		Spatial geometry = getPlayersModel(game, pid);
 

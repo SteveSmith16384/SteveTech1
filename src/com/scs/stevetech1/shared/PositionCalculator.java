@@ -22,7 +22,7 @@ public final class PositionCalculator {
 
 
 	public void addPositionData(Vector3f pos, Quaternion q, long time) {
-		//long diff = System.currentTimeMillis() - time; // todo - remove
+		//long diff = System.currentTimeMillis() - time;
 
 		EntityPositionData newData = null;
 		if (this.oldPositionData.size() > 0) {
@@ -63,7 +63,7 @@ public final class PositionCalculator {
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
 					// Requested time is too soon
 					if (warn) {
-						long diff = System.currentTimeMillis() - serverTimeToUse; // todo - remove
+						//long diff = System.currentTimeMillis() - serverTimeToUse;
 						long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
 						Globals.p("Warning: Requested time is " + startDiff + " too soon");
 						Globals.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));

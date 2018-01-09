@@ -8,13 +8,14 @@ URGENT
 Make vid of zombie
 Show other player as zombie
 Show current game time
-Jumping is a bit high
+	Jumping is a bit high
 	Client countdown game time itself
 	Adjust grenades in the same way that avatars are adjusted
 Search for todos
 
 
 TODO
+Console to connect to lobby
 Origin of entities should be floor 
 Grenades
 Check for packet loss

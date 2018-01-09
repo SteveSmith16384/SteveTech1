@@ -34,9 +34,7 @@ public class ZombieModel {
 		while (s.getNumControls() == 0) {
 			s = (Node)s.getChild(0);
 		}
-		//AnimControl ac = (AnimControl)s.getControl(AnimControl.class);
 		control = s.getControl(AnimControl.class);
-		//control.addListener(this);
 		channel = control.createChannel();
 		//channel.setAnim("ZombieWalk");
 

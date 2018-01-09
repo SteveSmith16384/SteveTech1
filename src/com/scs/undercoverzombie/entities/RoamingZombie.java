@@ -23,6 +23,7 @@ import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
+import com.scs.testgame.entities.Floor;
 import com.scs.undercoverzombie.models.ZombieModel;
 
 public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IProcessByClient, IAnimated, IRewindable {
@@ -56,9 +57,9 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 			// Server
 			Box box1 = new Box(w/2, h/2, d/2);
 			spatial = new Geometry("Crate", box1);
+			spatial.setLocalTranslation(0, h/2, 0); // Box origin is the centre
 		}
 		this.mainNode.attachChild(spatial);
-		spatial.setLocalTranslation(0, h/2, 0);
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
 
@@ -113,15 +114,16 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 
 	@Override
 	public void collided(PhysicalEntity pe) {
-		Globals.p("Zombie has hit " + pe);
-		// TODO turn around?
-		
+		if (pe instanceof Floor == false) {
+			Globals.p("Zombie has hit " + pe);
+		}
+		// TODO turn around?		
 	}
 
 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
-		HistoricalAnimationData had = this.animList.calcPosition(client.serverTimePast, true);
+		HistoricalAnimationData had = this.animList.get(client.renderTime, true);
 		if (had != null) {
 			if (!had.animation.equals(this.currentAnim)) {
 				this.currentAnim = had.animation;

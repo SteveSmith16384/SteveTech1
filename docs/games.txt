@@ -6,12 +6,14 @@ Test Game
 
 What the Box
 
-Secret Agent
+Undercover Agent/Undercover Zombie
 	Like What the Box, but people are walking around.  Who is the other agent?
 
 
 Moonbase Assault
-
+	One side must defend the computers, the other must destroy them.
+	The HUD shows a map of the moonbase, with destroyed computer shown
+	
 
 Space Hulk
 	aliens can walk through sonme walls, and respawn immed.
@@ -31,6 +33,8 @@ FTL
 
 	
 Battle of Wizards
+	Wizard has a range of spells to cast.
+
 
 The Thing
 	One player is the alien but looks normal
