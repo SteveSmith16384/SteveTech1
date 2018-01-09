@@ -1,21 +1,14 @@
 package com.scs.testgame.entities;
 
-import com.jme3.asset.TextureKey;
-import com.jme3.material.Material;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
-import com.jme3.texture.Texture;
-import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
-import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
-import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.undercoverzombie.entities.RoamingZombie;
+import com.scs.undercoverzombie.models.ZombieModel;
 
 public class TestGameClientAvatar extends AbstractClientAvatar {
 
@@ -27,7 +20,7 @@ public class TestGameClientAvatar extends AbstractClientAvatar {
 		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z, side);
 	}
 
-
+/*
 	public static Spatial getPlayersModel_Static(IEntityController game, int pid) {
 		Box box1 = new Box(PLAYER_RAD, PLAYER_HEIGHT/2, PLAYER_RAD);
 		Geometry playerGeometry = new Geometry("Player", box1);
@@ -49,10 +42,12 @@ public class TestGameClientAvatar extends AbstractClientAvatar {
 		return playerGeometry;		
 	}
 
-
+*/
 	@Override
 	protected Spatial getPlayersModel(IEntityController game, int pid) {
-		return getPlayersModel_Static(game, pid);
+		//return getPlayersModel_Static(game, pid);
+		ZombieModel z = new ZombieModel(game.getAssetManager());
+		return z.getModel();
 	}
 
 

@@ -1,4 +1,4 @@
-package com.scs.undercoveragent;
+package com.scs.undercoverzombie;
 
 public class UndercoverAgentEntityCreator {
 

@@ -40,6 +40,10 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		setupLight();
 
 		Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
+		model.scale(.125f);
+		model.setModelBound(new BoundingBox());
+		model.updateModelBound();
+		model.updateGeometricState();
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 
 		Node s = (Node)model;
@@ -51,13 +55,6 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		control.addListener(this);
 		channel = control.createChannel();
 		channel.setAnim("ZombieWalk");
-
-
-
-		model.scale(.5f);
-
-		model.setModelBound(new BoundingBox());
-		model.updateModelBound();
 
 		rootNode.attachChild(model);
 

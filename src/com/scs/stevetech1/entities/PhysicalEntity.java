@@ -35,6 +35,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
 	private Quaternion originalRot = new Quaternion();
+	
+	protected String currentAnim = "";
 
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name) {
 		super(_game, id, type, _name);
@@ -87,7 +89,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	
 	// This is overridden by Avatars to take into account local position
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
-		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse);
+		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse, false);
 		if (epd != null) {
 			this.setWorldTranslation(epd.position);
 			this.setWorldRotation(epd.rotation);
@@ -196,7 +198,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void rewindPositionTo(long serverTimeToUse) { //this.getWorldTranslation()
-		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse);
+		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse, true);
 		if (shooterEPD != null) {
 			this.originalPos.set(this.getWorldTranslation());
 			this.originalRot.set(this.getWorldRotation());
@@ -277,5 +279,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return super.getCreationData();
 	}
 
+	
+	public String getCurrentAnim() {
+		return this.currentAnim;
+	}
 
 }

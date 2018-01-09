@@ -21,6 +21,7 @@ import com.scs.testgame.entities.MovingTarget;
 import com.scs.testgame.entities.TestGameClientAvatar;
 import com.scs.testgame.entities.TestGameEnemyAvatar;
 import com.scs.testgame.entities.Wall;
+import com.scs.undercoverzombie.entities.RoamingZombie;
 
 /*
  * This is only used client-side.
@@ -42,6 +43,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 	public static final int HITSCAN_RIFLE = 11;
 	public static final int LASER_RIFLE = 12;
 	public static final int FLAT_FLOOR = 13;
+	public static final int ZOMBIE = 14;
 	
 	
 	public TestGameClientEntityCreator(TestGameClient _game) {
@@ -174,6 +176,14 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 			String tex = (String)msg.data.get("tex");
 			FlatFloor floor = new FlatFloor(game, id, pos.x, pos.y, pos.z, size.x, size.z, tex);
 			return floor;
+		}
+
+
+		case ZOMBIE:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			RoamingZombie z = new RoamingZombie(game, id, pos.x, pos.y, pos.z);
+			return z;
 		}
 
 

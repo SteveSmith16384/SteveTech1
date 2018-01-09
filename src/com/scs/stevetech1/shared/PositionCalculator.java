@@ -21,8 +21,9 @@ public final class PositionCalculator {
 	}
 
 
-	//public void addPositionData(EntityPositionData newData) {
 	public void addPositionData(Vector3f pos, Quaternion q, long time) {
+		//long diff = System.currentTimeMillis() - time; // todo - remove
+
 		EntityPositionData newData = null;
 		if (this.oldPositionData.size() > 0) {
 			newData = this.oldPositionData.removeLast();
@@ -34,7 +35,7 @@ public final class PositionCalculator {
 			newData.rotation.set(q);
 		}
 		newData.serverTimestamp = time;
-		
+
 		synchronized (positionData) {
 			boolean added = false;
 			for(int i=0 ; i<this.positionData.size() ; i++) { // Goes backwards in time, number gets smaller
@@ -56,18 +57,23 @@ public final class PositionCalculator {
 	}
 
 
-	public EntityPositionData calcPosition(long serverTimeToUse) {
+	public EntityPositionData calcPosition(long serverTimeToUse, boolean warn) {
 		synchronized (positionData) {
 			if (this.positionData.size() > 0) {
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
 					// Requested time is too soon
-					long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
-					Globals.p("Warning: Requested time is " + startDiff + " too soon");
-					//Globals.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));
+					if (warn) {
+						long diff = System.currentTimeMillis() - serverTimeToUse; // todo - remove
+						long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
+						Globals.p("Warning: Requested time is " + startDiff + " too soon");
+						Globals.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));
+					}
 					return this.positionData.getFirst(); // Our selected time is too soon!
 				} else if (this.positionData.getLast().serverTimestamp > serverTimeToUse) {
-					//Globals.p(this.toString(serverTimeToUse));
-					Globals.p("Warning: Requested time is too late");
+					if (warn) {
+						//Globals.p(this.toString(serverTimeToUse));
+						Globals.p("Warning: Requested time is too late");
+					}
 					return this.positionData.getLast(); // Our selected time is too late!
 				}
 
@@ -81,22 +87,13 @@ public final class PositionCalculator {
 							}
 							//return this.getInterpolatedPosition(firstEPD, secondEPD, serverTimeToUse); //positionData.indexOf(firstEPD);
 							return firstEPD.getInterpol(secondEPD, serverTimeToUse);
-
-						}/* else if (firstEPD.serverTimestamp < serverTimeToUse) {
-							// Data is too old!
-							Settings.p(this.toString(serverTimeToUse));
-							//long diff = serverTimeToUse - firstEPD.serverTimestamp;
-							//Settings.p("Position data too old for " + serverTimeToUse + " by " + diff + " (" + positionData.size() + " entries)");
-							//Settings.p("Data goes from " + positionData.getFirst().serverTimestamp + " to " + positionData.getLast().serverTimestamp);
-							return null;
-						}*/
+						}
 					}
 					firstEPD = secondEPD;
 					pos++;
 				}
 				//throw new RuntimeException("Should not get here!");
 			}
-			//Settings.p("No position data (" + positionData.size() + " entries)");
 		}
 		return null;
 
@@ -126,7 +123,7 @@ public final class PositionCalculator {
 		boolean shownTime = false;
 		for(int i=0 ; i<this.positionData.size() ; i++) { // Time gets earlier, number gets smaller
 			EntityPositionData epd = this.positionData.get(i);
-			if (!shownTime && showTime > epd.serverTimestamp) {
+			if (!shownTime && showTime > 0 && showTime > epd.serverTimestamp) {
 				str.append("Here: " + showTime + "\n");
 				shownTime = true;
 			}

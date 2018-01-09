@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.plugins.ClasspathLocator;
@@ -22,6 +21,7 @@ import com.jme3.system.JmeContext.Type;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IPreprocess;
 import com.scs.stevetech1.components.IProcessByClient;
@@ -51,12 +51,12 @@ import com.scs.stevetech1.networking.KryonetClient;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.AverageNumberCalculator;
+import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.UpdateAmmoCacheSystem;
 import com.scs.testgame.entities.Floor;
 
-import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
 public abstract class AbstractGameClient extends AbstractGameController implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
@@ -72,14 +72,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public static final int STATUS_JOINED_GAME = 4;
 	public static final int STATUS_GAME_STARTED = 5; // Have received all entities
 
-	//private static AtomicInteger nextEntityID = new AtomicInteger(1);
-
-	//public HashMap<Integer, IEntity> entities = new HashMap<>(100);
-	//private LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
-	//private LinkedList<Integer> toRemove = new LinkedList<Integer>(); 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
 
-	//private RealtimeInterval sendPingInt = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	public static BitmapFont guiFont_small;
 	public static AppSettings settings;
 	public IMessageClient networkClient;
@@ -100,6 +94,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	//private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	//private SimplePhysicsController<PhysicalEntity> physicsController;
+	
+	public long serverTime, serverTimePast; // todo - rename to renderTime
 
 	private UpdateAmmoCacheSystem updateAmmoSystem;
 
@@ -171,7 +167,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	@Override
 	public void simpleUpdate(float tpf_secs) {  //this.rootNode.getChild(3).getWorldTranslation();
 		try {
-			final long serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
+			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 
 			if (networkClient != null && networkClient.isConnected()) {
 				// Process messages in JME thread
@@ -213,6 +209,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											}
 										}
 										pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
+										if (pe instanceof IAnimated && eum.animation.length() > 0) {
+											IAnimated ia = (IAnimated)pe;
+											ia.addAnim(new HistoricalAnimationData(mainmsg.timestamp, eum.animation));
+										}
 										//Settings.p("New position for " + e + ": " + eum.pos);
 									} else {
 										Globals.p("Unknown entity ID: " + eum.entityID);
@@ -262,7 +262,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						}
 					}
 
-					final long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
+					serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 
 					// Loop through each entity and process them				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities

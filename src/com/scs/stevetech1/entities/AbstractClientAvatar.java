@@ -108,7 +108,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
 			long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
-			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis());
+			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis(), false);
 			if (epd != null) {
 				debugNode.setLocalTranslation(epd.position);
 			}

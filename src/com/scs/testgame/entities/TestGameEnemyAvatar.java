@@ -3,6 +3,7 @@ package com.scs.testgame.entities;
 import com.jme3.scene.Spatial;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.undercoverzombie.models.ZombieModel;
 
 public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 
@@ -13,7 +14,10 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 	
 	@Override
 	protected Spatial getPlayersModel(IEntityController game, int pid) {
-		return TestGameClientAvatar.getPlayersModel_Static(game, pid);
+		//return TestGameClientAvatar.getPlayersModel_Static(game, pid);
+		ZombieModel z = new ZombieModel(game.getAssetManager());
+		return z.getModel();
+
 	}
 
 }

@@ -12,10 +12,13 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
+import com.scs.stevetech1.netmessages.AnimationMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
+import com.scs.stevetech1.netmessages.EntityUpdateMessage.UpdateData;
 import com.scs.stevetech1.netmessages.GameStatusMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
+import com.scs.stevetech1.netmessages.GeneralCommandMessage.Command;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
@@ -27,8 +30,6 @@ import com.scs.stevetech1.netmessages.RequestNewBulletMessage;
 import com.scs.stevetech1.netmessages.TestMessage;
 import com.scs.stevetech1.netmessages.UnknownEntityMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
-import com.scs.stevetech1.netmessages.EntityUpdateMessage.UpdateData;
-import com.scs.stevetech1.netmessages.GeneralCommandMessage.Command;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 
@@ -109,6 +110,7 @@ public class KryonetServer implements IMessageServer {
 		kryo.register(SimplePlayerData.class);
 		kryo.register(SimpleGameData.class);
 		kryo.register(RequestNewBulletMessage.class);
+		kryo.register(AnimationMessage.class);
 		
 	}
 

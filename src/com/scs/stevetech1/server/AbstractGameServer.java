@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
@@ -19,6 +18,7 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPreprocess;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
@@ -52,7 +52,6 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.entities.Floor;
 
 import ssmith.swing.LogWindow;
-import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
 public abstract class AbstractGameServer extends AbstractGameController implements IEntityController, IMessageServerListener, ICollisionListener<PhysicalEntity> {
@@ -256,6 +255,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		loopTimer.start();
 	}
 
+	
 	protected void playerJoined(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 		int side = getSide(client);
@@ -667,6 +667,15 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		/*} else {
 			Settings.p("null object in collision");
 		}*/
+		if (a.userObject instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)a.userObject;
+			ic.collided(b.userObject);
+		}
+		if (b.userObject instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)b.userObject;
+			ic.collided(a.userObject);
+		}
+		
 	}
 
 

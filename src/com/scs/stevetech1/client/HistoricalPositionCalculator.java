@@ -18,11 +18,11 @@ public class HistoricalPositionCalculator {
 	 */
 	public static Vector3f calcHistoricalPositionOffset(PositionCalculator serverPositionData, PositionCalculator clientAvatarPositionData, long serverTimeToUse, long ping) {
 		long serverTimeDiff = System.currentTimeMillis() - serverTimeToUse;
-		EntityPositionData serverEPD = serverPositionData.calcPosition(serverTimeToUse);
+		EntityPositionData serverEPD = serverPositionData.calcPosition(serverTimeToUse, true);
 		if (serverEPD != null) {
 			long clientTimeToUse = serverTimeToUse - ping;
 			// check where we should be based on where we were X ms ago
-			EntityPositionData clientEPD = clientAvatarPositionData.calcPosition(clientTimeToUse);
+			EntityPositionData clientEPD = clientAvatarPositionData.calcPosition(clientTimeToUse, true);
 			if (clientEPD != null) {
 				// Is there a difference
 				float diff = serverEPD.position.distance(clientEPD.position);

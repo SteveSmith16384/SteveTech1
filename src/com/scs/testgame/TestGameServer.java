@@ -14,12 +14,11 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
-import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
-import com.scs.testgame.entities.MovingTarget;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
+import com.scs.undercoverzombie.entities.RoamingZombie;
 
 public class TestGameServer extends AbstractGameServer {
 
@@ -55,7 +54,9 @@ public class TestGameServer extends AbstractGameServer {
 
 		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 		
-		new FlatFloor(this, getNextEntityID(), 5, .1f, 5, 3, 3, "Textures/crate.png"); // todo - use this
+		//new FlatFloor(this, getNextEntityID(), 5, .1f, 5, 3, 3, "Textures/crate.png"); // todo - use this
+		
+		new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
 	}
 
 

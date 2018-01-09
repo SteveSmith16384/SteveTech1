@@ -16,16 +16,7 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 	public EntityUpdateMessage() {
 		super(false);
 	}
-/*	
-	public EntityUpdateMessage(PhysicalEntity e, boolean _force) {
-		super(false);
-		
-		entityID = e.getID();
-		pos = e.getWorldTranslation();
-		dir = e.getWorldRotation();
-		this.force = _force;
-	}
-*/
+
 	
 	public void addEntityData(PhysicalEntity sc, boolean force) {
 		UpdateData updateData = new UpdateData();
@@ -33,7 +24,7 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		updateData.pos = sc.getWorldTranslation();
 		updateData.dir = sc.getWorldRotation();
 		updateData.force = force;
-		
+		updateData.animation = sc.getCurrentAnim();
 		this.data.add(updateData);
 
 	}
@@ -46,6 +37,7 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		public Vector3f pos;
 		public Quaternion dir;
 		public boolean force; // Force new position on client, e.g. avatar restarting.
+		public String animation;
 		
 	}
 	

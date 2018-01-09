@@ -5,9 +5,9 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 Animate - send with update pos mail?
 
 URGENT
-Look for models?
+Zombie too high
+Zombie facing the wrong way
 Origin of entities should be floor 
-Walking aliens
 Check for packet loss
 Show current game time
 Grenades
@@ -68,6 +68,7 @@ Only send entity messages to players that have joined the game
 
 
 MODELS
+https://www.blendswap.com/blends/view/90451
 https://github.com/jMonkeyEngine/jmonkeyengine/tree/master/jme3-testdata/src/main/resources/Models
 https://free3d.com/3d-model/female-zumbi-51687.html
 https://free3d.com/3d-model/engel-officer-tactic-cadian-warhammer-40k-95098.html
