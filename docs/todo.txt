@@ -63,6 +63,10 @@ Only send entity messages to players that have joined the game
 
 
 MODELS
+https://clara.io/library?query=low-poly
+https://www.blendermarket.com/products/low-poly-asset-pack-1
+https://itch.io/game-assets/free/tag-low-poly
+https://droner503.itch.io/human-
 https://www.blendswap.com/blends/view/90451
 https://github.com/jMonkeyEngine/jmonkeyengine/tree/master/jme3-testdata/src/main/resources/Models
 https://free3d.com/3d-model/female-zumbi-51687.html
