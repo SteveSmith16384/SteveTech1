@@ -101,7 +101,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void clearPositiondata() {
-		this.serverPositionData.clearPositiondata();
+		this.serverPositionData.clear();
 	}
 
 

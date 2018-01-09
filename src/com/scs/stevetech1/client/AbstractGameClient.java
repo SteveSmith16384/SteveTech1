@@ -202,7 +202,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											pe.setWorldRotation(eum.dir);
 											pe.clearPositiondata();
 											if (pe == this.avatar) {
-												avatar.clientAvatarPositionData.clearPositiondata(); // Clear our local data as well
+												avatar.clientAvatarPositionData.clear(); // Clear our local data as well
 												avatar.storeAvatarPosition(serverTime);
 												// Stop us walking!
 												//this.avatar.resetWalkDir();
@@ -233,7 +233,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							}
 
 						} else if (message instanceof AbilityUpdateMessage) {
-							AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
+							AbilityUpdateMessage aum = (AbilityUpdateMessage) message;
 							IAbility a = (IAbility)entities.get(aum.entityID);
 							if (a != null) {
 								if (aum.timestamp > a.getLastUpdateTime()) {

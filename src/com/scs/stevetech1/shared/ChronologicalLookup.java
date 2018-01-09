@@ -4,14 +4,13 @@ import java.util.LinkedList;
 
 import com.scs.stevetech1.server.Globals;
 
-public class ChronoList<T extends ITimeStamped> {
+public class ChronologicalLookup<T extends ITimeStamped> {
 
 	private LinkedList<T> positionData = new LinkedList<>(); // Newest entry is at the start
-	//private LinkedList<T> oldPositionData = new LinkedList<>();
 	private int maxEntries;
 	private boolean cleardown;
 
-	public ChronoList(boolean _cleardown, int _maxEntries) {
+	public ChronologicalLookup(boolean _cleardown, int _maxEntries) {
 		super();
 
 		maxEntries = _maxEntries;
@@ -85,14 +84,14 @@ public class ChronoList<T extends ITimeStamped> {
 
 	private void cleardown(int num) {
 		if (num > 0) {
-		while (this.positionData.size() > num) {
-			this.positionData.removeLast();
-		}
+			while (this.positionData.size() > num) {
+				this.positionData.removeLast();
+			}
 		}
 	}
 
 
-	public void clearPositiondata() {
+	public void clear() {
 		synchronized (positionData) {
 			positionData.clear();
 		}

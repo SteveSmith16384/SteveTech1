@@ -5,13 +5,9 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 Animate - send with update pos mail?
 
 URGENT
-Zombie too high
-Zombie facing the wrong way
-Origin of entities should be floor 
-Check for packet loss
+Make vid of zombie
+Show other player as zombie
 Show current game time
-Grenades
-	Grenade hitting thrower
 Jumping is a bit high
 	Client countdown game time itself
 	Adjust grenades in the same way that avatars are adjusted
@@ -19,7 +15,9 @@ Search for todos
 
 
 TODO
-Animate messages?
+Origin of entities should be floor 
+Grenades
+Check for packet loss
 Less damage from hitscan over distance
 Make floor a single quad - needs rotating
 Strict mode - check if position already exists in positioncalc!
@@ -29,19 +27,15 @@ Lobby queue players
 Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
-Use new models
 Laser bullets
 Only rotate entities left/right
 IsOnGround not always correct
 Create sep projects for test game, killer crates
-	Game settings: num players per side, max sides
 Use latest JME libs
 Game lobby
 Walking up steps
 Physics test - do explosion
 Confirm source timings
-Draw map
-Am I adjusting rotation?
 Server don't check for hit unless client thinks it has hit
 Use test annotations
 Add lots of comments
@@ -56,7 +50,6 @@ Reduce object creation, including calls to clone()
 LATER
 Check code compiles without any game-specific code
 Simple physics - pushing
-Show kryonet logging
 Don't use broadcast()?s
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed

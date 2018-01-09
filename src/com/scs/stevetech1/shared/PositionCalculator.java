@@ -109,7 +109,7 @@ public final class PositionCalculator {
 	}
 
 
-	public void clearPositiondata() {
+	public void clear() {
 		this.oldPositionData.addAll(this.positionData);
 		synchronized (positionData) {
 			positionData.clear();

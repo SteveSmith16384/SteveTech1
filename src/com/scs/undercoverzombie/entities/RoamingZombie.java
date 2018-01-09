@@ -14,31 +14,30 @@ import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.ChronoList;
+import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 import com.scs.undercoverzombie.models.ZombieModel;
 
-public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IProcessByClient, IAnimated {
+public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IProcessByClient, IAnimated, IRewindable {
 	
-	private static final float w = 1f; // todo
-	private static final float d = 1f;
-	private static final float h = 1f;
+	private static final float w = .5f; // todo?
+	private static final float d = .7f;
+	private static final float h = .5f;
 
 	//private static final float DURATION = 3;
-	private static final float SPEED = 2;
+	private static final float SPEED = .22f; // 3f
 
-	private Spatial spatial = null;
 	private ZombieModel zm;
 	
 	private Vector3f currDir = new Vector3f(1f, 0, 0);
-	//private float timeUntilTurn = DURATION;
-	public ChronoList<HistoricalAnimationData> animList = new ChronoList<HistoricalAnimationData>(true, -1);
+	public ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 
 	public RoamingZombie(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, TestGameClientEntityCreator.ZOMBIE, "Zombie");
@@ -47,6 +46,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 			creationData = new HashMap<String, Object>();
 		}
 
+		Spatial spatial = null;
 		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
 			//spatial = game.getAssetManager().loadModel("Models/zombie/Zombie.blend");
 			//JMEFunctions.SetTextureOnSpatial(game.getAssetManager(), spatial, "Models/zombie/ZombieTexture.png");
@@ -57,7 +57,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 			Box box1 = new Box(w/2, h/2, d/2);
 			spatial = new Geometry("Crate", box1);
 		}
-		this.mainNode.attachChild(spatial); //This creates the model bounds!
+		this.mainNode.attachChild(spatial);
 		spatial.setLocalTranslation(0, h/2, 0);
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
@@ -74,12 +74,11 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
-		// todo
-		//this.spatial.lookAt(position, upVector);
-		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // this.getMainNode();
+		this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
+		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
 		this.currentAnim = "ZombieWalk";
+
 		super.processByServer(server, tpf_secs);
-		//Settings.p("Pos: " + this.getWorldTranslation());
 	}
 
 
@@ -114,6 +113,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 
 	@Override
 	public void collided(PhysicalEntity pe) {
+		Globals.p("Zombie has hit " + pe);
 		// TODO turn around?
 		
 	}
