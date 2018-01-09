@@ -1,4 +1,4 @@
-package com.scs.testgame.entities;
+package com.scs.moonbaseassault.entities;
 
 import java.util.HashMap;
 
@@ -13,23 +13,22 @@ import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.IAffectedByPhysics;
+import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 
-public class Crate extends PhysicalEntity implements IAffectedByPhysics {
+public class Computer extends PhysicalEntity implements IDamagable {
 
-	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
+	public Computer(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex) {
 		super(_game, id, TestGameClientEntityCreator.CRATE, "Crate");
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
-			//creationData.put("rot", rotDegrees); No, since chances are it will have moved anyway
 		}
 
 		Box box1 = new Box(w/2, h/2, d/2);
@@ -55,9 +54,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 			geometry.setQueueBucket(Bucket.Transparent);
 		}
 		this.mainNode.attachChild(geometry); //This creates the model bounds!  mainNode.getWorldBound();
-		float rads = (float)Math.toRadians(rotDegrees);
 		geometry.setLocalTranslation(0, h/2, 0);
-		mainNode.rotate(0, rads, 0);
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
 
@@ -75,6 +72,20 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);
 		//Settings.p("Pos: " + this.getWorldTranslation());
+	}
+
+
+	@Override
+	public void damaged(float amt, String reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public int getSide() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

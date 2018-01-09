@@ -7,6 +7,7 @@ Animate - send with update pos mail?
 URGENT
 Make vid of zombie
 Show other player as zombie
+Look for soldiers for Moonbase Assault
 Show current game time
 	Jumping is a bit high
 	Client countdown game time itself

@@ -330,6 +330,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	}
 
 
+	/*
+	 * For when a client requests the server to create an entity, e.g. a grenade (for lobbing).
+	 */
 	protected abstract IEntity createEntity(NewEntityMessage msg);
 
 

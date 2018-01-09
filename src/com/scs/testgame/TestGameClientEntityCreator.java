@@ -208,6 +208,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 		case LASER_RIFLE: return "LASER_RIFLE";
 		case HITSCAN_RIFLE: return "HITSCAN_RIFLE";
 		case FLAT_FLOOR: return "Flat Floor";
+		case ZOMBIE: return "ZOMBIE";
 		default: return "UNKNOWN (" + type + ")";
 		}
 	}
