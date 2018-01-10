@@ -39,13 +39,16 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-		Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
+		/*Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
 		model.scale(.125f);
 		model.setModelBound(new BoundingBox());
 		model.updateModelBound();
 		model.updateGeometricState();
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
-
+*/
+		
+		Spatial model = assetManager.loadModel("Models/STICKMEN SOLDIERS.blend");
+		
 		Node s = (Node)model;
 		while (s.getNumControls() == 0) {
 			s = (Node)s.getChild(0);

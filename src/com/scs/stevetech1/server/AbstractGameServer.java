@@ -312,9 +312,13 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 			HashMap<Integer, Integer> map = getPlayersPerSide();
 			// Get lowest amount
 			int lowest = 999;
+			int highest = -1;
 			for (int i : map.values()) {
 				if (i < lowest) {
-					i = lowest;
+					lowest = i;
+				}
+				if (i > highest) {
+					highest = i;
 				}
 			}
 			// Get the side

@@ -28,7 +28,7 @@ import com.scs.undercoverzombie.models.ZombieModel;
 
 public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IProcessByClient, IAnimated, IRewindable {
 	
-	private static final float w = .5f; // todo?
+	private static final float w = .5f;
 	private static final float d = .7f;
 	private static final float h = .5f;
 

@@ -5,8 +5,11 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 Animate - send with update pos mail?
 
 URGENT
-Make vid of zombie
-Show other player as zombie
+Convert md2 models?
+Animate players avatars
+JME GUI
+Blog post simple physics
+	Show other player as zombie
 Look for soldiers for Moonbase Assault
 Show current game time
 	Jumping is a bit high
@@ -16,6 +19,7 @@ Search for todos
 
 
 TODO
+Game lobby
 Console to connect to lobby
 Origin of entities should be floor 
 Grenades
@@ -24,17 +28,15 @@ Less damage from hitscan over distance
 Make floor a single quad - needs rotating
 Strict mode - check if position already exists in positioncalc!
 Simulate client?
-Tell player they have died - hide entity
+Tell player they have died
 Lobby queue players
 Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
 Laser bullets
-Only rotate entities left/right
 IsOnGround not always correct
 Create sep projects for test game, killer crates
 Use latest JME libs
-Game lobby
 Walking up steps
 Physics test - do explosion
 Confirm source timings
@@ -63,20 +65,22 @@ Only send entity messages to players that have joined the game
 
 
 MODELS
-https://clara.io/library?query=low-poly
+https://www.blendswap.com/terms/category/characters/page:3
+https://free3d.com/3d-model/low-poly-rigs-soldier-25083.html - waitng to register
+https://clara.io/library?query=low-poly - hundreds
 https://www.blendermarket.com/products/low-poly-asset-pack-1
 https://itch.io/game-assets/free/tag-low-poly
-https://droner503.itch.io/human-
-https://www.blendswap.com/blends/view/90451
 https://github.com/jMonkeyEngine/jmonkeyengine/tree/master/jme3-testdata/src/main/resources/Models
 https://free3d.com/3d-model/female-zumbi-51687.html
-https://free3d.com/3d-model/engel-officer-tactic-cadian-warhammer-40k-95098.html
-https://free3d.com/user/damianb
 woman - https://www.patreon.com/posts/animated-woman-15437702
-zombie - https://www.patreon.com/posts/16031258
 https://opengameart.org/content/animated-3d-models-0
 https://opengameart.org/content/female-npc
 
 
+TRIED
+zombie - https://www.patreon.com/posts/16031258
+
+
 UNUSED MODELS
+Not animated https://droner503.itch.io/human-
 https://free3d.com/3d-model/genestealer-tyranid-93377.html - Too big

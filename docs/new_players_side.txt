@@ -1,0 +1,6 @@
+Settings:
+	Max players per side
+	max sides
+	allPlayersOnDifferentSides
+	
+Player joins

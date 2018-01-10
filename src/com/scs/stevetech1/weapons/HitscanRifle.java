@@ -47,7 +47,6 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				this.hitThisMoment = null; // Clear it ready for next loop
 			}
 		} else {
-			// todo - nozzle flash or something
 			ICanShoot shooter = (ICanShoot)owner; 
 			Vector3f from = shooter.getBulletStartPos();
 			if (Globals.DEBUG_SHOOTING_POS) {

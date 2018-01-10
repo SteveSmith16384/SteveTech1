@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class Globals {
 
+	public static final boolean RECORD_VID = false;
 	public static final boolean SHOW_SERVER_POS_ON_CLIENT = false;
 	public static final boolean SHOW_AVATAR_WALK_DIR = false;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
@@ -34,7 +35,6 @@ public class Globals {
 
 	public static final String VERSION_ = "0.01";
 	public static final boolean SHOW_LOGO = false;
-	public static final boolean RECORD_VID = false;
 	public static final boolean USE_MODEL_FOR_PLAYERS = false;
 
 	// Our movement speed

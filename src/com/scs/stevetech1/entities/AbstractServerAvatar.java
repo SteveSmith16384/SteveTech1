@@ -56,25 +56,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		died(reason);
 	}
 
-/*
-	public void hitByBullet_(ICausesHarmOnContact bullet) {
-		if (invulnerableTime <= 0) {
-			float dam = bullet.getDamageCaused();
-			if (dam > 0) {
-				Settings.p("Player hit by bullet");
-				//module.doExplosion(this.main_node.getWorldTranslation(), this);
-				//module.audioExplode.play();
-				//this.health -= dam;
-				//this.hud.setHealth(this.health);
-				//this.hud.showDamageBox();
-
-				died("hit by " + bullet.toString());
-			}
-		} else {
-			Settings.p("Player hit but is currently invulnerable");
-		}
-	}
-*/
 
 	private void died(String reason) {
 		Globals.p("Player died: " + reason);
@@ -85,11 +66,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			ex.printStackTrace();
 		}
 		//invulnerableTime = RESTART_DUR*3;
-
-		// Move us below the map - todo - no!
-		Vector3f pos = this.getMainNode().getWorldTranslation().clone();//.floor_phy.getPhysicsLocation().clone();
-		pos.y = -10;//-SimpleCity.FLOOR_THICKNESS * 2;
-		super.setWorldTranslation(pos);
 	}
 
 
