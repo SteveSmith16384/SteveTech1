@@ -20,10 +20,11 @@ public class TestGameClientAvatar extends AbstractClientAvatar {
 	 */
 
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
-	private ZombieModel zm = new ZombieModel(game.getAssetManager());
+	private ZombieModel zm;
 
 	public TestGameClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
 		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z, side);
+		
 	}
 
 /*
@@ -51,6 +52,10 @@ public class TestGameClientAvatar extends AbstractClientAvatar {
 */
 	@Override
 	protected Spatial getPlayersModel(IEntityController game, int pid) {
+		if (zm == null)
+		{
+			zm = new ZombieModel(game.getAssetManager());
+		}
 		return zm.getModel();
 	}
 

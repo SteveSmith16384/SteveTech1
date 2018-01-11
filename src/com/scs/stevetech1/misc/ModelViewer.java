@@ -46,30 +46,17 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		model.updateGeometricState();
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 		 */
-		Spatial model = assetManager.loadModel("Models/hjmediastudios_space_marine_dist.blend");
+		Spatial model = assetManager.loadModel("Models/marine.blend");
 
 		//Spatial model = assetManager.loadModel("Models/tyrant/tyrant.blend");
 		//JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/tyrant/hivetyrant.png");
-
-		/*Node s = (Node)model;
-		Node s2 = null;
-		int ch = s.getChildren().size();
-		for (int i=0 ; i<ch ; i++) {
-			Spatial sp = s.getChild(i);
-			if (sp instanceof Node) {
-				if (sp.getNumControls() > 0) {
-					s2 = (Node)sp;
-					break;
-				}
-			}
-		}*/
 
 		Node s2 = this.getNodeWithControls((Node)model);
 		if (s2 != null) {
 			control = s2.getControl(AnimControl.class);
 			control.addListener(this);
 			channel = control.createChannel();
-			//channel.setAnim("ZombieWalk");
+			channel.setAnim("Shoot");
 		}
 
 		rootNode.attachChild(model);

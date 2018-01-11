@@ -1,3 +1,16 @@
+I'm currently developing an open-source multiplayer networked FPS engine, after getting addicted to Overwatch and TF2 and then wondering why there's not a single open-source Java multiplayer source game anywhere.  I aim to fix that, and at the moment progress is coming along nicely; it was never going to be easy but so far it has remained fun.  There's nothing to actually release yet; I'm going to wait until I've actually got a full game working before I release the source.
+
+Anyhoo, the project has necesitated some additional code not directly linked to the project, which I can release.  The first one is a Simple Physics Library for jMonkeyEngine.
+
+jMonkeyEngine comes with an excellent physics engine.  However, it is almost too excellent, and has a lot of features that I don't require, that take up CPU usage.  In addition, a multiplayer networked FPS requires the ability to "rewind" time on objects, which the existing JME physics engine can't do.
+
+The full source is available here, which includes an example FPS.
+
+And here is a video showing it in action.
+
+
+
+
 STETECH1
 
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
@@ -8,10 +21,9 @@ URGENT
 Look for soldiers for Moonbase Assault
 Blog post simple physics
 	Animate players avatars
-	Not rotating players avatars on other screen
 JME GUI
 Show current game time
-	Jumping is a bit high
+Jumping is a bit high on client, not server
 	Client countdown game time itself
 	Adjust grenades in the same way that avatars are adjusted
 Search for todos
@@ -50,6 +62,7 @@ Test with cheating client
 Reduce object creation, including calls to clone()
 Kryonet encryption?
 User enter name
+Use gradle for libraries
 
 
 LATER
@@ -64,9 +77,8 @@ Only send entity messages to players that have joined the game
 
 
 MODELS
-https://www.blendswap.com/blends/view/66490
-https://www.blendswap.com/blends/view/6437
-https://www.blendswap.com/blends/view/5308
+https://www.blendswap.com/blends/view/66490 - Terran marine, no anims
+https://www.blendswap.com/blends/view/5308 - Horror monsters
 https://www.blendswap.com/blends/view/5705 - Logo marines, does not load
 https://www.blendswap.com/blends/view/6480 - Spider, missing textures
 https://www.blendswap.com/blends/view/4420 - simple robot
