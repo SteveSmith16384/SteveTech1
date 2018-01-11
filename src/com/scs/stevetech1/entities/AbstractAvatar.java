@@ -148,6 +148,13 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		/*if (this.walkDirection.length() != 0) {
 			Settings.p("Pos=" + this.getWorldTranslation());
 		}*/
+		
+		// Point us in the right direction
+		if (this.game.isServer()) {
+			Vector3f lookAtPoint = camLeft.add(camDir.mult(10));
+			lookAtPoint.y = camLeft.y; // Look horizontal
+			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y);
+		}
 	}
 
 

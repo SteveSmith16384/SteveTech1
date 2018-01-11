@@ -14,6 +14,7 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
+import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
@@ -24,7 +25,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
+public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient, IAnimated {
 
 	public HUD hud;
 	public Camera cam;
@@ -102,11 +103,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		cam.update();
 
 		// Rotate us to point in the direction of the camera
-		Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
+		/*Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
 		lookAtPoint.y = cam.getLocation().y; // Look horizontal
 		// Rotating spatial makes us stick to the floor   
 		// this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
-
+*/
 		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
 			long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis(), false);

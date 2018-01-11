@@ -63,19 +63,12 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	public IMessageServer networkServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
-	//private HashMap<Integer, IEntity> entities = new HashMap<>(100); // EntityID::Entity
-	//private LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
-	//private LinkedList<Integer> toRemove = new LinkedList<Integer>(); 
-
 	public static GameProperties properties;
-	//private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
-	//private RealtimeInterval sendPingInterval = new RealtimeInterval(Settings.PING_INTERVAL_MS);
 	private RealtimeInterval checkStatusInterval = new RealtimeInterval(1000);
 	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Globals.SERVER_SEND_UPDATE_INTERVAL_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	protected LogWindow logWindow;
 	public IConsole console;
-	//private SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected SimpleGameData gameData;
 	public CollisionLogic collisionLogic = new CollisionLogic();
 	private GameOptions gameOptions;

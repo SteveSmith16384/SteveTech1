@@ -40,13 +40,13 @@ public class TestGameServer extends AbstractGameServer {
 
 	@Override
 	public Vector3f getAvatarStartPosition(AbstractAvatar avatar) {
-		return new Vector3f(3f, 0.6f, 3f + avatar.playerID);	
+		return new Vector3f(3f, 0.6f, 3f + (avatar.playerID*2));	
 	}
 
 
 	protected void createGame() {
 		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
-		new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
+		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 		//new Crate(this, getNextEntityID(), 8, 5, 8, 1, 1, 1f, "Textures/crate.png", 65);
 		new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 		new Wall(this, getNextEntityID(), 10, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
@@ -56,7 +56,7 @@ public class TestGameServer extends AbstractGameServer {
 		
 		//new FlatFloor(this, getNextEntityID(), 5, .1f, 5, 3, 3, "Textures/crate.png");
 		
-		new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
+		//new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
 	}
 
 

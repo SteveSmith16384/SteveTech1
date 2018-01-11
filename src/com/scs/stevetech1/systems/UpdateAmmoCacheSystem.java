@@ -14,17 +14,17 @@ public class UpdateAmmoCacheSystem extends AbstractSystem {
 
 		server = _server;
 	}
+	
 
-
-	@Override
-	public void process(IEntity entity, float tpf_secs) {
-		if (entity instanceof IRequiresAmmoCache) {
-			IRequiresAmmoCache irac = (IRequiresAmmoCache)entity;
+	//@Override
+	public void process(IRequiresAmmoCache irac, float tpf_secs) {
+		//if (entity instanceof IRequiresAmmoCache) {
+			//IRequiresAmmoCache irac = (IRequiresAmmoCache)entity;
 			if (irac.requiresAmmo()) {
-				RequestNewBulletMessage rnbm = new RequestNewBulletMessage(irac.getAmmoType(), entity.getID());
+				RequestNewBulletMessage rnbm = new RequestNewBulletMessage(irac.getAmmoType(), irac.getID());
 				server.networkClient.sendMessageToServer(rnbm);
 			}
-		}
+		//}
 
 	}
 

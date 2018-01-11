@@ -26,7 +26,7 @@ public class Globals {
 	public static final int UDP_LOBBY_PORT = 6144;
 	public static final float CONNECTION_IDLE_THRESH = 1000000;
 
-	public static final int SERVER_TICKRATE_MS = 20; // Source: 15ms
+	public static final int SERVER_TICKRATE_MS = 25; // Source: 15ms
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 70; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 
 	public static final int CLIENT_RENDER_DELAY = 1000; //SERVER_SEND_UPDATE_INTERVAL_MS*3; // How far in past the client should render the view.  Source: 50ms
 	public static final int PING_INTERVAL_MS = 100 * 1000; // How often server sends pings

@@ -6,6 +6,8 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
+import com.scs.stevetech1.shared.ChronologicalLookup;
+import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoverzombie.entities.RoamingZombie;
 import com.scs.undercoverzombie.models.ZombieModel;
@@ -16,6 +18,10 @@ public class TestGameClientAvatar extends AbstractClientAvatar {
 	private static final float PLAYER_RAD = 0.2f;
 	private static final float WEIGHT = 3f;
 	 */
+
+	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
+	private ZombieModel zm = new ZombieModel(game.getAssetManager());
+
 	public TestGameClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
 		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z, side);
 	}
@@ -45,10 +51,27 @@ public class TestGameClientAvatar extends AbstractClientAvatar {
 */
 	@Override
 	protected Spatial getPlayersModel(IEntityController game, int pid) {
-		//return getPlayersModel_Static(game, pid);
-		ZombieModel z = new ZombieModel(game.getAssetManager());
-		return z.getModel();
+		return zm.getModel();
 	}
 
+	
+	@Override
+	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
+		return animList;
+	}
 
+	
+	@Override
+	public void setCurrentAnim(String s) {
+		this.currentAnim = s;
+		this.zm.channel.setAnim(s);
+	}
+
+/*
+	@Override
+	public void addAnim(HistoricalAnimationData had) {
+		this.animList.addData(had);
+		
+	}
+*/
 }

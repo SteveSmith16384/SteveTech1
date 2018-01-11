@@ -54,6 +54,7 @@ import com.scs.stevetech1.shared.AverageNumberCalculator;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.stevetech1.systems.AnimationSystem;
 import com.scs.stevetech1.systems.UpdateAmmoCacheSystem;
 import com.scs.testgame.entities.Floor;
 
@@ -91,19 +92,20 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Globals.SERVER_TICKRATE_MS);
 	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
-	//private FixedLoopTime loopTimer = new FixedLoopTime(Settings.SERVER_TICKRATE_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
-	//private SimplePhysicsController<PhysicalEntity> physicsController;
-	
+
 	public long serverTime, renderTime;
 
+	// Entity systems
 	private UpdateAmmoCacheSystem updateAmmoSystem;
+	private AnimationSystem animSystem;
 
 	protected AbstractGameClient() {
 		super();
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 		updateAmmoSystem = new UpdateAmmoCacheSystem(this);
+		animSystem = new AnimationSystem(this);
 	}
 
 
@@ -211,7 +213,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 										pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
 										if (pe instanceof IAnimated && eum.animation.length() > 0) {
 											IAnimated ia = (IAnimated)pe;
-											ia.addAnim(new HistoricalAnimationData(mainmsg.timestamp, eum.animation));
+											ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animation));
 										}
 										//Settings.p("New position for " + e + ": " + eum.pos);
 									} else {
@@ -285,7 +287,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						}
 
 						if (e instanceof IRequiresAmmoCache) {
-							updateAmmoSystem.process(e, tpf_secs);
+							updateAmmoSystem.process((IRequiresAmmoCache)e, tpf_secs);
 						}
 
 						if (e instanceof PhysicalEntity) {
@@ -299,6 +301,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
 							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
+						}
+
+						if (e instanceof IAnimated) {
+							IAnimated pbc = (IAnimated)e;
+							this.animSystem.process(pbc, tpf_secs);
 						}
 					}
 

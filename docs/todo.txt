@@ -5,13 +5,11 @@ http://the-witness.net/news/2011/06/how-to-program-independent-games/
 Animate - send with update pos mail?
 
 URGENT
-Convert md2 models?
-Animate players avatars
-Not rotating players avatars on other screen
-JME GUI
-Blog post simple physics
-	Show other player as zombie
 Look for soldiers for Moonbase Assault
+Blog post simple physics
+	Animate players avatars
+	Not rotating players avatars on other screen
+JME GUI
 Show current game time
 	Jumping is a bit high
 	Client countdown game time itself
@@ -20,6 +18,7 @@ Search for todos
 
 
 TODO
+Roaming zombie - stop randomly
 Game lobby
 Console to connect to lobby
 Origin of entities should be floor 
@@ -40,7 +39,6 @@ Create sep projects for test game, killer crates
 Use latest JME libs
 Walking up steps
 Physics test - do explosion
-Confirm source timings
 Server don't check for hit unless client thinks it has hit
 Use test annotations
 Add lots of comments
@@ -50,6 +48,8 @@ Create generic classes and test them
 Make vars private/protected
 Test with cheating client
 Reduce object creation, including calls to clone()
+Kryonet encryption?
+User enter name
 
 
 LATER
@@ -59,9 +59,7 @@ Don't use broadcast()?s
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
-Kryonet encryption?
 Make classes final
-User enter name and ip address
 Only send entity messages to players that have joined the game
 
 
@@ -69,18 +67,17 @@ MODELS
 https://www.blendswap.com/blends/view/66490
 https://www.blendswap.com/blends/view/6437
 https://www.blendswap.com/blends/view/5308
-https://www.blendswap.com/blends/view/5705
-https://www.blendswap.com/blends/view/6480
-https://www.blendswap.com/blends/view/4373
-https://www.blendswap.com/blends/view/4420
-https://www.blendswap.com/blends/view/4456
-https://www.blendswap.com/blends/view/13277
-https://www.blendswap.com/blends/view/20658
-https://www.blendswap.com/blends/view/22012
+https://www.blendswap.com/blends/view/5705 - Logo marines, does not load
+https://www.blendswap.com/blends/view/6480 - Spider, missing textures
+https://www.blendswap.com/blends/view/4420 - simple robot
+https://www.blendswap.com/blends/view/4456 - Black lego figure - no controls
+https://www.blendswap.com/blends/view/13277 - Horror monsters
+https://www.blendswap.com/blends/view/20658 - Horror monster
+https://www.blendswap.com/blends/view/22012 - Too big (takes ages to load in ModelViewer)
 
 
 https://www.blendswap.com/terms/category/characters/page:3
-https://free3d.com/3d-model/low-poly-rigs-soldier-25083.html - waitng to register
+https://free3d.com/3d-model/low-poly-rigs-soldier-25083.html - waiting to register
 https://clara.io/library?query=low-poly - hundreds
 https://www.blendermarket.com/products/low-poly-asset-pack-1
 https://itch.io/game-assets/free/tag-low-poly

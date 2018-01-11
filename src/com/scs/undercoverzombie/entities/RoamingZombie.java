@@ -26,7 +26,7 @@ import com.scs.testgame.TestGameClientEntityCreator;
 import com.scs.testgame.entities.Floor;
 import com.scs.undercoverzombie.models.ZombieModel;
 
-public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IProcessByClient, IAnimated, IRewindable {
+public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IAnimated, IRewindable {
 	
 	private static final float w = .5f;
 	private static final float d = .7f;
@@ -38,7 +38,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 	private ZombieModel zm;
 	
 	private Vector3f currDir = new Vector3f(1f, 0, 0);
-	public ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
+	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 
 	public RoamingZombie(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, TestGameClientEntityCreator.ZOMBIE, "Zombie");
@@ -122,6 +122,19 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 
 
 	@Override
+	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
+		return animList;
+	}
+
+
+	@Override
+	public void setCurrentAnim(String s) {
+		this.currentAnim = s;
+		this.zm.channel.setAnim(s);
+	}
+
+/*
+	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		HistoricalAnimationData had = this.animList.get(client.renderTime, true);
 		if (had != null) {
@@ -131,12 +144,12 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 			}
 		}		
 	}
-
-
+*/
+/*
 	@Override
 	public void addAnim(HistoricalAnimationData had) {
 		this.animList.addData(had);
 		
 	}
-
+*/
 }

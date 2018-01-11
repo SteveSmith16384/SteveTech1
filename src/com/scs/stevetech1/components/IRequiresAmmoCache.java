@@ -1,6 +1,6 @@
 package com.scs.stevetech1.components;
 
-public interface IRequiresAmmoCache<T> {
+public interface IRequiresAmmoCache<T> { // Used by system UpdateAmmoCacheSystem
 
 	int getID();
 	
