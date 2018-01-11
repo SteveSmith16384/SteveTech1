@@ -7,6 +7,7 @@ Animate - send with update pos mail?
 URGENT
 Convert md2 models?
 Animate players avatars
+Not rotating players avatars on other screen
 JME GUI
 Blog post simple physics
 	Show other player as zombie

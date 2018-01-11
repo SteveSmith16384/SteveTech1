@@ -104,7 +104,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		// Rotate us to point in the direction of the camera
 		Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
 		lookAtPoint.y = cam.getLocation().y; // Look horizontal
-		//todo -re-add? But rotating spatial makes us stick to the floor   this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
+		// Rotating spatial makes us stick to the floor   
+		// this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
 
 		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
 			long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history

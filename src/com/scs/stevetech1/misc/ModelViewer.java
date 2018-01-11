@@ -45,19 +45,28 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		model.updateModelBound();
 		model.updateGeometricState();
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
-*/
-		
-		Spatial model = assetManager.loadModel("Models/STICKMEN SOLDIERS.blend");
-		
+		 */
+
+		Spatial model = assetManager.loadModel("Models/tyrant/tyrant.blend");
+		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/tyrant/hivetyrant.png");
+
 		Node s = (Node)model;
-		while (s.getNumControls() == 0) {
-			s = (Node)s.getChild(0);
+		Node s2 = null;
+		int ch = s.getChildren().size();
+		for (int i=0 ; i<ch ; i++) {
+			Spatial sp = s.getChild(i);
+			if (sp instanceof Node) {
+				if (sp.getNumControls() > 0) {
+					s2 = (Node)sp;
+					break;
+				}
+			}
 		}
 		//AnimControl ac = (AnimControl)s.getControl(AnimControl.class);
-		control = s.getControl(AnimControl.class);
+		control = s2.getControl(AnimControl.class);
 		control.addListener(this);
 		channel = control.createChannel();
-		channel.setAnim("ZombieWalk");
+		//channel.setAnim("ZombieWalk");
 
 		rootNode.attachChild(model);
 
@@ -68,8 +77,13 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		rootNode.updateGeometricState();
 
 	}
+/*
 
-
+	private Node getNodeWithControls() {
+		
+	}
+	*/
+	
 	private void setupLight() {
 		// Remove existing lights
 		this.rootNode.getWorldLightList().clear();
@@ -98,13 +112,13 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 	@Override
 	public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
-		
+
 	}
 
 
 	@Override
 	public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
-		
+
 	}
 
 

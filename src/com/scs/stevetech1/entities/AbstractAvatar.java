@@ -98,23 +98,29 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 			}
 		}
 
+		this.currentAnim = "ZombieIdle"; // Default
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 		if (input.getFwdValue()) {
 			//Settings.p("fwd=" + input.getFwdValue());
 			walkDirection.addLocal(camDir);
+			this.currentAnim = "ZombieWalk"; // Todo - what if not a zombie?
 		} else if (input.getBackValue()) {
 			walkDirection.addLocal(camDir.negate());
+			this.currentAnim = "ZombieWalk";
 		}
 		if (input.getStrafeLeftValue()) {		
 			walkDirection.addLocal(camLeft);
+			this.currentAnim = "ZombieWalk";
 		} else if (input.getStrafeRightValue()) {		
 			walkDirection.addLocal(camLeft.negate());
+			this.currentAnim = "ZombieWalk";
 		}
 		if (input.isJumpPressed()){
 			this.jump();
 		}
 		if (input.isShootPressed()) {
+			this.currentAnim = "ZombieBite";
 			shoot();
 		}
 
