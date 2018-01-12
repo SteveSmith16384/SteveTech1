@@ -5,8 +5,8 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
+import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -14,7 +14,7 @@ import com.scs.stevetech1.shared.IEntityController;
 /*
  * This is only used client-side
  */
-public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IProcessByClient {
+public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimated {
 
 	public AbstractEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
 		super(game, eid, 1, "EnemyAvatar");
@@ -43,20 +43,8 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 
 
 	@Override
-	public void processByServer(AbstractGameServer sevrer, float tpf) {
-		//Settings.p("Pos: " + this.getLocation());
-	}
-
-
-	@Override
 	public boolean hasMoved() {
 		return true; // Always calc for avatars
-	}
-
-
-	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
-		// Animate?
 	}
 
 

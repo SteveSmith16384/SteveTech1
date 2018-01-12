@@ -56,4 +56,10 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 	}
 
 
+	@Override
+	public String getAvatarAnimationCode() {
+		return "Shoot";
+	}
+
+
 }

@@ -102,4 +102,10 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	}
 
 
+	@Override
+	public String getAvatarAnimationCode() {
+		return "Shoot";
+	}
+
+
 }

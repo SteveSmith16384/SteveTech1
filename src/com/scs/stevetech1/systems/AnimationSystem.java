@@ -4,6 +4,10 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 
+/**
+ * This runs client-side, and checks that an IAnimated entity is running the correct animation.
+ *
+ */
 public class AnimationSystem extends AbstractSystem {
 
 	private AbstractGameClient client;

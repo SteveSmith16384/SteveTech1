@@ -1,4 +1,4 @@
-package com.scs.stevetech1.spidermonkeytest;
+package com.scs.stevetech1.networking.spidermonkeytest;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.network.ConnectionListener;

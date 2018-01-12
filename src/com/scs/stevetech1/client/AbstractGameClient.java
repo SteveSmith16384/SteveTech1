@@ -402,7 +402,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
 			if (clientStatus < STATUS_RCVD_WELCOME) {
 				clientStatus = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
-				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1)); // todo - get name from user
+				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
 				clientStatus = STATUS_SENT_JOIN_REQUEST;
 			} else {
 				throw new RuntimeException("Received second welcome message");

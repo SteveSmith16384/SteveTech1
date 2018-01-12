@@ -6,6 +6,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.scs.simplephysics.SimpleCharacterControl;
+import com.scs.stevetech1.animation.IGetAvatarAnimationString;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.ICanShoot;
@@ -16,7 +17,6 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameClientEntityCreator;
 
 public abstract class AbstractAvatar extends PhysicalEntity implements IPreprocess, IProcessByServer, ICanShoot, IAffectedByPhysics {
 
@@ -41,10 +41,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	private int numShotsHit = 0;
 	public IAbility abilityGun, abilityOther; // todo - have list of abilities
 	public int side = -1;
-
+	private IGetAvatarAnimationString animCodes;
+	
 	//private int num = 0;
 
-	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side) {
+	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IGetAvatarAnimationString _animCodes) {
 		super(_game, eid, 1, "Player");
 
 		if (game.isServer()) {
@@ -57,7 +58,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		playerID = _playerID;
 		input = _input;
 		side =_side;
-
+		animCodes = _animCodes;
+		
 		playerGeometry = getPlayersModel(game, playerID);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves - yet?
 
@@ -98,29 +100,28 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 			}
 		}
 
-		this.currentAnim = "ZombieIdle"; // Default
+		this.currentAnim = animCodes.getAnimationStringForCode("Idle"); // "ZombieIdle"; // Default
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 		if (input.getFwdValue()) {
 			//Settings.p("fwd=" + input.getFwdValue());
 			walkDirection.addLocal(camDir);
-			this.currentAnim = "ZombieWalk"; // Todo - what if not a zombie?
+			this.currentAnim = animCodes.getAnimationStringForCode("Walking");
 		} else if (input.getBackValue()) {
 			walkDirection.addLocal(camDir.negate());
-			this.currentAnim = "ZombieWalk";
+			this.currentAnim = animCodes.getAnimationStringForCode("Walking");
 		}
 		if (input.getStrafeLeftValue()) {		
 			walkDirection.addLocal(camLeft);
-			this.currentAnim = "ZombieWalk";
+			this.currentAnim = animCodes.getAnimationStringForCode("Walking");
 		} else if (input.getStrafeRightValue()) {		
 			walkDirection.addLocal(camLeft.negate());
-			this.currentAnim = "ZombieWalk";
+			this.currentAnim = animCodes.getAnimationStringForCode("Walking");
 		}
 		if (input.isJumpPressed()){
 			this.jump();
 		}
 		if (input.isShootPressed()) {
-			this.currentAnim = "ZombieBite";
 			shoot();
 		}
 
@@ -171,6 +172,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 
 	public void shoot() {
 		if (this.abilityGun.activate()) {
+			this.currentAnim = animCodes.getAnimationStringForCode(abilityGun.getAvatarAnimationCode());
 			this.numShots++;
 		}
 	}

@@ -279,7 +279,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return super.getCreationData();
 	}
 
-	
+
 	public String getCurrentAnim() {
 		return this.currentAnim;
 	}

@@ -12,6 +12,8 @@ public interface IAbility extends IEntity {
 	
 	String getHudText();
 	
+	String getAvatarAnimationCode();
+	
 	void encode(AbilityUpdateMessage aum);
 
 	void decode(AbilityUpdateMessage aum);

@@ -1,6 +1,6 @@
-MIT Licence for Multiplayer Sourcerers
+MIT Licence for SteveTech1
 
-Copyright (c)2017 Stephen Carlyle-Smith
+Copyright (c)2018 Stephen Carlyle-Smith
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

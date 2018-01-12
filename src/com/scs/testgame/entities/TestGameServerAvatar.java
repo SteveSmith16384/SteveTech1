@@ -6,6 +6,7 @@ import com.jme3.scene.shape.Box;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.undercoverzombie.ZombieAnimationStrings;
 
 public class TestGameServerAvatar extends AbstractServerAvatar {
 	
@@ -14,7 +15,7 @@ public class TestGameServerAvatar extends AbstractServerAvatar {
 	private static final float h = 1;
 
 	public TestGameServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side) {
-		super(_module, _playerID, _input, eid, side);
+		super(_module, _playerID, _input, eid, side, new ZombieAnimationStrings());
 	}
 	
 

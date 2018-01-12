@@ -1,0 +1,1 @@
+Game server periodically connect to lobby server indicating their existence and status

@@ -84,7 +84,6 @@ public class Computer extends PhysicalEntity implements IDamagable {
 
 	@Override
 	public int getSide() {
-		// TODO Auto-generated method stub
 		return 2;
 	}
 

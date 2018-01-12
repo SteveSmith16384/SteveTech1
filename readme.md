@@ -6,13 +6,14 @@ Licence is MIT.
  
 
 ## FEATURES:
-* Open source
+* Fully open source
 * Authoritative server
 * Client lag-compensation
 * TCP and UDP for networking
 * Position interpolation
 * Simple physics
-* Includes various example games
+* Includes some simple example games
+* Game lobby
 
 
 ## TODO

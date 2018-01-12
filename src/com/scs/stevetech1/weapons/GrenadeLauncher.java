@@ -54,5 +54,11 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 	}
 
 
+	@Override
+	public String getAvatarAnimationCode() {
+		return "LaunchGrenade";
+	}
+
+
 }
 

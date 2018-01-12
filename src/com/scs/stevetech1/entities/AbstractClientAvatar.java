@@ -10,6 +10,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.scs.stevetech1.animation.IGetAvatarAnimationString;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
@@ -25,7 +26,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient, IAnimated {
+public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {//, IAnimated {
 
 	public HUD hud;
 	public Camera cam;
@@ -34,8 +35,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	private Node debugNode;
 
-	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
-		super(_module, _playerID, _input, eid, side);
+	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side, IGetAvatarAnimationString animCodes) {
+		super(_module, _playerID, _input, eid, side, animCodes);
 
 		cam = _cam;
 		hud = _hud;

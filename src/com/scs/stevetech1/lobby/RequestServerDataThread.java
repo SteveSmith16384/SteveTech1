@@ -1,5 +1,5 @@
 package com.scs.stevetech1.lobby;
-
+/*
 import java.io.IOException;
 
 import com.scs.stevetech1.networking.IMessageClient;
@@ -26,3 +26,4 @@ public class RequestServerDataThread implements Runnable {
 	}
 
 }
+*/
