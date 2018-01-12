@@ -49,7 +49,7 @@ public class KryonetClient implements IMessageClient {
 		});
 
 		client.start();
-		client.connect(1000, Globals.IP_ADDRESS, Globals.TCP_PORT, Globals.UDP_PORT);
+		client.connect(1000, Globals.IP_ADDRESS, Globals.PORT, Globals.PORT);
 	}
 
 

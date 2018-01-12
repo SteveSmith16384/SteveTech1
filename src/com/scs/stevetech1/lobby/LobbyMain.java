@@ -24,7 +24,7 @@ public class LobbyMain implements IMessageServerListener, IMessageClientListener
 
 
 	public LobbyMain() throws IOException {
-		networkServer = new KryonetServer(Globals.TCP_LOBBY_PORT, Globals.UDP_LOBBY_PORT, this);
+		networkServer = new KryonetServer(Globals.LOBBY_PORT, Globals.LOBBY_PORT, this);
 	}
 
 

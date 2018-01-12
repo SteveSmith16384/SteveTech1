@@ -35,7 +35,7 @@ public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, M
 	private ExecutorService executor = Executors.newFixedThreadPool(20);
 
 	public SpiderMonkeyServer() throws IOException {
-		myServer = Network.createServer(Globals.TCP_PORT);
+		myServer = Network.createServer(Globals.PORT);
 
 		registerMessages();
 

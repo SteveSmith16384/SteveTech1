@@ -11,6 +11,7 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
@@ -34,7 +35,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	public TestGameServer() throws IOException {
-		super(new GameOptions(1, 999, 10*1000, 5*60*1000, 10*1000));
+		super(new GameOptions(1, 999, 10*1000, 5*60*1000, 10*1000, Globals.IP_ADDRESS, Globals.PORT, Globals.IP_ADDRESS, Globals.LOBBY_PORT));
 	}
 
 

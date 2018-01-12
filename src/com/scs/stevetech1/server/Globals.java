@@ -20,10 +20,10 @@ public class Globals {
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 
 	public static final String IP_ADDRESS = "localhost";
-	public static final int TCP_PORT = 6143;
-	public static final int UDP_PORT = 6143;
-	public static final int TCP_LOBBY_PORT = 6144;
-	public static final int UDP_LOBBY_PORT = 6144;
+	public static final int PORT = 6143;
+	//public static final int UDP_PORT = 6143;
+	public static final int LOBBY_PORT = 6144;
+	//public static final int UDP_LOBBY_PORT = 6144;
 	public static final float CONNECTION_IDLE_THRESH = 1000000;
 
 	public static final int SERVER_TICKRATE_MS = 25; // Source: 15ms

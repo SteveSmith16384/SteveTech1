@@ -3,11 +3,12 @@ STETECH1
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 URGENT
-Custom anim strings based on model
+Player caught on floor cos mesh is rotating
+Are avatars now animated?
+	Custom anim strings based on model
 Create moonbase map
 Look for soldiers for Moonbase Assault
-Blog post simple physics
-	Animate players avatars
+Blog post progress
 Simple console GUI
 Show current game time
 Jumping is a bit high on client, not server
@@ -33,10 +34,9 @@ Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
 Laser bullets
-IsOnGround not always correct
 Create sep projects for test game, killer crates
 Use latest JME libs
-Walking up steps
+Walking up steps - have flag to force player to rise
 Physics test - do explosion
 Server don't check for hit unless client thinks it has hit
 Use test annotations
@@ -64,6 +64,10 @@ Only send entity messages to players that have joined the game
 
 
 MODELS
+https://www.youtube.com/watch?v=4Sy2nkO7X8s - minecraft steve, no animation
+https://www.blendswap.com/blends/view/68295 - minecraft steve, no skin
+https://github.com/sparklinlabs/superpowers-asset-packs/tree/master/3d-character
+
 https://www.blendswap.com/blends/view/66490 - Terran marine, no anims
 https://www.blendswap.com/blends/view/5308 - Horror monsters
 https://www.blendswap.com/blends/view/5705 - Logo marines, does not load

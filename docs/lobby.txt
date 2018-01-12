@@ -1,1 +1,2 @@
 Game server periodically connect to lobby server indicating their existence and status
+Players connect to server; if not enough players, they are added to queue

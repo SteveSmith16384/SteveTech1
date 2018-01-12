@@ -10,6 +10,8 @@ import com.jme3.scene.Spatial;
 
 public class SimpleRigidBody<T> implements Collidable {
 
+	public boolean STRICT = true;
+
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f(); // Gets reduced by air resistance each frame
 	private Vector3f tmpMoveDir = new Vector3f();
@@ -149,6 +151,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * Returns object they collided with
 	 */
 	private SimpleRigidBody<T> move(Vector3f offset) {
+		if (STRICT) {
+			SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
+			if (tmpWasCollision != null) {
+				System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision);
+			}
+		}
+
 		if (offset.length() != 0) {
 			if (offset.length() > SimplePhysicsController.MAX_MOVE_DIST) {
 				offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
@@ -157,6 +166,13 @@ public class SimpleRigidBody<T> implements Collidable {
 			SimpleRigidBody<T> wasCollision = checkForCollisions();
 			if (wasCollision != null) {
 				this.spatial.move(offset.negateLocal()); // Move back
+
+				if (STRICT) {
+					SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
+					if (tmpWasCollision != null) {
+						System.err.println("Warning: " + this + " has collided with " + tmpWasCollision + " even after moving back");
+					}
+				}
 			}
 			return wasCollision;
 		}

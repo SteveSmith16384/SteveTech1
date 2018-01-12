@@ -105,7 +105,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 		if (input.getFwdValue()) {
 			//Settings.p("fwd=" + input.getFwdValue());
-			walkDirection.addLocal(camDir);
+			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
 			this.currentAnim = animCodes.getAnimationStringForCode("Walking");
 		} else if (input.getBackValue()) {
 			walkDirection.addLocal(camDir.negate());
@@ -132,18 +132,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 				Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());// + "  walkDirection=" + walkDirection);
 			}
 		}
+		
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 			if (abilityOther != null) {
 				this.hud.setAbilityOtherText(this.abilityOther.getHudText());
 			}*/
 
-		/*if (server != null) {
-			super.processByServer(server, tpf_secs);
-		} else {
-			if (simpleRigidBody != null) {*/
 		simpleRigidBody.process(tpf_secs);
-		//}
 
 		//}
 		/*if (this.walkDirection.length() != 0) {
@@ -153,8 +149,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		// Point us in the right direction
 		if (this.game.isServer()) {
 			Vector3f lookAtPoint = camLeft.add(camDir.mult(10));
-			lookAtPoint.y = camLeft.y; // Look horizontal
-			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y);
+			lookAtPoint.y = this.getMainNode().getWorldTranslation().y;// camLeft.y; // Look horizontal
+			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y);
 		}
 	}
 

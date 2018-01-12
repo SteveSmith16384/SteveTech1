@@ -58,8 +58,6 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 	private static final String PROPS_FILE = Globals.NAME.replaceAll(" ", "") + "_settings.txt";
 
-	//private static AtomicInteger nextEntityID = new AtomicInteger(1);
-
 	public IMessageServer networkServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
@@ -83,7 +81,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		console = new ServerConsole(this);
 
 		gameData = new SimpleGameData();
-		networkServer = new KryonetServer(Globals.TCP_PORT, Globals.UDP_PORT, this);
+		networkServer = new KryonetServer(Globals.PORT, Globals.PORT, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 	}
