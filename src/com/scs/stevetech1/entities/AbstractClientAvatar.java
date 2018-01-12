@@ -10,6 +10,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.animation.IGetAvatarAnimationString;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
@@ -48,6 +49,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		//syncPos = new AdjustBasedOnDistance();
 
 		this.simpleRigidBody.setGravity(0);
+
+
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE/4); // Different to server side, since we don't have gravity!
 
 		_module.avatar = this;
 

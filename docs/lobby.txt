@@ -1,2 +1,7 @@
+GAME SERVERS
 Game server periodically connect to lobby server indicating their existence and status
-Players connect to server; if not enough players, they are added to queue
+
+GAME CLIENTS
+Client initially connect to the lobby server
+They are then directed to a game server
+Players connect to game server; if not enough players, they are added to queue

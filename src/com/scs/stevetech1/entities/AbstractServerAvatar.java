@@ -1,6 +1,7 @@
 package com.scs.stevetech1.entities;
 
 import com.jme3.math.Vector3f;
+import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.animation.IGetAvatarAnimationString;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
@@ -19,6 +20,9 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		super(_module, _playerID, _input, eid, side, animCodes);
 
 		server = (AbstractGameServer)_module;
+
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE); // Different to client side, since that doesn't have gravity!
 	}
 
 

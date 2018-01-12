@@ -67,9 +67,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 
 		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 		
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.setJumpForce(2f);
-
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);

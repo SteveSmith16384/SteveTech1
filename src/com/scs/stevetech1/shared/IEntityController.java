@@ -13,8 +13,6 @@ public interface IEntityController {
 
 	void addEntity(IEntity e);
 	
-	//void addClientOnlyEntity(IEntity e);
-
 	void removeEntity(int id);
 	
 	JmeContext.Type getJmeContext();

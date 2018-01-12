@@ -3,7 +3,8 @@ STETECH1
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 URGENT
-Player caught on floor cos mesh is rotating
+Game lobby
+	Player caught on floor cos mesh is rotating
 Are avatars now animated?
 	Custom anim strings based on model
 Create moonbase map
@@ -11,15 +12,13 @@ Look for soldiers for Moonbase Assault
 Blog post progress
 Simple console GUI
 Show current game time
-Jumping is a bit high on client, not server
+	Jumping is a bit high on client, not server
 	Client countdown game time itself
 	Adjust grenades in the same way that avatars are adjusted
 Search for todos
 
 
 TODO
-Roaming zombie - stop randomly
-Game lobby
 Console to connect to lobby
 Origin of entities should be floor 
 Grenades
@@ -61,17 +60,13 @@ Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
 Make classes final
 Only send entity messages to players that have joined the game
-
+Player groups
 
 MODELS
-https://www.youtube.com/watch?v=4Sy2nkO7X8s - minecraft steve, no animation
-https://www.blendswap.com/blends/view/68295 - minecraft steve, no skin
-https://github.com/sparklinlabs/superpowers-asset-packs/tree/master/3d-character
+https://www.patreon.com/posts/16031258 - zombie, works
+https://github.com/sparklinlabs/superpowers-asset-packs/tree/master/3d-character - Pretty good!
 
-https://www.blendswap.com/blends/view/66490 - Terran marine, no anims
 https://www.blendswap.com/blends/view/5308 - Horror monsters
-https://www.blendswap.com/blends/view/5705 - Logo marines, does not load
-https://www.blendswap.com/blends/view/6480 - Spider, missing textures
 https://www.blendswap.com/blends/view/4420 - simple robot
 https://www.blendswap.com/blends/view/4456 - Black lego figure - no controls
 https://www.blendswap.com/blends/view/13277 - Horror monsters
@@ -91,10 +86,11 @@ https://opengameart.org/content/animated-3d-models-0
 https://opengameart.org/content/female-npc
 
 
-TRIED
-zombie - https://www.patreon.com/posts/16031258
-
-
 UNUSED MODELS
+https://www.youtube.com/watch?v=4Sy2nkO7X8s - minecraft steve, no animation
+https://www.blendswap.com/blends/view/68295 - minecraft steve, no skin
 Not animated https://droner503.itch.io/human-
 https://free3d.com/3d-model/genestealer-tyranid-93377.html - Too big
+https://www.blendswap.com/blends/view/66490 - Terran marine, no anims
+https://www.blendswap.com/blends/view/5705 - Logo marines, does not load
+https://www.blendswap.com/blends/view/6480 - Spider, missing textures

@@ -2,6 +2,7 @@ package com.scs.stevetech1.data;
 
 public class GameOptions {
 
+	public String displayName;
 	private int maxPlayersPerSide;
 	private int maxSides;
 	private boolean allPlayersOnDifferentSides;
@@ -12,8 +13,10 @@ public class GameOptions {
 	public String ourExternalIP, lobbyip;
 	public int ourExternalPort, lobbyport;
 
-	public GameOptions(int _maxPlayersPerSide, int _maxSides, long _deployDuration, long _gameDuration, long _finishedDuration,
+	public GameOptions(String _displayName, int _maxPlayersPerSide, int _maxSides, long _deployDuration, long _gameDuration, long _finishedDuration,
 			String _ourExternalIP, int _ourExternalPort, String _lobbyip, int _lobbyport) {
+		
+		displayName =_displayName;
 		maxPlayersPerSide = _maxPlayersPerSide;
 		maxSides = _maxSides;
 		allPlayersOnDifferentSides = (maxPlayersPerSide == 1);

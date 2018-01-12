@@ -19,8 +19,9 @@ public class Globals {
 	public static final boolean DEBUG_SHOOTING_POS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 
-	public static final String IP_ADDRESS = "localhost";
-	public static final int PORT = 6143;
+	public static final String SERVER_IP_ADDRESS = "localhost";
+	public static final String LOBBY_IP_ADDRESS = "localhost";
+	public static final int PORT = 6143; // todo - rename
 	//public static final int UDP_PORT = 6143;
 	public static final int LOBBY_PORT = 6144;
 	//public static final int UDP_LOBBY_PORT = 6144;
@@ -39,7 +40,7 @@ public class Globals {
 
 	// Our movement speed
 	public static final float PLAYER_MOVE_SPEED = 3f;
-	//public static final float JUMP_FORCE = 6f;
+	public static final float JUMP_FORCE = 2f;
 	public static final float SMALLEST_MOVE_DIST = 0.02f;
 
 	public static final float CAM_DIST = 50f;

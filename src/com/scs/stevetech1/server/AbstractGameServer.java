@@ -43,8 +43,12 @@ import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.RequestNewBulletMessage;
 import com.scs.stevetech1.netmessages.UnknownEntityMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
+import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
+import com.scs.stevetech1.networking.IMessageClient;
+import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.IMessageServer;
 import com.scs.stevetech1.networking.IMessageServerListener;
+import com.scs.stevetech1.networking.KryonetClient;
 import com.scs.stevetech1.networking.KryonetServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
 import com.scs.stevetech1.shared.AbstractGameController;
@@ -54,14 +58,20 @@ import com.scs.testgame.entities.Floor;
 import ssmith.swing.LogWindow;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameServer extends AbstractGameController implements IEntityController, IMessageServerListener, ICollisionListener<PhysicalEntity> {
+public abstract class AbstractGameServer extends AbstractGameController implements 
+			IEntityController, 
+			IMessageServerListener, // To listen for connecting game clients 
+			IMessageClientListener, // For sending messages to the lobby server
+			ICollisionListener<PhysicalEntity> {
 
 	private static final String PROPS_FILE = Globals.NAME.replaceAll(" ", "") + "_settings.txt";
 
 	public IMessageServer networkServer;
+	private IMessageClient clientToLobbyServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
 	public static GameProperties properties;
+	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(5000);
 	private RealtimeInterval checkStatusInterval = new RealtimeInterval(1000);
 	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Globals.SERVER_SEND_UPDATE_INTERVAL_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
@@ -91,6 +101,13 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	public void simpleInitApp() {
 		createGame();
 		console.appendText("Game created");
+		
+		try {
+			clientToLobbyServer = new KryonetClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this);
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
 		loopTimer.start();
 	}
 
@@ -101,6 +118,10 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		StringBuilder strDebug = new StringBuilder();
+		
+		if (updateLobbyInterval.hitInterval()) {
+			this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), true)); // todo - do we have spaces?
+		}
 
 		if (networkServer.getNumClients() > 0) {
 			// Process all messages
@@ -691,5 +712,34 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 
 	public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
+
+
+	@Override
+	public void connected() {
+		Globals.p("Connected to lobby server");
+		
+	}
+
+
+	@Override
+	public void messageReceived(MyAbstractMessage message) {
+		if (Globals.DEBUG_MSGS) {
+			Globals.p("Rcvd " + message.getClass().getSimpleName());
+		}
+
+		// Add it to list for processing in main thread
+		synchronized (this.unprocessedMessages) {
+			this.unprocessedMessages.add(message);
+		}
+		
+	}
+
+
+	@Override
+	public void disconnected() {
+		Globals.p("Disconnected from lobby server");
+		
+	}
+
 }
 

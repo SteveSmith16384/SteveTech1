@@ -14,7 +14,7 @@ public class KryonetClient implements IMessageClient {
 	private IMessageClientListener listener;
 	private Client client;
 
-	public KryonetClient(IMessageClientListener _listener) throws IOException {
+	public KryonetClient(String ip, int tcpPort, int udpPort, IMessageClientListener _listener) throws IOException {
 		listener = _listener;
 
 		Logger.setLevel(Logger.DEBUG); // todo?
@@ -49,7 +49,7 @@ public class KryonetClient implements IMessageClient {
 		});
 
 		client.start();
-		client.connect(1000, Globals.IP_ADDRESS, Globals.PORT, Globals.PORT);
+		client.connect(1000, ip, tcpPort, udpPort);
 	}
 
 
