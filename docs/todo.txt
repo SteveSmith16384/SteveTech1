@@ -3,6 +3,7 @@ STETECH1
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 URGENT
+Do tracer-style rewind
 Game lobby
 	Player caught on floor cos mesh is rotating
 Are avatars now animated?

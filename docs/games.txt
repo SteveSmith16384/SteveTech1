@@ -24,6 +24,7 @@ Overwatch Clone
 	Player abilities: vampire - must be underneath something
 	Invisible - turns invisible if keep still for a while
 	Secret Agent - spoon is the deadliest weapon
+	Objective: must cover all squares
 	
 
 FTL

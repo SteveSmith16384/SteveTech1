@@ -151,7 +151,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * Returns object they collided with
 	 */
 	private SimpleRigidBody<T> move(Vector3f offset) {
-		if (STRICT) {
+		if (STRICT) { // todo - only do this once!
 			SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
 			if (tmpWasCollision != null) {
 				System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision);
