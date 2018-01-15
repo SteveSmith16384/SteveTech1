@@ -1,9 +1,9 @@
 package com.scs.undercoverzombie;
-
+/*
 import java.util.HashMap;
 
 import com.scs.stevetech1.animation.IGetAvatarAnimationString;
-
+/*
 public class ZombieAnimationStrings extends HashMap<String, String> implements IGetAvatarAnimationString {
 
 	private static final long serialVersionUID = 1L;
@@ -22,3 +22,4 @@ public class ZombieAnimationStrings extends HashMap<String, String> implements I
 	}
 
 }
+*/

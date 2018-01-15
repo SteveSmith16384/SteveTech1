@@ -52,12 +52,15 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 			//spatial = game.getAssetManager().loadModel("Models/zombie/Zombie.blend");
 			//JMEFunctions.SetTextureOnSpatial(game.getAssetManager(), spatial, "Models/zombie/ZombieTexture.png");
 			zm = new ZombieModel(game.getAssetManager());
-			spatial = zm.getModel();
+			spatial = zm.getModel(true);
 		} else {
 			// Server
-			Box box1 = new Box(w/2, h/2, d/2);
+			/*Box box1 = new Box(w/2, h/2, d/2);
 			spatial = new Geometry("Crate", box1);
-			spatial.setLocalTranslation(0, h/2, 0); // Box origin is the centre
+			spatial.setLocalTranslation(0, h/2, 0); // Box origin is the centre*/
+			zm = new ZombieModel(game.getAssetManager());
+			spatial = zm.getModel(false);
+
 		}
 		this.mainNode.attachChild(spatial);
 		mainNode.setLocalTranslation(x, y, z);

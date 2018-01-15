@@ -81,7 +81,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public HUD hud;
 	public IInputDevice input;
 
-	public AbstractClientAvatar avatar; // Current avatar
+	public AbstractClientAvatar avatar; // todo - rename to Current avatar
 	public int playerID = -1;
 	public int side = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();

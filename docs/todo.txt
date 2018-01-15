@@ -3,6 +3,7 @@ STETECH1
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 URGENT
+How to get the height of a model?
 Zombie not facing the right direction
 Record desktop showing two players
 Use new models

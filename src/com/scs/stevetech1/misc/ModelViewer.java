@@ -48,7 +48,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		 */
 
 		Spatial model = assetManager.loadModel("Models/3d-character/character/character.blend");
-		model.scale(5);
+		model.scale(.2f);
 		
 		//Spatial model = assetManager.loadModel("Models/western-fps-2d/background-elements/3D-table/table.blend");
 		//model.scale(5);

@@ -6,9 +6,9 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.scs.simplephysics.SimpleCharacterControl;
-import com.scs.stevetech1.animation.IGetAvatarAnimationString;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
+import com.scs.stevetech1.components.IAnimatedAvatar;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IPreprocess;
 import com.scs.stevetech1.components.IProcessByServer;
@@ -40,11 +40,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	private int numShotsHit = 0;
 	public IAbility abilityGun, abilityOther; // todo - have list of abilities
 	public int side = -1;
-	private IGetAvatarAnimationString animCodes;
+	protected IAnimatedAvatar animCodes; // todo - rename
 	
-	//private int num = 0;
-
-	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IGetAvatarAnimationString _animCodes) {
+	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAnimatedAvatar _anim) {
 		super(_game, eid, 1, "Player");
 
 		if (game.isServer()) {
@@ -57,9 +55,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		playerID = _playerID;
 		input = _input;
 		side =_side;
-		animCodes = _animCodes;
+		animCodes = _anim;
 		
-		playerGeometry = getPlayersModel(game, playerID);
+		playerGeometry = animCodes.getModel(!game.isServer());// getPlayersModel(game, playerID);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves - yet?
 
 		this.getMainNode().attachChild(playerGeometry);
@@ -78,7 +76,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	}
 
 
-	protected abstract Spatial getPlayersModel(IEntityController game, int pid);
+	//protected abstract Spatial getPlayersModel(IEntityController game, int pid);
 
 
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
@@ -232,6 +230,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	public void preprocess() {
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
 		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
+	}
+
+
+	@Override
+	public Vector3f getBulletStartPos() {
+		return this.getWorldTranslation().add(0, animCodes.getBulletStartHeight(), 0);
 	}
 
 

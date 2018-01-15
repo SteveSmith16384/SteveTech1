@@ -2,7 +2,7 @@ package com.scs.stevetech1.entities;
 
 import com.jme3.math.Vector3f;
 import com.scs.simplephysics.SimpleCharacterControl;
-import com.scs.stevetech1.animation.IGetAvatarAnimationString;
+import com.scs.stevetech1.components.IAnimatedAvatar;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRewindable;
@@ -16,8 +16,8 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	private AbstractGameServer server;
 
-	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side, IGetAvatarAnimationString animCodes) {
-		super(_module, _playerID, _input, eid, side, animCodes);
+	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side, IAnimatedAvatar anim) {
+		super(_module, _playerID, _input, eid, side, anim);
 
 		server = (AbstractGameServer)_module;
 

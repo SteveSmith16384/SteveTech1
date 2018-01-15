@@ -11,12 +11,11 @@ import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleCharacterControl;
-import com.scs.stevetech1.animation.IGetAvatarAnimationString;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
-import com.scs.stevetech1.components.IAnimated;
+import com.scs.stevetech1.components.IAnimatedAvatar;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
@@ -35,14 +34,13 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
 	private Node debugNode;
-	private float camHeight;
 
-	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side, IGetAvatarAnimationString animCodes, float _camHeight) {
-		super(_module, _playerID, _input, eid, side, animCodes);
+	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, 
+			float x, float y, float z, int side, IAnimatedAvatar _zm) { //, IGetAvatarAnimationString animCodes, float _camHeight) {
+		super(_module, _playerID, _input, eid, side, _zm);
 
 		cam = _cam;
 		hud = _hud;
-		camHeight = _camHeight;
 		
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
@@ -65,7 +63,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 
 	private void createDebugBox() {
-		Box box1 = new Box(.5f, .5f, .5f);
+		Box box1 = new Box(.5f, .5f, .5f); // todo - use model size
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry g = new Geometry("Crate", box1);
 		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
@@ -106,16 +104,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		// Position camera at node
 		Vector3f vec = this.getWorldTranslation();
 		cam.getLocation().x = vec.x;
-		cam.getLocation().y = vec.y + camHeight;
+		cam.getLocation().y = vec.y + animCodes.getCameraHeight();
 		cam.getLocation().z = vec.z;
 		cam.update();
 
-		// Rotate us to point in the direction of the camera
-		/*Vector3f lookAtPoint = cam.getLocation().add(cam.getDirection().mult(10));
-		lookAtPoint.y = cam.getLocation().y; // Look horizontal
-		// Rotating spatial makes us stick to the floor   
-		// this.playerGeometry.lookAt(lookAtPoint, Vector3f.UNIT_Y);
-*/
 		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
 			long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis(), false);

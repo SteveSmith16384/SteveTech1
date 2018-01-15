@@ -22,7 +22,7 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 		if (zm == null) {
 			zm = new ZombieModel(game.getAssetManager());
 		}
-		return zm.getModel();
+		return zm.getModel(true);
 
 	}
 
