@@ -28,13 +28,13 @@ import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 
-public class SpiderMonkeyServer implements IMessageServer, ConnectionListener, MessageListener<HostedConnection> {
+public class SpiderMonkeyGameServer implements IGameMessageServer, ConnectionListener, MessageListener<HostedConnection> {
 
 	private Server myServer;
 	private IMessageServerListener listener;
 	private ExecutorService executor = Executors.newFixedThreadPool(20);
 
-	public SpiderMonkeyServer() throws IOException {
+	public SpiderMonkeyGameServer() throws IOException {
 		myServer = Network.createServer(Globals.GAME_PORT);
 
 		registerMessages();

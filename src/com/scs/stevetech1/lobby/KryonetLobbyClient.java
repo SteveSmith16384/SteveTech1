@@ -1,4 +1,4 @@
-package com.scs.stevetech1.networking;
+package com.scs.stevetech1.lobby;
 
 import java.io.IOException;
 
@@ -6,21 +6,23 @@ import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
+import com.scs.stevetech1.networking.IMessageClientListener;
+import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.sun.media.jfxmedia.logging.Logger;
 
-public class KryonetClient implements IMessageClient {
+public class KryonetLobbyClient {
 
 	private IMessageClientListener listener;
 	private Client client;
 
-	public KryonetClient(String ip, int tcpPort, int udpPort, IMessageClientListener _listener) throws IOException {
+	public KryonetLobbyClient(String ip, int tcpPort, int udpPort, IMessageClientListener _listener) throws IOException {
 		listener = _listener;
 
 		Logger.setLevel(Logger.DEBUG); // todo?
 
 		client = new Client();
-		KryonetServer.registerMessages(client.getKryo());
+		KryonetLobbyServer.registerMessages(client.getKryo());
 		client.setIdleThreshold(0); // todo
 		client.setTimeout(0); // todo
 
@@ -53,13 +55,6 @@ public class KryonetClient implements IMessageClient {
 	}
 
 
-	@Override
-	public boolean isConnected() {
-		return client.isConnected();
-	}
-
-
-	@Override
 	public void sendMessageToServer(final MyAbstractMessage msg) {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Sending to server: " + msg);
@@ -94,7 +89,6 @@ public class KryonetClient implements IMessageClient {
 	}
 
 
-	@Override
 	public void close() {
 		client.close();
 

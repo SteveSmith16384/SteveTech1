@@ -11,7 +11,7 @@ public class ZombieAnimationStrings extends HashMap<String, String> implements I
 
 	public ZombieAnimationStrings() {
 		super.put("Idle", "ZombieIdle");
-		super.put("Walking", "ZombieWalking");
+		super.put("Walking", "ZombieWalk");
 		//super.put("Idle", "");
 	}
 	

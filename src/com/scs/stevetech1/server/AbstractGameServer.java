@@ -29,6 +29,7 @@ import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameStatusMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -44,12 +45,11 @@ import com.scs.stevetech1.netmessages.RequestNewBulletMessage;
 import com.scs.stevetech1.netmessages.UnknownEntityMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
-import com.scs.stevetech1.networking.IMessageClient;
+import com.scs.stevetech1.networking.IGameMessageServer;
 import com.scs.stevetech1.networking.IMessageClientListener;
-import com.scs.stevetech1.networking.IMessageServer;
 import com.scs.stevetech1.networking.IMessageServerListener;
-import com.scs.stevetech1.networking.KryonetClient;
-import com.scs.stevetech1.networking.KryonetServer;
+import com.scs.stevetech1.networking.KryonetGameClient;
+import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
 import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.IEntityController;
@@ -66,8 +66,8 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 	private static final String PROPS_FILE = Globals.NAME.replaceAll(" ", "") + "_settings.txt";
 
-	public IMessageServer networkServer;
-	private IMessageClient clientToLobbyServer;
+	public IGameMessageServer networkServer;
+	private KryonetLobbyClient clientToLobbyServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
 	public static GameProperties properties;
@@ -91,7 +91,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		console = new ServerConsole(this);
 
 		gameData = new SimpleGameData();
-		networkServer = new KryonetServer(Globals.GAME_PORT, Globals.GAME_PORT, this);
+		networkServer = new KryonetGameServer(Globals.GAME_PORT, Globals.GAME_PORT, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 	}
@@ -103,9 +103,10 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		console.appendText("Game created");
 		
 		try {
-			clientToLobbyServer = new KryonetClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this);
+			clientToLobbyServer = new KryonetLobbyClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this);
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			Globals.p("Unable to connect to lobby server");
+			//throw new RuntimeException(e.getMessage());
 		}
 
 		loopTimer.start();
@@ -119,7 +120,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	public void simpleUpdate(float tpf_secs) {
 		StringBuilder strDebug = new StringBuilder();
 		
-		if (updateLobbyInterval.hitInterval()) {
+		if (updateLobbyInterval.hitInterval() && clientToLobbyServer != null) {
 			this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), true)); // todo - do we have spaces?
 		}
 

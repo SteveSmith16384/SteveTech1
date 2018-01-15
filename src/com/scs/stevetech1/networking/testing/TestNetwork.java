@@ -4,23 +4,23 @@ import java.io.IOException;
 
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.TestMessage;
-import com.scs.stevetech1.networking.IMessageClient;
+import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
-import com.scs.stevetech1.networking.IMessageServer;
+import com.scs.stevetech1.networking.IGameMessageServer;
 import com.scs.stevetech1.networking.IMessageServerListener;
-import com.scs.stevetech1.networking.KryonetClient;
-import com.scs.stevetech1.networking.KryonetServer;
+import com.scs.stevetech1.networking.KryonetGameClient;
+import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.Globals;
 
 public class TestNetwork implements IMessageServerListener, IMessageClientListener {
 	
-	private IMessageServer server;
-	private IMessageClient client;
+	private IGameMessageServer server;
+	private IGameMessageClient client;
 
 	public TestNetwork() throws IOException {
-		server = new KryonetServer(Globals.GAME_PORT, Globals.GAME_PORT, this);
+		server = new KryonetGameServer(Globals.GAME_PORT, Globals.GAME_PORT, this);
 		//server.setListener(this);
-		client = new KryonetClient(Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.GAME_PORT, this);
+		client = new KryonetGameClient(Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.GAME_PORT, this);
 		
 	}
 

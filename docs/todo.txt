@@ -3,14 +3,15 @@ STETECH1
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 URGENT
-Game lobby
+Zombie not facing the right direction
+Record desktop showing two players
+Use new models
 	Player caught on floor cos mesh is rotating
 Are avatars now animated?
 	Custom anim strings based on model
 Create moonbase map
 Look for soldiers for Moonbase Assault
 Blog post progress
-Simple console GUI
 Show current game time
 	Jumping is a bit high on client, not server
 	Client countdown game time itself
@@ -19,6 +20,10 @@ Search for todos
 
 
 TODO
+Simple console GUI for connecting to lobby
+Make game lobby a separate project
+Game lobby
+Use Logger, as per Kryo
 Do tracer-style rewind
 Console to connect to lobby
 Origin of entities should be floor 

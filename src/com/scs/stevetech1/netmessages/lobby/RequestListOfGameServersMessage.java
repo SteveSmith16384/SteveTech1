@@ -1,9 +1,13 @@
 package com.scs.stevetech1.netmessages.lobby;
 
-public class RequestListOfGameServersMessage {
+import com.jme3.network.serializing.Serializable;
+import com.scs.stevetech1.netmessages.MyAbstractMessage;
+
+@Serializable
+public class RequestListOfGameServersMessage extends MyAbstractMessage {
 
 	public RequestListOfGameServersMessage() {
-		// TODO Auto-generated constructor stub
+		super(true);
 	}
 
 }

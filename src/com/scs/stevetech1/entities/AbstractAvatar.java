@@ -146,7 +146,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		if (this.game.isServer()) {
 			Vector3f lookAtPoint = camLeft.add(camDir.mult(10));
 			lookAtPoint.y = this.getMainNode().getWorldTranslation().y;// camLeft.y; // Look horizontal
-			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y);
+			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 		}
 	}
 

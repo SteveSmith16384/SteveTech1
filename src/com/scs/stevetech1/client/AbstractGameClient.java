@@ -45,9 +45,9 @@ import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
-import com.scs.stevetech1.networking.IMessageClient;
+import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
-import com.scs.stevetech1.networking.KryonetClient;
+import com.scs.stevetech1.networking.KryonetGameClient;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.AverageNumberCalculator;
@@ -77,7 +77,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	public static BitmapFont guiFont_small;
 	public static AppSettings settings;
-	public IMessageClient networkClient;
+	public IGameMessageClient networkClient;
 	public HUD hud;
 	public IInputDevice input;
 
@@ -140,7 +140,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 
 		try {
-			networkClient = new KryonetClient(Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.GAME_PORT, this); // todo - connect to lobby first!
+			networkClient = new KryonetGameClient(Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.GAME_PORT, this); // todo - connect to lobby first!
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}

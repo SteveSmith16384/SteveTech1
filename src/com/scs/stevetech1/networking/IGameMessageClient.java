@@ -2,7 +2,7 @@ package com.scs.stevetech1.networking;
 
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 
-public interface IMessageClient {
+public interface IGameMessageClient {
 
 	boolean isConnected();
 	

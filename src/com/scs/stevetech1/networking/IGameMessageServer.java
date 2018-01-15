@@ -3,7 +3,7 @@ package com.scs.stevetech1.networking;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.server.ClientData;
 
-public interface IMessageServer {
+public interface IGameMessageServer {
 
 	//void setListener(IMessageServerListener _listener);
 	

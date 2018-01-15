@@ -21,16 +21,16 @@ import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.server.Globals;
 
-public class SpiderMonkeyClient implements IMessageClient, ClientStateListener, ErrorListener<Object>, MessageListener<Client>  {
+public class SpiderMonkeyGameClient implements IGameMessageClient, ClientStateListener, ErrorListener<Object>, MessageListener<Client>  {
 
 	private Client myClient;
 	private IMessageClientListener listener;
 	private ExecutorService executor = Executors.newFixedThreadPool(20);
 	
-	public SpiderMonkeyClient(IMessageClientListener _listener) throws IOException {
+	public SpiderMonkeyGameClient(IMessageClientListener _listener) throws IOException {
 		listener = _listener;
 		
-		SpiderMonkeyServer.registerMessages();
+		SpiderMonkeyGameServer.registerMessages();
 
 		myClient = Network.connectToServer("localhost", Globals.GAME_PORT);
 		myClient.addClientStateListener(this);

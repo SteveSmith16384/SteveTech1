@@ -42,7 +42,7 @@ public class ZombieModel {
 		//channel.setAnim("ZombieWalk");
 
 		Quaternion target_q = new Quaternion();
-		target_q.lookAt(new Vector3f(-1, 0, 0), Vector3f.UNIT_Y);
+		target_q.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y); // todo - was -1, 0, 0
 		model.setLocalRotation(target_q);
 
 

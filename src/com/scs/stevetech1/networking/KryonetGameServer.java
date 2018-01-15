@@ -32,12 +32,12 @@ import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 
-public class KryonetServer implements IMessageServer {
+public class KryonetGameServer implements IGameMessageServer {
 
 	private IMessageServerListener listener;
 	private Server server;
 
-	public KryonetServer(int tcpport, int udpport, IMessageServerListener _listener) throws IOException {
+	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener) throws IOException {
 		server = new Server();
 		registerMessages(server.getKryo());
 		setListener(_listener);

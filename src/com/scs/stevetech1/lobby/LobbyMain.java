@@ -4,17 +4,19 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
+import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
+import com.scs.stevetech1.netmessages.lobby.RequestListOfGameServersMessage;
 import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
-import com.scs.stevetech1.networking.IMessageServer;
+import com.scs.stevetech1.networking.IGameMessageServer;
 import com.scs.stevetech1.networking.IMessageServerListener;
-import com.scs.stevetech1.networking.KryonetServer;
+import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.Globals;
 
 public class LobbyMain implements IMessageServerListener {
 
-	private IMessageServer networkServer;
-	
-	private HashMap<String, GameServerDetails> gameServers = new HashMap<String, GameServerDetails>();
+	private KryonetLobbyServer networkServer;
+
+	private HashMap<String, GameServerDetails> gameServers = new HashMap<String, GameServerDetails>(); // game name::data
 
 	public static void main(String[] args) {
 		try {
@@ -27,7 +29,7 @@ public class LobbyMain implements IMessageServerListener {
 
 
 	public LobbyMain() throws IOException {
-		networkServer = new KryonetServer(Globals.LOBBY_PORT, Globals.LOBBY_PORT, this);
+		networkServer = new KryonetLobbyServer(Globals.LOBBY_PORT, Globals.LOBBY_PORT, this);
 		// todo - loop through and remove game servers that we haven't heard of for a while
 	}
 
@@ -35,7 +37,6 @@ public class LobbyMain implements IMessageServerListener {
 	@Override
 	public void connectionAdded(int id, Object net) {
 		Globals.p("Game server connected to us");
-		
 	}
 
 
@@ -47,15 +48,24 @@ public class LobbyMain implements IMessageServerListener {
 			this.gameServers.put(ulm.name, new GameServerDetails(ulm));
 
 			Globals.p("Updated details for game server '" + ulm.name + "'");
-}
-		
+		} else if (msg instanceof RequestListOfGameServersMessage) {
+			RequestListOfGameServersMessage rlogs = (RequestListOfGameServersMessage)msg;
+			
+			ListOfGameServersMessage logs = new ListOfGameServersMessage();
+			for(GameServerDetails details : gameServers.values()) {
+				logs.servers.add(details.ulm);
+			}
+			
+			//todo this.networkServer.sendMessageToClient(client, msg);
+		}
+
 	}
 
 
 	@Override
 	public void connectionRemoved(int id) {
 		Globals.p("Game server disconnected from us");
-		
+
 	}
 
 
