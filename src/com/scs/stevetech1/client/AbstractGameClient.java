@@ -140,7 +140,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 
 		try {
-			networkClient = new KryonetClient(Globals.SERVER_IP_ADDRESS, Globals.PORT, Globals.PORT, this); // todo - connect to lobby first!
+			networkClient = new KryonetClient(Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.GAME_PORT, this); // todo - connect to lobby first!
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}

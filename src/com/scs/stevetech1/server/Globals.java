@@ -19,9 +19,9 @@ public class Globals {
 	public static final boolean DEBUG_SHOOTING_POS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 
-	public static final String SERVER_IP_ADDRESS = "localhost";
+	public static final String GAME_IP_ADDRESS = "localhost";
 	public static final String LOBBY_IP_ADDRESS = "localhost";
-	public static final int PORT = 6143; // todo - rename
+	public static final int GAME_PORT = 6143;
 	//public static final int UDP_PORT = 6143;
 	public static final int LOBBY_PORT = 6144;
 	//public static final int UDP_LOBBY_PORT = 6144;

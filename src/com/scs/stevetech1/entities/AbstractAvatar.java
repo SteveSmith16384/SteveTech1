@@ -21,8 +21,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractAvatar extends PhysicalEntity implements IPreprocess, IProcessByServer, ICanShoot, IAffectedByPhysics {
 
 	// Player dimensions
-	public static final float PLAYER_HEIGHT = 0.7f; // todo - where are these used?
-	public static final float PLAYER_RAD = 0.2f;
+	//public static final float PLAYER_HEIGHT = 0.7f; // todo - where are these used?
 
 	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	public final float moveSpeed = Globals.PLAYER_MOVE_SPEED;
@@ -212,12 +211,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	}
 
 	
-	@Override
-	public Vector3f getBulletStartPos() {
-		return this.getWorldTranslation().add(0, PLAYER_HEIGHT - 0.1f, 0);
-	}
-
-
 	@Override
 	public int getSide() {
 		return side;

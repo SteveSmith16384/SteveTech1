@@ -36,7 +36,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	public TestGameServer() throws IOException {
-		super(new GameOptions("Test Game", 1, 999, 10*1000, 5*60*1000, 10*1000, Globals.SERVER_IP_ADDRESS, Globals.PORT, Globals.LOBBY_IP_ADDRESS, Globals.LOBBY_PORT));
+		super(new GameOptions("Test Game", 1, 999, 10*1000, 5*60*1000, 10*1000, Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.LOBBY_IP_ADDRESS, Globals.LOBBY_PORT));
 	}
 
 
@@ -53,7 +53,7 @@ public class TestGameServer extends AbstractGameServer {
 		new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 		new Wall(this, getNextEntityID(), 10, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 		new Wall(this, getNextEntityID(), 20, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
-		new Wall(this, getNextEntityID(), 30, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 270); // todo - check
+		new Wall(this, getNextEntityID(), 30, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 270);
 
 		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 		

@@ -27,7 +27,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {//, IAnimated {
+public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
 
 	public HUD hud;
 	public Camera cam;
@@ -35,13 +35,15 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
 	private Node debugNode;
+	private float camHeight;
 
-	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side, IGetAvatarAnimationString animCodes) {
+	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side, IGetAvatarAnimationString animCodes, float _camHeight) {
 		super(_module, _playerID, _input, eid, side, animCodes);
 
 		cam = _cam;
 		hud = _hud;
-
+		camHeight = _camHeight;
+		
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
 		syncPos = new InstantPositionAdjustment();
@@ -104,7 +106,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		// Position camera at node
 		Vector3f vec = this.getWorldTranslation();
 		cam.getLocation().x = vec.x;
-		cam.getLocation().y = vec.y + PLAYER_HEIGHT;
+		cam.getLocation().y = vec.y + camHeight;
 		cam.getLocation().z = vec.z;
 		cam.update();
 

@@ -1,5 +1,6 @@
 package com.scs.testgame.entities;
 
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Spatial;
 import com.scs.stevetech1.client.AbstractGameClient;
@@ -15,7 +16,7 @@ public class TestGameClientAvatar extends AbstractClientAvatar {
 	private ZombieModel zm;
 
 	public TestGameClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
-		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z, side, new ZombieAnimationStrings());
+		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z, side, new ZombieAnimationStrings(), TestGameServerAvatar.ZOMBIE_MODEL_HEIGHT);
 		
 	}
 
@@ -30,4 +31,10 @@ public class TestGameClientAvatar extends AbstractClientAvatar {
 	}
 
 	
+	@Override
+	public Vector3f getBulletStartPos() {
+		return this.getWorldTranslation().add(0, TestGameServerAvatar.ZOMBIE_MODEL_HEIGHT - 0.1f, 0);
+	}
+
+
 }

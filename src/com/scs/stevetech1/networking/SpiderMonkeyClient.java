@@ -32,7 +32,7 @@ public class SpiderMonkeyClient implements IMessageClient, ClientStateListener, 
 		
 		SpiderMonkeyServer.registerMessages();
 
-		myClient = Network.connectToServer("localhost", Globals.PORT);
+		myClient = Network.connectToServer("localhost", Globals.GAME_PORT);
 		myClient.addClientStateListener(this);
 		myClient.addErrorListener(this);
 

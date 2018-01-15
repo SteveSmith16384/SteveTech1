@@ -10,7 +10,7 @@ import com.jme3.scene.Spatial;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	public boolean STRICT = true;
+	//public boolean STRICT = true;
 
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f(); // Gets reduced by air resistance each frame
@@ -79,6 +79,20 @@ public class SimpleRigidBody<T> implements Collidable {
 			tpf_secs = 0.1f; // Prevent stepping too far
 		}
 		if (this.canMove) {
+			// Check we're not already colliding *before* we've even moved
+			SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
+			if (tmpWasCollision != null) {
+				System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision);
+				do {
+					Vector3f ourPos = this.getSpatial().getWorldBound().getCenter();
+					Vector3f theirPos = tmpWasCollision.getSpatial().getWorldBound().getCenter();
+					Vector3f diff = ourPos.subtract(theirPos).normalizeLocal();
+					tmpWasCollision = this.move(diff); // Move away until there's no more collisions
+				} while (tmpWasCollision != null);
+			}
+			
+			
+			
 			Vector3f additionalForce = this.getAdditionalForce();
 			if (additionalForce == null) {
 				additionalForce = Vector3f.ZERO; // Prevent NPE
@@ -151,13 +165,6 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * Returns object they collided with
 	 */
 	private SimpleRigidBody<T> move(Vector3f offset) {
-		if (STRICT) { // todo - only do this once!
-			SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
-			if (tmpWasCollision != null) {
-				System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision);
-			}
-		}
-
 		if (offset.length() != 0) {
 			if (offset.length() > SimplePhysicsController.MAX_MOVE_DIST) {
 				offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
@@ -167,12 +174,12 @@ public class SimpleRigidBody<T> implements Collidable {
 			if (wasCollision != null) {
 				this.spatial.move(offset.negateLocal()); // Move back
 
-				if (STRICT) {
+				/*if (STRICT) {
 					SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
 					if (tmpWasCollision != null) {
 						System.err.println("Warning: " + this + " has collided with " + tmpWasCollision + " even after moving back");
 					}
-				}
+				}*/
 			}
 			return wasCollision;
 		}
