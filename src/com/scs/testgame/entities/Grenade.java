@@ -51,7 +51,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("grenade", sphere);
 
-		if (game.getJmeContext() != JmeContext.Type.Headless) { // Not running in server
+		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey( "Textures/grenade.png");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			Material floor_mat = null;

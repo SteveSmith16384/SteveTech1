@@ -33,7 +33,7 @@ public class Fence extends PhysicalEntity {
 		Box box1 = new Box(WIDTH/2, height/2, .1f);
 		box1.scaleTextureCoordinates(new Vector2f(WIDTH, height));
 		Geometry geometry = new Geometry("Fence", box1);
-		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
+		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 
 			key3.setGenerateMips(true);

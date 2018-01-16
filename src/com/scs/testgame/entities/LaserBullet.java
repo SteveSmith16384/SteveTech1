@@ -28,7 +28,7 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 		Vector3f origin = shooter.getBulletStartPos().clone();//getWorldTranslation().clone();
 		//origin.addLocal(shooter.getBulletStartOffset());
 
-		Node laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(shooter.getShootDir().multLocal(1)), ColorRGBA.Pink, game.getJmeContext() != JmeContext.Type.Headless);
+		Node laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(shooter.getShootDir().multLocal(1)), ColorRGBA.Pink, !game.isServer());
 
 		this.mainNode.attachChild(laserNode);
 		//game.getRootNode().attachChild(this.mainNode);

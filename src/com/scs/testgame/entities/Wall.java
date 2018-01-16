@@ -35,7 +35,7 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Wall", box1);
-		if (game.getJmeContext() != JmeContext.Type.Headless) { // Not running in server
+		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);

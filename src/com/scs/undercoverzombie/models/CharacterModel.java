@@ -12,14 +12,14 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.scs.stevetech1.components.IAnimatedAvatar;
+import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.jme.JMEFunctions;
 
-public class CharacterModel implements IAnimatedAvatar {
+public class CharacterModel implements IAnimatedAvatarModel {
 
-	private static final float ZOMBIE_MODEL_WIDTH = .3f; // todo - rename
-	private static final float ZOMBIE_MODEL_DEPTH = .3f;
-	private static final float ZOMBIE_MODEL_HEIGHT = .7f;
+	private static final float MODEL_WIDTH = .3f;
+	private static final float MODEL_DEPTH = .3f;
+	private static final float MODEL_HEIGHT = .7f;
 
 	public AnimChannel channel;
 	private HashMap<String, String> animCodes = new HashMap<String, String>();
@@ -41,25 +41,17 @@ public class CharacterModel implements IAnimatedAvatar {
 			model.setModelBound(new BoundingBox());
 			//model.updateModelBound();
 
-			//JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
-
 			Node s = (Node)model;
 			while (s.getNumControls() == 0) {
 				s = (Node)s.getChild(0);
 			}
 			AnimControl control = s.getControl(AnimControl.class);
 			channel = control.createChannel();
-
-	/*
-			Quaternion target_q = new Quaternion();
-			target_q.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y); // todo - was -1, 0, 0
-			model.setLocalRotation(target_q);
-	*/
 			return model;
 		} else {
-			Box box1 = new Box(ZOMBIE_MODEL_WIDTH/2, ZOMBIE_MODEL_HEIGHT/2, ZOMBIE_MODEL_DEPTH/2);
+			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
 			Geometry geometry = new Geometry("CharacterBox", box1);
-			geometry.setLocalTranslation(0, ZOMBIE_MODEL_HEIGHT/2, 0); // Move origin to floor
+			geometry.setLocalTranslation(0, MODEL_HEIGHT/2, 0); // Move origin to floor
 			return geometry;
 		}
 	}
@@ -73,13 +65,13 @@ public class CharacterModel implements IAnimatedAvatar {
 
 	@Override
 	public float getCameraHeight() {
-		return ZOMBIE_MODEL_HEIGHT;
+		return MODEL_HEIGHT;
 	}
 
 
 	@Override
 	public float getBulletStartHeight() {
-		return ZOMBIE_MODEL_HEIGHT - 0.1f;
+		return MODEL_HEIGHT - 0.1f;
 	}
 
 }

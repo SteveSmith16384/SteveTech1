@@ -34,7 +34,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 		Box box1 = new Box(w/2, h/2, d/2);
 
 		Geometry geometry = new Geometry("Crate", box1);
-		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
+		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);

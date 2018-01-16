@@ -12,11 +12,11 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.scs.stevetech1.components.IAnimatedAvatar;
+import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.jme.JMEFunctions;
 
 /*
- * INFO: Found animation: ZombieAttack.
+INFO: Found animation: ZombieAttack.
 INFO: Found animation: ZombieBite.
 INFO: Found animation: ZombieCrawl.
 INFO: Found animation: ZombieIdle.
@@ -24,14 +24,13 @@ INFO: Found animation: ZombieRun.
 INFO: Found animation: ZombieWalk.
 
  */
-public class ZombieModel implements IAnimatedAvatar {
+public class ZombieModel implements IAnimatedAvatarModel {
 
 	private static final float ZOMBIE_MODEL_WIDTH = .3f;
 	private static final float ZOMBIE_MODEL_DEPTH = .3f;
 	private static final float ZOMBIE_MODEL_HEIGHT = .7f;
 
 	public AnimChannel channel;
-	//private AnimControl control;
 	private HashMap<String, String> animCodes = new HashMap<String, String>();
 	private AssetManager assetManager;
 	
@@ -59,8 +58,8 @@ public class ZombieModel implements IAnimatedAvatar {
 			}
 			AnimControl control = s.getControl(AnimControl.class);
 			channel = control.createChannel();
-			//channel.setAnim("ZombieWalk");
-	/*
+
+			/*
 			Quaternion target_q = new Quaternion();
 			target_q.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y); // todo - was -1, 0, 0
 			model.setLocalRotation(target_q);

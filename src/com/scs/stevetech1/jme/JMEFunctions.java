@@ -64,7 +64,7 @@ public class JMEFunctions {
 		g.setMaterial(mat);
 		//g.center().move(pos);
 		//rootNode.attachChild(g);
-		g.move(-size/2, 0, -size/2);
+		//g.move(-size/2, 0, -size/2);
 		return g;
 	}
 

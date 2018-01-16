@@ -22,6 +22,7 @@ import com.scs.testgame.entities.TestGameClientAvatar;
 import com.scs.testgame.entities.TestGameEnemyAvatar;
 import com.scs.testgame.entities.Wall;
 import com.scs.undercoverzombie.entities.RoamingZombie;
+import com.scs.undercoverzombie.models.HouseModel;
 
 /*
  * This is only used client-side.
@@ -44,6 +45,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 	public static final int LASER_RIFLE = 12;
 	public static final int FLAT_FLOOR = 13;
 	public static final int ZOMBIE = 14;
+	public static final int HOUSE = 15;
 	
 	
 	public TestGameClientEntityCreator(TestGameClient _game) {
@@ -142,7 +144,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 		case GRENADE_LAUNCHER: 
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			if (ownerid == game.avatar.id) { // Don't care about other's abilities?
+			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				GrenadeLauncher gl = new GrenadeLauncher(game, id, owner, num);
@@ -159,7 +161,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 		case HITSCAN_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			if (ownerid == game.avatar.id) { // Don't care about other's abilities?
+			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				HitscanRifle gl = new HitscanRifle(game, id, owner, num);
@@ -184,6 +186,14 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			RoamingZombie z = new RoamingZombie(game, id, pos.x, pos.y, pos.z);
 			return z;
+		}
+
+		case HOUSE:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
+			HouseModel house = new HouseModel(game, id, pos.x, pos.y, pos.z, 0);
+			return house;
 		}
 
 

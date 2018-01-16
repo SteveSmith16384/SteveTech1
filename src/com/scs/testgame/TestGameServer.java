@@ -9,18 +9,16 @@ import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
-import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.weapons.HitscanRifle;
-import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
-import com.scs.undercoverzombie.entities.RoamingZombie;
+import com.scs.undercoverzombie.models.HouseModel;
 
 public class TestGameServer extends AbstractGameServer {
 
@@ -60,6 +58,8 @@ public class TestGameServer extends AbstractGameServer {
 		//new FlatFloor(this, getNextEntityID(), 5, .1f, 5, 3, 3, "Textures/crate.png");
 		
 		//new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
+		
+		new HouseModel(this, getNextEntityID(), 20, 0, 20, 0);
 	}
 
 

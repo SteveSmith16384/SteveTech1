@@ -34,7 +34,7 @@ public class FlatFloor extends PhysicalEntity {
 		Quad q = new Quad(w, d);
 
 		Geometry geometry = new Geometry("FloorGeom", q);
-		if (_game.getJmeContext() != JmeContext.Type.Headless) { // Not running in server
+		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);

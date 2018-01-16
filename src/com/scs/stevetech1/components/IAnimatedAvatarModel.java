@@ -2,7 +2,7 @@ package com.scs.stevetech1.components;
 
 import com.jme3.scene.Spatial;
 
-public interface IAnimatedAvatar { // todo - rename to ...
+public interface IAnimatedAvatarModel {
 
 	Spatial getModel(boolean forClient);
 	

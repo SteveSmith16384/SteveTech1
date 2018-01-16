@@ -15,7 +15,7 @@ public interface IEntityController {
 	
 	void removeEntity(int id);
 	
-	JmeContext.Type getJmeContext();
+	//JmeContext.Type getJmeContext();
 	
 	AssetManager getAssetManager();
 	

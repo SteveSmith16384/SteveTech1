@@ -32,6 +32,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
+import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameStatusMessage;
@@ -81,7 +82,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public HUD hud;
 	public IInputDevice input;
 
-	public AbstractClientAvatar avatar; // todo - rename to Current avatar
+	public AbstractClientAvatar currentAvatar;
 	public int playerID = -1;
 	public int side = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
@@ -129,6 +130,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		getInputManager().addListener(this, TEST);            
 
 		setUpLight();
+
+		this.rootNode.attachChild(JMEFunctions.GetGrid(assetManager, 10));
 
 		hud = this.createHUD(getCamera());
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager());
@@ -203,9 +206,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											pe.setWorldTranslation(eum.pos);
 											pe.setWorldRotation(eum.dir);
 											pe.clearPositiondata();
-											if (pe == this.avatar) {
-												avatar.clientAvatarPositionData.clear(); // Clear our local data as well
-												avatar.storeAvatarPosition(serverTime);
+											if (pe == this.currentAvatar) {
+												currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
+												currentAvatar.storeAvatarPosition(serverTime);
 												// Stop us walking!
 												//this.avatar.resetWalkDir();
 											}
@@ -255,7 +258,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 				if (clientStatus == STATUS_GAME_STARTED) {
 
-					if (this.avatar != null) {
+					if (this.currentAvatar != null) {
 						// Send inputs
 						if (sendInputsInterval.hitInterval()) {
 							if (networkClient.isConnected()) {
@@ -291,7 +294,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						}
 
 						if (e instanceof PhysicalEntity) {
-							PhysicalEntity pe = (PhysicalEntity)e;
+							PhysicalEntity pe = (PhysicalEntity)e;  // pe.getWorldTranslation();
 							if (pe.canMove()) { // Only bother with things that can move
 								pe.calcPosition(this, renderTime); // Must be before we process physics as this calcs additionalForce
 							}
@@ -515,12 +518,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		return false;
 	}
 
-
+/*
 	@Override
 	public Type getJmeContext() {
 		return getContext().getType();
 	}
-
+*/
 
 	@Override
 	public void connected() {

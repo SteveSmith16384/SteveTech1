@@ -8,7 +8,7 @@ import com.jme3.scene.Spatial.CullHint;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
-import com.scs.stevetech1.components.IAnimatedAvatar;
+import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IPreprocess;
 import com.scs.stevetech1.components.IProcessByServer;
@@ -19,9 +19,6 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class AbstractAvatar extends PhysicalEntity implements IPreprocess, IProcessByServer, ICanShoot, IAffectedByPhysics {
-
-	// Player dimensions
-	//public static final float PLAYER_HEIGHT = 0.7f; // todo - where are these used?
 
 	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	public final float moveSpeed = Globals.PLAYER_MOVE_SPEED;
@@ -40,9 +37,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	private int numShotsHit = 0;
 	public IAbility abilityGun, abilityOther; // todo - have list of abilities
 	public int side = -1;
-	protected IAnimatedAvatar animCodes; // todo - rename
+	protected IAnimatedAvatarModel avatarModel;
 	
-	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAnimatedAvatar _anim) {
+	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAnimatedAvatarModel _anim) {
 		super(_game, eid, 1, "Player");
 
 		if (game.isServer()) {
@@ -55,9 +52,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		playerID = _playerID;
 		input = _input;
 		side =_side;
-		animCodes = _anim;
+		avatarModel = _anim;
 		
-		playerGeometry = animCodes.getModel(!game.isServer());// getPlayersModel(game, playerID);
+		playerGeometry = avatarModel.getModel(!game.isServer());// getPlayersModel(game, playerID);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves - yet?
 
 		this.getMainNode().attachChild(playerGeometry);
@@ -94,23 +91,23 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 			}
 		}
 
-		this.currentAnim = animCodes.getAnimationStringForCode("Idle"); // "ZombieIdle"; // Default
+		this.currentAnim = avatarModel.getAnimationStringForCode("Idle"); // "ZombieIdle"; // Default
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 		if (input.getFwdValue()) {
 			//Settings.p("fwd=" + input.getFwdValue());
 			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
-			this.currentAnim = animCodes.getAnimationStringForCode("Walking");
+			this.currentAnim = avatarModel.getAnimationStringForCode("Walking");
 		} else if (input.getBackValue()) {
 			walkDirection.addLocal(camDir.negate());
-			this.currentAnim = animCodes.getAnimationStringForCode("Walking");
+			this.currentAnim = avatarModel.getAnimationStringForCode("Walking");
 		}
 		if (input.getStrafeLeftValue()) {		
 			walkDirection.addLocal(camLeft);
-			this.currentAnim = animCodes.getAnimationStringForCode("Walking");
+			this.currentAnim = avatarModel.getAnimationStringForCode("Walking");
 		} else if (input.getStrafeRightValue()) {		
 			walkDirection.addLocal(camLeft.negate());
-			this.currentAnim = animCodes.getAnimationStringForCode("Walking");
+			this.currentAnim = avatarModel.getAnimationStringForCode("Walking");
 		}
 		if (input.isJumpPressed()){
 			this.jump();
@@ -135,15 +132,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 
 		simpleRigidBody.process(tpf_secs);
 
-		//}
-		/*if (this.walkDirection.length() != 0) {
-			Settings.p("Pos=" + this.getWorldTranslation());
-		}*/
-		
 		// Point us in the right direction
 		if (this.game.isServer()) {
 			Vector3f lookAtPoint = camLeft.add(camDir.mult(10));
-			lookAtPoint.y = this.getMainNode().getWorldTranslation().y;// camLeft.y; // Look horizontal
+			lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
 			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 		}
 	}
@@ -162,7 +154,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 
 	public void shoot() {
 		if (this.abilityGun.activate()) {
-			this.currentAnim = animCodes.getAnimationStringForCode(abilityGun.getAvatarAnimationCode());
+			this.currentAnim = avatarModel.getAnimationStringForCode(abilityGun.getAvatarAnimationCode());
 			this.numShots++;
 		}
 	}
@@ -235,7 +227,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 
 	@Override
 	public Vector3f getBulletStartPos() {
-		return this.getWorldTranslation().add(0, animCodes.getBulletStartHeight(), 0);
+		return this.getWorldTranslation().add(0, avatarModel.getBulletStartHeight(), 0);
 	}
 
 

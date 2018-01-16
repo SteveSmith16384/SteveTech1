@@ -14,12 +14,12 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.server.Globals;
 
 public class ModelViewer extends SimpleApplication implements AnimEventListener {
 
-	private AnimChannel channel;
 	private AnimControl control;
-
+	
 	public static void main(String[] args){
 		ModelViewer app = new ModelViewer();
 		app.showSettings = false;
@@ -38,36 +38,65 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
 
 		setupLight();
+
 		/*
 		Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
 		model.scale(.125f);
-		model.setModelBound(new BoundingBox());
-		model.updateModelBound();
-		model.updateGeometricState();
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 		 */
-
-		Spatial model = assetManager.loadModel("Models/3d-character/character/character.blend");
-		model.scale(.2f);
 		
-		//Spatial model = assetManager.loadModel("Models/western-fps-2d/background-elements/3D-table/table.blend");
-		//model.scale(5);
+		/*
+		Spatial model = assetManager.loadModel("Models/3d-character/environment/house/model.blend");
+		model.scale(.4f);
+		*/
+		
+		//Spatial model = assetManager.loadModel("Models/3d-character/environment/wood-barrier/model.blend"); // Fence post
+		//model.scale(1);
+
+		//Spatial model = assetManager.loadModel("Models/3d-character/environment/wall/model.blend"); // Has a bend in it?
+		//model.scale(1);
+
+		//Spatial model = assetManager.loadModel("Models/3d-character/environment/floor/model.blend"); // Funny shaped floor
+		//JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/3d-character/environment/floor/texture.png");
+		//model.scale(1);
+		
+		//Spatial model = assetManager.loadModel("Models/3d-character/environment/grass/modelgrass2.blend");
+		//JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/3d-character/environment/grass/textureGrass1.png");
+		//model.scale(.1f);
+
+		//Spatial model = assetManager.loadModel("Models/3d-character/environment/pole/model.blend");
+		//model.scale(.1f);
+
+		/*Spatial model = assetManager.loadModel("Models/3d-character/environment/trash-can/model.blend");
+		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/3d-character/environment/trash-can/texture.png");
+		model.scale(1f);*/
+
+		//Spatial model = assetManager.loadModel("Models/3d-vehicles/car/car.blend"); // Good
+
+		Spatial model = assetManager.loadModel("Models/Pleasant Park Pack/Props/Tree 1/tree1.obj");
+		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/Pleasant Park Pack/Props/Tree 1/Materials/tree1.png");
+		model.scale(1f);
 
 		Node s2 = this.getNodeWithControls((Node)model);
 		if (s2 != null) {
 			control = s2.getControl(AnimControl.class);
 			control.addListener(this);
-			channel = control.createChannel();
-			channel.setAnim("WALK");
+			AnimChannel channel = control.createChannel();
+			//channel.setAnim("WALK");
 		}
 
+		model.setModelBound(new BoundingBox());
 		rootNode.attachChild(model);
 
 		this.rootNode.attachChild(JMEFunctions.GetGrid(assetManager, 10));
 
-		this.flyCam.setMoveSpeed(12f);
-
 		rootNode.updateGeometricState();
+
+		model.updateModelBound();
+		BoundingBox bb = (BoundingBox)model.getWorldBound();
+		Globals.p("Model w/h/d: " + (bb.getXExtent()*2) + "/" + (bb.getYExtent()*2) + "/" + (bb.getZExtent()*2));
+
+		this.flyCam.setMoveSpeed(12f);
 
 	}
 
@@ -111,6 +140,8 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 	public void simpleUpdate(float tpf) {
 		//System.out.println("Pos: " + this.cam.getLocation());
 		//this.rootNode.rotate(0,  tpf,  tpf);
+
+		//Globals.p("Model w/h/d: " + (bb.getXExtent()*2) + "/" + (bb.getYExtent()*2) + "/" + (bb.getZExtent()*2));
 	}
 
 

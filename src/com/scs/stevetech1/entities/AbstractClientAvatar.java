@@ -15,7 +15,7 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
-import com.scs.stevetech1.components.IAnimatedAvatar;
+import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
@@ -36,7 +36,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	private Node debugNode;
 
 	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, 
-			float x, float y, float z, int side, IAnimatedAvatar _zm) { //, IGetAvatarAnimationString animCodes, float _camHeight) {
+			float x, float y, float z, int side, IAnimatedAvatarModel _zm) { //, IGetAvatarAnimationString animCodes, float _camHeight) {
 		super(_module, _playerID, _input, eid, side, _zm);
 
 		cam = _cam;
@@ -54,7 +54,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE/4); // Different to server side, since we don't have gravity!
 
-		_module.avatar = this;
+		_module.currentAvatar = this;
 
 		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
 			createDebugBox();
@@ -104,7 +104,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		// Position camera at node
 		Vector3f vec = this.getWorldTranslation();
 		cam.getLocation().x = vec.x;
-		cam.getLocation().y = vec.y + animCodes.getCameraHeight();
+		cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
 		cam.getLocation().z = vec.z;
 		cam.update();
 

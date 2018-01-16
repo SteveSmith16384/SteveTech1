@@ -641,13 +641,13 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 	}
 
-
+/*
 	@Override
 	public Type getJmeContext() {
 		return getContext().getType();
 	}
 
-
+*/
 	public ArrayList<RayCollisionData> checkForEntityCollisions(Ray r) {
 		//return this.physicsController.checkForCollisions(r);
 

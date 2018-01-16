@@ -56,7 +56,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 		}));
 
 		Geometry geometry = new Geometry("FloorGeom", box1);
-		if (_game.getJmeContext() != JmeContext.Type.Headless) { // Not running in server
+		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);

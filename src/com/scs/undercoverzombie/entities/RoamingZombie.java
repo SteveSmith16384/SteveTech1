@@ -48,7 +48,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		}
 
 		Spatial spatial = null;
-		if (_game.getJmeContext() != JmeContext.Type.Headless) { // !_game.isServer()) { // Not running in server
+		if (!_game.isServer()) { // Not running in server
 			//spatial = game.getAssetManager().loadModel("Models/zombie/Zombie.blend");
 			//JMEFunctions.SetTextureOnSpatial(game.getAssetManager(), spatial, "Models/zombie/ZombieTexture.png");
 			zm = new ZombieModel(game.getAssetManager());
