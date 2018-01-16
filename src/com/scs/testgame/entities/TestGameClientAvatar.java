@@ -5,12 +5,12 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
-import com.scs.undercoverzombie.models.ZombieModel;
+import com.scs.undercoverzombie.models.CharacterModel;
 
-public class TestGameClientAvatar extends AbstractClientAvatar {
+public class TestGameClientAvatar extends AbstractClientAvatar { // todo - don't need this class
 
 	public TestGameClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, float x, float y, float z, int side) {
-		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z, side, new ZombieModel(_module.getAssetManager()));//, new ZombieAnimationStrings(), ZombieModel.ZOMBIE_MODEL_HEIGHT);
+		super(_module, _playerID, _input, _cam, _hud, eid, x, y, z, side, new CharacterModel(_module.getAssetManager()));//, new ZombieAnimationStrings(), ZombieModel.ZOMBIE_MODEL_HEIGHT);
 		
 		//zm = new ZombieModel(game.getAssetManager());
 	}

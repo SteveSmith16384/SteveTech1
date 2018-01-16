@@ -68,6 +68,11 @@ public class Globals {
 	}
 
 
+	public static void pe(String s) {
+		System.err.println(System.currentTimeMillis() + ": " + s);
+	}
+
+
 	public static void appendToFile(String path, String text) {
 		BufferedWriter bw = null;
 

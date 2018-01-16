@@ -5,12 +5,13 @@ import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.undercoverzombie.models.CharacterModel;
 import com.scs.undercoverzombie.models.ZombieModel;
 
 public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
-	private ZombieModel zm;
+	private CharacterModel model;
 
 	public TestGameEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
 		super(game, pid, eid, x, y, z);
@@ -19,10 +20,10 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 	
 	@Override
 	protected Spatial getPlayersModel(IEntityController game, int pid) {
-		if (zm == null) {
-			zm = new ZombieModel(game.getAssetManager());
+		if (model == null) {
+			model = new CharacterModel(game.getAssetManager());
 		}
-		return zm.getModel(true);
+		return model.getModel(true);
 
 	}
 
@@ -36,7 +37,7 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 	@Override
 	public void setCurrentAnim(String s) {
 		this.currentAnim = s;
-		this.zm.channel.setAnim(s);
+		this.model.channel.setAnim(s);
 	}
 
 }

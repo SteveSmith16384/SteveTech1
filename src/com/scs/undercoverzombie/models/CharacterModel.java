@@ -15,43 +15,33 @@ import com.jme3.scene.shape.Box;
 import com.scs.stevetech1.components.IAnimatedAvatar;
 import com.scs.stevetech1.jme.JMEFunctions;
 
-/*
- * INFO: Found animation: ZombieAttack.
-INFO: Found animation: ZombieBite.
-INFO: Found animation: ZombieCrawl.
-INFO: Found animation: ZombieIdle.
-INFO: Found animation: ZombieRun.
-INFO: Found animation: ZombieWalk.
+public class CharacterModel implements IAnimatedAvatar {
 
- */
-public class ZombieModel implements IAnimatedAvatar {
-
-	private static final float ZOMBIE_MODEL_WIDTH = .3f;
+	private static final float ZOMBIE_MODEL_WIDTH = .3f; // todo - rename
 	private static final float ZOMBIE_MODEL_DEPTH = .3f;
 	private static final float ZOMBIE_MODEL_HEIGHT = .7f;
 
 	public AnimChannel channel;
-	//private AnimControl control;
 	private HashMap<String, String> animCodes = new HashMap<String, String>();
 	private AssetManager assetManager;
 	
-	public ZombieModel(AssetManager _assetManager) {
+	public CharacterModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
 		
-		animCodes.put("Idle", "ZombieIdle");
-		animCodes.put("Walking", "ZombieWalk");
+		animCodes.put("Idle", "IDLE1");
+		animCodes.put("Walking", "WALK");
 	}
 
 
 	@Override
 	public Spatial getModel(boolean forClient) {
 		if (forClient) {
-			Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
+			Spatial model = assetManager.loadModel("Models/3d-character/character/character.blend");
 			model.scale(.125f); // Make 1 high
 			model.setModelBound(new BoundingBox());
 			//model.updateModelBound();
 
-			JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
+			//JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 
 			Node s = (Node)model;
 			while (s.getNumControls() == 0) {
@@ -59,7 +49,7 @@ public class ZombieModel implements IAnimatedAvatar {
 			}
 			AnimControl control = s.getControl(AnimControl.class);
 			channel = control.createChannel();
-			//channel.setAnim("ZombieWalk");
+
 	/*
 			Quaternion target_q = new Quaternion();
 			target_q.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y); // todo - was -1, 0, 0
@@ -68,7 +58,7 @@ public class ZombieModel implements IAnimatedAvatar {
 			return model;
 		} else {
 			Box box1 = new Box(ZOMBIE_MODEL_WIDTH/2, ZOMBIE_MODEL_HEIGHT/2, ZOMBIE_MODEL_DEPTH/2);
-			Geometry geometry = new Geometry("ZombieBox", box1);
+			Geometry geometry = new Geometry("CharacterBox", box1);
 			geometry.setLocalTranslation(0, ZOMBIE_MODEL_HEIGHT/2, 0); // Move origin to floor
 			return geometry;
 		}

@@ -12,6 +12,4 @@ public interface IAnimatedAvatar { // todo - rename to ...
 	
 	String getAnimationStringForCode(String code);
 	
-	//Vector3f getModelDimensions();
-
 }
