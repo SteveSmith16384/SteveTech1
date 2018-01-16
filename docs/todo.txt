@@ -3,7 +3,9 @@ STETECH1
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 URGENT
-Animate backwards when walking backwards
+	Add grid to scenery
+Why is the house in the ground
+Do I need to rewind models when checking for solid bullet collisions
 Record desktop showing two players
 Use new models
 Blog post progress
@@ -17,6 +19,7 @@ How to convert Unity models to Blender?
 
 
 TODO
+Animate backwards when walking backwards
 Create moonbase map
 Look for soldiers for Moonbase Assault
 Simple console GUI for connecting to lobby
@@ -70,6 +73,8 @@ Player groups
 MODELS
 https://www.patreon.com/posts/16031258 - zombie, works
 https://github.com/sparklinlabs/superpowers-asset-packs/tree/master/3d-character - Pretty good!
+https://shallow-lagoon.itch.io/pleasant-park-pack - Good
+
 
 https://www.blendswap.com/blends/view/5308 - Horror monsters
 https://www.blendswap.com/blends/view/4420 - simple robot
@@ -77,8 +82,6 @@ https://www.blendswap.com/blends/view/4456 - Black lego figure - no controls
 https://www.blendswap.com/blends/view/13277 - Horror monsters
 https://www.blendswap.com/blends/view/20658 - Horror monster
 https://www.blendswap.com/blends/view/22012 - Too big (takes ages to load in ModelViewer)
-
-https://shallow-lagoon.itch.io/pleasant-park-pack
 https://www.gamedevmarket.net/asset/3d-warriors-9290/
 https://www.blendswap.com/terms/category/characters/page:3
 https://free3d.com/3d-model/low-poly-rigs-soldier-25083.html - waiting to register
@@ -86,8 +89,7 @@ https://clara.io/library?query=low-poly - hundreds
 https://www.blendermarket.com/products/low-poly-asset-pack-1
 https://itch.io/game-assets/free/tag-low-poly
 https://github.com/jMonkeyEngine/jmonkeyengine/tree/master/jme3-testdata/src/main/resources/Models
-https://free3d.com/3d-model/female-zumbi-51687.html
-woman - https://www.patreon.com/posts/animated-woman-15437702
+https://www.patreon.com/posts/animated-woman-15437702
 https://opengameart.org/content/animated-3d-models-0
 https://opengameart.org/content/female-npc
 

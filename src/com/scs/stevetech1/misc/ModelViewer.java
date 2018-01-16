@@ -75,14 +75,16 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		Spatial model = assetManager.loadModel("Models/Pleasant Park Pack/Props/Tree 1/tree1.obj");
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/Pleasant Park Pack/Props/Tree 1/Materials/tree1.png");
-		model.scale(1f);
+		model.scale(.5f);
 
+		if (model instanceof Node) {
 		Node s2 = this.getNodeWithControls((Node)model);
 		if (s2 != null) {
 			control = s2.getControl(AnimControl.class);
 			control.addListener(this);
 			AnimChannel channel = control.createChannel();
 			//channel.setAnim("WALK");
+		}
 		}
 
 		model.setModelBound(new BoundingBox());
