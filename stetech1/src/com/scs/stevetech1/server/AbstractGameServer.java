@@ -12,7 +12,6 @@ import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.system.JmeContext.Type;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -28,6 +27,7 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
+import com.scs.stevetech1.entities.Grenade;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
@@ -48,12 +48,11 @@ import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
 import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.IMessageServerListener;
-import com.scs.stevetech1.networking.KryonetGameClient;
 import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
+import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.entities.Floor;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.RealtimeInterval;
@@ -456,7 +455,16 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 	protected abstract void equipAvatar(AbstractServerAvatar avatar);
 
-	protected abstract IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac);
+	//protected abstract IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac);
+	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
+		switch (type) {
+		case AbstractClientEntityCreator.GRENADE:
+			return new Grenade(this, entityid, irac);
+		default:
+			throw new RuntimeException("Unknown entity type: " + type);
+			//return super.createEntity();
+		}
+	}
 
 
 	private void sendAllEntitiesToClient(ClientData client) {
@@ -676,9 +684,9 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
+		/*if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
 			Globals.p("Collision between " + a.userObject + " and " + b.userObject);
-		}
+		}*/
 		//if (a != null && b != null) {
 		collisionLogic.collision(a.userObject,  b.userObject);
 		/*} else {

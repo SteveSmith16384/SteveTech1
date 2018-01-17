@@ -17,7 +17,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.system.AppSettings;
-import com.jme3.system.JmeContext.Type;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -57,7 +56,6 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.AnimationSystem;
 import com.scs.stevetech1.systems.UpdateAmmoCacheSystem;
-import com.scs.testgame.entities.Floor;
 
 import ssmith.util.RealtimeInterval;
 
@@ -553,9 +551,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
+		/*if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
 			Globals.p("Collision between " + a.userObject + " and " + b.userObject);
-		}
+		}*/
 	}
 
 

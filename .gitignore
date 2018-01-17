@@ -1,4 +1,4 @@
-/bin/
+*/bin/
 OpenAL64.dll
 bulletjme64.dll
 lwjgl64.dll
@@ -10,5 +10,5 @@ jinput-dx8_64.dll
 jinput-raw.dll
 jinput-raw_64.dll
 .svn
-#MultiplayerArena_settings.txt
-
+/.metadata/
+/.recommenders/

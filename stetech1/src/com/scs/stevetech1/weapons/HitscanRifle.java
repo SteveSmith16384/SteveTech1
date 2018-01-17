@@ -10,11 +10,10 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.server.AbstractGameServer;
-import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.server.RayCollisionData;
+import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameClientEntityCreator;
-import com.scs.testgame.entities.MovingTarget;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
@@ -23,7 +22,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	public RayCollisionData hitThisMoment = null; // Only used server-side
 
 	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
-		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, 10);
+		super(game, id, AbstractClientEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, 10);
 
 	}
 
@@ -37,10 +36,10 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				Vector3f pos = this.hitThisMoment.point;
 
 				new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true);
-				if (hitThisMoment.entity instanceof MovingTarget && Globals.DEBUG_REWIND_POS1) {
+				/*if (hitThisMoment.entity instanceof MovingTarget && Globals.DEBUG_REWIND_POS1) {
 					//Settings.p(hitThisMoment.entity.name + " is at " + hitThisMoment.entity.getWorldTranslation() + " at " + hitThisMoment.timestamp);
 					Globals.appendToFile("ServerMovingtarget.csv", "ServerMovingtarget," + hitThisMoment.timestamp + "," + hitThisMoment.entity.getWorldTranslation());
-				}
+				}*/
 
 				AbstractGameServer server = (AbstractGameServer)game;
 				server.collisionLogic.collision(hitThisMoment.entity, this);
@@ -58,11 +57,11 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				Vector3f pos = rcd.point;
 				Globals.p("Hit " + rcd.entity.getName() + " at " + pos);
 				new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, false);
-				if (rcd.entity instanceof MovingTarget && Globals.DEBUG_REWIND_POS1) {
+				/*if (rcd.entity instanceof MovingTarget && Globals.DEBUG_REWIND_POS1) {
 					//Settings.p("Moving target hit at " + rcd.entity.getWorldTranslation());
 					Globals.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + (System.currentTimeMillis()-Globals.CLIENT_RENDER_DELAY) + "," + rcd.entity.getWorldTranslation());
 
-				}
+				}*/
 			} else {
 				Globals.p("Not hit anything");
 			}

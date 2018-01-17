@@ -10,9 +10,9 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.Grenade;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
-import com.scs.testgame.entities.Grenade;
 
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;

@@ -80,6 +80,10 @@ https://shallow-lagoon.itch.io/pleasant-park-pack - Good
 
 
 MODELS
+https://www.blendswap.com/blends/search?keywords=game+ready&is_fan_art=0&blend_license=&render_engine=&sort=downloads&direction=desc&page=7
+
+
+https://www.blendswap.com/blends/view/46380 - girl
 https://www.blendswap.com/blends/view/88854 - voxel wizard
 https://www.blendswap.com/blends/view/25727 - various minecraft 
 https://www.blendswap.com/blends/tagged/steve
@@ -91,7 +95,6 @@ https://www.blendswap.com/blends/view/69468 - zombie game character
 https://www.blendswap.com/blends/view/69443 - low poly robot, not animated?
 https://www.blendswap.com/blends/view/60186 - Steve, unanimated?
 https://www.blendswap.com/blends/view/57426 - minecraft
-https://www.blendswap.com/blends/view/67877
 
 https://www.blendswap.com/blends/view/5308 - Horror monsters
 https://www.blendswap.com/blends/view/4420 - simple robot
@@ -124,3 +127,4 @@ https://free3d.com/3d-model/genestealer-tyranid-93377.html - Too big
 https://www.blendswap.com/blends/view/66490 - Terran marine, no anims
 https://www.blendswap.com/blends/view/5705 - Logo marines, does not load
 https://www.blendswap.com/blends/view/6480 - Spider, missing textures
+https://www.blendswap.com/blends/view/67877 - Steve, Fan art

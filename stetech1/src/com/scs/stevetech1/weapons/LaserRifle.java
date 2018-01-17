@@ -5,10 +5,10 @@ import java.util.LinkedList;
 
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.LaserBullet;
+import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameClientEntityCreator;
-import com.scs.testgame.entities.LaserBullet;
 
 /*
  * This gun shoots physical laser bolts
@@ -18,7 +18,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 	private LinkedList<LaserBullet> ammoCache = new LinkedList<LaserBullet>(); 
 	
 	public LaserRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
-		super(game, id, TestGameClientEntityCreator.LASER_RIFLE, owner, num, "Laser Rifle", .2f, 2, 10);
+		super(game, id, AbstractClientEntityCreator.LASER_RIFLE, owner, num, "Laser Rifle", .2f, 2, 10);
 
 	}
 
@@ -34,7 +34,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 
 	@Override
 	public int getAmmoType() {
-		return TestGameClientEntityCreator.LASER_BULLET;
+		return AbstractClientEntityCreator.LASER_BULLET;
 	}
 
 
