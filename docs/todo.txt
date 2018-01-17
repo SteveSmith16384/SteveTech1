@@ -3,22 +3,22 @@ STETECH1
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 URGENT
+How to convert Unity models to Blender?
+Look for voxel animated character
 	Add grid to scenery
 Why is the house in the ground
 Do I need to rewind models when checking for solid bullet collisions
-Record desktop showing two players
 Use new models
 Blog post progress
 Show current game time
-	Jumping is a bit high on client, not server.
-Client can always jump
+Client can always jump, even when in the air
 	Client countdown game time itself
 	Adjust grenades in the same way that avatars are adjusted
 Search for todos
-How to convert Unity models to Blender?
 
 
 TODO
+Record desktop showing two players
 Animate backwards when walking backwards
 Create moonbase map
 Look for soldiers for Moonbase Assault
@@ -41,7 +41,7 @@ Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
 Laser bullets
-Create sep projects for test game, killer crates
+Create sep projects for each game
 Use latest JME libs
 Walking up steps - have flag to force player to rise
 Physics test - do explosion
