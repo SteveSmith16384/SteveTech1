@@ -1,0 +1,9 @@
+#
+#Wed Jan 17 13:16:40 GMT 2018
+linkedResources=
+managedNatures=
+classpath=<?xml version\="1.0" encoding\="UTF-8"?>\n<classpath>\n</classpath>\n
+subprojectPaths=jme3-android;jme3-android-native;jme3-blender;jme3-bullet;jme3-bullet-native;jme3-bullet-native-android;jme3-core;jme3-desktop;jme3-effects;jme3-examples;jme3-ios;jme3-jbullet;jme3-jogg;jme3-jogl;jme3-lwjgl;jme3-lwjgl3;jme3-networking;jme3-niftygui;jme3-plugins;jme3-terrain;jme3-testdata
+derivedResources=.gradle;build;jme3-android/build;jme3-android-native/build;jme3-blender/build;jme3-bullet/build;jme3-bullet-native/build;jme3-bullet-native-android/build;jme3-core/build;jme3-desktop/build;jme3-effects/build;jme3-examples/build;jme3-ios/build;jme3-jbullet/build;jme3-jogg/build;jme3-jogl/build;jme3-lwjgl/build;jme3-lwjgl3/build;jme3-networking/build;jme3-niftygui/build;jme3-plugins/build;jme3-terrain/build;jme3-testdata/build
+managedBuilders=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><commands/>
+buildDir=build

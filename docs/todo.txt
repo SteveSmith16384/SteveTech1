@@ -3,8 +3,10 @@ STETECH1
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 URGENT
+Hitscan rifle - show line showing where server says bullet went
+Grenades
+How to convert Unity models to .blend?
 Animation - need to walk and shoot?
-How to convert Unity models to Blender?
 Look for voxel animated character
 Add jme source to repos
 Does JME source compile?
@@ -30,7 +32,6 @@ Use Logger, as per Kryo
 Do tracer-style rewind
 Console to connect to lobby
 Origin of entities should be floor 
-Grenades
 Check for packet loss
 Less damage from hitscan over distance
 Make floor a single quad - needs rotating
@@ -84,8 +85,6 @@ https://www.blendswap.com/blends/view/25727 - various minecraft
 https://www.blendswap.com/blends/tagged/steve
 https://www.blendswap.com/blends/view/68864 - minecraft blocks
 https://www.blendswap.com/blends/tagged/minecraft
-https://www.blendswap.com/blends/view/77482 - unfinished smooth minecraft models
-https://www.blendswap.com/blends/view/84830 - fallout low-poly armour
 https://www.blendswap.com/blends/view/56597 -Paintwars
 https://www.blendswap.com/blends/view/69441 - game character
 https://www.blendswap.com/blends/view/69468 - zombie game character
@@ -96,7 +95,6 @@ https://www.blendswap.com/blends/view/67877
 
 https://www.blendswap.com/blends/view/5308 - Horror monsters
 https://www.blendswap.com/blends/view/4420 - simple robot
-https://www.blendswap.com/blends/view/4456 - Black lego figure - no controls
 https://www.blendswap.com/blends/view/13277 - Horror monsters
 https://www.blendswap.com/blends/view/20658 - Horror monster
 https://www.blendswap.com/blends/view/22012 - Too big (takes ages to load in ModelViewer)
@@ -113,6 +111,8 @@ https://opengameart.org/content/female-npc
 
 
 UNUSED MODELS
+https://www.blendswap.com/blends/view/84830 - fallout low-poly armour - Fan Art
+https://www.blendswap.com/blends/view/77482 - unfinished smooth minecraft models, Fan ART
 https://www.blendswap.com/blends/view/49007 - steve - all white
 https://www.blendswap.com/blends/view/49476 - green morph-style - nothing showing
 https://www.blendswap.com/blends/view/58694 - no licence
