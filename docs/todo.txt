@@ -3,7 +3,28 @@ STETECH1
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
 URGENT
+https://www.blendswap.com/blends/view/88855
+https://www.blendswap.com/blends/view/88854
+https://www.blendswap.com/blends/view/69151
+https://www.blendswap.com/blends/view/25727
+https://www.blendswap.com/blends/tagged/steve
+https://www.blendswap.com/blends/view/68864
+https://www.blendswap.com/blends/view/49476
+https://www.blendswap.com/blends/tagged/minecraft
+https://www.blendswap.com/blends/view/77482
+https://www.blendswap.com/blends/view/84830
+https://www.blendswap.com/blends/view/89563
+https://www.blendswap.com/blends/view/56597
+https://www.blendswap.com/blends/view/69441
+https://www.blendswap.com/blends/view/69468
+https://www.blendswap.com/blends/view/69443
+https://www.blendswap.com/blends/view/60186
+https://www.blendswap.com/blends/view/57426
+https://www.blendswap.com/blends/view/67877
+
 	Add grid to scenery
+Add jme source to repos
+Does JME source compile?
 Why is the house in the ground
 Do I need to rewind models when checking for solid bullet collisions
 Record desktop showing two players
