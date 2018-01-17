@@ -2,6 +2,9 @@ STETECH1
 
 http://the-witness.net/news/2011/06/how-to-program-independent-games/
 
+https://github.com/AlwaysGeeky/Vox
+https://github.com/yvt/openspades
+
 URGENT
 Hitscan rifle - show line showing where server says bullet went
 Grenades
