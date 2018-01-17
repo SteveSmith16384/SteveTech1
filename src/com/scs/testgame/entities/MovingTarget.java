@@ -31,7 +31,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	private float timeUntilTurn = DURATION;
 
 	public MovingTarget(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, id, TestGameClientEntityCreator.MOVING_TARGET, "MovingTarget");
+		super(_game, id, TestGameClientEntityCreator.MOVING_TARGET, "MovingTarget", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -65,7 +65,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		mainNode.rotate(0, rads, 0);
 		mainNode.setLocalTranslation(x, y, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 
 		game.getRootNode().attachChild(this.mainNode);
 

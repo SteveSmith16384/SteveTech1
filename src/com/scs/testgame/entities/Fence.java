@@ -22,7 +22,7 @@ public class Fence extends PhysicalEntity {
 	private static final float WIDTH = 2f;
 
 	public Fence(IEntityController _game, int id, float x, float height, float z, float rot, String tex) {
-		super(_game, id, TestGameClientEntityCreator.FENCE, "Fence");
+		super(_game, id, TestGameClientEntityCreator.FENCE, "Fence", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -59,8 +59,8 @@ public class Fence extends PhysicalEntity {
 		geometry.setLocalTranslation(WIDTH/2, height/2, 0.5f);
 		mainNode.setLocalTranslation(x, 0, z);
 
-			this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, (SimplePhysicsController)game, this);
-			this.simpleRigidBody.setMovable(false);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, (SimplePhysicsController)game, false, this);
+		this.simpleRigidBody.setMovable(false);
 
 		game.getRootNode().attachChild(this.mainNode);
 
@@ -68,12 +68,12 @@ public class Fence extends PhysicalEntity {
 
 	}
 
-
+/*
 	@Override
 	public boolean canMove() {
 		return false;
 	}
-
+*/
 
 
 }

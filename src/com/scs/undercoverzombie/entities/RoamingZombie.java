@@ -41,7 +41,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 
 	public RoamingZombie(IEntityController _game, int id, float x, float y, float z) {
-		super(_game, id, TestGameClientEntityCreator.ZOMBIE, "Zombie");
+		super(_game, id, TestGameClientEntityCreator.ZOMBIE, "Zombie", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -66,7 +66,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 
 		spatial.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

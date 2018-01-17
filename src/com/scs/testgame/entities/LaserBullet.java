@@ -21,7 +21,7 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 	private float timeLeft = 3;
 
 	public LaserBullet(IEntityController _game, int id, ICanShoot _shooter, float x, float y, float z) {
-		super(_game, id, TestGameClientEntityCreator.LASER_BULLET, "LaserBullet");
+		super(_game, id, TestGameClientEntityCreator.LASER_BULLET, "LaserBullet", true);
 
 		this.shooter = _shooter;
 
@@ -32,7 +32,7 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 
 		this.mainNode.attachChild(laserNode);
 		//game.getRootNode().attachChild(this.mainNode);
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 			simpleRigidBody.setAerodynamicness(1);
 			simpleRigidBody.setGravity(0);
 		

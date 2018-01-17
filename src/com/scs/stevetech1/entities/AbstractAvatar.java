@@ -40,7 +40,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	protected IAnimatedAvatarModel avatarModel;
 	
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAnimatedAvatarModel _anim) {
-		super(_game, eid, 1, "Player");
+		super(_game, eid, 1, "Player", true);
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();

@@ -31,7 +31,7 @@ public class Simulation implements ICollisionListener<String> {
 		Geometry ballGeometry = new Geometry("Sphere", sphere);
 		ballGeometry.setLocalTranslation(0, 10f, 0);
 
-		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(ballGeometry, physicsController, "Sphere");
+		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(ballGeometry, physicsController, true, "Sphere");
 		
 		float time = 1;
 		int prevReport = 0;

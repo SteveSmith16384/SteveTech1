@@ -28,7 +28,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 	private float w, h, d;
 
 	public Floor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
-		super(_game, id, TestGameClientEntityCreator.FLOOR, "Floor");
+		super(_game, id, TestGameClientEntityCreator.FLOOR, "Floor", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -76,7 +76,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 		geometry.setLocalTranslation((w/2), (h/2), (d/2)); // Move it into position
 		mainNode.setLocalTranslation(x, yTop, z); // Move it into position
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		this.simpleRigidBody.setMovable(false);
 
 		game.getRootNode().attachChild(this.mainNode);
@@ -133,11 +133,11 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 
 	}
 
-
+/*
 	@Override
 	public boolean canMove() {
 		return false;
 	}
-
+*/
 
 }

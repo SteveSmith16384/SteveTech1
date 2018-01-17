@@ -9,21 +9,20 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
-import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.scs.moonbaseassault.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameClientEntityCreator;
 
 public class Computer extends PhysicalEntity implements IDamagable {
 
 	public Computer(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex) {
-		super(_game, id, TestGameClientEntityCreator.CRATE, "Crate");
+		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -58,7 +57,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

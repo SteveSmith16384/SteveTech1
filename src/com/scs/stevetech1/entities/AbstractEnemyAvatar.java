@@ -17,7 +17,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimated {
 
 	public AbstractEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
-		super(game, eid, 1, "EnemyAvatar");
+		super(game, eid, 1, "EnemyAvatar", true);
 
 		Spatial geometry = getPlayersModel(game, pid);
 
@@ -34,7 +34,7 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 
 	}
 

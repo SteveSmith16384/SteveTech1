@@ -23,7 +23,7 @@ import com.scs.testgame.TestGameClientEntityCreator;
 public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 
 	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, id, TestGameClientEntityCreator.CRATE, "Crate");
+		super(_game, id, TestGameClientEntityCreator.CRATE, "Crate", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -61,7 +61,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

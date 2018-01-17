@@ -29,7 +29,7 @@ public class HouseModel extends PhysicalEntity {
 	private static final float d = 3f;
 	
 	public HouseModel(IEntityController _game, int id, float x, float y, float z, float rotDegrees) {
-		super(_game, id, TestGameClientEntityCreator.HOUSE, "House");
+		super(_game, id, TestGameClientEntityCreator.HOUSE, "House", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -53,7 +53,7 @@ public class HouseModel extends PhysicalEntity {
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		this.simpleRigidBody.setMovable(false);
 
 		model.setUserData(Globals.ENTITY, this);
@@ -61,11 +61,6 @@ public class HouseModel extends PhysicalEntity {
 
 		game.addEntity(this);
 
-	}
-
-
-	public boolean canMove() { // todo - make param
-		return false;
 	}
 
 

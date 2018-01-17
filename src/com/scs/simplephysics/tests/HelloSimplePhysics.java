@@ -127,7 +127,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		floorGeometry.setShadowMode(ShadowMode.Receive);
 		this.rootNode.attachChild(floorGeometry);
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floorGeometry, physicsController, floorGeometry);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floorGeometry, physicsController, false, floorGeometry);
 		srb.setMovable(false);
 	}
 
@@ -148,7 +148,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		wallGeometry.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(wallGeometry);
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(wallGeometry, physicsController, wallGeometry);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(wallGeometry, physicsController, false, wallGeometry);
 		srb.setMovable(false);
 	}
 
@@ -170,7 +170,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		boxGeometry.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(boxGeometry);
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(boxGeometry, physicsController, boxGeometry);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(boxGeometry, physicsController, true, boxGeometry);
 		srb.setBounciness(bounciness);
 	}
 
@@ -191,7 +191,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		ballGeometry.setShadowMode(ShadowMode.Cast);
 		this.rootNode.attachChild(ballGeometry);
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(ballGeometry, physicsController, ballGeometry);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(ballGeometry, physicsController, true, ballGeometry);
 		srb.setLinearVelocity(dir);
 		srb.setGravity(grav);
 		srb.setAerodynamicness(airRes);

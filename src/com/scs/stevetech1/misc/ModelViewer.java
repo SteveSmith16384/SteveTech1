@@ -19,7 +19,7 @@ import com.scs.stevetech1.server.Globals;
 public class ModelViewer extends SimpleApplication implements AnimEventListener {
 
 	private AnimControl control;
-	
+
 	public static void main(String[] args){
 		ModelViewer app = new ModelViewer();
 		app.showSettings = false;
@@ -44,12 +44,12 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		model.scale(.125f);
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 		 */
-		
+
 		/*
 		Spatial model = assetManager.loadModel("Models/3d-character/environment/house/model.blend");
 		model.scale(.4f);
-		*/
-		
+		 */
+
 		//Spatial model = assetManager.loadModel("Models/3d-character/environment/wood-barrier/model.blend"); // Fence post
 		//model.scale(1);
 
@@ -59,7 +59,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		//Spatial model = assetManager.loadModel("Models/3d-character/environment/floor/model.blend"); // Funny shaped floor
 		//JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/3d-character/environment/floor/texture.png");
 		//model.scale(1);
-		
+
 		//Spatial model = assetManager.loadModel("Models/3d-character/environment/grass/modelgrass2.blend");
 		//JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/3d-character/environment/grass/textureGrass1.png");
 		//model.scale(.1f);
@@ -73,18 +73,25 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		//Spatial model = assetManager.loadModel("Models/3d-vehicles/car/car.blend"); // Good
 
-		Spatial model = assetManager.loadModel("Models/Pleasant Park Pack/Props/Tree 1/tree1.obj");
+		/*Spatial model = assetManager.loadModel("Models/Pleasant Park Pack/Props/Tree 1/tree1.obj");
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/Pleasant Park Pack/Props/Tree 1/Materials/tree1.png");
-		model.scale(.5f);
+		model.scale(.5f);*/
 
+		Spatial model = assetManager.loadModel("Models/Steve.blend");
+		model.scale(.2f);
+		
 		if (model instanceof Node) {
-		Node s2 = this.getNodeWithControls((Node)model);
-		if (s2 != null) {
-			control = s2.getControl(AnimControl.class);
-			control.addListener(this);
-			AnimChannel channel = control.createChannel();
-			//channel.setAnim("WALK");
-		}
+			Node s2 = this.getNodeWithControls((Node)model);
+			if (s2 != null) {
+				control = s2.getControl(AnimControl.class);
+				if (control != null) {
+					control.addListener(this);
+					AnimChannel channel = control.createChannel();
+					//channel.setAnim("WALK");
+				} else {
+					Globals.p("No animation control");
+				}
+			}
 		}
 
 		model.setModelBound(new BoundingBox());

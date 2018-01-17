@@ -63,7 +63,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 
 	private void createDebugBox() {
-		Box box1 = new Box(.5f, .5f, .5f); // todo - use model size
+		Box box1 = new Box(.5f, .5f, .5f); // todo - use IAnimatedAvatarModel
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry g = new Geometry("Crate", box1);
 		TextureKey key3 = new TextureKey("Textures/neon1.jpg");

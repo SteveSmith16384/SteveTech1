@@ -37,7 +37,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 	public IEntity shooter; // So we know who not to collide with
 
 	public Grenade(IEntityController _game, int id, IRequiresAmmoCache<Grenade> owner) {
-		super(_game, id, TestGameClientEntityCreator.GRENADE, "Grenade");
+		super(_game, id, TestGameClientEntityCreator.GRENADE, "Grenade", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -80,7 +80,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient {
 		launched = true;
 
 		shooter = (IEntity)_shooter;
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 		this.simpleRigidBody.setBounciness(.6f);
 
 		game.getRootNode().attachChild(this.mainNode);

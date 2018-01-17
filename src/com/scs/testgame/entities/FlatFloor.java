@@ -21,7 +21,7 @@ import com.scs.testgame.TestGameClientEntityCreator;
 public class FlatFloor extends PhysicalEntity {
 
 	public FlatFloor(IEntityController _game, int id, float x, float y, float z, float w, float d, String tex) {
-		super(_game, id, TestGameClientEntityCreator.FLAT_FLOOR, "Floor");
+		super(_game, id, TestGameClientEntityCreator.FLAT_FLOOR, "FlatFloor", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -55,7 +55,7 @@ public class FlatFloor extends PhysicalEntity {
 		geometry.setLocalRotation(new Quaternion(0, 0, 1, 1)); // todo
 		mainNode.setLocalTranslation(x, y, z); // Move it into position
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		this.simpleRigidBody.setMovable(false);
 
 		game.getRootNode().attachChild(this.mainNode);
@@ -75,11 +75,11 @@ public class FlatFloor extends PhysicalEntity {
 
 	}
 
-
+/*
 	@Override
 	public boolean canMove() {
 		return false;
 	}
-
+*/
 
 }

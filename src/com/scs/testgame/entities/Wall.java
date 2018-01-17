@@ -19,7 +19,7 @@ import com.scs.testgame.TestGameClientEntityCreator;
 public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 
 	public Wall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
-		super(_game, id, TestGameClientEntityCreator.WALL, "Wall");
+		super(_game, id, TestGameClientEntityCreator.WALL, "Wall", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -60,7 +60,7 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 		geometry.setLocalTranslation(w/2, h/2, d/2); // Never change position of mainNode (unless the whole object is moving)
 		mainNode.setLocalTranslation(x, yBottom, z); // Never change position of mainNode (unless the whole object is moving)
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		this.simpleRigidBody.setMovable(false);
 
 		game.getRootNode().attachChild(this.mainNode);
@@ -72,11 +72,11 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 
 	}
 
-	
+	/*
 	@Override
 	public boolean canMove() {
 		return false;
 	}
-
+*/
 
 }

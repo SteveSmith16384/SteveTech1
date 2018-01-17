@@ -37,10 +37,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Quaternion originalRot = new Quaternion();
 	
 	protected String currentAnim = "";
+	public boolean moves;
 
-	public PhysicalEntity(IEntityController _game, int id, int type, String _name) {
+	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _moves) {
 		super(_game, id, type, _name);
 
+		moves =_moves;
 		serverPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode");
 	}
@@ -262,11 +264,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return null;
 	}
 	
-	
+	/*
 	public boolean canMove() {
 		return true;
 	}
-
+*/
 
 	@Override
 	public HashMap<String, Object> getCreationData() {
