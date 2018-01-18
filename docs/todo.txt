@@ -1,5 +1,13 @@
 STETECH1
 
+<<<<<<< HEAD
+=======
+http://the-witness.net/news/2011/06/how-to-program-independent-games/
+
+https://github.com/AlwaysGeeky/Vox
+https://github.com/yvt/openspades
+
+>>>>>>> e1c93baa2367398a30a70a3c2bb45e0bca5e9758
 URGENT
 How to convert Unity models to .blend?
 Move assets
