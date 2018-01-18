@@ -1,19 +1,15 @@
 STETECH1
 
-<<<<<<< HEAD
-=======
-http://the-witness.net/news/2011/06/how-to-program-independent-games/
-
-https://github.com/AlwaysGeeky/Vox
-https://github.com/yvt/openspades
-
->>>>>>> e1c93baa2367398a30a70a3c2bb45e0bca5e9758
 URGENT
+Grenades
+Laser bullets
+Finish a game!
+Look for low-poly interiors
+Search for 3d op-source games
+Add open-source msg to the top of all files
 How to convert Unity models to .blend?
 Move assets
 Hitscan rifle - show line showing where server says bullet went
-Grenades
-Animation - need to walk and shoot?
 Look for voxel animated character
 Use new models
 Show current game time
@@ -24,6 +20,7 @@ Search for todos
 
 
 TODO
+Animation - need to walk and shoot?
 Why is the house in the ground
 Blog post progress
 Record desktop showing two players
@@ -47,7 +44,6 @@ Lobby queue players
 Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
-Laser bullets
 Create sep projects for each game
 Use latest JME libs
 Walking up steps - have flag to force player to rise
@@ -67,7 +63,6 @@ Use gradle for libraries
 
 
 LATER
-Check code compiles without any game-specific code
 Simple physics - pushing
 Don't use broadcast()?s
 Kick players who don't move
@@ -78,58 +73,3 @@ Only send entity messages to players that have joined the game
 Player groups
 
 
-USED
-https://www.patreon.com/posts/16031258 - zombie, works
-https://github.com/sparklinlabs/superpowers-asset-packs/tree/master/3d-character - Pretty good!
-https://shallow-lagoon.itch.io/pleasant-park-pack - Good
-
-
-MODELS
-https://www.blendswap.com/blends/search?keywords=game+ready&is_fan_art=0&blend_license=&render_engine=&sort=downloads&direction=desc&page=7
-
-
-https://www.blendswap.com/blends/view/46380 - girl
-https://www.blendswap.com/blends/view/88854 - voxel wizard
-https://www.blendswap.com/blends/view/25727 - various minecraft 
-https://www.blendswap.com/blends/tagged/steve
-https://www.blendswap.com/blends/view/68864 - minecraft blocks
-https://www.blendswap.com/blends/tagged/minecraft
-https://www.blendswap.com/blends/view/56597 -Paintwars
-https://www.blendswap.com/blends/view/69441 - game character
-https://www.blendswap.com/blends/view/69468 - zombie game character
-https://www.blendswap.com/blends/view/69443 - low poly robot, not animated?
-https://www.blendswap.com/blends/view/60186 - Steve, unanimated?
-https://www.blendswap.com/blends/view/57426 - minecraft
-
-https://www.blendswap.com/blends/view/5308 - Horror monsters
-https://www.blendswap.com/blends/view/4420 - simple robot
-https://www.blendswap.com/blends/view/13277 - Horror monsters
-https://www.blendswap.com/blends/view/20658 - Horror monster
-https://www.blendswap.com/blends/view/22012 - Too big (takes ages to load in ModelViewer)
-https://www.gamedevmarket.net/asset/3d-warriors-9290/
-https://www.blendswap.com/terms/category/characters/page:3
-https://free3d.com/3d-model/low-poly-rigs-soldier-25083.html - waiting to register
-https://clara.io/library?query=low-poly - hundreds
-https://www.blendermarket.com/products/low-poly-asset-pack-1
-https://itch.io/game-assets/free/tag-low-poly
-https://github.com/jMonkeyEngine/jmonkeyengine/tree/master/jme3-testdata/src/main/resources/Models
-https://www.patreon.com/posts/animated-woman-15437702
-https://opengameart.org/content/animated-3d-models-0
-https://opengameart.org/content/female-npc
-
-
-UNUSED MODELS
-https://www.blendswap.com/blends/view/84830 - fallout low-poly armour - Fan Art
-https://www.blendswap.com/blends/view/77482 - unfinished smooth minecraft models, Fan ART
-https://www.blendswap.com/blends/view/49007 - steve - all white
-https://www.blendswap.com/blends/view/49476 - green morph-style - nothing showing
-https://www.blendswap.com/blends/view/58694 - no licence
-https://www.blendswap.com/blends/view/88855 - Simple voxel character  NO ANIMS
-https://www.youtube.com/watch?v=4Sy2nkO7X8s - minecraft steve, no animation
-https://www.blendswap.com/blends/view/68295 - minecraft steve, no skin
-Not animated https://droner503.itch.io/human-
-https://free3d.com/3d-model/genestealer-tyranid-93377.html - Too big
-https://www.blendswap.com/blends/view/66490 - Terran marine, no anims
-https://www.blendswap.com/blends/view/5705 - Logo marines, does not load
-https://www.blendswap.com/blends/view/6480 - Spider, missing textures
-https://www.blendswap.com/blends/view/67877 - Steve, Fan art

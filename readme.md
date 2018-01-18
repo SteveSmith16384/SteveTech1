@@ -1,6 +1,6 @@
 # SteveTech1
 
-SteveTech1 is a complete 3D multi[player FPS framework and engine.  It includes everything you need to create your own multiplayer FPS, from Overwatch to PUBG, and is designed to be easily extendable (as the example games will show).  It is intended to be the Java equivalent of the Source engine (or whatever the latest-and-greatest FPS engine is these days). 
+SteveTech1 is a complete 3D multiplayer FPS framework and engine, designed to create games such as Team Fortress 2, Overwatch or PUBG.  It includes almost all the code you'll need to create your own multiplayer FPS, and is designed to be easily extendable (as the example games will show).  It is intended to be the Java equivalent of the Source engine (or whatever the latest-and-greatest FPS engine is these days).  You will need to provide the assets of course.
 
 Licence is MIT.
  

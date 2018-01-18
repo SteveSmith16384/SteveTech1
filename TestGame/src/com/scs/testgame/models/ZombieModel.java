@@ -1,4 +1,4 @@
-package com.scs.undercoverzombie.models;
+package com.scs.testgame.models;
 
 import java.util.HashMap;
 

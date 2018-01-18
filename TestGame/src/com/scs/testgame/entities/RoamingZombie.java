@@ -1,9 +1,11 @@
-package com.scs.undercoverzombie.entities;
+package com.scs.testgame.entities;
 
 import java.util.HashMap;
 
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimated;
@@ -18,7 +20,7 @@ import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
-import com.scs.undercoverzombie.models.ZombieModel;
+import com.scs.testgame.models.ZombieModel;
 
 public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IAnimated, IRewindable {
 	
@@ -49,11 +51,11 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 			spatial = zm.getModel(true);
 		} else {
 			// Server
-			/*Box box1 = new Box(w/2, h/2, d/2);
-			spatial = new Geometry("Crate", box1);
+			Box box1 = new Box(w/2, h/2, d/2);
+			spatial = new Geometry("RoamingZombie", box1);
 			spatial.setLocalTranslation(0, h/2, 0); // Box origin is the centre*/
-			zm = new ZombieModel(game.getAssetManager());
-			spatial = zm.getModel(false);
+			//zm = new ZombieModel(game.getAssetManager());
+			//spatial = zm.getModel(false);
 
 		}
 		this.mainNode.attachChild(spatial);

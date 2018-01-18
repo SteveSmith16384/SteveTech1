@@ -77,20 +77,17 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/Pleasant Park Pack/Props/Tree 1/Materials/tree1.png");
 		model.scale(.5f);*/
 
-		Spatial model = assetManager.loadModel("Models/Steve.blend");
-		model.scale(.2f);
-		
+		Spatial model = assetManager.loadModel("Models/Human55.blend");
+		//model.scale(.2f);
+
 		if (model instanceof Node) {
-			Node s2 = this.getNodeWithControls((Node)model);
-			if (s2 != null) {
-				control = s2.getControl(AnimControl.class);
-				if (control != null) {
-					control.addListener(this);
-					AnimChannel channel = control.createChannel();
-					//channel.setAnim("WALK");
-				} else {
-					Globals.p("No animation control");
-				}
+			control = this.getNodeWithControls((Node)model);
+			if (control != null) {
+				control.addListener(this);
+				AnimChannel channel = control.createChannel();
+				channel.setAnim("Idle");
+			} else {
+				Globals.p("No animation control");
 			}
 		}
 
@@ -110,13 +107,17 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 	}
 
 
-	private Node getNodeWithControls(Node s) {
+	private AnimControl getNodeWithControls(Node s) {
 		int ch = s.getChildren().size();
 		for (int i=0 ; i<ch ; i++) {
 			Spatial sp = s.getChild(i);
 			if (sp instanceof Node) {
-				if (sp.getNumControls() > 0) {
-					return (Node)sp;
+				Node n2 = (Node)sp;
+				if (n2.getNumControls() > 0) {
+					control = n2.getControl(AnimControl.class);
+					if (control != null) {
+						return control;
+					}
 				} else {
 					return this.getNodeWithControls((Node)sp);
 				}

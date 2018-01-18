@@ -139,7 +139,6 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 			return house;
 		}
 
-
 		default:
 			return super.createEntity(game, msg);
 		}

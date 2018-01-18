@@ -1,0 +1,59 @@
+MODELS
+http://www.blendernation.com
+https://www.blendswap.com/blends/search?keywords=game+ready&is_fan_art=0&blend_license=&render_engine=&sort=downloads&direction=desc&page=7
+
+
+https://www.blendswap.com/blends/view/46380 - girl
+https://www.blendswap.com/blends/view/88854 - voxel wizard
+https://www.blendswap.com/blends/view/56597 -Paintwars
+https://www.blendswap.com/blends/view/69468 - zombie game character
+https://www.blendswap.com/blends/view/5308 - Horror monsters
+https://www.blendswap.com/blends/view/13277 - Horror monsters
+https://www.blendswap.com/blends/view/20658 - Horror monster
+https://www.blendswap.com/terms/category/characters/page:3
+https://clara.io/library?query=low-poly - hundreds
+https://github.com/jMonkeyEngine/jmonkeyengine/tree/master/jme3-testdata/src/main/resources/Models
+https://www.patreon.com/posts/animated-woman-15437702
+https://opengameart.org/content/animated-3d-models-0
+https://opengameart.org/content/female-npc
+https://www.cgtrader.com/free-3d-models/electronics/computer/servers - computer
+
+
+
+UNUSED MODELS
+https://www.gamedevmarket.net/asset/3d-warriors-9290/ - no anims
+https://droner503.itch.io/human- - No anims or tex
+https://www.blendswap.com/blends/view/68864 - minecraft blocks - fan art
+https://www.blendswap.com/blends/view/4420 - simple robot, no anims
+https://free3d.com/3d-model/low-poly-rigs-soldier-25083.html - waiting to register
+https://www.blendswap.com/blends/view/22012 - Too big (takes ages to load in ModelViewer)
+https://www.blendswap.com/blends/view/60186 - Steve, unanimated, fan art
+https://www.blendswap.com/blends/view/57426 - minecraft, fan art
+https://www.blendswap.com/blends/view/25727 - various minecraft, Fan Art
+https://github.com/AlwaysGeeky/Vox - qb file
+https://github.com/yvt/openspades - .weak files
+https://github.com/iamgreaser/iceball/ - kv6 files
+https://www.blendswap.com/blends/view/84830 - fallout low-poly armour - Fan Art
+https://www.blendswap.com/blends/view/77482 - unfinished smooth minecraft models, Fan ART
+https://www.blendswap.com/blends/view/49007 - steve - all white
+https://www.blendswap.com/blends/view/49476 - green morph-style - nothing showing
+https://www.blendswap.com/blends/view/58694 - no licence
+https://www.blendswap.com/blends/view/88855 - Simple voxel character  NO ANIMS
+https://www.youtube.com/watch?v=4Sy2nkO7X8s - minecraft steve, no animation
+https://www.blendswap.com/blends/view/68295 - minecraft steve, no skin
+Not animated https://droner503.itch.io/human-
+https://free3d.com/3d-model/genestealer-tyranid-93377.html - Too big
+https://www.blendswap.com/blends/view/66490 - Terran marine, no anims
+https://www.blendswap.com/blends/view/5705 - Logo marines, does not load
+https://www.blendswap.com/blends/view/6480 - Spider, missing textures
+https://www.blendswap.com/blends/view/67877 - Steve, Fan art
+https://www.blendswap.com/blends/view/69441 - game soldier, good but no anims
+https://www.blendswap.com/blends/view/69443 - low poly robot, not animated
+
+
+USED
+https://www.patreon.com/posts/16031258 - zombie, works
+https://github.com/sparklinlabs/superpowers-asset-packs/tree/master/3d-character - Good!
+https://shallow-lagoon.itch.io/pleasant-park-pack - Good, but voxel
+
+
