@@ -1,8 +1,10 @@
 package com.scs.moonbaseassault;
 
-public class MoonbaseAssaultClientEntityCreator {
+import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 
-	public static final int COMPUTER = 2;
+public class MoonbaseAssaultClientEntityCreator extends AbstractClientEntityCreator {
+
+	public static final int COMPUTER = 100;
 	
 	public MoonbaseAssaultClientEntityCreator() {
 	}

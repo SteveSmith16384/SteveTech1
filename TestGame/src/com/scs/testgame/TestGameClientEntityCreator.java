@@ -2,6 +2,7 @@ package com.scs.testgame;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
@@ -22,7 +23,7 @@ import com.scs.testgame.models.HouseModel;
  */
 public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 
-	private TestGameClient game;
+	//private TestGameClient game;
 
 	public static final int CRATE = 100;
 	public static final int FLOOR = 101;
@@ -33,15 +34,15 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 	public static final int HOUSE = 106;
 	
 	
-	public TestGameClientEntityCreator(TestGameClient _game) {
-		super(_game);
+	public TestGameClientEntityCreator() {
+		super();
 		
-		game =_game;
+		//game =_game;
 	}
 
 
 	@Override
-	public IEntity createEntity(NewEntityMessage msg) {
+	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Creating " + getName(msg.type));
 		}
@@ -140,7 +141,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 
 
 		default:
-			return super.createEntity(msg);
+			return super.createEntity(game, msg);
 		}
 	}
 	

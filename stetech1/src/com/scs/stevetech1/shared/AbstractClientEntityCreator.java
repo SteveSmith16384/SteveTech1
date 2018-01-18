@@ -22,14 +22,14 @@ public abstract class AbstractClientEntityCreator {
 	public static final int HITSCAN_RIFLE = 7;
 	public static final int LASER_RIFLE = 8;
 
-	private AbstractGameClient game;
+	//private AbstractGameClient game;
 
-	public AbstractClientEntityCreator(AbstractGameClient client) {
-		game = client;
+	public AbstractClientEntityCreator() {//AbstractGameClient client) {
+		//game = client;
 	}
 
 
-	public IEntity createEntity(NewEntityMessage msg) {
+	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
 		int id = msg.entityID;
 
 		switch (msg.type) {

@@ -49,6 +49,7 @@ import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.KryonetGameClient;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.AverageNumberCalculator;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
@@ -98,10 +99,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	// Entity systems
 	private UpdateAmmoCacheSystem updateAmmoSystem;
 	private AnimationSystem animSystem;
-
-	protected AbstractGameClient() {
+	private AbstractClientEntityCreator entityCreator;
+	
+	protected AbstractGameClient(AbstractClientEntityCreator _entityCreator) {
 		super();
 
+		this.entityCreator =_entityCreator;
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 		updateAmmoSystem = new UpdateAmmoCacheSystem(this);
 		animSystem = new AnimationSystem(this);
@@ -341,7 +344,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	/*
 	 * For when a client requests the server to create an entity, e.g. a grenade (for lobbing).
 	 */
-	protected abstract IEntity createEntity(NewEntityMessage msg);
+	protected final IEntity createEntity(NewEntityMessage msg) {
+		return this.entityCreator.createEntity(this, msg);
+	}
 
 
 	@Override

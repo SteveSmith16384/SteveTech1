@@ -1,15 +1,12 @@
 STETECH1
 
-http://the-witness.net/news/2011/06/how-to-program-independent-games/
-
 URGENT
+How to convert Unity models to .blend?
+Move assets
 Hitscan rifle - show line showing where server says bullet went
 Grenades
-How to convert Unity models to .blend?
 Animation - need to walk and shoot?
 Look for voxel animated character
-Add jme source to repos
-Does JME source compile?
 Use new models
 Show current game time
 Client can always jump, even when in the air
