@@ -27,7 +27,7 @@ import com.scs.stevetech1.shared.PositionCalculator;
 
 public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunchable {
 
-	private float timeLeft = 4f;
+	private float timeLeft = 3f;
 
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
@@ -83,7 +83,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunch
 
 		game.getRootNode().attachChild(this.mainNode);
 		this.setWorldTranslation(_shooter.getBulletStartPos());
-		this.simpleRigidBody.setLinearVelocity(_shooter.getShootDir().normalize().mult(5));
+		this.simpleRigidBody.setLinearVelocity(_shooter.getShootDir().normalize().mult(10));
 		this.collideable = true;
 
 	}

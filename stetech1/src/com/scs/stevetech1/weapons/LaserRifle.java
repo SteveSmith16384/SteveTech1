@@ -3,6 +3,7 @@ package com.scs.stevetech1.weapons;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.LaserBullet;
@@ -26,7 +27,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 	@Override
 	public void launchBullet() {
 		LaserBullet g = ammoCache.remove();
-		g.launch();
+		g.launch((ICanShoot)owner);
 	}
 
 

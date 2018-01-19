@@ -9,11 +9,14 @@ import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
+import com.scs.stevetech1.entities.Grenade;
+import com.scs.stevetech1.entities.LaserBullet;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IAbility;
-import com.scs.stevetech1.weapons.GrenadeLauncher;
+import com.scs.stevetech1.weapons.LaserRifle;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
@@ -71,10 +74,13 @@ public class TestGameServer extends AbstractGameServer {
 	@Override
 	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
-		//case TestGameClientEntityCreator.GRENADE:
-	//		return new Grenade(this, entityid, irac);
+		case AbstractClientEntityCreator.LASER_BULLET:
+			return new LaserBullet(this, entityid, irac);
+			
+		case AbstractClientEntityCreator.GRENADE:
+			return new Grenade(this, entityid, irac);
+			
 		default:
-			//throw new RuntimeException("Unknown entity type: " + type);
 			return super.createEntity(type, entityid, side, irac);
 		}
 	}
@@ -83,7 +89,8 @@ public class TestGameServer extends AbstractGameServer {
 	@Override
 	protected void equipAvatar(AbstractServerAvatar avatar) {
 		//IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
-		IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
+		//IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
+		IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0);
 		this.addEntity(abilityGun);
 		
 		/* 

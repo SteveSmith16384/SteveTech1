@@ -7,13 +7,15 @@ import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.entities.Grenade;
+import com.scs.stevetech1.entities.LaserBullet;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.weapons.GrenadeLauncher;
 import com.scs.stevetech1.weapons.HitscanRifle;
+import com.scs.stevetech1.weapons.LaserRifle;
 
 public abstract class AbstractClientEntityCreator {
 
-	public static final int AVATAR = 1;
+	public static final int AVATAR = 1; // todo - move all these to TestGame
 	public static final int DEBUGGING_SPHERE = 2;
 	public static final int MOVING_TARGET = 3;
 	public static final int LASER_BULLET = 4;
@@ -22,10 +24,8 @@ public abstract class AbstractClientEntityCreator {
 	public static final int HITSCAN_RIFLE = 7;
 	public static final int LASER_RIFLE = 8;
 
-	//private AbstractGameClient game;
-
-	public AbstractClientEntityCreator() {//AbstractGameClient client) {
-		//game = client;
+	
+	public AbstractClientEntityCreator() {
 	}
 
 
@@ -60,10 +60,26 @@ public abstract class AbstractClientEntityCreator {
 			return null;
 		}
 
-		/*case LASER_RIFLE:
-	{
+		case LASER_RIFLE:
+		{
+			int ownerid = (int)msg.data.get("ownerid");
+			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+				int num = (int)msg.data.get("num");
+				LaserRifle gl = new LaserRifle(game, id, owner, num);
+				return gl;
+			}
+			return null;
 
-	}*/
+		}
+
+		case LASER_BULLET:
+		{
+			int containerID = (int) msg.data.get("containerID");
+			IRequiresAmmoCache<LaserBullet> irac = (IRequiresAmmoCache<LaserBullet>)game.entities.get(containerID);
+			LaserBullet bullet = new LaserBullet(game, id, irac);
+			return bullet;
+		}
 
 		case HITSCAN_RIFLE:
 		{
@@ -79,7 +95,7 @@ public abstract class AbstractClientEntityCreator {
 		}
 
 		default:
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Unhandled entity type: " + msg.type);
 		}
 	}
 

@@ -77,8 +77,8 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/Pleasant Park Pack/Props/Tree 1/Materials/tree1.png");
 		model.scale(.5f);*/
 
-		Spatial model = assetManager.loadModel("Models/knightStanding.blend");
-		//model.scale(.02f);
+		Spatial model = assetManager.loadModel("Models/hjmediastudios_space_marine_addon_1.blend");
+		model.scale(.2f);
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);

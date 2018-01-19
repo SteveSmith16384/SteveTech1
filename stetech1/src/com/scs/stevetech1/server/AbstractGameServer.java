@@ -455,11 +455,8 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 	protected abstract void equipAvatar(AbstractServerAvatar avatar);
 
-	//protected abstract IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac);
 	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
-		case AbstractClientEntityCreator.GRENADE:
-			return new Grenade(this, entityid, irac);
 		default:
 			throw new RuntimeException("Unknown entity type: " + type);
 			//return super.createEntity();

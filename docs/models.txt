@@ -1,6 +1,5 @@
 MODELS
-
-http://www.blendernation.com
+http://openarena.ws/svn/source/assets/models/
 https://www.blendswap.com/blends/search?keywords=game+ready&is_fan_art=0&blend_license=&render_engine=&sort=downloads&direction=desc&page=7
 
 
@@ -24,18 +23,14 @@ https://www.cgtrader.com/free-3d-models/electronics/computer/servers - computer
 UNUSED MODELS
 https://www.gamedevmarket.net/asset/3d-warriors-9290/ - no anims
 https://droner503.itch.io/human- - No anims or tex
-https://www.blendswap.com/blends/view/68864 - minecraft blocks - fan art
 https://www.blendswap.com/blends/view/4420 - simple robot, no anims
 https://free3d.com/3d-model/low-poly-rigs-soldier-25083.html - waiting to register
 https://www.blendswap.com/blends/view/22012 - Too big (takes ages to load in ModelViewer)
-https://www.blendswap.com/blends/view/60186 - Steve, unanimated, fan art
 https://www.blendswap.com/blends/view/57426 - minecraft, fan art
-https://www.blendswap.com/blends/view/25727 - various minecraft, Fan Art
 https://github.com/AlwaysGeeky/Vox - qb file
 https://github.com/yvt/openspades - .weak files
 https://github.com/iamgreaser/iceball/ - kv6 files
 https://www.blendswap.com/blends/view/84830 - fallout low-poly armour - Fan Art
-https://www.blendswap.com/blends/view/77482 - unfinished smooth minecraft models, Fan ART
 https://www.blendswap.com/blends/view/49007 - steve - all white
 https://www.blendswap.com/blends/view/49476 - green morph-style - nothing showing
 https://www.blendswap.com/blends/view/58694 - no licence
@@ -53,6 +48,12 @@ https://www.blendswap.com/blends/view/69443 - low poly robot, not animated
 https://opengameart.org/content/scifi-girl - no model
 https://opengameart.org/content/thb-5j-thunderbird - wont load
 https://opengameart.org/content/low-poly-robot - Unknown curve type
+https://opengameart.org/content/mech - no anim control
+https://www.blendswap.com/blends/view/4984 - error when loading - AIOOB
+https://www.blendswap.com/blends/view/24682 - error when loading - AIOOB
+https://www.blendswap.com/blends/view/40767 - error loading
+https://www.blendswap.com/blends/view/84832 - no tex, lots of extra polygons
+https://www.blendswap.com/blends/view/80076 - no tex, lots of extra polygons
 
 
 USED
