@@ -1,4 +1,4 @@
-package com.scs.stevetech1.weapons;
+package com.scs.testgame.weapons;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,10 +6,12 @@ import java.util.LinkedList;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
-import com.scs.stevetech1.entities.Grenade;
 import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.stevetech1.weapons.AbstractMagazineGun;
+import com.scs.testgame.TestGameClientEntityCreator;
+import com.scs.testgame.entities.Grenade;
 
 public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache<Grenade> {
 
@@ -18,7 +20,7 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 	private LinkedList<Grenade> ammoCache = new LinkedList<Grenade>(); 
 
 	public GrenadeLauncher(IEntityController game, int id, AbstractAvatar owner, int num) {
-		super(game, id, AbstractClientEntityCreator.GRENADE_LAUNCHER, owner, num, "GrenadeLauncher", 1, 3, MAG_SIZE);
+		super(game, id, TestGameClientEntityCreator.GRENADE_LAUNCHER, owner, num, "GrenadeLauncher", 1, 3, MAG_SIZE);
 
 	}
 
@@ -32,8 +34,9 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 
 	@Override
 	public int getAmmoType() {
-		return AbstractClientEntityCreator.GRENADE;
+		return TestGameClientEntityCreator.GRENADE;
 	}
+	
 
 	@Override
 	public boolean requiresAmmo() {

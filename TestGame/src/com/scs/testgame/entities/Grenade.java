@@ -1,4 +1,4 @@
-package com.scs.stevetech1.entities;
+package com.scs.testgame.entities;
 
 import java.util.HashMap;
 
@@ -15,15 +15,15 @@ import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.ICanShoot;
-import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunchable {
 
@@ -35,7 +35,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunch
 	public ICanShoot shooter; // So we know who not to collide with
 
 	public Grenade(IEntityController _game, int id, IRequiresAmmoCache<Grenade> owner) {
-		super(_game, id, AbstractClientEntityCreator.GRENADE, "Grenade", true);
+		super(_game, id, TestGameClientEntityCreator.GRENADE, "Grenade", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

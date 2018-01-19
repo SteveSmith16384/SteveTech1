@@ -1,10 +1,11 @@
 STETECH1
 
 URGENT
-Move entities to a specific game
-Laser bullets - copy grenade
+Make lobby a sep project
+	Move entities to a specific game
+	Laser bullets - copy grenade
 Finish a game!
-Search for 3d open-source games
+	Search for 3d open-source games
 Add open-source msg to the top of all files
 Hitscan rifle - show line showing where server says bullet went
 Look for voxel animated character
@@ -16,7 +17,6 @@ Search for todos
 
 
 TODO
-Make lobby a sep project
 Move assets
 Animation - need to walk and shoot?  IAnimationFlags
 Blog post progress

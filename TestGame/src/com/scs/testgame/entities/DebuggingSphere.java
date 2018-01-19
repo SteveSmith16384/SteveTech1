@@ -1,4 +1,4 @@
-package com.scs.stevetech1.entities;
+package com.scs.testgame.entities;
 
 import java.util.HashMap;
 
@@ -11,10 +11,11 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 /*
  * Simple sphere to help show points in the world
@@ -26,7 +27,7 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 	private float timeLeft = DURATION;
 
 	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z, boolean server) {
-		super(_game, id, AbstractClientEntityCreator.DEBUGGING_SPHERE, "DebuggingSphere", false);
+		super(_game, id, TestGameClientEntityCreator.DEBUGGING_SPHERE, "DebuggingSphere", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

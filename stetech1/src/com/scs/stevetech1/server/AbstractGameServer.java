@@ -27,7 +27,6 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
-import com.scs.stevetech1.entities.Grenade;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
@@ -50,7 +49,6 @@ import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.IMessageServerListener;
 import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.IEntityController;
 

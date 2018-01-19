@@ -1,4 +1,4 @@
-package com.scs.stevetech1.weapons;
+package com.scs.testgame.weapons;
 
 import java.util.HashMap;
 
@@ -8,12 +8,13 @@ import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.entities.AbstractAvatar;
-import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.stevetech1.weapons.AbstractMagazineGun;
+import com.scs.testgame.TestGameClientEntityCreator;
+import com.scs.testgame.entities.DebuggingSphere;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
@@ -22,7 +23,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	public RayCollisionData hitThisMoment = null; // Only used server-side
 
 	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
-		super(game, id, AbstractClientEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, 10);
+		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, 10);
 
 	}
 

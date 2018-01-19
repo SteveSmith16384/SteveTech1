@@ -9,18 +9,17 @@ import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
-import com.scs.stevetech1.entities.Grenade;
-import com.scs.stevetech1.entities.LaserBullet;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IAbility;
-import com.scs.stevetech1.weapons.LaserRifle;
 import com.scs.testgame.entities.Floor;
+import com.scs.testgame.entities.Grenade;
+import com.scs.testgame.entities.LaserBullet;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
 import com.scs.testgame.models.HouseModel;
+import com.scs.testgame.weapons.LaserRifle;
 
 public class TestGameServer extends AbstractGameServer {
 
@@ -74,10 +73,10 @@ public class TestGameServer extends AbstractGameServer {
 	@Override
 	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
-		case AbstractClientEntityCreator.LASER_BULLET:
+		case TestGameClientEntityCreator.LASER_BULLET:
 			return new LaserBullet(this, entityid, irac);
 			
-		case AbstractClientEntityCreator.GRENADE:
+		case TestGameClientEntityCreator.GRENADE:
 			return new Grenade(this, entityid, irac);
 			
 		default:

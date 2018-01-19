@@ -1,4 +1,4 @@
-package com.scs.stevetech1.entities;
+package com.scs.testgame.entities;
 
 import java.util.HashMap;
 
@@ -16,12 +16,13 @@ import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, ILaunchable, IRemoveOnContact {
 
@@ -34,7 +35,7 @@ public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICa
 
 
 	public LaserBullet(IEntityController _game, int id, IRequiresAmmoCache<LaserBullet> owner) {
-		super(_game, id, AbstractClientEntityCreator.LASER_BULLET, "LaserBullet", true);
+		super(_game, id, TestGameClientEntityCreator.LASER_BULLET, "LaserBullet", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -107,7 +108,6 @@ public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICa
 		if (launched) {
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft < 0) {
-				// todo - damage surrounding entities
 				this.remove();
 			}
 			super.processByServer(server, tpf_secs);
@@ -122,7 +122,6 @@ public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICa
 
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft < 0) {
-				//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
 				this.remove();
 			}
 		}
