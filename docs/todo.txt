@@ -4,14 +4,10 @@ URGENT
 Grenades
 Laser bullets
 Finish a game!
-Look for low-poly interiors
-Search for 3d op-source games
+Search for 3d open-source games
 Add open-source msg to the top of all files
-How to convert Unity models to .blend?
-Move assets
 Hitscan rifle - show line showing where server says bullet went
 Look for voxel animated character
-Use new models
 Show current game time
 Client can always jump, even when in the air
 	Client countdown game time itself
@@ -20,17 +16,15 @@ Search for todos
 
 
 TODO
-Animation - need to walk and shoot?
-Why is the house in the ground
+Move assets
+Animation - need to walk and shoot?  IAnimationFlags
 Blog post progress
 Record desktop showing two players
 Animate backwards when walking backwards
 Create moonbase map
 Look for soldiers for Moonbase Assault
 Simple console GUI for connecting to lobby
-Make game lobby a separate project
 Game lobby
-Use Logger, as per Kryo
 Do tracer-style rewind
 Console to connect to lobby
 Origin of entities should be floor 
@@ -44,9 +38,7 @@ Lobby queue players
 Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
-Create sep projects for each game
-Use latest JME libs
-Walking up steps - have flag to force player to rise
+Walking up steps
 Physics test - do explosion
 Server don't check for hit unless client thinks it has hit
 Use test annotations
@@ -59,10 +51,11 @@ Test with cheating client
 Reduce object creation, including calls to clone()
 Kryonet encryption?
 User enter name
-Use gradle for libraries
 
 
 LATER
+Use gradle for libraries
+Use latest JME libs
 Simple physics - pushing
 Don't use broadcast()?s
 Kick players who don't move

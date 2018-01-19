@@ -6,7 +6,7 @@ Test Game
 
 What the Box
 
-Undercover Agent/Undercover Zombie
+Undercover Agent
 	Like What the Box, but people are walking around.  Who is the other agent?
 
 
@@ -25,7 +25,8 @@ Overwatch Clone
 	Invisible - turns invisible if keep still for a while
 	Secret Agent - spoon is the deadliest weapon
 	Objective: must cover all squares
-	
+	When a player dies, they come back more powerful
+
 
 FTL
 	Assign jobs to drones - repair

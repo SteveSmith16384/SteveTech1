@@ -77,15 +77,16 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/Pleasant Park Pack/Props/Tree 1/Materials/tree1.png");
 		model.scale(.5f);*/
 
-		Spatial model = assetManager.loadModel("Models/Human55.blend");
-		//model.scale(.2f);
+		Spatial model = assetManager.loadModel("Models/knightStanding.blend");
+		//model.scale(.02f);
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);
 			if (control != null) {
 				control.addListener(this);
+				Globals.p("Animations: " + control.getAnimationNames());
 				AnimChannel channel = control.createChannel();
-				channel.setAnim("Idle");
+				//channel.setAnim("03 run");
 			} else {
 				Globals.p("No animation control");
 			}
@@ -137,7 +138,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		// We add light so we see the scene
 		AmbientLight al = new AmbientLight();
-		al.setColor(ColorRGBA.White.mult(1f));
+		al.setColor(ColorRGBA.White.mult(2f));
 		rootNode.addLight(al);
 
 		DirectionalLight dirlight = new DirectionalLight(); // FSR need this for textures to show

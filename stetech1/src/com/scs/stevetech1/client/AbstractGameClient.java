@@ -547,12 +547,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		return physicsController;
 	}
 
-
+/*
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		return true;
 	}
-
+*/
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {

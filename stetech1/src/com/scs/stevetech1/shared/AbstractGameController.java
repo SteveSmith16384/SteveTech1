@@ -9,8 +9,8 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.entities.AbstractAvatar;
-import com.scs.stevetech1.entities.Grenade;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 
@@ -29,6 +29,11 @@ public abstract class AbstractGameController extends SimpleApplication implement
 	protected FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS);
 	protected RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
+	public AbstractGameController() {
+		super();
+	}
+
+	
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pa = a.userObject;
@@ -46,18 +51,17 @@ public abstract class AbstractGameController extends SimpleApplication implement
 				return false;
 			}
 		}
-
-		if (pa instanceof Grenade && pb instanceof AbstractAvatar) {
-			Grenade aa = (Grenade)pa;
-			AbstractAvatar ab = (AbstractAvatar)pb;
-			if (aa.shooter == ab) {
+		
+		// Prevent bullets getting hit by the shooter
+		if (pa instanceof ILaunchable) {
+			ILaunchable aa = (ILaunchable)pa;
+			if (aa.getLauncher() == pb) {
 				return false;
 			}
 		}
-		if (pb instanceof Grenade && pa instanceof AbstractAvatar) {
-			Grenade ab = (Grenade)pb;
-			AbstractAvatar aa = (AbstractAvatar)pa;
-			if (ab.shooter == aa) {
+		if (pb instanceof ILaunchable) {
+			ILaunchable ab = (ILaunchable)pb;
+			if (ab.getLauncher() == pa) {
 				return false;
 			}
 		}

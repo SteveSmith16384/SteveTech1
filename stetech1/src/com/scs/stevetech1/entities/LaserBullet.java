@@ -6,6 +6,7 @@ import com.jme3.scene.Node;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.models.BeamLaserModel;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -13,7 +14,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact, IRemoveOnContact { // Rename to Generic
+public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact, ILaunchable, IRemoveOnContact {
 
 	public ICanShoot shooter;
 	private float timeLeft = 3;
@@ -74,6 +75,12 @@ public class LaserBullet extends PhysicalEntity implements ICausesHarmOnContact,
 	@Override
 	public int getSide() {
 		return shooter.getSide();
+	}
+
+
+	@Override
+	public ICanShoot getLauncher() {
+		return shooter;
 	}
 
 

@@ -16,6 +16,7 @@ import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -24,14 +25,14 @@ import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public class Grenade extends PhysicalEntity implements IProcessByClient { // todo - rename to GenericGrenade
+public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunchable {
 
 	private float timeLeft = 4f;
 
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	private boolean launched = false;
-	public IEntity shooter; // So we know who not to collide with
+	public ICanShoot shooter; // So we know who not to collide with
 
 	public Grenade(IEntityController _game, int id, IRequiresAmmoCache<Grenade> owner) {
 		super(_game, id, AbstractClientEntityCreator.GRENADE, "Grenade", true);
@@ -76,7 +77,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient { // tod
 	public void launch(ICanShoot _shooter) {
 		launched = true;
 
-		shooter = (IEntity)_shooter;
+		shooter = _shooter;
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 		this.simpleRigidBody.setBounciness(.6f);
 
@@ -128,5 +129,12 @@ public class Grenade extends PhysicalEntity implements IProcessByClient { // tod
 		//super.processByServer(null, tpf_secs);
 
 	}
+
+
+	@Override
+	public ICanShoot getLauncher() {
+		return shooter;
+	}
+
 
 }
