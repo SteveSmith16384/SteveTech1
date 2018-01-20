@@ -1,7 +1,10 @@
 STETECH1
 
+https://en.wikipedia.org/wiki/Fortnite
+
 URGENT
-Grenades
+Physics engine - what happens when bouncing not at 90 degrees?
+	Grenades
 Laser bullets
 Finish a game!
 Search for 3d open-source games
