@@ -24,9 +24,9 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 	@Override
 	public Spatial getModel(boolean forClient) {
 		if (forClient) {
-			Spatial model = assetManager.loadModel("Models/3d-character/character/character.blend"); // todo
-			//model.scale(.125f); // Make 1 high
-			model.setModelBound(new BoundingBox());
+			Spatial model = assetManager.loadModel("Models/Holiday/Snowman.obj");
+			//model.scale(.125f); // todo - Make .7 high
+			// todo - position origin at bottom
 			return model;
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);

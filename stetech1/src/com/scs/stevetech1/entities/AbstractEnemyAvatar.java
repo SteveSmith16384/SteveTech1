@@ -3,11 +3,8 @@ package com.scs.stevetech1.entities;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimated;
-import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 

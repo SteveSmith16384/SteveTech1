@@ -14,6 +14,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.undercoveragent.entities.SnowFloor;
+import com.scs.undercoveragent.entities.SnowHill1;
 import com.scs.undercoveragent.entities.Snowball;
 import com.scs.undercoveragent.entities.SnowmanServerAvatar;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
@@ -32,7 +33,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	public UndercoverAgentServer() throws IOException {
-		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 5*60*1000, 10*1000, Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.LOBBY_IP_ADDRESS, Globals.LOBBY_PORT));
+		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 5*60*1000, 10*1000, UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT));
 	}
 
 
@@ -43,14 +44,9 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	protected void createGame() {
-		new SnowFloor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
+		new SnowFloor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null); // todo - snow tex
 
-		//new Crate(this, getNextEntityID(), 8, 5, 8, 1, 1, 1f, "Textures/crate.png", 65);
-		//new Wall(this, getNextEntityID(), 30, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 270);
-
-		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
-
-		//new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
+		new SnowHill1(this, getNextEntityID(), 8, 5, 8, 0);
 		
 	}
 

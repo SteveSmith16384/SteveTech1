@@ -15,10 +15,10 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
+import com.scs.testgame.entities.HouseModel;
 import com.scs.testgame.entities.LaserBullet;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
-import com.scs.testgame.models.HouseModel;
 import com.scs.testgame.weapons.LaserRifle;
 
 public class TestGameServer extends AbstractGameServer {
@@ -35,7 +35,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	public TestGameServer() throws IOException {
-		super(new GameOptions("Test Game", 1, 999, 10*1000, 5*60*1000, 10*1000, Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.LOBBY_IP_ADDRESS, Globals.LOBBY_PORT));
+		super(new GameOptions("Test Game", 1, 999, 10*1000, 5*60*1000, 10*1000, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, TestGameStaticData.LOBBY_IP_ADDRESS, TestGameStaticData.LOBBY_PORT));
 	}
 
 

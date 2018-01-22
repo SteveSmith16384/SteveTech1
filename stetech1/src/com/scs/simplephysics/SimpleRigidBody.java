@@ -30,7 +30,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	private CollisionResults collisionResults = new CollisionResults();
 
-	public SimpleRigidBody(Spatial s, SimplePhysicsController<T> _controller,boolean moves, T _tag) {
+	public SimpleRigidBody(Spatial s, SimplePhysicsController<T> _controller, boolean moves, T _tag) {
 		super();
 
 		spatial = s;  //spatial.getLocalTranslation();

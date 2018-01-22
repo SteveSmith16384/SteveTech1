@@ -1,3 +1,27 @@
+QUATERNIUS
+Works:
+Holiday:
+Snowman
+Igloo.blend
+Igloo2.blend - Looks the same as igloo1 though
+Terrain.blend
+
+SnowNature:
+Bush1.blend
+
+Cars:
+Taxi
+
+Desert:
+BigPalmTree.blend
+
+
+Not quite:
+Holiday:
+Christmas Tree.blend - No tex
+Elk.blend - no tex
+
+
 MODELS
 http://openarena.ws/svn/source/assets/models/
 https://www.blendswap.com/blends/search?keywords=game+ready&is_fan_art=0&blend_license=&render_engine=&sort=downloads&direction=desc&page=7

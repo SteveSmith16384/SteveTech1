@@ -1,4 +1,4 @@
-package com.scs.testgame.models;
+package com.scs.testgame.entities;
 
 import java.util.HashMap;
 
@@ -13,7 +13,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 
-public class HouseModel extends PhysicalEntity {
+public class HouseModel extends PhysicalEntity { // todo - rename
 
 	private static final float w = 3.8f;
 	private static final float h = 3f;
@@ -28,7 +28,7 @@ public class HouseModel extends PhysicalEntity {
 		}
 
 		Spatial model = null;
-		if (!_game.isServer()) { // !_game.isServer()) { // Not running in server
+		if (!_game.isServer()) {
 			model = game.getAssetManager().loadModel("Models/3d-character/environment/house/model.blend");
 			model.scale(0.4f);
 			model.setModelBound(new BoundingBox());

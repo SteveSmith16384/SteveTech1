@@ -101,14 +101,21 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private AnimationSystem animSystem;
 	private AbstractClientEntityCreator entityCreator;
 	
-	protected AbstractGameClient(AbstractClientEntityCreator _entityCreator) {
+	protected AbstractGameClient(String serverIP, int port, AbstractClientEntityCreator _entityCreator) {
 		super();
 
 		this.entityCreator =_entityCreator;
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 		updateAmmoSystem = new UpdateAmmoCacheSystem(this);
 		animSystem = new AnimationSystem(this);
-	}
+
+		try {
+			networkClient = new KryonetGameClient(serverIP, port, port, this); // todo - connect to lobby first!
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
+}
 
 
 	@Override
@@ -141,12 +148,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			Globals.p("Recording video");
 			VideoRecorderAppState video_recorder = new VideoRecorderAppState();
 			stateManager.attach(video_recorder);
-		}
-
-		try {
-			networkClient = new KryonetGameClient(Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.GAME_PORT, this); // todo - connect to lobby first!
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
 		}
 
 		loopTimer.start();

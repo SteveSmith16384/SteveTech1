@@ -14,14 +14,16 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 
 	public TestGameEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
 		super(game, pid, eid, x, y, z);
+		
+		model = new CharacterModel(game.getAssetManager());
 	}
 
 	
 	@Override
 	protected Spatial getPlayersModel(IEntityController game, int pid) {
-		if (model == null) {
+		/*if (model == null) {
 			model = new CharacterModel(game.getAssetManager());
-		}
+		}*/
 		return model.getModel(true);
 
 	}
