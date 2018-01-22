@@ -1,9 +1,14 @@
 STETECH1
 
+https://en.wikipedia.org/wiki/Fortnite
+
 URGENT
 Make lobby a sep project
 	Move entities to a specific game
 	Laser bullets - copy grenade
+Physics engine - what happens when bouncing not at 90 degrees?
+	Grenades
+Laser bullets
 Finish a game!
 	Search for 3d open-source games
 Add open-source msg to the top of all files

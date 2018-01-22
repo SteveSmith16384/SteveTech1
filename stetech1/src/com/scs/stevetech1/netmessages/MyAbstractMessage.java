@@ -7,13 +7,14 @@ import com.jme3.network.serializing.Serializable;
 import com.scs.stevetech1.server.ClientData;
 
 @Serializable
-public class MyAbstractMessage extends AbstractMessage {
+public class MyAbstractMessage { //extends AbstractMessage {
 
 	private transient static AtomicLong nextMsgID = new AtomicLong();
 
 	public long msgId;
 	public long timestamp = System.currentTimeMillis();
 	public transient ClientData client; // for the server to keep track of who sent it
+	private boolean reliable;
 	
 	public MyAbstractMessage() { // For serialization
 		super();
@@ -28,4 +29,13 @@ public class MyAbstractMessage extends AbstractMessage {
 		
 	}
 
+	
+	protected void setReliable(boolean b) {
+		this.reliable = b;
+	}
+
+	
+	public boolean isReliable() {
+		return this.reliable;
+	}
 }
