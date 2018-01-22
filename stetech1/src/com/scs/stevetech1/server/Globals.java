@@ -19,7 +19,7 @@ public class Globals {
 	public static final boolean DEBUG_SHOOTING_POS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 
-	public static final String GAME_IP_ADDRESS = "localhost";
+	public static final String GAME_IP_ADDRESS = "localhost"; // todo - move game-specific code to sep projects
 	public static final String LOBBY_IP_ADDRESS = "localhost";
 	public static final int GAME_PORT = 6143;
 	//public static final int UDP_PORT = 6143;

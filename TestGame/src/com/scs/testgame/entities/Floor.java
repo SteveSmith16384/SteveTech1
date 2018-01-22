@@ -133,11 +133,4 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 
 	}
 
-/*
-	@Override
-	public boolean canMove() {
-		return false;
-	}
-*/
-
 }

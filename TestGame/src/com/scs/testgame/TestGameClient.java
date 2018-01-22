@@ -11,7 +11,7 @@ import com.scs.stevetech1.server.Globals;
 public class TestGameClient extends AbstractGameClient {
 
 	//private TestGameClientEntityCreator creator;
-	
+
 	public static void main(String[] args) {
 		try {
 			settings = new AppSettings(true);
@@ -66,15 +66,6 @@ public class TestGameClient extends AbstractGameClient {
 
 	public TestGameClient() {
 		super(new TestGameClientEntityCreator());
-		
-		//creator = new TestGameClientEntityCreator(this);
 	}
 
-/*
-	@Override
-	protected IEntity createEntity(NewEntityMessage msg) {
-		return creator.createEntity(msg);
-	}
-
-*/
 }

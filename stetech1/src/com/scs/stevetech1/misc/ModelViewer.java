@@ -20,7 +20,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 	private AnimControl control;
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		ModelViewer app = new ModelViewer();
 		app.showSettings = false;
 
@@ -31,6 +31,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 	@Override
 	public void simpleInitApp() {
 		assetManager.registerLocator("assets/", FileLocator.class); // default
+		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class); // default
 		//assetManager.registerLocator("assets/Textures/", FileLocator.class);
 
 		super.getViewPort().setBackgroundColor(ColorRGBA.Black);
@@ -38,47 +39,14 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
 
 		setupLight();
-
-		/*
+/*
 		Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
 		model.scale(.125f);
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
-		 */
-
-		/*
-		Spatial model = assetManager.loadModel("Models/3d-character/environment/house/model.blend");
-		model.scale(.4f);
-		 */
-
-		//Spatial model = assetManager.loadModel("Models/3d-character/environment/wood-barrier/model.blend"); // Fence post
-		//model.scale(1);
-
-		//Spatial model = assetManager.loadModel("Models/3d-character/environment/wall/model.blend"); // Has a bend in it?
-		//model.scale(1);
-
-		//Spatial model = assetManager.loadModel("Models/3d-character/environment/floor/model.blend"); // Funny shaped floor
-		//JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/3d-character/environment/floor/texture.png");
-		//model.scale(1);
-
-		//Spatial model = assetManager.loadModel("Models/3d-character/environment/grass/modelgrass2.blend");
-		//JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/3d-character/environment/grass/textureGrass1.png");
-		//model.scale(.1f);
-
-		//Spatial model = assetManager.loadModel("Models/3d-character/environment/pole/model.blend");
-		//model.scale(.1f);
-
-		/*Spatial model = assetManager.loadModel("Models/3d-character/environment/trash-can/model.blend");
-		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/3d-character/environment/trash-can/texture.png");
-		model.scale(1f);*/
-
-		//Spatial model = assetManager.loadModel("Models/3d-vehicles/car/car.blend"); // Good
-
-		/*Spatial model = assetManager.loadModel("Models/Pleasant Park Pack/Props/Tree 1/tree1.obj");
-		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/Pleasant Park Pack/Props/Tree 1/Materials/tree1.png");
-		model.scale(.5f);*/
-
-		Spatial model = assetManager.loadModel("Models/hjmediastudios_space_marine_addon_1.blend");
-		model.scale(.2f);
+*/
+		Spatial model = assetManager.loadModel("Models/Desert/Skull.blend");
+		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/Desert/Textures/Skull.png");
+		//model.scale(.2f);
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);
@@ -86,7 +54,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 				control.addListener(this);
 				Globals.p("Animations: " + control.getAnimationNames());
 				AnimChannel channel = control.createChannel();
-				//channel.setAnim("03 run");
+				channel.setAnim("ZombieWalk");
 			} else {
 				Globals.p("No animation control");
 			}
@@ -138,10 +106,11 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		// We add light so we see the scene
 		AmbientLight al = new AmbientLight();
-		al.setColor(ColorRGBA.White.mult(2f));
+		al.setColor(ColorRGBA.White.mult(.5f));
 		rootNode.addLight(al);
 
 		DirectionalLight dirlight = new DirectionalLight(); // FSR need this for textures to show
+		dirlight.setColor(ColorRGBA.White.mult(.5f));
 		rootNode.addLight(dirlight);
 
 	}
