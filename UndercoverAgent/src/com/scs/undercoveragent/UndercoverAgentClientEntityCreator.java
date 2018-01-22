@@ -6,11 +6,15 @@ import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 
-public class UndercoverAgentEntityCreator extends AbstractClientEntityCreator {
+public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCreator {
 
-	public static final int HOUSE = 106;
+	public static final int AVATAR = 1;
+	public static final int FLOOR = 2;
+	
+	public static final int SNOWBALL_LAUNCHER = 10;
+	public static final int SNOWBALL = 11;
 
-	public UndercoverAgentEntityCreator() {
+	public UndercoverAgentClientEntityCreator() {
 		super();
 	}
 
@@ -23,7 +27,7 @@ public class UndercoverAgentEntityCreator extends AbstractClientEntityCreator {
 		int id = msg.entityID;
 
 		switch (msg.type) {
-		case HOUSE:
+		case SNOWBALL:
 		{
 			// todo
 		}
