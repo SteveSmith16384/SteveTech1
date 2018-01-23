@@ -88,7 +88,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		console = new ServerConsole(this);
 
 		gameData = new SimpleGameData();
-		networkServer = new KryonetGameServer(Globals.GAME_PORT, Globals.GAME_PORT, this);
+		networkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 	}

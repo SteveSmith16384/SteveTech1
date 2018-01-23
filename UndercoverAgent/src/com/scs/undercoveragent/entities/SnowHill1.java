@@ -28,7 +28,7 @@ public class SnowHill1 extends PhysicalEntity {
 		model = game.getAssetManager().loadModel("Models/3d-character/environment/house/model.blend"); // todo
 		//model.scale(0.4f);
 		//model.setModelBound(new BoundingBox());
-		//model.setLocalTranslation(0, .15f, 0); // todo - why do I need this?
+		//model.setLocalTranslation(0, .15f, 0);
 		this.mainNode.attachChild(model); //This creates the model bounds!
 		
 		float rads = (float)Math.toRadians(rotDegrees);

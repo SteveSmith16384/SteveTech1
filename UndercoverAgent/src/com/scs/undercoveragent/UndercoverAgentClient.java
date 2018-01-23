@@ -63,7 +63,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 
 	public UndercoverAgentClient() {
-		super(new UndercoverAgentClientEntityCreator());
+		super(UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, new UndercoverAgentClientEntityCreator());
 	}
 
 }

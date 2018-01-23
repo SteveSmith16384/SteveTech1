@@ -12,12 +12,11 @@ import com.scs.stevetech1.networking.IMessageServerListener;
 import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.Globals;
 
-public class LobbyMain implements IMessageServerListener {
-
-	private KryonetLobbyServer networkServer;
+public abstract class AbstractLobbyServer implements IMessageServerListener {
 
 	private HashMap<String, GameServerDetails> gameServers = new HashMap<String, GameServerDetails>(); // game name::data
-
+	private KryonetLobbyServer lobbyServer;
+/*
 	public static void main(String[] args) {
 		try {
 			new LobbyMain();
@@ -26,10 +25,10 @@ public class LobbyMain implements IMessageServerListener {
 		}
 
 	}
+*/
 
-
-	public LobbyMain() throws IOException {
-		networkServer = new KryonetLobbyServer(Globals.LOBBY_PORT, Globals.LOBBY_PORT, this);
+	public AbstractLobbyServer(int port) throws IOException {
+		lobbyServer = new KryonetLobbyServer(port, port, this);
 		// todo - loop through and remove game servers that we haven't heard of for a while
 	}
 

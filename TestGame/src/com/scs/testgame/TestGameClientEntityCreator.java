@@ -16,7 +16,7 @@ import com.scs.testgame.entities.DebuggingSphere;
 import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
-import com.scs.testgame.entities.HouseModel;
+import com.scs.testgame.entities.House;
 import com.scs.testgame.entities.LaserBullet;
 import com.scs.testgame.entities.MovingTarget;
 import com.scs.testgame.entities.TestGameClientAvatar;
@@ -212,7 +212,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
-			HouseModel house = new HouseModel(game, id, pos.x, pos.y, pos.z, 0);
+			House house = new House(game, id, pos.x, pos.y, pos.z, 0);
 			return house;
 		}
 

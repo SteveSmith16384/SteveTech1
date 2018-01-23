@@ -11,8 +11,8 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
-import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
+import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowHill1;
 import com.scs.undercoveragent.entities.Snowball;
@@ -47,6 +47,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		new SnowFloor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null); // todo - snow tex
 
 		new SnowHill1(this, getNextEntityID(), 8, 5, 8, 0);
+		new Igloo(this, getNextEntityID(), 8, 5, 8, 0);
 		
 	}
 

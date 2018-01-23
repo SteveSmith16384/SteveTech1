@@ -4,8 +4,6 @@ import java.util.prefs.BackingStoreException;
 
 import com.jme3.system.AppSettings;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 
 public class TestGameClient extends AbstractGameClient {
@@ -65,7 +63,7 @@ public class TestGameClient extends AbstractGameClient {
 
 
 	public TestGameClient() {
-		super(new TestGameClientEntityCreator());
+		super(TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, new TestGameClientEntityCreator());
 	}
 
 }

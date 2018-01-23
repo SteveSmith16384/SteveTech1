@@ -17,6 +17,7 @@ import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -25,9 +26,7 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
-public class Snowball extends PhysicalEntity implements IProcessByClient, ILaunchable {
-
-	private float timeLeft = 3f;
+public class Snowball extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact {
 
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
@@ -105,11 +104,6 @@ public class Snowball extends PhysicalEntity implements IProcessByClient, ILaunc
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (launched) {
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
-				// todo - damage surrounding entities
-				this.remove();
-			}
 			super.processByServer(server, tpf_secs);
 		}
 	}
@@ -119,15 +113,7 @@ public class Snowball extends PhysicalEntity implements IProcessByClient, ILaunc
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		if (launched) {
 			simpleRigidBody.process(tpf_secs);
-
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
-				//todo game.doExplosion(this.getWorldTranslation(), this);//, 3, 10);
-				this.remove();
-			}
 		}
-		//super.processByServer(null, tpf_secs);
-
 	}
 
 

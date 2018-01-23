@@ -15,7 +15,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.Grenade;
-import com.scs.testgame.entities.HouseModel;
+import com.scs.testgame.entities.House;
 import com.scs.testgame.entities.LaserBullet;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
@@ -60,7 +60,7 @@ public class TestGameServer extends AbstractGameServer {
 		
 		//new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
 		
-		new HouseModel(this, getNextEntityID(), 20, 0, 20, 0);
+		new House(this, getNextEntityID(), 20, 0, 20, 0);
 	}
 
 

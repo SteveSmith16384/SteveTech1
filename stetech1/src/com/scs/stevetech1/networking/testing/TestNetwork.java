@@ -14,13 +14,16 @@ import com.scs.stevetech1.server.Globals;
 
 public class TestNetwork implements IMessageServerListener, IMessageClientListener {
 	
+	private static final int GAME_PORT = 1234;
+	private static final String GAME_IP_ADDRESS = "localhost";
+	
 	private IGameMessageServer server;
 	private IGameMessageClient client;
 
 	public TestNetwork() throws IOException {
-		server = new KryonetGameServer(Globals.GAME_PORT, Globals.GAME_PORT, this);
+		server = new KryonetGameServer(GAME_PORT, GAME_PORT, this);
 		//server.setListener(this);
-		client = new KryonetGameClient(Globals.GAME_IP_ADDRESS, Globals.GAME_PORT, Globals.GAME_PORT, this);
+		client = new KryonetGameClient(GAME_IP_ADDRESS, GAME_PORT, GAME_PORT, this);
 		
 	}
 

@@ -13,13 +13,13 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 
-public class HouseModel extends PhysicalEntity { // todo - rename
+public class House extends PhysicalEntity {
 
 	private static final float w = 3.8f;
 	private static final float h = 3f;
 	private static final float d = 3f;
 	
-	public HouseModel(IEntityController _game, int id, float x, float y, float z, float rotDegrees) {
+	public House(IEntityController _game, int id, float x, float y, float z, float rotDegrees) {
 		super(_game, id, TestGameClientEntityCreator.HOUSE, "House", false);
 
 		if (_game.isServer()) {
