@@ -1,6 +1,5 @@
 package com.scs.testgame.entities;
 
-import com.jme3.scene.Spatial;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
@@ -13,21 +12,18 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 	private CharacterModel model;
 
 	public TestGameEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
-		super(game, pid, eid, x, y, z);
+		super(game, pid, eid, x, y, z, new CharacterModel(game.getAssetManager()));
 		
-		model = new CharacterModel(game.getAssetManager());
+		model = (CharacterModel)super.anim;
 	}
 
-	
+	/*
 	@Override
 	protected Spatial getPlayersModel(IEntityController game, int pid) {
-		/*if (model == null) {
-			model = new CharacterModel(game.getAssetManager());
-		}*/
 		return model.getModel(true);
 
 	}
-
+*/
 
 	@Override
 	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {

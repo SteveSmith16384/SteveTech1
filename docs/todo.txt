@@ -1,6 +1,7 @@
 STETECH1
 
 URGENT
+Have generic "entity owners"
 Requesting millions of bullets!
 	When avatar removed, remove weapons
 	When weapon  removed, remove bullets

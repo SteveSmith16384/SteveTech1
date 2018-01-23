@@ -26,9 +26,13 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 
 
 	@Override
-	public void launchBullet() {
-		Grenade g = ammoCache.remove();
-		g.launch((ICanShoot)owner);
+	public boolean launchBullet() {
+		if (!ammoCache.isEmpty()) {
+			Grenade g = ammoCache.remove();
+			g.launch((ICanShoot)owner);
+			return true;
+		}
+		return false;
 	}
 
 
@@ -36,7 +40,7 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 	public int getAmmoType() {
 		return TestGameClientEntityCreator.GRENADE;
 	}
-	
+
 
 	@Override
 	public boolean requiresAmmo() {
@@ -53,7 +57,7 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 	@Override
 	public void addToCache(Grenade o) {
 		this.ammoCache.add(o);
-		
+
 	}
 
 

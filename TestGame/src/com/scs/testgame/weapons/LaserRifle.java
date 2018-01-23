@@ -18,7 +18,7 @@ import com.scs.testgame.entities.LaserBullet;
 public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache<LaserBullet> {
 
 	private LinkedList<LaserBullet> ammoCache = new LinkedList<LaserBullet>(); 
-	
+
 	public LaserRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
 		super(game, id, TestGameClientEntityCreator.LASER_RIFLE, owner, num, "Laser Rifle", .2f, 2, 10);
 
@@ -26,9 +26,13 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 
 
 	@Override
-	public void launchBullet() {
-		LaserBullet g = ammoCache.remove();
-		g.launch((ICanShoot)owner);
+	public boolean launchBullet() {
+		if (!ammoCache.isEmpty()) {
+			LaserBullet g = ammoCache.remove();
+			g.launch((ICanShoot)owner);
+			return true;
+		}
+		return false;
 	}
 
 

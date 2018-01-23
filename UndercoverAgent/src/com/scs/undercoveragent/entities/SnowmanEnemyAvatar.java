@@ -9,13 +9,13 @@ import com.scs.undercoveragent.models.SnowmanModel;
 
 public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 	
-	private Spatial model;
+	//private Spatial model;
 	
 	public SnowmanEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
-		super(game, pid, eid, x, y, z);
+		super(game, pid, eid, x, y, z, new SnowmanModel(game.getAssetManager()));
 		
-		SnowmanModel tmp = new SnowmanModel(game.getAssetManager());
-		model = tmp.getModel(true);
+		//SnowmanModel tmp = new SnowmanModel(game.getAssetManager());
+		//model = tmp.getModel(true);
 	}
 	
 
@@ -31,10 +31,10 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 		
 	}
 
-	
+	/*
 	@Override
 	protected Spatial getPlayersModel(IEntityController game, int pid) {
 		return model;
 	}
-
+*/
 }

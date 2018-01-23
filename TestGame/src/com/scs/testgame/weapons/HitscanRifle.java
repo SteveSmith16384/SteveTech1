@@ -29,7 +29,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	public void launchBullet() {
+	public boolean launchBullet() {
 		if (game.isServer()) {
 			// We have already calculated the hit as part of ICalcHitInPast
 			if (hitThisMoment != null) {
@@ -67,7 +67,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				Globals.p("Not hit anything");
 			}
 		}
-
+		return true;
 	}
 
 

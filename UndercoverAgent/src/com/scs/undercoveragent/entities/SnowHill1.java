@@ -11,11 +11,11 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 public class SnowHill1 extends PhysicalEntity {
-
+/*
 	private static final float w = 3.8f;
 	private static final float h = 3f;
 	private static final float d = 3f;
-
+*/
 	public SnowHill1(IEntityController _game, int id, float x, float y, float z, float rotDegrees) {
 		super(_game, id, UndercoverAgentClientEntityCreator.SNOW_HILL_1, "SnowHill1", false);
 
