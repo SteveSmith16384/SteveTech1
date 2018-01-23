@@ -50,7 +50,7 @@ public class SnowHill1 extends PhysicalEntity {
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
-		super.processByServer(server, tpf);  //mainNode.getChild(0).getWorldTranslation();
+		super.processByServer(server, tpf);
 	}
 
 }

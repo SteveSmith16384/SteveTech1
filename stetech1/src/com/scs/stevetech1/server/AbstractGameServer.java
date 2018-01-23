@@ -517,6 +517,14 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		}
 		// Remove avatar
 		if (client.avatar != null) {
+			AbstractAvatar avatar = client.avatar; 
+			if (avatar.abilityGun != null) {
+				avatar.abilityGun.remove();
+			}
+			if (avatar.abilityOther != null) {
+				avatar.abilityOther.remove();
+			}
+			//todo client.avatar.abilityGun
 			this.removeEntity(client.avatar.id);
 			//gameData.removePlayer(client);
 		}

@@ -27,7 +27,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	}
 
 
-	public abstract void launchBullet();
+	public abstract boolean launchBullet();
 
 
 	@Override

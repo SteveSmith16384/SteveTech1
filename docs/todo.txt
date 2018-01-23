@@ -1,8 +1,9 @@
 STETECH1
 
 URGENT
-When avatar removed, remove weapons
-When weapon  removed, remove bullets
+Requesting millions of bullets!
+	When avatar removed, remove weapons
+	When weapon  removed, remove bullets
 Get tileable snow tex
 Finish a game!
 Add open-source msg to the top of all files

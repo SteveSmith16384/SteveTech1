@@ -9,4 +9,6 @@ public interface IRequiresAmmoCache<T> { // Used by system UpdateAmmoCacheSystem
 	public int getAmmoType();
 	
 	void addToCache(T o);
+	
+	//void emptyCache(); // For when avatar/gun is removed from the game
 }

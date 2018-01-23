@@ -14,17 +14,15 @@ public class UpdateAmmoCacheSystem extends AbstractSystem {
 
 		server = _server;
 	}
-	
+
 
 	//@Override
 	public void process(IRequiresAmmoCache irac, float tpf_secs) {
-		//if (entity instanceof IRequiresAmmoCache) {
-			//IRequiresAmmoCache irac = (IRequiresAmmoCache)entity;
-			if (irac.requiresAmmo()) {
-				RequestNewBulletMessage rnbm = new RequestNewBulletMessage(irac.getAmmoType(), irac.getID());
-				server.networkClient.sendMessageToServer(rnbm);
-			}
-		//}
+		// todo - only once every so often, and stop creating millions
+		if (irac.requiresAmmo()) {
+			RequestNewBulletMessage rnbm = new RequestNewBulletMessage(irac.getAmmoType(), irac.getID());
+			server.networkClient.sendMessageToServer(rnbm);
+		}
 
 	}
 

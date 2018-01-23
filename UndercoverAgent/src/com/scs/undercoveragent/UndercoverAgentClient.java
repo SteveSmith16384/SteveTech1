@@ -2,6 +2,10 @@ package com.scs.undercoveragent;
 
 import java.util.prefs.BackingStoreException;
 
+import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.system.AppSettings;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.server.Globals;
@@ -65,5 +69,20 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	public UndercoverAgentClient() {
 		super(UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, new UndercoverAgentClientEntityCreator());
 	}
+
+
+	@Override
+	protected void setUpLight() {
+		AmbientLight al = new AmbientLight();
+		al.setColor(ColorRGBA.White.mult(.3f));
+		getRootNode().addLight(al);
+
+		DirectionalLight sun = new DirectionalLight();
+		sun.setColor(ColorRGBA.White);
+		sun.setDirection(new Vector3f(.5f, -1f, .5f).normalizeLocal());
+		rootNode.addLight(sun);
+	}
+
+
 
 }

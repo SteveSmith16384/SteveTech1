@@ -25,9 +25,13 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 
 	@Override
-	public void launchBullet() {
-		Snowball g = ammoCache.remove();
-		g.launch((ICanShoot)owner);
+	public boolean launchBullet() {
+		if (!ammoCache.isEmpty()) {
+			Snowball g = ammoCache.remove();
+			g.launch((ICanShoot)owner);
+			return true;
+		}
+		return false;
 	}
 
 
@@ -61,6 +65,16 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 		return null;
 	}
 
+	
+	public void remove() { // todo - copy to other guns
+		while (!ammoCache.isEmpty()) {
+			Snowball g = ammoCache.remove();
+			g.remove();
+		}
+		super.remove();
+	}
+	
+	
 
 }
 

@@ -170,7 +170,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	}
 
 
-	private void setUpLight() {
+	protected void setUpLight() {
 		AmbientLight al = new AmbientLight();
 		al.setColor(ColorRGBA.White.mult(.5f));
 		getRootNode().addLight(al);
