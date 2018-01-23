@@ -13,6 +13,7 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -95,27 +96,25 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public long serverTime, renderTime;
+	private String serverIP;
+	private int port;
 
 	// Entity systems
 	private UpdateAmmoCacheSystem updateAmmoSystem;
 	private AnimationSystem animSystem;
 	private AbstractClientEntityCreator entityCreator;
 	
-	protected AbstractGameClient(String serverIP, int port, AbstractClientEntityCreator _entityCreator) {
+	protected AbstractGameClient(String _serverIP, int _port, AbstractClientEntityCreator _entityCreator) {
 		super();
 
+		serverIP = _serverIP;
+		port = _port;
 		this.entityCreator =_entityCreator;
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 		updateAmmoSystem = new UpdateAmmoCacheSystem(this);
 		animSystem = new AnimationSystem(this);
 
-		try {
-			networkClient = new KryonetGameClient(serverIP, port, port, this); // todo - connect to lobby first!
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-
-}
+	}
 
 
 	@Override
@@ -150,6 +149,13 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			stateManager.attach(video_recorder);
 		}
 
+		// Don't connect to network until JME is up and running!
+		try {
+			networkClient = new KryonetGameClient(serverIP, port, port, this); // todo - connect to lobby first!
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+
 		loopTimer.start();
 
 	}
@@ -166,8 +172,13 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	private void setUpLight() {
 		AmbientLight al = new AmbientLight();
-		al.setColor(ColorRGBA.White.mult(1));
+		al.setColor(ColorRGBA.White.mult(.5f));
 		getRootNode().addLight(al);
+
+		DirectionalLight sun = new DirectionalLight();
+		sun.setColor(ColorRGBA.Yellow);
+		sun.setDirection(new Vector3f(.5f, -1f, .5f).normalizeLocal());
+		rootNode.addLight(sun);
 	}
 
 

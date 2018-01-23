@@ -25,7 +25,7 @@ public class SnowHill1 extends PhysicalEntity {
 		}
 
 		Spatial model = null;
-		model = game.getAssetManager().loadModel("Models/3d-character/environment/house/model.blend"); // todo
+		model = game.getAssetManager().loadModel("Models/Holiday/Terrain.blend");
 		//model.scale(0.4f);
 		//model.setModelBound(new BoundingBox());
 		//model.setLocalTranslation(0, .15f, 0);

@@ -62,9 +62,11 @@ public class JMEFunctions {
 		mat.getAdditionalRenderState().setWireframe(true);
 		mat.setColor("Color", ColorRGBA.White);
 		g.setMaterial(mat);
+		
+		// Move to middle
 		//g.center().move(pos);
 		//rootNode.attachChild(g);
-		//g.move(-size/2, 0, -size/2);
+		g.move(-size/2, 0, -size/2);
 		return g;
 	}
 

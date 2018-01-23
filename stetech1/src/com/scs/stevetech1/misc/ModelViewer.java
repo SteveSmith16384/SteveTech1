@@ -44,9 +44,20 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		model.scale(.125f);
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 */
-		Spatial model = assetManager.loadModel("Models/SnowNature/Bush1.blend");
-		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/SnowNature/Textures/BushTexture.png");
-		//model.scale(.2f);
+		
+		/*
+		Spatial model = assetManager.loadModel("Models/Holiday/Snowman.obj");
+		model.setLocalTranslation(0, .3f, 0);
+		model.scale(.36f);
+*/
+/*
+		Spatial model = assetManager.loadModel("Models/Holiday/Igloo.blend");
+		//model.setLocalTranslation(0, .3f, 0);
+		//model.scale(.36f);
+*/
+		Spatial model = assetManager.loadModel("Models/Holiday/Terrain.blend");
+		//model.setLocalTranslation(0, .3f, 0);
+		//model.scale(.36f);
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);

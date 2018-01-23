@@ -1,16 +1,22 @@
 package com.scs.undercoveragent;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.shared.AbstractClientEntityCreator;
+import com.scs.undercoveragent.entities.Igloo;
+import com.scs.undercoveragent.entities.SnowFloor;
+import com.scs.undercoveragent.entities.SnowHill1;
 import com.scs.undercoveragent.entities.Snowball;
 import com.scs.undercoveragent.entities.SnowmanClientAvatar;
 import com.scs.undercoveragent.entities.SnowmanEnemyAvatar;
+import com.scs.undercoveragent.weapons.SnowballLauncher;
 
 public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCreator {
 
@@ -50,6 +56,43 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 				AbstractEnemyAvatar avatar = new SnowmanEnemyAvatar(game, playerID, id, pos.x, pos.y, pos.z);
 				return avatar;
 			}
+		}
+
+		case FLOOR:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Vector3f size = (Vector3f)msg.data.get("size");
+			String tex = (String)msg.data.get("tex");
+			SnowFloor floor = new SnowFloor(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, null);
+			return floor;
+		}
+
+		case IGLOO:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
+			Igloo crate = new Igloo(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			return crate;  //crate.getMainNode().getWorldTranslation();
+		}
+
+		case SNOW_HILL_1:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
+			SnowHill1 crate = new SnowHill1(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			return crate;  //crate.getMainNode().getWorldTranslation();
+		}
+
+		case SNOWBALL_LAUNCHER: 
+		{
+			int ownerid = (int)msg.data.get("ownerid");
+			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+				int num = (int)msg.data.get("num");
+				SnowballLauncher gl = new SnowballLauncher(game, id, owner, num);
+				return gl;
+			}
+			return null;
 		}
 
 		case SNOWBALL:

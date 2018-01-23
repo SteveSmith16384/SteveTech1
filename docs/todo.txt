@@ -1,19 +1,12 @@
 STETECH1
 
-https://en.wikipedia.org/wiki/Fortnite
-
 URGENT
-Make lobby a sep project
-	Move entities to a specific game
-	Laser bullets - copy grenade
-Physics engine - what happens when bouncing not at 90 degrees?
-	Grenades
-Laser bullets
+When avatar removed, remove weapons
+When weapon  removed, remove bullets
+Get tileable snow tex
 Finish a game!
-	Search for 3d open-source games
 Add open-source msg to the top of all files
 Hitscan rifle - show line showing where server says bullet went
-Look for voxel animated character
 Show current game time
 Client can always jump, even when in the air
 	Client countdown game time itself
@@ -22,6 +15,9 @@ Search for todos
 
 
 TODO
+Physics engine - what happens when bouncing not at 90 degrees?
+UA - Surround with trees
+Laser bullets
 Move assets
 Animation - need to walk and shoot?  IAnimationFlags
 Blog post progress

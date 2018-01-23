@@ -9,9 +9,9 @@ import com.scs.stevetech1.components.IAnimatedAvatarModel;
 
 public class SnowmanModel implements IAnimatedAvatarModel {
 
-	private static final float MODEL_WIDTH = .3f;
-	private static final float MODEL_DEPTH = .3f;
-	private static final float MODEL_HEIGHT = .7f;
+	private static final float MODEL_WIDTH = .5f;
+	private static final float MODEL_DEPTH = 1f;
+	private static final float MODEL_HEIGHT = 0.97f;
 
 	private AssetManager assetManager;
 	
@@ -25,12 +25,12 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 	public Spatial getModel(boolean forClient) {
 		if (forClient) {
 			Spatial model = assetManager.loadModel("Models/Holiday/Snowman.obj");
-			//model.scale(.125f); // todo - Make .7 high
-			// todo - position origin at bottom
+			model.setLocalTranslation(0, .3f, 0);
+			model.scale(.36f);
 			return model;
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
-			Geometry geometry = new Geometry("CharacterBox", box1);
+			Geometry geometry = new Geometry("Snowman", box1);
 			geometry.setLocalTranslation(0, MODEL_HEIGHT/2, 0); // Move origin to floor
 			return geometry;
 		}

@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.jme3.asset.plugins.ClasspathLocator;
+import com.jme3.asset.plugins.FileLocator;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
@@ -96,6 +98,9 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 	@Override
 	public void simpleInitApp() {
+		assetManager.registerLocator("assets/", FileLocator.class); // default
+		assetManager.registerLocator("assets/", ClasspathLocator.class);
+
 		createGame();
 		console.appendText("Game created");
 		

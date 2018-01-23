@@ -44,10 +44,11 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	protected void createGame() {
-		new SnowFloor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null); // todo - snow tex
+		new SnowFloor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/snow.jpg", null);
 
-		new SnowHill1(this, getNextEntityID(), 8, 5, 8, 0);
-		new Igloo(this, getNextEntityID(), 8, 5, 8, 0);
+		new Igloo(this, getNextEntityID(), 5, 0, 5, 0);
+
+		new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);
 		
 	}
 
@@ -72,16 +73,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	protected void equipAvatar(AbstractServerAvatar avatar) {
-		//IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
-		//IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
 		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0);
 		this.addEntity(abilityGun);
-		
-		/* 
-			this.abilityOther = new JetPac(this, 1);// BoostFwd(this, 1);//getRandomAbility(this);
-		game.addEntity(abilityOther);
-		}*/
-
 		
 	}
 

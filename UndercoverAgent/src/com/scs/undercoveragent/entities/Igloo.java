@@ -28,9 +28,8 @@ public class Igloo extends PhysicalEntity {
 			creationData.put("rot", rotDegrees);
 		}
 
-		Spatial model = game.getAssetManager().loadModel("Models/3d-character/environment/house/model.blend"); // todo
+		Spatial model = game.getAssetManager().loadModel("Models/Holiday/Igloo.blend");
 		//model.scale(0.4f);
-		//model.setModelBound(new BoundingBox());
 
 		/*if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
