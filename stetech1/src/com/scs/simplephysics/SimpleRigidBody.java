@@ -10,8 +10,6 @@ import com.jme3.scene.Spatial;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	//public boolean STRICT = true;
-
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f(); // Gets reduced by air resistance each frame
 	private Vector3f tmpMoveDir = new Vector3f();
@@ -27,6 +25,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	private boolean canMove = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
 	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.
+	public int modelComplexity = 0; // For determining which way round to check - todo - make private with get/set
 
 	private CollisionResults collisionResults = new CollisionResults();
 
@@ -94,9 +93,9 @@ public class SimpleRigidBody<T> implements Collidable {
 
 				} while (tmpWasCollision != null);
 			}
-			
-			
-			
+
+
+
 			Vector3f additionalForce = this.getAdditionalForce();
 			if (additionalForce == null) {
 				additionalForce = Vector3f.ZERO; // Prevent NPE
@@ -197,13 +196,20 @@ public class SimpleRigidBody<T> implements Collidable {
 	public SimpleRigidBody<T> checkForCollisions() {
 		collisionResults.clear();
 		SimpleRigidBody<T> collidedWith = null;
-		Collection<SimpleRigidBody<T>> entities = physicsController.getEntities();
+		Collection<SimpleRigidBody<T>> entities = physicsController.getEntities(); // Todo - some way of NOT checking every entity against every other entity, and thus checking each entity twice
 		synchronized (entities) {
 			// Loop through the entities
 			for(SimpleRigidBody<T> e : entities) {
 				if (e != this) { // Don't check ourselves
 					if (this.physicsController.getCollisionListener().canCollide(this, e)) {
-						if (this.collideWith(e.spatial.getWorldBound(), collisionResults) > 0) {
+						// Check which object is the most complex, and collide that against the bounding box of the other
+						int res = 0;
+						if (this.modelComplexity >= e.modelComplexity) {
+							res = this.collideWith(e.spatial.getWorldBound(), collisionResults);
+						} else {
+							res = e.collideWith(this.spatial.getWorldBound(), collisionResults);
+						}
+						if (res > 0) {
 							collidedWith = e;
 							this.physicsController.getCollisionListener().collisionOccurred(this, e, collisionResults.getClosestCollision().getContactPoint());
 							collisionResults.clear();

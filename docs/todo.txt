@@ -1,28 +1,34 @@
 STETECH1
 
 URGENT
-Have generic "entity owners"
-Requesting millions of bullets!
-	When avatar removed, remove weapons
-	When weapon  removed, remove bullets
-Get tileable snow tex
+Client show latest avatar position data timestamp
+Make font black
+Player correction is all over the shop - show debugging box
+Set model complexity values
+Are all entities being checked twice against each other entity?  Yes
+Snowball floating in mid-air
+	Player face right way at start
+	The camera is very high
 Finish a game!
 Add open-source msg to the top of all files
-Hitscan rifle - show line showing where server says bullet went
 Show current game time
 Client can always jump, even when in the air
 	Client countdown game time itself
 	Adjust grenades in the same way that avatars are adjusted
 Search for todos
+Blog post progress
 
 
 TODO
-Physics engine - what happens when bouncing not at 90 degrees?
+Skybox
 UA - Surround with trees
+Get tileable snow tex
+Falling snow
+Use server-style simple models for collision checking on client side
+Hitscan rifle - show line showing where server says bullet went
+Requesting millions of bullets!  Request a certain number every few seconds?  Ignore old messages?
 Laser bullets
-Move assets
 Animation - need to walk and shoot?  IAnimationFlags
-Blog post progress
 Record desktop showing two players
 Animate backwards when walking backwards
 Create moonbase map
@@ -34,7 +40,6 @@ Console to connect to lobby
 Origin of entities should be floor 
 Check for packet loss
 Less damage from hitscan over distance
-Make floor a single quad - needs rotating
 Strict mode - check if position already exists in positioncalc!
 Simulate client?
 Tell player they have died
@@ -55,6 +60,7 @@ Test with cheating client
 Reduce object creation, including calls to clone()
 Kryonet encryption?
 User enter name
+Have generic "entity owners"?
 
 
 LATER

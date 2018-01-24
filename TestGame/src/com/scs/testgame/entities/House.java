@@ -32,7 +32,7 @@ public class House extends PhysicalEntity {
 			model = game.getAssetManager().loadModel("Models/3d-character/environment/house/model.blend");
 			model.scale(0.4f);
 			model.setModelBound(new BoundingBox());
-			model.setLocalTranslation(0, .15f, 0); // todo - why do I need this?
+			//model.setLocalTranslation(0, .15f, 0);
 		} else {
 			Box box1 = new Box(w/2, h/2, d/2);
 			model = new Geometry(this.getName(), box1);
@@ -45,7 +45,7 @@ public class House extends PhysicalEntity {
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
-		this.simpleRigidBody.setMovable(false);
+		//this.simpleRigidBody.setMovable(false);
 
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

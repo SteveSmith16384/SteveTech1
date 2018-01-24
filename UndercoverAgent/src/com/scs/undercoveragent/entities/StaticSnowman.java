@@ -5,25 +5,26 @@ import java.util.HashMap;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
+import com.scs.undercoveragent.models.SnowmanModel;
 
-public class SnowHill1 extends PhysicalEntity {
+public class StaticSnowman extends PhysicalEntity {
 
-	public SnowHill1(IEntityController _game, int id, float x, float y, float z, float rotDegrees) {
-		super(_game, id, UndercoverAgentClientEntityCreator.SNOW_HILL_1, "SnowHill1", false);
+	public StaticSnowman(IEntityController _game, int id, float x, float y, float z, float rotDegrees) {
+		super(_game, id, UndercoverAgentClientEntityCreator.STATIC_SNOWMAN, "Snowman", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("rot", rotDegrees);
 		}
 
-		Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain.blend");
-		//model.scale(0.4f);
-		//model.setModelBound(new BoundingBox());
-		//model.setLocalTranslation(0, .15f, 0);
+		SnowmanModel m = new SnowmanModel(game.getAssetManager());
+		Spatial model = m.getModel(!game.isServer());
+
 		this.mainNode.attachChild(model); //This creates the model bounds!
 		
 		float rads = (float)Math.toRadians(rotDegrees);
@@ -33,7 +34,6 @@ public class SnowHill1 extends PhysicalEntity {
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
-		//this.simpleRigidBody.setMovable(false);
 
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

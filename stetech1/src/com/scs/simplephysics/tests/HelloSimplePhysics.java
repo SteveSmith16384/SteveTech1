@@ -5,6 +5,8 @@ import java.util.Collection;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.TextureKey;
+import com.jme3.asset.plugins.ClasspathLocator;
+import com.jme3.asset.plugins.FileLocator;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -63,6 +65,9 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 
 	public void simpleInitApp() {
+		assetManager.registerLocator("assets/", FileLocator.class); // default
+		assetManager.registerLocator("assets/", ClasspathLocator.class);
+
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, 1000f);
 		cam.lookAt(new Vector3f(3, 1f, 20f), Vector3f.UNIT_Y);
 		viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
@@ -96,6 +101,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			this.addBox(4f+(i*2), 7f, 9f, 1f, 1f, (i/10f));
 		}
 
+		addModel();
+		
 		// Add shadows
 		final int SHADOWMAP_SIZE = 1024;
 		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
@@ -109,7 +116,19 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	}
 
 
-	public void addFloor() {
+	
+	private void addModel() {
+		// Add a model
+		Spatial model = getAssetManager().loadModel("Models/Holiday/Terrain.blend");
+		model.setLocalTranslation(13, 0, 13);
+		model.setShadowMode(ShadowMode.CastAndReceive);
+		this.rootNode.attachChild(model);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(model, physicsController, false, model);		
+		srb.modelComplexity = 1;
+	}
+	
+	
+	private void addFloor() {
 		Box floor = new Box(30f, 0.1f, 30f);
 		floor.scaleTextureCoordinates(new Vector2f(3, 6));
 
@@ -128,11 +147,10 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		this.rootNode.attachChild(floorGeometry);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floorGeometry, physicsController, false, floorGeometry);
-		srb.setMovable(false);
 	}
 
 
-	public void addWall() {
+	private void addWall() {
 		Box floor = new Box(5f, 5f, .1f);
 
 		Material wallMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -149,11 +167,10 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		this.rootNode.attachChild(wallGeometry);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(wallGeometry, physicsController, false, wallGeometry);
-		srb.setMovable(false);
 	}
 
 
-	public void addBox(float x, float y, float z, float w, float h, float bounciness) {
+	private void addBox(float x, float y, float z, float w, float h, float bounciness) {
 		Box box = new Box(w/2, h/2, w/2);
 
 		//Material material = new Material(getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
@@ -168,6 +185,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		boxGeometry.setMaterial(material);
 		boxGeometry.setLocalTranslation(x, y, z);
 		boxGeometry.setShadowMode(ShadowMode.CastAndReceive);
+		boxGeometry.lookAt(new Vector3f(0, y, 0), Vector3f.UNIT_Y); // Rotate them to different angles
 		this.rootNode.attachChild(boxGeometry);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(boxGeometry, physicsController, true, boxGeometry);
@@ -175,7 +193,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	}
 
 
-	public void addBall(float x, float y, float z, float rad, Vector3f dir, float grav, float airRes, float bounce) {
+	private void addBall(float x, float y, float z, float rad, Vector3f dir, float grav, float airRes, float bounce) {
 		Sphere sphere = new Sphere(16, 16, rad);
 
 		Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -333,7 +351,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b, Vector3f point) {
-		//p("Collision between " + a.userObject + " and " + b.userObject);
+		p("Collision between " + a.userObject + " and " + b.userObject);
 
 	}
 

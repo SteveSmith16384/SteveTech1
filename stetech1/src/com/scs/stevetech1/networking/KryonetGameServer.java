@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.KryoNetException;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.jme3.math.Quaternion;
@@ -87,7 +88,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(byte[].class);
 		kryo.register(java.util.LinkedList.class);
 		kryo.register(java.util.ArrayList.class);
-		
+
 		// Messages
 		kryo.register(MyAbstractMessage.class);
 		kryo.register(WelcomeClientMessage.class);
@@ -123,7 +124,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Sending to all " + msg);
 		}
-		
+
 		if (Globals.ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				server.sendToAllTCP(msg);
@@ -157,30 +158,34 @@ public class KryonetGameServer implements IGameMessageServer {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Sending to client: " + msg);
 		}
- 		if (Globals.ARTIFICIAL_COMMS_DELAY == 0) {
-			if (msg.isReliable()) {
-				server.sendToTCP(client.id, msg);
-			} else {
-				server.sendToUDP(client.id, msg);
-			}		
-		}
-		else {
-			Thread t = new Thread("CommsDelayThread") {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(Globals.ARTIFICIAL_COMMS_DELAY);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+		try {
+			if (Globals.ARTIFICIAL_COMMS_DELAY == 0) {
+				if (msg.isReliable()) {
+					server.sendToTCP(client.id, msg);
+				} else {
+					server.sendToUDP(client.id, msg);
+				}		
+			}
+			else {
+				Thread t = new Thread("CommsDelayThread") {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(Globals.ARTIFICIAL_COMMS_DELAY);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						if (msg.isReliable()) {
+							server.sendToTCP(client.id, msg);
+						} else {
+							server.sendToUDP(client.id, msg);
+						}		
 					}
-					if (msg.isReliable()) {
-						server.sendToTCP(client.id, msg);
-					} else {
-						server.sendToUDP(client.id, msg);
-					}		
-				}
-			};
-			t.start();
+				};
+				t.start();
+			}
+		} catch (KryoNetException ex) {
+			Globals.pe("Error sending to client: " + ex.getMessage());
 		}
 
 	}

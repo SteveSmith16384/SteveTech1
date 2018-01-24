@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
@@ -67,5 +66,13 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 	}
 
 
+	public void remove() { // todo - copy to other guns
+		while (!ammoCache.isEmpty()) {
+			Grenade g = ammoCache.remove();
+			g.remove();
+		}
+		super.remove();
+	}
+	
 }
 

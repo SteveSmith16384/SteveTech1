@@ -138,7 +138,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		setUpLight();
 
-		this.rootNode.attachChild(JMEFunctions.GetGrid(assetManager, 10));
+		//this.rootNode.attachChild(JMEFunctions.GetGrid(assetManager, 10));
 
 		hud = this.createHUD(getCamera());
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager());

@@ -4,19 +4,24 @@ import java.io.IOException;
 
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowHill1;
-import com.scs.undercoveragent.entities.Snowball;
+import com.scs.undercoveragent.entities.SnowTree1;
+import com.scs.undercoveragent.entities.SnowballBullet;
 import com.scs.undercoveragent.entities.SnowmanServerAvatar;
+import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
 
 public class UndercoverAgentServer extends AbstractGameServer {
@@ -47,15 +52,18 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		new SnowFloor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/snow.jpg", null);
 
 		new Igloo(this, getNextEntityID(), 5, 0, 5, 0);
-
-		new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);
+		new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);		
+		new StaticSnowman(this, getNextEntityID(), 5, 0, 10, 0);		
+		new SnowTree1(this, getNextEntityID(), 10, 0, 5, 0);
 		
 	}
 
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
-		return new SnowmanServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
+		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
+		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
+		return avatar;
 	}
 
 
@@ -63,7 +71,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
 		case UndercoverAgentClientEntityCreator.SNOWBALL:
-			return new Snowball(this, entityid, irac);
+			return new SnowballBullet(this, entityid, irac);
 			
 		default:
 			return super.createEntity(type, entityid, side, irac);
@@ -79,4 +87,16 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	}
 
 
+	@Override
+	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
+		PhysicalEntity pea = a.userObject;
+		PhysicalEntity peb = b.userObject;
+		
+		if (pea instanceof SnowFloor == false && peb instanceof SnowFloor == false) {
+			Globals.p("Collision between " + pea + " and " + peb);
+		}
+		
+		super.collisionOccurred(a, b, point);
+		
+	}
 }

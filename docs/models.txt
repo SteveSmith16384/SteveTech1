@@ -8,6 +8,7 @@ Terrain.blend
 
 SnowNature:
 Bush1.blend
+Tree.blend, with added texture
 
 Cars:
 Taxi

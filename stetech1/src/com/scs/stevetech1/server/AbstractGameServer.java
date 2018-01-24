@@ -436,20 +436,8 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
 		avatar.setWorldTranslation(this.getAvatarStartPosition(avatar));
-		//avatar.moveToStartPostion(true);
 		this.addEntity(avatar);
-
 		this.equipAvatar(avatar);
-		/*
-		IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
-		//IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
-		this.addEntity(abilityGun);
-
-		/* 
-			this.abilityOther = new JetPac(this, 1);// BoostFwd(this, 1);//getRandomAbility(this);
-		game.addEntity(abilityOther);
-		}*/
-
 		return avatar;
 	}
 
@@ -517,16 +505,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		}
 		// Remove avatar
 		if (client.avatar != null) {
-			AbstractAvatar avatar = client.avatar; 
-			if (avatar.abilityGun != null) {
-				avatar.abilityGun.remove();
-			}
-			if (avatar.abilityOther != null) {
-				avatar.abilityOther.remove();
-			}
-			//todo client.avatar.abilityGun
-			this.removeEntity(client.avatar.id);
-			//gameData.removePlayer(client);
+			client.avatar.remove();
 		}
 		this.sendGameStatusMessage();
 		checkGameStatus(true);
@@ -665,8 +644,6 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 */
 	public ArrayList<RayCollisionData> checkForEntityCollisions(Ray r) {
-		//return this.physicsController.checkForCollisions(r);
-
 		CollisionResults res = new CollisionResults();
 		ArrayList<RayCollisionData> myList = new ArrayList<RayCollisionData>(); 
 		synchronized (entities) {
@@ -692,21 +669,22 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		/*if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
-			Globals.p("Collision between " + a.userObject + " and " + b.userObject);
-		}*/
+		PhysicalEntity pea = a.userObject;
+		PhysicalEntity peb = b.userObject;
+		
 		//if (a != null && b != null) {
-		collisionLogic.collision(a.userObject,  b.userObject);
+		collisionLogic.collision(pea, peb);
 		/*} else {
 			Settings.p("null object in collision");
 		}*/
-		if (a.userObject instanceof INotifiedOfCollision) {
-			INotifiedOfCollision ic = (INotifiedOfCollision)a.userObject;
-			ic.collided(b.userObject);
+		
+		if (pea instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
+			ic.collided(peb);
 		}
-		if (b.userObject instanceof INotifiedOfCollision) {
-			INotifiedOfCollision ic = (INotifiedOfCollision)b.userObject;
-			ic.collided(a.userObject);
+		if (peb instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)peb;
+			ic.collided(pea);
 		}
 		
 	}

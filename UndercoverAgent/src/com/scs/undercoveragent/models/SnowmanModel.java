@@ -8,11 +8,14 @@ import com.jme3.scene.shape.Box;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.jme.JMEFunctions;
 
+/*
+ * This class, and classes like this, is designed to keep all the model-specific settings in one place.
+ */
 public class SnowmanModel implements IAnimatedAvatarModel {
 
-	private static final float MODEL_WIDTH = .5f;
-	private static final float MODEL_DEPTH = 1f;
-	private static final float MODEL_HEIGHT = 0.97f;
+	private static final float MODEL_WIDTH = .4f;
+	private static final float MODEL_DEPTH = 3f;
+	private static final float MODEL_HEIGHT = 0.7f;
 
 	private AssetManager assetManager;
 	
@@ -26,7 +29,7 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 	public Spatial getModel(boolean forClient) {
 		if (forClient) {
 			Spatial model = assetManager.loadModel("Models/Holiday/Snowman.obj");
-			JMEFunctions.scaleModelToSize(model, .7f);
+			JMEFunctions.scaleModelToSize(model, MODEL_HEIGHT);
 			JMEFunctions.moveOriginToFloor(model);
 			//model.setLocalTranslation(0, .3f, 0);
 			//model.scale(.36f);

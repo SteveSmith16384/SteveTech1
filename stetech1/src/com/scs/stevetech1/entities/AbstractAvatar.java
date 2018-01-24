@@ -231,4 +231,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	}
 
 
+	@Override
+	public void remove() {
+		if (abilityGun != null) {
+			abilityGun.remove();
+		}
+		if (abilityOther != null) {
+			abilityOther.remove();
+		}
+		super.remove();
+	}
 }

@@ -7,8 +7,11 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.system.AppSettings;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
+import com.scs.undercoveragent.entities.SnowFloor;
 
 public class UndercoverAgentClient extends AbstractGameClient {
 
@@ -72,6 +75,14 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 
 	@Override
+	public void simpleInitApp() {
+		super.simpleInitApp();
+		
+		this.getViewPort().setBackgroundColor(ColorRGBA.Cyan);
+	}
+	
+	
+	@Override
 	protected void setUpLight() {
 		AmbientLight al = new AmbientLight();
 		al.setColor(ColorRGBA.White.mult(.3f));
@@ -84,5 +95,17 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 
 
+	@Override
+	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
+		PhysicalEntity pea = a.userObject;
+		PhysicalEntity peb = b.userObject;
+		
+		if (pea instanceof SnowFloor == false && peb instanceof SnowFloor == false) {
+			Globals.p("Collision between " + pea + " and " + peb);
+		}
+		
+		super.collisionOccurred(a, b, point);
+		
+	}
 
 }

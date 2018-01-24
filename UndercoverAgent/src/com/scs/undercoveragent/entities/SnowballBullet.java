@@ -26,14 +26,14 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
-public class Snowball extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact {
+public class SnowballBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact {
 
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	private boolean launched = false;
 	public ICanShoot shooter; // So we know who not to collide with
 
-	public Snowball(IEntityController _game, int id, IRequiresAmmoCache<Snowball> owner) {
+	public SnowballBullet(IEntityController _game, int id, IRequiresAmmoCache<SnowballBullet> owner) {
 		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL, "Snowball", true);
 
 		if (_game.isServer()) {
@@ -42,14 +42,16 @@ public class Snowball extends PhysicalEntity implements IProcessByClient, ILaunc
 			creationData.put("containerID", owner.getID());
 		}
 
-		owner.addToCache(this);
+		if (owner != null) { // Once launched, they have nothing to do with an owner
+			owner.addToCache(this);
+		}
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("grenade", sphere);
 
 		if (!_game.isServer()) { // Not running in server
-			TextureKey key3 = new TextureKey( "Textures/grenade.png");
+			TextureKey key3 = new TextureKey( "Textures/snow.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			Material floor_mat = null;
 			if (Globals.LIGHTING) {
@@ -78,7 +80,7 @@ public class Snowball extends PhysicalEntity implements IProcessByClient, ILaunc
 
 		shooter = _shooter;
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
-		this.simpleRigidBody.setBounciness(.6f);
+		//this.simpleRigidBody.setBounciness(.6f);
 
 		game.getRootNode().attachChild(this.mainNode);
 		this.setWorldTranslation(_shooter.getBulletStartPos());

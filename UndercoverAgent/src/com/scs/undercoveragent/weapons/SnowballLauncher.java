@@ -10,13 +10,13 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
-import com.scs.undercoveragent.entities.Snowball;
+import com.scs.undercoveragent.entities.SnowballBullet;
 
-public class SnowballLauncher extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache<Snowball> {
+public class SnowballLauncher extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache<SnowballBullet> {
 
 	private static final int MAG_SIZE = 6;
 
-	private LinkedList<Snowball> ammoCache = new LinkedList<Snowball>(); 
+	private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>(); 
 
 	public SnowballLauncher(IEntityController game, int id, AbstractAvatar owner, int num) {
 		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, owner, num, "SnowballLauncher", 1, 3, MAG_SIZE);
@@ -27,7 +27,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 	@Override
 	public boolean launchBullet() {
 		if (!ammoCache.isEmpty()) {
-			Snowball g = ammoCache.remove();
+			SnowballBullet g = ammoCache.remove();
 			g.launch((ICanShoot)owner);
 			return true;
 		}
@@ -54,7 +54,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 
 	@Override
-	public void addToCache(Snowball o) {
+	public void addToCache(SnowballBullet o) {
 		this.ammoCache.add(o);
 		
 	}
@@ -66,15 +66,14 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 	}
 
 	
-	public void remove() { // todo - copy to other guns
+	public void remove() {
 		while (!ammoCache.isEmpty()) {
-			Snowball g = ammoCache.remove();
+			SnowballBullet g = ammoCache.remove();
 			g.remove();
 		}
 		super.remove();
 	}
-	
-	
+		
 
 }
 
