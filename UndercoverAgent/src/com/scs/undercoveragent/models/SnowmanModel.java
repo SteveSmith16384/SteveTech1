@@ -6,6 +6,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
+import com.scs.stevetech1.jme.JMEFunctions;
 
 public class SnowmanModel implements IAnimatedAvatarModel {
 
@@ -25,8 +26,10 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 	public Spatial getModel(boolean forClient) {
 		if (forClient) {
 			Spatial model = assetManager.loadModel("Models/Holiday/Snowman.obj");
-			model.setLocalTranslation(0, .3f, 0);
-			model.scale(.36f);
+			JMEFunctions.scaleModelToSize(model, .7f);
+			JMEFunctions.moveOriginToFloor(model);
+			//model.setLocalTranslation(0, .3f, 0);
+			//model.scale(.36f);
 			return model;
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);

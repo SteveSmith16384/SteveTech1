@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.AssetNotFoundException;
 import com.jme3.asset.TextureKey;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.export.binary.BinaryExporter;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
@@ -146,6 +147,22 @@ public class JMEFunctions {
 			Geometry g = (Geometry)spatial;
 			g.setMaterial(mat);
 		}
+	}
+	
+	
+	public static void scaleModelToSize(Spatial model, float height) {
+		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
+		float currHeight = bb.getYExtent() * 2;
+		float frac = height/currHeight;
+		model.scale(frac);
+	}
+	
+	
+	public static void moveOriginToFloor(Spatial model) {
+		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
+		float currOrigin = bb.getCenter().y - bb.getYExtent();
+		model.move(new Vector3f(0, -currOrigin, 0));
+		
 	}
 
 }
