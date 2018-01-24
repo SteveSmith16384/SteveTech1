@@ -31,10 +31,5 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 		
 	}
 
-	/*
-	@Override
-	protected Spatial getPlayersModel(IEntityController game, int pid) {
-		return model;
-	}
-*/
+
 }

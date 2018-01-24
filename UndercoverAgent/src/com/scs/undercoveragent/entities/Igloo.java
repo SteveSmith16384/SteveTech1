@@ -57,6 +57,7 @@ public class Igloo extends PhysicalEntity {
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
+		simpleRigidBody.modelComplexity = 3;
 
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

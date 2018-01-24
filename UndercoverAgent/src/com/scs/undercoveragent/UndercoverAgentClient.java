@@ -15,8 +15,6 @@ import com.scs.undercoveragent.entities.SnowFloor;
 
 public class UndercoverAgentClient extends AbstractGameClient {
 
-	//private TestGameClientEntityCreator creator;
-
 	public static void main(String[] args) {
 		try {
 			settings = new AppSettings(true);

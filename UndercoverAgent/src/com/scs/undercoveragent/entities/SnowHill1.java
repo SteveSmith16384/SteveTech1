@@ -33,6 +33,7 @@ public class SnowHill1 extends PhysicalEntity {
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
+		simpleRigidBody.modelComplexity = 3;
 		//this.simpleRigidBody.setMovable(false);
 
 		model.setUserData(Globals.ENTITY, this);

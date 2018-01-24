@@ -25,6 +25,7 @@ import com.scs.stevetech1.server.Globals;
  */
 public class HUD extends Node implements IProcessByClient {
 
+	private static ColorRGBA defaultColour = ColorRGBA.Black;
 	public TextArea log_ta;
 	public float hud_width, hud_height;
 
@@ -46,7 +47,7 @@ public class HUD extends Node implements IProcessByClient {
 
 		super.setLocalTranslation(0, 0, 0);
 
-		this.addTargetter();
+		//this.addTargetter();
 
 		if (Globals.DEBUG_HUD) {
 			for (int i=0; i<100 ; i+=10) {
@@ -59,28 +60,32 @@ public class HUD extends Node implements IProcessByClient {
 		}
 
 		abilityGun = new BitmapText(font_small, false);
-		abilityGun.setColor(ColorRGBA.Green);
+		abilityGun.setColor(defaultColour);
 		abilityGun.setLocalTranslation(10, hud_height-30, 0);
 		this.attachChild(abilityGun);
 
 		abilityOther = new BitmapText(font_small, false);
-		abilityOther.setColor(ColorRGBA.Green);
+		abilityOther.setColor(defaultColour);
 		abilityOther.setLocalTranslation(10, hud_height-45, 0);
 		this.attachChild(abilityOther);
 
 		playerID = new BitmapText(font_small, false);
+		playerID.setColor(defaultColour);
 		playerID.setLocalTranslation(10, hud_height-60, 0);
 		this.attachChild(playerID);
 
 		gameStatus = new BitmapText(font_small, false);
+		gameStatus.setColor(defaultColour);
 		gameStatus.setLocalTranslation(10, hud_height-75, 0);
 		this.attachChild(gameStatus);
 
 		gameTime = new BitmapText(font_small, false);
+		gameTime.setColor(defaultColour);
 		gameTime.setLocalTranslation(10, hud_height-90, 0);
 		this.attachChild(gameTime);
 
 		log_ta = new TextArea("log", font_small, 6, "Entities");
+		log_ta.setColor(defaultColour);
 		log_ta.setLocalTranslation(0, hud_height/2, 0);
 		this.attachChild(log_ta);
 
@@ -144,8 +149,6 @@ public class HUD extends Node implements IProcessByClient {
 				process_damage_box = false;
 			}
 		}
-
-
 
 	}
 

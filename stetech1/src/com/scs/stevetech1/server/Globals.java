@@ -8,7 +8,9 @@ import java.util.Random;
 
 public class Globals {
 
+	
 	public static final boolean RECORD_VID = false;
+	public static final boolean USE_SERVER_MODELS_ON_CLIENT = true;
 	public static final boolean SHOW_SERVER_POS_ON_CLIENT = true;
 	public static final boolean SHOW_AVATAR_WALK_DIR = false;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = false;

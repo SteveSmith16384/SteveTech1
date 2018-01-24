@@ -1,10 +1,12 @@
 STETECH1
 
 URGENT
+Debug mode - use server-side models
+	Player correction is all over the shop - show debugging box
+Look for 3d models of spectrum games?
 Client show latest avatar position data timestamp
-Make font black
-Player correction is all over the shop - show debugging box
-Set model complexity values
+	Make font black
+	Set model complexity values
 Are all entities being checked twice against each other entity?  Yes
 Snowball floating in mid-air
 	Player face right way at start
@@ -14,7 +16,6 @@ Add open-source msg to the top of all files
 Show current game time
 Client can always jump, even when in the air
 	Client countdown game time itself
-	Adjust grenades in the same way that avatars are adjusted
 Search for todos
 Blog post progress
 
