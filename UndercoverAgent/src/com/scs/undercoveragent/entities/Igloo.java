@@ -2,30 +2,22 @@ package com.scs.undercoveragent.entities;
 
 import java.util.HashMap;
 
-import com.jme3.asset.TextureKey;
-import com.jme3.bounding.BoundingBox;
-import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
-import com.jme3.renderer.queue.RenderQueue.Bucket;
-import com.jme3.scene.Geometry;
+import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
-import com.jme3.texture.Texture;
-import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 public class Igloo extends PhysicalEntity {
 
-	public Igloo(IEntityController _game, int id, float x, float y, float z, int rotDegrees) {
+	public Igloo(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
 		super(_game, id, UndercoverAgentClientEntityCreator.IGLOO, "Igloo", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("rot", rotDegrees);
+			creationData.put("q", q);
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/Holiday/Igloo.blend");
@@ -50,9 +42,9 @@ public class Igloo extends PhysicalEntity {
 			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 		}*/
 		this.mainNode.attachChild(model); //This creates the model bounds!  mainNode.getWorldBound();
-		float rads = (float)Math.toRadians(rotDegrees);
-		//geometry.setLocalTranslation(0, h/2, 0);
-		mainNode.rotate(0, rads, 0);
+		//float rads = (float)Math.toRadians(rotDegrees);
+		//mainNode.rotate(0, rads, 0);
+		mainNode.setLocalRotation(q);
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
 

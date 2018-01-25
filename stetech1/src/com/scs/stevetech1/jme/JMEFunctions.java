@@ -174,11 +174,10 @@ public class JMEFunctions {
 	}
 
 
-	public static void RotateTo90(Spatial spatial) {
-		Vector3f dir_to_target = new Vector3f(0, -1, 0);
+	public static Quaternion GetRotation(float x, float z) {
 		Quaternion target_q = new Quaternion();
-		target_q.lookAt(dir_to_target, Vector3f.UNIT_Y);
-		spatial.setLocalRotation(target_q);
+		target_q.lookAt(new Vector3f(x, 0, z), Vector3f.UNIT_Y);
+		return target_q;
 	}
 
 

@@ -2,6 +2,7 @@ package com.scs.undercoveragent.entities;
 
 import java.util.HashMap;
 
+import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -13,12 +14,12 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 public class SnowTree2 extends PhysicalEntity {
 
-	public SnowTree2(IEntityController _game, int id, float x, float y, float z, float rotDegrees) {
+	public SnowTree2(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
 		super(_game, id, UndercoverAgentClientEntityCreator.SNOW_TREE_2, "SnowTree2", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("rot", rotDegrees);
+			creationData.put("q", q);
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/SnowNature/Tree2.blend");
@@ -27,8 +28,9 @@ public class SnowTree2 extends PhysicalEntity {
 		}
 		this.mainNode.attachChild(model); //This creates the model bounds!
 
-		float rads = (float)Math.toRadians(rotDegrees);
-		mainNode.rotate(0, rads, 0);
+		//float rads = (float)Math.toRadians(rotDegrees);
+		//mainNode.rotate(0, rads, 0);
+		this.mainNode.setLocalRotation(q);
 
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);

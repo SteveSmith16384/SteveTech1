@@ -77,48 +77,48 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		case IGLOO:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
-			Igloo crate = new Igloo(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			Quaternion q = (Quaternion)msg.data.get("q");
+			Igloo crate = new Igloo(game, id, pos.x, pos.y, pos.z, q);
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case SNOW_HILL_1:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
-			SnowHill1 crate = new SnowHill1(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			Quaternion q = (Quaternion)msg.data.get("q");
+			SnowHill1 crate = new SnowHill1(game, id, pos.x, pos.y, pos.z, q);
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case STATIC_SNOWMAN:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
-			StaticSnowman snowman = new StaticSnowman(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			Quaternion q = (Quaternion)msg.data.get("q");
+			StaticSnowman snowman = new StaticSnowman(game, id, pos.x, pos.y, pos.z, q);
 			return snowman;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case SNOW_TREE_1:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
-			SnowTree1 tree = new SnowTree1(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			Quaternion q = (Quaternion)msg.data.get("q");
+			SnowTree1 tree = new SnowTree1(game, id, pos.x, pos.y, pos.z, q);
 			return tree;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case SNOW_TREE_2:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
-			SnowTree2 crate = new SnowTree2(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			Quaternion q = (Quaternion)msg.data.get("q");
+			SnowTree2 crate = new SnowTree2(game, id, pos.x, pos.y, pos.z, q);
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case BIG_TREE_WITH_LEAVES:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
-			BigTreeWithLeaves tree = new BigTreeWithLeaves(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			Quaternion q = (Quaternion)msg.data.get("q");
+			BigTreeWithLeaves tree = new BigTreeWithLeaves(game, id, pos.x, pos.y, pos.z, q);
 			return tree;  //crate.getMainNode().getWorldTranslation();
 		}
 

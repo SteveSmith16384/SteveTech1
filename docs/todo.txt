@@ -1,10 +1,12 @@
 STETECH1
 
 URGENT
-Why can client move if server avatar can't move?
-Improve avatar start position
+Kryonet buffers?
 Randomly place snowmen
 Player dies - show died model
+	Not rotating hills
+Why can client move if server avatar can't move?
+Improve avatar start position
 	Player dies - restart, stop client moving
 	JME function to rotate models by 90 deg
 	Rotate snow hills

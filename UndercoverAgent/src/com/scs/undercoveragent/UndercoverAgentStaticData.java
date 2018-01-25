@@ -9,6 +9,6 @@ public class UndercoverAgentStaticData {
 	public static final int GAME_PORT = 6143;
 	public static final int LOBBY_PORT = 6144;
 	
-	public static final int MAP_SIZE = 30;
+	public static final int MAP_SIZE = 20;
 
 }
