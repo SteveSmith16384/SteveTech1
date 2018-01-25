@@ -57,7 +57,6 @@ import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.AnimationSystem;
-import com.scs.stevetech1.systems.UpdateAmmoCacheSystem;
 
 import ssmith.util.RealtimeInterval;
 
@@ -100,7 +99,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private int port;
 
 	// Entity systems
-	private UpdateAmmoCacheSystem updateAmmoSystem;
+	//private UpdateAmmoCacheSystem updateAmmoSystem;
 	private AnimationSystem animSystem;
 	private AbstractClientEntityCreator entityCreator;
 
@@ -111,7 +110,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		port = _port;
 		this.entityCreator =_entityCreator;
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
-		updateAmmoSystem = new UpdateAmmoCacheSystem(this);
+		//updateAmmoSystem = new UpdateAmmoCacheSystem(this);
 		animSystem = new AnimationSystem(this);
 
 	}
@@ -310,11 +309,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							IPreprocess p = (IPreprocess)e;
 							p.preprocess();
 						}
-
+/*
 						if (e instanceof IRequiresAmmoCache) {
 							updateAmmoSystem.process((IRequiresAmmoCache)e, tpf_secs);
 						}
-
+*/
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;  // pe.getWorldTranslation();
 							if (pe.moves) { // Only bother with things that can move

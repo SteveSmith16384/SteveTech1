@@ -1,6 +1,8 @@
 package com.scs.stevetech1.weapons;
 
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -48,11 +50,22 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	}
 
 
+	private void checkForAmmo(AbstractGameServer server) {
+		if (this instanceof IRequiresAmmoCache) {
+			IRequiresAmmoCache irac = (IRequiresAmmoCache)this;
+			if (irac.requiresAmmo()) {
+				server.createEntity(irac.getAmmoType(), server.getNextEntityID(), -1, irac);
+			}
+		}
+	}
+	
+
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
 		if (game.isServer()) { // Only server can reload
+			checkForAmmo(server);
 			if (this.bulletsLeftInMag <= 0) {
 				// Reload
 				Globals.p("Reloading");
@@ -68,7 +81,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		timeUntilShoot_secs -= tpf_secs;
-		
+
 	}
 
 

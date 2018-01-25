@@ -82,3 +82,5 @@ https://github.com/sparklinlabs/superpowers-asset-packs/tree/master/3d-character
 https://shallow-lagoon.itch.io/pleasant-park-pack - Good, but voxel
 
 
+SKYBOX TEX:
+http://www.humus.name/index.php?page=Textures

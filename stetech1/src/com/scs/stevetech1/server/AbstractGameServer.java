@@ -42,7 +42,6 @@ import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
-import com.scs.stevetech1.netmessages.RequestNewBulletMessage;
 import com.scs.stevetech1.netmessages.UnknownEntityMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
@@ -154,12 +153,11 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 							client.latestInputTimestamp = pim.timestamp;
 						}
 
-					} else if (message instanceof RequestNewBulletMessage) {
+					/*} else if (message instanceof RequestNewBulletMessage) {
 						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
 						IRequiresAmmoCache irac = (IRequiresAmmoCache)this.entities.get(rnbe.ownerEntityID);
 						IEntity e = this.createEntity(rnbe.type, getNextEntityID(), -1, irac);
-						//irac.addToCache(e);
-
+*/
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
 					}
@@ -446,7 +444,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 	protected abstract void equipAvatar(AbstractServerAvatar avatar);
 
-	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
+	public IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
 		default:
 			throw new RuntimeException("Unknown entity type: " + type);

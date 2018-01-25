@@ -1,12 +1,11 @@
 STETECH1
 
 URGENT
-Why does the client need to request bullets?  Can't the server just send them?
+	Why does the client need to request bullets?  Can't the server just send them?
 Some way to check an area is clear before generating an avatar
 Try diff snow hills
 UA - Surround with trees/hills
-UA - Players have one teleport
-Skybox
+	Skybox
 Show current game time - a bit big
 Snowball floating in mid-air
 	Player face right way at start
@@ -18,6 +17,7 @@ Blog post progress
 
 
 TODO
+UA - Players have one teleport
 Get tileable snow tex
 Falling snow
 Use server-style simple models for collision checking on client side?

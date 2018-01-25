@@ -1,7 +1,7 @@
 package com.scs.stevetech1.netmessages;
 
 import com.jme3.network.serializing.Serializable;
-
+/*
 @Serializable
 public class RequestNewBulletMessage extends MyAbstractMessage {
 
@@ -13,7 +13,7 @@ public class RequestNewBulletMessage extends MyAbstractMessage {
 	}
 	
 
-	public RequestNewBulletMessage(int _type, int _entityID) {
+	public RequestNewBulletMessage(int _type, int _entityID, int deleteMe) {
 		this();
 		
 		type = _type;
@@ -21,3 +21,4 @@ public class RequestNewBulletMessage extends MyAbstractMessage {
 	}
 
 }
+*/

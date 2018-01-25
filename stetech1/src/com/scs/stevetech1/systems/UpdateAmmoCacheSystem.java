@@ -1,11 +1,11 @@
 package com.scs.stevetech1.systems;
-
+/*
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.netmessages.RequestNewBulletMessage;
 
-public class UpdateAmmoCacheSystem extends AbstractSystem {
+public class UpdateAmmoCacheSystem extends AbstractSystem { // todo - delete this?
 
 	private AbstractGameClient server;
 
@@ -26,3 +26,4 @@ public class UpdateAmmoCacheSystem extends AbstractSystem {
 	}
 
 }
+*/
