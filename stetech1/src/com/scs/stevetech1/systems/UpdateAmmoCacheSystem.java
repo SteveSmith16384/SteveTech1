@@ -18,7 +18,6 @@ public class UpdateAmmoCacheSystem extends AbstractSystem {
 
 	//@Override
 	public void process(IRequiresAmmoCache irac, float tpf_secs) {
-		// todo - only once every so often, and stop creating millions
 		if (irac.requiresAmmo()) {
 			RequestNewBulletMessage rnbm = new RequestNewBulletMessage(irac.getAmmoType(), irac.getID());
 			server.networkClient.sendMessageToServer(rnbm);

@@ -34,7 +34,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	public ICanShoot shooter; // So we know who not to collide with
 
 	public SnowballBullet(IEntityController _game, int id, IRequiresAmmoCache<SnowballBullet> owner) {
-		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL, "Snowball", true);
+		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -80,7 +80,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 		shooter = _shooter;
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
-		//this.simpleRigidBody.setBounciness(.6f);
+		this.simpleRigidBody.setBounciness(0f);
 
 		game.getRootNode().attachChild(this.mainNode);
 		this.setWorldTranslation(_shooter.getBulletStartPos());

@@ -18,7 +18,7 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowHill1;
-import com.scs.undercoveragent.entities.SnowTree1;
+import com.scs.undercoveragent.entities.SnowTree2;
 import com.scs.undercoveragent.entities.SnowballBullet;
 import com.scs.undercoveragent.entities.SnowmanServerAvatar;
 import com.scs.undercoveragent.entities.StaticSnowman;
@@ -49,12 +49,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	protected void createGame() {
-		new SnowFloor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/snow.jpg", null);
+		new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg", null);
 
 		new Igloo(this, getNextEntityID(), 5, 0, 5, 0);
 		new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);		
 		new StaticSnowman(this, getNextEntityID(), 5, 0, 10, 0);		
-		new SnowTree1(this, getNextEntityID(), 10, 0, 5, 0);
+		new SnowTree2(this, getNextEntityID(), 10, 0, 5, 0);
 		
 	}
 
@@ -70,7 +70,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
-		case UndercoverAgentClientEntityCreator.SNOWBALL:
+		case UndercoverAgentClientEntityCreator.SNOWBALL_BULLET:
 			return new SnowballBullet(this, entityid, irac);
 			
 		default:

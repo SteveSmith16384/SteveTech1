@@ -1,28 +1,26 @@
 STETECH1
 
 URGENT
+Why does the client need to request bullets?  Can't the server just send them?
+Some way to check an area is clear before generating an avatar
+Try diff snow hills
+UA - Surround with trees/hills
+UA - Players have one teleport
+Skybox
 Show current game time - a bit big
-	Debug mode - use server-side models
-	Player correction is all over the shop
-	Client show latest avatar position data timestamp
 Snowball floating in mid-air
 	Player face right way at start
 	The camera is very high
-Finish a game!
 Add open-source msg to the top of all files
 Client can always jump, even when in the air
-	Client countdown game time itself
 Search for todos
 Blog post progress
 
 
 TODO
-Look for 3d models of spectrum games?
-Skybox
-UA - Surround with trees
 Get tileable snow tex
 Falling snow
-Use server-style simple models for collision checking on client side
+Use server-style simple models for collision checking on client side?
 Hitscan rifle - show line showing where server says bullet went
 Requesting millions of bullets!  Request a certain number every few seconds?  Ignore old messages?
 Laser bullets

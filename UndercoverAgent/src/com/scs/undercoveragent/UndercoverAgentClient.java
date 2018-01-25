@@ -7,6 +7,7 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.system.AppSettings;
+import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -77,6 +78,8 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		super.simpleInitApp();
 		
 		this.getViewPort().setBackgroundColor(ColorRGBA.Cyan);
+		
+		getRootNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 	}
 	
 	

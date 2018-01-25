@@ -10,10 +10,12 @@ import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.shared.AbstractClientEntityCreator;
+import com.scs.undercoveragent.entities.BigTreeWithLeaves;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowHill1;
 import com.scs.undercoveragent.entities.SnowTree1;
+import com.scs.undercoveragent.entities.SnowTree2;
 import com.scs.undercoveragent.entities.SnowballBullet;
 import com.scs.undercoveragent.entities.SnowmanClientAvatar;
 import com.scs.undercoveragent.entities.SnowmanEnemyAvatar;
@@ -28,9 +30,10 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 	public static final int SNOW_HILL_1 = 4;
 	public static final int STATIC_SNOWMAN = 5;
 	public static final int SNOW_TREE_1 = 6;
-	
-	public static final int SNOWBALL_LAUNCHER = 10;
-	public static final int SNOWBALL = 11;
+	public static final int SNOW_TREE_2 = 7;
+	public static final int BIG_TREE_WITH_LEAVES = 8;
+	public static final int SNOWBALL_LAUNCHER = 9;
+	public static final int SNOWBALL_BULLET = 10;
 
 	public UndercoverAgentClientEntityCreator() {
 		super();
@@ -91,16 +94,32 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
-			StaticSnowman crate = new StaticSnowman(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
-			return crate;  //crate.getMainNode().getWorldTranslation();
+			StaticSnowman snowman = new StaticSnowman(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			return snowman;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case SNOW_TREE_1:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
-			SnowTree1 crate = new SnowTree1(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			SnowTree1 tree = new SnowTree1(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			return tree;  //crate.getMainNode().getWorldTranslation();
+		}
+
+		case SNOW_TREE_2:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
+			SnowTree2 crate = new SnowTree2(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
 			return crate;  //crate.getMainNode().getWorldTranslation();
+		}
+
+		case BIG_TREE_WITH_LEAVES:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
+			BigTreeWithLeaves tree = new BigTreeWithLeaves(game, id, pos.x, pos.y, pos.z, 0); // Give def rotation of 0, since it will get rotated anyway
+			return tree;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case SNOWBALL_LAUNCHER: 
@@ -115,12 +134,12 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			return null;
 		}
 
-		case SNOWBALL:
+		case SNOWBALL_BULLET:
 		{
 			int containerID = (int) msg.data.get("containerID");
 			IRequiresAmmoCache<SnowballBullet> irac = (IRequiresAmmoCache<SnowballBullet>)game.entities.get(containerID);
-			SnowballBullet grenade = new SnowballBullet(game, id, irac);
-			return grenade;
+			SnowballBullet snowball = new SnowballBullet(game, id, irac);
+			return snowball;
 		}
 
 

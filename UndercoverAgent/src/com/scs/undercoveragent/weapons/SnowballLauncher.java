@@ -37,7 +37,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 	@Override
 	public int getAmmoType() {
-		return UndercoverAgentClientEntityCreator.SNOWBALL;
+		return UndercoverAgentClientEntityCreator.SNOWBALL_BULLET;
 	}
 	
 
