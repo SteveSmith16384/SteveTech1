@@ -40,8 +40,11 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	public Vector3f getAvatarStartPosition(AbstractAvatar avatar) {
+	/*public Vector3f getAvatarStartPosition(AbstractAvatar avatar) {
 		return new Vector3f(3f, 0.6f, 3f + (avatar.playerID*2));	
+	}*/
+	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
+		avatar.setWorldTranslation(new Vector3f(3f, 0.6f, 3f + (avatar.playerID*2)));
 	}
 
 

@@ -17,7 +17,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable {
 
 	private AbstractGameServer server;
-	private ClientData client;
+	private ClientData client; // is this used?
 
 	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, int side, IAnimatedAvatarModel anim) {
 		super(_module, _playerID, _input, eid, side, anim);
@@ -35,9 +35,14 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		if (!this.alive) {
 			restartTime -= tpf;
 			if (this.restartTime <= 0) {
-				this.moveToStartPostion();
+				server.moveAvatarToStartPosition(this);
+				//this.moveToStartPostion();
 				alive = true;
-				server.networkServer.sendMessageToClient(client, new AvatarStatusMessage(this));
+				server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
+
+				EntityUpdateMessage eum = new EntityUpdateMessage();
+				eum.addEntityData(this, true);
+				server.networkServer.sendMessageToAll(eum);
 			}
 			return;
 		}
@@ -74,7 +79,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		} catch (NullPointerException ex){
 			ex.printStackTrace();
 		}
-		server.networkServer.sendMessageToClient(client, new AvatarStatusMessage(this));
+		server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
 		//invulnerableTime = RESTART_DUR*3;
 	}
 
@@ -82,12 +87,10 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {
 		//this.incScore(20, "shot " + e.toString());
-		//new AbstractHUDImage(game, module, this.hud, "Textures/text/hit.png", this.hud.hud_width, this.hud.hud_height, 2);
-		//this.hud.showCollectBox();
 		//numShotsHit++;
 	}
 
-
+/*
 	public void moveToStartPostion() {
 		Vector3f pos = server.getAvatarStartPosition(this);
 		//Settings.p("Scheduling player to start position: " + pos);
@@ -96,7 +99,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		eum.addEntityData(this, true);
 		server.networkServer.sendMessageToAll(eum);
 	}
-
+*/
 
 	@Override
 	public Vector3f getShootDir() {

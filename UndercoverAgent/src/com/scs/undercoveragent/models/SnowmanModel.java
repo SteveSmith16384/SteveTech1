@@ -56,13 +56,13 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 
 	@Override
 	public float getCameraHeight() {
-		return MODEL_HEIGHT;
+		return MODEL_HEIGHT - 0.1f;
 	}
 
 
 	@Override
 	public float getBulletStartHeight() {
-		return MODEL_HEIGHT - 0.1f;
+		return MODEL_HEIGHT - 0.2f;
 	}
 
 }

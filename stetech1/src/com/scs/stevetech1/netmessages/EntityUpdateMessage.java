@@ -11,6 +11,8 @@ import com.scs.stevetech1.netmessages.EntityUpdateMessage.UpdateData;
 @Serializable
 public class EntityUpdateMessage extends MyAbstractMessage {
 	
+	private static final int MAX_ITEMS = 10;
+	
 	public LinkedList<UpdateData> data = new LinkedList<UpdateData>();
 	
 	public EntityUpdateMessage() {
@@ -27,6 +29,11 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		updateData.animation = sc.getCurrentAnim();
 		this.data.add(updateData);
 
+	}
+	
+	
+	public boolean isFull() {
+		return this.data.size() >= MAX_ITEMS;
 	}
 	
 	

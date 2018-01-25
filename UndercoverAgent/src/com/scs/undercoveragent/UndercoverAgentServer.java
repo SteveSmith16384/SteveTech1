@@ -46,8 +46,18 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	public Vector3f getAvatarStartPosition(AbstractAvatar avatar) {
-		return new Vector3f(3f, 0.6f, 3f + (avatar.playerID*2));	
+	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
+		//return new Vector3f(3f, 0.6f, 3f + (avatar.playerID*2));
+		float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+		float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+		SimpleRigidBody<PhysicalEntity> collider = avatar.simpleRigidBody.checkForCollisions();
+		while (collider != null) {
+			x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+			z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+			avatar.setWorldTranslation(x, 2f, z);
+			collider = avatar.simpleRigidBody.checkForCollisions();
+		}
+		
 	}
 
 

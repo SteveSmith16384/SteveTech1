@@ -243,6 +243,14 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 						if (sendUpdates) {
 							if (physicalEntity.hasMoved()) { // Don't send if not moved (unless Avatar)
 								eum.addEntityData(physicalEntity, false);
+								if (eum.isFull()) {
+									for (ClientData client : this.clients.values()) {
+										if (client.clientStatus == ClientStatus.Accepted) {
+											networkServer.sendMessageToClient(client, eum);	
+										}
+									}
+									eum = new EntityUpdateMessage();
+								}
 							}
 						}
 					} else {
@@ -256,7 +264,6 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 						networkServer.sendMessageToClient(client, eum);	
 					}
 				}
-				//networkServer.sendMessageToAll(eum);
 			}
 			if (checkStatusInterval.hitInterval()) {
 				this.checkGameStatus(false);
@@ -434,12 +441,15 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	private AbstractServerAvatar createPlayersAvatar(ClientData client, int side) {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
-		avatar.setWorldTranslation(this.getAvatarStartPosition(avatar));
+		this.moveAvatarToStartPosition(avatar);
+		//avatar.setWorldTranslation(this.getAvatarStartPosition(avatar));
 		this.addEntity(avatar);
 		this.equipAvatar(avatar);
 		return avatar;
 	}
 
+	
+	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
 
@@ -709,7 +719,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	}
 
 
-	public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
+	//public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
 
 
 	@Override

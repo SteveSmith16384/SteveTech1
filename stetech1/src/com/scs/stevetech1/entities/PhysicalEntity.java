@@ -164,6 +164,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
+	public void setWorldTranslation(float x, float y, float z) {
+		this.getMainNode().setLocalTranslation(x, y, z);
+	}
+
+
 	public void applyOneOffForce(Vector3f dir) {
 		this.simpleRigidBody.getLinearVelocity().addLocal(dir);
 	}
