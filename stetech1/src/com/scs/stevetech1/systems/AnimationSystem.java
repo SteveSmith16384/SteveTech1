@@ -12,24 +12,26 @@ import com.scs.stevetech1.shared.HistoricalAnimationData;
 public class AnimationSystem extends AbstractSystem {
 
 	private AbstractGameClient client;
-	
+
 	public AnimationSystem(AbstractGameClient _client) {
 		client = _client;
 	}
-	
-	
+
+
 	public void process(IAnimated anim, float tpf_secs) {
-		HistoricalAnimationData had = anim.getAnimList().get(client.renderTime, true);
-		if (had != null) {
-			if (!had.animation.equals(anim.getCurrentAnim())) {
-				try {
-				anim.setCurrentAnim(had.animation);
-				//this.zm.channel.setAnim(had.animation);
-				} catch (IllegalArgumentException ex) {
-					Globals.pe(ex.getMessage());
+		if (anim.getAnimList() != null) { // Might be unanimated
+			HistoricalAnimationData had = anim.getAnimList().get(client.renderTime, true);
+			if (had != null) {
+				if (!had.animation.equals(anim.getCurrentAnim())) {
+					try {
+						anim.setCurrentAnim(had.animation);
+						//this.zm.channel.setAnim(had.animation);
+					} catch (IllegalArgumentException ex) {
+						Globals.pe(ex.getMessage());
+					}
 				}
 			}
-		}		
+		}
 	}
 
 

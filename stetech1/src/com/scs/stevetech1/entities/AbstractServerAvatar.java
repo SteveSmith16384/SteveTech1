@@ -31,7 +31,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		if (this.restarting) {
 			restartTime -= tpf;
 			if (this.restartTime <= 0) {
-				this.moveToStartPostion(true);
+				this.moveToStartPostion();
 				restarting = false;
 				return;
 			}
@@ -82,13 +82,10 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	}
 
 
-	public void moveToStartPostion(boolean invuln) {
+	public void moveToStartPostion() {
 		Vector3f pos = server.getAvatarStartPosition(this);
 		//Settings.p("Scheduling player to start position: " + pos);
 		super.setWorldTranslation(pos);
-		if (invuln) {
-			// invulnerableTime = Sorcerers.properties.GetInvulnerableTimeSecs();
-		}
 		EntityUpdateMessage eum = new EntityUpdateMessage();
 		eum.addEntityData(this, true);
 		server.networkServer.sendMessageToAll(eum);

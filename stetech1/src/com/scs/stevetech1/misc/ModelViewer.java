@@ -59,8 +59,8 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		Spatial model = assetManager.loadModel("Models/SnowNature/Tree.blend");
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/SnowNature/Textures/TreeTexture.png");
 
-		JMEFunctions.scaleModelToSize(model, 4f);
-		JMEFunctions.moveOriginToFloor(model);
+		JMEFunctions.scaleModelToHeight(model, 4f);
+		JMEFunctions.moveYOriginTo(model, 0f);
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);

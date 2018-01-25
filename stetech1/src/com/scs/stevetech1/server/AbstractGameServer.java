@@ -14,6 +14,7 @@ import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -546,6 +547,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	private void actuallyRemoveEntity(int id) {
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
+			if (e != null) {
 			Globals.p("Removing entity " + e.getName() + " / ID:" + id);
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
@@ -553,6 +555,9 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 			}
 			this.entities.remove(id);
 			this.console.appendText("Removed " + e);
+			} else {
+				Globals.pe("Warning - entity " + id + " doesn't exist for removal");
+			}
 		}
 		this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
 	}
@@ -733,6 +738,16 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		Globals.p("Disconnected from lobby server");
 		
 	}
-
+	
+/*	
+	public boolean isAreaClear(Spatial s) {
+		//SimplePhysicsController<String> spc = new SimplePhysicsController<String>(null);
+		SimpleRigidBody<PhysicalEntity> srb = new SimpleRigidBody<PhysicalEntity>(s, this.physicsController, false, null);
+		SimpleRigidBody<PhysicalEntity> collidedWith = srb.checkForCollisions();
+		this.physicsController.removeSimpleRigidBody(srb);
+		return collidedWith == null;
+		
+	}
+*/
 }
 

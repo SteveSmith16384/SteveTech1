@@ -226,7 +226,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											}
 										}
 										pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
-										if (pe instanceof IAnimated && eum.animation.length() > 0) {
+										if (pe instanceof IAnimated && eum.animation != null && eum.animation.length() > 0) {
 											IAnimated ia = (IAnimated)pe;
 											ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animation));
 										}
@@ -282,9 +282,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
-						long timeDiff = this.currentAvatar.serverPositionData.getMostRecent().serverTimestamp - renderTime;
-						this.hud.setDebugText("Latest Data is " + timeDiff + " newer than we need");
-						} catch (NoSuchElementException ex) {
+							long timeDiff = this.currentAvatar.serverPositionData.getMostRecent().serverTimestamp - renderTime;
+							this.hud.setDebugText("Latest Data is " + timeDiff + " newer than we need");
+						} catch (Exception ex) {
 							// do nothing, no data yet
 						}
 					}

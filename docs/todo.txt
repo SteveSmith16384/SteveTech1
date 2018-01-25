@@ -1,15 +1,13 @@
 STETECH1
 
 URGENT
-	Why does the client need to request bullets?  Can't the server just send them?
-Some way to check an area is clear before generating an avatar
+Player dies - show died model, restart, invulnerable, stop client moving
+JME function to rotate models by 90 deg
 Try diff snow hills
-UA - Surround with trees/hills
-	Skybox
+	Some way to check an area is clear before generating an avatar
+	UA - Surround with trees/hills
+	Why does the client need to request bullets?  Can't the server just send them?
 Show current game time - a bit big
-Snowball floating in mid-air
-	Player face right way at start
-	The camera is very high
 Add open-source msg to the top of all files
 Client can always jump, even when in the air
 Search for todos
@@ -33,7 +31,6 @@ Simple console GUI for connecting to lobby
 Game lobby
 Do tracer-style rewind
 Console to connect to lobby
-Origin of entities should be floor 
 Check for packet loss
 Less damage from hitscan over distance
 Strict mode - check if position already exists in positioncalc!
@@ -66,8 +63,8 @@ Simple physics - pushing
 Don't use broadcast()?s
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed
+Server tell client to slow down if server struggling
 Stop client if no comms for a while
-Make classes final
 Only send entity messages to players that have joined the game
 Player groups
 

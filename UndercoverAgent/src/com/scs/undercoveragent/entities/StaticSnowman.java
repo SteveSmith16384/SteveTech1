@@ -34,7 +34,7 @@ public class StaticSnowman extends PhysicalEntity {
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
-		simpleRigidBody.modelComplexity = 2;
+		simpleRigidBody.setModelComplexity(2);
 
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

@@ -25,7 +25,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	private boolean canMove = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
 	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.
-	public int modelComplexity = 0; // For determining which way round to check - todo - make private with get/set
+	private int modelComplexity = 0; // For determining which way round to check - todo - make private with get/set
 
 	private CollisionResults collisionResults = new CollisionResults();
 
@@ -255,5 +255,14 @@ public class SimpleRigidBody<T> implements Collidable {
 		return this.isOnGround;
 	}
 
+	
+	/**
+	 * When comparing for collisions, it's only possible to check BB v Mesh or BB v BB, not Mesh v Mesh.
+	 * So to get the best kind of collision check, the model complexity value is used to determine which
+	 * of our 2 potential colliders should be the mesh, and which should be the BB.
+	 */
+	public void setModelComplexity(int i) {
+		this.modelComplexity = i;
+	}
 }
 

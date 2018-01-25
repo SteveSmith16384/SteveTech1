@@ -150,7 +150,7 @@ public class JMEFunctions {
 	}
 	
 	
-	public static void scaleModelToSize(Spatial model, float height) {
+	public static void scaleModelToHeight(Spatial model, float height) {
 		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
 		float currHeight = bb.getYExtent() * 2;
 		float frac = height/currHeight;
@@ -158,10 +158,18 @@ public class JMEFunctions {
 	}
 	
 	
-	public static void moveOriginToFloor(Spatial model) {
+	public static void scaleModelToWidth(Spatial model, float width) {
+		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
+		float currWidth = bb.getXExtent() * 2;
+		float frac = width/currWidth;
+		model.scale(frac);
+	}
+	
+	
+	public static void moveYOriginTo(Spatial model, float yPos) {
 		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
 		float currOrigin = bb.getCenter().y - bb.getYExtent();
-		model.move(new Vector3f(0, -currOrigin, 0));
+		model.move(new Vector3f(0, yPos - currOrigin, 0));
 		
 	}
 

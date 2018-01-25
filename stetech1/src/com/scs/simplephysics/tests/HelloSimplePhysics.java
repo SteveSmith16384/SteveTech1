@@ -124,7 +124,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(model);
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(model, physicsController, false, model);		
-		srb.modelComplexity = 1;
+		srb.setModelComplexity(1);
 	}
 	
 	

@@ -63,6 +63,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		
 		game.getRootNode().attachChild(this.mainNode);
 
+		playerGeometry.setUserData(Globals.ENTITY, this);
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());

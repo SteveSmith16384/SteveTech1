@@ -30,8 +30,8 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 	public Spatial getModel(boolean forClient) {
 		if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
 			Spatial model = assetManager.loadModel("Models/Holiday/Snowman.obj");
-			JMEFunctions.scaleModelToSize(model, MODEL_HEIGHT);
-			JMEFunctions.moveOriginToFloor(model);
+			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
+			JMEFunctions.moveYOriginTo(model, 0f);
 			return model;
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);

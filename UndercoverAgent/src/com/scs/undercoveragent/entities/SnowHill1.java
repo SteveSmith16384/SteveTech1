@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -20,7 +21,8 @@ public class SnowHill1 extends PhysicalEntity {
 			creationData.put("rot", rotDegrees);
 		}
 
-		Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain.blend");
+		Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
+		JMEFunctions.moveYOriginTo(model, -.5f);
 		//model.scale(0.4f);
 		//model.setModelBound(new BoundingBox());
 		//model.setLocalTranslation(0, .15f, 0);
@@ -33,8 +35,7 @@ public class SnowHill1 extends PhysicalEntity {
 		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
-		simpleRigidBody.modelComplexity = 3;
-		//this.simpleRigidBody.setMovable(false);
+		simpleRigidBody.setModelComplexity(3);
 
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

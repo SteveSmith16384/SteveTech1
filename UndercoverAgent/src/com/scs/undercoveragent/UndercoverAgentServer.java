@@ -24,6 +24,8 @@ import com.scs.undercoveragent.entities.SnowmanServerAvatar;
 import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
 
+import ssmith.lang.NumberFunctions;
+
 public class UndercoverAgentServer extends AbstractGameServer {
 
 	public static void main(String[] args) {
@@ -51,11 +53,25 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	protected void createGame() {
 		new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg", null);
 
+		// Create border
+		for (int z=0; z<UndercoverAgentStaticData.MAP_SIZE ; z+=2) {
+			for (int x=0; x<UndercoverAgentStaticData.MAP_SIZE ; x+=2) {
+				if (x == 0 || z == 0 || x >= UndercoverAgentStaticData.MAP_SIZE-1 || z >= UndercoverAgentStaticData.MAP_SIZE-1) {
+					new SnowHill1(this, getNextEntityID(), x, 0, z, 0);
+				} else {
+					int rnd = NumberFunctions.rnd(0, 6);
+					switch (rnd) {
+						// todo
+					}
+				}
+			}			
+		}
+
 		new Igloo(this, getNextEntityID(), 5, 0, 5, 0);
 		new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);		
 		new StaticSnowman(this, getNextEntityID(), 5, 0, 10, 0);		
 		new SnowTree2(this, getNextEntityID(), 10, 0, 5, 0);
-		
+
 	}
 
 
@@ -72,7 +88,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		switch (type) {
 		case UndercoverAgentClientEntityCreator.SNOWBALL_BULLET:
 			return new SnowballBullet(this, entityid, irac);
-			
+
 		default:
 			return super.createEntity(type, entityid, side, irac);
 		}
@@ -83,7 +99,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	protected void equipAvatar(AbstractServerAvatar avatar) {
 		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0);
 		this.addEntity(abilityGun);
-		
+
 	}
 
 
@@ -91,12 +107,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
-		
+
 		if (pea instanceof SnowFloor == false && peb instanceof SnowFloor == false) {
 			Globals.p("Collision between " + pea + " and " + peb);
 		}
-		
+
 		super.collisionOccurred(a, b, point);
-		
+
 	}
 }

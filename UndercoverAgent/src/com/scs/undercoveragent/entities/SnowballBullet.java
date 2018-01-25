@@ -15,6 +15,7 @@ import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.ICanShoot;
+import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
@@ -26,7 +27,7 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
-public class SnowballBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact {
+public class SnowballBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact, ICausesHarmOnContact {
 
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
@@ -122,6 +123,18 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	@Override
 	public ICanShoot getLauncher() {
 		return shooter;
+	}
+
+
+	@Override
+	public float getDamageCaused() {
+		return 1;
+	}
+
+
+	@Override
+	public int getSide() {
+		return shooter.getSide();
 	}
 
 
