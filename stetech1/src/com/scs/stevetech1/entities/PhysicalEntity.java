@@ -26,7 +26,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	protected Node mainNode;
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
-	protected PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
+	public PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public boolean collideable = true;
 	
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true

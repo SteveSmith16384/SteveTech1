@@ -1,8 +1,5 @@
 package com.scs.stevetech1.hud;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jme3.bounding.BoundingBox;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
@@ -26,16 +23,16 @@ import com.scs.stevetech1.server.Globals;
 public class HUD extends Node implements IProcessByClient {
 
 	private static ColorRGBA defaultColour = ColorRGBA.Black;
+	
 	public TextArea log_ta;
 	public float hud_width, hud_height;
-
-	//private int playerId;
 	private Camera cam;
 	private Geometry damage_box;
 	private ColorRGBA dam_box_col = new ColorRGBA(1, 0, 0, 0.0f);
 	private boolean process_damage_box;
 	private AbstractGameClient game;
-	private BitmapText abilityGun, abilityOther, playerID, gameStatus, gameTime;
+	
+	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime;
 
 	public HUD(AbstractGameClient _game, BitmapFont font_small, Camera _cam) {
 		super("HUD");
@@ -69,10 +66,10 @@ public class HUD extends Node implements IProcessByClient {
 		abilityOther.setLocalTranslation(10, hud_height-45, 0);
 		this.attachChild(abilityOther);
 
-		playerID = new BitmapText(font_small, false);
-		playerID.setColor(defaultColour);
-		playerID.setLocalTranslation(10, hud_height-60, 0);
-		this.attachChild(playerID);
+		debugText = new BitmapText(font_small, false);
+		debugText.setColor(defaultColour);
+		debugText.setLocalTranslation(10, hud_height-60, 0);
+		this.attachChild(debugText);
 
 		gameStatus = new BitmapText(font_small, false);
 		gameStatus.setColor(defaultColour);
@@ -158,8 +155,8 @@ public class HUD extends Node implements IProcessByClient {
 	}
 
 
-	public void setPlayerID(int id) {
-		this.playerID.setText("PlayerID: " + id);
+	public void setDebugText(String s) {
+		this.debugText.setText(s);
 	}
 
 

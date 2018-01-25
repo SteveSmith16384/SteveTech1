@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.plugins.ClasspathLocator;
@@ -32,7 +33,6 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
-import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameStatusMessage;
@@ -103,7 +103,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private UpdateAmmoCacheSystem updateAmmoSystem;
 	private AnimationSystem animSystem;
 	private AbstractClientEntityCreator entityCreator;
-	
+
 	protected AbstractGameClient(String _serverIP, int _port, AbstractClientEntityCreator _entityCreator) {
 		super();
 
@@ -231,7 +231,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											IAnimated ia = (IAnimated)pe;
 											ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animation));
 										}
-										//Settings.p("New position for " + e + ": " + eum.pos);
 									} else {
 										Globals.p("Unknown entity ID: " + eum.entityID);
 										// Ask the server for entity details since we don't know about it.
@@ -281,6 +280,16 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					}
 
 					renderTime = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
+
+					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
+						try {
+						long timeDiff = this.currentAvatar.serverPositionData.getMostRecent().serverTimestamp - renderTime;
+						this.hud.setDebugText("Latest Data is " + timeDiff + " newer than we need");
+						} catch (NoSuchElementException ex) {
+							// do nothing, no data yet
+						}
+					}
+
 
 					// Loop through each entity and process them				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
@@ -386,7 +395,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
 				this.side = npcm.side;
-				this.hud.setPlayerID(this.playerID);
+				//this.hud.setDebugText("PlayerID=" + this.playerID);
 				//Settings.p("We are player " + playerID);
 				clientStatus = STATUS_JOINED_GAME;
 			} else {
@@ -533,12 +542,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		return false;
 	}
 
-/*
+	/*
 	@Override
 	public Type getJmeContext() {
 		return getContext().getType();
 	}
-*/
+	 */
 
 	@Override
 	public void connected() {
@@ -559,12 +568,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		return physicsController;
 	}
 
-/*
+	/*
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		return true;
 	}
-*/
+	 */
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {

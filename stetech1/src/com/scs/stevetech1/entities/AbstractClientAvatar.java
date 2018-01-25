@@ -56,7 +56,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		_module.currentAvatar = this;
 
-		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
+		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			createDebugBox();
 		}
 	}
@@ -108,7 +108,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		cam.getLocation().z = vec.z;
 		cam.update();
 
-		if (Globals.SHOW_SERVER_POS_ON_CLIENT) {
+		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis(), false);
 			if (epd != null) {

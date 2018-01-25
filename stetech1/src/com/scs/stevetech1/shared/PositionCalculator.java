@@ -21,6 +21,16 @@ public final class PositionCalculator {
 	}
 
 
+	public EntityPositionData getMostRecent() {
+		return positionData.getFirst();
+	}
+	
+	
+	public EntityPositionData getOldest() {
+		return positionData.getLast();
+	}
+	
+	
 	public void addPositionData(Vector3f pos, Quaternion q, long time) {
 		//long diff = System.currentTimeMillis() - time;
 
@@ -72,7 +82,8 @@ public final class PositionCalculator {
 				} else if (this.positionData.getLast().serverTimestamp > serverTimeToUse) {
 					if (warn) {
 						//Globals.p(this.toString(serverTimeToUse));
-						Globals.p("Warning: Requested time is too late");
+						long diff = this.positionData.getLast().serverTimestamp - serverTimeToUse;
+						Globals.p("Warning: Requested time is too late by " + diff);
 					}
 					return this.positionData.getLast(); // Our selected time is too late!
 				}

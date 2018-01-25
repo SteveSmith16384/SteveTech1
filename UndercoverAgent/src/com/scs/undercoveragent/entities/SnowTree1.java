@@ -22,13 +22,14 @@ public class SnowTree1 extends PhysicalEntity {
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/SnowNature/Tree.blend");
-		JMEFunctions.SetTextureOnSpatial(game.getAssetManager(), model, "Models/SnowNature/Textures/TreeTexture.png");
-
+		if (!_game.isServer()) {
+			JMEFunctions.SetTextureOnSpatial(game.getAssetManager(), model, "Models/SnowNature/Textures/TreeTexture.png");
+		}
 		this.mainNode.attachChild(model); //This creates the model bounds!
-		
+
 		float rads = (float)Math.toRadians(rotDegrees);
 		mainNode.rotate(0, rads, 0);
-		
+
 		mainNode.setLocalTranslation(x, y, z);
 		game.getRootNode().attachChild(this.mainNode);
 

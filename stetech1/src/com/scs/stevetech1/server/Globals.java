@@ -7,11 +7,13 @@ import java.util.Random;
 
 
 public class Globals {
-
 	
 	public static final boolean RECORD_VID = false;
+	
 	public static final boolean USE_SERVER_MODELS_ON_CLIENT = true;
-	public static final boolean SHOW_SERVER_POS_ON_CLIENT = true;
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
+	public static final boolean SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP = true;
+	
 	public static final boolean SHOW_AVATAR_WALK_DIR = false;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
 	public static final boolean DEBUG_REWIND_POS1 = false;
