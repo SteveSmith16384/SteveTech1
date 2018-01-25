@@ -7,18 +7,22 @@ import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.input.IInputDevice;
+import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable {
 
 	private AbstractGameServer server;
+	private ClientData client;
 
-	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side, IAnimatedAvatarModel anim) {
+	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, int side, IAnimatedAvatarModel anim) {
 		super(_module, _playerID, _input, eid, side, anim);
 
+		client = _client;
 		server = (AbstractGameServer)_module;
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
@@ -28,13 +32,14 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
-		if (this.restarting) {
+		if (!this.alive) {
 			restartTime -= tpf;
 			if (this.restartTime <= 0) {
 				this.moveToStartPostion();
-				restarting = false;
-				return;
+				alive = true;
+				server.networkServer.sendMessageToClient(client, new AvatarStatusMessage(this));
 			}
+			return;
 		}
 
 		if (invulnerableTime >= 0) {
@@ -52,7 +57,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		if (this instanceof IRewindable) {
 			addPositionData();
 		}
-}
+	}
 
 
 	@Override
@@ -63,12 +68,13 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	private void died(String reason) {
 		Globals.p("Player died: " + reason);
-		this.restarting = true;
+		this.alive = false;
 		try {
 			this.restartTime = AbstractGameServer.properties.GetRestartTimeSecs();
 		} catch (NullPointerException ex){
 			ex.printStackTrace();
 		}
+		server.networkServer.sendMessageToClient(client, new AvatarStatusMessage(this));
 		//invulnerableTime = RESTART_DUR*3;
 	}
 
@@ -100,11 +106,11 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	@Override
 	public void fallenOffEdge() {
-		if (!this.restarting) {
+		if (this.alive) {
 			Globals.p("playerID " + this.playerID + " has died due to falling off the edge (pos " + this.getWorldTranslation() + ")");
 			died("Too low");
 		}
 	}
 
-	
+
 }

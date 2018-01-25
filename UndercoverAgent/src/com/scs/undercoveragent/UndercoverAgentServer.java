@@ -11,6 +11,7 @@ import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -57,7 +58,10 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		for (int z=0; z<UndercoverAgentStaticData.MAP_SIZE ; z+=2) {
 			for (int x=0; x<UndercoverAgentStaticData.MAP_SIZE ; x+=2) {
 				if (x == 0 || z == 0 || x >= UndercoverAgentStaticData.MAP_SIZE-1 || z >= UndercoverAgentStaticData.MAP_SIZE-1) {
-					new SnowHill1(this, getNextEntityID(), x, 0, z, 0);
+					SnowHill1 hill = new SnowHill1(this, getNextEntityID(), x, 0, z, 0);
+					if (NumberFunctions.rnd(0, 1) == 0) {
+						JMEFunctions.RotateTo90(hill.getMainNode());
+					}					
 				} else {
 					int rnd = NumberFunctions.rnd(0, 6);
 					switch (rnd) {
@@ -77,7 +81,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
-		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
+		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid, side);
 		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
 		return avatar;
 	}

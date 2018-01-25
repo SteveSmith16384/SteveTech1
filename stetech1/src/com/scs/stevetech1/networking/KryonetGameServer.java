@@ -13,6 +13,7 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
+import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage.UpdateData;
 import com.scs.stevetech1.netmessages.GameStatusMessage;
@@ -108,7 +109,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(AbilityUpdateMessage.class);
 		kryo.register(SimplePlayerData.class);
 		kryo.register(SimpleGameData.class);
-		//kryo.register(RequestNewBulletMessage.class);
+		kryo.register(AvatarStatusMessage.class);
 	}
 
 

@@ -31,14 +31,15 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
-	protected boolean restarting = false;
-	protected float restartTime, invulnerableTime;
 	private int numShots = 0;
 	private int numShotsHit = 0;
 	public IAbility abilityGun, abilityOther; // todo - have list of abilities
 	public int side = -1;
 	protected IAnimatedAvatarModel avatarModel;
 	
+	public boolean alive = true;
+	protected float restartTime, invulnerableTime;
+
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAnimatedAvatarModel _anim) {
 		super(_game, eid, 1, "Player", true);
 

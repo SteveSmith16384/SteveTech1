@@ -95,9 +95,21 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
 		
-		storeAvatarPosition(serverTime);
-
+		if (!this.alive) {
+			// Position cam above avatar
+			Vector3f vec = this.getWorldTranslation();
+			cam.getLocation().x = vec.x;
+			cam.getLocation().y = 10f;
+			cam.getLocation().z = vec.z;
+			
+			cam.lookAt(this.getWorldTranslation(), Vector3f.UNIT_Y);
+			cam.update();
+			return;
+		}
+		
 		super.serverAndClientProcess(null, client, tpf_secs, serverTime);
+
+		storeAvatarPosition(serverTime);
 
 		hud.processByClient(client, tpf_secs);
 

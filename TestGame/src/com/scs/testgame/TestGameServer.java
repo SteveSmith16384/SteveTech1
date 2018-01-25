@@ -66,12 +66,12 @@ public class TestGameServer extends AbstractGameServer {
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
-		return new TestGameServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
+		return new TestGameServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid, side);
 	}
 
 
 	@Override
-	protected IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
+	public IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
 		case TestGameClientEntityCreator.LASER_BULLET:
 			return new LaserBullet(this, entityid, irac);

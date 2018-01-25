@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.plugins.ClasspathLocator;
@@ -26,14 +25,15 @@ import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IPreprocess;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
+import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameStatusMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -182,7 +182,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	@Override
-	public void simpleUpdate(float tpf_secs) {  //this.rootNode.getChild(3).getWorldTranslation();
+	public void simpleUpdate(float tpf_secs) {
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 
@@ -257,6 +257,13 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 									a.setLastUpdateTime(aum.timestamp);
 								}
 							}
+						} else if (message instanceof AvatarStatusMessage) {
+							AvatarStatusMessage asm = (AvatarStatusMessage) message;
+							AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
+							if (avatar.alive != asm.alive) {
+								// todo - show message or something
+							}
+							avatar.alive = asm.alive;							
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
