@@ -27,7 +27,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public abstract class AbstractClientAvatar extends AbstractAvatar implements IPreprocess, IShowOnHUD, IProcessByClient {
+public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
 
 	public HUD hud;
 	public Camera cam;
@@ -63,8 +63,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements IPr
 
 
 	private void createDebugBox() {
-		Box box1 = new Box(.5f, .5f, .5f); // todo - use IAnimatedAvatarModel
-		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
+		Box box1 = new Box(.5f, .5f, .5f); // todo - use IAnimatedAvatarModel?
 		Geometry g = new Geometry("Crate", box1);
 		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 		key3.setGenerateMips(true);
@@ -87,16 +86,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements IPr
 		debugNode = new Node();
 		debugNode.attachChild(g);
 		game.getRootNode().attachChild(debugNode);
-
-	}
-
-
-	@Override
-	public void preprocess() {
-		super.preprocess();
-		
-		//final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
-		//storeAvatarPosition(serverTime); todo
 
 	}
 

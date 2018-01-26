@@ -30,16 +30,12 @@ public class TestInstantPositionAdjustment {
 		FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS);
 
 		InstantPositionAdjustment ipa = new InstantPositionAdjustment();
-		long start = System.currentTimeMillis();
+		long start = 0;//System.currentTimeMillis();
 
 		for (int t=0 ; t<100000 ; t+=100) {
-			//loopTimer.start();
-
 			long now = t;//System.currentTimeMillis();
 
 			serverPositionData.addPositionData(serverEntity.getWorldTranslation(), null, now);
-
-			clientAvatarPositionData.addPositionData(clientEntity.getWorldTranslation(), null, now);
 
 			Vector3f adj = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, now-1000, 100);
 			if (adj != null && adj.length() > 0) {
@@ -51,8 +47,9 @@ public class TestInstantPositionAdjustment {
 			long simpleTime = now-start;
 			Globals.p("Client pos at " + simpleTime + ": " + clientEntity.getWorldTranslation());
 
-			//loopTimer.waitForFinish();
+			clientAvatarPositionData.addPositionData(clientEntity.getWorldTranslation(), null, now);
 		}
+		
 	}
 
 }

@@ -69,12 +69,16 @@ public final class PositionCalculator {
 
 
 	public boolean hasRecentData(long serverTimeToUse) {
+		try {
 			EntityPositionData epd = this.positionData.getFirst(); 
 			if (epd != null) {
 				long diff = epd.serverTimestamp - serverTimeToUse;
 				return diff >= 0;
 			}
-			return false;
+		} catch (NoSuchElementException ex) {
+			// todo - why do we get this?
+		}
+		return false;
 	}
 
 	public EntityPositionData calcPosition(long serverTimeToUse, boolean warn) {
