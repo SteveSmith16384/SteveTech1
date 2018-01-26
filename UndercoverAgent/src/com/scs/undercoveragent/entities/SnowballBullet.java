@@ -3,6 +3,7 @@ package com.scs.undercoveragent.entities;
 import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
+import com.jme3.bounding.BoundingSphere;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -65,7 +66,8 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			ball_geo.setMaterial(floor_mat);
 		}
 
-		this.mainNode.attachChild(ball_geo);
+		ball_geo.setModelBound(new BoundingSphere());
+		this.mainNode.attachChild(ball_geo); //ball_geo.getModelBound();
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 		game.addEntity(this);

@@ -1,5 +1,7 @@
 package com.scs.stevetech1.unittests;
 
+import org.junit.Test;
+
 import com.scs.stevetech1.shared.AverageNumberCalculator;
 
 public class TestAveragePingTime {
@@ -8,11 +10,7 @@ public class TestAveragePingTime {
 	}
 
 
-	public void runTests() {
-		basicTest1();
-	}
-
-
+	@Test
 	private void basicTest1() {
 		AverageNumberCalculator apt = new AverageNumberCalculator();
 		apt.add(100);

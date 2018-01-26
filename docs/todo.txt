@@ -1,9 +1,9 @@
 STETECH1
 
 URGENT
-Don't adjust client until there's enough data
-What boundingbox does snowball have
-Why can client move if server avatar can't move?  And why does it rotate around correct position?
+	Don't adjust client until there's enough data
+What boundingbox does snowball have?
+	Why can client move if server avatar can't move?  And why does it rotate around correct position?
 	Player sometimes starting on edge
 Improve border - server side is just a box, client side is an invisible box with hills around
 Player dies - show died model.  Manual IAnimation?

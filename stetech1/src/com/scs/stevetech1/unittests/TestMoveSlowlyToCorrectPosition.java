@@ -9,14 +9,14 @@ import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.unittests.dummyentities.DummyPhysicalEntity;
 
-public class TestPositionSync {
+public class TestMoveSlowlyToCorrectPosition {
 
-	public TestPositionSync() {
+	public TestMoveSlowlyToCorrectPosition() {
 	}
 
 
 	@Test
-	public void TestMoveSlowlyToCorrectPosition() {
+	public void TestMoveSlowlyToCorrectPosition1() {
 		IPhysicalEntity pe = new DummyPhysicalEntity();
 		pe.setWorldTranslation(new Vector3f(5f, 0.5f, 5f));
 		

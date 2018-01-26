@@ -1,6 +1,7 @@
 package com.scs.stevetech1.shared;
 
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -24,13 +25,13 @@ public final class PositionCalculator {
 	public EntityPositionData getMostRecent() {
 		return positionData.getFirst();
 	}
-	
-	
+
+
 	public EntityPositionData getOldest() {
 		return positionData.getLast();
 	}
-	
-	
+
+
 	public void addPositionData(Vector3f pos, Quaternion q, long time) {
 		//long diff = System.currentTimeMillis() - time;
 
@@ -66,9 +67,14 @@ public final class PositionCalculator {
 		}
 	}
 
-	
+
 	public boolean hasRecentData(long serverTimeToUse) {
-		return this.positionData.getFirst().serverTimestamp > serverTimeToUse;
+			EntityPositionData epd = this.positionData.getFirst(); 
+			if (epd != null) {
+				long diff = epd.serverTimestamp - serverTimeToUse;
+				return diff >= 0;
+			}
+			return false;
 	}
 
 	public EntityPositionData calcPosition(long serverTimeToUse, boolean warn) {
@@ -116,11 +122,12 @@ public final class PositionCalculator {
 
 
 	private void cleardown(int num) {
-		while (this.positionData.size() > num) {
-			EntityPositionData epd = this.positionData.removeLast();
-			this.oldPositionData.add(epd);
+		if (num >= 0) {
+			while (this.positionData.size() > num) {
+				EntityPositionData epd = this.positionData.removeLast();
+				this.oldPositionData.add(epd);
+			}
 		}
-
 	}
 
 

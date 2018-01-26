@@ -183,6 +183,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
+		if (tpf_secs > 1) {
+			tpf_secs = 1;
+		}
+
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 

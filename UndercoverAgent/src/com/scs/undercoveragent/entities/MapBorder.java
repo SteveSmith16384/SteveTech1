@@ -13,7 +13,11 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
-public class MapBorder extends PhysicalEntity {
+/*
+ * The origin for this should be left/bottom/front
+ *
+ */
+public class MapBorder extends PhysicalEntity { // todo - use this
 	
 	private static final float MODEL_W_H = 4f;
 

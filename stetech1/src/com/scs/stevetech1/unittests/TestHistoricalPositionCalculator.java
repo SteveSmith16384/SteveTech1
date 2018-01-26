@@ -1,22 +1,20 @@
 package com.scs.stevetech1.unittests;
 
+import org.junit.Test;
+
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public class TestAvatarPositionCalcs {
+public class TestHistoricalPositionCalculator {
 
-	public TestAvatarPositionCalcs() {
+	public TestHistoricalPositionCalculator() {
 	}
 
-	
-	public void runTests() {
-		basicPositionCalc1();
-	}
-	
-	
+
+	@Test
 	private void basicPositionCalc1() {
 		int ping = 100;
 		// Players moves at 1f per 100ms
@@ -39,7 +37,5 @@ public class TestAvatarPositionCalcs {
 			throw new RuntimeException("basicPositionCalc1 Failed: Diff is " + diff);
 		}
 	}
-
-
 
 }

@@ -1,5 +1,7 @@
 package com.scs.stevetech1.unittests;
 
+import org.junit.Test;
+
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
@@ -10,16 +12,7 @@ public class TestPositionCalculator {
 	}
 
 
-	public void runTests() {
-		basicPositionCalc1();
-		basicPositionCalc2_AddInReverse();
-		basicPositionCalc2_EarlyInSegment();
-		basicPositionCalc2_LateInSegment();
-		basicPositionCalc_TooEarly();
-		basicPositionCalc_TooLate();
-	}
-
-
+	@Test
 	private void basicPositionCalc1() {
 		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=0 ; i<10 ; i++) {
@@ -34,6 +27,7 @@ public class TestPositionCalculator {
 	}
 
 
+	@Test
 	private void basicPositionCalc2_AddInReverse() {
 		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {
@@ -48,6 +42,7 @@ public class TestPositionCalculator {
 	}
 
 
+	@Test
 	private void basicPositionCalc2_EarlyInSegment() {
 		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {
@@ -62,6 +57,7 @@ public class TestPositionCalculator {
 	}
 	
 
+	@Test
 	private void basicPositionCalc2_LateInSegment() {
 		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {
@@ -76,6 +72,7 @@ public class TestPositionCalculator {
 	}
 
 
+	@Test
 	private void basicPositionCalc_TooEarly() {
 		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {
@@ -93,6 +90,7 @@ public class TestPositionCalculator {
 	}
 
 
+	@Test
 	private void basicPositionCalc_TooLate() {
 		PositionCalculator posCalc = new PositionCalculator(false, 1000);
 		for (int i=10 ; i>0 ; i--) {

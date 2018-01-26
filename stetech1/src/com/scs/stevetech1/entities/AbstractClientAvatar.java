@@ -17,6 +17,7 @@ import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IPreprocess;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
 import com.scs.stevetech1.hud.HUD;
@@ -26,7 +27,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
+public abstract class AbstractClientAvatar extends AbstractAvatar implements IPreprocess, IShowOnHUD, IProcessByClient {
 
 	public HUD hud;
 	public Camera cam;
@@ -49,7 +50,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		//syncPos = new AdjustBasedOnDistance();
 
 		this.simpleRigidBody.setGravity(0);
-
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE/4); // Different to server side, since we don't have gravity!
@@ -87,6 +87,16 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		debugNode = new Node();
 		debugNode.attachChild(g);
 		game.getRootNode().attachChild(debugNode);
+
+	}
+
+
+	@Override
+	public void preprocess() {
+		super.preprocess();
+		
+		//final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
+		//storeAvatarPosition(serverTime); todo
 
 	}
 

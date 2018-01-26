@@ -22,7 +22,7 @@ public class MoveSlowlyToCorrectPosition implements ICorrectClientEntityPosition
 			if (Globals.DEBUG_ADJ_AVATAR_POS) {
 				Globals.p("Adjusting client avatar by " + offset);
 			}
-			pe.adjustWorldTranslation(offset);
+			pe.adjustWorldTranslation(offset.divide(tpf_secs)); // Need to divide it since we later multiply it
 		}
 	}
 
