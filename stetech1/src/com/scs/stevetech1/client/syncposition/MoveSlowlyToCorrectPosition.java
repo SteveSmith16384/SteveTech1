@@ -13,7 +13,7 @@ public class MoveSlowlyToCorrectPosition implements ICorrectClientEntityPosition
 
 
 	@Override
-	public void adjustPosition(IPhysicalEntity pe, Vector3f offset) {
+	public void adjustPosition(IPhysicalEntity pe, Vector3f offset, float tpf_secs) {
 		float diff = offset.length();
 		if (diff > Globals.SMALLEST_MOVE_DIST) { // Avoid lots of small movements
 			if (diff > MAX_DIST) {

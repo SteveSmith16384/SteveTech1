@@ -41,7 +41,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		cam = _cam;
 		hud = _hud;
-		
+
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
 		syncPos = new InstantPositionAdjustment();
@@ -94,20 +94,33 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
-		
+
 		if (!this.alive) {
 			// Position cam above avatar
 			Vector3f vec = this.getWorldTranslation();
 			cam.getLocation().x = vec.x;
 			cam.getLocation().y = 10f;
 			cam.getLocation().z = vec.z;
-			
+
 			cam.lookAt(this.getWorldTranslation(), Vector3f.UNIT_Y);
 			cam.update();
 			return;
 		}
-		
+
+		Vector3f pos = this.getWorldTranslation().clone(); // todo - remove
+
 		super.serverAndClientProcess(null, client, tpf_secs, serverTime);
+
+		if (Globals.DEBUG_ADJ_AVATAR_POS) {
+			Vector3f newPos = this.getWorldTranslation().clone();
+			Vector3f diff = newPos.subtract(pos);
+			if (diff.length() > 0) {
+				Globals.p("Moved client by " + diff);
+			} else {
+				Globals.p("Client not moved");
+			}
+			Globals.p("Client position is " + this.getWorldTranslation());
+		}
 
 		storeAvatarPosition(serverTime);
 
@@ -121,7 +134,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		cam.update();
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
-			long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
+			//long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis(), false);
 			if (epd != null) {
 				debugNode.setLocalTranslation(epd.position);
@@ -140,14 +153,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	// Avatars have their own special position calculator
 	@Override
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
+	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		if (Globals.SYNC_AVATAR_POS) {
-			/*if (clientAvatarPositionData.positionData.size() > 30) {
-				//Globals.p(clientAvatarPositionData.toString(0));
-			}*/
 			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 			if (offset != null) {
-				this.syncPos.adjustPosition(this, offset);
+				this.syncPos.adjustPosition(this, offset, tpf_secs);
 			}
 		}
 	}

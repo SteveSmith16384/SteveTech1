@@ -324,7 +324,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;  // pe.getWorldTranslation();
 							if (pe.moves) { // Only bother with things that can move
-								pe.calcPosition(this, renderTime); // Must be before we process physics as this calcs additionalForce
+								pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
 							}
 							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 						}

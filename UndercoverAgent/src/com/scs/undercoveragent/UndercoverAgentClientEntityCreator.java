@@ -14,6 +14,9 @@ import com.scs.undercoveragent.entities.BigTreeWithLeaves;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowHill1;
+import com.scs.undercoveragent.entities.SnowHill2;
+import com.scs.undercoveragent.entities.SnowHill3;
+import com.scs.undercoveragent.entities.SnowHill4;
 import com.scs.undercoveragent.entities.SnowTree1;
 import com.scs.undercoveragent.entities.SnowTree2;
 import com.scs.undercoveragent.entities.SnowballBullet;
@@ -34,6 +37,10 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 	public static final int BIG_TREE_WITH_LEAVES = 8;
 	public static final int SNOWBALL_LAUNCHER = 9;
 	public static final int SNOWBALL_BULLET = 10;
+	public static final int MAP_BORDER = 11;
+	public static final int SNOW_HILL_2 = 12;
+	public static final int SNOW_HILL_3 = 13;
+	public static final int SNOW_HILL_4 = 14;
 
 	public UndercoverAgentClientEntityCreator() {
 		super();
@@ -87,6 +94,30 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("q");
 			SnowHill1 crate = new SnowHill1(game, id, pos.x, pos.y, pos.z, q);
+			return crate;  //crate.getMainNode().getWorldTranslation();
+		}
+
+		case SNOW_HILL_2:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion q = (Quaternion)msg.data.get("q");
+			SnowHill2 crate = new SnowHill2(game, id, pos.x, pos.y, pos.z, q);
+			return crate;  //crate.getMainNode().getWorldTranslation();
+		}
+
+		case SNOW_HILL_3:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion q = (Quaternion)msg.data.get("q");
+			SnowHill3 crate = new SnowHill3(game, id, pos.x, pos.y, pos.z, q);
+			return crate;  //crate.getMainNode().getWorldTranslation();
+		}
+
+		case SNOW_HILL_4:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion q = (Quaternion)msg.data.get("q");
+			SnowHill4 crate = new SnowHill4(game, id, pos.x, pos.y, pos.z, q);
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}
 

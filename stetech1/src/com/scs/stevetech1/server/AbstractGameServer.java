@@ -236,19 +236,15 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity physicalEntity = (PhysicalEntity)e;
 						strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
-						/*if (sc.type == EntityTypes.AVATAR) {
-							AbstractPlayersAvatar av = (AbstractPlayersAvatar)sc;
-							strDebug.append("WalkDir: " + av.playerControl.getWalkDirection() + "   Velocity: " + av.playerControl.getVelocity().length() + "\n");
-						}*/
 						if (sendUpdates) {
 							if (physicalEntity.hasMoved()) { // Don't send if not moved (unless Avatar)
 								eum.addEntityData(physicalEntity, false);
 								if (eum.isFull()) {
-									for (ClientData client : this.clients.values()) {
-										if (client.clientStatus == ClientStatus.Accepted) {
-											networkServer.sendMessageToClient(client, eum);	
-										}
-									}
+									//for (ClientData client : this.clients.values()) {
+										//if (client.clientStatus == ClientStatus.Accepted) {
+											networkServer.sendMessageToAll(eum);	
+										//}
+									//}
 									eum = new EntityUpdateMessage();
 								}
 							}
@@ -259,11 +255,11 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 				}
 			}
 			if (sendUpdates) {
-				for (ClientData client : this.clients.values()) {
-					if (client.clientStatus == ClientStatus.Accepted) {
-						networkServer.sendMessageToClient(client, eum);	
-					}
-				}
+				//for (ClientData client : this.clients.values()) {
+					//if (client.clientStatus == ClientStatus.Accepted) {
+						networkServer.sendMessageToAll(eum);	
+					//}
+				//}
 			}
 			if (checkStatusInterval.hitInterval()) {
 				this.checkGameStatus(false);

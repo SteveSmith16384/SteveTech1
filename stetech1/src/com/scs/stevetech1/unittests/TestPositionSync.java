@@ -26,7 +26,7 @@ public class TestPositionSync {
 		int count = 0;
 		while (serverPos.distance(pe.getWorldTranslation()) > 0.01f) {
 			Vector3f offset = serverPos.subtract(pe.getWorldTranslation());
-			posSync.adjustPosition(pe, offset);
+			posSync.adjustPosition(pe, offset, 1);
 			Globals.p("Client pos: " + pe.getWorldTranslation());
 			count++;
 		}

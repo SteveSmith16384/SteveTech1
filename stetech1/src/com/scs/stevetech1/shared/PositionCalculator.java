@@ -66,6 +66,10 @@ public final class PositionCalculator {
 		}
 	}
 
+	
+	public boolean hasRecentData(long serverTimeToUse) {
+		return this.positionData.getFirst().serverTimestamp > serverTimeToUse;
+	}
 
 	public EntityPositionData calcPosition(long serverTimeToUse, boolean warn) {
 		synchronized (positionData) {

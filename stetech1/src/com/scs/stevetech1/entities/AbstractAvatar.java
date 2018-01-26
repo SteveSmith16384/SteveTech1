@@ -36,7 +36,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 	public IAbility abilityGun, abilityOther; // todo - have list of abilities
 	public int side = -1;
 	protected IAnimatedAvatarModel avatarModel;
-	
+
 	public boolean alive = true;
 	protected float restartTime, invulnerableTime;
 
@@ -54,14 +54,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		input = _input;
 		side =_side;
 		avatarModel = _anim;
-		
+
 		playerGeometry = avatarModel.getModel(!game.isServer());// getPlayersModel(game, playerID);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves - yet?
 
 		this.getMainNode().attachChild(playerGeometry);
 
 		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-		
+
 		game.getRootNode().attachChild(this.mainNode);
 
 		playerGeometry.setUserData(Globals.ENTITY, this);
@@ -93,7 +93,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 			}
 		}
 
-		this.currentAnim = avatarModel.getAnimationStringForCode("Idle"); // "ZombieIdle"; // Default
+		this.currentAnim = avatarModel.getAnimationStringForCode("Idle"); // Default
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 		if (input.getFwdValue()) {
@@ -119,13 +119,15 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		}
 
 		if (this.walkDirection.length() != 0) {
-			SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-			simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
-			if (Globals.SHOW_AVATAR_WALK_DIR) {
-				Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());// + "  walkDirection=" + walkDirection);
+			if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
+				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+				simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
+				if (Globals.SHOW_AVATAR_WALK_DIR) {
+					Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());// + "  walkDirection=" + walkDirection);
+				}
 			}
 		}
-		
+
 		// These must be after we might use them, so the hud is correct 
 		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
 			if (abilityOther != null) {
@@ -202,7 +204,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 		//}
 	}
 
-	
+
 	@Override
 	public int getSide() {
 		return side;

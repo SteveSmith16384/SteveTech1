@@ -9,13 +9,15 @@ import java.util.Random;
 public class Globals {
 	
 	public static final boolean RECORD_VID = false;
+
+	public static final boolean STOP_SERVER_AVATAR_MOVING = true;
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
+	public static final boolean DEBUG_ADJ_AVATAR_POS = true;
 	
 	public static final boolean USE_SERVER_MODELS_ON_CLIENT = false;
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP = false;
-	
+
 	public static final boolean SHOW_AVATAR_WALK_DIR = false;
-	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
 	public static final boolean DEBUG_REWIND_POS1 = false;
 	public static final boolean DEBUG_HUD = false;
 	public static final boolean LOG_MOVING_TARGET_POS = false;

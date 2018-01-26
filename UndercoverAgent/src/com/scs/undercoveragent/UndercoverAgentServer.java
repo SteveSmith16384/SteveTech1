@@ -57,13 +57,13 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			avatar.setWorldTranslation(x, 2f, z);
 			collider = avatar.simpleRigidBody.checkForCollisions();
 		}
-		
+		Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
 
 
 	protected void createGame() {
 		// Create border
-		for (int z=0; z<UndercoverAgentStaticData.MAP_SIZE ; z+=2) {
+		/*for (int z=0; z<UndercoverAgentStaticData.MAP_SIZE ; z+=2) {
 			for (int x=0; x<UndercoverAgentStaticData.MAP_SIZE ; x+=2) {
 				if (x == 0 || z == 0 || x >= UndercoverAgentStaticData.MAP_SIZE-1 || z >= UndercoverAgentStaticData.MAP_SIZE-2) {
 					if (NumberFunctions.rnd(0, 1) == 0) {
@@ -78,16 +78,16 @@ public class UndercoverAgentServer extends AbstractGameServer {
 					}
 				}
 			}			
-		}
-
+		}*/
+/*
 		new Igloo(this, getNextEntityID(), 5, 0, 5, JMEFunctions.GetRotation(-1, 0));
 		//new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);
 		new StaticSnowman(this, getNextEntityID(), 5, 0, 10, JMEFunctions.GetRotation(-1, 0));
 		new SnowTree2(this, getNextEntityID(), 10, 0, 5, JMEFunctions.GetRotation(-1, 0));
 
 		// Place snowman
-		//int numSnowmen = 30;
-		for (int i=0 ; i<30 ; i++) {
+		int numSnowmen = 30;
+		for (int i=0 ; i<numSnowmen ; i++) {
 			//while (numSnowmen > 0) {
 			float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
 			float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
@@ -102,7 +102,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			//numSnowmen--;
 			Globals.p("Placed " + i + " snowmen.");
 		}
-
+*/
 		// Place floor last so the snowmen don't collide with it when being placed
 		new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg", null);
 

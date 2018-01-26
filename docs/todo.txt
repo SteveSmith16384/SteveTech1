@@ -1,17 +1,17 @@
 STETECH1
 
 URGENT
-Player dies - show died model
-Why can client move if server avatar can't move?
+Don't adjust client until there's enough data
+What boundingbox does snowball have
+Why can client move if server avatar can't move?  And why does it rotate around correct position?
+	Player sometimes starting on edge
+Improve border - server side is just a box, client side is an invisible box with hills around
+Player dies - show died model.  Manual IAnimation?
 	Improve avatar start position
 	Randomly place snowmen
 	Not rotating hills
 	Player dies - restart, stop client moving
-	JME function to rotate models by 90 deg
 	Rotate snow hills
-Try diff snow hills
-	Some way to check an area is clear before generating an avatar
-	Why does the client need to request bullets?  Can't the server just send them?
 Show current game time - a bit big
 Add open-source msg to the top of all files
 Client can always jump, even when in the air
@@ -20,12 +20,13 @@ Blog post progress
 
 
 TODO
+Try diff snow hills
+Tree - make serverside just a cyl on trunk
 UA - Players have one teleport
 Get tileable snow tex
 Falling snow
 Use server-style simple models for collision checking on client side?
 Hitscan rifle - show line showing where server says bullet went
-Requesting millions of bullets!  Request a certain number every few seconds?  Ignore old messages?
 Laser bullets
 Animation - need to walk and shoot?  IAnimationFlags
 Record desktop showing two players

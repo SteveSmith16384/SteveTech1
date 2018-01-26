@@ -8,6 +8,6 @@ import com.scs.stevetech1.components.IPhysicalEntity;
  */
 public interface ICorrectClientEntityPosition {
 
-	void adjustPosition(IPhysicalEntity avatar, Vector3f offset);
+	void adjustPosition(IPhysicalEntity avatar, Vector3f offset, float tpf_secs);
 	
 }

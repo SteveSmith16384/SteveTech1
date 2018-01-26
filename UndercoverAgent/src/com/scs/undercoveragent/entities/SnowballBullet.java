@@ -92,12 +92,12 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 
 	@Override
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
+	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		if (launched) {
 			if (Globals.SYNC_GRENADE_POS) {
 				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 				if (offset != null) {
-					this.syncPos.adjustPosition(this, offset);
+					this.syncPos.adjustPosition(this, offset, tpf_secs);
 				}
 			}
 		}

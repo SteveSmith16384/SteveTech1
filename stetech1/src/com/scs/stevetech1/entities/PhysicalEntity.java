@@ -90,7 +90,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	
 	// This is overridden by Avatars to take into account local position
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
+	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse, false);
 		if (epd != null) {
 			this.setWorldTranslation(epd.position);

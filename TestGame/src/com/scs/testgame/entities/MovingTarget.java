@@ -125,9 +125,9 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	}
 
 
-	// This is overridden by Avatars to take into account local position
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse) {
-		super.calcPosition(mainApp, serverTimeToUse);
+	@Override
+	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+		super.calcPosition(mainApp, serverTimeToUse, tpf_secs);
 		
 		if (Globals.LOG_MOVING_TARGET_POS) {
 			Globals.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + serverTimeToUse + "," + this.getWorldTranslation());
