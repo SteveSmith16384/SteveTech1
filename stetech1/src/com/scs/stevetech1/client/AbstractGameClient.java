@@ -86,7 +86,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public int side = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
-	public long clientToServerDiffTime; // Add to current time to get server time
+	private long clientToServerDiffTime; // Add to current time to get server time
 	public int clientStatus = STATUS_NOT_CONNECTED;
 	public SimpleGameData gameData;
 
@@ -159,6 +159,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
+	
+	public long getServerTime() {
+		return System.currentTimeMillis() + clientToServerDiffTime;
+	}
 
 	private HUD createHUD(Camera c) {
 		BitmapFont guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
@@ -222,7 +226,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											pe.setWorldTranslation(eum.pos);
 											pe.setWorldRotation(eum.dir);
 											pe.clearPositiondata();
-											if (pe == this.currentAvatar) {
+											if (pe == this.currentAvatar) { // todo - do this for all entities that adjust their position
 												currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
 												currentAvatar.storeAvatarPosition(serverTime);
 												// Stop us walking!

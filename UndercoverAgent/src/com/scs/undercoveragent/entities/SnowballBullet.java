@@ -99,7 +99,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			if (Globals.SYNC_GRENADE_POS) {
 				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
 				if (offset != null) {
-					this.syncPos.adjustPosition(this, offset, tpf_secs);
+					this.syncPos.adjustPosition(this, offset, tpf_secs); // todo - is this actually called?
 				}
 			}
 		}
@@ -119,6 +119,13 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		if (launched) {
 			simpleRigidBody.process(tpf_secs);
 		}
+	}
+
+
+	private void storeAvatarPosition(long serverTime) { // todo - call this
+		Vector3f pos = getWorldTranslation();
+		//Globals.p("Storing pos " + pos);
+		this.clientAvatarPositionData.addPositionData(pos, null, serverTime);
 	}
 
 

@@ -1,6 +1,7 @@
 STETECH1
 
 URGENT
+Check client and server times are the same
 	Don't adjust client until there's enough data
 What boundingbox does snowball have?
 	Why can client move if server avatar can't move?  And why does it rotate around correct position?

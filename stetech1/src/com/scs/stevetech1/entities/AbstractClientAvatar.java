@@ -92,7 +92,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
-		final long serverTime = System.currentTimeMillis() + client.clientToServerDiffTime;
+		final long serverTime = client.getServerTime();// System.currentTimeMillis() + client.clientToServerDiffTime;
 
 		if (!this.alive) {
 			// Position cam above avatar

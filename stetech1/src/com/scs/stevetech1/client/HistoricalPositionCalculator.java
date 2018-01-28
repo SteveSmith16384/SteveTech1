@@ -20,7 +20,7 @@ public class HistoricalPositionCalculator {
 		if (serverPositionData.hasRecentData(serverTimeToUse)) {
 			EntityPositionData serverEPD = serverPositionData.calcPosition(serverTimeToUse, true);
 			if (serverEPD != null) {
-				long clientTimeToUse = serverTimeToUse - ping;
+				long clientTimeToUse = serverTimeToUse;// - ping;
 				// check where we should be based on where we were X ms ago
 				EntityPositionData clientEPD = clientAvatarPositionData.calcPosition(clientTimeToUse, true);
 				if (clientEPD != null) {

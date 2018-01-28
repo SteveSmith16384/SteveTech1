@@ -27,27 +27,34 @@ public class TestInstantPositionAdjustment {
 		PositionCalculator serverPositionData = new PositionCalculator(false, -1);
 		PositionCalculator clientAvatarPositionData = new PositionCalculator(false, -1);
 
-		FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS);
-
 		InstantPositionAdjustment ipa = new InstantPositionAdjustment();
-		long start = 0;//System.currentTimeMillis();
 
-		for (int t=0 ; t<100000 ; t+=100) {
-			long now = t;//System.currentTimeMillis();
+		for (int t=0 ; t<10000 ; t+=100) {
+			if (t == 2000) {
+				int dfg = 456;
+			}
+			
+			// Move server
+			serverEntity.adjustWorldTranslation(new Vector3f(1f, 0, 0));
+			serverPositionData.addPositionData(serverEntity.getWorldTranslation(), null, t);
 
-			serverPositionData.addPositionData(serverEntity.getWorldTranslation(), null, now);
+			clientEntity.adjustWorldTranslation(new Vector3f(2f, 0, 0));
+			clientAvatarPositionData.addPositionData(clientEntity.getWorldTranslation(), null, t);
 
-			Vector3f adj = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, now-1000, 100);
+			// Adjust client
+			Vector3f adj = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, t-1000, 100);
 			if (adj != null && adj.length() > 0) {
-				ipa.adjustPosition(clientEntity, adj, 1);
+				adj = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, t-1000, 100);
+				if (ipa.adjustPosition(clientEntity, adj, 1)) {
+					Globals.p("Adjusting client by " + adj);
+
+					int dfg = 456;
+				}
 			}
 
-			clientEntity.adjustWorldTranslation(new Vector3f(.1f, 0, 0));
+			Globals.p("Client pos at " + t + ": " + clientEntity.getWorldTranslation());
+			Globals.p("Server pos at " + t + ": " + serverEntity.getWorldTranslation());
 
-			long simpleTime = now-start;
-			Globals.p("Client pos at " + simpleTime + ": " + clientEntity.getWorldTranslation());
-
-			clientAvatarPositionData.addPositionData(clientEntity.getWorldTranslation(), null, now);
 		}
 		
 	}
