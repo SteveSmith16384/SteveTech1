@@ -13,7 +13,7 @@ public interface IEntityController {
 
 	void addEntity(IEntity e);
 	
-	void removeEntity(int id);
+	void removeEntity(int id, long time);
 	
 	//JmeContext.Type getJmeContext();
 	

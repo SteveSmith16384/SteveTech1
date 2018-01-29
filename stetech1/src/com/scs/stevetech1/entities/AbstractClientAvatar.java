@@ -64,7 +64,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	private void createDebugBox() {
 		Box box1 = new Box(.5f, .5f, .5f); // todo - use IAnimatedAvatarModel?
-		Geometry g = new Geometry("Crate", box1);
+		Geometry g = new Geometry("DebugBox", box1);
 		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = game.getAssetManager().loadTexture(key3);

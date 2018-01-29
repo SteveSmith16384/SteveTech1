@@ -77,7 +77,7 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
-			SnowFloor floor = new SnowFloor(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, null);
+			SnowFloor floor = new SnowFloor(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex);
 			return floor;
 		}
 
@@ -85,40 +85,40 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("q");
-			Igloo crate = new Igloo(game, id, pos.x, pos.y, pos.z, q);
-			return crate;  //crate.getMainNode().getWorldTranslation();
+			Igloo igloo = new Igloo(game, id, pos.x, pos.y, pos.z, q);
+			return igloo;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case SNOW_HILL_1:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("q");
-			SnowHill1 crate = new SnowHill1(game, id, pos.x, pos.y, pos.z, q);
-			return crate;  //crate.getMainNode().getWorldTranslation();
+			SnowHill1 hill = new SnowHill1(game, id, pos.x, pos.y, pos.z, q);
+			return hill;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case SNOW_HILL_2:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("q");
-			SnowHill2 crate = new SnowHill2(game, id, pos.x, pos.y, pos.z, q);
-			return crate;  //crate.getMainNode().getWorldTranslation();
+			SnowHill2 hill = new SnowHill2(game, id, pos.x, pos.y, pos.z, q);
+			return hill;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case SNOW_HILL_3:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("q");
-			SnowHill3 crate = new SnowHill3(game, id, pos.x, pos.y, pos.z, q);
-			return crate;  //crate.getMainNode().getWorldTranslation();
+			SnowHill3 hill = new SnowHill3(game, id, pos.x, pos.y, pos.z, q);
+			return hill;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case SNOW_HILL_4:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("q");
-			SnowHill4 crate = new SnowHill4(game, id, pos.x, pos.y, pos.z, q);
-			return crate;  //crate.getMainNode().getWorldTranslation();
+			SnowHill4 hill = new SnowHill4(game, id, pos.x, pos.y, pos.z, q);
+			return hill;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case STATIC_SNOWMAN:
@@ -141,8 +141,8 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("q");
-			SnowTree2 crate = new SnowTree2(game, id, pos.x, pos.y, pos.z, q);
-			return crate;  //crate.getMainNode().getWorldTranslation();
+			SnowTree2 tree = new SnowTree2(game, id, pos.x, pos.y, pos.z, q);
+			return tree;  //crate.getMainNode().getWorldTranslation();
 		}
 
 		case BIG_TREE_WITH_LEAVES:

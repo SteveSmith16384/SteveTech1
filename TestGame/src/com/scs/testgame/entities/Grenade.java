@@ -14,8 +14,8 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
-import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.ICanShoot;
+import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
@@ -26,7 +26,7 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
 import com.scs.testgame.TestGameClientEntityCreator;
 
-public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunchable {
+public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunchable, IClientControlled {
 
 	private float timeLeft = 3f;
 
@@ -111,8 +111,9 @@ public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunch
 			if (this.timeLeft < 0) {
 				// todo - damage surrounding entities
 				this.remove();
-			}
+			} else {
 			super.processByServer(server, tpf_secs);
+			}
 		}
 	}
 

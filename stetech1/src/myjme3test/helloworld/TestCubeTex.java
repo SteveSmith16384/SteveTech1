@@ -43,7 +43,7 @@ public class TestCubeTex extends SimpleApplication {
 		
 		//box1.sett
 		//box1.scaleTextureCoordinates(new Vector2f(10, 10));
-		Geometry geometry = new Geometry("Crate", box1);
+		Geometry geometry = new Geometry("Box", box1);
 		TextureKey key3 = new TextureKey("Textures/tron1.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = getAssetManager().loadTexture(key3);

@@ -34,7 +34,7 @@ public abstract class Entity implements IEntity, Savable {
 
 
 	public void remove() {
-		game.removeEntity(this.id);
+		game.removeEntity(this.id, 0);
 	}
 	
 	

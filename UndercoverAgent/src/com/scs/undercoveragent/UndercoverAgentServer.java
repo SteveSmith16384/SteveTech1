@@ -108,7 +108,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		}
 */
 		// Place floor last so the snowmen don't collide with it when being placed
-		new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg", null);
+		new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg");
 
 
 	}

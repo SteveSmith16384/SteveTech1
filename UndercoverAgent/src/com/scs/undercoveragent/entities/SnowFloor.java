@@ -23,10 +23,9 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 
 	private Box box1;
-	private Vector3f texScroll, thisScroll;
 	private float w, h, d;
 
-	public SnowFloor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
+	public SnowFloor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex) {
 		super(_game, id, UndercoverAgentClientEntityCreator.FLOOR, "Floor", false);
 
 		if (_game.isServer()) {
@@ -39,9 +38,6 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 		this.w = w;
 		this.h = h;
 		this.d = d;
-
-		this.texScroll = _texScroll;
-		thisScroll = new Vector3f();
 
 		box1 = new Box(w/2, h/2, d/2);
 
@@ -90,7 +86,7 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf) {
-		if (texScroll != null) {
+		/*if (texScroll != null) {
 			float diff = tpf*1f;
 			thisScroll.addLocal(diff, diff, diff);
 			thisScroll.multLocal(this.texScroll);
@@ -122,7 +118,7 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 					w+offx, offz, w+offx, d+offz, offx, d+offz, offx, offz  // bottom
 			}));
 
-		}
+		}*/
 	}
 
 

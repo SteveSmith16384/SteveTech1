@@ -55,8 +55,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 	@Override
 	public void addToCache(SnowballBullet o) {
-		this.ammoCache.add(o);
-		
+		this.ammoCache.add(o);		
 	}
 
 

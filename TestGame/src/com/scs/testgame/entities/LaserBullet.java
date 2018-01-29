@@ -12,6 +12,7 @@ import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
+import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
@@ -24,7 +25,7 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
 import com.scs.testgame.TestGameClientEntityCreator;
 
-public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, ILaunchable, IRemoveOnContact {
+public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, ILaunchable, IRemoveOnContact, IClientControlled {
 
 	private float timeLeft = 3f;
 

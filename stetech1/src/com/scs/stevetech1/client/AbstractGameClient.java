@@ -22,9 +22,11 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimated;
+import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
@@ -159,7 +161,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
-	
+
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;
 	}
@@ -248,7 +250,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							}
 						} else if (message instanceof RemoveEntityMessage) {
 							RemoveEntityMessage rem = (RemoveEntityMessage)message;
-							this.removeEntity(rem.entityID);
+							this.removeEntity(rem.entityID, rem.timeToRemove);
 
 						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
 							GeneralCommandMessage msg = (GeneralCommandMessage)message;
@@ -314,21 +316,24 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					}
 					this.toAdd.clear();
 
-					for(Integer i : this.toRemove) {
-						this.actuallyRemoveEntity(i);
+					for(Integer i : this.toRemove.keySet()) {
+						long timeToRemove = this.toRemove.get(i);
+						if (timeToRemove < serverTime) { // Only remove them when its time
+							this.actuallyRemoveEntity(i);
+						}
 					}
 					this.toRemove.clear();
 
-					for (IEntity e : this.entities.values()) {
+					for (IEntity e : this.entities.values()) {  // this.getRootNode();
 						if (e instanceof IPlayerControlled) {
 							IPlayerControlled p = (IPlayerControlled)e;
 							p.resetPlayerInput();
 						}
-/*
+						/*
 						if (e instanceof IRequiresAmmoCache) {
 							updateAmmoSystem.process((IRequiresAmmoCache)e, tpf_secs);
 						}
-*/
+						 */
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;  // pe.getWorldTranslation();
 							if (pe.moves) { // Only bother with things that can move
@@ -491,8 +496,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	@Override
-	public void removeEntity(int id) {
-		this.toRemove.add(id);
+	public void removeEntity(int id, long time) {
+		this.toRemove.put(id, time);
 	}
 
 
@@ -508,9 +513,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					if (pe.simpleRigidBody != null) {
 						this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
 					}
-					pe.getMainNode().removeFromParent();
+					pe.getMainNode().removeFromParent(); // this.getRootNode();
 				}
 				this.entities.remove(id);
+			} else {
+				Globals.pe("Entity id " + id + " not found for removal");
 			}
 		}
 	}
@@ -595,6 +602,42 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		/*if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
 			Globals.p("Collision between " + a.userObject + " and " + b.userObject);
 		}*/
+		PhysicalEntity pea = a.userObject;
+		PhysicalEntity peb = b.userObject;
+
+		if (pea instanceof IClientControlled) {
+			IClientControlled cc = (IClientControlled)pea;
+			if (cc.isItOurEntity()) {
+				if (pea instanceof IRemoveOnContact) {
+					IRemoveOnContact roc = (IRemoveOnContact)pea;
+					roc.remove();
+				}
+			}
+		}
+		if (peb instanceof IClientControlled) {
+			IClientControlled cc = (IClientControlled)peb;
+			if (cc.isItOurEntity()) {
+				if (peb instanceof IRemoveOnContact) {
+					IRemoveOnContact roc = (IRemoveOnContact)peb;
+					roc.remove();
+				}
+			}
+		}
+
+		/*
+		if (pea instanceof IRemoveOnContact) {
+			IRemoveOnContact roc = (IRemoveOnContact)pea;
+			if (roc.removeByClient()) {
+				pea.remove();
+			}
+		}
+		if (peb instanceof IRemoveOnContact) {
+			IRemoveOnContact roc = (IRemoveOnContact)peb;
+			if (roc.removeByClient()) {
+				peb.remove();
+			}
+		}
+		 */
 	}
 
 

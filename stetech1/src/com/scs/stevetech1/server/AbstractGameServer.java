@@ -218,7 +218,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 				}
 				this.toAdd.clear();
 
-				for(Integer i : this.toRemove) {
+				for(Integer i : this.toRemove.keySet()) {
 					this.actuallyRemoveEntity(i);
 				}
 				this.toRemove.clear();
@@ -547,8 +547,8 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 
 	@Override
-	public void removeEntity(int id) {
-		this.toRemove.add(id);
+	public void removeEntity(int id, long time) {
+		this.toRemove.put(id, time);
 	}
 
 

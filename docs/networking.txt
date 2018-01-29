@@ -16,16 +16,16 @@ Player moves and their avatar is moved immediately
 	Server calcs position of the client
 	Server sends back position of all entities
 	Client corrects itself based on servers position
-Player shooting
+Player shooting (hitscan)
 	Client sends shot msg with timestamp and direction
 	Server moves players to correct position and checks the client has hit
 	 
 	
 PLAYER SHOOTING
-Players gets sent a cache of "unshot" bullets
+Players gets sent "unshot" bullets/grenades
 If player shoots, client "shoots" the bullets immediately
-NO? The client then keeps the bullets in sync in the same way as for their avatar, by adjusting position
-?? The shooting client keeps it's own track of bullets, they are not syncd
+NO!! The client then keeps the bullets in sync in the same way as for their avatar, by adjusting position
+The shooting client keeps it's own track of bullets, they are not syncd.  It also removes them when required
 The other clients show the bullets like any other object
 
 

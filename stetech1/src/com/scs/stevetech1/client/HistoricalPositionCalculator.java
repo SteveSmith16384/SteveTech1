@@ -16,14 +16,14 @@ public class HistoricalPositionCalculator {
 	 * This calculates the difference between what the client and server think the position should be,
 	 * so this can be added to the clients current position to get the correct position.
 	 */
-	public static Vector3f calcHistoricalPositionOffset(PositionCalculator serverPositionData, PositionCalculator clientAvatarPositionData, long serverTimeToUse) {
+	public static Vector3f calcHistoricalPositionOffset(PositionCalculator serverPositionData, PositionCalculator clientPositionData, long serverTimeToUse) {
 		if (serverPositionData.hasRecentData(serverTimeToUse)) {
-			//if (clientAvatarPositionData.hasRecentData(serverTimeToUse)) {
+			if (clientPositionData.hasRecentData(serverTimeToUse)) {
 			EntityPositionData serverEPD = serverPositionData.calcPosition(serverTimeToUse, true);
 			if (serverEPD != null) {
 				long clientTimeToUse = serverTimeToUse;// - ping;
 				// check where we should be based on where we were X ms ago
-				EntityPositionData clientEPD = clientAvatarPositionData.calcPosition(clientTimeToUse, true);
+				EntityPositionData clientEPD = clientPositionData.calcPosition(clientTimeToUse, true);
 				if (clientEPD != null) {
 					// Is there a difference
 					/*float diff = serverEPD.position.distance(clientEPD.position);
@@ -35,7 +35,7 @@ public class HistoricalPositionCalculator {
 					Vector3f vdiff = serverEPD.position.subtract(clientEPD.position); 
 					return vdiff;
 				}
-			//}
+			}
 			}
 		}
 		return null;

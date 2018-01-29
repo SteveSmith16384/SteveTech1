@@ -23,7 +23,7 @@ public abstract class AbstractGameController extends SimpleApplication implement
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	protected LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
-	protected LinkedList<Integer> toRemove = new LinkedList<Integer>(); 
+	protected HashMap<Integer, Long> toRemove = new HashMap<Integer, Long>();  // EntityID::TimeToRemove
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS);

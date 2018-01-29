@@ -19,7 +19,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	protected float shotInterval_secs, reloadInterval_secs;
 
 
-	public AbstractMagazineGun(IEntityController _game, int id, int type, AbstractAvatar owner, int num, String _name, float shotInt, float reloadInt, int magSize) { // ICanShoot _shooter, 
+	public AbstractMagazineGun(IEntityController _game, int id, int type, AbstractAvatar owner, int num, String _name, float shotInt, float reloadInt, int magSize) { 
 		super(_game, id, type, owner, num, _name);
 
 		this.shotInterval_secs = shotInt;
@@ -43,7 +43,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			if (bulletsLeftInMag <= 0) {
 				Globals.p("No bullets");
 			} else if (timeUntilShoot_secs > 0) {
-				Globals.p("Shooting too soon");
+				Globals.p("Shooting too soon - wait for " + timeUntilShoot_secs + " secs");
 			}
 		}
 		return false;
@@ -58,22 +58,22 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			}
 		}
 	}
-	
+
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
-		if (game.isServer()) { // Only server can reload
-			checkForAmmo(server);
-			if (this.bulletsLeftInMag <= 0) {
-				// Reload
-				Globals.p("Reloading");
-				this.bulletsLeftInMag = this.magazineSize;
-				this.timeUntilShoot_secs += this.reloadInterval_secs;
-				server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
-			}
+		//if (game.isServer()) { // Only server can reload
+		checkForAmmo(server);
+		if (this.bulletsLeftInMag <= 0) {
+			// Reload
+			Globals.p("Reloading");
+			this.bulletsLeftInMag = this.magazineSize;
+			this.timeUntilShoot_secs = this.reloadInterval_secs;
+			server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 		}
+		//}
 		timeUntilShoot_secs -= tpf_secs;
 	}
 
@@ -81,7 +81,6 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		timeUntilShoot_secs -= tpf_secs;
-
 	}
 
 

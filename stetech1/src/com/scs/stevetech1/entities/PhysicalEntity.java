@@ -117,6 +117,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		super.remove();
 		if (this.mainNode.getParent() == null) {
 			//throw new RuntimeException("No parent!");
+			Globals.pe(this + " has no parent!");
 		} else {
 			this.mainNode.removeFromParent(); // Don't need to remove left/right nodes as they are attached to the main node
 		}

@@ -1,27 +1,25 @@
 STETECH1
 
 URGENT
+Don't remove entities immed, wait for scheduled time.
+Snowballs not being removed
+Floating snowballs - not being removed from rootNode
 Test two clients, can one see the other shooting?
-	Are grenades actually syncd?
 Check client and server times are the same
-	Don't adjust client until there's enough data
-	Why can client move if server avatar can't move?  And why does it rotate around correct position?
-	Player sometimes starting on edge
 Improve border - server side is just a box, client side is an invisible box with hills around
 Player dies - show died model.  Manual IAnimation?
 	Not rotating hills
 	Player dies - restart, stop client moving
-	Rotate snow hills
 Show current game time - a bit big
 Add open-source msg to the top of all files
 Client can always jump, even when in the air
 Search for todos
 Blog post progress
-Auto-start lobby with server
 Animation - need to walk and shoot?  IAnimationFlags
 
 
 TODO
+Auto-start lobby with server
 Do I need to sync every bullet/grenade?
 Try diff snow hills
 Tree - make serverside just a cyl on trunk

@@ -25,11 +25,11 @@ public class CollisionLogic {
 		
 		if (a instanceof IRemoveOnContact) {
 			IRemoveOnContact roc = (IRemoveOnContact)a;
-			checkForRemoval(roc);
+			markForRemoval(roc);
 		}
 		if (b instanceof IRemoveOnContact) {
 			IRemoveOnContact roc = (IRemoveOnContact)b;
-			checkForRemoval(roc);
+			markForRemoval(roc);
 		}
 	}
 	
@@ -42,7 +42,7 @@ public class CollisionLogic {
 	}
 
 
-	private void checkForRemoval(IRemoveOnContact roc) {
+	private void markForRemoval(IRemoveOnContact roc) {
 		roc.remove();
 	}
 	
