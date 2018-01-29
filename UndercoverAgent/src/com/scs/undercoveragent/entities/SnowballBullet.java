@@ -88,27 +88,9 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		this.mainNode.updateGeometricState();
 
 		this.collideable = true;
+		
+		// todo - if server, send messages to clients to tell them it has been laucnhed
 
-	}
-
-
-	@Override
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
-		if (this.shooter == mainApp.currentAvatar) {
-			// Do nothing
-		} else {
-			super.calcPosition(mainApp, serverTimeToUse, tpf_secs);
-		}
-		/*if (launched) {
-			if (Globals.SYNC_GRENADE_POS) {
-				if (this.serverPositionData.hasRecentData(serverTimeToUse)) { // todo - remove
-					Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientSidePositionData, serverTimeToUse);
-					if (offset != null) {
-						this.syncPos.adjustPosition(this, offset, tpf_secs);
-					}
-				}
-			}
-		}*/
 	}
 
 

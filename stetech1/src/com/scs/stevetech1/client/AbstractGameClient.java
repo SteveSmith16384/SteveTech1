@@ -250,7 +250,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							}
 						} else if (message instanceof RemoveEntityMessage) {
 							RemoveEntityMessage rem = (RemoveEntityMessage)message;
-							this.removeEntity(rem.entityID, rem.timeToRemove);
+							this.removeEntity(rem.entityID, rem.timestamp);
 
 						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
 							GeneralCommandMessage msg = (GeneralCommandMessage)message;

@@ -112,7 +112,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunch
 				// todo - damage surrounding entities
 				this.remove();
 			} else {
-			super.processByServer(server, tpf_secs);
+				super.processByServer(server, tpf_secs);
 			}
 		}
 	}
