@@ -1,11 +1,11 @@
-package com.scs.stevetech1.server;
+package com.scs.undercoveragent;
 
 import java.io.IOException;
 import ssmith.util.MyProperties;
 
-public class GameProperties extends MyProperties { // todo - move to specific project
+public class UndercoverAgentGameProperties extends MyProperties { // todo - use it
 
-	public GameProperties(String file) throws IOException {
+	public UndercoverAgentGameProperties(String file) throws IOException {
 		super(file);
 	}
 	

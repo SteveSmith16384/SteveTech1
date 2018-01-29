@@ -66,7 +66,7 @@ public class GrenadeLauncher extends AbstractMagazineGun implements IAbility, IR
 	}
 
 
-	public void remove() { // todo - copy to other guns
+	public void remove() {
 		while (!ammoCache.isEmpty()) {
 			Grenade g = ammoCache.remove();
 			g.remove();

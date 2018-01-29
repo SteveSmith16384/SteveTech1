@@ -116,7 +116,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		/*if (pe instanceof Floor == false) {
 			Globals.p("Zombie has hit " + pe);
 		}*/
-		// TODO turn around?		
+		// turn around?		
 	}
 
 

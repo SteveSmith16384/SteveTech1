@@ -13,11 +13,10 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
+import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
-import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IPreprocess;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
 import com.scs.stevetech1.hud.HUD;
@@ -45,10 +44,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
-		syncPos = new InstantPositionAdjustment();
+		//syncPos = new InstantPositionAdjustment();
 		//syncPos = new MoveSlowlyToCorrectPosition();
 		//syncPos = new AdjustBasedOnDistance();
-
+		syncPos = new AdjustByFractionOfDistance();
+		
 		this.simpleRigidBody.setGravity(0);
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
@@ -106,11 +106,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			return;
 		}
 
-		Vector3f pos = this.getWorldTranslation().clone(); // todo - remove
+		//Vector3f pos = this.getWorldTranslation().clone(); // todo - remove
 
 		super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 
-		if (Globals.DEBUG_ADJ_AVATAR_POS) {
+		/*if (Globals.DEBUG_ADJ_AVATAR_POS) {
 			Vector3f newPos = this.getWorldTranslation().clone();
 			Vector3f diff = newPos.subtract(pos);
 			if (diff.length() > 0) {
@@ -119,7 +119,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				Globals.p("Client not moved");
 			}
 			Globals.p("Client position is " + this.getWorldTranslation());
-		}
+		}*/
 
 		storeAvatarPosition(serverTime);
 
@@ -154,7 +154,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		if (Globals.SYNC_AVATAR_POS) {
-			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
 			if (offset != null) {
 				this.syncPos.adjustPosition(this, offset, tpf_secs);
 			}

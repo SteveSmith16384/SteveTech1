@@ -10,7 +10,7 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.components.ICanShoot;
-import com.scs.stevetech1.components.IPreprocess;
+import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -18,7 +18,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractAvatar extends PhysicalEntity implements IPreprocess, IProcessByServer, ICanShoot, IAffectedByPhysics {
+public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerControlled, IProcessByServer, ICanShoot, IAffectedByPhysics {
 
 	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	public final float moveSpeed = Globals.PLAYER_MOVE_SPEED;
@@ -223,7 +223,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPreproce
 
 
 	@Override
-	public void preprocess() {
+	public void resetPlayerInput() {
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
 		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 	}

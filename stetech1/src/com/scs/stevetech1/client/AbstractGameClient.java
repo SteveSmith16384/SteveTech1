@@ -23,7 +23,7 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IPreprocess;
+import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -320,9 +320,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					this.toRemove.clear();
 
 					for (IEntity e : this.entities.values()) {
-						if (e instanceof IPreprocess) {
-							IPreprocess p = (IPreprocess)e;
-							p.preprocess();
+						if (e instanceof IPlayerControlled) {
+							IPlayerControlled p = (IPlayerControlled)e;
+							p.resetPlayerInput();
 						}
 /*
 						if (e instanceof IRequiresAmmoCache) {
@@ -348,6 +348,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						}
 					}
 
+					// Now do client-only entities
 					for (IEntity e : this.clientOnlyEntities.values()) {
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;

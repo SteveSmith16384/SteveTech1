@@ -21,7 +21,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
-import com.scs.stevetech1.components.IPreprocess;
+import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.components.IRewindable;
@@ -69,7 +69,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	private KryonetLobbyClient clientToLobbyServer;
 	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
-	public static GameProperties properties;
+	//public static GameProperties properties;
 	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(5000);
 	private RealtimeInterval checkStatusInterval = new RealtimeInterval(1000);
 	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Globals.SERVER_SEND_UPDATE_INTERVAL_MS);
@@ -78,14 +78,14 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	public IConsole console;
 	protected SimpleGameData gameData;
 	public CollisionLogic collisionLogic = new CollisionLogic();
-	private GameOptions gameOptions;
+	public GameOptions gameOptions;
 
 	public AbstractGameServer(GameOptions _gameOptions) throws IOException {
 		super();
 
 		gameOptions = _gameOptions;
 
-		properties = new GameProperties(PROPS_FILE);
+		//properties = new GameProperties(PROPS_FILE);
 		logWindow = new LogWindow("Server", 400, 300);
 		console = new ServerConsole(this);
 
@@ -223,9 +223,9 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 				// Loop through the entities
 				for (IEntity e : entities.values()) {
-					if (e instanceof IPreprocess) {
-						IPreprocess p = (IPreprocess)e;
-						p.preprocess();
+					if (e instanceof IPlayerControlled) {
+						IPlayerControlled p = (IPlayerControlled)e;
+						p.resetPlayerInput();
 					}
 
 					if (e instanceof IProcessByServer) {
@@ -297,22 +297,22 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 			if (!enoughPlayers && gameData.isInGame()) {
 				gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 			} else if (enoughPlayers && gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
-				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDuration);
+				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 			}
 		}
 
 		long duration = System.currentTimeMillis() - gameData.statusStartTimeMS;
 		if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
-			if (duration >= this.gameOptions.deployDuration) {
-				gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDuration);
+			if (duration >= this.gameOptions.deployDurationMillis) {
+				gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDurationMillis);
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_STARTED) {
-			if (duration >= this.gameOptions.gameDuration) {
-				gameData.setGameStatus(SimpleGameData.ST_FINISHED, gameOptions.finishedDuration);
+			if (duration >= this.gameOptions.gameDurationMillis) {
+				gameData.setGameStatus(SimpleGameData.ST_FINISHED, gameOptions.finishedDurationMillis);
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_FINISHED) {
-			if (duration >= this.gameOptions.finishedDuration) {
-				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDuration);
+			if (duration >= this.gameOptions.finishedDurationMillis) {
+				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 			}
 		}
 		if (oldStatus != gameData.getGameStatus()) {
@@ -744,6 +744,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		Globals.p("Disconnected from lobby server");
 		
 	}
+
 	
 /*	
 	public boolean isAreaClear(Spatial s) {

@@ -54,7 +54,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		super.serverAndClientProcess(server, null, tpf, System.currentTimeMillis());
 
 		if (getWorldTranslation().y < -1) {
-			// Dropped away?
+			// Dropped off the edge?
 			server.console.appendText(getName() + " has fallen off the edge");
 			fallenOffEdge();
 		}
@@ -74,16 +74,12 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	private void died(String reason) {
 		Globals.p("Player died: " + reason);
 		this.alive = false;
-		try {
-			this.restartTime = AbstractGameServer.properties.GetRestartTimeSecs();
-		} catch (NullPointerException ex){
-			ex.printStackTrace();
-		}
+		this.restartTime = server.gameOptions.restartTimeSecs;//.getRestartTimeSecs(); // AbstractGameServer.properties.GetRestartTimeSecs();
 		server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
 		//invulnerableTime = RESTART_DUR*3;
 	}
 
-
+	
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {
 		//this.incScore(20, "shot " + e.toString());

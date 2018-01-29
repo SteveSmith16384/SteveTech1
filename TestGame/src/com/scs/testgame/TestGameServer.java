@@ -35,14 +35,11 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	public TestGameServer() throws IOException {
-		super(new GameOptions("Test Game", 1, 999, 10*1000, 5*60*1000, 10*1000, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, TestGameStaticData.LOBBY_IP_ADDRESS, TestGameStaticData.LOBBY_PORT));
+		super(new GameOptions("Test Game", 1, 999, 10*1000, 5*60*1000, 10*1000, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, TestGameStaticData.LOBBY_IP_ADDRESS, TestGameStaticData.LOBBY_PORT, 5, 5));
 	}
 
 
 	@Override
-	/*public Vector3f getAvatarStartPosition(AbstractAvatar avatar) {
-		return new Vector3f(3f, 0.6f, 3f + (avatar.playerID*2));	
-	}*/
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		avatar.setWorldTranslation(new Vector3f(3f, 0.6f, 3f + (avatar.playerID*2)));
 	}

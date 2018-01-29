@@ -13,6 +13,7 @@ import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
+import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.ICanShoot;
@@ -31,7 +32,7 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 public class SnowballBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact, ICausesHarmOnContact {
 
 	private ICorrectClientEntityPosition syncPos;
-	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
+	public PositionCalculator clientSidePositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	private boolean launched = false;
 	public ICanShoot shooter; // So we know who not to collide with
 
@@ -72,7 +73,8 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 		game.addEntity(this);
 
-		syncPos = new InstantPositionAdjustment();
+		//syncPos = new InstantPositionAdjustment();
+		syncPos = new AdjustByFractionOfDistance();
 
 		this.collideable = false;
 	}
@@ -97,7 +99,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		if (launched) {
 			if (Globals.SYNC_GRENADE_POS) {
-				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientSidePositionData, serverTimeToUse);
 				if (offset != null) {
 					this.syncPos.adjustPosition(this, offset, tpf_secs); // todo - is this actually called?
 				}
@@ -117,15 +119,16 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		if (launched) {
+			this.storeAvatarPosition(client.getServerTime());
 			simpleRigidBody.process(tpf_secs);
 		}
 	}
 
 
-	private void storeAvatarPosition(long serverTime) { // todo - call this
+	private void storeAvatarPosition(long serverTime) {
 		Vector3f pos = getWorldTranslation();
 		//Globals.p("Storing pos " + pos);
-		this.clientAvatarPositionData.addPositionData(pos, null, serverTime);
+		this.clientSidePositionData.addPositionData(pos, null, serverTime);
 	}
 
 

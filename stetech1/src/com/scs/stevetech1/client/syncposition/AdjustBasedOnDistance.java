@@ -11,7 +11,8 @@ public class AdjustBasedOnDistance implements ICorrectClientEntityPosition {
 
 
 	@Override
-	public boolean adjustPosition(IPhysicalEntity pe, Vector3f offset, float tpf_secs) { // pe.getWorldTranslation();
+	public boolean adjustPosition(IPhysicalEntity pe, Vector3f offset, float tpf_secs) {
+		// pe.getWorldTranslation();
 		float diff = offset.length();
 		if (Float.isNaN(diff)) {
 			Globals.p("Emergency warp of player");

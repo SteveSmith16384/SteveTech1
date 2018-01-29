@@ -16,7 +16,6 @@ public class TestHistoricalPositionCalculator {
 
 	@Test
 	private void basicPositionCalc1() {
-		int ping = 100;
 		// Players moves at 1f per 100ms
 		PositionCalculator serverPositions = new PositionCalculator(false, 1000);
 		PositionCalculator clientPositions = new PositionCalculator(false, 1000);
@@ -29,7 +28,7 @@ public class TestHistoricalPositionCalculator {
 		//Vector3f currentClientPos = new Vector3f(11, 0, 0);
 		long time = 800;
 		Globals.p(clientPositions.toString(time));
-		Vector3f newPos = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositions, clientPositions, time, ping);
+		Vector3f newPos = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositions, clientPositions, time);
 		Vector3f correctDiff = new Vector3f(0f, 0, 0); 
 		
 		float diff = correctDiff.distance(newPos); 

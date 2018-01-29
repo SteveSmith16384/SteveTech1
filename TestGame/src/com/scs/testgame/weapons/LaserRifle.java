@@ -68,7 +68,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 	}
 
 
-	public void remove() { // todo - copy to other guns
+	public void remove() {
 		while (!ammoCache.isEmpty()) {
 			LaserBullet g = ammoCache.remove();
 			g.remove();

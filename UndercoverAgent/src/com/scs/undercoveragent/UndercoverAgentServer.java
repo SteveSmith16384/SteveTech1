@@ -29,6 +29,8 @@ import ssmith.lang.NumberFunctions;
 
 public class UndercoverAgentServer extends AbstractGameServer {
 
+	private UndercoverAgentGameProperties properties;
+
 	public static void main(String[] args) {
 		try {
 			AbstractGameServer app = new UndercoverAgentServer();
@@ -41,7 +43,9 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	public UndercoverAgentServer() throws IOException {
-		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 5*60*1000, 10*1000, UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT));
+		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 5*60*1000, 10*1000, UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 5, 5));
+
+		//properties = new GameProperties(PROPS_FILE);
 	}
 
 
@@ -150,4 +154,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		super.collisionOccurred(a, b, point);
 
 	}
+
+
 }

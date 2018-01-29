@@ -25,7 +25,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	private boolean canMove = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
 	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.
-	private int modelComplexity = 0; // For determining which way round to check - todo - make private with get/set
+	private int modelComplexity = 0; // For determining which way round to check
 
 	private CollisionResults collisionResults = new CollisionResults();
 
@@ -196,7 +196,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public SimpleRigidBody<T> checkForCollisions() {
 		collisionResults.clear();
 		SimpleRigidBody<T> collidedWith = null;
-		Collection<SimpleRigidBody<T>> entities = physicsController.getEntities(); // Todo - some way of NOT checking every entity against every other entity, and thus checking each entity twice
+		Collection<SimpleRigidBody<T>> entities = physicsController.getEntities();
 		synchronized (entities) {
 			// Loop through the entities
 			for(SimpleRigidBody<T> e : entities) {

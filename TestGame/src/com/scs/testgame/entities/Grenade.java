@@ -12,6 +12,7 @@ import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
+import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
 import com.scs.stevetech1.components.ICanShoot;
@@ -68,7 +69,8 @@ public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunch
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 		game.addEntity(this);
 
-		syncPos = new InstantPositionAdjustment();
+		//syncPos = new InstantPositionAdjustment();
+		syncPos = new AdjustByFractionOfDistance();
 
 		this.collideable = false;
 	}
@@ -93,7 +95,7 @@ public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunch
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		if (launched) {
 			if (Globals.SYNC_GRENADE_POS) {
-				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse, mainApp.pingRTT/2);
+				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
 				if (offset != null) {
 					this.syncPos.adjustPosition(this, offset, tpf_secs);
 				}
