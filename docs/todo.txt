@@ -2,7 +2,6 @@ STETECH1
 
 URGENT
 Test two clients, can one see the other shooting?
-Don't let client move until there is historical server data?
 	Are grenades actually syncd?
 Check client and server times are the same
 	Don't adjust client until there's enough data
@@ -10,8 +9,6 @@ Check client and server times are the same
 	Player sometimes starting on edge
 Improve border - server side is just a box, client side is an invisible box with hills around
 Player dies - show died model.  Manual IAnimation?
-	Improve avatar start position
-	Randomly place snowmen
 	Not rotating hills
 	Player dies - restart, stop client moving
 	Rotate snow hills
@@ -20,9 +17,12 @@ Add open-source msg to the top of all files
 Client can always jump, even when in the air
 Search for todos
 Blog post progress
+Auto-start lobby with server
+Animation - need to walk and shoot?  IAnimationFlags
 
 
 TODO
+Do I need to sync every bullet/grenade?
 Try diff snow hills
 Tree - make serverside just a cyl on trunk
 UA - Players have one teleport
@@ -31,7 +31,6 @@ Falling snow
 Use server-style simple models for collision checking on client side?
 Hitscan rifle - show line showing where server says bullet went
 Laser bullets
-Animation - need to walk and shoot?  IAnimationFlags
 Record desktop showing two players
 Animate backwards when walking backwards
 Create moonbase map
@@ -39,11 +38,9 @@ Look for soldiers for Moonbase Assault
 Simple console GUI for connecting to lobby
 Game lobby
 Do tracer-style rewind
-Console to connect to lobby
 Check for packet loss
 Less damage from hitscan over distance
 Strict mode - check if position already exists in positioncalc!
-Simulate client?
 Tell player they have died
 Lobby queue players
 Games - "powered by SteveTech"
@@ -52,7 +49,6 @@ Should not have a generic "process()" or preprocess() method?
 Walking up steps
 Physics test - do explosion
 Server don't check for hit unless client thinks it has hit
-Use test annotations
 Add lots of comments
 Unit test rewind avatars
 Spectator mode

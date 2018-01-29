@@ -9,6 +9,7 @@ import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
+import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
@@ -31,10 +32,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
-	private int numShots = 0;
-	private int numShotsHit = 0;
-	//public IAbility[] ability = new IAbility[2];// abilityGun, abilityOther; // todo - have list of abilities
-	public IAbility abilityGun, abilityOther; // todo - have list of abilities
+	public IAbility[] ability = new IAbility[2];// abilityGun, abilityOther; // todo - have list of abilities
 	public int side = -1;
 	protected IAnimatedAvatarModel avatarModel;
 
@@ -68,21 +66,18 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		playerGeometry.setUserData(Globals.ENTITY, this);
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
-		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
-		if (abilityOther != null) {
-			this.hud.setAbilityOtherText(this.abilityOther.getHudText());
-		}*/
-
 	}
 
 
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
 		this.resetWalkDir();
 
-		if (this.abilityOther != null) {
-			if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
-				//Settings.p("Using " + this.ability.toString());
-				this.abilityOther.activate();
+		for (int i=0 ; i< this.ability.length ; i++) {
+			if (this.ability[i] != null) {
+				if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
+					//Settings.p("Using " + this.ability.toString());
+					this.ability[i].activate();
+				}
 			}
 		}
 
@@ -107,9 +102,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		if (input.isJumpPressed()){
 			this.jump();
 		}
-		if (input.isShootPressed()) {
+		/*if (input.isShootPressed()) {
 			shoot();
-		}
+		}*/
 
 		if (this.walkDirection.length() != 0) {
 			if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
@@ -138,24 +133,24 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-/*
+	/*
 	public void addToWalkDir(Vector3f offset) {
 		this.walkDirection.addLocal(offset);
 	}
 
-*/
+	 */
 	public void resetWalkDir() {
 		this.walkDirection.set(0, 0, 0);
 	}
 
-
+	/*
 	public void shoot() {
 		if (this.abilityGun.activate()) {
 			this.currentAnim = avatarModel.getAnimationStringForCode(abilityGun.getAvatarAnimationCode());
 			this.numShots++;
 		}
 	}
-
+	 */
 
 
 	public void jump() {
@@ -178,11 +173,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		return true; // Always send for avatars
 	}
 
-
+	/*
 	public boolean isShooting() {
 		return this.input.isShootPressed();
 	}
-
+	 */
 
 	/*
 	 * Need this since we can't warp a player to correct their position, as they may warp into walls!
@@ -203,13 +198,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 
 	public void addAbility(IAbility a, int num) {
-		if (num == 0) {
+		this.ability[num] = a;
+		/*if (num == 0) {
 			this.abilityGun = a;
 		} else if (num == 1) {
 			this.abilityOther = a;
 		} else {
 			throw new RuntimeException("Unknown ability num: " + num);
-		}
+		}*/
 	}
 
 
@@ -228,12 +224,29 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	@Override
 	public void remove() {
-		if (abilityGun != null) {
+		/*if (abilityGun != null) {
 			abilityGun.remove();
 		}
 		if (abilityOther != null) {
 			abilityOther.remove();
+		}*/
+		for (int i=0 ; i< this.ability.length ; i++) {
+			if (this.ability[i] != null) {
+				this.ability[i].remove();
+			}
 		}
 		super.remove();
+	}
+	
+	
+	public ICalcHitInPast getAnyAbilitiesShootingInPast() {
+		for (int i=0 ; i< this.ability.length ; i++) {
+			if (this.ability[i] != null) {
+				if (this.ability[i] instanceof ICalcHitInPast) {
+					return (ICalcHitInPast)this.ability[i];
+				}
+			}
+		}
+		return null;
 	}
 }

@@ -28,8 +28,8 @@ public class PlayerInputMessage extends MyAbstractMessage {
 		strafeLeft = inputs.getStrafeLeftValue();
 		strafeRight = inputs.getStrafeRightValue();
 		jump = inputs.isJumpPressed();
-		this.mainAbility = inputs.isShootPressed();
-		this.secondaryAbility = inputs.isAbilityOtherPressed();
+		this.mainAbility = inputs.isAbilityPressed(0);
+		this.secondaryAbility = inputs.isAbilityPressed(1);
 		this.selectNextAbility = inputs.isSelectNextAbilityPressed();
 	}
 

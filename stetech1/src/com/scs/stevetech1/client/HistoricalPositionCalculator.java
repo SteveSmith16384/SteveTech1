@@ -18,6 +18,7 @@ public class HistoricalPositionCalculator {
 	 */
 	public static Vector3f calcHistoricalPositionOffset(PositionCalculator serverPositionData, PositionCalculator clientAvatarPositionData, long serverTimeToUse) {
 		if (serverPositionData.hasRecentData(serverTimeToUse)) {
+			//if (clientAvatarPositionData.hasRecentData(serverTimeToUse)) {
 			EntityPositionData serverEPD = serverPositionData.calcPosition(serverTimeToUse, true);
 			if (serverEPD != null) {
 				long clientTimeToUse = serverTimeToUse;// - ping;
@@ -34,6 +35,7 @@ public class HistoricalPositionCalculator {
 					Vector3f vdiff = serverEPD.position.subtract(clientEPD.position); 
 					return vdiff;
 				}
+			//}
 			}
 		}
 		return null;

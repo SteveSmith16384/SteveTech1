@@ -48,7 +48,7 @@ public class RemoteInput implements IInputDevice {
 		return pim.jump;
 	}
 
-
+/*
 	@Override
 	public boolean isShootPressed() {
 		return pim.mainAbility;
@@ -58,6 +58,16 @@ public class RemoteInput implements IInputDevice {
 	@Override
 	public boolean isAbilityOtherPressed() {
 		return pim.secondaryAbility;
+	}
+*/
+
+	@Override
+	public boolean isAbilityPressed(int i) {
+		switch (i) {
+		case 0: return pim.mainAbility;
+		case 1: return pim.secondaryAbility;
+		}
+		return false;
 	}
 
 
@@ -77,5 +87,6 @@ public class RemoteInput implements IInputDevice {
 	public Vector3f getLeft() {
 		return pim.leftDir;
 	}
+
 
 }

@@ -174,7 +174,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 				boolean areAnyPlayersShooting = false;
 				for (ClientData c : this.clients.values()) {
 					AbstractServerAvatar avatar = c.avatar;
-					if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
+					if (avatar != null && avatar.getAnyAbilitiesShootingInPast() != null) { //.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 						areAnyPlayersShooting = true;
 						break;
 					}
@@ -185,8 +185,10 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 					this.rootNode.updateGeometricState();
 					for (ClientData c : this.clients.values()) {
 						AbstractServerAvatar avatar = c.avatar;
-						if (avatar != null && avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
-							ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
+						if (avatar != null)
+							{//&& avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
+							//ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
+							ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
 							Vector3f from = avatar.getBulletStartPos();
 							if (Globals.DEBUG_SHOOTING_POS) {
 								Globals.p("Server shooting from " + from);

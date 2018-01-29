@@ -160,7 +160,7 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		return jump;
 	}
 
-
+/*
 	@Override
 	public boolean isShootPressed() {
 		return shoot;
@@ -171,6 +171,17 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 	public boolean isAbilityOtherPressed() {
 		return ability1;
 	}
+*/
+
+	@Override
+	public boolean isAbilityPressed(int i) {
+		switch (i) {
+		case 0: return shoot;
+		case 1: return ability1;
+		}
+		return false;
+	}        
+
 
 
 	@Override
@@ -188,7 +199,7 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 	@Override
 	public Vector3f getLeft() {
 		return cam.getLeft();
-	}        
+	}
 
 
 }

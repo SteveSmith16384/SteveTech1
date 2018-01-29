@@ -34,14 +34,15 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 			creationData.put("num", num);
 		}
 		
+		owner.ability[num] = this;
 		// Add to avatar
-		if (num == 0) {
+		/*if (num == 0) {
 			owner.abilityGun = this;
 		} else if (num == 1) {
 			owner.abilityOther = this;
 		} else {
 			throw new RuntimeException("Unknown ability num: " + num);
-		}
+		}*/
 
 	}
 
