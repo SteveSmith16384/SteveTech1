@@ -1,8 +1,9 @@
 STETECH1
 
 URGENT
+Test two clients, can one see the other shooting?
 Don't let client move until there is historical server data?
-Are grenades actually syncd?
+	Are grenades actually syncd?
 Check client and server times are the same
 	Don't adjust client until there's enough data
 	Why can client move if server avatar can't move?  And why does it rotate around correct position?

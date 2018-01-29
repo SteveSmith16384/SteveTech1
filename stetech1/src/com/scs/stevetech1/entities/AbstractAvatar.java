@@ -33,6 +33,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected float health;
 	private int numShots = 0;
 	private int numShotsHit = 0;
+	//public IAbility[] ability = new IAbility[2];// abilityGun, abilityOther; // todo - have list of abilities
 	public IAbility abilityGun, abilityOther; // todo - have list of abilities
 	public int side = -1;
 	protected IAnimatedAvatarModel avatarModel;
@@ -75,16 +76,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	//protected abstract Spatial getPlayersModel(IEntityController game, int pid);
-
-
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
 		this.resetWalkDir();
-
-		// Reset addition force
-		/*if (server != null) { // Only do this server-side, since it contains sync adjustments
-			simplePlayerControl.getAdditionalForce().set(0, 0, 0);
-		}*/
 
 		if (this.abilityOther != null) {
 			if (input.isAbilityOtherPressed()) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
@@ -145,12 +138,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-
+/*
 	public void addToWalkDir(Vector3f offset) {
 		this.walkDirection.addLocal(offset);
 	}
 
-
+*/
 	public void resetWalkDir() {
 		this.walkDirection.set(0, 0, 0);
 	}
@@ -198,10 +191,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	 */
 	@Override
 	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
-		//if (offset.length() > 0.01f) { Already checked this
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
 		simplePlayerControl.getAdditionalForce().addLocal(offset);
-		//}
 	}
 
 
