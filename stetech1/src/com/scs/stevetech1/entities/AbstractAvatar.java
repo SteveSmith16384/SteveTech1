@@ -32,7 +32,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
-	public IAbility[] ability = new IAbility[2];// abilityGun, abilityOther; // todo - have list of abilities
+	public IAbility[] ability = new IAbility[2];
 	public int side = -1;
 	protected IAnimatedAvatarModel avatarModel;
 
@@ -131,7 +131,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 		}*/
 	}
-	// todo - how do bullets work?
+
 
 	/*
 	public void addToWalkDir(Vector3f offset) {
@@ -169,7 +169,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	 */
 
 	@Override
-	public boolean hasMoved() { // todo- reanemt to senduPDATES
+	public boolean sendUpdates() {
 		return true; // Always send for avatars
 	}
 

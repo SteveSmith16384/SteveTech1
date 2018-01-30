@@ -22,7 +22,8 @@ public abstract class AbstractGameController extends SimpleApplication implement
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
-	protected LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
+	//protected LinkedList<IEntity> toAdd = new LinkedList<IEntity>();
+	protected HashMap<IEntity, Long> toAdd = new HashMap<IEntity, Long>();  // Entity::TimeToAdd
 	protected HashMap<Integer, Long> toRemove = new HashMap<Integer, Long>();  // EntityID::TimeToRemove
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
@@ -64,6 +65,11 @@ public abstract class AbstractGameController extends SimpleApplication implement
 			if (ab.getLauncher() == pa) {
 				return false;
 			}
+		}
+
+		if (pa instanceof ILaunchable && pb instanceof ILaunchable) {
+			// Bullets don't collide with each other
+			return false;
 		}
 
 		return true;

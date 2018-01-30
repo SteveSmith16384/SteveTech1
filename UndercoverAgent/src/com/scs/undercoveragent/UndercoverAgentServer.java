@@ -85,6 +85,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		}*/
 /*
 		new Igloo(this, getNextEntityID(), 5, 0, 5, JMEFunctions.GetRotation(-1, 0));
+		// todo - actually add entities
 		//new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);
 		new StaticSnowman(this, getNextEntityID(), 5, 0, 10, JMEFunctions.GetRotation(-1, 0));
 		new SnowTree2(this, getNextEntityID(), 10, 0, 5, JMEFunctions.GetRotation(-1, 0));
@@ -108,7 +109,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		}
 */
 		// Place floor last so the snowmen don't collide with it when being placed
-		new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg");
+		SnowFloor floor = new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg");
+		this.actuallyAddEntity(floor);
 
 
 	}
@@ -137,7 +139,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	protected void equipAvatar(AbstractServerAvatar avatar) {
 		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0);
-		this.addEntity(abilityGun);
+		this.actuallyAddEntity(abilityGun);
 
 	}
 

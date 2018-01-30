@@ -6,17 +6,15 @@ import com.jme3.network.serializing.Serializable;
 public class RemoveEntityMessage extends MyAbstractMessage {
 	
 	public int entityID;
-	//public long timeToRemove; // todo - use message timwestamp
 
 	public RemoveEntityMessage() {
 		super(false);
 	}
 	
-	public RemoveEntityMessage(int _entityID) {//, long _timeToRemove) {
+	public RemoveEntityMessage(int _entityID) {
 		super(false);
 		
 		entityID = _entityID;
-		//timeToRemove = System.currentTimeMillis();// _timeToRemove;
 	}
 	
 }

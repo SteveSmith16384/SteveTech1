@@ -33,7 +33,6 @@ public class BigTreeWithLeaves extends PhysicalEntity {
 		mainNode.setLocalRotation(q);
 
 		mainNode.setLocalTranslation(x, y, z);
-		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		simpleRigidBody.setModelComplexity(3);
@@ -41,7 +40,8 @@ public class BigTreeWithLeaves extends PhysicalEntity {
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
-		game.addEntity(this);
+		//game.getRootNode().attachChild(this.mainNode);
+		//game.addEntity(this);
 
 	}
 

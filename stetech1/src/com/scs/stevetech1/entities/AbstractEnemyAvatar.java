@@ -27,16 +27,15 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 		//float rads = (float)Math.toRadians(rotDegrees);
 		//main_node.rotate(0, rads, 0);
 
-		game.getRootNode().attachChild(this.mainNode);
-
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-
-		game.addEntity(this);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
+
+		//game.getRootNode().attachChild(this.mainNode);
+		//game.addEntity(this);
 
 	}
 
@@ -45,7 +44,7 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 
 
 	@Override
-	public boolean hasMoved() {
+	public boolean sendUpdates() {
 		return true; // Always calc for avatars
 	}
 

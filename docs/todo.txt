@@ -1,11 +1,14 @@
 STETECH1
 
 URGENT
-Don't remove entities immed, wait for scheduled time.
+Launch - give direction?
+Test two clients, can one see the other shooting?
+	Creating an entity should NOT add it to entities list and NOT add it to the root node!
+	actuallyAddEntity() should add it to the root node
+	Don't add entities immed, wait for scheduled time.
+	Don't remove entities immed, wait for scheduled time.
 Snowballs not being removed
 Floating snowballs - not being removed from rootNode
-Test two clients, can one see the other shooting?
-Check client and server times are the same
 Improve border - server side is just a box, client side is an invisible box with hills around
 Player dies - show died model.  Manual IAnimation?
 	Not rotating hills
@@ -19,6 +22,7 @@ Animation - need to walk and shoot?  IAnimationFlags
 
 
 TODO
+	Prevent bullets colliding with each other
 Auto-start lobby with server
 Do I need to sync every bullet/grenade?
 Try diff snow hills
@@ -60,6 +64,7 @@ Have generic "entity owners"?
 
 
 LATER
+Check messages receive in incorrect order won't affect the game
 Use gradle for libraries
 Use latest JME libs
 Simple physics - pushing

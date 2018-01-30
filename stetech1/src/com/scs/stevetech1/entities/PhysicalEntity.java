@@ -29,7 +29,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public boolean collideable = true;
 	
-	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first hasMoved check returns true
+	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first sendUpdates check returns true
 	private Quaternion prevRot = new Quaternion();
 
 	// Rewind settings
@@ -115,6 +115,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	@Override
 	public void remove() {
 		super.remove();
+		
+		if (simpleRigidBody != null) {
+			this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
+		}
+		
 		if (this.mainNode.getParent() == null) {
 			//throw new RuntimeException("No parent!");
 			Globals.pe(this + " has no parent!");
@@ -180,7 +185,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public boolean hasMoved() {
+	public boolean sendUpdates() {
 		Vector3f currentPos = this.getWorldTranslation();
 		float dist = currentPos.distance(prevPos);
 		boolean hasMoved = dist > 0.01f; 

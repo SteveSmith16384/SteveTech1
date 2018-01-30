@@ -16,16 +16,7 @@ public abstract class AbstractLobbyServer implements IMessageServerListener {
 
 	private HashMap<String, GameServerDetails> gameServers = new HashMap<String, GameServerDetails>(); // game name::data
 	private KryonetLobbyServer lobbyServer;
-/*
-	public static void main(String[] args) {
-		try {
-			new LobbyMain();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-	}
-*/
 
 	public AbstractLobbyServer(int port) throws IOException {
 		lobbyServer = new KryonetLobbyServer(port, port, this);

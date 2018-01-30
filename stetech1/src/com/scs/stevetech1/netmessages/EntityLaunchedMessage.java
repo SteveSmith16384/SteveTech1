@@ -16,8 +16,6 @@ public class EntityLaunchedMessage extends MyAbstractMessage {
 		this();
 		
 		entityID = eid;
-		
-		// todo  -only launch entity when timestamp reached!
 	}
 	
 }

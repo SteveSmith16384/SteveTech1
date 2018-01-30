@@ -58,10 +58,10 @@ import ssmith.swing.LogWindow;
 import ssmith.util.RealtimeInterval;
 
 public abstract class AbstractGameServer extends AbstractGameController implements 
-			IEntityController, 
-			IMessageServerListener, // To listen for connecting game clients 
-			IMessageClientListener, // For sending messages to the lobby server
-			ICollisionListener<PhysicalEntity> {
+IEntityController, 
+IMessageServerListener, // To listen for connecting game clients 
+IMessageClientListener, // For sending messages to the lobby server
+ICollisionListener<PhysicalEntity> {
 
 	private static final String PROPS_FILE = Globals.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -103,7 +103,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 		createGame();
 		console.appendText("Game created");
-		
+
 		try {
 			clientToLobbyServer = new KryonetLobbyClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this);
 		} catch (IOException e) {
@@ -121,7 +121,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		StringBuilder strDebug = new StringBuilder();
-		
+
 		if (updateLobbyInterval.hitInterval() && clientToLobbyServer != null) {
 			this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), true)); // todo - do we have spaces?
 		}
@@ -154,11 +154,11 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 							client.latestInputTimestamp = pim.timestamp;
 						}
 
-					/*} else if (message instanceof RequestNewBulletMessage) {
+						/*} else if (message instanceof RequestNewBulletMessage) {
 						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
 						IRequiresAmmoCache irac = (IRequiresAmmoCache)this.entities.get(rnbe.ownerEntityID);
 						IEntity e = this.createEntity(rnbe.type, getNextEntityID(), -1, irac);
-*/
+						 */
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
 					}
@@ -186,7 +186,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 					for (ClientData c : this.clients.values()) {
 						AbstractServerAvatar avatar = c.avatar;
 						if (avatar != null)
-							{//&& avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
+						{//&& avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 							//ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
 							ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
 							Vector3f from = avatar.getBulletStartPos();
@@ -213,7 +213,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 			synchronized (entities) {
 				// Add and remove entities
-				for(IEntity e : this.toAdd) {
+				for(IEntity e : this.toAdd.keySet()) {
 					this.actuallyAddEntity(e);
 				}
 				this.toAdd.clear();
@@ -239,13 +239,13 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 						PhysicalEntity physicalEntity = (PhysicalEntity)e;
 						strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 						if (sendUpdates) {
-							if (physicalEntity.hasMoved()) { // Don't send if not moved (unless Avatar)
+							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
 								eum.addEntityData(physicalEntity, false);
 								if (eum.isFull()) {
 									//for (ClientData client : this.clients.values()) {
-										//if (client.clientStatus == ClientStatus.Accepted) {
-											networkServer.sendMessageToAll(eum);	
-										//}
+									//if (client.clientStatus == ClientStatus.Accepted) {
+									networkServer.sendMessageToAll(eum);	
+									//}
 									//}
 									eum = new EntityUpdateMessage();
 								}
@@ -258,9 +258,9 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 			}
 			if (sendUpdates) {
 				//for (ClientData client : this.clients.values()) {
-					//if (client.clientStatus == ClientStatus.Accepted) {
-						networkServer.sendMessageToAll(eum);	
-					//}
+				//if (client.clientStatus == ClientStatus.Accepted) {
+				networkServer.sendMessageToAll(eum);	
+				//}
 				//}
 			}
 			if (checkStatusInterval.hitInterval()) {
@@ -274,7 +274,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		loopTimer.start();
 	}
 
-	
+
 	protected void playerJoined(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 		int side = getSide(client);
@@ -441,12 +441,12 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
 		this.moveAvatarToStartPosition(avatar);
 		//avatar.setWorldTranslation(this.getAvatarStartPosition(avatar));
-		this.addEntity(avatar);
+		this.actuallyAddEntity(avatar);
 		this.equipAvatar(avatar);
 		return avatar;
 	}
 
-	
+
 	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
@@ -520,8 +520,8 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 
 	@Override
-	public void addEntity(IEntity e) {
-		this.toAdd.add(e);
+	public void addEntity(IEntity e, long timeToAdd) {
+		this.toAdd.put(e, timeToAdd);
 	}
 
 
@@ -532,6 +532,11 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 				throw new RuntimeException("Entity id " + e.getID() + " already exists: " + e);
 			}
 			this.entities.put(e.getID(), e);
+
+			if (e instanceof PhysicalEntity) {
+				PhysicalEntity pe = (PhysicalEntity)e;
+				this.getRootNode().attachChild(pe.getMainNode());
+			}
 
 			// Tell clients
 			NewEntityMessage nem = new NewEntityMessage(e);
@@ -556,13 +561,13 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
 			if (e != null) {
-			Globals.p("Removing entity " + e.getName() + " / ID:" + id);
-			if (e instanceof PhysicalEntity) {
-				PhysicalEntity pe = (PhysicalEntity)e;
-				this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
-			}
-			this.entities.remove(id);
-			this.console.appendText("Removed " + e);
+				Globals.p("Removing entity " + e.getName() + " / ID:" + id);
+				/*if (e instanceof PhysicalEntity) {
+					PhysicalEntity pe = (PhysicalEntity)e;
+					this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
+				}*/
+				this.entities.remove(id);
+				this.console.appendText("Removed " + e);
 			} else {
 				Globals.pe("Warning - entity " + id + " doesn't exist for removal");
 			}
@@ -647,13 +652,13 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 	}
 
-/*
+	/*
 	@Override
 	public Type getJmeContext() {
 		return getContext().getType();
 	}
 
-*/
+	 */
 	public ArrayList<RayCollisionData> checkForEntityCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		ArrayList<RayCollisionData> myList = new ArrayList<RayCollisionData>(); 
@@ -682,13 +687,13 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
-		
+
 		//if (a != null && b != null) {
 		collisionLogic.collision(pea, peb);
 		/*} else {
 			Settings.p("null object in collision");
 		}*/
-		
+
 		if (pea instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
 			ic.collided(peb);
@@ -697,7 +702,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 			INotifiedOfCollision ic = (INotifiedOfCollision)peb;
 			ic.collided(pea);
 		}
-		
+
 	}
 
 
@@ -723,7 +728,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	@Override
 	public void connected() {
 		Globals.p("Connected to lobby server");
-		
+
 	}
 
 
@@ -737,26 +742,26 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		synchronized (this.unprocessedMessages) {
 			this.unprocessedMessages.add(message);
 		}
-		
+
 	}
 
 
 	@Override
 	public void disconnected() {
 		Globals.p("Disconnected from lobby server");
-		
+
 	}
 
-	
-/*	
+
+	/*	
 	public boolean isAreaClear(Spatial s) {
 		//SimplePhysicsController<String> spc = new SimplePhysicsController<String>(null);
 		SimpleRigidBody<PhysicalEntity> srb = new SimpleRigidBody<PhysicalEntity>(s, this.physicsController, false, null);
 		SimpleRigidBody<PhysicalEntity> collidedWith = srb.checkForCollisions();
 		this.physicsController.removeSimpleRigidBody(srb);
 		return collidedWith == null;
-		
+
 	}
-*/
+	 */
 }
 

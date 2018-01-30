@@ -9,8 +9,6 @@ import com.scs.stevetech1.components.IEntity;
 public class NewEntityMessage extends MyAbstractMessage {
 	
 	public int entityID;
-	//public Vector3f pos;
-	//public Quaternion dir;
 	public int type;
 	public HashMap<String, Object> data = new HashMap<>(); 
 
@@ -24,8 +22,6 @@ public class NewEntityMessage extends MyAbstractMessage {
 		
 		type = e.getType();
 		entityID = e.getID();
-		//pos = e.getWorldTranslation(); These get added
-		//dir = e.getWorldRotation();
 		data = e.getCreationData();
 	}
 

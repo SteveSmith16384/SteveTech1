@@ -6,5 +6,5 @@ package com.scs.stevetech1.components;
  */
 public interface IClientControlled {
 
-	boolean isItOurEntity();
+	//boolean isItOurEntity();
 }

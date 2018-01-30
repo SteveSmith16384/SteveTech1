@@ -19,6 +19,7 @@ import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -67,15 +68,20 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		this.mainNode.attachChild(ball_geo); //ball_geo.getModelBound();
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
-		game.addEntity(this);
 
 		//syncPos = new AdjustByFractionOfDistance();
 
 		this.collideable = false;
+
+		//game.addEntity(this);
 	}
 
 
 	public void launch(ICanShoot _shooter) {
+		if (launched) {
+			return;
+		}
+		
 		launched = true;
 		shooter = _shooter;
 		
@@ -89,7 +95,11 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 		this.collideable = true;
 		
-		// todo - if server, send messages to clients to tell them it has been laucnhed
+		// If server, send messages to clients to tell them it has been laucnhed
+		if (game.isServer()) {
+			AbstractGameServer server = (AbstractGameServer)game;
+			server.networkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID()));
+		}
 
 	}
 
@@ -110,7 +120,21 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		}
 	}
 
-/*
+
+	@Override
+	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+		// Do nothing!
+	}
+
+	
+	@Override
+	public boolean sendUpdates() {
+		return false; 
+	}
+
+
+
+	/*
 	private void storeAvatarPosition(long serverTime) {
 		Vector3f pos = getWorldTranslation();
 		//Globals.p("Storing pos " + pos);
@@ -135,12 +159,12 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		return shooter.getSide();
 	}
 
-
+/*
 	@Override
 	public boolean isItOurEntity() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+*/
 
 }

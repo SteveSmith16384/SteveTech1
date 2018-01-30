@@ -24,6 +24,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
@@ -36,6 +37,7 @@ import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
+import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameStatusMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -76,6 +78,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public static final int STATUS_GAME_STARTED = 5; // Have received all entities
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
+	protected HashMap<ILaunchable, Long> toLaunch = new HashMap<ILaunchable, Long>();  // Entity::TimeToLaunch
 
 	public static BitmapFont guiFont_small;
 	public static AppSettings settings;
@@ -202,13 +205,14 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					// Check we don't already know about it
 					while (!this.unprocessedMessages.isEmpty()) {
 						MyAbstractMessage message = this.unprocessedMessages.remove(0);
+						
 						if (message instanceof NewEntityMessage) {
 							NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 							if (!this.entities.containsKey(newEntityMessage.entityID)) {
 								IEntity e = createEntity(newEntityMessage);
 								if (e != null) {
-									//this.addEntity(e);
-									this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to
+									this.addEntity(e, newEntityMessage.timestamp);
+									//this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to
 								}
 							} else {
 								// We already know about it
@@ -231,8 +235,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											if (pe == this.currentAvatar) { // todo - do this for all entities that adjust their position
 												currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
 												currentAvatar.storeAvatarPosition(serverTime);
-												// Stop us walking!
-												//this.avatar.resetWalkDir();
 											}
 										}
 										pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
@@ -267,6 +269,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 									a.setLastUpdateTime(aum.timestamp);
 								}
 							}
+							
 						} else if (message instanceof AvatarStatusMessage) {
 							AvatarStatusMessage asm = (AvatarStatusMessage) message;
 							AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
@@ -274,6 +277,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 								// todo - show message or something
 							}
 							avatar.alive = asm.alive;							
+						} else if (message instanceof EntityLaunchedMessage) {
+							// don't launch straight away!
+							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
+							ILaunchable l = (ILaunchable)this.entities.get(elm.entityID);
+							this.toLaunch.put(l, message.timestamp);
+							
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
@@ -311,18 +320,31 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
 
 					// Add and remove entities
-					for(IEntity e : this.toAdd) {
-						this.actuallyAddEntity(e);
+					for(IEntity e : this.toAdd.keySet()) {
+						long timeToAdd = this.toAdd.get(e);
+						if (timeToAdd < serverTime) { // Only remove them when its time
+							this.toAdd.remove(e);
+							this.actuallyAddEntity(e);
+						}
 					}
-					this.toAdd.clear();
+					//this.toAdd.clear();
 
 					for(Integer i : this.toRemove.keySet()) {
 						long timeToRemove = this.toRemove.get(i);
 						if (timeToRemove < serverTime) { // Only remove them when its time
+							this.toRemove.remove(i);
 							this.actuallyRemoveEntity(i);
 						}
 					}
-					this.toRemove.clear();
+					//this.toRemove.clear();
+
+					for(ILaunchable e : this.toLaunch.keySet()) {
+						long timeToAdd = this.toLaunch.get(e);
+						if (timeToAdd < serverTime) { // Only remove them when its time
+							this.toLaunch.remove(e);
+							e.launch(e.getLauncher());
+						}
+					}
 
 					for (IEntity e : this.entities.values()) {  // this.getRootNode();
 						if (e instanceof IPlayerControlled) {
@@ -477,11 +499,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	@Override
-	public void addEntity(IEntity e) {
+	public void addEntity(IEntity e, long timeToAdd) {
 		if (e.getID() <= 0) {
 			throw new RuntimeException("No entity id!");
 		}
-		this.toAdd.add(e);
+		this.toAdd.put(e, timeToAdd);
 	}
 
 
@@ -491,6 +513,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				throw new RuntimeException("No entity id!");
 			}
 			this.entities.put(e.getID(), e);
+
+			if (e instanceof PhysicalEntity) {
+				PhysicalEntity pe = (PhysicalEntity)e;
+				this.getRootNode().attachChild(pe.getMainNode());
+			}
+
 		}
 	}
 
@@ -505,16 +533,21 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
 			if (e != null) {
+				if (e instanceof IClientControlled) {
+					// Don't remove it!  The client will do that
+					Globals.p("NOT Removing " + e.getName() + " as it is client controlled"); // todo - DO remove unlaunched entities
+					return;
+				}
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Removing " + e.getName());
 				}
-				if (e instanceof PhysicalEntity) {
+				/*if (e instanceof PhysicalEntity) { // todo - move this to the entity itself?!
 					PhysicalEntity pe =(PhysicalEntity)e;
 					if (pe.simpleRigidBody != null) {
 						this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
 					}
-					pe.getMainNode().removeFromParent(); // this.getRootNode();
-				}
+					pe.getMainNode().removeFromParent(); // Todo - npe if "unluanched" snowball?
+				}*/
 				this.entities.remove(id);
 			} else {
 				Globals.pe("Entity id " + id + " not found for removal");
@@ -607,21 +640,21 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		if (pea instanceof IClientControlled) {
 			IClientControlled cc = (IClientControlled)pea;
-			if (cc.isItOurEntity()) {
+			//if (cc.isItOurEntity()) {
 				if (pea instanceof IRemoveOnContact) {
 					IRemoveOnContact roc = (IRemoveOnContact)pea;
 					roc.remove();
 				}
-			}
+			//}
 		}
 		if (peb instanceof IClientControlled) {
 			IClientControlled cc = (IClientControlled)peb;
-			if (cc.isItOurEntity()) {
+			//if (cc.isItOurEntity()) {
 				if (peb instanceof IRemoveOnContact) {
 					IRemoveOnContact roc = (IRemoveOnContact)peb;
 					roc.remove();
 				}
-			}
+			//}
 		}
 
 		/*

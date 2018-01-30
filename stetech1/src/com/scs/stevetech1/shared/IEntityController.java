@@ -11,11 +11,9 @@ public interface IEntityController {
 
 	boolean isServer();
 
-	void addEntity(IEntity e);
+	void addEntity(IEntity e, long timeToAdd);
 	
-	void removeEntity(int id, long time);
-	
-	//JmeContext.Type getJmeContext();
+	void removeEntity(int id, long timeToRemove);
 	
 	AssetManager getAssetManager();
 	
