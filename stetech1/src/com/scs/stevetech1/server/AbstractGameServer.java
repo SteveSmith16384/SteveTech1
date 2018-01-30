@@ -19,6 +19,7 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICalcHitInPast;
+import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
@@ -571,8 +572,13 @@ ICollisionListener<PhysicalEntity> {
 			} else {
 				Globals.pe("Warning - entity " + id + " doesn't exist for removal");
 			}
+
+			if (e instanceof IClientControlled == false) {
+				// The client will remove 
+				this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
+			}
 		}
-		this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
+
 	}
 
 

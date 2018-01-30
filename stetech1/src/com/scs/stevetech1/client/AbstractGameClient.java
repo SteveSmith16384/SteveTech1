@@ -2,6 +2,7 @@ package com.scs.stevetech1.client;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -205,7 +206,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					// Check we don't already know about it
 					while (!this.unprocessedMessages.isEmpty()) {
 						MyAbstractMessage message = this.unprocessedMessages.remove(0);
-						
+
 						if (message instanceof NewEntityMessage) {
 							NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 							if (!this.entities.containsKey(newEntityMessage.entityID)) {
@@ -269,7 +270,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 									a.setLastUpdateTime(aum.timestamp);
 								}
 							}
-							
+
 						} else if (message instanceof AvatarStatusMessage) {
 							AvatarStatusMessage asm = (AvatarStatusMessage) message;
 							AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
@@ -282,7 +283,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 							ILaunchable l = (ILaunchable)this.entities.get(elm.entityID);
 							this.toLaunch.put(l, message.timestamp);
-							
+
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
@@ -319,26 +320,40 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					// Loop through each entity and process them				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
 
-					// Add and remove entities
-					for(IEntity e : this.toAdd.keySet()) {
+					// Add entities
+					Iterator<IEntity> it = this.toAdd.keySet().iterator();
+					while (it.hasNext()) {
+						IEntity e = it.next();
+						//for(IEntity e : this.toAdd.keySet()) { //use iterator
 						long timeToAdd = this.toAdd.get(e);
 						if (timeToAdd < serverTime) { // Only remove them when its time
-							this.toAdd.remove(e);
+							//this.toAdd.remove(e);
+							it.remove();
 							this.actuallyAddEntity(e);
 						}
 					}
+					it = null;
 					//this.toAdd.clear();
 
-					for(Integer i : this.toRemove.keySet()) {
+					// Remove entities
+					//for(Integer i : this.toRemove.keySet()) {
+					Iterator<Integer> it2 = this.toRemove.keySet().iterator();
+					while (it2.hasNext()) {
+						int i = it2.next();
 						long timeToRemove = this.toRemove.get(i);
 						if (timeToRemove < serverTime) { // Only remove them when its time
 							this.toRemove.remove(i);
 							this.actuallyRemoveEntity(i);
 						}
 					}
+					it2 = null;
 					//this.toRemove.clear();
 
-					for(ILaunchable e : this.toLaunch.keySet()) {
+					// Launch any launchables
+					Iterator<ILaunchable> it3 = this.toLaunch.keySet().iterator();
+					while (it3.hasNext()) {
+						ILaunchable e = it3.next();
+						//for(ILaunchable e : this.toLaunch.keySet()) {
 						long timeToAdd = this.toLaunch.get(e);
 						if (timeToAdd < serverTime) { // Only remove them when its time
 							this.toLaunch.remove(e);
@@ -533,11 +548,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
 			if (e != null) {
-				if (e instanceof IClientControlled) {
-					// Don't remove it!  The client will do that
-					Globals.p("NOT Removing " + e.getName() + " as it is client controlled"); // todo - DO remove unlaunched entities
-					return;
-				}
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Removing " + e.getName());
 				}
@@ -641,19 +651,19 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		if (pea instanceof IClientControlled) {
 			IClientControlled cc = (IClientControlled)pea;
 			//if (cc.isItOurEntity()) {
-				if (pea instanceof IRemoveOnContact) {
-					IRemoveOnContact roc = (IRemoveOnContact)pea;
-					roc.remove();
-				}
+			if (pea instanceof IRemoveOnContact) {
+				IRemoveOnContact roc = (IRemoveOnContact)pea;
+				roc.remove();
+			}
 			//}
 		}
 		if (peb instanceof IClientControlled) {
 			IClientControlled cc = (IClientControlled)peb;
 			//if (cc.isItOurEntity()) {
-				if (peb instanceof IRemoveOnContact) {
-					IRemoveOnContact roc = (IRemoveOnContact)peb;
-					roc.remove();
-				}
+			if (peb instanceof IRemoveOnContact) {
+				IRemoveOnContact roc = (IRemoveOnContact)peb;
+				roc.remove();
+			}
 			//}
 		}
 

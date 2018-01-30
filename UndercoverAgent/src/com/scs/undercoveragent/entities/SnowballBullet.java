@@ -82,6 +82,11 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			return;
 		}
 		
+		if (_shooter == null) {
+			throw new RuntimeException("todo");
+		}
+		
+		
 		launched = true;
 		shooter = _shooter;
 		
@@ -166,5 +171,10 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		return false;
 	}
 */
-
+/*
+	@Override
+	public void remove() {
+		super
+	}
+	*/
 }
