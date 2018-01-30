@@ -53,6 +53,13 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		
 		super.serverAndClientProcess(server, null, tpf, System.currentTimeMillis());
 
+		// Point us in the right direction
+		//if (this.game.isServer()) {
+			Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
+			lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
+			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
+		//}
+
 		if (getWorldTranslation().y < -1) {
 			// Dropped off the edge?
 			server.console.appendText(getName() + " has fallen off the edge");

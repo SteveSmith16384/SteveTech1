@@ -125,13 +125,13 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		simpleRigidBody.process(tpf_secs);
 
 		// Point us in the right direction
-		if (this.game.isServer()) {
+		/*if (this.game.isServer()) {
 			Vector3f lookAtPoint = camLeft.add(camDir.mult(10));
 			lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
 			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
-		}
+		}*/
 	}
-
+	// todo - how do bullets work?
 
 	/*
 	public void addToWalkDir(Vector3f offset) {
@@ -169,7 +169,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	 */
 
 	@Override
-	public boolean hasMoved() {
+	public boolean hasMoved() { // todo- reanemt to senduPDATES
 		return true; // Always send for avatars
 	}
 

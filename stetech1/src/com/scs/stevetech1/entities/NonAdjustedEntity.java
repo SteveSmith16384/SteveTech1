@@ -23,6 +23,11 @@ public abstract class NonAdjustedEntity extends PhysicalEntity {
 		}*/
 	}
 
+	@Override
+	public boolean hasMoved() { // todo- reanemt to senduPDATES
+		return false; 
+	}
+
 
 
 }
