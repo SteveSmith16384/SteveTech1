@@ -1,6 +1,7 @@
 STETECH1
 
 URGENT
+Notes: Can't update completely accurately since they will keep overshooting!
 Create projectile example doc
 MapBorder too big
 	Create launcherSystem, also store actual direction and who the launcher is
