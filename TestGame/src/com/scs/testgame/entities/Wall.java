@@ -63,12 +63,11 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		//this.simpleRigidBody.setMovable(false);
 
-		game.getRootNode().attachChild(this.mainNode);
-
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
-		game.addEntity(this);
+		//game.getRootNode().attachChild(this.mainNode);
+		//game.addEntity(this);
 
 	}
 

@@ -67,7 +67,8 @@ public class Grenade extends PhysicalEntity implements IProcessByClient, ILaunch
 		this.mainNode.attachChild(ball_geo);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
-		game.addEntity(this);
+		
+		//game.addEntity(this);
 
 		//syncPos = new InstantPositionAdjustment();
 		syncPos = new AdjustByFractionOfDistance();

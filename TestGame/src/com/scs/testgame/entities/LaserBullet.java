@@ -46,7 +46,7 @@ public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICa
 
 		owner.addToCache(this);
 
-		game.addEntity(this);
+		//game.addEntity(this);
 		
 		syncPos = new InstantPositionAdjustment();
 

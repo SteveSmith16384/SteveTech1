@@ -63,14 +63,14 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 
 		this.mainNode.attachChild(ball_geo);
 		this.mainNode.setLocalTranslation(x, y, z);
-		game.getRootNode().attachChild(this.mainNode);
 		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
 		
 		//this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 		//this.simpleRigidBody.setMovable(false);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
-		game.addEntity(this);
+		//game.getRootNode().attachChild(this.mainNode);
+		//game.addEntity(this);
 
 	}
 

@@ -59,14 +59,14 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 		float rads = (float)Math.toRadians(rotDegrees);
 		mainNode.rotate(0, rads, 0);
 		mainNode.setLocalTranslation(x, y, z);
-		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
-		game.addEntity(this);
+		//game.getRootNode().attachChild(this.mainNode);
+		//game.addEntity(this);
 
 	}
 

@@ -42,7 +42,6 @@ public class House extends PhysicalEntity {
 		float rads = (float)Math.toRadians(rotDegrees);
 		mainNode.rotate(0, rads, 0);
 		mainNode.setLocalTranslation(x, y, z);
-		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		//this.simpleRigidBody.setMovable(false);
@@ -50,7 +49,8 @@ public class House extends PhysicalEntity {
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
-		game.addEntity(this);
+		//game.getRootNode().attachChild(this.mainNode);
+		//game.addEntity(this);
 
 	}
 
