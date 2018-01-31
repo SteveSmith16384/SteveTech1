@@ -7,7 +7,6 @@ Test two clients, can one see the other shooting?
 	actuallyAddEntity() should add it to the root node
 	Don't add entities immed, wait for scheduled time.
 	Don't remove entities immed, wait for scheduled time.
-Snowballs not being removed
 Floating snowballs - not being removed from rootNode
 Improve border - server side is just a box, client side is an invisible box with hills around
 Player dies - show died model.  Manual IAnimation?
@@ -23,9 +22,8 @@ Animation - need to walk and shoot?  IAnimationFlags
 
 
 TODO
-	Prevent bullets colliding with each other
 Auto-start lobby with server
-Do I need to sync every bullet/grenade?
+Do I need to sync every bullet/grenade?  No.
 Try diff snow hills
 Tree - make serverside just a cyl on trunk
 UA - Players have one teleport

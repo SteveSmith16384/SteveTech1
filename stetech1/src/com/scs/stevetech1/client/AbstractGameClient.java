@@ -40,7 +40,7 @@ import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
-import com.scs.stevetech1.netmessages.GameStatusMessage;
+import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -61,8 +61,8 @@ import com.scs.stevetech1.shared.AverageNumberCalculator;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.stevetech1.systems.AnimationSystem;
-import com.scs.stevetech1.systems.ClientEntityLauncherSystem;
+import com.scs.stevetech1.systems.client.AnimationSystem;
+import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
 
 import ssmith.util.RealtimeInterval;
 
@@ -408,7 +408,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	/*
-	 * For when a client requests the server to create an entity, e.g. a grenade (for lobbing).
+	 * IS IT?? For when a client requests the server to create an entity, e.g. a grenade (for lobbing).
 	 */
 	protected final IEntity createEntity(NewEntityMessage msg) {
 		return this.entityCreator.createEntity(this, msg);
@@ -484,8 +484,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
 			unprocessedMessages.add(aum);
 
-		} else if (message instanceof GameStatusMessage) {
-			GameStatusMessage gsm = (GameStatusMessage)message;
+		} else if (message instanceof SimpleGameDataMessage) {
+			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 			this.gameData = gsm.gameData;
 
 		} else {

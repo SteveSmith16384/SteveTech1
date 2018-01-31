@@ -1,4 +1,4 @@
-package com.scs.stevetech1.systems;
+package com.scs.stevetech1.systems.client;
 
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;

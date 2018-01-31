@@ -14,7 +14,6 @@ import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -34,7 +33,7 @@ import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
-import com.scs.stevetech1.netmessages.GameStatusMessage;
+import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -54,21 +53,22 @@ import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
 import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
 
 import ssmith.swing.LogWindow;
 import ssmith.util.RealtimeInterval;
 
 public abstract class AbstractGameServer extends AbstractGameController implements 
-IEntityController, 
-IMessageServerListener, // To listen for connecting game clients 
-IMessageClientListener, // For sending messages to the lobby server
-ICollisionListener<PhysicalEntity> {
+		IEntityController, 
+		IMessageServerListener, // To listen for connecting game clients 
+		IMessageClientListener, // For sending messages to the lobby server
+		ICollisionListener<PhysicalEntity> {
 
 	//private static final String PROPS_FILE = Globals.NAME.replaceAll(" ", "") + "_settings.txt";
 
 	public IGameMessageServer networkServer;
 	private KryonetLobbyClient clientToLobbyServer;
-	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
+	public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
 	//public static GameProperties properties;
 	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(5000);
@@ -77,9 +77,12 @@ ICollisionListener<PhysicalEntity> {
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	protected LogWindow logWindow;
 	public IConsole console;
-	protected SimpleGameData gameData;
+	public SimpleGameData gameData;
 	public CollisionLogic collisionLogic = new CollisionLogic();
 	public GameOptions gameOptions;
+	
+	// Systems
+	private ServerGameStatusSystem gameStatusSystem;
 
 	public AbstractGameServer(GameOptions _gameOptions) throws IOException {
 		super();
@@ -94,6 +97,8 @@ ICollisionListener<PhysicalEntity> {
 		networkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
+		
+		this.gameStatusSystem = new ServerGameStatusSystem(this);
 	}
 
 
@@ -258,7 +263,8 @@ ICollisionListener<PhysicalEntity> {
 				networkServer.sendMessageToAll(eum);	
 			}
 			if (checkStatusInterval.hitInterval()) {
-				this.checkGameStatus(false);
+				//this.checkGameStatus(false);
+				gameStatusSystem.checkGameStatus(false);
 			}
 		}
 
@@ -281,39 +287,8 @@ ICollisionListener<PhysicalEntity> {
 		this.sendGameStatusMessage();
 		this.networkServer.sendMessageToClient(client, new PingMessage(true));
 
-		checkGameStatus(true);
+		gameStatusSystem.checkGameStatus(true);
 
-	}
-
-
-	private void checkGameStatus(boolean playersChanged) {
-		int oldStatus = gameData.getGameStatus();
-		if (playersChanged) {
-			boolean enoughPlayers = areThereEnoughPlayers();
-			if (!enoughPlayers && gameData.isInGame()) {
-				gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
-			} else if (enoughPlayers && gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
-				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
-			}
-		}
-
-		long duration = System.currentTimeMillis() - gameData.statusStartTimeMS;
-		if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
-			if (duration >= this.gameOptions.deployDurationMillis) {
-				gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDurationMillis);
-			}
-		} else if (gameData.getGameStatus() == SimpleGameData.ST_STARTED) {
-			if (duration >= this.gameOptions.gameDurationMillis) {
-				gameData.setGameStatus(SimpleGameData.ST_FINISHED, gameOptions.finishedDurationMillis);
-			}
-		} else if (gameData.getGameStatus() == SimpleGameData.ST_FINISHED) {
-			if (duration >= this.gameOptions.finishedDurationMillis) {
-				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
-			}
-		}
-		if (oldStatus != gameData.getGameStatus()) {
-			sendGameStatusMessage();
-		}
 	}
 
 
@@ -345,23 +320,6 @@ ICollisionListener<PhysicalEntity> {
 			}
 			throw new RuntimeException("Should not get here");
 		}
-	}
-
-
-	private boolean areThereEnoughPlayers() {
-		/*if (this.gameOptions.areAllPlayersOnDifferentSides()) {
-			return clients.values().size() >= 2;
-		} else {*/
-		ArrayList<Integer> map = new ArrayList<Integer>();
-		for (ClientData client : this.clients.values()) {
-			if (client.avatar != null) {
-				if (!map.contains(client.avatar.side)) {
-					map.add(client.avatar.side);
-				}
-			}
-		}
-		return map.size() >= 2;
-		//}
 	}
 
 
@@ -509,7 +467,7 @@ ICollisionListener<PhysicalEntity> {
 			client.avatar.remove();
 		}
 		this.sendGameStatusMessage();
-		checkGameStatus(true);
+		gameStatusSystem.checkGameStatus(true);
 	}
 
 
@@ -654,13 +612,7 @@ ICollisionListener<PhysicalEntity> {
 		gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 	}
 
-	/*
-	@Override
-	public Type getJmeContext() {
-		return getContext().getType();
-	}
 
-	 */
 	public ArrayList<RayCollisionData> checkForEntityCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		ArrayList<RayCollisionData> myList = new ArrayList<RayCollisionData>(); 
@@ -714,17 +666,14 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	private void sendGameStatusMessage() {
+	public void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
 		for(ClientData client : this.clients.values()) {
 			players.add(client.playerData);
 		}
-		this.networkServer.sendMessageToAll(new GameStatusMessage(this.gameData, players));
+		this.networkServer.sendMessageToAll(new SimpleGameDataMessage(this.gameData, players));
 
 	}
-
-
-	//public abstract Vector3f getAvatarStartPosition(AbstractAvatar avatar);
 
 
 	@Override

@@ -2,10 +2,15 @@ package com.scs.undercoveragent.entities;
 
 import java.util.HashMap;
 
+import com.jme3.asset.TextureKey;
 import com.jme3.bounding.BoundingBox;
+import com.jme3.material.Material;
 import com.jme3.math.Quaternion;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.texture.Texture;
+import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.jme.JMEFunctions;
@@ -31,7 +36,7 @@ public class MapBorder extends PhysicalEntity { // todo - use this
 		}
 
 
-		if (!game.isServer()) {
+		/*todo if (!game.isServer()) {
 			for (float i=(MODEL_W_H/2) ; i<size ; i+=MODEL_W_H) {
 				Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
 				JMEFunctions.scaleModelToWidth(model, MODEL_W_H);
@@ -39,10 +44,30 @@ public class MapBorder extends PhysicalEntity { // todo - use this
 				this.mainNode.attachChild(model);
 			}
 			this.mainNode.setModelBound(new BoundingBox());
-		} else {
+		} else {*/
 			Box box1 = new Box(MODEL_W_H/2, 100/2, size/2);
+			Geometry geometry = new Geometry("Crate", box1);
+			if (!_game.isServer()) { // Not running in server
+				TextureKey key3 = new TextureKey("Textures/snow.jpg");
+				key3.setGenerateMips(true);
+				Texture tex3 = game.getAssetManager().loadTexture(key3);
+				tex3.setWrap(WrapMode.Repeat);
 
-		}
+				Material floor_mat = null;
+				if (Globals.LIGHTING) {
+					floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+					floor_mat.setTexture("DiffuseMap", tex3);
+				} else {
+					floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+					floor_mat.setTexture("ColorMap", tex3);
+				}
+
+				geometry.setMaterial(floor_mat);
+				//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+				//geometry.setQueueBucket(Bucket.Transparent);
+			}
+
+		//}
 
 		mainNode.setLocalRotation(q);
 

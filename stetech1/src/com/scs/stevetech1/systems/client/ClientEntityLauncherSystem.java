@@ -1,4 +1,4 @@
-package com.scs.stevetech1.systems;
+package com.scs.stevetech1.systems.client;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,6 +7,9 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 
+/*
+ * This is for launching bullets/grenades etc...
+ */
 public class ClientEntityLauncherSystem {
 
 	private HashMap<ILaunchable, LaunchData> toLaunch = new HashMap<ILaunchable, LaunchData>();  // Entity::LaunchData

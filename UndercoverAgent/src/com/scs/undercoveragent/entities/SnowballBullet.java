@@ -24,7 +24,7 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
-import com.scs.stevetech1.systems.LaunchData;
+import com.scs.stevetech1.systems.client.LaunchData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 public class SnowballBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact, ICausesHarmOnContact, IClientControlled {

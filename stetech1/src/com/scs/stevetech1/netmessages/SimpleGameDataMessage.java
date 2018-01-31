@@ -11,17 +11,17 @@ import com.scs.stevetech1.data.SimplePlayerData;
  *
  */
 @Serializable
-public class GameStatusMessage extends MyAbstractMessage {
+public class SimpleGameDataMessage extends MyAbstractMessage {
 
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> players;
 	
-	public GameStatusMessage() {
+	public SimpleGameDataMessage() {
 		super(true);
 	}
 
 	
-	public GameStatusMessage(SimpleGameData _gameData, ArrayList<SimplePlayerData> _players) {
+	public SimpleGameDataMessage(SimpleGameData _gameData, ArrayList<SimplePlayerData> _players) {
 		super(true);
 		
 		this.gameData = _gameData;

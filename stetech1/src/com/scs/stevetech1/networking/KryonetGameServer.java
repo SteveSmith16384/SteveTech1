@@ -17,7 +17,7 @@ import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage.UpdateData;
-import com.scs.stevetech1.netmessages.GameStatusMessage;
+import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage.Command;
@@ -33,7 +33,7 @@ import com.scs.stevetech1.netmessages.UnknownEntityMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.systems.LaunchData;
+import com.scs.stevetech1.systems.client.LaunchData;
 
 public class KryonetGameServer implements IGameMessageServer {
 
@@ -106,7 +106,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(RemoveEntityMessage.class);
 		kryo.register(GeneralCommandMessage.class);
 		kryo.register(Command.class);
-		kryo.register(GameStatusMessage.class);
+		kryo.register(SimpleGameDataMessage.class);
 		kryo.register(TestMessage.class);
 		kryo.register(AbilityUpdateMessage.class);
 		kryo.register(SimplePlayerData.class);
