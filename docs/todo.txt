@@ -1,7 +1,7 @@
 STETECH1
 
 URGENT
-Launch - give direction?
+	Create launcherSystem, also store actual direction and who the launcher is
 Test two clients, can one see the other shooting?
 	Creating an entity should NOT add it to entities list and NOT add it to the root node!
 	actuallyAddEntity() should add it to the root node
@@ -13,6 +13,7 @@ Improve border - server side is just a box, client side is an invisible box with
 Player dies - show died model.  Manual IAnimation?
 	Not rotating hills
 	Player dies - restart, stop client moving
+Split up client/server into systems
 Show current game time - a bit big
 Add open-source msg to the top of all files
 Client can always jump, even when in the air

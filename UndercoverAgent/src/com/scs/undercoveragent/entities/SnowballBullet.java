@@ -24,6 +24,7 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
+import com.scs.stevetech1.systems.LaunchData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 public class SnowballBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact, ICausesHarmOnContact, IClientControlled {
@@ -78,12 +79,12 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 
 	public void launch(ICanShoot _shooter) {
-		if (launched) {
+		if (launched) { // We might be the client that fired the bullet, we we've already launched
 			return;
 		}
 		
 		if (_shooter == null) {
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Null launcher");
 		}
 		
 		
@@ -103,7 +104,8 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		// If server, send messages to clients to tell them it has been laucnhed
 		if (game.isServer()) {
 			AbstractGameServer server = (AbstractGameServer)game;
-			server.networkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID()));
+			LaunchData ld = new LaunchData(shooter.getShootDir(), shooter, System.currentTimeMillis());
+			server.networkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), ld));
 		}
 
 	}
@@ -164,17 +166,10 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		return shooter.getSide();
 	}
 
-/*
+
 	@Override
-	public boolean isItOurEntity() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isClientControlled() {
+		return launched;
 	}
-*/
-/*
-	@Override
-	public void remove() {
-		super
-	}
-	*/
+
 }

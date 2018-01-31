@@ -49,10 +49,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		//syncPos = new AdjustBasedOnDistance();
 		syncPos = new AdjustByFractionOfDistance();
 		
-		this.simpleRigidBody.setGravity(0);
+		this.simpleRigidBody.setGravity(0); // todo - remove?
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE/4); // Different to server side, since we don't have gravity!
+		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE);
 
 		_module.currentAvatar = this;
 
@@ -63,7 +63,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 
 	private void createDebugBox() {
-		Box box1 = new Box(.5f, .5f, .5f); // todo - use IAnimatedAvatarModel?
+		Box box1 = new Box(.5f, .5f, .5f);
 		Geometry g = new Geometry("DebugBox", box1);
 		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 		key3.setGenerateMips(true);
@@ -106,7 +106,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			return;
 		}
 
-		//Vector3f pos = this.getWorldTranslation().clone(); // todo - remove
+		//Vector3f pos = this.getWorldTranslation().clone();
 
 		super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 

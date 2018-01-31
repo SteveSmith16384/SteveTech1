@@ -62,6 +62,7 @@ import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.AnimationSystem;
+import com.scs.stevetech1.systems.ClientEntityLauncherSystem;
 
 import ssmith.util.RealtimeInterval;
 
@@ -79,7 +80,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public static final int STATUS_GAME_STARTED = 5; // Have received all entities
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
-	protected HashMap<ILaunchable, Long> toLaunch = new HashMap<ILaunchable, Long>();  // Entity::TimeToLaunch
+	//protected HashMap<ILaunchable, Long> toLaunch = new HashMap<ILaunchable, Long>();  // Entity::TimeToLaunch
 
 	public static BitmapFont guiFont_small;
 	public static AppSettings settings;
@@ -105,9 +106,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private int port;
 
 	// Entity systems
-	//private UpdateAmmoCacheSystem updateAmmoSystem;
 	private AnimationSystem animSystem;
 	private AbstractClientEntityCreator entityCreator;
+	private ClientEntityLauncherSystem launchSystem;
 
 	protected AbstractGameClient(String _serverIP, int _port, AbstractClientEntityCreator _entityCreator) {
 		super();
@@ -116,8 +117,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		port = _port;
 		this.entityCreator =_entityCreator;
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
-		//updateAmmoSystem = new UpdateAmmoCacheSystem(this);
 		animSystem = new AnimationSystem(this);
+		launchSystem = new ClientEntityLauncherSystem(this);
 
 	}
 
@@ -199,6 +200,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
+			renderTime = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 
 			if (networkClient != null && networkClient.isConnected()) {
 				// Process messages in JME thread
@@ -279,11 +281,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							}
 							avatar.alive = asm.alive;							
 						} else if (message instanceof EntityLaunchedMessage) {
-							// don't launch straight away!
 							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
-							ILaunchable l = (ILaunchable)this.entities.get(elm.entityID);
-							this.toLaunch.put(l, message.timestamp);
-
+							this.launchSystem.scheduleLaunch(elm);
+							
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
@@ -305,8 +305,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						}
 					}
 
-					renderTime = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
-
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
 							long timeDiff = this.currentAvatar.serverPositionData.getMostRecent().serverTimestamp - renderTime;
@@ -326,7 +324,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						IEntity e = it.next();
 						//for(IEntity e : this.toAdd.keySet()) { //use iterator
 						long timeToAdd = this.toAdd.get(e);
-						if (timeToAdd < serverTime) { // Only remove them when its time
+						if (timeToAdd < renderTime) { // Only remove them when its time
 							//this.toAdd.remove(e);
 							it.remove();
 							this.actuallyAddEntity(e);
@@ -341,7 +339,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					while (it2.hasNext()) {
 						int i = it2.next();
 						long timeToRemove = this.toRemove.get(i);
-						if (timeToRemove < serverTime) { // Only remove them when its time
+						if (timeToRemove < renderTime) { // Only remove them when its time
 							this.toRemove.remove(i);
 							this.actuallyRemoveEntity(i);
 						}
@@ -349,18 +347,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					it2 = null;
 					//this.toRemove.clear();
 
-					// Launch any launchables
-					Iterator<ILaunchable> it3 = this.toLaunch.keySet().iterator();
-					while (it3.hasNext()) {
-						ILaunchable e = it3.next();
-						//for(ILaunchable e : this.toLaunch.keySet()) {
-						long timeToAdd = this.toLaunch.get(e);
-						if (timeToAdd < serverTime) { // Only remove them when its time
-							this.toLaunch.remove(e);
-							e.launch(e.getLauncher());
-						}
-					}
-
+					this.launchSystem.process(renderTime);
+					
 					for (IEntity e : this.entities.values()) {  // this.getRootNode();
 						if (e instanceof IPlayerControlled) {
 							IPlayerControlled p = (IPlayerControlled)e;
@@ -530,8 +518,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			this.entities.put(e.getID(), e);
 
 			if (e instanceof PhysicalEntity) {
-				PhysicalEntity pe = (PhysicalEntity)e;
-				this.getRootNode().attachChild(pe.getMainNode());
+				if (e instanceof ILaunchable == false) { // Don't draw bullets yet! 
+					PhysicalEntity pe = (PhysicalEntity)e;
+					this.getRootNode().attachChild(pe.getMainNode());
+				}
 			}
 
 		}
@@ -551,12 +541,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Removing " + e.getName());
 				}
-				/*if (e instanceof PhysicalEntity) { // todo - move this to the entity itself?!
+				/*if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe =(PhysicalEntity)e;
 					if (pe.simpleRigidBody != null) {
 						this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
 					}
-					pe.getMainNode().removeFromParent(); // Todo - npe if "unluanched" snowball?
+					pe.getMainNode().removeFromParent();
 				}*/
 				this.entities.remove(id);
 			} else {

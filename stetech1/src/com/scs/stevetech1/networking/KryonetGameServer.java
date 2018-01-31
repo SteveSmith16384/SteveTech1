@@ -33,6 +33,7 @@ import com.scs.stevetech1.netmessages.UnknownEntityMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.systems.LaunchData;
 
 public class KryonetGameServer implements IGameMessageServer {
 
@@ -112,6 +113,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(SimpleGameData.class);
 		kryo.register(AvatarStatusMessage.class);
 		kryo.register(EntityLaunchedMessage.class);
+		kryo.register(LaunchData.class);
 	}
 
 

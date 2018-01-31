@@ -64,7 +64,7 @@ IMessageServerListener, // To listen for connecting game clients
 IMessageClientListener, // For sending messages to the lobby server
 ICollisionListener<PhysicalEntity> {
 
-	private static final String PROPS_FILE = Globals.NAME.replaceAll(" ", "") + "_settings.txt";
+	//private static final String PROPS_FILE = Globals.NAME.replaceAll(" ", "") + "_settings.txt";
 
 	public IGameMessageServer networkServer;
 	private KryonetLobbyClient clientToLobbyServer;
@@ -187,7 +187,8 @@ ICollisionListener<PhysicalEntity> {
 					for (ClientData c : this.clients.values()) {
 						AbstractServerAvatar avatar = c.avatar;
 						if (avatar != null)
-						{//&& avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
+						{
+							//&& avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 							//ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
 							ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
 							Vector3f from = avatar.getBulletStartPos();
@@ -243,11 +244,7 @@ ICollisionListener<PhysicalEntity> {
 							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
 								eum.addEntityData(physicalEntity, false);
 								if (eum.isFull()) {
-									//for (ClientData client : this.clients.values()) {
-									//if (client.clientStatus == ClientStatus.Accepted) {
 									networkServer.sendMessageToAll(eum);	
-									//}
-									//}
 									eum = new EntityUpdateMessage();
 								}
 							}
@@ -258,11 +255,7 @@ ICollisionListener<PhysicalEntity> {
 				}
 			}
 			if (sendUpdates) {
-				//for (ClientData client : this.clients.values()) {
-				//if (client.clientStatus == ClientStatus.Accepted) {
 				networkServer.sendMessageToAll(eum);	
-				//}
-				//}
 			}
 			if (checkStatusInterval.hitInterval()) {
 				this.checkGameStatus(false);
@@ -573,10 +566,13 @@ ICollisionListener<PhysicalEntity> {
 				Globals.pe("Warning - entity " + id + " doesn't exist for removal");
 			}
 
-			if (e instanceof IClientControlled == false) {
-				// The client will remove 
-				this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
+			if (e instanceof IClientControlled) {
+				IClientControlled cc = (IClientControlled)e;
+				if (cc.isClientControlled()) {
+					return;
+				}
 			}
+			this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
 		}
 
 	}
