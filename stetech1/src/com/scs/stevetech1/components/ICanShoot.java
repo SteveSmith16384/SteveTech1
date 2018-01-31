@@ -6,6 +6,8 @@ import com.scs.stevetech1.server.RayCollisionData;
 
 public interface ICanShoot {
 
+	int getID();
+	
 	int getSide();
 	
 	Vector3f getShootDir();

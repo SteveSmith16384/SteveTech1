@@ -205,8 +205,18 @@ public class SimpleRigidBody<T> implements Collidable {
 						// Check which object is the most complex, and collide that against the bounding box of the other
 						int res = 0;
 						if (this.modelComplexity >= e.modelComplexity) {
+							//try { // todo - remove
+							if (e.spatial.getWorldBound() == null) {
+								throw new RuntimeException(e.userObject + " has no bounds");
+							}
 							res = this.collideWith(e.spatial.getWorldBound(), collisionResults);
+							/*} catch (Exception ex) {
+								ex.printStackTrace();
+							}*/
 						} else {
+							if (this.spatial.getWorldBound() == null) {
+								throw new RuntimeException(this.userObject + " has no bounds");
+							}
 							res = e.collideWith(this.spatial.getWorldBound(), collisionResults);
 						}
 						if (res > 0) {

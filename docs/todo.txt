@@ -1,6 +1,8 @@
 STETECH1
 
 URGENT
+Create projectile example doc
+MapBorder too big
 	Create launcherSystem, also store actual direction and who the launcher is
 Test two clients, can one see the other shooting?
 	Creating an entity should NOT add it to entities list and NOT add it to the root node!
@@ -12,8 +14,7 @@ Improve border - server side is just a box, client side is an invisible box with
 Player dies - show died model.  Manual IAnimation?
 	Not rotating hills
 	Player dies - restart, stop client moving
-Split up client/server into systems
-Show current game time - a bit big
+	Show current game time - a bit big
 Add open-source msg to the top of all files
 Client can always jump, even when in the air
 Search for todos
@@ -22,8 +23,9 @@ Animation - need to walk and shoot?  IAnimationFlags
 
 
 TODO
+Split up client/server into systems
 Auto-start lobby with server
-Do I need to sync every bullet/grenade?  No.
+	Do I need to sync every bullet/grenade?  No.
 Try diff snow hills
 Tree - make serverside just a cyl on trunk
 UA - Players have one teleport

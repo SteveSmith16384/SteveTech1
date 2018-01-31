@@ -214,8 +214,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							if (!this.entities.containsKey(newEntityMessage.entityID)) {
 								IEntity e = createEntity(newEntityMessage);
 								if (e != null) {
-									this.addEntity(e, newEntityMessage.timestamp);
-									//this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to
+									if (e instanceof AbstractAvatar) {
+										this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to
+									} else {
+										this.addEntity(e, newEntityMessage.timestamp); // Schedule it for addition at the right time
+									}
 								}
 							} else {
 								// We already know about it
@@ -416,7 +419,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	@Override
-	public void messageReceived(MyAbstractMessage message) {
+	public void messageReceived(MyAbstractMessage message) { // todo - catch exception and stop main program
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Rcvd " + message.getClass().getSimpleName());
 		}
@@ -447,7 +450,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
 			}
 
-		} else if (message instanceof NewEntityMessage) {
+		/*} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 			synchronized (unprocessedMessages) {
 				unprocessedMessages.add(newEntityMessage);
@@ -469,7 +472,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			GeneralCommandMessage rem = (GeneralCommandMessage)message;
 			synchronized (unprocessedMessages) {
 				unprocessedMessages.add(rem);
-			}
+			}*/
+			
 		} else if (message instanceof WelcomeClientMessage) {
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
 			if (clientStatus < STATUS_RCVD_WELCOME) {
@@ -480,16 +484,22 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				throw new RuntimeException("Received second welcome message");
 			}
 
-		} else if (message instanceof AbilityUpdateMessage) {
+		/*} else if (message instanceof AbilityUpdateMessage) {
 			AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
 			unprocessedMessages.add(aum);
-
+*/
 		} else if (message instanceof SimpleGameDataMessage) {
 			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 			this.gameData = gsm.gameData;
 
+		/*} else if (message instanceof AvatarStatusMessage) {
+			AvatarStatusMessage asm = (AvatarStatusMessage)message;
+			// todo
+*/
 		} else {
-			throw new RuntimeException("Unknown message type: " + message);
+			//throw new RuntimeException("Unknown message type: " + message);
+			unprocessedMessages.add(message);
+
 		}
 
 		if (Globals.DEBUG_MSGS) {

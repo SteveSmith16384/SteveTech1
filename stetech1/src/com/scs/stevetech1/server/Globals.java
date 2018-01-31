@@ -23,13 +23,8 @@ public class Globals {
 	public static final boolean LOG_MOVING_TARGET_POS = false;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
-	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
-/*
-	public static final String GAME_IP_ADDRESS = "localhost";
-	public static final String LOBBY_IP_ADDRESS = "localhost";
-	public static final int GAME_PORT = 6143;
-	public static final int LOBBY_PORT = 6144;
-	*/
+	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
+
 	public static final float CONNECTION_IDLE_THRESH = 1000000;
 
 	public static final int SERVER_TICKRATE_MS = 25; // Source: 15ms
@@ -38,9 +33,7 @@ public class Globals {
 	public static final int PING_INTERVAL_MS = 100 * 1000; // How often server sends pings
 	public static final int ARTIFICIAL_COMMS_DELAY = 0;
 
-	//public static final String VERSION_ = "0.01";
 	public static final boolean SHOW_LOGO = false;
-	//public static final boolean USE_MODEL_FOR_PLAYERS = false;
 
 	// Our movement speed
 	public static final float PLAYER_MOVE_SPEED = 3f;

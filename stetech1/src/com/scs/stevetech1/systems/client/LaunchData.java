@@ -8,14 +8,19 @@ import com.scs.stevetech1.components.ICanShoot;
 public class LaunchData {
 
 	public Vector3f dir;
-	public ICanShoot shooter;
+	public int shooterId;
 	public long launchTime;
 	
-	public LaunchData(Vector3f _dir, ICanShoot _shooter, long _launchTime) {
+	public LaunchData() {
+		super(); // Need this for serialization
+	}
+
+	
+	public LaunchData(Vector3f _dir, int _shooterId, long _launchTime) {
 		super();
 		
 		dir = _dir;
-		shooter = _shooter;
+		shooterId = _shooterId;
 		launchTime = _launchTime;
 	}
 	

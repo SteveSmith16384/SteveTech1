@@ -2,6 +2,7 @@ package com.scs.undercoveragent;
 
 import java.io.IOException;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -11,25 +12,21 @@ import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
-import com.scs.undercoveragent.entities.Igloo;
+import com.scs.undercoveragent.entities.MapBorder;
 import com.scs.undercoveragent.entities.SnowFloor;
-import com.scs.undercoveragent.entities.SnowHill1;
-import com.scs.undercoveragent.entities.SnowTree2;
 import com.scs.undercoveragent.entities.SnowballBullet;
 import com.scs.undercoveragent.entities.SnowmanServerAvatar;
-import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
 
 import ssmith.lang.NumberFunctions;
 
 public class UndercoverAgentServer extends AbstractGameServer {
 
-	private UndercoverAgentGameProperties properties;
+	//private UndercoverAgentGameProperties properties;
 
 	public static void main(String[] args) {
 		try {
@@ -52,15 +49,19 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		//return new Vector3f(3f, 0.6f, 3f + (avatar.playerID*2));
-		float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-		float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-		SimpleRigidBody<PhysicalEntity> collider = avatar.simpleRigidBody.checkForCollisions();
-		while (collider != null) {
+		SimpleRigidBody<PhysicalEntity> collider;
+		do {
+			float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+			float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+			avatar.setWorldTranslation(x, 2f, z);
+			collider = avatar.simpleRigidBody.checkForCollisions();
+		} while (collider != null);
+		/*while (collider != null) {
 			x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
 			z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
 			avatar.setWorldTranslation(x, 2f, z);
 			collider = avatar.simpleRigidBody.checkForCollisions();
-		}
+		}*/
 		Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
 
@@ -78,12 +79,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 				} else {
 					int rnd = NumberFunctions.rnd(0, 6);
 					switch (rnd) {
-					// todo
 					}
 				}
 			}			
 		}*/
-/*
+
+		/*
 		new Igloo(this, getNextEntityID(), 5, 0, 5, JMEFunctions.GetRotation(-1, 0));
 		// todo - actually add entities
 		//new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);
@@ -107,11 +108,13 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			//numSnowmen--;
 			Globals.p("Placed " + i + " snowmen.");
 		}
-*/
+		 */
 		// Place floor last so the snowmen don't collide with it when being placed
 		SnowFloor floor = new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg");
 		this.actuallyAddEntity(floor);
 
+		MapBorder border1 = new MapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, new Quaternion());
+		this.actuallyAddEntity(border1);
 
 	}
 

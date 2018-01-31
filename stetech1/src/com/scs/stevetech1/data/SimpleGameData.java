@@ -14,10 +14,13 @@ public class SimpleGameData { // pojo
 	public static final int ST_FINISHED = 3;
 
 	private int gameStatus = ST_WAITING_FOR_PLAYERS;
-	public long statusStartTimeMS, statusDurationMS;
+	private long statusStartTimeMS;
+	private long statusDurationMS;
 
 	public SimpleGameData() {
 		super();
+		
+		statusStartTimeMS = System.currentTimeMillis();
 
 	}
 
@@ -42,7 +45,15 @@ public class SimpleGameData { // pojo
 		return gameStatus == SimpleGameData.ST_DEPLOYING || gameStatus == SimpleGameData.ST_STARTED;
 	}
 
+	
+	public long getStatusStartTimeMS() {
+		return statusStartTimeMS;
+	}
+	
 
+	/*
+	 * Only called by the server
+	 */
 	public void setGameStatus(int newStatus, long duration) {
 		if (gameStatus != newStatus) {
 			gameStatus = newStatus;

@@ -104,7 +104,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		// If server, send messages to clients to tell them it has been laucnhed
 		if (game.isServer()) {
 			AbstractGameServer server = (AbstractGameServer)game;
-			LaunchData ld = new LaunchData(shooter.getShootDir(), shooter, System.currentTimeMillis());
+			LaunchData ld = new LaunchData(shooter.getShootDir(), shooter.getID(), System.currentTimeMillis());
 			server.networkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), ld));
 		}
 

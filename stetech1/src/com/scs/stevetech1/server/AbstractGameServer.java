@@ -59,10 +59,10 @@ import ssmith.swing.LogWindow;
 import ssmith.util.RealtimeInterval;
 
 public abstract class AbstractGameServer extends AbstractGameController implements 
-		IEntityController, 
-		IMessageServerListener, // To listen for connecting game clients 
-		IMessageClientListener, // For sending messages to the lobby server
-		ICollisionListener<PhysicalEntity> {
+IEntityController, 
+IMessageServerListener, // To listen for connecting game clients 
+IMessageClientListener, // For sending messages to the lobby server
+ICollisionListener<PhysicalEntity> {
 
 	//private static final String PROPS_FILE = Globals.NAME.replaceAll(" ", "") + "_settings.txt";
 
@@ -72,7 +72,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 	//public static GameProperties properties;
 	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(5000);
-	private RealtimeInterval checkStatusInterval = new RealtimeInterval(1000);
+	private RealtimeInterval checkStatusInterval = new RealtimeInterval(5000);
 	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Globals.SERVER_SEND_UPDATE_INTERVAL_MS);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	protected LogWindow logWindow;
@@ -80,7 +80,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	public SimpleGameData gameData;
 	public CollisionLogic collisionLogic = new CollisionLogic();
 	public GameOptions gameOptions;
-	
+
 	// Systems
 	private ServerGameStatusSystem gameStatusSystem;
 
@@ -97,7 +97,7 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 		networkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
-		
+
 		this.gameStatusSystem = new ServerGameStatusSystem(this);
 	}
 
@@ -391,9 +391,8 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 	private AbstractServerAvatar createPlayersAvatar(ClientData client, int side) {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
-		this.moveAvatarToStartPosition(avatar);
-		//avatar.setWorldTranslation(this.getAvatarStartPosition(avatar));
 		this.actuallyAddEntity(avatar);
+		this.moveAvatarToStartPosition(avatar);
 		this.equipAvatar(avatar);
 		return avatar;
 	}
@@ -426,11 +425,11 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 
 	private void sendNewEntity(ClientData client, IEntity e) {
-		if (e instanceof PhysicalEntity) {
-			PhysicalEntity se = (PhysicalEntity)e;
-			NewEntityMessage nem = new NewEntityMessage(se);
-			this.networkServer.sendMessageToClient(client, nem);
-		}
+		//if (e instanceof PhysicalEntity) {  Why was this here?  It prevented sending SnowballLauncher
+		//PhysicalEntity se = (PhysicalEntity)e;
+		NewEntityMessage nem = new NewEntityMessage(e);
+		this.networkServer.sendMessageToClient(client, nem);
+		//}
 	}
 
 
@@ -487,6 +486,9 @@ public abstract class AbstractGameServer extends AbstractGameController implemen
 
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
+				if (pe.getMainNode().getParent() != null) {
+					throw new RuntimeException("todo");
+				}
 				this.getRootNode().attachChild(pe.getMainNode());
 			}
 

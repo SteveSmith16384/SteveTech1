@@ -2,31 +2,31 @@ package ssmith.util;
 
 public class RealtimeInterval {
 
-	private long next_check_time, duration;
+	private long next_check_time, durationMS;
 
-	public RealtimeInterval(long duration) {
-		this(duration, false);
+	public RealtimeInterval(long _duration) {
+		this(_duration, false);
 	}
 	
 	
-	public RealtimeInterval(long duration, boolean fire_now) {
+	public RealtimeInterval(long _duration, boolean fire_now) {
 		super();
-		this.duration = duration;
+		this.durationMS = _duration;
 		if (fire_now) {
 			this.next_check_time = System.currentTimeMillis(); // Fire straight away
 		} else {
-			this.next_check_time = System.currentTimeMillis() + duration;
+			this.next_check_time = System.currentTimeMillis() + durationMS;
 		}
 	}
 	
 	
 	public void restartTimer() {
-		this.next_check_time = System.currentTimeMillis() + duration;
+		this.next_check_time = System.currentTimeMillis() + durationMS;
 	}
 
 	
 	public void setInterval(long amt, boolean restart) {
-		duration = amt;
+		durationMS = amt;
 		
 		if (restart) {
 			this.restartTimer();

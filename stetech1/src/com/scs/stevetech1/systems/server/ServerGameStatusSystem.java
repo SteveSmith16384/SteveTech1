@@ -32,7 +32,7 @@ public class ServerGameStatusSystem {
 			}
 		}
 
-		long duration = System.currentTimeMillis() - gameData.statusStartTimeMS;
+		long duration = System.currentTimeMillis() - gameData.getStatusStartTimeMS();
 		if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
 			if (duration >= gameOptions.deployDurationMillis) {
 				gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDurationMillis);
@@ -46,9 +46,9 @@ public class ServerGameStatusSystem {
 				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 			}
 		}
-		if (oldStatus != gameData.getGameStatus()) {
+		//if (oldStatus != gameData.getGameStatus()) {
 			server.sendGameStatusMessage();
-		}
+		//}
 	}
 
 	

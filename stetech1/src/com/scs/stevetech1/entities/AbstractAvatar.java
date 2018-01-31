@@ -61,7 +61,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 
-		game.getRootNode().attachChild(this.mainNode);
+		//game.getRootNode().attachChild(this.mainNode);
 
 		playerGeometry.setUserData(Globals.ENTITY, this);
 		this.getMainNode().setUserData(Globals.ENTITY, this);

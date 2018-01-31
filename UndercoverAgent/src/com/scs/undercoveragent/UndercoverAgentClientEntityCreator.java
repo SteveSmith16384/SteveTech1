@@ -9,9 +9,11 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.undercoveragent.entities.BigTreeWithLeaves;
 import com.scs.undercoveragent.entities.Igloo;
+import com.scs.undercoveragent.entities.MapBorder;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowHill1;
 import com.scs.undercoveragent.entities.SnowHill2;
@@ -49,9 +51,9 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 
 	@Override
 	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
-		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-			Globals.p("Creating " + getName(msg.type));
-		}*/
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			Globals.p("Creating type " + msg.type);
+		}
 		int id = msg.entityID;
 
 		switch (msg.type) {
@@ -171,6 +173,15 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			IRequiresAmmoCache<SnowballBullet> irac = (IRequiresAmmoCache<SnowballBullet>)game.entities.get(containerID);
 			SnowballBullet snowball = new SnowballBullet(game, id, irac);
 			return snowball;
+		}
+
+		case MAP_BORDER:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion q = (Quaternion)msg.data.get("q");
+			float size = (float)msg.data.get("size");
+			MapBorder hill = new MapBorder(game, id, pos.x, pos.y, pos.z, size, q);
+			return hill;  //crate.getMainNode().getWorldTranslation();
 		}
 
 

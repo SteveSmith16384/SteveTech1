@@ -23,8 +23,8 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
  *
  */
 public class MapBorder extends PhysicalEntity { // todo - use this
-	
-	private static final float MODEL_W_H = 4f;
+
+	private static final float BORDER_WIDTH = 2f;
 
 	public MapBorder(IEntityController _game, int id, float x, float y, float z, float size, Quaternion q) {
 		super(_game, id, UndercoverAgentClientEntityCreator.MAP_BORDER, "MapBorder", false);
@@ -45,38 +45,38 @@ public class MapBorder extends PhysicalEntity { // todo - use this
 			}
 			this.mainNode.setModelBound(new BoundingBox());
 		} else {*/
-			Box box1 = new Box(MODEL_W_H/2, 100/2, size/2);
-			Geometry geometry = new Geometry("Crate", box1);
-			if (!_game.isServer()) { // Not running in server
-				TextureKey key3 = new TextureKey("Textures/snow.jpg");
-				key3.setGenerateMips(true);
-				Texture tex3 = game.getAssetManager().loadTexture(key3);
-				tex3.setWrap(WrapMode.Repeat);
+		Box box1 = new Box(BORDER_WIDTH/2, 100/2, size/2);
+		Geometry geometry = new Geometry("Crate", box1);
+		if (!_game.isServer()) { // Not running in server
+			TextureKey key3 = new TextureKey("Textures/neon1.jpg");
+			//TextureKey key3 = new TextureKey("Textures/snow.jpg");
+			key3.setGenerateMips(true);
+			Texture tex3 = game.getAssetManager().loadTexture(key3);
+			tex3.setWrap(WrapMode.Repeat);
 
-				Material floor_mat = null;
-				if (Globals.LIGHTING) {
-					floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-					floor_mat.setTexture("DiffuseMap", tex3);
-				} else {
-					floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-					floor_mat.setTexture("ColorMap", tex3);
-				}
-
-				geometry.setMaterial(floor_mat);
-				//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-				//geometry.setQueueBucket(Bucket.Transparent);
+			Material floor_mat = null;
+			if (Globals.LIGHTING) {
+				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+				floor_mat.setTexture("DiffuseMap", tex3);
+			} else {
+				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+				floor_mat.setTexture("ColorMap", tex3);
 			}
+
+			geometry.setMaterial(floor_mat);
+		}
 
 		//}
 
-		mainNode.setLocalRotation(q);
+		mainNode.attachChild(geometry);
 
+		mainNode.setLocalRotation(q);
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		simpleRigidBody.setModelComplexity(0);
 
-		//model.setUserData(Globals.ENTITY, this);
+		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
 		//game.getRootNode().attachChild(this.mainNode);
