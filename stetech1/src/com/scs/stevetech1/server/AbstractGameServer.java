@@ -160,11 +160,6 @@ ICollisionListener<PhysicalEntity> {
 							client.latestInputTimestamp = pim.timestamp;
 						}
 
-						/*} else if (message instanceof RequestNewBulletMessage) {
-						RequestNewBulletMessage rnbe = (RequestNewBulletMessage) message;
-						IRequiresAmmoCache irac = (IRequiresAmmoCache)this.entities.get(rnbe.ownerEntityID);
-						IEntity e = this.createEntity(rnbe.type, getNextEntityID(), -1, irac);
-						 */
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
 					}
@@ -186,7 +181,7 @@ ICollisionListener<PhysicalEntity> {
 					}
 				}
 				if (areAnyPlayersShooting) {
-					long timeTo = System.currentTimeMillis() - Globals.CLIENT_RENDER_DELAY;
+					long timeTo = System.currentTimeMillis() - Globals.CLIENT_RENDER_DELAY; // Should this be by their ping time?
 					this.rewindEntities(timeTo);
 					this.rootNode.updateGeometricState();
 					for (ClientData c : this.clients.values()) {
@@ -220,10 +215,10 @@ ICollisionListener<PhysicalEntity> {
 
 			synchronized (entities) {
 				// Add and remove entities
-				for(IEntity e : this.toAdd.keySet()) {
+				for(IEntity e : this.entitiesScheduledToBeAdded.keySet()) {
 					this.actuallyAddEntity(e);
 				}
-				this.toAdd.clear();
+				this.entitiesScheduledToBeAdded.clear();
 
 				for(Integer i : this.toRemove.keySet()) {
 					this.actuallyRemoveEntity(i);
@@ -404,12 +399,17 @@ ICollisionListener<PhysicalEntity> {
 
 	protected abstract void equipAvatar(AbstractServerAvatar avatar);
 
-	public IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
-		switch (type) {
-		default:
+	protected abstract IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac);
+	
+	/*
+	 * Override this to create your own entities
+	 */
+	public final void createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
+		IEntity e = this.createGameSpecificEntiy(type, entityid, side, irac);
+		if (e == null) {
 			throw new RuntimeException("Unknown entity type: " + type);
-			//return super.createEntity();
 		}
+		this.scheduleAddEntity(e, 0);
 	}
 
 
@@ -471,8 +471,8 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void addEntity(IEntity e, long timeToAdd) {
-		this.toAdd.put(e, timeToAdd);
+	public void scheduleAddEntity(IEntity e, long timeToAdd) {
+		this.entitiesScheduledToBeAdded.put(e, timeToAdd);
 	}
 
 
@@ -506,7 +506,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void removeEntity(int id, long time) {
+	public void scheduleEntityRemoval(int id, long time) {
 		this.toRemove.put(id, time);
 	}
 

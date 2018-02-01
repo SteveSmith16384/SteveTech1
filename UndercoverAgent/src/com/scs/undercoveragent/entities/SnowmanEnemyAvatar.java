@@ -1,6 +1,5 @@
 package com.scs.undercoveragent.entities;
 
-import com.jme3.scene.Spatial;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;

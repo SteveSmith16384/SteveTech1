@@ -7,7 +7,7 @@ import com.scs.stevetech1.components.ICanShoot;
 @Serializable
 public class LaunchData {
 
-	public Vector3f dir;
+	public Vector3f startPos, dir;
 	public int shooterId;
 	public long launchTime;
 	
@@ -16,9 +16,10 @@ public class LaunchData {
 	}
 
 	
-	public LaunchData(Vector3f _dir, int _shooterId, long _launchTime) {
+	public LaunchData(Vector3f _startPos, Vector3f _dir, int _shooterId, long _launchTime) {
 		super();
 		
+		startPos = _startPos;
 		dir = _dir;
 		shooterId = _shooterId;
 		launchTime = _launchTime;

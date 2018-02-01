@@ -24,11 +24,15 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 	}
 
 
+	/*
+	 * This is called when the player fires the weapon
+	 */
 	@Override
 	public boolean launchBullet() {
 		if (!ammoCache.isEmpty()) {
 			SnowballBullet g = ammoCache.remove();
-			g.launch((ICanShoot)owner);
+			ICanShoot ic = (ICanShoot)owner;
+			g.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			return true;
 		}
 		return false;

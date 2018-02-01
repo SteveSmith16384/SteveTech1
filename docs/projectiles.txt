@@ -2,10 +2,20 @@ Client is rendering ~100ms behind the server and ping is ~50
 Bullet travels 1 every 50ms
 
 
-Time (ms)	Client		ClientBulletPos		Server			ServerBulletPos		OtherClient		OtherClientBulletPos
+Time (ms)	Client		ClientBulletPos		Server			ServerBulletPos		OtherClient			OtherClientBulletPos
 0			Client fires0					n/a
-50						1					rcvs msg		0
-100						2									1					Rcvs msg		0
-150						3									2									1
-200						4									3									2
+50						1					rcvs msg/FFWD!	0
+100						2									1					Rcvs msg			0
+150						3									2					Starts rendering	1
+200						4									3										0
+
+
+
+Time (ms)	Client		ClientBulletPos		Server			ServerBulletPos		OtherClient			OtherClientBulletPos
+0			Client fires0					n/a
+50						1					rcvs msg/FFWD!	0
+100						2									1					Rcvs msg			0
+150						3									2					Starts rendering	1
+200						4									3										0
+
 

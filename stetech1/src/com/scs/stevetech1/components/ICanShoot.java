@@ -4,8 +4,9 @@ import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.server.RayCollisionData;
 
-public interface ICanShoot {
+public interface ICanShoot { // todo - rename to IPlayerShooter or something
 
+	// todo - are all these used?
 	int getID();
 	
 	int getSide();

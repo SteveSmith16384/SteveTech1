@@ -224,12 +224,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	@Override
 	public void remove() {
-		/*if (abilityGun != null) {
-			abilityGun.remove();
-		}
-		if (abilityOther != null) {
-			abilityOther.remove();
-		}*/
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				this.ability[i].remove();

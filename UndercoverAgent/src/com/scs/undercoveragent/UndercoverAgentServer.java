@@ -128,14 +128,16 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	public IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
+	public IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
 		case UndercoverAgentClientEntityCreator.SNOWBALL_BULLET:
-			return new SnowballBullet(this, entityid, irac);
+			return new SnowballBullet(this, entityid, irac, side);
 
 		default:
-			return super.createEntity(type, entityid, side, irac);
+			//super.createEntity(type, entityid, side, irac);
+			return null;
 		}
+		
 	}
 
 

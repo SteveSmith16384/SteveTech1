@@ -29,9 +29,11 @@ import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
+import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
+import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
@@ -40,7 +42,6 @@ import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
-import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -50,6 +51,7 @@ import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
+import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
@@ -212,14 +214,15 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						if (message instanceof NewEntityMessage) {
 							NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 							if (!this.entities.containsKey(newEntityMessage.entityID)) {
-								IEntity e = createEntity(newEntityMessage);
-								if (e != null) {
+								//IEntity e = 
+								createEntity(newEntityMessage, newEntityMessage.timestamp);
+								/*if (e != null) {
 									if (e instanceof AbstractAvatar) {
 										this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to
 									} else {
 										this.addEntity(e, newEntityMessage.timestamp); // Schedule it for addition at the right time
 									}
-								}
+								}*/
 							} else {
 								// We already know about it
 							}
@@ -258,7 +261,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							}
 						} else if (message instanceof RemoveEntityMessage) {
 							RemoveEntityMessage rem = (RemoveEntityMessage)message;
-							this.removeEntity(rem.entityID, rem.timestamp);
+							this.scheduleEntityRemoval(rem.entityID, rem.timestamp);
 
 						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
 							GeneralCommandMessage msg = (GeneralCommandMessage)message;
@@ -322,11 +325,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
 
 					// Add entities
-					Iterator<IEntity> it = this.toAdd.keySet().iterator();
+					Iterator<IEntity> it = this.entitiesScheduledToBeAdded.keySet().iterator();
 					while (it.hasNext()) {
 						IEntity e = it.next();
 						//for(IEntity e : this.toAdd.keySet()) { //use iterator
-						long timeToAdd = this.toAdd.get(e);
+						long timeToAdd = this.entitiesScheduledToBeAdded.get(e);
 						if (timeToAdd < renderTime) { // Only remove them when its time
 							//this.toAdd.remove(e);
 							it.remove();
@@ -343,7 +346,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						int i = it2.next();
 						long timeToRemove = this.toRemove.get(i);
 						if (timeToRemove < renderTime) { // Only remove them when its time
-							this.toRemove.remove(i);
+							//this.toRemove.remove(i);
+							it2.remove();
 							this.actuallyRemoveEntity(i);
 						}
 					}
@@ -411,10 +415,18 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	/*
-	 * IS IT?? For when a client requests the server to create an entity, e.g. a grenade (for lobbing).
+	 * Mainly for when a client requests the server to create an entity, e.g. a grenade (for lobbing).
 	 */
-	protected final IEntity createEntity(NewEntityMessage msg) {
-		return this.entityCreator.createEntity(this, msg);
+	protected final void createEntity(NewEntityMessage msg, long timeToCreate) {
+		IEntity e = this.entityCreator.createEntity(this, msg);
+		if (e != null) {
+			if (e instanceof AbstractAvatar || e instanceof IRequiresAmmoCache || e instanceof AbstractEnemyAvatar) {
+				this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to, or a grenade launcher to add a bullet to
+			} else {
+				this.scheduleAddEntity(e, timeToCreate);//newEntityMessage.timestamp); // Schedule it for addition at the right time
+			}
+		}
+
 	}
 
 
@@ -450,30 +462,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
 			}
 
-		/*} else if (message instanceof NewEntityMessage) {
-			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-			synchronized (unprocessedMessages) {
-				unprocessedMessages.add(newEntityMessage);
-			}
-
-		} else if (message instanceof EntityUpdateMessage) {
-			EntityUpdateMessage eum = (EntityUpdateMessage)message;
-			synchronized (unprocessedMessages) {
-				unprocessedMessages.add(eum);
-			}
-
-		} else if (message instanceof RemoveEntityMessage) {
-			RemoveEntityMessage rem = (RemoveEntityMessage)message;
-			synchronized (unprocessedMessages) {
-				unprocessedMessages.add(rem);
-			}
-
-		} else if (message instanceof GeneralCommandMessage) {
-			GeneralCommandMessage rem = (GeneralCommandMessage)message;
-			synchronized (unprocessedMessages) {
-				unprocessedMessages.add(rem);
-			}*/
-			
 		} else if (message instanceof WelcomeClientMessage) {
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
 			if (clientStatus < STATUS_RCVD_WELCOME) {
@@ -484,20 +472,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				throw new RuntimeException("Received second welcome message");
 			}
 
-		/*} else if (message instanceof AbilityUpdateMessage) {
-			AbilityUpdateMessage aum = (AbilityUpdateMessage)message;
-			unprocessedMessages.add(aum);
-*/
 		} else if (message instanceof SimpleGameDataMessage) {
 			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 			this.gameData = gsm.gameData;
 
-		/*} else if (message instanceof AvatarStatusMessage) {
-			AvatarStatusMessage asm = (AvatarStatusMessage)message;
-			// todo
-*/
 		} else {
-			//throw new RuntimeException("Unknown message type: " + message);
 			unprocessedMessages.add(message);
 
 		}
@@ -512,11 +491,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	@Override
-	public void addEntity(IEntity e, long timeToAdd) {
+	public void scheduleAddEntity(IEntity e, long timeToAdd) {
 		if (e.getID() <= 0) {
 			throw new RuntimeException("No entity id!");
 		}
-		this.toAdd.put(e, timeToAdd);
+		this.entitiesScheduledToBeAdded.put(e, timeToAdd);
 	}
 
 
@@ -539,7 +518,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	@Override
-	public void removeEntity(int id, long time) {
+	public void scheduleEntityRemoval(int id, long time) {
 		this.toRemove.put(id, time);
 	}
 

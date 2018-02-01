@@ -1,13 +1,8 @@
 package com.scs.simplephysics;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
-
-import com.jme3.collision.CollisionResult;
-import com.jme3.collision.CollisionResults;
-import com.jme3.math.Ray;
+import java.util.List;
 
 public class SimplePhysicsController<T> {
 
@@ -47,9 +42,14 @@ public class SimplePhysicsController<T> {
 		this.enabled = b;
 	}
 
-
+/*
 	public Collection<SimpleRigidBody<T>> getEntities() {
 		return Collections.synchronizedCollection(this.entities);
+	}
+*/
+
+	public List<SimpleRigidBody<T>> getEntities() {
+		return this.entities;
 	}
 
 
@@ -69,6 +69,7 @@ public class SimplePhysicsController<T> {
 
 	public void removeSimpleRigidBody(SimpleRigidBody<T> srb) {
 		synchronized (entities) {
+			//if (DEBUG_EN)
 			this.entities.remove(srb);
 		}
 	}

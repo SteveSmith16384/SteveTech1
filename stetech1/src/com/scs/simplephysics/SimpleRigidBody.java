@@ -1,6 +1,6 @@
 package com.scs.simplephysics;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
@@ -21,7 +21,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public float currentGravInc = 0; // The y-axis change this frame from gravity
 
 	private Spatial spatial;
-	public T userObject; // Attach any object
+	public T userObject; // Attach any object  todo - make private with get/set
 	private boolean canMove = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
 	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.
@@ -82,7 +82,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			// Check we're not already colliding *before* we've even moved
 			SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
 			if (tmpWasCollision != null) {
-				System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision);
+				System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision.userObject);
 				do {
 					Vector3f ourPos = this.getSpatial().getWorldBound().getCenter();
 					Vector3f theirPos = tmpWasCollision.getSpatial().getWorldBound().getCenter();
@@ -196,23 +196,22 @@ public class SimpleRigidBody<T> implements Collidable {
 	public SimpleRigidBody<T> checkForCollisions() {
 		collisionResults.clear();
 		SimpleRigidBody<T> collidedWith = null;
-		Collection<SimpleRigidBody<T>> entities = physicsController.getEntities();
+		//Collection<SimpleRigidBody<T>> entities = physicsController.getEntities();
+		List<SimpleRigidBody<T>> entities = physicsController.getEntities();
 		synchronized (entities) {
 			// Loop through the entities
-			for(SimpleRigidBody<T> e : entities) {
+			//for(SimpleRigidBody<T> e : entities) { // CCM exception
+			for (int i=0 ; i<entities.size() ; i++) {
+				SimpleRigidBody<T> e = entities.get(i);
 				if (e != this) { // Don't check ourselves
 					if (this.physicsController.getCollisionListener().canCollide(this, e)) {
 						// Check which object is the most complex, and collide that against the bounding box of the other
 						int res = 0;
 						if (this.modelComplexity >= e.modelComplexity) {
-							//try { // todo - remove
 							if (e.spatial.getWorldBound() == null) {
 								throw new RuntimeException(e.userObject + " has no bounds");
 							}
 							res = this.collideWith(e.spatial.getWorldBound(), collisionResults);
-							/*} catch (Exception ex) {
-								ex.printStackTrace();
-							}*/
 						} else {
 							if (this.spatial.getWorldBound() == null) {
 								throw new RuntimeException(this.userObject + " has no bounds");

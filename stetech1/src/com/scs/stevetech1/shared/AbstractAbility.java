@@ -11,11 +11,11 @@ import com.scs.stevetech1.server.AbstractGameServer;
 
 public abstract class AbstractAbility extends Entity implements IAbility, IProcessByServer, IProcessByClient {
 
-	private static final float SEND_INT = 5;
+	private static final float SEND_INT_SECS = 5;
 
 	protected AbstractAvatar owner;
 	public int num;
-	private float timeUntilNextSend = SEND_INT;
+	private float timeUntilNextSend_secs = SEND_INT_SECS;
 	private long lastUpdateMsgTime;
 
 	public AbstractAbility(IEntityController _game, int _id, int type, AbstractAvatar _owner, int _num, String _name) {
@@ -35,25 +35,15 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 		}
 		
 		owner.ability[num] = this;
-		// Add to avatar
-		/*if (num == 0) {
-			owner.abilityGun = this;
-		} else if (num == 1) {
-			owner.abilityOther = this;
-		} else {
-			throw new RuntimeException("Unknown ability num: " + num);
-		}*/
-
 	}
 
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
-		timeUntilNextSend -= tpf_secs;
-		if (timeUntilNextSend <= 0) {
-			//AbstractGameServer server = (AbstractGameServer)game;
+		timeUntilNextSend_secs -= tpf_secs;
+		if (timeUntilNextSend_secs <= 0) {
 			server.networkServer.sendMessageToAll(new AbilityUpdateMessage(false, this));
-			timeUntilNextSend = SEND_INT;
+			timeUntilNextSend_secs = SEND_INT_SECS;
 		}
 	}
 

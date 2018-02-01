@@ -158,11 +158,13 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		case SNOWBALL_LAUNCHER: 
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
-				int num = (int)msg.data.get("num");
-				SnowballLauncher gl = new SnowballLauncher(game, id, owner, num);
-				return gl;
+			if (game.currentAvatar != null) { // We might not have an avatar yet
+				if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+					AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+					int num = (int)msg.data.get("num");
+					SnowballLauncher gl = new SnowballLauncher(game, id, owner, num);
+					return gl;
+				}
 			}
 			return null;
 		}
@@ -170,8 +172,9 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		case SNOWBALL_BULLET:
 		{
 			int containerID = (int) msg.data.get("containerID");
+			int side = (int) msg.data.get("side");
 			IRequiresAmmoCache<SnowballBullet> irac = (IRequiresAmmoCache<SnowballBullet>)game.entities.get(containerID);
-			SnowballBullet snowball = new SnowballBullet(game, id, irac);
+			SnowballBullet snowball = new SnowballBullet(game, id, irac, side);
 			return snowball;
 		}
 

@@ -1,18 +1,20 @@
 STETECH1
 
 URGENT
+	ConcurrentModException on client and server
+Client re-launching own snowball
+
+Ffwd projectiles
+Turn gravity back on
+	Create abstract getgamespecificentity method
 Notes: Can't update completely accurately since they will keep overshooting!
-Create projectile example doc
+	Create projectile example doc
 MapBorder too big
 	Create launcherSystem, also store actual direction and who the launcher is
 Test two clients, can one see the other shooting?
-	Creating an entity should NOT add it to entities list and NOT add it to the root node!
-	actuallyAddEntity() should add it to the root node
-	Don't add entities immed, wait for scheduled time.
-	Don't remove entities immed, wait for scheduled time.
 Floating snowballs - not being removed from rootNode
 Improve border - server side is just a box, client side is an invisible box with hills around
-Player dies - show died model.  Manual IAnimation?
+Player dies - show died model. "Dead" in big letters Manual IAnimation?
 	Not rotating hills
 	Player dies - restart, stop client moving
 	Show current game time - a bit big
@@ -24,6 +26,9 @@ Animation - need to walk and shoot?  IAnimationFlags
 
 
 TODO
+Add entities to list immediately, but don't add to root node until scheduled?
+Add unique code to ping messages
+Ping system
 Split up client/server into systems
 Auto-start lobby with server
 	Do I need to sync every bullet/grenade?  No.
