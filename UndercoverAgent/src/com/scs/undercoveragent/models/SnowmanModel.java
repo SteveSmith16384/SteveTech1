@@ -32,7 +32,7 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 			Spatial model = assetManager.loadModel("Models/Holiday/Snowman.obj");
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEFunctions.moveYOriginTo(model, 0f);
-			JMEFunctions.RotateToDirection(model, new Vector3f(1, 0, 0));
+			JMEFunctions.RotateToDirection(model, new Vector3f(1, 0, 0)); // 90 deg to the right
 			return model;
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);

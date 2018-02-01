@@ -105,10 +105,23 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 		this.collideable = true;
 		
-		// If server, send messages to clients to tell them it has been launched
 		if (game.isServer()) {
 			AbstractGameServer server = (AbstractGameServer)game;
-			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis());
+			
+			// fast forward it!
+			float totalTimeToFFwd = Globals.CLIENT_RENDER_DELAY; // todo + clientPingTime
+			float tpf_secs = Globals.SERVER_TICKRATE_MS / 1000;
+			while (totalTimeToFFwd > 0) {
+				totalTimeToFFwd -= Globals.SERVER_TICKRATE_MS;
+				super.processByServer(server, tpf_secs);
+				if (this.removed) {
+					break;
+				}
+			}
+			
+			// If server, send messages to clients to tell them it has been launched
+			//AbstractGameServer server = (AbstractGameServer)game;
+			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis()-Globals.CLIENT_RENDER_DELAY); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
 			server.networkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), ld));
 		}
 

@@ -15,6 +15,7 @@ public abstract class Entity implements IEntity, Savable {
 	public final int type;
 	protected transient IEntityController game;
 	public final String name;
+	public boolean removed = false;
 
 	// Server-only vars
 	protected HashMap<String, Object> creationData;
@@ -35,6 +36,7 @@ public abstract class Entity implements IEntity, Savable {
 
 	public void remove() {
 		game.scheduleEntityRemoval(this.id, 0);
+		removed = true;
 	}
 	
 	

@@ -55,6 +55,7 @@ import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
 
+import ssmith.lang.NumberFunctions;
 import ssmith.swing.LogWindow;
 import ssmith.util.RealtimeInterval;
 
@@ -80,6 +81,7 @@ ICollisionListener<PhysicalEntity> {
 	public SimpleGameData gameData;
 	public CollisionLogic collisionLogic = new CollisionLogic();
 	public GameOptions gameOptions;
+	private int randomPingCode;
 
 	// Systems
 	private ServerGameStatusSystem gameStatusSystem;
@@ -167,7 +169,8 @@ ICollisionListener<PhysicalEntity> {
 			}
 
 			if (sendPingInterval.hitInterval()) {
-				this.networkServer.sendMessageToAll(new PingMessage(true));
+				randomPingCode = NumberFunctions.rnd(0,  999999);
+				this.networkServer.sendMessageToAll(new PingMessage(true, randomPingCode));
 			}
 
 			synchronized (this.clients) {
@@ -280,7 +283,7 @@ ICollisionListener<PhysicalEntity> {
 		client.clientStatus = ClientData.ClientStatus.Accepted;
 
 		this.sendGameStatusMessage();
-		this.networkServer.sendMessageToClient(client, new PingMessage(true));
+		this.networkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));
 
 		gameStatusSystem.checkGameStatus(true);
 
@@ -355,13 +358,18 @@ ICollisionListener<PhysicalEntity> {
 			PingMessage pingMessage = (PingMessage) message;
 			if (pingMessage.s2c) {
 				try {
-					long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
-					client.playerData.pingRTT = client.pingCalc.add(rttDuration);
-					client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.playerData.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-					//Settings.p("Client rtt = " + client.pingRTT);
-					//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
-					if ((client.playerData.pingRTT/2) + Globals.SERVER_SEND_UPDATE_INTERVAL_MS > Globals.CLIENT_RENDER_DELAY) {
-						Globals.p("Warning: client ping is longer than client render delay!");
+					// Check code
+					if (pingMessage.randomCode == this.randomPingCode) {
+						long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
+						client.playerData.pingRTT = client.pingCalc.add(rttDuration);
+						client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.playerData.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
+						//Settings.p("Client rtt = " + client.pingRTT);
+						//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
+						if ((client.playerData.pingRTT/2) + Globals.SERVER_SEND_UPDATE_INTERVAL_MS > Globals.CLIENT_RENDER_DELAY) {
+							Globals.p("Warning: client ping is longer than client render delay!");
+						}
+					} else {
+						Globals.pe("Unexpected ping response code!");
 					}
 				} catch (NullPointerException npe) {
 					npe.printStackTrace();
@@ -400,7 +408,7 @@ ICollisionListener<PhysicalEntity> {
 	protected abstract void equipAvatar(AbstractServerAvatar avatar);
 
 	protected abstract IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac);
-	
+
 	/*
 	 * Override this to create your own entities
 	 */

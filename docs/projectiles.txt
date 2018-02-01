@@ -2,20 +2,30 @@ Client is rendering ~100ms behind the server and ping is ~50
 Bullet travels 1 every 50ms
 
 
+Without any ffwding
+
+Real
 Time (ms)	Client		ClientBulletPos		Server			ServerBulletPos		OtherClient			OtherClientBulletPos
 0			Client fires0					n/a
-50						1					rcvs msg/FFWD!	0
+50						1					rcvs msg		0
 100						2									1					Rcvs msg			0
-150						3									2					Starts rendering	1
+150						3									2										1
 200						4									3										0
 
+This is almost fine, as the "other client" is rendering 100ms behind reality anyway, so it appears at the right time.
+But the server needs to check for collisions on behalf of the shooting client
 
+--------------------------------------------------
 
+With ffwding:
+
+Real
 Time (ms)	Client		ClientBulletPos		Server			ServerBulletPos		OtherClient			OtherClientBulletPos
 0			Client fires0					n/a
-50						1					rcvs msg/FFWD!	0
-100						2									1					Rcvs msg			0
-150						3									2					Starts rendering	1
-200						4									3										0
+50						1					rcvs msg/FFWD!	0/3
+100						2									4					Rcvs msg			0
+150						3									5					Starts rendering	1
+200						4									6										0
 
-
+Here, the server ffwds the projectile by 100ms+50ms so it is ahead of the shooting client
+It then sends a "fired" message to the other clients

@@ -300,7 +300,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				}
 
 				if (clientStatus >= STATUS_CONNECTED && sendPingInterval.hitInterval()) {
-					networkClient.sendMessageToServer(new PingMessage(false));
+					networkClient.sendMessageToServer(new PingMessage(false, 0));
 				}
 
 				if (clientStatus == STATUS_GAME_STARTED) {

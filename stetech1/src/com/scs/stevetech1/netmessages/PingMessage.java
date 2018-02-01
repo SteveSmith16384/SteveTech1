@@ -8,17 +8,19 @@ public class PingMessage extends MyAbstractMessage {
 	public boolean s2c; // Is it server2client or vice-versa
 	public long originalSentTime;
 	public long responseSentTime;
+	public int randomCode;
 
 	public PingMessage() {
 		super(false);
 	}
 	
 	
-	public PingMessage(boolean _s2c) {
-		super(false);
+	public PingMessage(boolean _s2c, int _randomCode) {
+		this();
 
 		s2c = _s2c;
 		originalSentTime = System.currentTimeMillis();
+		randomCode = _randomCode;
 	}
 
 }

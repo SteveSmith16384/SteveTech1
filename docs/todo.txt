@@ -2,9 +2,9 @@ STETECH1
 
 URGENT
 	Rotate snowmen by 90
-Ffwd projectiles
+	Ffwd projectiles
 	Turn gravity back on
-MapBorder too big
+	MapBorder too big
 	Test two clients, can one see the other shooting?
 	Floating snowballs - not being removed from rootNode
 Improve border - server side is just a box, client side is an invisible box with hills around
@@ -21,7 +21,7 @@ Animation - need to walk and shoot?  IAnimationFlags
 
 TODO
 Add entities to list immediately, but don't add to root node until scheduled?
-Add unique code to ping messages
+	Add unique code to ping messages
 Ping system
 Split up client/server into systems
 Auto-start lobby with server
