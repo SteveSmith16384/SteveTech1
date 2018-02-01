@@ -63,7 +63,7 @@ public class JMEFunctions {
 		mat.getAdditionalRenderState().setWireframe(true);
 		mat.setColor("Color", ColorRGBA.White);
 		g.setMaterial(mat);
-		
+
 		// Move to middle
 		//g.center().move(pos);
 		//rootNode.attachChild(g);
@@ -148,29 +148,29 @@ public class JMEFunctions {
 			g.setMaterial(mat);
 		}
 	}
-	
-	
+
+
 	public static void scaleModelToHeight(Spatial model, float height) {
 		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
 		float currHeight = bb.getYExtent() * 2;
 		float frac = height/currHeight;
 		model.scale(frac);
 	}
-	
-	
+
+
 	public static void scaleModelToWidth(Spatial model, float width) {
 		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
 		float currWidth = bb.getXExtent() * 2;
 		float frac = width/currWidth;
 		model.scale(frac);
 	}
-	
-	
+
+
 	public static void moveYOriginTo(Spatial model, float yPos) {
 		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
 		float currOrigin = bb.getCenter().y - bb.getYExtent();
 		model.move(new Vector3f(0, yPos - currOrigin, 0));
-		
+
 	}
 
 
@@ -180,5 +180,11 @@ public class JMEFunctions {
 		return target_q;
 	}
 
+
+	public static void RotateToDirection(Spatial s, Vector3f dir) {
+		Vector3f v = s.getLocalTranslation();
+		v.add(dir);
+		s.lookAt(v, Vector3f.UNIT_Y);
+	}
 
 }

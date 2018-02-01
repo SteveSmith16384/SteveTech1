@@ -1,3 +1,6 @@
+Notes: Can't update completely accurately since they will keep overshooting!
+
+
 Client render in past to ensure it has enough data.
 This example assumes a 50ms delay in comms from client to server (and vice versa)
 Client and server positions should match if client time is earlier

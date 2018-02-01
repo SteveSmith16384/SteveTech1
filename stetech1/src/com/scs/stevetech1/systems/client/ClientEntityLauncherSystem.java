@@ -42,7 +42,6 @@ public class ClientEntityLauncherSystem {
 			if (timeToAdd < renderTime) { // Only remove them when its time
 				LaunchData ld = this.toLaunch.get(e);
 				it3.remove();
-				//ICanShoot ic = (ICanShoot)client.entities.get(ld.shooterId);
 				IEntity shooter = client.entities.get(ld.shooterId);
 				e.launch(shooter, ld.startPos, ld.dir);
 			}

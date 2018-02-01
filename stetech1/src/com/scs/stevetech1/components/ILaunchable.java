@@ -4,9 +4,8 @@ import com.jme3.math.Vector3f;
 
 public interface ILaunchable {
 
-	IEntity getLauncher();
+	IEntity getLauncher(); // So we know who not to collide with
 	
 	void launch(IEntity _shooter, Vector3f startPos, Vector3f dir);
 	
-	//void launch(ICanShoot _shooter);
 }

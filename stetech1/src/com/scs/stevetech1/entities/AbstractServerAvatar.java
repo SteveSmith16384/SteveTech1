@@ -86,13 +86,13 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		//invulnerableTime = RESTART_DUR*3;
 	}
 
-	
+	/*
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {
 		//this.incScore(20, "shot " + e.toString());
 		//numShotsHit++;
 	}
-
+*/
 /*
 	public void moveToStartPostion() {
 		Vector3f pos = server.getAvatarStartPosition(this);

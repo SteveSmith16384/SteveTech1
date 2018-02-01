@@ -487,7 +487,7 @@ ICollisionListener<PhysicalEntity> {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				if (pe.getMainNode().getParent() != null) {
-					throw new RuntimeException("todo");
+					throw new RuntimeException("Entity already has a node");
 				}
 				this.getRootNode().attachChild(pe.getMainNode());
 			}

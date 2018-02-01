@@ -18,7 +18,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 	private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>(); 
 
-	public SnowballLauncher(IEntityController game, int id, AbstractAvatar owner, int num) {
+	public SnowballLauncher(IEntityController game, int id, ICanShoot owner, int num) {
 		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, owner, num, "SnowballLauncher", 1, 3, MAG_SIZE);
 
 	}

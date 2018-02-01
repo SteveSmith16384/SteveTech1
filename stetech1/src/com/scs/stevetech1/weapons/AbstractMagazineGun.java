@@ -1,7 +1,7 @@
 package com.scs.stevetech1.weapons;
 
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
@@ -19,8 +19,8 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	protected float shotInterval_secs, reloadInterval_secs;
 
 
-	public AbstractMagazineGun(IEntityController _game, int id, int type, AbstractAvatar owner, int num, String _name, float shotInt, float reloadInt, int magSize) { 
-		super(_game, id, type, owner, num, _name);
+	public AbstractMagazineGun(IEntityController _game, int id, int type, ICanShoot owner, int num, String _name, float shotInt, float reloadInt, int magSize) { 
+		super(_game, id, type, (AbstractAvatar)owner, num, _name);
 
 		this.shotInterval_secs = shotInt;
 		this.reloadInterval_secs = reloadInt;

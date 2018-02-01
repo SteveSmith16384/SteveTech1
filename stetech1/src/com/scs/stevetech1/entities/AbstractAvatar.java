@@ -191,7 +191,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	@Override
+//	@Override
 	public int getSide() {
 		return side;
 	}

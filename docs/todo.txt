@@ -1,18 +1,12 @@
 STETECH1
 
 URGENT
-	ConcurrentModException on client and server
-Client re-launching own snowball
-
+	Rotate snowmen by 90
 Ffwd projectiles
-Turn gravity back on
-	Create abstract getgamespecificentity method
-Notes: Can't update completely accurately since they will keep overshooting!
-	Create projectile example doc
+	Turn gravity back on
 MapBorder too big
-	Create launcherSystem, also store actual direction and who the launcher is
-Test two clients, can one see the other shooting?
-Floating snowballs - not being removed from rootNode
+	Test two clients, can one see the other shooting?
+	Floating snowballs - not being removed from rootNode
 Improve border - server side is just a box, client side is an invisible box with hills around
 Player dies - show died model. "Dead" in big letters Manual IAnimation?
 	Not rotating hills

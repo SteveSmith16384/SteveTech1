@@ -281,15 +281,18 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 						} else if (message instanceof AvatarStatusMessage) {
 							AvatarStatusMessage asm = (AvatarStatusMessage) message;
-							AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
-							if (avatar.alive != asm.alive) {
-								// todo - show message or something
+							PhysicalEntity e = (PhysicalEntity)this.entities.get(asm.entityID);
+							if (e == this.currentAvatar) {
+								AbstractAvatar avatar = (AbstractAvatar)e;
+								if (avatar.alive != asm.alive) {
+									// todo - show message or something
+									avatar.alive = asm.alive;							
+								}
 							}
-							avatar.alive = asm.alive;							
 						} else if (message instanceof EntityLaunchedMessage) {
 							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 							this.launchSystem.scheduleLaunch(elm);
-							
+
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
@@ -355,7 +358,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					//this.toRemove.clear();
 
 					this.launchSystem.process(renderTime);
-					
+
 					for (IEntity e : this.entities.values()) {  // this.getRootNode();
 						if (e instanceof IPlayerControlled) {
 							IPlayerControlled p = (IPlayerControlled)e;

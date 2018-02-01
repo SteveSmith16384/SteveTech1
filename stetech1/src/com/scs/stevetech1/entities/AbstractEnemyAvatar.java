@@ -6,7 +6,6 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
-import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 

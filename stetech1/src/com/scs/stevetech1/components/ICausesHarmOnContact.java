@@ -7,7 +7,4 @@ public interface ICausesHarmOnContact {//extends ICollideable {
 	
 	int getSide(); // Prevent friendly-fire
 	
-	//ICanShoot getShooter();
-	
-	//void remove();
 }

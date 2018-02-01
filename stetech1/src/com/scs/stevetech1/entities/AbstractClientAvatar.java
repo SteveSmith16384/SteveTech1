@@ -49,7 +49,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		//syncPos = new AdjustBasedOnDistance();
 		syncPos = new AdjustByFractionOfDistance();
 		
-		this.simpleRigidBody.setGravity(0); // todo - remove?
+		//this.simpleRigidBody.setGravity(0); // todo - remove?
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE);
@@ -161,12 +161,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		}
 	}
 
-
+/*
 	@Override
 	public void hasSuccessfullyHit(IEntity e) {
 		// Do nothing - done server-side
 	}
-
+*/
 
 	@Override
 	public Vector3f getShootDir() {

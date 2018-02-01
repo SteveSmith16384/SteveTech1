@@ -2,6 +2,7 @@ package com.scs.stevetech1.shared;
 
 import java.util.HashMap;
 
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -30,7 +31,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("ownerid", owner.id);
+			creationData.put("ownerid", owner.getID());
 			creationData.put("num", num);
 		}
 		

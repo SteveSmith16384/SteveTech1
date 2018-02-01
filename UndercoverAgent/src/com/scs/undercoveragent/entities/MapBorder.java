@@ -22,9 +22,10 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
  * The origin for this should be left/bottom/front
  *
  */
-public class MapBorder extends PhysicalEntity { // todo - use this
+public class MapBorder extends PhysicalEntity {
 
 	private static final float BORDER_WIDTH = 2f;
+	private static final float BORDER_HEIGHT = 5f;
 
 	public MapBorder(IEntityController _game, int id, float x, float y, float z, float size, Quaternion q) {
 		super(_game, id, UndercoverAgentClientEntityCreator.MAP_BORDER, "MapBorder", false);
@@ -35,7 +36,6 @@ public class MapBorder extends PhysicalEntity { // todo - use this
 			creationData.put("q", q);
 		}
 
-
 		/*todo if (!game.isServer()) {
 			for (float i=(MODEL_W_H/2) ; i<size ; i+=MODEL_W_H) {
 				Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
@@ -45,7 +45,7 @@ public class MapBorder extends PhysicalEntity { // todo - use this
 			}
 			this.mainNode.setModelBound(new BoundingBox());
 		} else {*/
-		Box box1 = new Box(BORDER_WIDTH/2, 100/2, size/2);
+		Box box1 = new Box(BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
 		Geometry geometry = new Geometry("Crate", box1);
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey("Textures/neon1.jpg");
@@ -65,11 +65,10 @@ public class MapBorder extends PhysicalEntity { // todo - use this
 
 			geometry.setMaterial(floor_mat);
 		}
-
 		//}
+		geometry.setLocalTranslation(-BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
 
 		mainNode.attachChild(geometry);
-
 		mainNode.setLocalRotation(q);
 		mainNode.setLocalTranslation(x, y, z);
 
