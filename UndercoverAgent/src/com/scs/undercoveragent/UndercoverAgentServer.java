@@ -26,10 +26,9 @@ import ssmith.lang.NumberFunctions;
 
 public class UndercoverAgentServer extends AbstractGameServer {
 
-	//private UndercoverAgentGameProperties properties;
-
 	public static void main(String[] args) {
 		try {
+			// Run the lobby server as well
 			Thread r = new Thread("LobbyServer") {
 
 				@Override
@@ -136,12 +135,16 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
 		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
 		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
+
+		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0);
+		this.actuallyAddEntity(abilityGun);
+
 		return avatar;
 	}
 
-
-	@Override
-	public IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac) {
+/*
+	//@Override
+	public IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac) { // todo - why do we need this?  Just create the entities
 		switch (type) {
 		case UndercoverAgentClientEntityCreator.SNOWBALL_BULLET:
 			return new SnowballBullet(this, entityid, irac, side);
@@ -151,16 +154,16 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			return null;
 		}
 		
-	}
+	}*/
 
-
+/*
 	@Override
 	protected void equipAvatar(AbstractServerAvatar avatar) {
 		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0);
 		this.actuallyAddEntity(abilityGun);
 
 	}
-
+*/
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {

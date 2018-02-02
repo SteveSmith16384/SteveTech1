@@ -16,6 +16,7 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
@@ -28,9 +29,9 @@ import com.scs.stevetech1.shared.PositionCalculator;
 import com.scs.stevetech1.systems.client.LaunchData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
-public class SnowballBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact, ICausesHarmOnContact, IClientControlled {
+public class SnowballBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact, ICausesHarmOnContact, IClientControlled, INotifiedOfCollision {
 
-	public PositionCalculator clientSidePositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
+	//public PositionCalculator clientSidePositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	private boolean launched = false;
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
@@ -187,6 +188,13 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	@Override
 	public boolean isClientControlled() {
 		return launched; // All launched snowballs are under client control
+	}
+
+
+	@Override
+	public void collided(PhysicalEntity pe) {
+		// Create debugging sphere
+		
 	}
 
 }

@@ -63,7 +63,7 @@ public class TestGameClient extends AbstractGameClient {
 
 
 	public TestGameClient() {
-		super(TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, new TestGameClientEntityCreator());
+		super(TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, "unused", -1, new TestGameClientEntityCreator());
 	}
 
 }

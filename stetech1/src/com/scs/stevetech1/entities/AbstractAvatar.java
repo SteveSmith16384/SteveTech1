@@ -43,7 +43,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected IAnimatedAvatarModel avatarModel;
 
 	protected boolean alive = true;
-	protected float restartTime, invulnerableTime;
+	protected float restartTimeSecs, invulnerableTimeSecs;
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAnimatedAvatarModel _anim) {
 		super(_game, eid, 1, "Player", true);

@@ -76,6 +76,13 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 		}
 		super.remove();
 	}
+
+
+	@Override
+	protected void createBullet(IEntityController game, int entityid, IRequiresAmmoCache irac, int side) {
+		new SnowballBullet(game, entityid, irac, side);
+		
+	}
 		
 
 }

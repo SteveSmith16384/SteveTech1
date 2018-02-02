@@ -29,7 +29,8 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 	public boolean launchBullet() {
 		if (!ammoCache.isEmpty()) {
 			LaserBullet g = ammoCache.remove();
-			g.launch((ICanShoot)owner);
+			ICanShoot ic = (ICanShoot)owner;
+			g.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			return true;
 		}
 		return false;
@@ -74,6 +75,12 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 			g.remove();
 		}
 		super.remove();
+	}
+
+
+	@Override
+	protected void createBullet(IEntityController game, int entityid, IRequiresAmmoCache irac, int side) {
+		new LaserBullet(game, entityid, irac, side);		
 	}
 	
 }

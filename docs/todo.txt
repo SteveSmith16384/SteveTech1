@@ -1,14 +1,14 @@
 STETECH1
 
 URGENT
-Player dies - "Dead" in big letters
+Show debug sphere where & when snowball has hit something
+Improve border - server side is just a box, client side is an invisible box with hills around
 	Don't do avatar death straight away!
 	Animation - need to walk and shoot?  IAnimationFlags
 	Create setDied() and respondToDied()
 	Player dies - show died model.
 	Ffwd projectiles
 	Test two clients, can one see the other shooting?
-Improve border - server side is just a box, client side is an invisible box with hills around
 	Not rotating hills
 	Player dies - restart, stop client moving
 	Show current game time - a bit big
@@ -16,9 +16,11 @@ Add open-source msg to the top of all files
 Client can always jump, even when in the air
 Search for todos
 Blog post progress
+Record desktop showing two players
 
 
 TODO
+Player dies - "Dead" in big letters
 Add entities to list immediately, but don't add to root node until scheduled?
 Ping system
 Split up client/server into systems
@@ -31,7 +33,6 @@ Falling snow
 Use server-style simple models for collision checking on client side?
 Hitscan rifle - show line showing where server says bullet went
 Laser bullets
-Record desktop showing two players
 Animate backwards when walking backwards
 Create moonbase map
 Look for soldiers for Moonbase Assault

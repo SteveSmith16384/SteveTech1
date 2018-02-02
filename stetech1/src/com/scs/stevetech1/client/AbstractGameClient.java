@@ -667,20 +667,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			//}
 		}
 
-		/*
-		if (pea instanceof IRemoveOnContact) {
-			IRemoveOnContact roc = (IRemoveOnContact)pea;
-			if (roc.removeByClient()) {
-				pea.remove();
-			}
-		}
-		if (peb instanceof IRemoveOnContact) {
-			IRemoveOnContact roc = (IRemoveOnContact)peb;
-			if (roc.removeByClient()) {
-				peb.remove();
-			}
-		}
-		 */
 	}
 
 

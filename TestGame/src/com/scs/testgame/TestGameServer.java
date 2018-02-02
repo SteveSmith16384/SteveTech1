@@ -11,15 +11,11 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
-import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.IAbility;
 import com.scs.testgame.entities.Floor;
-import com.scs.testgame.entities.Grenade;
 import com.scs.testgame.entities.House;
 import com.scs.testgame.entities.LaserBullet;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
-import com.scs.testgame.weapons.LaserRifle;
 
 public class TestGameServer extends AbstractGameServer {
 
@@ -70,21 +66,21 @@ public class TestGameServer extends AbstractGameServer {
 	}
 
 
-	@Override
-	public IEntity createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
+	//@Override
+	public IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
 		case TestGameClientEntityCreator.LASER_BULLET:
-			return new LaserBullet(this, entityid, irac);
-			
+			return new LaserBullet(this, entityid, irac, side);
+			/*
 		case TestGameClientEntityCreator.GRENADE:
 			return new Grenade(this, entityid, irac);
-			
+			*/
 		default:
-			return super.createEntity(type, entityid, side, irac);
+			return null;//super.createEntity(type, entityid, side, irac);
 		}
 	}
 
-
+/*
 	@Override
 	protected void equipAvatar(AbstractServerAvatar avatar) {
 		//IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
@@ -92,13 +88,7 @@ public class TestGameServer extends AbstractGameServer {
 		IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0);
 		this.addEntity(abilityGun);
 		
-		/* 
-			this.abilityOther = new JetPac(this, 1);// BoostFwd(this, 1);//getRandomAbility(this);
-		game.addEntity(abilityOther);
-		}*/
-
-		
 	}
 
-
+*/
 }

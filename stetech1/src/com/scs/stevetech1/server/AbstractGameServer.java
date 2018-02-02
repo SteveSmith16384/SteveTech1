@@ -78,7 +78,7 @@ ICollisionListener<PhysicalEntity> {
 	protected LogWindow logWindow;
 	public IConsole console;
 	public SimpleGameData gameData;
-	public CollisionLogic collisionLogic = new CollisionLogic();
+	public ServerSideCollisionLogic collisionLogic = new ServerSideCollisionLogic();
 	public GameOptions gameOptions;
 	private int randomPingCode = NumberFunctions.rnd(0,  999999);
 
@@ -403,7 +403,7 @@ ICollisionListener<PhysicalEntity> {
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
 		this.actuallyAddEntity(avatar);
 		this.moveAvatarToStartPosition(avatar);
-		this.equipAvatar(avatar);
+		//this.equipAvatar(avatar);
 		return avatar;
 	}
 
@@ -412,13 +412,11 @@ ICollisionListener<PhysicalEntity> {
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
 
-	protected abstract void equipAvatar(AbstractServerAvatar avatar);
-
-	protected abstract IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac);
+	//protected abstract void equipAvatar(AbstractServerAvatar avatar);
 
 	/*
-	 * Override this to create your own entities
-	 */
+	protected abstract IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac);
+
 	public final void createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		IEntity e = this.createGameSpecificEntiy(type, entityid, side, irac);
 		if (e == null) {
@@ -426,7 +424,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 		this.scheduleAddEntity(e, 0);
 	}
-
+*/
 
 	private void sendAllEntitiesToClient(ClientData client) {
 		synchronized (entities) {
@@ -659,12 +657,6 @@ ICollisionListener<PhysicalEntity> {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
 
-		//if (a != null && b != null) {
-		collisionLogic.collision(pea, peb);
-		/*} else {
-			Settings.p("null object in collision");
-		}*/
-
 		if (pea instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
 			ic.collided(peb);
@@ -673,6 +665,12 @@ ICollisionListener<PhysicalEntity> {
 			INotifiedOfCollision ic = (INotifiedOfCollision)peb;
 			ic.collided(pea);
 		}
+
+		//if (a != null && b != null) {
+		collisionLogic.collision(pea, peb);
+		/*} else {
+			Settings.p("null object in collision");
+		}*/
 
 	}
 

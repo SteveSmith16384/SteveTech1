@@ -3,11 +3,10 @@ package com.scs.stevetech1.server;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IRemoveOnContact;
-import com.scs.stevetech1.entities.PhysicalEntity;
 
-public class CollisionLogic {
+public class ServerSideCollisionLogic {
 
-	public CollisionLogic() {
+	public ServerSideCollisionLogic() {
 	}
 
 	

@@ -11,7 +11,7 @@ import com.scs.stevetech1.shared.AbstractAbility;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractMagazineGun extends AbstractAbility implements IAbility {
+public abstract class AbstractMagazineGun<T> extends AbstractAbility implements IAbility {
 
 	protected float timeUntilShoot_secs = 0;
 	protected int magazineSize;
@@ -52,12 +52,16 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 
 	private void checkForAmmo(AbstractGameServer server) {
 		if (this instanceof IRequiresAmmoCache) {
-			IRequiresAmmoCache irac = (IRequiresAmmoCache)this;
+			IRequiresAmmoCache<T> irac = (IRequiresAmmoCache)this;
 			if (irac.requiresAmmo()) {
-				server.createEntity(irac.getAmmoType(), server.getNextEntityID(), -1, irac);
+				//server.createEntity(irac.getAmmoType(), server.getNextEntityID(), -1, irac);
+				createBullet(game, server.getNextEntityID(), irac, -1);
 			}
 		}
 	}
+	
+	
+	protected abstract void createBullet(IEntityController game, int entityid, IRequiresAmmoCache<T> irac, int side);
 
 
 	@Override

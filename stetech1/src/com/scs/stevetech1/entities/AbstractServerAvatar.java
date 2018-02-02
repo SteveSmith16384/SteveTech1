@@ -32,11 +32,13 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
 		if (!this.alive) {
-			restartTime -= tpf;
-			if (this.restartTime <= 0) {
+			restartTimeSecs -= tpf;
+			if (this.restartTimeSecs <= 0) {
+				Globals.p("Resurrecting avatar");
+				alive = true;
+				this.invulnerableTimeSecs = 5;
 				server.moveAvatarToStartPosition(this);
 
-				alive = true;
 				server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
 
 				// Send position udpate
@@ -47,18 +49,16 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			return;
 		}
 
-		if (invulnerableTime >= 0) {
-			invulnerableTime -= tpf;
+		if (invulnerableTimeSecs >= 0) {
+			invulnerableTimeSecs -= tpf;
 		}
-		
+
 		super.serverAndClientProcess(server, null, tpf, System.currentTimeMillis());
 
 		// Point us in the right direction
-		//if (this.game.isServer()) {
-			Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
-			lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
-			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
-		//}
+		Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
+		lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
+		this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 
 		if (getWorldTranslation().y < -1) {
 			// Dropped off the edge?
@@ -81,11 +81,10 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	private void setDied(String reason) {
 		Globals.p("Player died: " + reason);
 		this.alive = false;
-		this.restartTime = server.gameOptions.restartTimeSecs;//.getRestartTimeSecs(); // AbstractGameServer.properties.GetRestartTimeSecs();
+		this.restartTimeSecs = server.gameOptions.restartTimeSecs;//.getRestartTimeSecs(); // AbstractGameServer.properties.GetRestartTimeSecs();
 		server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
-		
+
 		avatarModel.setAnimationForCode(ANIM_DIED); // Send death as an anim, so it gets scheduled and is not shown straight away
-		//invulnerableTime = RESTART_DUR*3;
 	}
 
 

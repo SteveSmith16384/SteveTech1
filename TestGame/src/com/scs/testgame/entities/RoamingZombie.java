@@ -127,11 +127,18 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 
 
 	@Override
+	public void setCurrentAnim(Object s) {
+		// TODO Auto-generated method stub
+		
+	}
+
+/*
+	@Override
 	public void setCurrentAnim(String s) {
 		this.currentAnim = s;
 		this.zm.channel.setAnim(s);
 	}
-
+*/
 /*
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {

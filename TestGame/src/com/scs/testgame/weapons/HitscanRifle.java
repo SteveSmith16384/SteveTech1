@@ -7,6 +7,7 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
+import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
@@ -53,19 +54,15 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				Globals.p("Client shooting from " + from);
 			}
 			Ray ray = new Ray(from, shooter.getShootDir());
+			/* todo - re-add
 			RayCollisionData rcd = shooter.checkForCollisions(ray, RANGE);
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
 				Globals.p("Hit " + rcd.entity.getName() + " at " + pos);
 				new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, false);
-				/*if (rcd.entity instanceof MovingTarget && Globals.DEBUG_REWIND_POS1) {
-					//Settings.p("Moving target hit at " + rcd.entity.getWorldTranslation());
-					Globals.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + (System.currentTimeMillis()-Globals.CLIENT_RENDER_DELAY) + "," + rcd.entity.getWorldTranslation());
-
-				}*/
 			} else {
 				Globals.p("Not hit anything");
-			}
+			}*/
 		}
 		return true;
 	}
@@ -105,6 +102,13 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	@Override
 	public String getAvatarAnimationCode() {
 		return "Shoot";
+	}
+
+
+	@Override
+	protected void createBullet(IEntityController game, int entityid, IRequiresAmmoCache irac, int side) {
+		// Do nothing
+		
 	}
 
 
