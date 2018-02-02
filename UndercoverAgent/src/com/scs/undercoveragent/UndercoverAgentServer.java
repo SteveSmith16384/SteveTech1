@@ -121,7 +121,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
-		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid, side);
+		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
 		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
 		return avatar;
 	}

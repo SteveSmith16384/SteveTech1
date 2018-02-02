@@ -8,8 +8,8 @@ import com.scs.undercoveragent.models.SnowmanModel;
 
 public class SnowmanServerAvatar extends AbstractServerAvatar {
 	
-	public SnowmanServerAvatar(IEntityController _module, ClientData client, int _playerID, IInputDevice _input, int eid, int side) {
-		super(_module, client, _playerID, _input, eid, side, new SnowmanModel(_module.getAssetManager()));
+	public SnowmanServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side) {
+		super(_module, _playerID, _input, eid, side, new SnowmanModel(_module.getAssetManager()));
 	}
 
 }

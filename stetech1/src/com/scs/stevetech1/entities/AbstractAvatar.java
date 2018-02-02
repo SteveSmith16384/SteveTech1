@@ -21,6 +21,12 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerControlled, IProcessByServer, ICanShoot, IAffectedByPhysics {
 
+	// Animation Codes
+	public static final String ANIM_IDLE = "Idle";
+	public static final String ANIM_WALKING = "Walking";
+	public static final String ANIM_SHOOTING = "Shooting";
+	public static final String ANIM_DIED = "Died";
+	
 	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	public final float moveSpeed = Globals.PLAYER_MOVE_SPEED;
 	protected IInputDevice input;
@@ -36,7 +42,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public int side = -1;
 	protected IAnimatedAvatarModel avatarModel;
 
-	public boolean alive = true;
+	protected boolean alive = true;
 	protected float restartTime, invulnerableTime;
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAnimatedAvatarModel _anim) {
@@ -72,39 +78,39 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
 		this.resetWalkDir();
 
+		avatarModel.setAnimationForCode(ANIM_IDLE); // Default
+		
+		// Check for any abilities/guns being fired
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
 					//Settings.p("Using " + this.ability.toString());
+					avatarModel.setAnimationForCode(ANIM_SHOOTING); // Default
 					this.ability[i].activate();
 				}
 			}
 		}
 
-		this.currentAnim = avatarModel.getAnimationStringForCode("Idle"); // Default
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 		if (input.getFwdValue()) {
 			//Settings.p("fwd=" + input.getFwdValue());
 			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
-			this.currentAnim = avatarModel.getAnimationStringForCode("Walking");
+			avatarModel.setAnimationForCode(ANIM_WALKING);
 		} else if (input.getBackValue()) {
 			walkDirection.addLocal(camDir.negate());
-			this.currentAnim = avatarModel.getAnimationStringForCode("Walking");
+			avatarModel.setAnimationForCode(ANIM_WALKING);
 		}
 		if (input.getStrafeLeftValue()) {		
 			walkDirection.addLocal(camLeft);
-			this.currentAnim = avatarModel.getAnimationStringForCode("Walking");
+			avatarModel.setAnimationForCode(ANIM_WALKING);
 		} else if (input.getStrafeRightValue()) {		
 			walkDirection.addLocal(camLeft.negate());
-			this.currentAnim = avatarModel.getAnimationStringForCode("Walking");
+			avatarModel.setAnimationForCode(ANIM_WALKING);
 		}
 		if (input.isJumpPressed()){
 			this.jump();
 		}
-		/*if (input.isShootPressed()) {
-			shoot();
-		}*/
 
 		if (this.walkDirection.length() != 0) {
 			if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
@@ -154,11 +160,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 
 	public void jump() {
-		Globals.p("Jumping!");
-		//if (this.game.isServer()) { Too much of a delay
+		//Globals.p("Jumping!");
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.jump();
-		//}
 	}
 
 
@@ -242,5 +246,18 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 			}
 		}
 		return null;
+	}
+	
+	
+	public void setAlive(boolean a) {
+		if (this.alive != a) {
+			this.alive = a;
+			// Note that the client has been told they have died, but the player shouldn't know until the client render time has caught up!
+		}
+	}
+	
+	
+	public boolean isAlive() {
+		return alive;
 	}
 }

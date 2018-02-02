@@ -183,8 +183,7 @@ public class JMEFunctions {
 
 	public static void RotateToDirection(Spatial s, Vector3f dir) {
 		Vector3f v = s.getLocalTranslation();
-		v.add(dir);
-		s.lookAt(v, Vector3f.UNIT_Y);
+		s.lookAt(v.add(dir), Vector3f.UNIT_Y);
 	}
 
 }

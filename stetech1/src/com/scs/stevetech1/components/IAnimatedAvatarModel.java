@@ -10,6 +10,8 @@ public interface IAnimatedAvatarModel {
 	
 	float getBulletStartHeight();
 	
-	String getAnimationStringForCode(String code);
+	void setAnimationForCode(String code); // Called either server-side or client side for our own avatar.
 	
+	void showCurrentAnimation();
+		
 }

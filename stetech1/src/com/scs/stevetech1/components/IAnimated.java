@@ -7,8 +7,8 @@ public interface IAnimated {
 
 	ChronologicalLookup<HistoricalAnimationData> getAnimList();
 	
-	String getCurrentAnim();
+	Object getCurrentAnim();
 	
-	void setCurrentAnim(String s);
+	void setCurrentAnim(Object s);
 	
 }

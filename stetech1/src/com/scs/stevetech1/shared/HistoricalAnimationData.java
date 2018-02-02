@@ -3,9 +3,9 @@ package com.scs.stevetech1.shared;
 public class HistoricalAnimationData implements ITimeStamped {
 
 	public long timeStamp;
-	public String animation;
+	public Object animation;
 	
-	public HistoricalAnimationData(long _timeStamp, String anim) {
+	public HistoricalAnimationData(long _timeStamp, Object anim) {
 		timeStamp = _timeStamp;
 		animation = anim;
 	}

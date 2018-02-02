@@ -81,7 +81,7 @@ ICollisionListener<PhysicalEntity> {
 	public SimpleGameData gameData;
 	public CollisionLogic collisionLogic = new CollisionLogic();
 	public GameOptions gameOptions;
-	private int randomPingCode;
+	private int randomPingCode = NumberFunctions.rnd(0,  999999);
 
 	// Systems
 	private ServerGameStatusSystem gameStatusSystem;
@@ -454,7 +454,7 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void connectionRemoved(int id) {
-		Globals.p("connectionRemoved()");
+		//Globals.p("connectionRemoved()");
 		synchronized (clients) {
 			ClientData client = clients.get(id);
 			if (client != null) { // For some reason, connectionRemoved() gets called multiple times

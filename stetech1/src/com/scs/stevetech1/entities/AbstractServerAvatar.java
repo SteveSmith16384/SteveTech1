@@ -17,12 +17,11 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable {
 
 	private AbstractGameServer server;
-	private ClientData client; // is this used?
 
-	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, int side, IAnimatedAvatarModel anim) {
+	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side, IAnimatedAvatarModel anim) {
 		super(_module, _playerID, _input, eid, side, anim);
 
-		client = _client;
+		//client = _client;
 		server = (AbstractGameServer)_module;
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
@@ -36,10 +35,11 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			restartTime -= tpf;
 			if (this.restartTime <= 0) {
 				server.moveAvatarToStartPosition(this);
-				//this.moveToStartPostion();
+
 				alive = true;
 				server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
 
+				// Send position udpate
 				EntityUpdateMessage eum = new EntityUpdateMessage();
 				eum.addEntityData(this, true);
 				server.networkServer.sendMessageToAll(eum);
@@ -74,35 +74,20 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	@Override
 	public void damaged(float amt, String reason) {
-		died(reason);
+		setDied(reason);
 	}
 
 
-	private void died(String reason) {
+	private void setDied(String reason) {
 		Globals.p("Player died: " + reason);
 		this.alive = false;
 		this.restartTime = server.gameOptions.restartTimeSecs;//.getRestartTimeSecs(); // AbstractGameServer.properties.GetRestartTimeSecs();
 		server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
+		
+		avatarModel.setAnimationForCode(ANIM_DIED); // Send death as an anim, so it gets scheduled and is not shown straight away
 		//invulnerableTime = RESTART_DUR*3;
 	}
 
-	/*
-	@Override
-	public void hasSuccessfullyHit(IEntity e) {
-		//this.incScore(20, "shot " + e.toString());
-		//numShotsHit++;
-	}
-*/
-/*
-	public void moveToStartPostion() {
-		Vector3f pos = server.getAvatarStartPosition(this);
-		//Settings.p("Scheduling player to start position: " + pos);
-		super.setWorldTranslation(pos);
-		EntityUpdateMessage eum = new EntityUpdateMessage();
-		eum.addEntityData(this, true);
-		server.networkServer.sendMessageToAll(eum);
-	}
-*/
 
 	@Override
 	public Vector3f getShootDir() {
@@ -114,7 +99,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	public void fallenOffEdge() {
 		if (this.alive) {
 			Globals.p("playerID " + this.playerID + " has died due to falling off the edge (pos " + this.getWorldTranslation() + ")");
-			died("Too low");
+			setDied("fallen Off Edge");
 		}
 	}
 

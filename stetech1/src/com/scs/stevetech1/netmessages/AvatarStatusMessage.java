@@ -18,7 +18,7 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 		this();
 		
 		this.entityID = avatar.getID();
-		alive = avatar.alive;
+		alive = avatar.isAlive();
 	}
 
 }

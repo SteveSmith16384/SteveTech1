@@ -49,10 +49,30 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 	}
 
 
+	public static String TypeToString(int type) {
+		switch (type) {
+		case AVATAR: return "Avatar";
+		case FLOOR: return "FLOOR";
+		case IGLOO: return "IGLOO";
+		case SNOW_HILL_1: return "SNOW_HILL_1";
+		case STATIC_SNOWMAN: return "STATIC_SNOWMAN";
+		case SNOW_TREE_1: return "SNOW_TREE_1";
+		case SNOW_TREE_2: return "SNOW_TREE_2";
+		case BIG_TREE_WITH_LEAVES: return "BIG_TREE_WITH_LEAVES";
+		case SNOWBALL_LAUNCHER: return "SNOWBALL_LAUNCHER";
+		case SNOWBALL_BULLET: return "SNOWBALL_BULLET";
+		case MAP_BORDER: return "MAP_BORDER";
+		case SNOW_HILL_2: return "SNOW_HILL_2";
+		case SNOW_HILL_3: return "SNOW_HILL_3";
+		case SNOW_HILL_4: return "SNOW_HILL_4";
+		default: return "Unknown";
+		}
+	}
+
 	@Override
 	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-			Globals.p("Creating type " + msg.type);
+			Globals.p("Creating " + TypeToString(msg.type));
 		}
 		int id = msg.entityID;
 

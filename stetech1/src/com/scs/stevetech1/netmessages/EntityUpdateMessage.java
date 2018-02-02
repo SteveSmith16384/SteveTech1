@@ -44,7 +44,7 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		public Vector3f pos;
 		public Quaternion dir;
 		public boolean force; // Force new position on client, e.g. avatar restarting.
-		public String animation;
+		public Object animation;
 		
 	}
 	

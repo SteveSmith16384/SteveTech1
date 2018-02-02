@@ -1,14 +1,15 @@
 STETECH1
 
 URGENT
-	Rotate snowmen by 90
+	Don't do avatar death straight away!
+	Animation - need to walk and shoot?  IAnimationFlags
+	Create setDied() and respondToDied()
+Rotate snowmen by 90
+Player dies - show died model.
+Player dies - "Dead" in big letters
 	Ffwd projectiles
-	Turn gravity back on
-	MapBorder too big
 	Test two clients, can one see the other shooting?
-	Floating snowballs - not being removed from rootNode
 Improve border - server side is just a box, client side is an invisible box with hills around
-Player dies - show died model. "Dead" in big letters Manual IAnimation?
 	Not rotating hills
 	Player dies - restart, stop client moving
 	Show current game time - a bit big
@@ -16,16 +17,14 @@ Add open-source msg to the top of all files
 Client can always jump, even when in the air
 Search for todos
 Blog post progress
-Animation - need to walk and shoot?  IAnimationFlags
+Tell player they have died
 
 
 TODO
 Add entities to list immediately, but don't add to root node until scheduled?
-	Add unique code to ping messages
 Ping system
 Split up client/server into systems
 Auto-start lobby with server
-	Do I need to sync every bullet/grenade?  No.
 Try diff snow hills
 Tree - make serverside just a cyl on trunk
 UA - Players have one teleport
@@ -44,7 +43,6 @@ Do tracer-style rewind
 Check for packet loss
 Less damage from hitscan over distance
 Strict mode - check if position already exists in positioncalc!
-Tell player they have died
 Lobby queue players
 Games - "powered by SteveTech"
 Add Features to readme

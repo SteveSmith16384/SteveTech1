@@ -6,13 +6,14 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimated;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
+import com.scs.stevetech1.components.IClientAvatar;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 /*
  * This is only used client-side
  */
-public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimated {
+public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimated, IClientAvatar {
 	
 	protected IAnimatedAvatarModel anim;
 
@@ -24,8 +25,6 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 		Spatial geometry = anim.getModel(true);// getPlayersModel(game, pid);
 
 		this.mainNode.attachChild(geometry);
-		//float rads = (float)Math.toRadians(rotDegrees);
-		//main_node.rotate(0, rads, 0);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
@@ -40,13 +39,15 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 	}
 
 
-	//protected abstract Spatial getPlayersModel(IEntityController game, int pid);
-
-
 	@Override
 	public boolean sendUpdates() {
-		return true; // Always calc for avatars
+		return true; // Always send for avatars
 	}
 
+/*
+	public void hasDied() {
+		// todo
+	}
+*/
 
 }

@@ -16,7 +16,7 @@ import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
-import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IClientAvatar;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
 import com.scs.stevetech1.hud.HUD;
@@ -26,14 +26,14 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
+public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient, IClientAvatar {
 
 	public HUD hud;
 	public Camera cam;
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
-	private Node debugNode;
+	private Node debugNode;	
 
 	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, 
 			float x, float y, float z, int side, IAnimatedAvatarModel _zm) { //, IGetAvatarAnimationString animCodes, float _camHeight) {
@@ -49,7 +49,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		//syncPos = new AdjustBasedOnDistance();
 		syncPos = new AdjustByFractionOfDistance();
 		
-		//this.simpleRigidBody.setGravity(0); // todo - remove?
+		//this.simpleRigidBody.setGravity(0);
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE);
@@ -184,12 +184,19 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		return insideoutside;
 	}
 
-
+/*
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		// Do nothing
 
 	}
+*/
 
-
+	/*
+	@Override
+	public void hasDied() {
+		// TODO Auto-generated method stub
+		
+	}
+*/
 }

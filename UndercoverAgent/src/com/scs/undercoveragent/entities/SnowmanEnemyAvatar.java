@@ -8,8 +8,6 @@ import com.scs.undercoveragent.models.SnowmanModel;
 
 public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 	
-	//private Spatial model;
-	
 	public SnowmanEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z) {
 		super(game, pid, eid, x, y, z, new SnowmanModel(game.getAssetManager()));
 		
@@ -25,7 +23,7 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 	
 
 	@Override
-	public void setCurrentAnim(String s) {
+	public void setCurrentAnim(Object s) {
 		// Do nothing
 		
 	}

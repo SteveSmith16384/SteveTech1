@@ -23,6 +23,7 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimated;
+import com.scs.stevetech1.components.IClientAvatar;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
@@ -247,12 +248,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											}
 										}
 										pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
-										if (pe instanceof IAnimated && eum.animation != null && eum.animation.length() > 0) {
+										if (pe instanceof IAnimated && eum.animation != null && eum.animation != null) {
 											IAnimated ia = (IAnimated)pe;
 											ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animation));
 										}
 									} else {
-										Globals.p("Unknown entity ID: " + eum.entityID);
+										// Globals.p("Unknown entity ID for update: " + eum.entityID);
 										// Ask the server for entity details since we don't know about it.
 										// No, since we might not have joined the game yet! (server uses broadcast()
 										// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
@@ -284,11 +285,14 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							PhysicalEntity e = (PhysicalEntity)this.entities.get(asm.entityID);
 							if (e == this.currentAvatar) {
 								AbstractAvatar avatar = (AbstractAvatar)e;
-								if (avatar.alive != asm.alive) {
-									// todo - show message or something
-									avatar.alive = asm.alive;							
-								}
+								avatar.setAlive(asm.alive);
+								//avatar.hasDied();
 							}
+
+							/*if (e instanceof IClientAvatar) {
+								IClientAvatar aea = (IClientAvatar)e;
+								aea.hasDied();
+							}*/
 						} else if (message instanceof EntityLaunchedMessage) {
 							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 							this.launchSystem.scheduleLaunch(elm);
