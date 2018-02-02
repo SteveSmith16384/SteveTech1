@@ -64,12 +64,11 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			Globals.p("Error: " + e);
 			e.printStackTrace();
 		}
-
 	}
 
 
 	public UndercoverAgentClient() {
-		super(UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, new UndercoverAgentClientEntityCreator());
+		super(UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, new UndercoverAgentClientEntityCreator());
 	}
 
 

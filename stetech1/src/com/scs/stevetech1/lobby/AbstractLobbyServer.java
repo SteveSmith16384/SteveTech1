@@ -3,17 +3,17 @@ package com.scs.stevetech1.lobby;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.esotericsoftware.kryonet.Connection;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
 import com.scs.stevetech1.netmessages.lobby.RequestListOfGameServersMessage;
 import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
-import com.scs.stevetech1.networking.IGameMessageServer;
 import com.scs.stevetech1.networking.IMessageServerListener;
-import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.Globals;
 
 public abstract class AbstractLobbyServer implements IMessageServerListener {
 
+	private HashMap<Integer, Connection> clients = new HashMap<Integer, Connection>(); // client id::data
 	private HashMap<String, GameServerDetails> gameServers = new HashMap<String, GameServerDetails>(); // game name::data
 	private KryonetLobbyServer lobbyServer;
 
@@ -26,7 +26,8 @@ public abstract class AbstractLobbyServer implements IMessageServerListener {
 
 	@Override
 	public void connectionAdded(int id, Object net) {
-		Globals.p("Game server connected to us");
+		Globals.p("Client (player or server) connected to us");
+		this.clients.put(id, (Connection)net);
 	}
 
 
@@ -39,14 +40,14 @@ public abstract class AbstractLobbyServer implements IMessageServerListener {
 
 			Globals.p("Updated details for game server '" + ulm.name + "'");
 		} else if (msg instanceof RequestListOfGameServersMessage) {
-			RequestListOfGameServersMessage rlogs = (RequestListOfGameServersMessage)msg;
+			//RequestListOfGameServersMessage rlogs = (RequestListOfGameServersMessage)msg;
 			
 			ListOfGameServersMessage logs = new ListOfGameServersMessage();
 			for(GameServerDetails details : gameServers.values()) {
 				logs.servers.add(details.ulm);
 			}
 			
-			//todo this.networkServer.sendMessageToClient(client, msg);
+			this.lobbyServer.sendMessageToClient(clients.get(clientid), logs);
 		}
 
 	}

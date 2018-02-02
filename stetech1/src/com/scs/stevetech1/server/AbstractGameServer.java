@@ -65,16 +65,15 @@ IMessageServerListener, // To listen for connecting game clients
 IMessageClientListener, // For sending messages to the lobby server
 ICollisionListener<PhysicalEntity> {
 
-	//private static final String PROPS_FILE = Globals.NAME.replaceAll(" ", "") + "_settings.txt";
-
 	public IGameMessageServer networkServer;
 	private KryonetLobbyClient clientToLobbyServer;
 	public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
 	//public static GameProperties properties;
-	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(5000);
-	private RealtimeInterval checkStatusInterval = new RealtimeInterval(5000);
+	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
+	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
 	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Globals.SERVER_SEND_UPDATE_INTERVAL_MS);
+
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	protected LogWindow logWindow;
 	public IConsole console;
@@ -112,13 +111,6 @@ ICollisionListener<PhysicalEntity> {
 		createGame();
 		console.appendText("Game created");
 
-		try {
-			clientToLobbyServer = new KryonetLobbyClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this);
-		} catch (IOException e) {
-			Globals.p("Unable to connect to lobby server");
-			//throw new RuntimeException(e.getMessage());
-		}
-
 		loopTimer.start();
 	}
 
@@ -126,12 +118,27 @@ ICollisionListener<PhysicalEntity> {
 	protected abstract void createGame();
 
 
+	private void connectToLobby() {
+		try {
+			clientToLobbyServer = new KryonetLobbyClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this);
+			Globals.p("Connected to lobby server");
+		} catch (IOException e) {
+			Globals.p("Unable to connect to lobby server");
+		}	
+	}
+
+
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		StringBuilder strDebug = new StringBuilder();
 
-		if (updateLobbyInterval.hitInterval() && clientToLobbyServer != null) {
-			this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), true)); // todo - do we have spaces?
+		if (updateLobbyInterval.hitInterval()) {
+			if (clientToLobbyServer == null) {
+				connectToLobby();
+			}
+			if (clientToLobbyServer != null) {
+				this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), true)); // todo - do we have spaces?
+			}
 		}
 
 		if (networkServer.getNumClients() > 0) {
@@ -260,7 +267,7 @@ ICollisionListener<PhysicalEntity> {
 			if (sendUpdates) {
 				networkServer.sendMessageToAll(eum);	
 			}
-			if (checkStatusInterval.hitInterval()) {
+			if (checkGameStatusInterval.hitInterval()) {
 				//this.checkGameStatus(false);
 				gameStatusSystem.checkGameStatus(false);
 			}
@@ -688,7 +695,7 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void connected() {
-		Globals.p("Connected to lobby server");
+		// Connected to lobby server
 
 	}
 

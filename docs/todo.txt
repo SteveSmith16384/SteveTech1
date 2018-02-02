@@ -1,12 +1,11 @@
 STETECH1
 
 URGENT
+Player dies - "Dead" in big letters
 	Don't do avatar death straight away!
 	Animation - need to walk and shoot?  IAnimationFlags
 	Create setDied() and respondToDied()
-Rotate snowmen by 90
-Player dies - show died model.
-Player dies - "Dead" in big letters
+	Player dies - show died model.
 	Ffwd projectiles
 	Test two clients, can one see the other shooting?
 Improve border - server side is just a box, client side is an invisible box with hills around
@@ -17,7 +16,6 @@ Add open-source msg to the top of all files
 Client can always jump, even when in the air
 Search for todos
 Blog post progress
-Tell player they have died
 
 
 TODO

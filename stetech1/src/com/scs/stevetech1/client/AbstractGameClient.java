@@ -23,7 +23,6 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimated;
-import com.scs.stevetech1.components.IClientAvatar;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
@@ -39,6 +38,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
+import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
@@ -54,6 +54,8 @@ import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
+import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
+import com.scs.stevetech1.netmessages.lobby.RequestListOfGameServersMessage;
 import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.KryonetGameClient;
@@ -83,10 +85,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public static final int STATUS_GAME_STARTED = 5; // Have received all entities
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
-	//protected HashMap<ILaunchable, Long> toLaunch = new HashMap<ILaunchable, Long>();  // Entity::TimeToLaunch
 
 	public static BitmapFont guiFont_small;
 	public static AppSettings settings;
+	private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
 	public HUD hud;
 	public IInputDevice input;
@@ -105,19 +107,21 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public long serverTime, renderTime;
-	private String serverIP;
-	private int port;
+	private String gameServerIP, lobbyIP;
+	private int gamePort, lobbyPort;
 
 	// Entity systems
 	private AnimationSystem animSystem;
 	private AbstractClientEntityCreator entityCreator;
 	private ClientEntityLauncherSystem launchSystem;
 
-	protected AbstractGameClient(String _serverIP, int _port, AbstractClientEntityCreator _entityCreator) {
+	protected AbstractGameClient(String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, AbstractClientEntityCreator _entityCreator) {
 		super();
 
-		serverIP = _serverIP;
-		port = _port;
+		gameServerIP = _gameServerIP; // todo - rename all these
+		gamePort = _gamePort;
+		lobbyIP = _lobbyIP;
+		lobbyPort = _lobbyPort;
 		this.entityCreator =_entityCreator;
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 		animSystem = new AnimationSystem(this);
@@ -160,7 +164,13 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		// Don't connect to network until JME is up and running!
 		try {
-			networkClient = new KryonetGameClient(serverIP, port, port, this); // todo - connect to lobby first!
+			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this);
+			lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		try {
+			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this); // todo - connect to lobby first!
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -296,6 +306,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						} else if (message instanceof EntityLaunchedMessage) {
 							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 							this.launchSystem.scheduleLaunch(elm);
+
+						} else if (message instanceof ListOfGameServersMessage) {
+							ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
+							// todo - do something with message
 
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);

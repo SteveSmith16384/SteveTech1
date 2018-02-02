@@ -1,14 +1,17 @@
 package com.scs.stevetech1.lobby;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
+import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
+import com.scs.stevetech1.netmessages.lobby.RequestListOfGameServersMessage;
+import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
 import com.scs.stevetech1.networking.IMessageServerListener;
-import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 
 public class KryonetLobbyServer {
@@ -57,26 +60,24 @@ public class KryonetLobbyServer {
 
 	}
 
-	public static void registerMessages(Kryo kryo) {
-		//kryo.register(RequestNewBulletMessage.class);
-	}
+	public static void registerMessages(Kryo kryo) {	
+		kryo.register(UpdateLobbyMessage.class);
+		kryo.register(RequestListOfGameServersMessage.class);
+		kryo.register(ListOfGameServersMessage.class);
 
-/*
-	@Override
-	public int getNumClients() {
-		return server.getConnections().length;
-	}
-*/
+		kryo.register(ArrayList.class);
+}
 
-	public void sendMessageToClient(final ClientData client, final MyAbstractMessage msg) {
+
+	public void sendMessageToClient(final Connection client, final MyAbstractMessage msg) {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Sending to client: " + msg);
 		}
- 		if (Globals.ARTIFICIAL_COMMS_DELAY == 0) {
+		if (Globals.ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
-				server.sendToTCP(client.id, msg);
+				server.sendToTCP(client.getID(), msg);
 			} else {
-				server.sendToUDP(client.id, msg);
+				server.sendToUDP(client.getID(), msg);
 			}		
 		}
 		else {
@@ -89,9 +90,9 @@ public class KryonetLobbyServer {
 						e.printStackTrace();
 					}
 					if (msg.isReliable()) {
-						server.sendToTCP(client.id, msg);
+						server.sendToTCP(client.getID(), msg);
 					} else {
-						server.sendToUDP(client.id, msg);
+						server.sendToUDP(client.getID(), msg);
 					}		
 				}
 			};
@@ -99,12 +100,6 @@ public class KryonetLobbyServer {
 		}
 
 	}
-/*
-	@Override
-	public void close() {
-		server.close();
 
-	}
-*/
 }
 

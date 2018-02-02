@@ -30,6 +30,19 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	public static void main(String[] args) {
 		try {
+			Thread r = new Thread("LobbyServer") {
+
+				@Override
+				public void run() {
+					try {
+						new UndercoverAgentLobbyServer();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			r.start();
+			
 			AbstractGameServer app = new UndercoverAgentServer();
 			app.setPauseOnLostFocus(false);
 			app.start(JmeContext.Type.Headless);
