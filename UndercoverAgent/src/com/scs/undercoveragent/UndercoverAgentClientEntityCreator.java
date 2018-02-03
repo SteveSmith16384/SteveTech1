@@ -43,6 +43,7 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 	public static final int SNOW_HILL_2 = 12;
 	public static final int SNOW_HILL_3 = 13;
 	public static final int SNOW_HILL_4 = 14;
+	public static final int DEBUGGING_SPHERE = 15;
 
 	public UndercoverAgentClientEntityCreator() {
 		super();
@@ -65,7 +66,7 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		case SNOW_HILL_2: return "SNOW_HILL_2";
 		case SNOW_HILL_3: return "SNOW_HILL_3";
 		case SNOW_HILL_4: return "SNOW_HILL_4";
-		default: return "Unknown";
+		default: return "Unknown (" + type + ")";
 		}
 	}
 
