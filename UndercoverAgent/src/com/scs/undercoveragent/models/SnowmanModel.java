@@ -82,4 +82,12 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 
 	}
 
+
+	@Override
+	public void process(float tpf_secs) {
+		if (this.showDied) {
+			// todo - sink
+		}
+	}
+
 }

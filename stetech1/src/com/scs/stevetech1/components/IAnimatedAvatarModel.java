@@ -13,5 +13,7 @@ public interface IAnimatedAvatarModel {
 	void setAnimationForCode(String code); // Called either server-side or client side for our own avatar.
 	
 	void showCurrentAnimation();
+	
+	void process(float tpf_secs);
 		
 }

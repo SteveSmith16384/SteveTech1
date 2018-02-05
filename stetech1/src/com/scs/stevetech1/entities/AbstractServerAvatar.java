@@ -4,13 +4,11 @@ import com.jme3.math.Vector3f;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.components.IDamagable;
-import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
-import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
@@ -36,6 +34,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			if (this.restartTimeSecs <= 0) {
 				Globals.p("Resurrecting avatar");
 				alive = true;
+				// todo - set health
 				this.invulnerableTimeSecs = 5;
 				server.moveAvatarToStartPosition(this);
 
@@ -74,7 +73,12 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	@Override
 	public void damaged(float amt, String reason) {
-		setDied(reason);
+		if (this.alive) {
+			this.health -= amt;
+			if (health <= 0) {
+				setDied(reason);
+			}
+		}
 	}
 
 
@@ -82,7 +86,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		Globals.p("Player died: " + reason);
 		this.alive = false;
 		this.restartTimeSecs = server.gameOptions.restartTimeSecs;//.getRestartTimeSecs(); // AbstractGameServer.properties.GetRestartTimeSecs();
-		server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
+		server.networkServer.sendMessageToAll(new AvatarStatusMessage(this)); // todo - send avatardiedmsg
 
 		avatarModel.setAnimationForCode(ANIM_DIED); // Send death as an anim, so it gets scheduled and is not shown straight away
 	}
