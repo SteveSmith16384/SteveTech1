@@ -203,9 +203,10 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		case MAP_BORDER:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			Quaternion q = (Quaternion)msg.data.get("q");
+			//Quaternion q = (Quaternion)msg.data.get("q");
+			Vector3f dir = (Vector3f)msg.data.get("dir");
 			float size = (float)msg.data.get("size");
-			MapBorder hill = new MapBorder(game, id, pos.x, pos.y, pos.z, size, q);
+			MapBorder hill = new MapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
 			return hill;  //crate.getMainNode().getWorldTranslation();
 		}
 

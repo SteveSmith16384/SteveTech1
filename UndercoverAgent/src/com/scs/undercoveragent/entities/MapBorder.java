@@ -3,11 +3,9 @@ package com.scs.undercoveragent.entities;
 import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
-import com.jme3.bounding.BoundingBox;
 import com.jme3.material.Material;
-import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
@@ -27,13 +25,14 @@ public class MapBorder extends PhysicalEntity {
 	private static final float BORDER_WIDTH = 2f;
 	private static final float BORDER_HEIGHT = 5f;
 
-	public MapBorder(IEntityController _game, int id, float x, float y, float z, float size, Quaternion q) {
+	public MapBorder(IEntityController _game, int id, float x, float y, float z, float size, Vector3f dir) {
 		super(_game, id, UndercoverAgentClientEntityCreator.MAP_BORDER, "MapBorder", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("size", size);
-			creationData.put("q", q);
+			//creationData.put("q", q);
+			creationData.put("dir", dir);
 		}
 
 		/*todo if (!game.isServer()) {
@@ -69,7 +68,8 @@ public class MapBorder extends PhysicalEntity {
 		geometry.setLocalTranslation(-BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
 
 		mainNode.attachChild(geometry);
-		mainNode.setLocalRotation(q);
+		JMEFunctions.RotateToDirection(mainNode, dir);
+		//mainNode.setLocalRotation(q);
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);

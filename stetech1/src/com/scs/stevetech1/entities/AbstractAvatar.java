@@ -44,6 +44,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	protected boolean alive = true;
 	protected float restartTimeSecs, invulnerableTimeSecs;
+	protected long lastMoveTime = System.currentTimeMillis() + 5000;
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAnimatedAvatarModel _anim) {
 		super(_game, eid, 1, "Player", true);
@@ -97,16 +98,20 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 			//Settings.p("fwd=" + input.getFwdValue());
 			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
 			avatarModel.setAnimationForCode(ANIM_WALKING);
+			lastMoveTime = System.currentTimeMillis();
 		} else if (input.getBackValue()) {
 			walkDirection.addLocal(camDir.negate());
 			avatarModel.setAnimationForCode(ANIM_WALKING);
+			lastMoveTime = System.currentTimeMillis();
 		}
 		if (input.getStrafeLeftValue()) {		
 			walkDirection.addLocal(camLeft);
 			avatarModel.setAnimationForCode(ANIM_WALKING);
+			lastMoveTime = System.currentTimeMillis();
 		} else if (input.getStrafeRightValue()) {		
 			walkDirection.addLocal(camLeft.negate());
 			avatarModel.setAnimationForCode(ANIM_WALKING);
+			lastMoveTime = System.currentTimeMillis();
 		}
 		if (input.isJumpPressed()){
 			this.jump();
@@ -162,7 +167,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public void jump() {
 		//Globals.p("Jumping!");
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.jump();
+		if (simplePlayerControl.jump()) {
+			lastMoveTime = System.currentTimeMillis();
+		}
 	}
 
 

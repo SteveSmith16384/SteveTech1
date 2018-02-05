@@ -68,12 +68,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			avatar.setWorldTranslation(x, 2f, z);
 			collider = avatar.simpleRigidBody.checkForCollisions();
 		} while (collider != null);
-		/*while (collider != null) {
-			x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-			z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-			avatar.setWorldTranslation(x, 2f, z);
-			collider = avatar.simpleRigidBody.checkForCollisions();
-		}*/
 		Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
 
@@ -125,8 +119,11 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		SnowFloor floor = new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg");
 		this.actuallyAddEntity(floor);
 
-		MapBorder border1 = new MapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, new Quaternion());
-		this.actuallyAddEntity(border1);
+		MapBorder borderL = new MapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		this.actuallyAddEntity(borderL);
+
+		//MapBorder borderB = new MapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		//this.actuallyAddEntity(borderB);
 
 	}
 

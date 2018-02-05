@@ -111,7 +111,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 			// fast forward it!
 			float totalTimeToFFwd = Globals.CLIENT_RENDER_DELAY; // todo + clientPingTime
-			float tpf_secs = Globals.SERVER_TICKRATE_MS / 1000;
+			float tpf_secs = Globals.SERVER_TICKRATE_MS / 1000f;
 			while (totalTimeToFFwd > 0) {
 				totalTimeToFFwd -= Globals.SERVER_TICKRATE_MS;
 				super.processByServer(server, tpf_secs);
@@ -192,6 +192,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 	@Override
 	public void collided(PhysicalEntity pe) {
+		Globals.p("Snowball hit something at " + System.currentTimeMillis());
 		if (Globals.SHOW_SNOWBALL_COLLISION_POS) {
 			if (game.isServer()) {
 				// Create debugging sphere
