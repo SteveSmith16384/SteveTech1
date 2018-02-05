@@ -151,13 +151,13 @@ ICollisionListener<PhysicalEntity> {
 					if (message instanceof NewPlayerRequestMessage) {
 						this.playerJoined(client, message);
 
-					} else if (message instanceof UnknownEntityMessage) {
+					/*} else if (message instanceof UnknownEntityMessage) {
 						UnknownEntityMessage uem = (UnknownEntityMessage) message;
 						IEntity e = null;
 						synchronized (entities) {
 							e = this.entities.get(uem.entityID);
 						}
-						this.sendNewEntity(client, e);
+						this.sendNewEntity(client, e);*/
 
 					} else if (message instanceof PlayerLeftMessage) {
 						this.connectionRemoved(client.getPlayerID());
@@ -225,12 +225,12 @@ ICollisionListener<PhysicalEntity> {
 
 			synchronized (entities) {
 				// Add and remove entities
-				for(IEntity e : this.entitiesScheduledToBeAdded.keySet()) {
+				for(IEntity e : this.entitiesScheduledToBeAdded) {
 					this.actuallyAddEntity(e);
 				}
 				this.entitiesScheduledToBeAdded.clear();
 
-				for(Integer i : this.toRemove.keySet()) {
+				for(Integer i : this.toRemove) {
 					this.actuallyRemoveEntity(i);
 				}
 				this.toRemove.clear();
@@ -402,41 +402,33 @@ ICollisionListener<PhysicalEntity> {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
 		this.actuallyAddEntity(avatar);
-		this.moveAvatarToStartPosition(avatar);
-		//this.equipAvatar(avatar);
+		
+		avatar.startAgain();
+		//avatar.setHealth(getAvatarStartHealth(avatar));
+		//this.moveAvatarToStartPosition(avatar);
 		return avatar;
 	}
-
+	
+	
+	public abstract float getAvatarStartHealth(AbstractAvatar avatar);
 
 	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
 
-	//protected abstract void equipAvatar(AbstractServerAvatar avatar);
-
-	/*
-	protected abstract IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac);
-
-	public final void createEntity(int type, int entityid, int side, IRequiresAmmoCache irac) {
-		IEntity e = this.createGameSpecificEntiy(type, entityid, side, irac);
-		if (e == null) {
-			throw new RuntimeException("Unknown entity type: " + type);
-		}
-		this.scheduleAddEntity(e, 0);
-	}
-*/
-
 	private void sendAllEntitiesToClient(ClientData client) {
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {
-				this.sendNewEntity(client, e);
+				//this.sendNewEntity(client, e);
+				NewEntityMessage nem = new NewEntityMessage(e);
+				this.networkServer.sendMessageToClient(client, nem);
 			}
 			GeneralCommandMessage aes = new GeneralCommandMessage(GeneralCommandMessage.Command.AllEntitiesSent);
 			this.networkServer.sendMessageToClient(client, aes);
 		}
 	}
 
-
+/*
 	private void sendNewEntity(ClientData client, IEntity e) {
 		//if (e instanceof PhysicalEntity) {  Why was this here?  It prevented sending SnowballLauncher
 		//PhysicalEntity se = (PhysicalEntity)e;
@@ -444,7 +436,7 @@ ICollisionListener<PhysicalEntity> {
 		this.networkServer.sendMessageToClient(client, nem);
 		//}
 	}
-
+*/
 
 	@Override
 	public void connectionAdded(int id, Object net) {
@@ -484,8 +476,8 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void scheduleAddEntity(IEntity e, long timeToAdd) {
-		this.entitiesScheduledToBeAdded.put(e, timeToAdd);
+	public void scheduleAddEntity(IEntity e) {
+		this.entitiesScheduledToBeAdded.add(e);
 	}
 
 
@@ -519,8 +511,8 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void scheduleEntityRemoval(int id, long time) {
-		this.toRemove.put(id, time);
+	public void scheduleEntityRemoval(int id) {
+		this.toRemove.add(id);
 	}
 
 

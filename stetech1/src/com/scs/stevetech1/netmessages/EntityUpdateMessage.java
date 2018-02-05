@@ -16,7 +16,7 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 	public LinkedList<UpdateData> data = new LinkedList<UpdateData>();
 	
 	public EntityUpdateMessage() {
-		super(false);
+		super();
 	}
 
 	

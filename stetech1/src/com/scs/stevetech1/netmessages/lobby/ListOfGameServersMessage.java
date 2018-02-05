@@ -12,7 +12,7 @@ public class ListOfGameServersMessage extends MyAbstractMessage {
 	public List<UpdateLobbyMessage> servers = new ArrayList<UpdateLobbyMessage>();
 
 	public ListOfGameServersMessage() {
-		super(true);
+		super(true, false);
 	}
 
 }

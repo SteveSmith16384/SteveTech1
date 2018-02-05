@@ -11,7 +11,7 @@ public class PlayerInputMessage extends MyAbstractMessage {
 	public boolean fwd, back, strafeLeft, strafeRight, jump, mainAbility, secondaryAbility, selectNextAbility;
 
 	public PlayerInputMessage() {
-		super(false);
+		super();
 		
 		direction = Vector3f.UNIT_Y; // To avoid NPEs from RemoteController
 		leftDir = Vector3f.UNIT_Z; // To avoid NPEs from RemoteController
@@ -19,7 +19,7 @@ public class PlayerInputMessage extends MyAbstractMessage {
 	
 	
 	public PlayerInputMessage(IInputDevice inputs) {
-		super(false);
+		super(false, false);
 
 		direction = inputs.getDirection();
 		leftDir = inputs.getLeft();

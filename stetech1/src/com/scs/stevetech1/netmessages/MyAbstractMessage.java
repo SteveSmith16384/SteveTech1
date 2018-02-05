@@ -11,21 +11,24 @@ public class MyAbstractMessage { //extends AbstractMessage {
 
 	private transient static AtomicLong nextMsgID = new AtomicLong();
 
+	private boolean reliable = true;
+	public boolean scheduled = false;
+	
 	public long msgId;
 	public long timestamp = System.currentTimeMillis();
 	public transient ClientData client; // for the server to keep track of who sent it
-	private boolean reliable;
 	
 	public MyAbstractMessage() { // For serialization
 		super();
 	}
 	
 	
-	public MyAbstractMessage(boolean tcp) {
+	public MyAbstractMessage(boolean tcp, boolean _scheduled) {
 		super();
 		
 		msgId = nextMsgID.addAndGet(1);
 		this.setReliable(tcp);
+		this.scheduled = _scheduled;
 		
 	}
 

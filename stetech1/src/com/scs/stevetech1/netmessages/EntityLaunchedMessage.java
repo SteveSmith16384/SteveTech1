@@ -10,7 +10,7 @@ public class EntityLaunchedMessage extends MyAbstractMessage {
 	public LaunchData launchData;
 
 	public EntityLaunchedMessage() {
-		super(true);
+		super();
 	}
 
 

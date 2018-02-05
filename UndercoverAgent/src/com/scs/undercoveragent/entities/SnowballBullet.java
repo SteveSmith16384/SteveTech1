@@ -50,7 +50,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		}
 
 		side = _side;
-		
+
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("grenade", sphere);
@@ -87,15 +87,15 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			Globals.p("Snowball already launched.  This may be a good sign.");
 			return;
 		}
-		
+
 		if (_shooter == null) {
 			throw new RuntimeException("Null launcher");
 		}
-		
-		
+
+
 		launched = true;
 		shooter = _shooter;
-		
+
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 		this.simpleRigidBody.setBounciness(0f);
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));
@@ -105,10 +105,10 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		this.mainNode.updateGeometricState();
 
 		this.collideable = true;
-		
+
 		if (game.isServer()) {
 			AbstractGameServer server = (AbstractGameServer)game;
-			
+
 			// fast forward it!
 			float totalTimeToFFwd = Globals.CLIENT_RENDER_DELAY; // todo + clientPingTime
 			float tpf_secs = Globals.SERVER_TICKRATE_MS / 1000;
@@ -119,7 +119,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 					break;
 				}
 			}
-			
+
 			// If server, send messages to clients to tell them it has been launched
 			//AbstractGameServer server = (AbstractGameServer)game;
 			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis()-Globals.CLIENT_RENDER_DELAY); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
@@ -140,7 +140,6 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		if (launched) {
-			//this.storeAvatarPosition(client.getServerTime());
 			simpleRigidBody.process(tpf_secs); //this.mainNode;
 		}
 	}
@@ -151,7 +150,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		// Do nothing!
 	}
 
-	
+
 	@Override
 	public boolean sendUpdates() {
 		return false; 
@@ -165,7 +164,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		//Globals.p("Storing pos " + pos);
 		this.clientSidePositionData.addPositionData(pos, null, serverTime);
 	}
-*/
+	 */
 
 	@Override
 	public IEntity getLauncher() {
@@ -193,8 +192,14 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 	@Override
 	public void collided(PhysicalEntity pe) {
-		// Create debugging sphere
-		
+		if (Globals.SHOW_SNOWBALL_COLLISION_POS) {
+			if (game.isServer()) {
+				// Create debugging sphere
+				Vector3f pos = this.getWorldTranslation();
+				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true);
+				game.scheduleAddEntity(ds);
+			}
+		}
 	}
 
 }

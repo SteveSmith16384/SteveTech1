@@ -11,12 +11,12 @@ public class PlayerLeftMessage extends MyAbstractMessage {
 	public int playerID;
 
 	public PlayerLeftMessage() {
-		super(true);
+		super();
 	}
 	
 	
 	public PlayerLeftMessage(int _playerID) {
-		super(true);
+		super(true, false);
 		
 		playerID = _playerID;
 	}

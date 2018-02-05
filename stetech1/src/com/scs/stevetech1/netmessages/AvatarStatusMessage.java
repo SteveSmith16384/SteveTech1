@@ -7,18 +7,20 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 public class AvatarStatusMessage extends MyAbstractMessage {
 	
 	public int entityID;
-	public boolean alive;
+	public float health;
+	//public boolean alive;
 	
 	public AvatarStatusMessage() {
-		super(true);
+		super();
 	}
 
 
 	public AvatarStatusMessage(AbstractAvatar avatar) {
-		this();
+		super(true, true);
 		
 		this.entityID = avatar.getID();
-		alive = avatar.isAlive();
+		//alive = avatar.isAlive();
+		this.health = avatar.getHealth();
 	}
 
 }

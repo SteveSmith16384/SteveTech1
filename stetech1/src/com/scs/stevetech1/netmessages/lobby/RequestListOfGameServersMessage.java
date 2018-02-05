@@ -7,7 +7,7 @@ import com.scs.stevetech1.netmessages.MyAbstractMessage;
 public class RequestListOfGameServersMessage extends MyAbstractMessage {
 
 	public RequestListOfGameServersMessage() {
-		super(true);
+		super(true, false);
 	}
 
 }

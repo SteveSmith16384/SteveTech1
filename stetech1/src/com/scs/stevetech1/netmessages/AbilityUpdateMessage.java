@@ -15,12 +15,12 @@ public class AbilityUpdateMessage extends MyAbstractMessage {
 	//public int abilityNum = -1; // 0 = main etc...
 	
 	public AbilityUpdateMessage() {
-		super(true);
+		super();
 	}
 
 
 	public AbilityUpdateMessage(boolean reliable, IAbility ability) {
-		super(reliable);
+		super(reliable, true);
 		
 		//avatarId = avatar.id;
 		//abilityNum = num;

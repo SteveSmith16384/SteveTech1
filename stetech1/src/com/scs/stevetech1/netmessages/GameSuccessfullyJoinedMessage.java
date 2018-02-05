@@ -9,12 +9,12 @@ public class GameSuccessfullyJoinedMessage extends MyAbstractMessage {
 	public int playerID;
 
 	public GameSuccessfullyJoinedMessage() {
-		super(true);
+		super();
 	}
 	
 	
 	public GameSuccessfullyJoinedMessage(int _playerID, int _side) {
-		super(true);
+		super(true, false);
 		
 		playerID = _playerID;
 		side =_side;

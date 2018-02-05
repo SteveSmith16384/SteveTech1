@@ -11,12 +11,12 @@ public class PingMessage extends MyAbstractMessage {
 	public int randomCode;
 
 	public PingMessage() {
-		super(false);
+		super();
 	}
 	
 	
 	public PingMessage(boolean _s2c, int _randomCode) {
-		this();
+		super(true, false);
 
 		s2c = _s2c;
 		originalSentTime = System.currentTimeMillis();

@@ -16,12 +16,12 @@ public class UpdateLobbyMessage extends MyAbstractMessage {
 	public boolean anySpaces; // Note that players can still join, but will be a spectator or something
 	
 	public UpdateLobbyMessage() {
-		super(false);
+		super();
 	}
 
 
 	public UpdateLobbyMessage(String _name, String _gameServerIPAddress, int _port, int _totalPlayers, boolean spaces) {
-		super(true);
+		super(true, false);
 		
 		name = _name;
 		gameServerIPAddress = _gameServerIPAddress;

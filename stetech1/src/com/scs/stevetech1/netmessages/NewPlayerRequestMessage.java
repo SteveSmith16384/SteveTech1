@@ -13,7 +13,7 @@ public class NewPlayerRequestMessage extends MyAbstractMessage {
 	}
 	
 	public NewPlayerRequestMessage(String _name, int _side) {
-		super(true);
+		super(true, false);
 		
 		name = _name;
 		side = (byte)_side;

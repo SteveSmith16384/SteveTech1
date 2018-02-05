@@ -4,9 +4,12 @@ import com.jme3.math.Vector3f;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.components.IAnimatedAvatarModel;
 import com.scs.stevetech1.components.IDamagable;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.input.IInputDevice;
+import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
+import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
@@ -26,21 +29,27 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE); // Different to client side, since that doesn't have gravity!
 	}
 
+	
+	public void startAgain() {
+		alive = true;
+		this.health = server.getAvatarStartHealth(this);
+		this.invulnerableTimeSecs = 5;
+		server.moveAvatarToStartPosition(this);
 
+	}
+
+	
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
 		if (!this.alive) {
 			restartTimeSecs -= tpf;
 			if (this.restartTimeSecs <= 0) {
 				Globals.p("Resurrecting avatar");
-				alive = true;
-				// todo - set health
-				this.invulnerableTimeSecs = 5;
-				server.moveAvatarToStartPosition(this);
+				this.startAgain();
+				
+				server.networkServer.sendMessageToAll(new AvatarStartedMessage(this));
 
-				server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
-
-				// Send position udpate
+				// Send position update
 				EntityUpdateMessage eum = new EntityUpdateMessage();
 				eum.addEntityData(this, true);
 				server.networkServer.sendMessageToAll(eum);
@@ -72,21 +81,23 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 
 	@Override
-	public void damaged(float amt, String reason) {
-		if (this.alive) {
+	public void damaged(float amt, IEntity killer, String reason) {
+		if (this.alive && invulnerableTimeSecs < 0) {
 			this.health -= amt;
 			if (health <= 0) {
-				setDied(reason);
+				setDied(killer, reason);
+			} else {
+				this.server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
 			}
 		}
 	}
 
 
-	private void setDied(String reason) {
+	private void setDied(IEntity killer, String reason) {
 		Globals.p("Player died: " + reason);
 		this.alive = false;
-		this.restartTimeSecs = server.gameOptions.restartTimeSecs;//.getRestartTimeSecs(); // AbstractGameServer.properties.GetRestartTimeSecs();
-		server.networkServer.sendMessageToAll(new AvatarStatusMessage(this)); // todo - send avatardiedmsg
+		this.restartTimeSecs = server.gameOptions.restartTimeSecs;
+		server.networkServer.sendMessageToAll(new EntityKilledMessage(this, killer));
 
 		avatarModel.setAnimationForCode(ANIM_DIED); // Send death as an anim, so it gets scheduled and is not shown straight away
 	}
@@ -102,7 +113,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	public void fallenOffEdge() {
 		if (this.alive) {
 			Globals.p("playerID " + this.playerID + " has died due to falling off the edge (pos " + this.getWorldTranslation() + ")");
-			setDied("fallen Off Edge");
+			setDied(null, "fallen Off Edge");
 		}
 	}
 

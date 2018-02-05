@@ -12,6 +12,7 @@ import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.undercoveragent.entities.BigTreeWithLeaves;
+import com.scs.undercoveragent.entities.DebuggingSphere;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.MapBorder;
 import com.scs.undercoveragent.entities.SnowFloor;
@@ -208,6 +209,12 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			return hill;  //crate.getMainNode().getWorldTranslation();
 		}
 
+		case DEBUGGING_SPHERE:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			DebuggingSphere hill = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true);
+			return hill;
+		}
 
 		default:
 			return super.createEntity(game, msg);

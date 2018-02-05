@@ -260,4 +260,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public boolean isAlive() {
 		return alive;
 	}
+	
+	
+	public float getHealth() {
+		return this.health;
+	}
+
+
+	public void setHealth(float h) {
+		this.health = h;
+	}
 }

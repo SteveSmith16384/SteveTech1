@@ -179,4 +179,10 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	}
 
 
+	@Override
+	public float getAvatarStartHealth(AbstractAvatar avatar) {
+		return 2;
+	}
+
+
 }

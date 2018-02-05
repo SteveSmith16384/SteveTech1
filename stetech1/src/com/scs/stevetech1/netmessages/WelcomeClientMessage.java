@@ -9,7 +9,7 @@ import com.jme3.network.serializing.Serializable;
 public class WelcomeClientMessage extends MyAbstractMessage {
 	
 	public WelcomeClientMessage() {
-		super(true);
+		super(true, false);
 	}
 	
 }

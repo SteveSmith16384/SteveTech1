@@ -17,12 +17,12 @@ public class SimpleGameDataMessage extends MyAbstractMessage {
 	public ArrayList<SimplePlayerData> players;
 	
 	public SimpleGameDataMessage() {
-		super(true);
+		super();
 	}
 
 	
 	public SimpleGameDataMessage(SimpleGameData _gameData, ArrayList<SimplePlayerData> _players) {
-		super(true);
+		super(true, true);
 		
 		this.gameData = _gameData;
 		players = _players;

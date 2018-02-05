@@ -8,7 +8,7 @@ public class JoinGameFailedMessage extends MyAbstractMessage {
 	public String reason;
 	
 	public JoinGameFailedMessage() {
-		super(true);
+		super(true, false);
 	}
 
 	public JoinGameFailedMessage(String _reason) {

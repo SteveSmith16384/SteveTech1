@@ -4,6 +4,7 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
@@ -55,21 +56,21 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			IRequiresAmmoCache<T> irac = (IRequiresAmmoCache)this;
 			if (irac.requiresAmmo()) {
 				//server.createEntity(irac.getAmmoType(), server.getNextEntityID(), -1, irac);
-				createBullet(game, server.getNextEntityID(), irac, -1);
+				PhysicalEntity pe = createBullet(game, server.getNextEntityID(), irac, -1);
+				server.scheduleAddEntity(pe);
 			}
 		}
 	}
 	
 	
-	protected abstract void createBullet(IEntityController game, int entityid, IRequiresAmmoCache<T> irac, int side);
+	protected abstract PhysicalEntity createBullet(IEntityController game, int entityid, IRequiresAmmoCache<T> irac, int side);
 
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
-		//if (game.isServer()) { // Only server can reload
-		checkForAmmo(server);
+		checkForAmmo(server);// Only server can reload
 		if (this.bulletsLeftInMag <= 0) {
 			// Reload
 			Globals.p("Reloading");
@@ -77,7 +78,6 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 		}
-		//}
 		timeUntilShoot_secs -= tpf_secs;
 	}
 

@@ -1,14 +1,16 @@
 package com.scs.stevetech1.netmessages;
 
 import com.jme3.math.Vector3f;
+import com.jme3.network.serializing.Serializable;
 
-public class PlaySoundMessage {
+@Serializable
+public class PlaySoundMessage extends MyAbstractMessage {
 
 	public String sound;
 	public Vector3f pos;
 	
 	public PlaySoundMessage() {
-		super(true);
+		super(true, true);
 	}
 	
 	

@@ -13,6 +13,7 @@ import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
  */
 public class ClientEntityLauncherSystem {
 
+	// todo- don't need to schedule any more
 	private HashMap<ILaunchable, LaunchData> toLaunch = new HashMap<ILaunchable, LaunchData>();  // Entity::LaunchData
 	private AbstractGameClient client;
 

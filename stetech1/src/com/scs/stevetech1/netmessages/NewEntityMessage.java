@@ -18,7 +18,7 @@ public class NewEntityMessage extends MyAbstractMessage {
 	
 	
 	public NewEntityMessage(IEntity e) {
-		super(true);
+		super(true, true);
 		
 		type = e.getType();
 		entityID = e.getID();

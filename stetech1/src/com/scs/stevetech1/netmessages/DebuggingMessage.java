@@ -6,7 +6,7 @@ import com.jme3.network.serializing.Serializable;
 public class DebuggingMessage extends MyAbstractMessage {
 
 	public DebuggingMessage() {
-		super(true);
+		super(true, false);
 	}
 	
 }

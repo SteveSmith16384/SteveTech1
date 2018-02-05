@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
-import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
@@ -79,8 +79,8 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 
 	@Override
-	protected void createBullet(IEntityController game, int entityid, IRequiresAmmoCache irac, int side) {
-		new SnowballBullet(game, entityid, irac, side);
+	protected PhysicalEntity createBullet(IEntityController game, int entityid, IRequiresAmmoCache irac, int side) {
+		return new SnowballBullet(game, entityid, irac, side);
 		
 	}
 		

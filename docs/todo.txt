@@ -1,19 +1,16 @@
 STETECH1
 
 URGENT
-Players send ping to server from lobby to see which is best
+Set kryonet values depending on whether debugging or not
+	New bullet not being sent
+	Show debug sphere where & when snowball has hit something
+	Only process some messages when the time is right!
 Snowman sink into floor if they don't move, or die
-Only adjust player when they are moving
-Show debug sphere where & when snowball has hit something
 Improve border - server side is just a box, client side is an invisible box with hills around
-	Don't do avatar death straight away!
 	Animation - need to walk and shoot?  IAnimationFlags
-	Create setDied() and respondToDied()
-	Player dies - show died model.
 	Ffwd projectiles
 	Test two clients, can one see the other shooting?
 	Not rotating hills
-	Player dies - restart, stop client moving
 	Show current game time - a bit big
 Add open-source msg to the top of all files
 Client can always jump, even when in the air
@@ -23,6 +20,8 @@ Record desktop showing two players
 
 
 TODO
+Only adjust player when they are moving
+Players send ping to server from lobby to see which is best
 Sound Effect message
 Player dies - "Dead" in big letters
 Add entities to list immediately, but don't add to root node until scheduled?
