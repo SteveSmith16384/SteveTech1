@@ -14,6 +14,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IDamagable;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
@@ -113,7 +114,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	
 	
 	@Override
-	public void damaged(float amt, String reason) {
+	public void damaged(float amt, IEntity killer, String reason) {
 		//this.respawn();
 	}
 

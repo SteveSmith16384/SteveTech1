@@ -88,7 +88,7 @@ public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICa
 		simpleRigidBody.setAerodynamicness(1);
 		simpleRigidBody.setGravity(0);
 
-		game.getRootNode().attachChild(this.mainNode);
+		game.getGameNode().attachChild(this.mainNode);
 		this.setWorldTranslation(startPos);
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(20));
 		this.collideable = true;
@@ -107,20 +107,7 @@ public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICa
 		return side;
 	}
 
-/*
-	@Override
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
-		if (launched) {
-			if (Globals.SYNC_GRENADE_POS) {
-				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
-				if (offset != null) {
-					this.syncPos.adjustPosition(this, offset, tpf_secs);
-				}
-			}
-		}
-	}
 
-*/
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (launched) {

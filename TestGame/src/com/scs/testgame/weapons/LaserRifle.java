@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
@@ -38,7 +39,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 
 
 
-
+/*
 	@Override
 	public int getAmmoType() {
 		return TestGameClientEntityCreator.LASER_BULLET;
@@ -49,7 +50,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 	public boolean requiresAmmo() {
 		return this.ammoCache.size() <= 2;
 	}
-
+*/
 
 	@Override
 	public HashMap<String, Object> getCreationData() {
@@ -79,8 +80,18 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 
 
 	@Override
-	protected void createBullet(IEntityController game, int entityid, IRequiresAmmoCache irac, int side) {
-		new LaserBullet(game, entityid, irac, side);		
+	protected void createBullet(AbstractGameServer server, int entityid, IRequiresAmmoCache irac, int side) {
+		LaserBullet l = new LaserBullet(game, entityid, irac, side);
+		server.addEntity(l);
+
 	}
 	
+
+	@Override
+	public int getBulletsInMag() {
+		return this.ammoCache.size();
+	}
+
+
+
 }

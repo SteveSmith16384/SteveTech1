@@ -1,6 +1,7 @@
 STETECH1
 
 URGENT
+Get TestGame compiling
 Improve border - server side is just a box, client side is an invisible box with hills around
 	Set zero grav on enemyavatars so they move exactly where they should
 Set kryonet values depending on whether debugging or not

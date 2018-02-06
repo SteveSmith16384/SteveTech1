@@ -32,9 +32,10 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 
 	
 	@Override
-	public void setCurrentAnim(String s) {
+	public void setCurrentAnim(Object s) {
 		this.currentAnim = s;
-		this.model.channel.setAnim(s);
+		// todo this.model.channel.setAnim(s);
 	}
+
 
 }

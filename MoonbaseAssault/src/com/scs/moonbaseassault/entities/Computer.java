@@ -14,6 +14,7 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.moonbaseassault.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IDamagable;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
@@ -55,14 +56,14 @@ public class Computer extends PhysicalEntity implements IDamagable {
 		this.mainNode.attachChild(geometry); //This creates the model bounds!  mainNode.getWorldBound();
 		geometry.setLocalTranslation(0, h/2, 0);
 		mainNode.setLocalTranslation(x, y, z);
-		game.getRootNode().attachChild(this.mainNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
-		game.addEntity(this);
+		//game.getGameNode().attachChild(this.mainNode);
+		//game.addEntity(this);
 
 	}
 
@@ -75,7 +76,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 
 
 	@Override
-	public void damaged(float amt, String reason) {
+	public void damaged(float amt, IEntity killer, String reason) {
 		// TODO Auto-generated method stub
 		
 	}

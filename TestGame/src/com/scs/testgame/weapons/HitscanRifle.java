@@ -19,12 +19,14 @@ import com.scs.testgame.entities.DebuggingSphere;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
+	private static final int MAG_SIZE = 10;
 	private static final float RANGE = 99f;
 
 	public RayCollisionData hitThisMoment = null; // Only used server-side
+	private int bulletsInMag = MAG_SIZE;
 
 	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
-		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, 10);
+		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE);
 
 	}
 
@@ -106,9 +108,15 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	protected void createBullet(IEntityController game, int entityid, IRequiresAmmoCache irac, int side) {
-		// Do nothing
+	protected void createBullet(AbstractGameServer server, int entityid, IRequiresAmmoCache owner, int side) {
+		this.bulletsInMag++; // No physical projectiles required!
 		
+	}
+
+
+	@Override
+	public int getBulletsInMag() {
+		return bulletsInMag;
 	}
 
 

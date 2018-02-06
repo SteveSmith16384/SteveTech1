@@ -62,33 +62,24 @@ public class TestGameServer extends AbstractGameServer {
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
-		return new TestGameServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid, side);
+		return new TestGameServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
 	}
 
-
+/*
 	//@Override
 	public IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac) {
 		switch (type) {
 		case TestGameClientEntityCreator.LASER_BULLET:
 			return new LaserBullet(this, entityid, irac, side);
-			/*
-		case TestGameClientEntityCreator.GRENADE:
-			return new Grenade(this, entityid, irac);
-			*/
 		default:
 			return null;//super.createEntity(type, entityid, side, irac);
 		}
 	}
+*/
 
-/*
 	@Override
-	protected void equipAvatar(AbstractServerAvatar avatar) {
-		//IAbility abilityGun = new HitscanRifle(this, getNextEntityID(), avatar, 0);
-		//IAbility abilityGun = new GrenadeLauncher(this, getNextEntityID(), avatar, 0);
-		IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0);
-		this.addEntity(abilityGun);
-		
+	public float getAvatarStartHealth(AbstractAvatar avatar) {
+		return 1;
 	}
 
-*/
 }

@@ -64,7 +64,6 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 	@Override
 	protected void createBullet(AbstractGameServer server, int entityid, IRequiresAmmoCache irac, int side) {
 		SnowballBullet pe = new SnowballBullet(game, entityid, irac, side);
-		//this.ammoCache.add(pe);
 		server.addEntity(pe);
 
 		
