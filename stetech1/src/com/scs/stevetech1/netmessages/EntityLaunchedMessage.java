@@ -15,7 +15,9 @@ public class EntityLaunchedMessage extends MyAbstractMessage {
 
 
 	public EntityLaunchedMessage(int eid, LaunchData _launchData) {
-		this();
+		super(true, true);
+		
+		this.timestamp = _launchData.launchTime; // This will be earlier than most other messages
 		
 		entityID = eid;
 		launchData = _launchData;

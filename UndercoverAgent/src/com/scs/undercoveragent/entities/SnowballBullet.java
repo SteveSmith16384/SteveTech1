@@ -98,9 +98,9 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 		this.simpleRigidBody.setBounciness(0f);
-		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));
+		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(100));
 
-		game.getRootNode().attachChild(this.mainNode);
+		game.getGameNode().attachChild(this.mainNode);
 		this.setWorldTranslation(startPos);
 		this.mainNode.updateGeometricState();
 
@@ -140,6 +140,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		if (launched) {
+			Globals.p("Moving snowball:" + this.simpleRigidBody.getLinearVelocity());
 			simpleRigidBody.process(tpf_secs); //this.mainNode;
 		}
 	}
@@ -157,14 +158,6 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	}
 
 
-
-	/*
-	private void storeAvatarPosition(long serverTime) {
-		Vector3f pos = getWorldTranslation();
-		//Globals.p("Storing pos " + pos);
-		this.clientSidePositionData.addPositionData(pos, null, serverTime);
-	}
-	 */
 
 	@Override
 	public IEntity getLauncher() {

@@ -13,7 +13,7 @@ public class AvatarStartedMessage extends MyAbstractMessage {
 	}
 
 	public AvatarStartedMessage(AbstractAvatar _avatarId) {
-		this();
+		super(true, true);
 		
 		avatarId = _avatarId.getID();
 	}

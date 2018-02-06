@@ -13,7 +13,6 @@ import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
  */
 public class ClientEntityLauncherSystem {
 
-	// todo- don't need to schedule any more
 	private HashMap<ILaunchable, LaunchData> toLaunch = new HashMap<ILaunchable, LaunchData>();  // Entity::LaunchData
 	private AbstractGameClient client;
 
@@ -39,13 +38,13 @@ public class ClientEntityLauncherSystem {
 		Iterator<ILaunchable> it3 = this.toLaunch.keySet().iterator();
 		while (it3.hasNext()) {
 			ILaunchable e = it3.next();
-			long timeToAdd = this.toLaunch.get(e).launchTime;
-			if (timeToAdd < renderTime) { // Only remove them when its time
+			//long timeToAdd = this.toLaunch.get(e).launchTime;
+			//if (timeToAdd < renderTime) { // Only remove them when its time
 				LaunchData ld = this.toLaunch.get(e);
 				it3.remove();
 				IEntity shooter = client.entities.get(ld.shooterId);
 				e.launch(shooter, ld.startPos, ld.dir);
-			}
+			//}
 		}
 
 	}

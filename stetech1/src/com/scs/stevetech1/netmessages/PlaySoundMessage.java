@@ -15,7 +15,7 @@ public class PlaySoundMessage extends MyAbstractMessage {
 	
 	
 	public PlaySoundMessage(String _sound, Vector3f _pos) {
-		this();
+		super(true, true);
 		
 		sound = _sound;
 		pos = _pos;

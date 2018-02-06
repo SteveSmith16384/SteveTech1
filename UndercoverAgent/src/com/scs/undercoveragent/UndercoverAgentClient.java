@@ -6,6 +6,7 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -78,20 +79,20 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		
 		this.getViewPort().setBackgroundColor(ColorRGBA.Cyan);
 		
-		getRootNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
+		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 	}
 	
 	
 	@Override
-	protected void setUpLight() {
+	protected void setUpLight() { // todo  - already done in superclass?
 		AmbientLight al = new AmbientLight();
 		al.setColor(ColorRGBA.White.mult(.3f));
-		getRootNode().addLight(al);
+		getGameNode().addLight(al);
 
 		DirectionalLight sun = new DirectionalLight();
 		sun.setColor(ColorRGBA.White);
 		sun.setDirection(new Vector3f(.5f, -1f, .5f).normalizeLocal());
-		rootNode.addLight(sun);
+		getGameNode().addLight(sun);
 	}
 
 
@@ -107,5 +108,6 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		super.collisionOccurred(a, b, point);
 		
 	}
+
 
 }

@@ -97,7 +97,7 @@ public final class PositionCalculator {
 					if (warn) {
 						//Globals.p(this.toString(serverTimeToUse));
 						long diff = this.positionData.getLast().serverTimestamp - serverTimeToUse;
-						Globals.p("Warning: Requested time is too late by " + diff);
+						//Globals.p("Warning: Requested time is too late by " + diff);
 					}
 					return this.positionData.getLast(); // Our selected time is too late!
 				}
@@ -110,7 +110,6 @@ public final class PositionCalculator {
 							if (cleardown) {
 								this.cleardown(pos+4);
 							}
-							//return this.getInterpolatedPosition(firstEPD, secondEPD, serverTimeToUse); //positionData.indexOf(firstEPD);
 							return firstEPD.getInterpol(secondEPD, serverTimeToUse);
 						}
 					}

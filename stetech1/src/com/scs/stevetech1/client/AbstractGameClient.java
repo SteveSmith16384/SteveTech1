@@ -18,6 +18,7 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
+import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
@@ -40,6 +41,7 @@ import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
 import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
+import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -49,7 +51,6 @@ import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
-import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
@@ -73,16 +74,17 @@ import ssmith.util.RealtimeInterval;
 
 public abstract class AbstractGameClient extends AbstractGameController implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
 
-	private static final String QUIT = "Quit";
-	private static final String TEST = "Test";
-
 	// Statuses
 	public static final int STATUS_NOT_CONNECTED = 0;
-	public static final int STATUS_CONNECTED = 1;
-	public static final int STATUS_RCVD_WELCOME = 2;
-	public static final int STATUS_SENT_JOIN_REQUEST = 3;
-	public static final int STATUS_JOINED_GAME = 4;
-	public static final int STATUS_GAME_STARTED = 5; // Have received all entities
+	public static final int STATUS_CONNECTED_TO_LOBBY = 1;
+	public static final int STATUS_CONNECTED_TO_GAME = 2;
+	public static final int STATUS_RCVD_WELCOME = 3;
+	public static final int STATUS_SENT_JOIN_REQUEST = 4;
+	public static final int STATUS_JOINED_GAME = 5;
+	public static final int STATUS_GAME_STARTED = 6; // Have received all entities
+
+	private static final String QUIT = "Quit";
+	private static final String TEST = "Test";
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
 
@@ -101,6 +103,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private long clientToServerDiffTime; // Add to current time to get server time
 	public int clientStatus = STATUS_NOT_CONNECTED;
 	public SimpleGameData gameData;
+	protected Node gameNode = new Node("GameNode");
 
 	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Globals.SERVER_TICKRATE_MS);
 	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
@@ -151,8 +154,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		setUpLight();
 
-		//this.rootNode.attachChild(JMEFunctions.GetGrid(assetManager, 10));
-
 		hud = this.createHUD(getCamera());
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager());
 
@@ -165,10 +166,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		// Don't connect to network until JME is up and running!
 		try {
 			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this);
+			this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
 			lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
+
 		try {
 			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this); // todo - connect to lobby first!
 		} catch (IOException e) {
@@ -196,12 +199,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	protected void setUpLight() {
 		AmbientLight al = new AmbientLight();
 		al.setColor(ColorRGBA.White.mult(.5f));
-		getRootNode().addLight(al);
+		getGameNode().addLight(al);
 
 		DirectionalLight sun = new DirectionalLight();
 		sun.setColor(ColorRGBA.Yellow);
 		sun.setDirection(new Vector3f(.5f, -1f, .5f).normalizeLocal());
-		rootNode.addLight(sun);
+		getGameNode().addLight(sun);
 	}
 
 
@@ -279,6 +282,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							GeneralCommandMessage msg = (GeneralCommandMessage)message;
 							if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) {
 								clientStatus = STATUS_GAME_STARTED;
+								this.getRootNode().attachChild(this.gameNode);
 							}
 
 						} else if (message instanceof AbilityUpdateMessage) {
@@ -323,7 +327,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					}
 				}
 
-				if (clientStatus >= STATUS_CONNECTED && sendPingInterval.hitInterval()) {
+				if (clientStatus >= STATUS_CONNECTED_TO_GAME && sendPingInterval.hitInterval()) {
 					networkClient.sendMessageToServer(new PingMessage(false, 0));
 				}
 
@@ -348,7 +352,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					}
 
 
-					// Loop through each entity and process them				
 					StringBuffer strListEnts = new StringBuffer(); // Log entities
 
 					// Add entities
@@ -367,7 +370,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					// Remove entities
 					//for(Integer i : this.toRemove.keySet()) {
 					Iterator<Integer> it2 = this.toRemove.iterator();
-					while (it2.hasNext()) { //this.rootNode
+					while (it2.hasNext()) {
 						int i = it2.next();
 						//long timeToRemove = this.toRemove.get(i);
 						//if (timeToRemove < renderTime) { // Only remove them when its time
@@ -381,7 +384,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 					this.launchSystem.process(renderTime);
 
-					for (IEntity e : this.entities.values()) {  // this.getRootNode();
+					// Loop through each entity and process them				
+					for (IEntity e : this.entities.values()) {
 						if (e instanceof IPlayerControlled) {
 							IPlayerControlled p = (IPlayerControlled)e;
 							p.resetPlayerInput();
@@ -429,7 +433,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 				}
 			}
-			loopTimer.waitForFinish(); // Keep clients and server running at same speed
+			//loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
 
 		} catch (Exception ex) {
@@ -535,7 +539,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			if (e instanceof PhysicalEntity) {
 				if (e instanceof ILaunchable == false) { // Don't draw bullets yet! 
 					PhysicalEntity pe = (PhysicalEntity)e;
-					this.getRootNode().attachChild(pe.getMainNode());
+					this.getGameNode().attachChild(pe.getMainNode());
 				}
 			}
 
@@ -691,5 +695,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		return nextEntityID.getAndAdd(1);
 	}
 
+
+	@Override
+	public Node getGameNode() {
+		return gameNode;
+	}
 
 }

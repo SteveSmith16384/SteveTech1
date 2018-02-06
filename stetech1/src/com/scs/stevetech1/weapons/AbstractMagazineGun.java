@@ -42,9 +42,9 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			return true;
 		} else {
 			if (bulletsLeftInMag <= 0) {
-				Globals.p("No bullets");
+				Globals.p("No bullets"); // Should never happen
 			} else if (timeUntilShoot_secs > 0) {
-				Globals.p("Shooting too soon - wait for " + timeUntilShoot_secs + " secs");
+				//Globals.p("Shooting too soon - wait for " + timeUntilShoot_secs + " secs");
 			}
 		}
 		return false;

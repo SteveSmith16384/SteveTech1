@@ -1,6 +1,14 @@
 STETECH1
 
 URGENT
+EnemyAvatar remaining if client drops out
+Client snowball dropping suddently
+Create lobbylistener
+Client connect to lobby first, then select server
+Show ping
+	Remove frame limiterw
+	Create gameNode
+	Show game ndoe when everything loaded
 	Snowman jump if not moved for a while
 Set kryonet values depending on whether debugging or not
 	Show debug sphere where & when snowball has hit something
@@ -17,6 +25,7 @@ Record desktop showing two players
 
 
 TODO
+Create game modules?
 Only adjust player when they are moving
 Players send ping to server from lobby to see which is best
 Sound Effect message

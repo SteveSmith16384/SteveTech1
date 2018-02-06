@@ -28,7 +28,7 @@ public abstract class AbstractGameController extends SimpleApplication implement
 	protected LinkedList<Integer> toRemove = new LinkedList<Integer>(); // todo - rename
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
-	protected FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS);
+	protected FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS); // todo - delete this
 	protected RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
 	public AbstractGameController() {

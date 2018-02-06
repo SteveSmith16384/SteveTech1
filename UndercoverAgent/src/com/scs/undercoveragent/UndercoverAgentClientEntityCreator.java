@@ -67,6 +67,7 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		case SNOW_HILL_2: return "SNOW_HILL_2";
 		case SNOW_HILL_3: return "SNOW_HILL_3";
 		case SNOW_HILL_4: return "SNOW_HILL_4";
+		case DEBUGGING_SPHERE: return "DEBUGGING_SPHERE";
 		default: return "Unknown (" + type + ")";
 		}
 	}

@@ -55,7 +55,7 @@ public class ChronologicalLookup<T extends ITimeStamped> {
 				} else if (this.positionData.getLast().getTimestamp() > serverTimeToUse) {
 					if (warn) {
 						//Globals.p(this.toString(serverTimeToUse));
-						Globals.p("Warning: Requested time is too late");
+						//Globals.p("Warning: Requested time is too late");
 					}
 					return this.positionData.getLast(); // Our selected time is too late!
 				}

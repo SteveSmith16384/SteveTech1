@@ -19,7 +19,7 @@ public interface IEntityController {
 	
 	SimplePhysicsController<PhysicalEntity> getPhysicsController();
 	
-	Node getRootNode();
+	Node getGameNode();
 	
 	int getNextEntityID();
 	

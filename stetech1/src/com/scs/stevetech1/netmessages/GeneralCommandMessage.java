@@ -12,10 +12,12 @@ public class GeneralCommandMessage extends MyAbstractMessage {
 	
 	public Command command;
 	
+	
 	public GeneralCommandMessage() {
 		super();
 	}
 
+	
 	public GeneralCommandMessage(Command cmd) {
 		super(true, false);
 		

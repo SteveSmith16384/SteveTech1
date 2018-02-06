@@ -85,7 +85,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		debugNode = new Node();
 		debugNode.attachChild(g);
-		game.getRootNode().attachChild(debugNode);
+		game.getGameNode().attachChild(debugNode);
 
 	}
 

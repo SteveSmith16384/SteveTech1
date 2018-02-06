@@ -250,7 +250,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public RayCollisionData checkForCollisions(Ray r, float range) {
 		CollisionResults res = new CollisionResults();
-		int c = game.getRootNode().collideWith(r, res);
+		int c = game.getGameNode().collideWith(r, res);
 		if (c == 0) {
 			Globals.p("No Ray collisions");
 			return null;

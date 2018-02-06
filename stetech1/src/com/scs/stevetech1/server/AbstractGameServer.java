@@ -14,6 +14,7 @@ import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -69,7 +70,6 @@ ICollisionListener<PhysicalEntity> {
 	private KryonetLobbyClient clientToLobbyServer;
 	public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
-	//public static GameProperties properties;
 	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
 	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
 	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Globals.SERVER_SEND_UPDATE_INTERVAL_MS);
@@ -275,7 +275,7 @@ ICollisionListener<PhysicalEntity> {
 
 		this.logWindow.setText(strDebug.toString());
 
-		loopTimer.waitForFinish(); // Keep clients and server running at same speed
+		//loopTimer.waitForFinish(); // Keep clients and server running at same speed
 		loopTimer.start();
 	}
 
@@ -494,7 +494,7 @@ ICollisionListener<PhysicalEntity> {
 				if (pe.getMainNode().getParent() != null) {
 					throw new RuntimeException("Entity already has a node");
 				}
-				this.getRootNode().attachChild(pe.getMainNode());
+				this.getGameNode().attachChild(pe.getMainNode());
 			}
 
 			// Tell clients
@@ -613,7 +613,7 @@ ICollisionListener<PhysicalEntity> {
 			e.remove();
 		}
 
-		this.getRootNode().detachAllChildren();
+		this.getGameNode().detachAllChildren();
 		this.getPhysicsController().removeAllEntities();
 
 		gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
@@ -721,5 +721,12 @@ ICollisionListener<PhysicalEntity> {
 
 	}
 	 */
+
+
+	@Override
+	public Node getGameNode() {
+		return rootNode;
+	}
+
 }
 
