@@ -134,6 +134,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		cam.getLocation().z = vec.z;
 		cam.update();
 
+		// These must be after we might use them, so the hud is correct 
+		this.hud.setAbilityGunText(this.ability[0].getHudText());
+		if (this.ability[1] != null) {
+			this.hud.setAbilityOtherText(this.ability[1].getHudText());
+		}
+
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			//long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis(), false);
@@ -163,12 +169,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		}
 	}
 
-/*
-	@Override
-	public void hasSuccessfullyHit(IEntity e) {
-		// Do nothing - done server-side
-	}
-*/
 
 	@Override
 	public Vector3f getShootDir() {
@@ -186,19 +186,5 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		return insideoutside;
 	}
 
-/*
-	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
-		// Do nothing
 
-	}
-*/
-
-	/*
-	@Override
-	public void hasDied() {
-		// TODO Auto-generated method stub
-		
-	}
-*/
 }

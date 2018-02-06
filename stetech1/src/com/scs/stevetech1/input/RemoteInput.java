@@ -48,18 +48,6 @@ public class RemoteInput implements IInputDevice {
 		return pim.jump;
 	}
 
-/*
-	@Override
-	public boolean isShootPressed() {
-		return pim.mainAbility;
-	}
-
-
-	@Override
-	public boolean isAbilityOtherPressed() {
-		return pim.secondaryAbility;
-	}
-*/
 
 	@Override
 	public boolean isAbilityPressed(int i) {

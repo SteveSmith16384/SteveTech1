@@ -11,9 +11,9 @@ public interface IEntityController {
 
 	boolean isServer();
 
-	void scheduleAddEntity(IEntity e); // todo - rename
+	void addEntity(IEntity e);
 	
-	void scheduleEntityRemoval(int id); // todo - rename
+	void removeEntity(int id);
 	
 	AssetManager getAssetManager();
 	

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
-import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
@@ -40,26 +40,8 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 
 	@Override
-	public int getAmmoType() {
-		return UndercoverAgentClientEntityCreator.SNOWBALL_BULLET;
-	}
-	
-
-	@Override
-	public boolean requiresAmmo() {
-		return this.ammoCache.size() <= 2;
-	}
-
-
-	@Override
 	public HashMap<String, Object> getCreationData() {
 		return super.creationData;
-	}
-
-
-	@Override
-	public void addToCache(SnowballBullet o) {
-		this.ammoCache.add(o);		
 	}
 
 
@@ -70,6 +52,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 	
 	public void remove() {
+		// Remove all owned bullets
 		while (!ammoCache.isEmpty()) {
 			SnowballBullet g = ammoCache.remove();
 			g.remove();
@@ -79,11 +62,26 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 
 	@Override
-	protected PhysicalEntity createBullet(IEntityController game, int entityid, IRequiresAmmoCache irac, int side) {
-		return new SnowballBullet(game, entityid, irac, side);
+	protected void createBullet(AbstractGameServer server, int entityid, IRequiresAmmoCache irac, int side) {
+		SnowballBullet pe = new SnowballBullet(game, entityid, irac, side);
+		//this.ammoCache.add(pe);
+		server.addEntity(pe);
+
 		
 	}
-		
+
+
+	@Override
+	public int getBulletsInMag() {
+		return this.ammoCache.size();
+	}
+
+
+	@Override
+	public void addToCache(SnowballBullet o) {
+		this.ammoCache.add(o);
+	}
+
 
 }
 

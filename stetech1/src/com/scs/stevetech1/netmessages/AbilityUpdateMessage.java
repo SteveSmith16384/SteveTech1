@@ -7,12 +7,10 @@ import com.scs.stevetech1.shared.IAbility;
 @Serializable
 public class AbilityUpdateMessage extends MyAbstractMessage {
 	
-	public int bulletsLeftInMag;
+	//public int bulletsLeftInMag;
 	public float timeUntilShoot = 0;
 	
-	public int entityID; //
-	//public int avatarId = -1;
-	//public int abilityNum = -1; // 0 = main etc...
+	public int entityID;
 	
 	public AbilityUpdateMessage() {
 		super();

@@ -4,7 +4,6 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.AbstractAvatar;
-import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
@@ -16,7 +15,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	protected float timeUntilShoot_secs = 0;
 	protected int magazineSize;
-	protected int bulletsLeftInMag;
+	//protected int bulletsLeftInMag;
 	protected float shotInterval_secs, reloadInterval_secs;
 
 
@@ -26,22 +25,25 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 		this.shotInterval_secs = shotInt;
 		this.reloadInterval_secs = reloadInt;
 		this.magazineSize = magSize;
-		this.bulletsLeftInMag = this.magazineSize;
+		//this.bulletsLeftInMag = this.magazineSize;
 	}
 
 
 	public abstract boolean launchBullet();
 
+	protected abstract void createBullet(AbstractGameServer server, int entityid, IRequiresAmmoCache owner, int side);
+
+	public abstract int getBulletsInMag();
 
 	@Override
 	public final boolean activate() {
-		if (this.timeUntilShoot_secs <= 0 && bulletsLeftInMag > 0) {
+		if (this.timeUntilShoot_secs <= 0 && getBulletsInMag() > 0) {
 			this.launchBullet();
 			timeUntilShoot_secs = this.shotInterval_secs;
-			bulletsLeftInMag--;
+			//bulletsLeftInMag--;
 			return true;
 		} else {
-			if (bulletsLeftInMag <= 0) {
+			if (getBulletsInMag() <= 0) {
 				Globals.p("No bullets"); // Should never happen
 			} else if (timeUntilShoot_secs > 0) {
 				//Globals.p("Shooting too soon - wait for " + timeUntilShoot_secs + " secs");
@@ -51,30 +53,27 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	}
 
 
-	private void checkForAmmo(AbstractGameServer server) {
-		if (this instanceof IRequiresAmmoCache) {
-			IRequiresAmmoCache<T> irac = (IRequiresAmmoCache)this;
-			if (irac.requiresAmmo()) {
-				//server.createEntity(irac.getAmmoType(), server.getNextEntityID(), -1, irac);
-				PhysicalEntity pe = createBullet(game, server.getNextEntityID(), irac, -1);
-				server.scheduleAddEntity(pe);
-			}
+	private void reload(AbstractGameServer server) {
+		//if (this instanceof IRequiresAmmoCache) {
+		IRequiresAmmoCache<T> irac = (IRequiresAmmoCache)this;
+		//if (irac.requiresAmmo()) {
+		while (this.getBulletsInMag() < this.magazineSize) {
+			//server.createEntity(irac.getAmmoType(), server.getNextEntityID(), -1, irac);
+			createBullet(server, server.getNextEntityID(), irac, -1);
 		}
+		//}
 	}
-	
-	
-	protected abstract PhysicalEntity createBullet(IEntityController game, int entityid, IRequiresAmmoCache<T> irac, int side);
 
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
-		checkForAmmo(server);// Only server can reload
-		if (this.bulletsLeftInMag <= 0) {
+		if (this.getBulletsInMag() <= 0) {
 			// Reload
 			Globals.p("Reloading");
-			this.bulletsLeftInMag = this.magazineSize;
+			reload(server);// Only server can reload
+			//this.bulletsLeftInMag = this.magazineSize;
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 		}
@@ -90,17 +89,17 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	@Override
 	public String getHudText() {
-		if (this.bulletsLeftInMag == this.magazineSize && this.timeUntilShoot_secs > shotInterval_secs) {
+		if (this.getBulletsInMag() == this.magazineSize && this.timeUntilShoot_secs > shotInterval_secs) {
 			return name + " RELOADING";
 		} else {
-			return name + " (" + this.bulletsLeftInMag + "/" + this.magazineSize  +")";
+			return name + " (" + this.getBulletsInMag() + "/" + this.magazineSize  +")";
 		}
 	}
 
 
 	@Override
 	public void encode(AbilityUpdateMessage aum) {
-		aum.bulletsLeftInMag = bulletsLeftInMag;
+		//aum.bulletsLeftInMag = bulletsLeftInMag;
 		aum.timeUntilShoot = timeUntilShoot_secs;
 
 	}
@@ -108,8 +107,10 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	@Override
 	public void decode(AbilityUpdateMessage aum) {
-		this.bulletsLeftInMag = aum.bulletsLeftInMag;
+		//this.bulletsLeftInMag = aum.bulletsLeftInMag;
 		timeUntilShoot_secs = aum.timeUntilShoot;
 	}
+
+
 
 }

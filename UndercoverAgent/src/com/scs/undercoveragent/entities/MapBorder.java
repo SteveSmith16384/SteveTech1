@@ -77,10 +77,6 @@ public class MapBorder extends PhysicalEntity {
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
-
 	}
 
 }

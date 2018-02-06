@@ -32,9 +32,7 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
-
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
+		simpleRigidBody.setGravity(0); // So they move exactly where we want, even when client jumps
 
 	}
 
@@ -43,11 +41,5 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 	public boolean sendUpdates() {
 		return true; // Always send for avatars
 	}
-
-/*
-	public void hasDied() {
-		// todo
-	}
-*/
 
 }

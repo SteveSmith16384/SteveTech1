@@ -25,7 +25,6 @@ import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.stevetech1.shared.PositionCalculator;
 import com.scs.stevetech1.systems.client.LaunchData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
@@ -83,8 +82,8 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 
 	public void launch(IEntity _shooter, Vector3f startPos, Vector3f dir) {
-		if (launched) { // We might be the client that fired the bullet, we we've already launched
-			Globals.p("Snowball already launched.  This may be a good sign.");
+		if (launched) { // We might be the client that fired the bullet, which we've already launched
+			//Globals.p("Snowball already launched.  This may be a good sign.");
 			return;
 		}
 
@@ -98,7 +97,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
 		this.simpleRigidBody.setBounciness(0f);
-		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(100));
+		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));
 
 		game.getGameNode().attachChild(this.mainNode);
 		this.setWorldTranslation(startPos);
@@ -140,7 +139,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		if (launched) {
-			Globals.p("Moving snowball:" + this.simpleRigidBody.getLinearVelocity());
+			//Globals.p("Moving snowball:" + this.simpleRigidBody.getLinearVelocity());
 			simpleRigidBody.process(tpf_secs); //this.mainNode;
 		}
 	}
@@ -191,7 +190,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 				// Create debugging sphere
 				Vector3f pos = this.getWorldTranslation();
 				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true);
-				game.scheduleAddEntity(ds);
+				game.addEntity(ds);
 			}
 		}
 	}

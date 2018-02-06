@@ -26,7 +26,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public static final String ANIM_WALKING = "Walking";
 	public static final String ANIM_SHOOTING = "Shooting";
 	public static final String ANIM_DIED = "Died";
-	
+
 	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	public final float moveSpeed = Globals.PLAYER_MOVE_SPEED;
 	protected IInputDevice input;
@@ -80,11 +80,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		this.resetWalkDir();
 
 		avatarModel.setAnimationForCode(ANIM_IDLE); // Default
-		
+
 		// Check for any abilities/guns being fired
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
+					if (server != null) { // todo - delete
+						int dfgdfg = 456456;
+					}
 					//Settings.p("Using " + this.ability.toString());
 					avatarModel.setAnimationForCode(ANIM_SHOOTING); // Default
 					this.ability[i].activate();
@@ -126,12 +129,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 				}
 			}
 		}
-
-		// These must be after we might use them, so the hud is correct 
-		/*this.hud.setAbilityGunText(this.abilityGun.getHudText());
-			if (abilityOther != null) {
-				this.hud.setAbilityOtherText(this.abilityOther.getHudText());
-			}*/
 
 		simpleRigidBody.process(tpf_secs);
 
@@ -202,7 +199,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-//	@Override
+	//	@Override
 	public int getSide() {
 		return side;
 	}
@@ -242,8 +239,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 		super.remove();
 	}
-	
-	
+
+
 	public ICalcHitInPast getAnyAbilitiesShootingInPast() {
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
@@ -254,21 +251,21 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 		return null;
 	}
-	
-	
+
+
 	public void setAlive(boolean a) {
 		if (this.alive != a) {
 			this.alive = a;
 			// Note that the client has been told they have died, but the player shouldn't know until the client render time has caught up!
 		}
 	}
-	
-	
+
+
 	public boolean isAlive() {
 		return alive;
 	}
-	
-	
+
+
 	public float getHealth() {
 		return this.health;
 	}

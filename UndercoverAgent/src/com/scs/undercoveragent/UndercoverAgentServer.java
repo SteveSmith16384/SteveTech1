@@ -2,13 +2,9 @@ package com.scs.undercoveragent;
 
 import java.io.IOException;
 
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -19,7 +15,6 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.undercoveragent.entities.MapBorder;
 import com.scs.undercoveragent.entities.SnowFloor;
-import com.scs.undercoveragent.entities.SnowballBullet;
 import com.scs.undercoveragent.entities.SnowmanServerAvatar;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
 
@@ -120,11 +115,11 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		SnowFloor floor = new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg");
 		this.actuallyAddEntity(floor);
 
-		MapBorder borderL = new MapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		MapBorder borderL = new MapBorder(this, getNextEntityID(),0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(borderL);
 
-		//MapBorder borderB = new MapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
-		//this.actuallyAddEntity(borderB);
+		MapBorder borderR = new MapBorder(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		this.actuallyAddEntity(borderR);
 
 	}
 
@@ -140,28 +135,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		return avatar;
 	}
 
-/*
-	//@Override
-	public IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac) { // todo - why do we need this?  Just create the entities
-		switch (type) {
-		case UndercoverAgentClientEntityCreator.SNOWBALL_BULLET:
-			return new SnowballBullet(this, entityid, irac, side);
-
-		default:
-			//super.createEntity(type, entityid, side, irac);
-			return null;
-		}
-		
-	}*/
-
-/*
-	@Override
-	protected void equipAvatar(AbstractServerAvatar avatar) {
-		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0);
-		this.actuallyAddEntity(abilityGun);
-
-	}
-*/
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {

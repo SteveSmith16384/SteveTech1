@@ -24,7 +24,6 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
@@ -34,7 +33,6 @@ import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
-import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -44,7 +42,7 @@ import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
-import com.scs.stevetech1.netmessages.UnknownEntityMessage;
+import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
@@ -151,7 +149,7 @@ ICollisionListener<PhysicalEntity> {
 					if (message instanceof NewPlayerRequestMessage) {
 						this.playerJoined(client, message);
 
-					/*} else if (message instanceof UnknownEntityMessage) {
+						/*} else if (message instanceof UnknownEntityMessage) {
 						UnknownEntityMessage uem = (UnknownEntityMessage) message;
 						IEntity e = null;
 						synchronized (entities) {
@@ -225,15 +223,15 @@ ICollisionListener<PhysicalEntity> {
 
 			synchronized (entities) {
 				// Add and remove entities
-				for(IEntity e : this.entitiesScheduledToBeAdded) {
+				for(IEntity e : this.entitiesToAdd) {
 					this.actuallyAddEntity(e);
 				}
-				this.entitiesScheduledToBeAdded.clear();
+				this.entitiesToAdd.clear();
 
-				for(Integer i : this.toRemove) {
+				for(Integer i : this.entitiesToRemove) {
 					this.actuallyRemoveEntity(i);
 				}
-				this.toRemove.clear();
+				this.entitiesToRemove.clear();
 
 				// Loop through the entities
 				for (IEntity e : entities.values()) {
@@ -275,7 +273,7 @@ ICollisionListener<PhysicalEntity> {
 
 		this.logWindow.setText(strDebug.toString());
 
-		//loopTimer.waitForFinish(); // Keep clients and server running at same speed
+		loopTimer.waitForFinish(); // Keep clients and server running at same speed
 		loopTimer.start();
 	}
 
@@ -402,14 +400,14 @@ ICollisionListener<PhysicalEntity> {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
 		this.actuallyAddEntity(avatar);
-		
+
 		avatar.startAgain();
 		//avatar.setHealth(getAvatarStartHealth(avatar));
 		//this.moveAvatarToStartPosition(avatar);
 		return avatar;
 	}
-	
-	
+
+
 	public abstract float getAvatarStartHealth(AbstractAvatar avatar);
 
 	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
@@ -428,7 +426,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 	}
 
-/*
+	/*
 	private void sendNewEntity(ClientData client, IEntity e) {
 		//if (e instanceof PhysicalEntity) {  Why was this here?  It prevented sending SnowballLauncher
 		//PhysicalEntity se = (PhysicalEntity)e;
@@ -436,7 +434,7 @@ ICollisionListener<PhysicalEntity> {
 		this.networkServer.sendMessageToClient(client, nem);
 		//}
 	}
-*/
+	 */
 
 	@Override
 	public void connectionAdded(int id, Object net) {
@@ -476,8 +474,8 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void scheduleAddEntity(IEntity e) {
-		this.entitiesScheduledToBeAdded.add(e);
+	public void addEntity(IEntity e) {
+		this.entitiesToAdd.add(e);
 	}
 
 
@@ -511,8 +509,8 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void scheduleEntityRemoval(int id) {
-		this.toRemove.add(id);
+	public void removeEntity(int id) {
+		this.entitiesToRemove.add(id);
 	}
 
 

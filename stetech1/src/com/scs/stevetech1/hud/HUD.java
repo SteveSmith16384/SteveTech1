@@ -21,6 +21,8 @@ import com.scs.stevetech1.server.Globals;
  * 
  */
 public class HUD extends Node implements IProcessByClient {
+	
+	private static final float LINE_SPACING = 10;
 
 	private static ColorRGBA defaultColour = ColorRGBA.Black;
 	
@@ -32,7 +34,7 @@ public class HUD extends Node implements IProcessByClient {
 	private boolean process_damage_box;
 	private AbstractGameClient game;
 	
-	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime;
+	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText;
 
 	public HUD(AbstractGameClient _game, BitmapFont font_small, Camera _cam) {
 		super("HUD");
@@ -56,30 +58,43 @@ public class HUD extends Node implements IProcessByClient {
 			}
 		}
 
-		abilityGun = new BitmapText(font_small, false);
-		abilityGun.setColor(defaultColour);
-		abilityGun.setLocalTranslation(10, hud_height-30, 0);
-		this.attachChild(abilityGun);
+		float yPos = hud_height - LINE_SPACING;
 
-		abilityOther = new BitmapText(font_small, false);
-		abilityOther.setColor(defaultColour);
-		abilityOther.setLocalTranslation(10, hud_height-45, 0);
-		this.attachChild(abilityOther);
-
-		debugText = new BitmapText(font_small, false);
-		debugText.setColor(defaultColour);
-		debugText.setLocalTranslation(10, hud_height-60, 0);
-		this.attachChild(debugText);
-
+		yPos -= LINE_SPACING;
 		gameStatus = new BitmapText(font_small, false);
 		gameStatus.setColor(defaultColour);
-		gameStatus.setLocalTranslation(10, hud_height-75, 0);
+		gameStatus.setLocalTranslation(10, yPos, 0);
 		this.attachChild(gameStatus);
 
+		yPos -= LINE_SPACING;
 		gameTime = new BitmapText(font_small, false);
 		gameTime.setColor(defaultColour);
-		gameTime.setLocalTranslation(10, hud_height-90, 0);
+		gameTime.setLocalTranslation(10, yPos, 0);
 		this.attachChild(gameTime);
+
+		yPos -= LINE_SPACING;
+		abilityGun = new BitmapText(font_small, false);
+		abilityGun.setColor(defaultColour);
+		abilityGun.setLocalTranslation(10, yPos, 0);
+		this.attachChild(abilityGun);
+
+		yPos -= LINE_SPACING;
+		abilityOther = new BitmapText(font_small, false);
+		abilityOther.setColor(defaultColour);
+		abilityOther.setLocalTranslation(10, yPos, 0);
+		this.attachChild(abilityOther);
+
+		yPos -= LINE_SPACING;
+		pingText = new BitmapText(font_small, false);
+		pingText.setColor(defaultColour);
+		pingText.setLocalTranslation(10, yPos, 0);
+		this.attachChild(pingText);
+
+		yPos -= LINE_SPACING;
+		debugText = new BitmapText(font_small, false);
+		debugText.setColor(defaultColour);
+		debugText.setLocalTranslation(10, yPos, 0);
+		this.attachChild(debugText);
 
 		log_ta = new TextArea("log", font_small, 6, "Entities");
 		log_ta.setColor(defaultColour);
@@ -177,6 +192,11 @@ public class HUD extends Node implements IProcessByClient {
 
 	public void setAbilityOtherText(String s) {
 		this.abilityOther.setText(s);
+	}
+
+
+	public void setPing(long i) {
+		this.pingText.setText("Ping: " + i);
 	}
 
 

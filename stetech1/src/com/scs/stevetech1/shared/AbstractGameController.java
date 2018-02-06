@@ -22,10 +22,8 @@ public abstract class AbstractGameController extends SimpleApplication implement
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
-	//protected HashMap<IEntity, Long> entitiesScheduledToBeAdded = new HashMap<IEntity, Long>();  // Entity::TimeToAdd
-	protected LinkedList<IEntity> entitiesScheduledToBeAdded = new LinkedList<IEntity>(); // todo - rename
-	//protected HashMap<Integer, Long> toRemove = new HashMap<Integer, Long>();  // EntityID::TimeToRemove
-	protected LinkedList<Integer> toRemove = new LinkedList<Integer>(); // todo - rename
+	protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
+	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS); // todo - delete this
