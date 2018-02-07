@@ -24,5 +24,7 @@ public interface IInputDevice {
 	
 	boolean isAbilityPressed(int i);
 	
-	boolean isSelectNextAbilityPressed();
+	//boolean isSelectNextAbilityPressed();
+	
+	//void reset();
 }

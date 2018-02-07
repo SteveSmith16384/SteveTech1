@@ -21,7 +21,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public float currentGravInc = 0; // The y-axis change this frame from gravity
 
 	private Spatial spatial;
-	public T userObject; // Attach any object  todo - make private with get/set
+	public T userObject; // Attach any object
 	private boolean canMove = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
 	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.

@@ -2,7 +2,7 @@ package com.scs.stevetech1.weapons;
 
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.ICanShoot;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -31,7 +31,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	public abstract boolean launchBullet();
 
-	protected abstract void createBullet(AbstractGameServer server, int entityid, IRequiresAmmoCache owner, int side);
+	protected abstract void createBullet(AbstractGameServer server, int entityid, IEntityContainer owner, int side);
 
 	public abstract int getBulletsInMag();
 
@@ -55,7 +55,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	private void reload(AbstractGameServer server) {
 		//if (this instanceof IRequiresAmmoCache) {
-		IRequiresAmmoCache<T> irac = (IRequiresAmmoCache)this;
+		IEntityContainer<T> irac = (IEntityContainer)this;
 		//if (irac.requiresAmmo()) {
 		while (this.getBulletsInMag() < this.magazineSize) {
 			//server.createEntity(irac.getAmmoType(), server.getNextEntityID(), -1, irac);

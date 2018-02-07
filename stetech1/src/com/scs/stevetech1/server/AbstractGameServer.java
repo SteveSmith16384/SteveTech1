@@ -93,7 +93,7 @@ ICollisionListener<PhysicalEntity> {
 		console = new ServerConsole(this);
 
 		gameData = new SimpleGameData();
-		networkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this);
+		networkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, !Globals.LIVE_SERVER);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 
@@ -118,7 +118,7 @@ ICollisionListener<PhysicalEntity> {
 
 	private void connectToLobby() {
 		try {
-			clientToLobbyServer = new KryonetLobbyClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this);
+			clientToLobbyServer = new KryonetLobbyClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this, !Globals.LIVE_SERVER);
 			Globals.p("Connected to lobby server");
 		} catch (IOException e) {
 			Globals.p("Unable to connect to lobby server");

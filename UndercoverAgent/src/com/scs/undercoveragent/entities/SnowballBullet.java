@@ -19,7 +19,7 @@ import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -34,7 +34,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
 
-	public SnowballBullet(IEntityController _game, int id, IRequiresAmmoCache<SnowballBullet> owner, int _side) {
+	public SnowballBullet(IEntityController _game, int id, IEntityContainer<SnowballBullet> owner, int _side) {
 		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", true);
 
 		if (_game.isServer()) {
@@ -80,6 +80,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	}
 
 
+	@Override
 	public void launch(IEntity _shooter, Vector3f startPos, Vector3f dir) {
 		if (launched) { // We might be the client that fired the bullet, which we've already launched
 			//Globals.p("Snowball already launched.  This may be a good sign.");

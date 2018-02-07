@@ -85,9 +85,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
-					if (server != null) { // todo - delete
-						int dfgdfg = 456456;
-					}
 					//Settings.p("Using " + this.ability.toString());
 					avatarModel.setAnimationForCode(ANIM_SHOOTING); // Default
 					this.ability[i].activate();
@@ -141,24 +138,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	/*
-	public void addToWalkDir(Vector3f offset) {
-		this.walkDirection.addLocal(offset);
-	}
-
-	 */
 	public void resetWalkDir() {
 		this.walkDirection.set(0, 0, 0);
 	}
-
-	/*
-	public void shoot() {
-		if (this.abilityGun.activate()) {
-			this.currentAnim = avatarModel.getAnimationStringForCode(abilityGun.getAvatarAnimationCode());
-			this.numShots++;
-		}
-	}
-	 */
 
 
 	public void jump() {

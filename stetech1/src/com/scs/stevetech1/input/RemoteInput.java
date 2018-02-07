@@ -52,19 +52,19 @@ public class RemoteInput implements IInputDevice {
 	@Override
 	public boolean isAbilityPressed(int i) {
 		switch (i) {
-		case 0: return pim.mainAbility;
-		case 1: return pim.secondaryAbility;
+		case 0: return pim.ability1;
+		case 1: return pim.ability2;
 		}
 		return false;
 	}
 
-
+/*
 	@Override
 	public boolean isSelectNextAbilityPressed() {
 		return pim.selectNextAbility;
 	}
 
-
+*/
 	@Override
 	public Vector3f getDirection() {
 		return pim.direction;

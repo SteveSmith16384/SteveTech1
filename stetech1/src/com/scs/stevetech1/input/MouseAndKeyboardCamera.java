@@ -13,7 +13,7 @@ import com.jme3.renderer.Camera;
 
 public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListener, IInputDevice { 
 
-	private boolean left = false, right = false, up = false, down = false, jump = false, shoot = false, ability1 = false, cycleAbility = false;
+	private boolean left = false, right = false, up = false, down = false, jump = false, ability1 = false, ability2 = false;//, cycleAbility = false;
 
 	public MouseAndKeyboardCamera(Camera cam, InputManager _inputManager) {
 		super(cam);
@@ -30,12 +30,12 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		inputManager.addListener(this, "Down");
 		inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
 		inputManager.addListener(this, "Jump");
-		inputManager.addMapping("Shoot", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-		inputManager.addListener(this, "Shoot");
-		inputManager.addMapping("Ability1", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+		inputManager.addMapping("Ability1", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		inputManager.addListener(this, "Ability1");
-		inputManager.addMapping("CycleAbility", new KeyTrigger(KeyInput.KEY_C));
-		inputManager.addListener(this, "CycleAbility");
+		inputManager.addMapping("Ability2", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+		inputManager.addListener(this, "Ability2");
+		//inputManager.addMapping("CycleAbility", new KeyTrigger(KeyInput.KEY_C));
+		//inputManager.addListener(this, "CycleAbility");
 
 		// both mouse and button - rotation of cam
 		inputManager.addMapping("mFLYCAM_Left", new MouseAxisTrigger(MouseInput.AXIS_X, true), new KeyTrigger(KeyInput.KEY_LEFT));
@@ -121,12 +121,12 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 			down = isPressed;
 		} else if (binding.equals("Jump")) {
 			jump = isPressed;
-		} else if (binding.equals("Shoot")) {
-			shoot = isPressed;
 		} else if (binding.equals("Ability1")) {
 			ability1 = isPressed;
-		} else if (binding.equals("CycleAbility")) {
-			this.cycleAbility = isPressed;
+		} else if (binding.equals("Ability2")) {
+			ability2 = isPressed;
+		/*} else if (binding.equals("CycleAbility")) {
+			this.cycleAbility = isPressed;*/
 		}		
 	}
 
@@ -176,19 +176,19 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 	@Override
 	public boolean isAbilityPressed(int i) {
 		switch (i) {
-		case 0: return shoot;
-		case 1: return ability1;
+		case 0: return ability1;
+		case 1: return ability2;
 		}
 		return false;
 	}        
 
 
-
+/*
 	@Override
 	public boolean isSelectNextAbilityPressed() {
 		return this.cycleAbility;
 	}
-
+*/
 
 	@Override
 	public Vector3f getDirection() {
@@ -201,5 +201,10 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		return cam.getLeft();
 	}
 
-
+/*	
+	public void reset() {
+		this.ability1 = false;
+		this.ability2 = false;
+	}
+*/
 }

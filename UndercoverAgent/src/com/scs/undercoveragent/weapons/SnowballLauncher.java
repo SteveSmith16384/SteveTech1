@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.scs.stevetech1.components.ICanShoot;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -12,7 +12,7 @@ import com.scs.stevetech1.weapons.AbstractMagazineGun;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 import com.scs.undercoveragent.entities.SnowballBullet;
 
-public class SnowballLauncher extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache<SnowballBullet> {
+public class SnowballLauncher extends AbstractMagazineGun implements IAbility, IEntityContainer<SnowballBullet> {
 
 	private static final int MAG_SIZE = 6;
 
@@ -62,7 +62,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 
 
 	@Override
-	protected void createBullet(AbstractGameServer server, int entityid, IRequiresAmmoCache irac, int side) {
+	protected void createBullet(AbstractGameServer server, int entityid, IEntityContainer irac, int side) {
 		SnowballBullet pe = new SnowballBullet(game, entityid, irac, side);
 		server.addEntity(pe);
 

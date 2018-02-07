@@ -4,7 +4,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
@@ -14,7 +14,8 @@ import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.undercoveragent.entities.BigTreeWithLeaves;
 import com.scs.undercoveragent.entities.DebuggingSphere;
 import com.scs.undercoveragent.entities.Igloo;
-import com.scs.undercoveragent.entities.MapBorder;
+import com.scs.undercoveragent.entities.InvisibleMapBorder;
+import com.scs.undercoveragent.entities.MountainMapBorder;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowHill1;
 import com.scs.undercoveragent.entities.SnowHill2;
@@ -40,11 +41,12 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 	public static final int BIG_TREE_WITH_LEAVES = 8;
 	public static final int SNOWBALL_LAUNCHER = 9;
 	public static final int SNOWBALL_BULLET = 10;
-	public static final int MAP_BORDER = 11;
-	public static final int SNOW_HILL_2 = 12;
-	public static final int SNOW_HILL_3 = 13;
-	public static final int SNOW_HILL_4 = 14;
-	public static final int DEBUGGING_SPHERE = 15;
+	public static final int INVISIBLE_MAP_BORDER = 11;
+	public static final int MOUNTAIN_MAP_BORDER = 12;
+	public static final int SNOW_HILL_2 = 13;
+	public static final int SNOW_HILL_3 = 14;
+	public static final int SNOW_HILL_4 = 15;
+	public static final int DEBUGGING_SPHERE = 16;
 
 	public UndercoverAgentClientEntityCreator() {
 		super();
@@ -63,7 +65,7 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		case BIG_TREE_WITH_LEAVES: return "BIG_TREE_WITH_LEAVES";
 		case SNOWBALL_LAUNCHER: return "SNOWBALL_LAUNCHER";
 		case SNOWBALL_BULLET: return "SNOWBALL_BULLET";
-		case MAP_BORDER: return "MAP_BORDER";
+		case INVISIBLE_MAP_BORDER: return "MAP_BORDER";
 		case SNOW_HILL_2: return "SNOW_HILL_2";
 		case SNOW_HILL_3: return "SNOW_HILL_3";
 		case SNOW_HILL_4: return "SNOW_HILL_4";
@@ -159,7 +161,7 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("q");
 			SnowTree1 tree = new SnowTree1(game, id, pos.x, pos.y, pos.z, q);
-			return tree;  //crate.getMainNode().getWorldTranslation();
+			return tree;
 		}
 
 		case SNOW_TREE_2:
@@ -167,7 +169,7 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("q");
 			SnowTree2 tree = new SnowTree2(game, id, pos.x, pos.y, pos.z, q);
-			return tree;  //crate.getMainNode().getWorldTranslation();
+			return tree;
 		}
 
 		case BIG_TREE_WITH_LEAVES:
@@ -196,19 +198,27 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		{
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
-			IRequiresAmmoCache<SnowballBullet> irac = (IRequiresAmmoCache<SnowballBullet>)game.entities.get(containerID);
+			IEntityContainer<SnowballBullet> irac = (IEntityContainer<SnowballBullet>)game.entities.get(containerID);
 			SnowballBullet snowball = new SnowballBullet(game, id, irac, side);
 			return snowball;
 		}
 
-		case MAP_BORDER:
+		case INVISIBLE_MAP_BORDER:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			//Quaternion q = (Quaternion)msg.data.get("q");
 			Vector3f dir = (Vector3f)msg.data.get("dir");
 			float size = (float)msg.data.get("size");
-			MapBorder hill = new MapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
-			return hill;  //crate.getMainNode().getWorldTranslation();
+			InvisibleMapBorder hill = new InvisibleMapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
+			return hill;
+		}
+
+		case MOUNTAIN_MAP_BORDER:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Vector3f dir = (Vector3f)msg.data.get("dir");
+			float size = (float)msg.data.get("size");
+			MountainMapBorder hill = new MountainMapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
+			return hill;
 		}
 
 		case DEBUGGING_SPHERE:

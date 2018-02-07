@@ -12,14 +12,19 @@ import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
 import com.scs.stevetech1.netmessages.lobby.RequestListOfGameServersMessage;
 import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
 import com.scs.stevetech1.networking.IMessageServerListener;
+import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.Globals;
 
 public class KryonetLobbyServer {
 
+	private boolean debugging;
 	private IMessageServerListener listener;
 	private Server server;
 
-	public KryonetLobbyServer(int tcpport, int udpport, IMessageServerListener _listener) throws IOException {
+	public KryonetLobbyServer(int tcpport, int udpport, IMessageServerListener _listener, boolean _debugging) throws IOException {
+		super();
+		
+		debugging = _debugging;
 		server = new Server();
 		registerMessages(server.getKryo());
 		setListener(_listener);
@@ -43,8 +48,8 @@ public class KryonetLobbyServer {
 			}
 
 			public void connected (Connection connection) {
-				connection.setIdleThreshold(0); // todo
-				connection.setTimeout(0); // todo
+				connection.setIdleThreshold(debugging ? 0 : KryonetGameServer.DEF_TIMEOUT);
+				connection.setTimeout(debugging ? 0 : KryonetGameServer.DEF_TIMEOUT);
 
 				listener.connectionAdded(connection.getID(), connection);
 			}

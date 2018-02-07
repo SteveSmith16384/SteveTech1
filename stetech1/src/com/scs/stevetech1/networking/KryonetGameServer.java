@@ -37,11 +37,18 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.systems.client.LaunchData;
 
 public class KryonetGameServer implements IGameMessageServer {
+	
+	public static final int DEF_TIMEOUT = 10*1000;
 
+	private boolean debugging;
 	private IMessageServerListener listener;
 	private Server server;
 
-	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener) throws IOException {
+	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener, boolean _debugging) throws IOException {
+		super();
+		
+		debugging =_debugging;
+		
 		server = new Server();
 		registerMessages(server.getKryo());
 		setListener(_listener);
@@ -66,8 +73,8 @@ public class KryonetGameServer implements IGameMessageServer {
 			}
 
 			public void connected (Connection connection) {
-				connection.setIdleThreshold(0); // todo
-				connection.setTimeout(0); // todo
+				connection.setIdleThreshold(debugging ? 0 : DEF_TIMEOUT);
+				connection.setTimeout(debugging ? 0 : DEF_TIMEOUT);
 
 				listener.connectionAdded(connection.getID(), connection);
 			}

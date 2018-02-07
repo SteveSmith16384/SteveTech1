@@ -2,13 +2,10 @@ package com.scs.undercoveragent.entities;
 
 import java.util.HashMap;
 
-import com.jme3.asset.TextureKey;
-import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
-import com.jme3.texture.Texture;
-import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.jme.JMEFunctions;
@@ -20,34 +17,26 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
  * The origin for this should be left/bottom/front
  *
  */
-public class MapBorder extends PhysicalEntity {
+public class InvisibleMapBorder extends PhysicalEntity {
 
-	private static final float BORDER_WIDTH = 2f;
-	private static final float BORDER_HEIGHT = 5f;
+	public static final float BORDER_WIDTH = 2f;
+	public static final float BORDER_HEIGHT = 5f;
 
-	public MapBorder(IEntityController _game, int id, float x, float y, float z, float size, Vector3f dir) {
-		super(_game, id, UndercoverAgentClientEntityCreator.MAP_BORDER, "MapBorder", false);
+	public InvisibleMapBorder(IEntityController _game, int id, float x, float y, float z, float size, Vector3f dir) {
+		super(_game, id, UndercoverAgentClientEntityCreator.INVISIBLE_MAP_BORDER, "InvisibleMapBorder", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("size", size);
-			//creationData.put("q", q);
 			creationData.put("dir", dir);
 		}
 
-		/*todo if (!game.isServer()) {
-			for (float i=(MODEL_W_H/2) ; i<size ; i+=MODEL_W_H) {
-				Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
-				JMEFunctions.scaleModelToWidth(model, MODEL_W_H);
-				model.setLocalTranslation(MODEL_W_H/2, 0, i);
-				this.mainNode.attachChild(model);
-			}
-			this.mainNode.setModelBound(new BoundingBox());
-		} else {*/
 		Box box1 = new Box(BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
-		Geometry geometry = new Geometry("Crate", box1);
+		Geometry geometry = new Geometry("MapBorderBox", box1);
 		if (!_game.isServer()) { // Not running in server
-			TextureKey key3 = new TextureKey("Textures/neon1.jpg");
+			geometry.setCullHint(CullHint.Always); // DOn't draw the box on the client
+
+			/*TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 			//TextureKey key3 = new TextureKey("Textures/snow.jpg");
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
@@ -62,14 +51,13 @@ public class MapBorder extends PhysicalEntity {
 				floor_mat.setTexture("ColorMap", tex3);
 			}
 
-			geometry.setMaterial(floor_mat);
-		}
-		//}
-		geometry.setLocalTranslation(-BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
+			geometry.setMaterial(floor_mat);*/
 
+		}
+		
+		geometry.setLocalTranslation(-BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
 		mainNode.attachChild(geometry);
 		JMEFunctions.RotateToDirection(mainNode, dir);
-		//mainNode.setLocalRotation(q);
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);

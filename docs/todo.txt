@@ -1,19 +1,20 @@
 STETECH1
 
 URGENT
-Get TestGame compiling
-Improve border - server side is just a box, client side is an invisible box with hills around
-	Set zero grav on enemyavatars so they move exactly where they should
-Set kryonet values depending on whether debugging or not
-	Not rotating hills
-Add open-source msg to the top of all files
-Client can always jump, even when in the air
+Why doesn't player slide along snowmen?
+	How Does Source sent player inputs?
+	Improve border - server side is just a box, client side is an invisible box with hills around
+Not showing all borders
 Search for todos
-Blog post progress
-Record desktop showing two players
 
 
 TODO
+Always send shoot to the server
+Add open-source msg to the top of all files
+Record desktop showing two players
+Blog post progress
+Client can always jump, even when in the air
+Set kryonet values depending on whether debugging or not
 Create lobbylistener
 Snowman sink into floor when died
 Remove frame limiter?  Problems shooting...
@@ -27,7 +28,7 @@ Player dies - "Dead" in big letters
 Add entities to list immediately, but don't add to root node until scheduled?
 Ping system
 Split up client/server into systems
-Auto-start lobby with server
+	Auto-start lobby with server
 Try diff snow hills
 Tree - make serverside just a cyl on trunk
 UA - Players have one teleport

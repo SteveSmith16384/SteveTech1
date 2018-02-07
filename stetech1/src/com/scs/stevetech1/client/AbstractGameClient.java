@@ -165,7 +165,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		// Don't connect to network until JME is up and running!
 		try {
-			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this);
+			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this, !Globals.LIVE_SERVER);
 			this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
 			lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
 		} catch (IOException e) {
@@ -173,7 +173,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 
 		try {
-			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this); // todo - connect to lobby first!
+			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, !Globals.LIVE_SERVER); // todo - connect to lobby first!
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -196,7 +196,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		HUD hud = new HUD(this, guiFont_small, c);
 		getGuiNode().attachChild(hud);
 		return hud;
-
 	}
 
 
@@ -214,7 +213,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		if (tpf_secs > 1) {
+		if (tpf_secs > 1) { this.getRootNode();
 			tpf_secs = 1;
 		}
 
@@ -440,7 +439,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 				}
 			}
-
+			
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
 
@@ -572,13 +571,13 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Removing " + e.getName());
 				}
-				/*if (e instanceof PhysicalEntity) {
+				if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe =(PhysicalEntity)e;
 					if (pe.simpleRigidBody != null) {
 						this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
 					}
 					pe.getMainNode().removeFromParent();
-				}*/
+				}
 				this.entities.remove(id);
 			} else {
 				Globals.pe("Entity id " + id + " not found for removal");

@@ -9,6 +9,7 @@ import java.util.Random;
 public class Globals {
 	
 	public static final boolean RECORD_VID = false;
+	public static final boolean LIVE_SERVER = false; // Adjusts network idle thresholds etc...
 
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
 	public static final boolean SHOW_SNOWBALL_COLLISION_POS = true;
