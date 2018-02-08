@@ -41,6 +41,7 @@ import com.scs.stevetech1.input.MouseAndKeyboardCamera;
 import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
+import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
@@ -80,7 +81,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public static final int STATUS_CONNECTED_TO_GAME = 2;
 	public static final int STATUS_RCVD_WELCOME = 3;
 	public static final int STATUS_SENT_JOIN_REQUEST = 4;
-	public static final int STATUS_JOINED_GAME = 5;
+	public static final int STATUS_JOINED_GAME = 5; // About to be sent all the entities
 	public static final int STATUS_GAME_STARTED = 6; // Have received all entities
 
 	private static final String QUIT = "Quit";
@@ -199,9 +200,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	}
 
 
+	/*
+	 * Default light; override if required.
+	 */
 	protected void setUpLight() {
 		AmbientLight al = new AmbientLight();
-		al.setColor(ColorRGBA.White.mult(.5f));
+		al.setColor(ColorRGBA.White);
 		getGameNode().addLight(al);
 
 		DirectionalLight sun = new DirectionalLight();
@@ -327,6 +331,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
 							// todo - do something with message
 
+						} else if (message instanceof AvatarStatusMessage) {
+							AvatarStatusMessage asm = (AvatarStatusMessage)message;
+							if (asm.entityID == this.currentAvatar.getID()) {
+								this.hud.setHealthText((int)asm.health);
+							}
+							
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
@@ -569,7 +579,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			IEntity e = this.entities.get(id);
 			if (e != null) {
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-					Globals.p("Removing " + e.getName());
+					Globals.p("Removing entity " + id + ":" + e.getName());
 				}
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe =(PhysicalEntity)e;

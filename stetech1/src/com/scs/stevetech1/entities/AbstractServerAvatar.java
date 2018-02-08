@@ -87,6 +87,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			if (health <= 0) {
 				setDied(killer, reason);
 			} else {
+				Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);
 				this.server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
 			}
 		}
@@ -94,7 +95,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 
 	private void setDied(IEntity killer, String reason) {
-		Globals.p("Player died: " + reason);
+		Globals.p("Player " + this.getID() + " died: " + reason);
 		this.alive = false;
 		this.restartTimeSecs = server.gameOptions.restartTimeSecs;
 		server.networkServer.sendMessageToAll(new EntityKilledMessage(this, killer));

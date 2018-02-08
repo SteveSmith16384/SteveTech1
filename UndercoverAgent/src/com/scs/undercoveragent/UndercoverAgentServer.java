@@ -86,7 +86,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 		/*
 		new Igloo(this, getNextEntityID(), 5, 0, 5, JMEFunctions.GetRotation(-1, 0));
-		// todo - actually add entities
 		//new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);
 		new StaticSnowman(this, getNextEntityID(), 5, 0, 10, JMEFunctions.GetRotation(-1, 0));
 		new SnowTree2(this, getNextEntityID(), 10, 0, 5, JMEFunctions.GetRotation(-1, 0));
@@ -117,7 +116,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		this.actuallyAddEntity(floor);
 
 		// Walls
-		/*InvisibleMapBorder borderL = new InvisibleMapBorder(this, getNextEntityID() ,0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		InvisibleMapBorder borderL = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(borderL);  // works
 		InvisibleMapBorder borderR = new InvisibleMapBorder(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(borderR); // works
@@ -125,8 +124,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		this.actuallyAddEntity(borderBack);
 		InvisibleMapBorder borderFront = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
 		this.actuallyAddEntity(borderFront);
-*/
-		MountainMapBorder mborderL = new MountainMapBorder(this, getNextEntityID() ,0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+
+		MountainMapBorder mborderL = new MountainMapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(mborderL); 
 		MountainMapBorder mborderR = new MountainMapBorder(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(mborderR);
@@ -165,7 +164,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	public float getAvatarStartHealth(AbstractAvatar avatar) {
-		return 2;
+		return 1;
 	}
 
 

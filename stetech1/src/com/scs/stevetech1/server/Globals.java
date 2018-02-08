@@ -11,9 +11,11 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 	public static final boolean LIVE_SERVER = false; // Adjusts network idle thresholds etc...
 
-	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
-	public static final boolean SHOW_SNOWBALL_COLLISION_POS = true;
+	public static final boolean DEBUG_ANIM = true;
 
+	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
+	
+	public static final boolean SHOW_SNOWBALL_COLLISION_POS = false;
 	public static final boolean STOP_SERVER_AVATAR_MOVING = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = false;

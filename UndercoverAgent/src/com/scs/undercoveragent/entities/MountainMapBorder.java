@@ -25,12 +25,13 @@ public class MountainMapBorder extends PhysicalEntity {
 		if (!_game.isServer()) { // Not running in server
 			Node container = new Node("MountainContainer");
 			// Add mountain models
-			for (float i=(InvisibleMapBorder.BORDER_WIDTH/2) ; i<size ; i+=InvisibleMapBorder.BORDER_WIDTH) {
+			int i = 0;
+			//for (float i=(InvisibleMapBorder.BORDER_WIDTH/2) ; i<size ; i+=InvisibleMapBorder.BORDER_WIDTH) {
 				Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
 				JMEFunctions.scaleModelToWidth(model, InvisibleMapBorder.BORDER_WIDTH);
 				model.setLocalTranslation(InvisibleMapBorder.BORDER_WIDTH/2, 0, i);
 				container.attachChild(model);
-			}
+			//}
 			container.setModelBound(new BoundingBox());
 			//container.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, InvisibleMapBorder.BORDER_HEIGHT/2, size/2);
 

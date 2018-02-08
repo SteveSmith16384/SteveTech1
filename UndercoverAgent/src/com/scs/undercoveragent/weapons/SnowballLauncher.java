@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
@@ -32,6 +33,9 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 		if (!ammoCache.isEmpty()) {
 			SnowballBullet g = ammoCache.remove();
 			ICanShoot ic = (ICanShoot)owner;
+			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+				Globals.p("Manually launching entity " + g.id);
+			}
 			g.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			return true;
 		}

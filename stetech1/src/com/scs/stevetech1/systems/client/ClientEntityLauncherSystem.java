@@ -18,13 +18,19 @@ public class ClientEntityLauncherSystem {
 
 	public ClientEntityLauncherSystem(AbstractGameClient _client) {
 		super();
-		
+
 		client = _client;
 	}
 
 
 	public void scheduleLaunch(EntityLaunchedMessage elm) {
 		ILaunchable l = (ILaunchable)client.entities.get(elm.entityID);
+		if (l == null || l.hasBeenLaunched()) {
+			/*
+			 * It's probably our own entity that we've already manually launched.
+			 */
+			return;
+		}
 		if (l == null) {
 			throw new RuntimeException("Launchable id " + elm.entityID + " not found");
 		}
@@ -38,13 +44,10 @@ public class ClientEntityLauncherSystem {
 		Iterator<ILaunchable> it3 = this.toLaunch.keySet().iterator();
 		while (it3.hasNext()) {
 			ILaunchable e = it3.next();
-			//long timeToAdd = this.toLaunch.get(e).launchTime;
-			//if (timeToAdd < renderTime) { // Only remove them when its time
-				LaunchData ld = this.toLaunch.get(e);
-				it3.remove();
-				IEntity shooter = client.entities.get(ld.shooterId);
-				e.launch(shooter, ld.startPos, ld.dir);
-			//}
+			LaunchData ld = this.toLaunch.get(e);
+			it3.remove();
+			IEntity shooter = client.entities.get(ld.shooterId);
+			e.launch(shooter, ld.startPos, ld.dir);
 		}
 
 	}

@@ -1,27 +1,25 @@
 STETECH1
 
 URGENT
-Why doesn't player slide along snowmen?
-	How Does Source sent player inputs?
-	Improve border - server side is just a box, client side is an invisible box with hills around
+Error shown shooting
+Snowman sink into floor when died
 Not showing all borders
+	Only adjust player when they are moving?
 Search for todos
 
 
 TODO
+Falling snow - started
 Always send shoot to the server
+Why doesn't player slide along snowmen?
 Add open-source msg to the top of all files
 Record desktop showing two players
 Blog post progress
 Client can always jump, even when in the air
-Set kryonet values depending on whether debugging or not
-Create lobbylistener
-Snowman sink into floor when died
 Remove frame limiter?  Problems shooting...
-EnemyAvatar remaining if client drops out
+	EnemyAvatar remaining if client drops out
 Client connect to lobby first, then select server
 Create game modules?
-Only adjust player when they are moving
 Players send ping to server from lobby to see which is best
 Sound Effect message
 Player dies - "Dead" in big letters
@@ -33,7 +31,6 @@ Try diff snow hills
 Tree - make serverside just a cyl on trunk
 UA - Players have one teleport
 Get tileable snow tex
-Falling snow
 Use server-style simple models for collision checking on client side?
 Hitscan rifle - show line showing where server says bullet went
 Laser bullets
@@ -52,7 +49,6 @@ Add Features to readme
 Should not have a generic "process()" or preprocess() method?
 Walking up steps
 Physics test - do explosion
-Server don't check for hit unless client thinks it has hit
 Add lots of comments
 Unit test rewind avatars
 Spectator mode

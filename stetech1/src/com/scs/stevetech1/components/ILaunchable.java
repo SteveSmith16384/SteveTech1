@@ -8,4 +8,6 @@ public interface ILaunchable {
 	
 	void launch(IEntity _shooter, Vector3f startPos, Vector3f dir);
 	
+	boolean hasBeenLaunched();
+	
 }

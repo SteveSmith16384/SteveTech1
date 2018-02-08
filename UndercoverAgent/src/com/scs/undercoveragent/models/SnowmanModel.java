@@ -11,7 +11,7 @@ import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.Globals;
 
 /*
- * This class, and classes like this, is designed to keep all the model-specific settings in one place.
+ * This class, and classes like this, are designed to keep all the model-specific settings in one place.
  */
 public class SnowmanModel implements IAnimatedAvatarModel {
 
@@ -21,8 +21,9 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 
 	private AssetManager assetManager;
 	private Spatial model;
+	private String lastAnimCode = "";
 
-	private boolean showDied = false;
+	private boolean showDied = false; // So we know not to change the anim
 
 	public SnowmanModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
@@ -55,6 +56,13 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 
 	@Override
 	public void setAnimationForCode(String code) {
+		if (code.equals(lastAnimCode)) {
+			return;
+		}
+		lastAnimCode = code;
+		if (Globals.DEBUG_ANIM) {
+			Globals.p("Showing anim for code " + code);
+		}
 		if (code == AbstractAvatar.ANIM_DIED) {
 			showDied = true;
 		}
@@ -86,7 +94,8 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 	@Override
 	public void process(float tpf_secs) {
 		if (this.showDied) {
-			// todo - sink
+			// Sink
+			this.model.move(0, -tpf_secs/10, 0);
 		}
 	}
 

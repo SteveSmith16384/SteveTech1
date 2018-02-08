@@ -34,7 +34,7 @@ public class HUD extends Node implements IProcessByClient {
 	private boolean process_damage_box;
 	private AbstractGameClient game;
 	
-	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText;
+	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText, healthText;
 
 	public HUD(AbstractGameClient _game, BitmapFont font_small, Camera _cam) {
 		super("HUD");
@@ -83,6 +83,12 @@ public class HUD extends Node implements IProcessByClient {
 		abilityOther.setColor(defaultColour);
 		abilityOther.setLocalTranslation(10, yPos, 0);
 		this.attachChild(abilityOther);
+
+		yPos -= LINE_SPACING;
+		healthText = new BitmapText(font_small, false);
+		healthText.setColor(defaultColour);
+		healthText.setLocalTranslation(10, yPos, 0);
+		this.attachChild(healthText);
 
 		yPos -= LINE_SPACING;
 		pingText = new BitmapText(font_small, false);
@@ -192,6 +198,11 @@ public class HUD extends Node implements IProcessByClient {
 
 	public void setAbilityOtherText(String s) {
 		this.abilityOther.setText(s);
+	}
+
+
+	public void setHealthText(int s) {
+		this.healthText.setText("Health " + s);
 	}
 
 

@@ -44,6 +44,9 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		}
 
 		if (owner != null) { // Only snowball fired by us have an owner
+			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+				Globals.p("Adding snowball entity " + id + " to owner " + owner.getID());
+			}
 			owner.addToCache(this);
 		}
 
@@ -76,7 +79,6 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 		this.collideable = false;
 
-		//game.addEntity(this);
 	}
 
 
@@ -91,6 +93,9 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			throw new RuntimeException("Null launcher");
 		}
 
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			Globals.p("Launching entity " + this.getID());
+		}
 
 		launched = true;
 		shooter = _shooter;
@@ -193,6 +198,12 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 				game.addEntity(ds);
 			}
 		}
+	}
+
+
+	@Override
+	public boolean hasBeenLaunched() {
+		return this.launched;
 	}
 
 }

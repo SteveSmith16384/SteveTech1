@@ -48,7 +48,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		//syncPos = new MoveSlowlyToCorrectPosition();
 		//syncPos = new AdjustBasedOnDistance();
 		syncPos = new AdjustByFractionOfDistance();
-		
+
 		//this.simpleRigidBody.setGravity(0);
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
@@ -95,7 +95,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		final long serverTime = client.getServerTime();// System.currentTimeMillis() + client.clientToServerDiffTime;
 
 		this.avatarModel.process(tpf_secs);
-		
+
 		if (!this.alive) {
 			// Position cam above avatar - todo - move gradually
 			Vector3f vec = this.getWorldTranslation();
@@ -162,9 +162,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		if (Globals.SYNC_AVATAR_POS) {
-			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
-			if (offset != null) {
-				this.syncPos.adjustPosition(this, offset, tpf_secs);
+			if (super.playerWalked) { // Only adjust us if the player tried to move
+				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
+				if (offset != null) {
+					this.syncPos.adjustPosition(this, offset, tpf_secs);
+				}
 			}
 		}
 	}
