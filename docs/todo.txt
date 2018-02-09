@@ -1,16 +1,18 @@
 STETECH1
 
 URGENT
-Error shown shooting
 Snowman sink into floor when died
+If player presses shoot, make sure it is acted upon (keep bool true)
 Not showing all borders
+	Error shown shooting
 	Only adjust player when they are moving?
 Search for todos
 
 
 TODO
+Implement EntityNotFound message for entities that we still don't know about 10 seconds later
 Falling snow - started
-Always send shoot to the server
+Always send shoot to the server?
 Why doesn't player slide along snowmen?
 Add open-source msg to the top of all files
 Record desktop showing two players

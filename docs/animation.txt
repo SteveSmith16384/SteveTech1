@@ -1,0 +1,3 @@
+AbstractAvatar player input's determine the current animation code
+The server sends animation codes back to the client via the EntityUpdateMessage.
+The animation system goes through each animatable entity and sets the correct anim based on the time.

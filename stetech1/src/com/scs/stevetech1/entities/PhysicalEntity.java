@@ -36,7 +36,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f originalPos = new Vector3f();
 	private Quaternion originalRot = new Quaternion();
 	
-	protected Object currentAnim;// = "";
+	protected String currentAnimCode = null;
 	public boolean moves;
 
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _moves) {
@@ -298,8 +298,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public Object getCurrentAnim() {
-		return this.currentAnim;
+	public String getCurrentAnimCode() {
+		return this.currentAnimCode;
 	}
 
 }

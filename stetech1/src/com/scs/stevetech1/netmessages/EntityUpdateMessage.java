@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage.UpdateData;
 
@@ -26,7 +27,12 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		updateData.pos = sc.getWorldTranslation();
 		updateData.dir = sc.getWorldRotation();
 		updateData.force = force;
-		updateData.animation = sc.getCurrentAnim();
+		updateData.animationCode = sc.getCurrentAnimCode();
+		
+		if (sc.getCurrentAnimCode() != null && sc.getCurrentAnimCode().equals(AbstractAvatar.ANIM_DIED)) {
+			int dfgdfg = 45656;
+		}
+		
 		this.data.add(updateData);
 
 	}
@@ -44,7 +50,7 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		public Vector3f pos;
 		public Quaternion dir;
 		public boolean force; // Force new position on client, e.g. avatar restarting.
-		public Object animation;
+		public String animationCode;
 		
 	}
 	

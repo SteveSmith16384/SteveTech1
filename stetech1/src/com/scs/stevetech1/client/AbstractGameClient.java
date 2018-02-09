@@ -269,9 +269,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											}
 										}
 										pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
-										if (pe instanceof IAnimated && eum.animation != null && eum.animation != null) {
+										if (pe instanceof IAnimated && eum.animationCode != null) {
 											IAnimated ia = (IAnimated)pe;
-											ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animation));
+											ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animationCode));
+											if (eum.animationCode != null && eum.animationCode.equals(AbstractAvatar.ANIM_DIED)) {
+												int dfgdfg = 456456;
+											}
 										}
 									} else {
 										// Globals.p("Unknown entity ID for update: " + eum.entityID);

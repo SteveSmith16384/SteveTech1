@@ -2,6 +2,7 @@ package com.scs.stevetech1.systems.client;
 
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAnimated;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.systems.AbstractSystem;
@@ -23,16 +24,19 @@ public class AnimationSystem extends AbstractSystem {
 		if (anim.getAnimList() != null) { // Might be unanimated
 			HistoricalAnimationData had = anim.getAnimList().get(client.renderTime, true);
 			if (had != null) {
-				if (!had.animation.equals(anim.getCurrentAnim())) {
+				if (!had.animationCode.equals(anim.getCurrentAnimCode())) {
 					try {
-						anim.setCurrentAnim(had.animation);
-						//this.zm.channel.setAnim(had.animation);
+						if (had.animationCode != null && had.animationCode.equals(AbstractAvatar.ANIM_DIED)) { // todo - remove
+							int dfgdfg = 456456;
+						}
+						anim.setCurrentAnimForCode(had.animationCode);
 					} catch (IllegalArgumentException ex) {
 						Globals.pe(ex.getMessage());
 					}
 				}
 			}
 		}
+		anim.processAnimation(tpf_secs);
 	}
 
 

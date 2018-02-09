@@ -365,6 +365,7 @@ ICollisionListener<PhysicalEntity> {
 				try {
 					// Check code
 					if (pingMessage.randomCode == this.randomPingCode) {
+						try {
 						long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
 						client.playerData.pingRTT = client.pingCalc.add(rttDuration);
 						client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.playerData.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
@@ -372,6 +373,9 @@ ICollisionListener<PhysicalEntity> {
 						//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
 						if ((client.playerData.pingRTT/2) + Globals.SERVER_SEND_UPDATE_INTERVAL_MS > Globals.CLIENT_RENDER_DELAY) {
 							Globals.p("Warning: client ping is longer than client render delay!");
+						}
+						} catch (NullPointerException ex) {
+							ex.printStackTrace();
 						}
 					} else {
 						Globals.pe("Unexpected ping response code!");

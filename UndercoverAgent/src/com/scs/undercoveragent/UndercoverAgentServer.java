@@ -51,7 +51,9 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	public UndercoverAgentServer() throws IOException {
-		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 5*60*1000, 10*1000, UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 5, 5));
+		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 5*60*1000, 10*1000, 
+				UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 
+				25, 5));
 
 		//properties = new GameProperties(PROPS_FILE);
 	}

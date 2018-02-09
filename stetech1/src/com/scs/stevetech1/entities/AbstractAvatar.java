@@ -80,14 +80,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
 		this.resetWalkDir();
 
-		avatarModel.setAnimationForCode(ANIM_IDLE); // Default
+		String newAnimCode = ANIM_IDLE; // Default
 
 		// Check for any abilities/guns being fired
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
 					//Settings.p("Using " + this.ability.toString());
-					avatarModel.setAnimationForCode(ANIM_SHOOTING); // Default
+					newAnimCode = ANIM_SHOOTING;
 					this.ability[i].activate();
 				}
 			}
@@ -98,20 +98,20 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		if (input.getFwdValue()) {
 			//Settings.p("fwd=" + input.getFwdValue());
 			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
-			avatarModel.setAnimationForCode(ANIM_WALKING);
+			newAnimCode = ANIM_WALKING;
 			lastMoveTime = System.currentTimeMillis();
 		} else if (input.getBackValue()) {
 			walkDirection.addLocal(camDir.negate());
-			avatarModel.setAnimationForCode(ANIM_WALKING);
+			newAnimCode = ANIM_WALKING;
 			lastMoveTime = System.currentTimeMillis();
 		}
 		if (input.getStrafeLeftValue()) {		
 			walkDirection.addLocal(camLeft);
-			avatarModel.setAnimationForCode(ANIM_WALKING);
+			newAnimCode = ANIM_WALKING;
 			lastMoveTime = System.currentTimeMillis();
 		} else if (input.getStrafeRightValue()) {		
 			walkDirection.addLocal(camLeft.negate());
-			avatarModel.setAnimationForCode(ANIM_WALKING);
+			newAnimCode = ANIM_WALKING;
 			lastMoveTime = System.currentTimeMillis();
 		}
 		if (input.isJumpPressed()){
@@ -131,6 +131,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 
 		simpleRigidBody.process(tpf_secs);
+
+		if (!this.alive) {
+			this.currentAnimCode = ANIM_DIED;
+		} else {
+			if (!newAnimCode.equals(currentAnimCode)) {
+				this.currentAnimCode = newAnimCode;
+			}
+		}
 
 		// Point us in the right direction
 		/*if (this.game.isServer()) {
@@ -155,22 +163,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	/*@Override
-	public boolean canMove() {
-		return true; // Always calc for avatars
-	}
-	 */
-
 	@Override
 	public boolean sendUpdates() {
 		return true; // Always send for avatars
 	}
 
-	/*
-	public boolean isShooting() {
-		return this.input.isShootPressed();
-	}
-	 */
 
 	/*
 	 * Need this since we can't warp a player to correct their position, as they may warp into walls!
@@ -192,13 +189,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	public void addAbility(IAbility a, int num) {
 		this.ability[num] = a;
-		/*if (num == 0) {
-			this.abilityGun = a;
-		} else if (num == 1) {
-			this.abilityOther = a;
-		} else {
-			throw new RuntimeException("Unknown ability num: " + num);
-		}*/
 	}
 
 

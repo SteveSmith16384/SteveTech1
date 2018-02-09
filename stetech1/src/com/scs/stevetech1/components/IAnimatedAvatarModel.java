@@ -2,7 +2,7 @@ package com.scs.stevetech1.components;
 
 import com.jme3.scene.Spatial;
 
-public interface IAnimatedAvatarModel {
+public interface IAnimatedAvatarModel { //extends IAnimated { todo - rename
 
 	Spatial getModel(boolean forClient);
 	
@@ -10,10 +10,10 @@ public interface IAnimatedAvatarModel {
 	
 	float getBulletStartHeight();
 	
-	void setAnimationForCode(String code); // Called either server-side or client side for our own avatar.
+	//void setAnimationForCode(String code); // Called either server-side or client side for our own avatar.
 	
-	void showCurrentAnimation();
+	//void showCurrentAnimation();
 	
-	void process(float tpf_secs);
+	//void process(float tpf_secs);
 		
 }

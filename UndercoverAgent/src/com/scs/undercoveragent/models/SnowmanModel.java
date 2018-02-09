@@ -21,10 +21,7 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 
 	private AssetManager assetManager;
 	private Spatial model;
-	private String lastAnimCode = "";
-
-	private boolean showDied = false; // So we know not to change the anim
-
+	
 	public SnowmanModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
 
@@ -32,7 +29,7 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 
 
 	@Override
-	public Spatial getModel(boolean forClient) {
+	public Spatial getModel(boolean forClient) { // todo - rename to Create...
 		if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
 			model = assetManager.loadModel("Models/Holiday/Snowman.obj");
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
@@ -53,7 +50,7 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 		}
 	}
 
-
+/*
 	@Override
 	public void setAnimationForCode(String code) {
 		if (code.equals(lastAnimCode)) {
@@ -67,7 +64,7 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 			showDied = true;
 		}
 	}
-
+*/
 
 	@Override
 	public float getCameraHeight() {
@@ -80,7 +77,7 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 		return MODEL_HEIGHT - 0.2f;
 	}
 
-
+/*
 	@Override
 	public void showCurrentAnimation() {
 		if (showDied) {
@@ -89,14 +86,29 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 		}
 
 	}
-
-
-	@Override
-	public void process(float tpf_secs) {
+*/
+/*
+	public void processAnimation(float tpf_secs) {
 		if (this.showDied) {
 			// Sink
 			this.model.move(0, -tpf_secs/10, 0);
 		}
 	}
+*/
+	public void showDied(float tpf_secs) {
+		/*if (Globals.DEBUG_ANIM) {
+			Globals.p("Snowman sinking...");
+		}*/
+		this.model.move(0, -tpf_secs/10, 0);
+		
+	}
 
+
+	public void showAlive(float tpf_secs) {
+		/*if (Globals.DEBUG_ANIM) {
+			Globals.p("Snowman restored...");
+		}*/
+		this.model.move(0, 0, 0); // todo - check if already restored
+		
+	}
 }

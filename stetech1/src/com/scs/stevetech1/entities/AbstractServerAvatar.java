@@ -100,7 +100,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		this.restartTimeSecs = server.gameOptions.restartTimeSecs;
 		server.networkServer.sendMessageToAll(new EntityKilledMessage(this, killer));
 
-		avatarModel.setAnimationForCode(ANIM_DIED); // Send death as an anim, so it gets scheduled and is not shown straight away
+		this.currentAnimCode = ANIM_DIED; // Send death as an anim, so it gets scheduled and is not shown straight away
 	}
 
 

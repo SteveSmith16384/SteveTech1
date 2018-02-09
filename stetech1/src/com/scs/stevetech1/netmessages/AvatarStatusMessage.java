@@ -8,7 +8,6 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 	
 	public int entityID;
 	public float health;
-	//public boolean alive;
 	
 	public AvatarStatusMessage() {
 		super();
@@ -19,7 +18,6 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 		super(true, true);
 		
 		this.entityID = avatar.getID();
-		//alive = avatar.isAlive();
 		this.health = avatar.getHealth();
 	}
 

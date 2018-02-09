@@ -3,11 +3,11 @@ package com.scs.stevetech1.shared;
 public class HistoricalAnimationData implements ITimeStamped {
 
 	public long timeStamp;
-	public Object animation;
+	public String animationCode;
 	
-	public HistoricalAnimationData(long _timeStamp, Object anim) {
+	public HistoricalAnimationData(long _timeStamp, String animCode) {
 		timeStamp = _timeStamp;
-		animation = anim;
+		animationCode = animCode;
 	}
 
 	
