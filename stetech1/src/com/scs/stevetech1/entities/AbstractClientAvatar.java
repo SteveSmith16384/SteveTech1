@@ -15,7 +15,7 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
-import com.scs.stevetech1.components.IAnimatedAvatarModel;
+import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IClientAvatar;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
@@ -36,7 +36,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	private Node debugNode;	
 
 	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, 
-			float x, float y, float z, int side, IAnimatedAvatarModel _zm) { //, IGetAvatarAnimationString animCodes, float _camHeight) {
+			float x, float y, float z, int side, IAvatarModel _zm) { //, IGetAvatarAnimationString animCodes, float _camHeight) {
 		super(_module, _playerID, _input, eid, side, _zm);
 
 		cam = _cam;
@@ -104,33 +104,21 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			cam.lookAt(this.getWorldTranslation(), Vector3f.UNIT_Y);
 			cam.update();
 			return;
+		} else {
+
+			super.serverAndClientProcess(null, client, tpf_secs, serverTime);
+
+			storeAvatarPosition(serverTime);
+
+			// Position camera at node
+			Vector3f vec = this.getWorldTranslation();
+			cam.getLocation().x = vec.x;
+			cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
+			cam.getLocation().z = vec.z;
+			cam.update();
 		}
 
-		//Vector3f pos = this.getWorldTranslation().clone();
-
-		super.serverAndClientProcess(null, client, tpf_secs, serverTime);
-
-		/*if (Globals.DEBUG_ADJ_AVATAR_POS) {
-			Vector3f newPos = this.getWorldTranslation().clone();
-			Vector3f diff = newPos.subtract(pos);
-			if (diff.length() > 0) {
-				Globals.p("Moved client by " + diff);
-			} else {
-				Globals.p("Client not moved");
-			}
-			Globals.p("Client position is " + this.getWorldTranslation());
-		}*/
-
-		storeAvatarPosition(serverTime);
-
 		hud.processByClient(client, tpf_secs);
-
-		// Position camera at node
-		Vector3f vec = this.getWorldTranslation();
-		cam.getLocation().x = vec.x;
-		cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
-		cam.getLocation().z = vec.z;
-		cam.update();
 
 		// These must be after we might use them, so the hud is correct 
 		this.hud.setAbilityGunText(this.ability[0].getHudText());

@@ -206,4 +206,10 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		return this.launched;
 	}
 
+
+	@Override
+	public IEntity getActualShooter() {
+		return shooter;
+	}
+
 }

@@ -1,9 +1,12 @@
 STETECH1
 
 URGENT
-Snowman sink into floor when died
+Add client ping time to bullet ffwd
+Is camera looking down when killed?
 If player presses shoot, make sure it is acted upon (keep bool true)
 Not showing all borders
+Show players score
+	Snowman sink into floor when died
 	Error shown shooting
 	Only adjust player when they are moving?
 Search for todos

@@ -23,7 +23,7 @@ import com.jme3.system.AppSettings;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.IAnimated;
+import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
@@ -170,7 +170,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
 			lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
 		} catch (IOException e) {
-			//todo - re-add throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e.getMessage());
 		}
 
 		try {
@@ -269,8 +269,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											}
 										}
 										pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
-										if (pe instanceof IAnimated && eum.animationCode != null) {
-											IAnimated ia = (IAnimated)pe;
+										if (pe instanceof IClientSideAnimated && eum.animationCode != null) {
+											IClientSideAnimated ia = (IClientSideAnimated)pe;
 											ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animationCode));
 											if (eum.animationCode != null && eum.animationCode.equals(AbstractAvatar.ANIM_DIED)) {
 												int dfgdfg = 456456;
@@ -409,11 +409,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							IPlayerControlled p = (IPlayerControlled)e;
 							p.resetPlayerInput();
 						}
-						/*
-						if (e instanceof IRequiresAmmoCache) {
-							updateAmmoSystem.process((IRequiresAmmoCache)e, tpf_secs);
-						}
-						 */
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;  // pe.getWorldTranslation();
 							if (pe.moves) { // Only bother with things that can move
@@ -427,8 +422,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
 						}
 
-						if (e instanceof IAnimated) {
-							IAnimated pbc = (IAnimated)e;
+						if (e instanceof IClientSideAnimated) {
+							IClientSideAnimated pbc = (IClientSideAnimated)e;
 							this.animSystem.process(pbc, tpf_secs);
 						}
 					}
@@ -640,12 +635,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		return false;
 	}
 
-	/*
-	@Override
-	public Type getJmeContext() {
-		return getContext().getType();
-	}
-	 */
 
 	@Override
 	public void connected() {
@@ -666,12 +655,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		return physicsController;
 	}
 
-	/*
-	@Override
-	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
-		return true;
-	}
-	 */
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {

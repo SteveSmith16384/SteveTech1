@@ -2,9 +2,9 @@ package com.scs.stevetech1.components;
 
 import com.jme3.scene.Spatial;
 
-public interface IAnimatedAvatarModel { //extends IAnimated { todo - rename
+public interface IAvatarModel {
 
-	Spatial getModel(boolean forClient);
+	Spatial createAndGetModel(boolean forClient);
 	
 	float getCameraHeight();
 	

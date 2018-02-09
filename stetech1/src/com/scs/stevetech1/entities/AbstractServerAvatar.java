@@ -2,7 +2,8 @@ package com.scs.stevetech1.entities;
 
 import com.jme3.math.Vector3f;
 import com.scs.simplephysics.SimpleCharacterControl;
-import com.scs.stevetech1.components.IAnimatedAvatarModel;
+import com.scs.stevetech1.components.IAvatarModel;
+import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRewindable;
@@ -19,7 +20,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	private AbstractGameServer server;
 
-	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side, IAnimatedAvatarModel anim) {
+	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side, IAvatarModel anim) {
 		super(_module, _playerID, _input, eid, side, anim);
 
 		//client = _client;
@@ -81,10 +82,11 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 
 	@Override
-	public void damaged(float amt, IEntity killer, String reason) {
+	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
 		if (this.alive && invulnerableTimeSecs < 0) {
 			this.health -= amt;
 			if (health <= 0) {
+				IEntity killer = collider.getActualShooter();
 				setDied(killer, reason);
 			} else {
 				Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);

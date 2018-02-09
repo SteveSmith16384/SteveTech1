@@ -36,7 +36,7 @@ public class ServerSideCollisionLogic {
 	
 	private void checkForDamage(ICausesHarmOnContact choc, IDamagable id) {
 		if (choc.getSide() != id.getSide()) {
-			id.damaged(choc.getDamageCaused(), (IEntity)choc, "Hit by " + choc);
+			id.damaged(choc.getDamageCaused(), choc, "Hit by " + choc);
 		}
 		
 	}

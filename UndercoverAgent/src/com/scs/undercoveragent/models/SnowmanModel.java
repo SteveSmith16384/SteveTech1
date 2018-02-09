@@ -5,7 +5,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.scs.stevetech1.components.IAnimatedAvatarModel;
+import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.Globals;
@@ -13,7 +13,7 @@ import com.scs.stevetech1.server.Globals;
 /*
  * This class, and classes like this, are designed to keep all the model-specific settings in one place.
  */
-public class SnowmanModel implements IAnimatedAvatarModel {
+public class SnowmanModel implements IAvatarModel {
 
 	private static final float MODEL_WIDTH = 0.4f;
 	private static final float MODEL_DEPTH = 0.3f;
@@ -22,6 +22,8 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 	private AssetManager assetManager;
 	private Spatial model;
 	
+	private boolean showingDied = false;
+	
 	public SnowmanModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
 
@@ -29,7 +31,7 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 
 
 	@Override
-	public Spatial getModel(boolean forClient) { // todo - rename to Create...
+	public Spatial createAndGetModel(boolean forClient) {
 		if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
 			model = assetManager.loadModel("Models/Holiday/Snowman.obj");
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
@@ -100,6 +102,7 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 			Globals.p("Snowman sinking...");
 		}*/
 		this.model.move(0, -tpf_secs/10, 0);
+		showingDied = true;
 		
 	}
 
@@ -108,7 +111,11 @@ public class SnowmanModel implements IAnimatedAvatarModel {
 		/*if (Globals.DEBUG_ANIM) {
 			Globals.p("Snowman restored...");
 		}*/
-		this.model.move(0, 0, 0); // todo - check if already restored
+		if (!showingDied) {
+			return;
+		}
+		this.model.move(0, 0, 0);
+		showingDied = false;
 		
 	}
 }

@@ -8,7 +8,7 @@ import com.jme3.scene.Spatial.CullHint;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
-import com.scs.stevetech1.components.IAnimatedAvatarModel;
+import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IPlayerControlled;
@@ -40,14 +40,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected float health;
 	public IAbility[] ability = new IAbility[2];
 	public int side = -1;
-	protected IAnimatedAvatarModel avatarModel;
+	protected IAvatarModel avatarModel;
 
 	protected boolean alive = true;
 	protected float restartTimeSecs, invulnerableTimeSecs;
 	protected long lastMoveTime = System.currentTimeMillis() + 5000;
 	protected boolean playerWalked; // Has the player tried to move us?
 
-	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAnimatedAvatarModel _anim) {
+	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _anim) {
 		super(_game, eid, 1, "Player", true);
 
 		if (game.isServer()) {
@@ -62,7 +62,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		side =_side;
 		avatarModel = _anim;
 
-		playerGeometry = avatarModel.getModel(!game.isServer());// getPlayersModel(game, playerID);
+		playerGeometry = avatarModel.createAndGetModel(!game.isServer());// getPlayersModel(game, playerID);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves - yet?
 
 		this.getMainNode().attachChild(playerGeometry);

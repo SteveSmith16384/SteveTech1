@@ -23,7 +23,7 @@ public class StaticSnowman extends PhysicalEntity {
 		}
 
 		SnowmanModel m = new SnowmanModel(game.getAssetManager());
-		Spatial model = m.getModel(!game.isServer());
+		Spatial model = m.createAndGetModel(!game.isServer());
 
 		this.mainNode.attachChild(model); //This creates the model bounds!
 		
