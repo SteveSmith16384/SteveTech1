@@ -170,7 +170,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
 			lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			//todo - re-add throw new RuntimeException(e.getMessage());
 		}
 
 		try {
@@ -307,7 +307,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 						} else if (message instanceof EntityKilledMessage) {
 							EntityKilledMessage asm = (EntityKilledMessage) message;
-							PhysicalEntity killed = (PhysicalEntity)this.entities.get(asm.killerEntityID);
+							PhysicalEntity killed = (PhysicalEntity)this.entities.get(asm.killedEntityID);
 							PhysicalEntity killer = (PhysicalEntity)this.entities.get(asm.killerEntityID);
 							if (killed == this.currentAvatar) {
 								Globals.p("You have been killed by " + killer);

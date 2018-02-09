@@ -94,7 +94,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	}
 
 
-	private void setDied(IEntity killer, String reason) {
+	private void setDied(IEntity killer, String reason) { // todo - killer is snowball!
 		Globals.p("Player " + this.getID() + " died: " + reason);
 		this.alive = false;
 		this.restartTimeSecs = server.gameOptions.restartTimeSecs;
