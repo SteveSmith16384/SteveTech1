@@ -40,7 +40,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 				}
 			};
 			r.start();
-			
+
 			AbstractGameServer app = new UndercoverAgentServer();
 			app.setPauseOnLostFocus(false);
 			app.start(JmeContext.Type.Headless);
@@ -53,7 +53,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	public UndercoverAgentServer() throws IOException {
 		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 5*60*1000, 10*1000, 
 				UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 
-				25, 5));
+				10, 5));
 
 		//properties = new GameProperties(PROPS_FILE);
 	}
@@ -62,7 +62,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		avatar.setWorldTranslation(new Vector3f(3f, 1f, 3f + (avatar.playerID*2)));
-		/*todo - re-add SimpleRigidBody<PhysicalEntity> collider;
+		
+		/*SimpleRigidBody<PhysicalEntity> collider; todo - re-add
 		do {
 			float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
 			float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
@@ -91,8 +92,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		//new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);
 		new StaticSnowman(this, getNextEntityID(), 5, 0, 10, JMEFunctions.GetRotation(-1, 0));
 		new SnowTree2(this, getNextEntityID(), 10, 0, 5, JMEFunctions.GetRotation(-1, 0));
-*/
-		
+		 */
+
 		// Place snowman
 		/*int numSnowmen = 30;
 		for (int i=0 ; i<numSnowmen ; i++) {
@@ -112,7 +113,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			//numSnowmen--;
 			Globals.p("Placed " + i + " snowmen.");
 		}*/
-		
+
 		// Place floor last so the snowmen don't collide with it when being placed
 		SnowFloor floor = new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg");
 		this.actuallyAddEntity(floor);

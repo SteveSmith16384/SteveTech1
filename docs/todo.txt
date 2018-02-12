@@ -1,16 +1,14 @@
 STETECH1
 
 URGENT
-	Show players score
-Set score, health to 0 at start
-Warn if client and server have diff bullets left
-Is camera looking down when killed?
 Not showing all borders
+	Not setting alive = truen on client
+	Show players score
+	Show game status in HUD
+Warn if client and server have diff bullets left
 	Snowman sink into floor when died
-	Error shown shooting
-	Only adjust player when they are moving?
 Search for todos
-
+Use model woman
 
 TODO
 If player presses shoot, make sure it is acted upon (keep bool true)?  Needed?

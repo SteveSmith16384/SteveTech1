@@ -315,7 +315,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 								avatar.setAlive(false);
 								//avatar.hasDied();
 							} else if (killer == this.currentAvatar) {
-								Globals.p("You have killed " + killed);
+								Globals.p("You have killed " + killed); // todo - inc score
 								// todo - say "you have killed..." in hud
 							}
 
@@ -329,6 +329,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 						} else if (message instanceof AvatarStartedMessage) {
 							AvatarStartedMessage asm = (AvatarStartedMessage)message;
+							AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.avatarId);
+							avatar.setAlive(true);
 
 						} else if (message instanceof ListOfGameServersMessage) {
 							ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
