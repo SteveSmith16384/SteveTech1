@@ -8,6 +8,7 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 	
 	public int entityID;
 	public float health;
+	public int score;
 	
 	public AvatarStatusMessage() {
 		super();
@@ -19,6 +20,7 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 		
 		this.entityID = avatar.getID();
 		this.health = avatar.getHealth();
+		this.score = avatar.getScore();
 	}
 
 }

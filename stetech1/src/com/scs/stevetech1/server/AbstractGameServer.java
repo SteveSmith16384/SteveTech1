@@ -21,6 +21,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
@@ -194,8 +195,7 @@ ICollisionListener<PhysicalEntity> {
 					this.rootNode.updateGeometricState();
 					for (ClientData c : this.clients.values()) {
 						AbstractServerAvatar avatar = c.avatar;
-						if (avatar != null)
-						{
+						if (avatar != null) {
 							//&& avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 							//ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
 							ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
@@ -730,5 +730,18 @@ ICollisionListener<PhysicalEntity> {
 		return rootNode;
 	}
 
+	
+	public void gameStatusChanged(int newStatus)  {
+		if (newStatus == SimpleGameData.ST_DEPLOYING || newStatus == SimpleGameData.ST_STARTED) {
+			synchronized (entities) {
+				for (IEntity e : entities.values()) {
+					if (e instanceof IGetReadyForGame) {
+						IGetReadyForGame grfg = (IGetReadyForGame)e;
+						grfg.getReadyForGame();
+					}
+				}
+			}
+		}
+	}
 }
 

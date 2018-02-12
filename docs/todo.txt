@@ -1,11 +1,11 @@
 STETECH1
 
 URGENT
-Add client ping time to bullet ffwd
+	Show players score
+Set score, health to 0 at start
+Warn if client and server have diff bullets left
 Is camera looking down when killed?
-If player presses shoot, make sure it is acted upon (keep bool true)
 Not showing all borders
-Show players score
 	Snowman sink into floor when died
 	Error shown shooting
 	Only adjust player when they are moving?
@@ -13,6 +13,8 @@ Search for todos
 
 
 TODO
+If player presses shoot, make sure it is acted upon (keep bool true)?  Needed?
+Add client ping time to bullet ffwd
 Implement EntityNotFound message for entities that we still don't know about 10 seconds later
 Falling snow - started
 Always send shoot to the server?

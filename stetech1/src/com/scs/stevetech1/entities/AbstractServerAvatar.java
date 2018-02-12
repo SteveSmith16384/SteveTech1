@@ -6,6 +6,7 @@ import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
@@ -16,7 +17,7 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable {
+public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame {
 
 	private AbstractGameServer server;
 
@@ -90,11 +91,16 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 				setDied(killer, reason);
 			} else {
 				Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);
-				this.server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
+				sendStatusMessage();
 			}
 		}
 	}
 
+	
+	private void sendStatusMessage() {
+		this.server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
+
+	}
 
 	private void setDied(IEntity killer, String reason) { // todo - killer is snowball!
 		Globals.p("Player " + this.getID() + " died: " + reason);
@@ -120,5 +126,16 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		}
 	}
 
+
+	@Override
+	public void getReadyForGame() {
+		alive = true;
+		this.health = server.getAvatarStartHealth(this);
+		this.setScore(0);
+		this.invulnerableTimeSecs = 5;
+		
+		sendStatusMessage();
+		
+	}
 
 }

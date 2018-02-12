@@ -38,6 +38,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public final int playerID;
 	public Spatial playerGeometry;
 	protected float health;
+	protected int score;
 	public IAbility[] ability = new IAbility[2];
 	public int side = -1;
 	protected IAvatarModel avatarModel;
@@ -246,7 +247,23 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
+	public int getScore() {
+		return this.score;
+	}
+
+
+	public void incScore(int i) {
+		this.score += i;
+	}
+
+
+	public void setScore(int i) {
+		this.score = i;
+	}
+
+
 	public void setHealth(float h) {
 		this.health = h;
 	}
+	
 }

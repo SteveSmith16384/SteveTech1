@@ -46,9 +46,10 @@ public class ServerGameStatusSystem {
 				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 			}
 		}
-		//if (oldStatus != gameData.getGameStatus()) {
-			server.sendGameStatusMessage();
-		//}
+		server.sendGameStatusMessage();
+		if (oldStatus != gameData.getGameStatus()) {
+			server.gameStatusChanged(gameData.getGameStatus());
+		}
 	}
 
 	

@@ -6,6 +6,7 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractAbility;
 import com.scs.stevetech1.shared.IAbility;
@@ -15,7 +16,6 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	protected float timeUntilShoot_secs = 0;
 	protected int magazineSize;
-	//protected int bulletsLeftInMag;
 	protected float shotInterval_secs, reloadInterval_secs;
 
 
@@ -54,14 +54,10 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 
 	private void reload(AbstractGameServer server) {
-		//if (this instanceof IRequiresAmmoCache) {
 		IEntityContainer<T> irac = (IEntityContainer)this;
-		//if (irac.requiresAmmo()) {
 		while (this.getBulletsInMag() < this.magazineSize) {
-			//server.createEntity(irac.getAmmoType(), server.getNextEntityID(), -1, irac);
 			createBullet(server, server.getNextEntityID(), irac, -1);
 		}
-		//}
 	}
 
 
@@ -73,7 +69,6 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			// Reload
 			Globals.p("Reloading");
 			reload(server);// Only server can reload
-			//this.bulletsLeftInMag = this.magazineSize;
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			server.networkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 		}

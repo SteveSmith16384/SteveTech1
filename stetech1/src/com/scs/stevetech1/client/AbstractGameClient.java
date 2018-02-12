@@ -106,7 +106,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public SimpleGameData gameData;
 	protected Node gameNode = new Node("GameNode");
 
-	private RealtimeInterval sendInputsInterval = new RealtimeInterval(Globals.SERVER_TICKRATE_MS);
+	//private RealtimeInterval sendInputsInterval = new RealtimeInterval(Globals.SERVER_TICKRATE_MS);
 	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
@@ -352,15 +352,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 				if (clientStatus == STATUS_GAME_STARTED) {
 
-					if (this.currentAvatar != null) {
-						// Send inputs
-						if (sendInputsInterval.hitInterval()) {
-							if (networkClient.isConnected()) {
-								this.networkClient.sendMessageToServer(new PlayerInputMessage(this.input));
-							}
-						}
-					}
-
+					this.sendInputsIfTime();
+					
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
 							long timeDiff = this.currentAvatar.serverPositionData.getMostRecent().serverTimestamp - renderTime;
@@ -457,6 +450,18 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 	}
 
+	
+	private void sendInputsIfTime() {
+		if (this.currentAvatar != null) {
+			// Send inputs
+			if (networkClient.isConnected()) {
+				//if (sendInputsInterval.hitInterval()) {  Don't need this since it's once a loop anyway
+					this.networkClient.sendMessageToServer(new PlayerInputMessage(this.input));
+				//}
+			}
+		}
+	}
+	
 
 	/*
 	 * Mainly for when a client requests the server to create an entity, e.g. a grenade (for lobbing).
