@@ -33,10 +33,39 @@ FTL
 	Place gun emplacements
 	medibot
 
-	
+------------	
 Battle of Wizards
-	Wizard has a range of spells to cast.
+	Wizard has a range of spells to casthttps://opengameart.org/content/wizard-4
+    Wall
+Fire
+Shrink
+Tornado
+Invisible
+Heal
+Creatures
+Lightening bolt
+Fireball
+Turmoil
+Resurrect
+Subversion
+Gooey Blob - use domes?
+Magic Castle
+Enhance creature - make it bigger
+Teleport
+Vortex
+Plague of Locusts
+Swap Positions
+Heal
+Shrink creature
+Magic Carpet
+Temporary Blindness
+Hailstorm
+Remove gravity
 
+
+Sorcerers Mode:
+Leave gravestones
+----------------------------
 
 The Thing
 	One player is the alien but looks normal

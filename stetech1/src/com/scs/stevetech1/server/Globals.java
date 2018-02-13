@@ -11,17 +11,17 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 	public static final boolean LIVE_SERVER = false; // Adjusts network idle thresholds etc...
 
-	public static final boolean DEBUG_MOUNTAIN_BORDER = true;
-	public static final boolean PLAYERS_START_IN_CORDNER = true;
+	public static final boolean DEBUG_PLAYER_RESTART = true;
+	public static final boolean PLAYERS_START_IN_CORNER = true;
 	public static final boolean EMPTY_MAP = true;
 	
-	public static final boolean DEBUG_ANIM = false;
+	public static final boolean DEBUG_MOUNTAIN_BORDER = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;	
 	public static final boolean SHOW_SNOWBALL_COLLISION_POS = false;
 	public static final boolean STOP_SERVER_AVATAR_MOVING = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
-	public static final boolean USE_SERVER_MODELS_ON_CLIENT = true;
+	public static final boolean USE_SERVER_MODELS_ON_CLIENT = false;
 	public static final boolean SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP = false;
 	public static final boolean SHOW_AVATAR_WALK_DIR = false;
 	public static final boolean DEBUG_REWIND_POS1 = false;

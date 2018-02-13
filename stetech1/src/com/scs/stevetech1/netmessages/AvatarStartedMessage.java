@@ -6,16 +6,16 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 @Serializable
 public class AvatarStartedMessage extends MyAbstractMessage {
 	
-	public int avatarId;
+	public int entityID;
 	
 	public AvatarStartedMessage() {
 		super();
 	}
 
-	public AvatarStartedMessage(AbstractAvatar _avatarId) {
+	public AvatarStartedMessage(AbstractAvatar _avatar) {
 		super(true, true);
 		
-		avatarId = _avatarId.getID();
+		entityID = _avatar.getID();
 	}
 
 }

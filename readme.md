@@ -9,18 +9,20 @@ SteveTech1 is a complete 3D multiplayer FPS framework and engine, designed to cr
 * Client lag-compensation
 * TCP and UDP for networking
 * Position interpolation
+* Avatar "rewinding" for accurate shooting
 * Simple physics
 * Includes some simple example games
 * Game lobby
 
 
-## TODO
-* Create Gradle/Maven/Ant files.
+## GETTING STARTED
+
+You are advised to look at the example game Undercover Agent to see how to easily implement your own multiplayer FPS game using SteveTech1.
 
 
 
 ## CREDITS
-Designed and developed by Stephen Carlyle-Smith (stephen.carlylesmith@googlemail.com)
+Designed and developed by Stephen Carlyle-Smith (http://twitter.com/stephencsmith/, stephen.carlylesmith@googlemail.com)
 Use JMonkeyEngine for the 3D
 Uses Kryonet for networking
 

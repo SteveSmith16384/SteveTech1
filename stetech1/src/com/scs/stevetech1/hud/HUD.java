@@ -188,7 +188,7 @@ public class HUD extends Node implements IProcessByClient {
 
 
 	public void setGameStatus(String s) {
-		this.gameStatus.setText(s);
+		this.gameStatus.setText("Game Status: " + s);
 	}
 
 

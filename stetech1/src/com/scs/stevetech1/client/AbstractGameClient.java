@@ -82,7 +82,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public static final int STATUS_RCVD_WELCOME = 3;
 	public static final int STATUS_SENT_JOIN_REQUEST = 4;
 	public static final int STATUS_JOINED_GAME = 5; // About to be sent all the entities
-	public static final int STATUS_GAME_STARTED = 6; // Have received all entities
+	public static final int STATUS_STARTED = 6; // Have received all entities
 
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
@@ -176,11 +176,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		try {
 			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, !Globals.LIVE_SERVER); // todo - connect to lobby first!
 		} catch (IOException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
 		}
 
 		loopTimer.start();
-		
+
 		// Turn off stats
 		setDisplayFps(false);
 		setDisplayStatView(false);
@@ -218,7 +219,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		if (tpf_secs > 1) { this.getRootNode();
-			tpf_secs = 1;
+		tpf_secs = 1;
 		}
 
 		try {
@@ -272,9 +273,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 										if (pe instanceof IClientSideAnimated && eum.animationCode != null) {
 											IClientSideAnimated ia = (IClientSideAnimated)pe;
 											ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animationCode));
-											if (eum.animationCode != null && eum.animationCode.equals(AbstractAvatar.ANIM_DIED)) {
+											/*if (eum.animationCode != null && eum.animationCode.equals(AbstractAvatar.ANIM_DIED)) {
 												int dfgdfg = 456456;
-											}
+											}*/
 										}
 									} else {
 										// Globals.p("Unknown entity ID for update: " + eum.entityID);
@@ -288,10 +289,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							RemoveEntityMessage rem = (RemoveEntityMessage)message;
 							this.removeEntity(rem.entityID);
 
-						} else if (message instanceof GeneralCommandMessage) { // We now have enough data to start
+						} else if (message instanceof GeneralCommandMessage) {
 							GeneralCommandMessage msg = (GeneralCommandMessage)message;
-							if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) {
-								clientStatus = STATUS_GAME_STARTED;
+							if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
+								clientStatus = STATUS_STARTED;
 								this.getRootNode().attachChild(this.gameNode);
 							}
 
@@ -313,29 +314,33 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 								Globals.p("You have been killed by " + killer);
 								AbstractAvatar avatar = (AbstractAvatar)killed;
 								avatar.setAlive(false);
-								//avatar.hasDied();
 							} else if (killer == this.currentAvatar) {
-								Globals.p("You have killed " + killed); // todo - inc score
+								Globals.p("You have killed " + killed);
 							}
+							
 						} else if (message instanceof EntityLaunchedMessage) {
 							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 							this.launchSystem.scheduleLaunch(elm); //this.entities
 
 						} else if (message instanceof AvatarStartedMessage) {
+							if (Globals.DEBUG_PLAYER_RESTART) {
+								Globals.p("Rcvd AvatarStartedMessage");
+							}
 							AvatarStartedMessage asm = (AvatarStartedMessage)message;
-							AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.avatarId);
-							avatar.setAlive(true);
-
+							if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
+								AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
+								avatar.setAlive(true); // todo -point camera fwds again
+							}
 						} else if (message instanceof ListOfGameServersMessage) {
 							ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
 							// todo - do something with message
 
 						} else if (message instanceof AvatarStatusMessage) {
 							AvatarStatusMessage asm = (AvatarStatusMessage)message;
-							if (asm.entityID == this.currentAvatar.getID()) {
+							if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 								this.hud.setHealthText((int)asm.health);
 							}
-							
+
 						} else {
 							throw new RuntimeException("Unknown message type: " + message);
 						}
@@ -346,10 +351,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					networkClient.sendMessageToServer(new PingMessage(false, 0));
 				}
 
-				if (clientStatus == STATUS_GAME_STARTED) {
+				if (clientStatus == STATUS_STARTED) {
 
 					this.sendInputsIfTime();
-					
+
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
 							long timeDiff = this.currentAvatar.serverPositionData.getMostRecent().serverTimestamp - renderTime;
@@ -399,7 +404,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							p.resetPlayerInput();
 						}
 						if (e instanceof PhysicalEntity) {
-							PhysicalEntity pe = (PhysicalEntity)e;  // pe.getWorldTranslation();
+							PhysicalEntity pe = (PhysicalEntity)e;  // pe.getWorldTranslation();  
 							if (pe.moves) { // Only bother with things that can move
 								pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
 							}
@@ -436,6 +441,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 				}
 			}
+
+			input.reset();
 			
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
@@ -446,18 +453,18 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 	}
 
-	
-	private void sendInputsIfTime() {
+
+	private void sendInputsIfTime() { // todo - rename
 		if (this.currentAvatar != null) {
 			// Send inputs
 			if (networkClient.isConnected()) {
 				//if (sendInputsInterval.hitInterval()) {  Don't need this since it's once a loop anyway
-					this.networkClient.sendMessageToServer(new PlayerInputMessage(this.input));
+				this.networkClient.sendMessageToServer(new PlayerInputMessage(this.input));
 				//}
 			}
 		}
 	}
-	
+
 
 	/*
 	 * Mainly for when a client requests the server to create an entity, e.g. a grenade (for lobbing).

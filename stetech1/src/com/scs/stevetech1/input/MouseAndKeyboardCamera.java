@@ -122,11 +122,9 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		} else if (binding.equals("Jump")) {
 			jump = isPressed;
 		} else if (binding.equals("Ability1")) {
-			ability1 = isPressed;
+			ability1 = ability1 || isPressed;
 		} else if (binding.equals("Ability2")) {
-			ability2 = isPressed;
-		/*} else if (binding.equals("CycleAbility")) {
-			this.cycleAbility = isPressed;*/
+			ability2 = ability2 || isPressed;
 		}		
 	}
 
@@ -183,13 +181,6 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 	}        
 
 
-/*
-	@Override
-	public boolean isSelectNextAbilityPressed() {
-		return this.cycleAbility;
-	}
-*/
-
 	@Override
 	public Vector3f getDirection() {
 		return cam.getDirection();
@@ -201,10 +192,10 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		return cam.getLeft();
 	}
 
-/*	
+
 	public void reset() {
 		this.ability1 = false;
 		this.ability2 = false;
 	}
-*/
+
 }

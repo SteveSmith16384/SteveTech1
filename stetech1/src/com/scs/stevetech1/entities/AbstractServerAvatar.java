@@ -51,12 +51,15 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		
 		if (!this.alive) {
 			restartTimeSecs -= tpf;
+			this.currentAnimCode = ANIM_DIED;
 			if (this.restartTimeSecs <= 0) {
 				Globals.p("Resurrecting avatar");
 				this.startAgain();
 				
 				server.networkServer.sendMessageToAll(new AvatarStartedMessage(this));
-
+				if (Globals.DEBUG_PLAYER_RESTART) {
+					Globals.p("Sent AvatarStartedMessage");
+				}
 				// Send position update
 				EntityUpdateMessage eum = new EntityUpdateMessage();
 				eum.addEntityData(this, true);
@@ -101,13 +104,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		}
 	}
 
-/*	
-	private void sendStatusMessage() {
-		this.server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
 
-	}
-*/
-	
 	private void setDied(IEntity killer, String reason) {
 		Globals.p("Player " + this.getID() + " died: " + reason);
 		this.alive = false;

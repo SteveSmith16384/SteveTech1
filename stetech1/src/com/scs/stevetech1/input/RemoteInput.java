@@ -77,4 +77,11 @@ public class RemoteInput implements IInputDevice {
 	}
 
 
+	@Override
+	public void reset() {
+		// Do nothing?
+		
+	}
+
+
 }

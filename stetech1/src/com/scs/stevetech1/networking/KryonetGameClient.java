@@ -49,7 +49,7 @@ public class KryonetGameClient implements IGameMessageClient {
 		});
 
 		client.start();
-		client.connect(1000, ip, tcpPort, udpPort);
+		client.connect(debugging ? 999*1000 : KryonetGameServer.DEF_TIMEOUT, ip, tcpPort, udpPort);
 	}
 
 

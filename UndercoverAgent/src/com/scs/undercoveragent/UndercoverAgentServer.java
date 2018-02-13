@@ -68,7 +68,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		if (Globals.PLAYERS_START_IN_CORDNER) {
+		if (Globals.PLAYERS_START_IN_CORNER) {
 			avatar.setWorldTranslation(new Vector3f(3f, 1f, 3f + (avatar.playerID*2)));
 		} else {
 			// Find a random position
@@ -130,13 +130,13 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		this.actuallyAddEntity(borderFront);
 
 		MountainMapBorder mborderL = new MountainMapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
-		this.actuallyAddEntity(mborderL);
-		MountainMapBorder mborderR = new MountainMapBorder(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
-		//this.actuallyAddEntity(mborderR);
+		this.actuallyAddEntity(mborderL); // works
+		MountainMapBorder mborderR = new MountainMapBorder(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE+InvisibleMapBorder.BORDER_WIDTH, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		this.actuallyAddEntity(mborderR); // works
 		MountainMapBorder mborderBack = new MountainMapBorder(this, getNextEntityID(), 0, 0, UndercoverAgentStaticData.MAP_SIZE, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
-		//this.actuallyAddEntity(mborderBack);
-		MountainMapBorder mborderFront = new MountainMapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
-		//this.actuallyAddEntity(mborderFront);
+		this.actuallyAddEntity(mborderBack);
+		MountainMapBorder mborderFront = new MountainMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
+		this.actuallyAddEntity(mborderFront);
 	}
 
 

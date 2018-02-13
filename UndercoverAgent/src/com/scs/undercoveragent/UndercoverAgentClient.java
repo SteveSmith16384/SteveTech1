@@ -104,7 +104,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	public void simpleUpdate(float tpf_secs) {
 		super.simpleUpdate(tpf_secs);
 		
-		if (this.clientStatus == AbstractGameClient.STATUS_GAME_STARTED) {
+		if (this.clientStatus == AbstractGameClient.STATUS_STARTED) {
 			snowflakeSystem.process(tpf_secs);
 		}
 	}

@@ -1,18 +1,16 @@
 STETECH1
 
 URGENT
-If player shootsd, always send shoot
+Sometimes, first bullet no killing snowman
+Player who died not coming back properly
+	If player shootsd, always send shoot
 Add snowtext to mountains
-Not showing all borders in right place?
-	Show players score
-	Show game status in HUD
 Warn if client and server have diff bullets left
-	Snowman sink into floor when died
 Search for todos
-Use model woman
 
 
 TODO
+Use model woman
 Find sound effects
 Add client ping time to bullet ffwd
 Implement EntityNotFound message for entities that we still don't know about 10 seconds later

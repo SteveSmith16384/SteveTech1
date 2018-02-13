@@ -34,11 +34,11 @@ public class MountainMapBorder extends PhysicalEntity {
 			for (float i=(InvisibleMapBorder.BORDER_WIDTH/2) ; i<size ; i+=InvisibleMapBorder.BORDER_WIDTH/2) { 
 				Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
 				JMEFunctions.scaleModelToWidth(model, InvisibleMapBorder.BORDER_WIDTH);
-				//model.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, 0, i);
+				model.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, 0, i);//-(InvisibleMapBorder.BORDER_WIDTH/2));
 				container.attachChild(model);
 			}
 			//container.setModelBound(new BoundingBox());  This stops it being drawn!?
-			container.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, 0, 0);
+			//container.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, 0, 0);
 
 			mainNode.attachChild(container);
 			JMEFunctions.rotateToDirection(mainNode, dir);

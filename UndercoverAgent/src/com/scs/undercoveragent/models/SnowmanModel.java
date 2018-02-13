@@ -21,9 +21,9 @@ public class SnowmanModel implements IAvatarModel {
 
 	private AssetManager assetManager;
 	private Spatial model;
-	
+
 	private boolean showingDied = false;
-	
+
 	public SnowmanModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
 
@@ -40,19 +40,19 @@ public class SnowmanModel implements IAvatarModel {
 			return model;
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
-			Geometry geometry = new Geometry("Snowman", box1);
-			geometry.setLocalTranslation(0, MODEL_HEIGHT/2, 0); // Move origin to floor
+			model = new Geometry("Snowman", box1);
+			model.setLocalTranslation(0, MODEL_HEIGHT/2, 0); // Move origin to floor
 
 			if (Globals.USE_SERVER_MODELS_ON_CLIENT) {
 				// Need to give it a tex
-				JMEFunctions.setTextureOnSpatial(assetManager, geometry, "Textures/greensun.jpg");
+				JMEFunctions.setTextureOnSpatial(assetManager, model, "Textures/greensun.jpg");
 			}
 
-			return geometry;
+			return model;
 		}
 	}
 
-/*
+	/*
 	@Override
 	public void setAnimationForCode(String code) {
 		if (code.equals(lastAnimCode)) {
@@ -66,7 +66,7 @@ public class SnowmanModel implements IAvatarModel {
 			showDied = true;
 		}
 	}
-*/
+	 */
 
 	@Override
 	public float getCameraHeight() {
@@ -79,7 +79,7 @@ public class SnowmanModel implements IAvatarModel {
 		return MODEL_HEIGHT - 0.2f;
 	}
 
-/*
+	/*
 	@Override
 	public void showCurrentAnimation() {
 		if (showDied) {
@@ -88,34 +88,39 @@ public class SnowmanModel implements IAvatarModel {
 		}
 
 	}
-*/
-/*
+	 */
+	/*
 	public void processAnimation(float tpf_secs) {
 		if (this.showDied) {
 			// Sink
 			this.model.move(0, -tpf_secs/10, 0);
 		}
 	}
-*/
+	 */
 	public void showDied(float tpf_secs) {
 		/*if (Globals.DEBUG_ANIM) {
 			Globals.p("Snowman sinking...");
 		}*/
-		this.model.move(0, -tpf_secs/10, 0);
+		try {
+			if (model != null) {
+				this.model.move(0, -tpf_secs/7, 0);
+			}
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+		}
 		showingDied = true;
-		
+
 	}
 
 
 	public void showAlive(float tpf_secs) {
-		/*if (Globals.DEBUG_ANIM) {
-			Globals.p("Snowman restored...");
-		}*/
+		//model.getLocalTranslation();
+		//model.getParent().getLocalTranslation();
 		if (!showingDied) {
 			return;
-		}
-		this.model.move(0, 0, 0);
+		} 
+		this.model.setLocalTranslation(0, 0, 0);
 		showingDied = false;
-		
+
 	}
 }

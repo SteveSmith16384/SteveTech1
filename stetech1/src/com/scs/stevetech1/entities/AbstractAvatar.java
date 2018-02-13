@@ -137,13 +137,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 		simpleRigidBody.process(tpf_secs);
 
-		if (!this.alive) {
+		
+		/*if (!this.alive) {
 			this.currentAnimCode = ANIM_DIED;
-		} else {
+		} else {*/
 			if (!newAnimCode.equals(currentAnimCode)) {
 				this.currentAnimCode = newAnimCode;
 			}
-		}
+		//}
 
 		// Point us in the right direction
 		/*if (this.game.isServer()) {

@@ -189,7 +189,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 	@Override
 	public void collided(PhysicalEntity pe) {
-		Globals.p("Snowball hit something at " + System.currentTimeMillis());
+		//Globals.p("Snowball hit something at " + System.currentTimeMillis());
 		if (Globals.SHOW_SNOWBALL_COLLISION_POS) {
 			if (game.isServer()) {
 				// Create debugging sphere

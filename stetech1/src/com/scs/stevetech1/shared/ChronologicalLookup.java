@@ -48,7 +48,7 @@ public class ChronologicalLookup<T extends ITimeStamped> {
 					if (warn) {
 						//long diff = System.currentTimeMillis() - serverTimeToUse;
 						long startDiff = serverTimeToUse - positionData.getFirst().getTimestamp();
-						Globals.p("Warning: Requested time is " + startDiff + " too soon");
+						//Globals.p("Warning: Requested time is " + startDiff + " too soon");
 						//Globals.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));
 					}
 					return this.positionData.getFirst(); // Our selected time is too soon!

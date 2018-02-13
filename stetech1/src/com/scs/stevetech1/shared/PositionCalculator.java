@@ -89,7 +89,7 @@ public final class PositionCalculator {
 					if (warn) {
 						//long diff = System.currentTimeMillis() - serverTimeToUse;
 						long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
-						Globals.p("Warning: Requested time is " + startDiff + " too soon");
+						//Globals.p("Warning: Requested time is " + startDiff + " too soon");
 						Globals.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));
 					}
 					return this.positionData.getFirst(); // Our selected time is too soon!
