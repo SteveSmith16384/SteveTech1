@@ -77,7 +77,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		model.setModelBound(new BoundingBox());
 		rootNode.attachChild(model);
 
-		this.rootNode.attachChild(JMEFunctions.GetGrid(assetManager, 10));
+		this.rootNode.attachChild(JMEFunctions.getGrid(assetManager, 10));
 
 		rootNode.updateGeometricState();
 

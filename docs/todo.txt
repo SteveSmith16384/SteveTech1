@@ -1,8 +1,9 @@
 STETECH1
 
 URGENT
-Not showing all borders
-	Not setting alive = truen on client
+If player shootsd, always send shoot
+Add snowtext to mountains
+Not showing all borders in right place?
 	Show players score
 	Show game status in HUD
 Warn if client and server have diff bullets left
@@ -10,18 +11,17 @@ Warn if client and server have diff bullets left
 Search for todos
 Use model woman
 
+
 TODO
-If player presses shoot, make sure it is acted upon (keep bool true)?  Needed?
+Find sound effects
 Add client ping time to bullet ffwd
 Implement EntityNotFound message for entities that we still don't know about 10 seconds later
 Falling snow - started
-Always send shoot to the server?
 Why doesn't player slide along snowmen?
 Add open-source msg to the top of all files
 Record desktop showing two players
 Blog post progress
 Client can always jump, even when in the air
-Remove frame limiter?  Problems shooting...
 	EnemyAvatar remaining if client drops out
 Client connect to lobby first, then select server
 Create game modules?
@@ -55,7 +55,6 @@ Should not have a generic "process()" or preprocess() method?
 Walking up steps
 Physics test - do explosion
 Add lots of comments
-Unit test rewind avatars
 Spectator mode
 Create generic classes and test them
 Make vars private/protected

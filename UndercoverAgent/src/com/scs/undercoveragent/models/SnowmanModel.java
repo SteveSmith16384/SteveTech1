@@ -36,7 +36,7 @@ public class SnowmanModel implements IAvatarModel {
 			model = assetManager.loadModel("Models/Holiday/Snowman.obj");
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEFunctions.moveYOriginTo(model, 0f);
-			JMEFunctions.RotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
+			JMEFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 			return model;
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
@@ -45,7 +45,7 @@ public class SnowmanModel implements IAvatarModel {
 
 			if (Globals.USE_SERVER_MODELS_ON_CLIENT) {
 				// Need to give it a tex
-				JMEFunctions.SetTextureOnSpatial(assetManager, geometry, "Textures/greensun.jpg");
+				JMEFunctions.setTextureOnSpatial(assetManager, geometry, "Textures/greensun.jpg");
 			}
 
 			return geometry;

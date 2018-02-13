@@ -81,7 +81,7 @@ public class CustomMeshViewer extends SimpleApplication {
 		rootNode.attachChild(geo);
 		
 		
-		this.rootNode.attachChild(JMEFunctions.GetGrid(assetManager, 10));
+		this.rootNode.attachChild(JMEFunctions.getGrid(assetManager, 10));
 		rootNode.updateGeometricState();
 
 	}

@@ -3,8 +3,8 @@ package com.scs.stevetech1.data;
 public class GameOptions {
 
 	public String displayName;
-	private int maxPlayersPerSide;
-	private int maxSides;
+	public int maxPlayersPerSide;
+	public int maxSides;
 	private boolean allPlayersOnDifferentSides;
 	public long deployDurationMillis = 10 * 1000;
 	public long gameDurationMillis = 60 * 1000;

@@ -36,6 +36,7 @@ import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
+import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
@@ -65,7 +66,7 @@ IMessageServerListener, // To listen for connecting game clients
 IMessageClientListener, // For sending messages to the lobby server
 ICollisionListener<PhysicalEntity> {
 
-	public IGameMessageServer networkServer;
+	public IGameMessageServer networkServer; // todo - rename to gamenetworkServer
 	private KryonetLobbyClient clientToLobbyServer;
 	public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
@@ -136,7 +137,8 @@ ICollisionListener<PhysicalEntity> {
 				connectToLobby();
 			}
 			if (clientToLobbyServer != null) {
-				this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), true)); // todo - do we have spaces?
+				boolean spaces = this.doWeHaveSpaces();
+				this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), spaces));
 			}
 		}
 
@@ -277,8 +279,22 @@ ICollisionListener<PhysicalEntity> {
 		loopTimer.start();
 	}
 
+	
+	private boolean doWeHaveSpaces() {
+		if (this.gameOptions.maxSides <= 0 || this.gameOptions.maxPlayersPerSide <= 0) {
+			return true;
+		}
+		int currentPlayers = this.clients.size(); // todo - only count players actually Accepted!
+		int maxPlayers = this.gameOptions.maxSides * this.gameOptions.maxPlayersPerSide;
+		return currentPlayers < maxPlayers;
+	}
 
-	protected void playerJoined(ClientData client, MyAbstractMessage message) {
+	
+	private void playerJoined(ClientData client, MyAbstractMessage message) {
+		if (!this.doWeHaveSpaces()) {
+			this.networkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces"));
+		}
+		
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 		int side = getSide(client);
 		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, side);

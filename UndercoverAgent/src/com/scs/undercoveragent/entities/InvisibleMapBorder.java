@@ -18,7 +18,8 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 /*
- * The origin for this should be left/bottom/front
+ * 
+ * The origin for this should be left/bottom/front.
  *
  */
 public class InvisibleMapBorder extends PhysicalEntity {
@@ -62,7 +63,7 @@ public class InvisibleMapBorder extends PhysicalEntity {
 
 		geometry.setLocalTranslation(-BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
 		mainNode.attachChild(geometry);
-		JMEFunctions.RotateToDirection(mainNode, dir);
+		JMEFunctions.rotateToDirection(mainNode, dir);
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);

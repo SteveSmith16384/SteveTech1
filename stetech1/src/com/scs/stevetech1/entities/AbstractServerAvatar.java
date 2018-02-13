@@ -3,6 +3,7 @@ package com.scs.stevetech1.entities;
 import com.jme3.math.Vector3f;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.components.IAvatarModel;
+import com.scs.stevetech1.components.ICanScorePoints;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
@@ -17,14 +18,13 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame {
+public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame, ICanScorePoints {
 
 	private AbstractGameServer server;
 
 	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side, IAvatarModel anim) {
 		super(_module, _playerID, _input, eid, side, anim);
 
-		//client = _client;
 		server = (AbstractGameServer)_module;
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
@@ -34,7 +34,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	
 	public void startAgain() {
 		alive = true;
-		this.health = server.getAvatarStartHealth(this);
+		this.setHealth(server.getAvatarStartHealth(this));
 		this.invulnerableTimeSecs = 5;
 		server.moveAvatarToStartPosition(this);
 
@@ -43,6 +43,12 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
+		if (this.statsChanged) {
+			this.server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
+			this.statsChanged = false;
+		}
+		
+		
 		if (!this.alive) {
 			restartTimeSecs -= tpf;
 			if (this.restartTimeSecs <= 0) {
@@ -85,30 +91,35 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
 		if (this.alive && invulnerableTimeSecs < 0) {
-			this.health -= amt;
-			if (health <= 0) {
+			this.decHealth(amt);
+			if (this.getHealth() <= 0) {
 				IEntity killer = collider.getActualShooter();
 				setDied(killer, reason);
 			} else {
 				Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);
-				sendStatusMessage();
 			}
 		}
 	}
 
-	
+/*	
 	private void sendStatusMessage() {
 		this.server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
 
 	}
-
-	private void setDied(IEntity killer, String reason) { // todo - killer is snowball!
+*/
+	
+	private void setDied(IEntity killer, String reason) {
 		Globals.p("Player " + this.getID() + " died: " + reason);
 		this.alive = false;
 		this.restartTimeSecs = server.gameOptions.restartTimeSecs;
 		server.networkServer.sendMessageToAll(new EntityKilledMessage(this, killer));
 
 		this.currentAnimCode = ANIM_DIED; // Send death as an anim, so it gets scheduled and is not shown straight away
+		
+		if (killer != null && killer instanceof ICanScorePoints) {
+			ICanScorePoints csp = (ICanScorePoints)killer;
+			csp.incScore(1);
+		}
 	}
 
 
@@ -130,11 +141,9 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	@Override
 	public void getReadyForGame() {
 		alive = true;
-		this.health = server.getAvatarStartHealth(this);
+		this.setHealth(server.getAvatarStartHealth(this));
 		this.setScore(0);
 		this.invulnerableTimeSecs = 5;
-		
-		sendStatusMessage();
 		
 	}
 

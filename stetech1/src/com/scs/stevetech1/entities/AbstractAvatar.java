@@ -37,8 +37,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	public final int playerID;
 	public Spatial playerGeometry;
-	protected float health;
-	protected int score;
 	public IAbility[] ability = new IAbility[2];
 	public int side = -1;
 	protected IAvatarModel avatarModel;
@@ -47,6 +45,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected float restartTimeSecs, invulnerableTimeSecs;
 	protected long lastMoveTime = System.currentTimeMillis() + 5000;
 	protected boolean playerWalked; // Has the player tried to move us?
+
+	// Send messages when changed
+	protected boolean statsChanged = false;
+	private float health;
+	private int score;
+
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _anim) {
 		super(_game, eid, 1, "Player", true);
@@ -242,11 +246,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	public float getHealth() {
-		return this.health;
-	}
-
-
 	public int getScore() {
 		return this.score;
 	}
@@ -254,16 +253,30 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	public void incScore(int i) {
 		this.score += i;
+		this.statsChanged = true;
 	}
 
 
 	public void setScore(int i) {
 		this.score = i;
+		this.statsChanged = true;
+	}
+
+
+	public float getHealth() {
+		return this.health;
 	}
 
 
 	public void setHealth(float h) {
 		this.health = h;
+		this.statsChanged = true;
+	}
+	
+
+	public void decHealth(float h) {
+		this.health -= h;
+		this.statsChanged = true;
 	}
 	
 }

@@ -28,7 +28,7 @@ public class JMEFunctions {
 	}
 
 
-	public static Spatial LoadModel(AssetManager assetManager, String path) {
+	public static Spatial loadModel(AssetManager assetManager, String path) {
 		boolean LOAD_JME_VERSION = true;
 
 		Spatial ship = null;
@@ -57,7 +57,7 @@ public class JMEFunctions {
 	}
 
 
-	public static Geometry GetGrid(AssetManager assetManager, int size){
+	public static Geometry getGrid(AssetManager assetManager, int size){
 		Geometry g = new Geometry("wireframe grid", new Grid(size, size, 1f) );
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		mat.getAdditionalRenderState().setWireframe(true);
@@ -65,14 +65,12 @@ public class JMEFunctions {
 		g.setMaterial(mat);
 
 		// Move to middle
-		//g.center().move(pos);
-		//rootNode.attachChild(g);
 		g.move(-size/2, 0, -size/2);
 		return g;
 	}
 
 
-	public static void TurnTowards_Gentle(Spatial spatial, Vector3f target, float pcent) {
+	public static void turnTowards_Gentle(Spatial spatial, Vector3f target, float pcent) {
 		if (pcent <= 0) {
 			return; //throw new RuntimeException("Invalid pcent: " + pcent);
 		}
@@ -94,14 +92,14 @@ public class JMEFunctions {
 	}
 
 
-	public static void MoveForwards(Spatial spatial, float speed) {
+	public static void moveForwards(Spatial spatial, float speed) {
 		Vector3f forward = spatial.getLocalRotation().mult(Vector3f.UNIT_Z);
 		Vector3f offset = forward.mult(speed);
 		spatial.move(offset);
 	}
 
 
-	public static BitmapText CreateBitmapText(BitmapFont guiFont, String text) {
+	public static BitmapText createBitmapText(BitmapFont guiFont, String text) {
 		BitmapText bmp = new BitmapText(guiFont, false);
 		bmp.setSize(guiFont.getCharSet().getRenderedSize());
 		bmp.setColor(ColorRGBA.White);
@@ -111,7 +109,7 @@ public class JMEFunctions {
 	}
 
 
-	public static float GetAngleBetween(Spatial spatial, Vector3f target) {
+	public static float getAngleBetween(Spatial spatial, Vector3f target) {
 		Vector3f dir_to_target = target.subtract(spatial.getWorldTranslation()).normalizeLocal();
 		Vector3f forward = spatial.getLocalRotation().mult(Vector3f.UNIT_Z).normalizeLocal();
 		float diff = forward.distance(dir_to_target);
@@ -119,7 +117,7 @@ public class JMEFunctions {
 	}
 
 
-	public static void SetTextureOnSpatial(AssetManager assetManager, Spatial spatial, String tex) {
+	public static void setTextureOnSpatial(AssetManager assetManager, Spatial spatial, String tex) {
 		TextureKey key3 = new TextureKey(tex);
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
@@ -133,15 +131,15 @@ public class JMEFunctions {
 			material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 			material.setTexture("ColorMap", tex3);
 		}
-		SetMaterialOnSpatial(spatial, material);
+		setMaterialOnSpatial(spatial, material);
 	}
 
 
-	public static void SetMaterialOnSpatial(Spatial spatial, Material mat) {
+	public static void setMaterialOnSpatial(Spatial spatial, Material mat) {
 		if (spatial instanceof Node) {
 			Node node = (Node) spatial;
 			for (Spatial s : node.getChildren()) {
-				SetMaterialOnSpatial(s, mat);
+				setMaterialOnSpatial(s, mat);
 			}
 		} else {
 			Geometry g = (Geometry)spatial;
@@ -174,16 +172,23 @@ public class JMEFunctions {
 	}
 
 
-	public static Quaternion GetRotation(float x, float z) {
+	public static Quaternion getRotation(float x, float z) {
 		Quaternion target_q = new Quaternion();
 		target_q.lookAt(new Vector3f(x, 0, z), Vector3f.UNIT_Y);
 		return target_q;
 	}
 
 
-	public static void RotateToDirection(Spatial s, Vector3f dir) {
+	public static void rotateToDirection(Spatial s, Vector3f dir) {
 		Vector3f v = s.getLocalTranslation();
 		s.lookAt(v.add(dir), Vector3f.UNIT_Y);
+	}
+
+
+	public static void rotateToDirection(Spatial s, int angdeg) {
+		double ang = Math.toRadians(angdeg);
+		Vector3f dir = new Vector3f((float)Math.cos(ang), 0, (float)Math.sin(ang));
+		rotateToDirection(s, dir);
 	}
 
 }

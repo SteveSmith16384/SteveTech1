@@ -24,7 +24,7 @@ public class BigTreeWithLeaves extends PhysicalEntity {
 
 		Spatial model = game.getAssetManager().loadModel("Models/SnowNature/BigTreeWithLeaves.blend");
 		if (!_game.isServer()) {
-			JMEFunctions.SetTextureOnSpatial(game.getAssetManager(), model, "Models/SnowNature/Textures/TreeTexture.png");
+			JMEFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Models/SnowNature/Textures/TreeTexture.png");
 		}
 		this.mainNode.attachChild(model); //This creates the model bounds!
 

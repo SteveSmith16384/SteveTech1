@@ -17,6 +17,10 @@ import com.scs.stevetech1.server.Globals;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
+/*
+ * This class is shared by bother the abstract client and abstract server.
+ * 
+ */
 public abstract class AbstractGameController extends SimpleApplication implements ICollisionListener<PhysicalEntity>{
 
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
@@ -26,7 +30,7 @@ public abstract class AbstractGameController extends SimpleApplication implement
 	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
-	protected FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS);
+	protected FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS); // Keep client and server running at the same time
 	protected RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
 	public AbstractGameController() {

@@ -263,7 +263,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 											pe.setWorldTranslation(eum.pos);
 											pe.setWorldRotation(eum.dir);
 											pe.clearPositiondata();
-											if (pe == this.currentAvatar) { // todo - do this for all entities that adjust their position
+											if (pe == this.currentAvatar) {
 												currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
 												currentAvatar.storeAvatarPosition(serverTime);
 											}
@@ -316,13 +316,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 								//avatar.hasDied();
 							} else if (killer == this.currentAvatar) {
 								Globals.p("You have killed " + killed); // todo - inc score
-								// todo - say "you have killed..." in hud
 							}
-
-							/*if (e instanceof IClientAvatar) {
-								IClientAvatar aea = (IClientAvatar)e;
-								aea.hasDied();
-							}*/
 						} else if (message instanceof EntityLaunchedMessage) {
 							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 							this.launchSystem.scheduleLaunch(elm); //this.entities

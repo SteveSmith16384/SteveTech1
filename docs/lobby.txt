@@ -4,4 +4,4 @@ Game server periodically connect to lobby server indicating their existence and 
 GAME CLIENTS
 Client initially connect to the lobby server
 They are then directed to a game server
-Players connect to game server; if not enough players, they are added to queue
+Players connect to game server; TODO: if not enough players, they are added to queue on the server

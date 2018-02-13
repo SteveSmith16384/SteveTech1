@@ -12,6 +12,8 @@ public class Globals {
 	public static final boolean LIVE_SERVER = false; // Adjusts network idle thresholds etc...
 
 	public static final boolean DEBUG_MOUNTAIN_BORDER = true;
+	public static final boolean PLAYERS_START_IN_CORDNER = true;
+	public static final boolean EMPTY_MAP = true;
 	
 	public static final boolean DEBUG_ANIM = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;	
