@@ -6,13 +6,11 @@ import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingBox;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.scs.stevetech1.components.IAnimatedAvatarModel;
+import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.jme.JMEFunctions;
 
 /*
@@ -24,7 +22,7 @@ INFO: Found animation: ZombieRun.
 INFO: Found animation: ZombieWalk.
 
  */
-public class ZombieModel implements IAnimatedAvatarModel {
+public class ZombieModel implements IAvatarModel {
 
 	private static final float ZOMBIE_MODEL_WIDTH = .3f;
 	private static final float ZOMBIE_MODEL_DEPTH = .3f;
@@ -43,14 +41,14 @@ public class ZombieModel implements IAnimatedAvatarModel {
 
 
 	@Override
-	public Spatial getModel(boolean forClient) {
+	public Spatial createAndGetModel(boolean forClient) {
 		if (forClient) {
 			Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
 			model.scale(.125f); // Make 1 high
 			model.setModelBound(new BoundingBox());
 			//model.updateModelBound();
 
-			JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
+			JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 
 			Node s = (Node)model;
 			while (s.getNumControls() == 0) {
@@ -73,12 +71,12 @@ public class ZombieModel implements IAnimatedAvatarModel {
 		}
 	}
 
-
+/*
 	@Override
 	public void setAnimationForCode(String code) {
 		//todo return animCodes.get(code);
 	}
-
+*/
 
 	@Override
 	public float getCameraHeight() {
@@ -91,7 +89,7 @@ public class ZombieModel implements IAnimatedAvatarModel {
 		return ZOMBIE_MODEL_HEIGHT - 0.1f;
 	}
 
-
+/*
 	@Override
 	public void showCurrentAnimation() {
 		// TODO Auto-generated method stub
@@ -104,5 +102,5 @@ public class ZombieModel implements IAnimatedAvatarModel {
 		// TODO Auto-generated method stub
 		
 	}
-
+*/
 }

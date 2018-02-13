@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
-import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -13,7 +11,6 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.House;
-import com.scs.testgame.entities.LaserBullet;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
 

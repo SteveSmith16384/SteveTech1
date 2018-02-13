@@ -7,23 +7,18 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.client.HistoricalPositionCalculator;
-import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
-import com.scs.stevetech1.client.syncposition.InstantPositionAdjustment;
-import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.stevetech1.shared.PositionCalculator;
 import com.scs.testgame.TestGameClientEntityCreator;
 
 public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, ILaunchable, IRemoveOnContact, IClientControlled {
@@ -36,7 +31,7 @@ public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICa
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
 
-	public LaserBullet(IEntityController _game, int id, IRequiresAmmoCache<LaserBullet> owner, int _side) {
+	public LaserBullet(IEntityController _game, int id, IEntityContainer<LaserBullet> owner, int _side) {
 		super(_game, id, TestGameClientEntityCreator.LASER_BULLET, "LaserBullet", true);
 
 		if (_game.isServer()) {
@@ -144,6 +139,18 @@ public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICa
 	@Override
 	public IEntity getLauncher() {
 		return shooter;
+	}
+
+
+	@Override
+	public boolean hasBeenLaunched() {
+		return this.hasBeenLaunched();
+	}
+
+
+	@Override
+	public IEntity getActualShooter() {
+		return this.shooter;
 	}
 
 }

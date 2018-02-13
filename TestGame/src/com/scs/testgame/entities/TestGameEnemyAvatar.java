@@ -30,11 +30,16 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 		return animList;
 	}
 
-	
 	@Override
-	public void setCurrentAnim(Object s) {
-		this.currentAnim = s;
-		// todo this.model.channel.setAnim(s);
+	public void setCurrentAnimForCode(String s) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void processAnimation(float tpf_secs) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

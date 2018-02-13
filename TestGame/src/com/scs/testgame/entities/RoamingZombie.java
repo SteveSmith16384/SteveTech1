@@ -8,9 +8,8 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
-import com.scs.stevetech1.components.IAnimated;
+import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
-import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -23,7 +22,7 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 import com.scs.testgame.models.ZombieModel;
 
-public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IAnimated, IRewindable {
+public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IRewindable {
 	
 	private static final float w = .5f;
 	private static final float d = .7f;
@@ -49,7 +48,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 			//spatial = game.getAssetManager().loadModel("Models/zombie/Zombie.blend");
 			//JMEFunctions.SetTextureOnSpatial(game.getAssetManager(), spatial, "Models/zombie/ZombieTexture.png");
 			zm = new ZombieModel(game.getAssetManager());
-			spatial = zm.getModel(true);
+			spatial = zm.createAndGetModel(true);
 		} else {
 			// Server
 			Box box1 = new Box(w/2, h/2, d/2);
@@ -77,7 +76,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
-		this.currentAnim = "ZombieWalk";
+		//this.currentAnim = "ZombieWalk";
 
 		super.processByServer(server, tpf_secs);
 	}
@@ -101,8 +100,8 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 	
 	
 	@Override
-	public void damaged(float amt, IEntity killer, String reason) {
-		this.currentAnim = "ZombieBite";
+	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
+		//this.currentAnim = "ZombieBite";
 	}
 
 
@@ -120,13 +119,13 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		// turn around?		
 	}
 
-
+/*
 	@Override
 	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
 		return animList;
 	}
 
-
+/*
 	@Override
 	public void setCurrentAnim(Object s) {
 		// TODO Auto-generated method stub

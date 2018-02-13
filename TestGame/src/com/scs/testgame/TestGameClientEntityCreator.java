@@ -4,7 +4,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
@@ -124,7 +124,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 		{
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
-			IRequiresAmmoCache<LaserBullet> irac = (IRequiresAmmoCache<LaserBullet>)game.entities.get(containerID);
+			IEntityContainer<LaserBullet> irac = (IEntityContainer<LaserBullet>)game.entities.get(containerID);
 			LaserBullet bullet = new LaserBullet(game, id, irac, side);
 			return bullet;
 		}

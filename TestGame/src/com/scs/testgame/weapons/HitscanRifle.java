@@ -7,7 +7,8 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
@@ -108,7 +109,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	protected void createBullet(AbstractGameServer server, int entityid, IRequiresAmmoCache owner, int side) {
+	protected void createBullet(AbstractGameServer server, int entityid, IEntityContainer irac, int side) {
 		this.bulletsInMag++; // No physical projectiles required!
 		
 	}
@@ -119,5 +120,10 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 		return bulletsInMag;
 	}
 
+
+	@Override
+	public IEntity getActualShooter() {
+		return owner;
+	}
 
 }

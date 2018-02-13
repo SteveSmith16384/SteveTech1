@@ -6,16 +6,13 @@ import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingBox;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.scs.stevetech1.components.IAnimatedAvatarModel;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.components.IAvatarModel;
 
-public class CharacterModel implements IAnimatedAvatarModel {
+public class CharacterModel implements IAvatarModel {
 
 	private static final float MODEL_WIDTH = .3f;
 	private static final float MODEL_DEPTH = .3f;
@@ -34,7 +31,7 @@ public class CharacterModel implements IAnimatedAvatarModel {
 
 
 	@Override
-	public Spatial getModel(boolean forClient) {
+	public Spatial createAndGetModel(boolean forClient) {
 		if (forClient) {
 			Spatial model = assetManager.loadModel("Models/3d-character/character/character.blend");
 			model.scale(.125f); // Make 1 high
@@ -56,13 +53,13 @@ public class CharacterModel implements IAnimatedAvatarModel {
 		}
 	}
 
-
+/*
 	@Override
 	public void setAnimationForCode(String code) {
 		//todo return animCodes.get(code);
 	}
 
-
+*/
 	@Override
 	public float getCameraHeight() {
 		return MODEL_HEIGHT;
@@ -74,7 +71,7 @@ public class CharacterModel implements IAnimatedAvatarModel {
 		return MODEL_HEIGHT - 0.1f;
 	}
 
-
+/*
 	@Override
 	public void showCurrentAnimation() {
 		// TODO Auto-generated method stub
@@ -87,5 +84,5 @@ public class CharacterModel implements IAnimatedAvatarModel {
 		// TODO Auto-generated method stub
 		
 	}
-
+*/
 }

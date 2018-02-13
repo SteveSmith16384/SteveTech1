@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.scs.stevetech1.components.ICanShoot;
-import com.scs.stevetech1.components.IRequiresAmmoCache;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.shared.IAbility;
@@ -16,7 +16,7 @@ import com.scs.testgame.entities.LaserBullet;
 /*
  * This gun shoots physical laser bolts
  */
-public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequiresAmmoCache<LaserBullet> {
+public class LaserRifle extends AbstractMagazineGun implements IAbility, IEntityContainer<LaserBullet> {
 
 	private LinkedList<LaserBullet> ammoCache = new LinkedList<LaserBullet>(); 
 
@@ -80,7 +80,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility, IRequir
 
 
 	@Override
-	protected void createBullet(AbstractGameServer server, int entityid, IRequiresAmmoCache irac, int side) {
+	protected void createBullet(AbstractGameServer server, int entityid, IEntityContainer irac, int side) {
 		LaserBullet l = new LaserBullet(game, entityid, irac, side);
 		server.addEntity(l);
 

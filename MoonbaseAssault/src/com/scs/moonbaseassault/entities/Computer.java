@@ -13,6 +13,7 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.moonbaseassault.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -69,14 +70,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf) {
-		super.processByServer(server, tpf);
-		//Settings.p("Pos: " + this.getWorldTranslation());
-	}
-
-
-	@Override
-	public void damaged(float amt, IEntity killer, String reason) {
+	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
 		// TODO Auto-generated method stub
 		
 	}

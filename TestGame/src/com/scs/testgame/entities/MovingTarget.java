@@ -13,6 +13,7 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
+import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IRewindable;
@@ -114,7 +115,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	
 	
 	@Override
-	public void damaged(float amt, IEntity killer, String reason) {
+	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
 		//this.respawn();
 	}
 
