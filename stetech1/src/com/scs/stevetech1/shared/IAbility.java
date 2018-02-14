@@ -5,6 +5,7 @@ import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 
 public interface IAbility extends IEntity {
 
+	String getName();
 	/**
 	 * Called when activated/used.  Returns whether it was successfully used.
 	 */

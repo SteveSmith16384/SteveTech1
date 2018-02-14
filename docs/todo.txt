@@ -1,15 +1,16 @@
 STETECH1
 
 URGENT
+Server not always sending resurrect msg?
 Sometimes, first bullet no killing snowman
-Player who died not coming back properly
-	If player shootsd, always send shoot
+	Player who died not coming back properly
+	If player shoots, always send shoot
 Add snowtext to mountains
-Warn if client and server have diff bullets left
 Search for todos
 
 
 TODO
+Warn if client and server have diff bullets left
 Use model woman
 Find sound effects
 Add client ping time to bullet ffwd
@@ -20,7 +21,6 @@ Add open-source msg to the top of all files
 Record desktop showing two players
 Blog post progress
 Client can always jump, even when in the air
-	EnemyAvatar remaining if client drops out
 Client connect to lobby first, then select server
 Create game modules?
 Players send ping to server from lobby to see which is best

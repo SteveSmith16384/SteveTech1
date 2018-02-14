@@ -329,7 +329,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							AvatarStartedMessage asm = (AvatarStartedMessage)message;
 							if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 								AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
-								avatar.setAlive(true); // todo -point camera fwds again
+								avatar.setAlive(true); 
+								// Point camera fwds again
+								cam.lookAt(new Vector3f(15, .5f, 15), Vector3f.UNIT_Y);
+								cam.update();
+
 							}
 						} else if (message instanceof ListOfGameServersMessage) {
 							ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
@@ -353,7 +357,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 				if (clientStatus == STATUS_STARTED) {
 
-					this.sendInputsIfTime();
+					this.sendInputs();
 
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
@@ -454,7 +458,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	}
 
 
-	private void sendInputsIfTime() { // todo - rename
+	private void sendInputs() {
 		if (this.currentAvatar != null) {
 			// Send inputs
 			if (networkClient.isConnected()) {
@@ -585,7 +589,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			IEntity e = this.entities.get(id);
 			if (e != null) {
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-					Globals.p("Removing entity " + id + ":" + e.getName());
+					Globals.p("Actually removing entity " + id + ":" + e.getName());
 				}
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe =(PhysicalEntity)e;

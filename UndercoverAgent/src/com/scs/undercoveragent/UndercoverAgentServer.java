@@ -108,7 +108,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 					snowman.setWorldTranslation(x, z);
 					collider = snowman.simpleRigidBody.checkForCollisions();
 				}
-				// todo - randomly rotate snowman
+				// randomly rotate snowman
+				JMEFunctions.rotateToDirection(snowman.getMainNode(), NumberFunctions.rnd(0,  359));
 				Globals.p("Placed " + i + " snowmen.");
 			}
 		}

@@ -21,6 +21,7 @@ public class SnowmanModel implements IAvatarModel {
 
 	private AssetManager assetManager;
 	private Spatial model;
+	private Vector3f origPos;
 
 	private boolean showingDied = false;
 
@@ -37,6 +38,9 @@ public class SnowmanModel implements IAvatarModel {
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEFunctions.moveYOriginTo(model, 0f);
 			JMEFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
+			
+			origPos = model.getLocalTranslation().clone();
+			
 			return model;
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
@@ -102,7 +106,7 @@ public class SnowmanModel implements IAvatarModel {
 			Globals.p("Snowman sinking...");
 		}*/
 		try {
-			if (model != null) {
+			if (model != null) { this.model.getLocalTranslation();
 				this.model.move(0, -tpf_secs/7, 0);
 			}
 		} catch (NullPointerException ex) {
@@ -119,7 +123,8 @@ public class SnowmanModel implements IAvatarModel {
 		if (!showingDied) {
 			return;
 		} 
-		this.model.setLocalTranslation(0, 0, 0);
+		this.model.setLocalTranslation(origPos);
+		this.model.updateGeometricState();
 		showingDied = false;
 
 	}

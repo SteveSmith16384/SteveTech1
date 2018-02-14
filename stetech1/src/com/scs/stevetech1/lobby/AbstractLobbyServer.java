@@ -38,7 +38,7 @@ public abstract class AbstractLobbyServer implements IMessageServerListener {
 			this.gameServers.remove(ulm.name);
 			this.gameServers.put(ulm.name, new GameServerDetails(ulm));
 
-			Globals.p("Updated details for game server '" + ulm.name + "'");
+			//Globals.p("Updated details for game server '" + ulm.name + "'");
 		} else if (msg instanceof RequestListOfGameServersMessage) {
 			//RequestListOfGameServersMessage rlogs = (RequestListOfGameServersMessage)msg;
 			

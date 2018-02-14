@@ -44,7 +44,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
 		if (this.statsChanged) {
-			this.server.networkServer.sendMessageToAll(new AvatarStatusMessage(this));
+			this.server.gameNetworkServer.sendMessageToAll(new AvatarStatusMessage(this));
 			this.statsChanged = false;
 		}
 		
@@ -54,16 +54,16 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			this.currentAnimCode = ANIM_DIED;
 			if (this.restartTimeSecs <= 0) {
 				Globals.p("Resurrecting avatar");
-				this.startAgain();
-				
-				server.networkServer.sendMessageToAll(new AvatarStartedMessage(this));
+				this.startAgain();				
+				server.gameNetworkServer.sendMessageToAll(new AvatarStartedMessage(this));
 				if (Globals.DEBUG_PLAYER_RESTART) {
 					Globals.p("Sent AvatarStartedMessage");
 				}
+				
 				// Send position update
 				EntityUpdateMessage eum = new EntityUpdateMessage();
 				eum.addEntityData(this, true);
-				server.networkServer.sendMessageToAll(eum);
+				server.gameNetworkServer.sendMessageToAll(eum);
 			}
 			return;
 		}
@@ -109,7 +109,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		Globals.p("Player " + this.getID() + " died: " + reason);
 		this.alive = false;
 		this.restartTimeSecs = server.gameOptions.restartTimeSecs;
-		server.networkServer.sendMessageToAll(new EntityKilledMessage(this, killer));
+		server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, killer));
 
 		this.currentAnimCode = ANIM_DIED; // Send death as an anim, so it gets scheduled and is not shown straight away
 		

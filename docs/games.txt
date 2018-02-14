@@ -3,9 +3,6 @@ GAME IDEAS
 
 Test Game
 
-
-What the Box
-
 Undercover Agent
 	Like What the Box, but people are walking around.  Who is the other agent?
 
@@ -73,5 +70,4 @@ The Thing
 Spectrum Games
 	Recreate them as multiplayer games
 
-	
 Multiplayer 3D roguelike

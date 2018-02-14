@@ -66,7 +66,7 @@ IMessageServerListener, // To listen for connecting game clients
 IMessageClientListener, // For sending messages to the lobby server
 ICollisionListener<PhysicalEntity> {
 
-	public IGameMessageServer networkServer; // todo - rename to gamenetworkServer
+	public IGameMessageServer gameNetworkServer;
 	private KryonetLobbyClient clientToLobbyServer;
 	public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 
@@ -95,7 +95,7 @@ ICollisionListener<PhysicalEntity> {
 		console = new ServerConsole(this);
 
 		gameData = new SimpleGameData();
-		networkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, !Globals.LIVE_SERVER);
+		gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, !Globals.LIVE_SERVER);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 
@@ -142,7 +142,7 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 
-		if (networkServer.getNumClients() > 0) {
+		if (gameNetworkServer.getNumClients() > 0) {
 			// Process all messages
 			synchronized (unprocessedMessages) {
 				while (!this.unprocessedMessages.isEmpty()) {
@@ -150,7 +150,7 @@ ICollisionListener<PhysicalEntity> {
 					ClientData client = message.client;
 
 					if (message instanceof NewPlayerRequestMessage) {
-						this.playerJoined(client, message);
+						this.playerConnected(client, message);
 
 						/*} else if (message instanceof UnknownEntityMessage) {
 						UnknownEntityMessage uem = (UnknownEntityMessage) message;
@@ -178,7 +178,7 @@ ICollisionListener<PhysicalEntity> {
 
 			if (sendPingInterval.hitInterval()) {
 				randomPingCode = NumberFunctions.rnd(0,  999999);
-				this.networkServer.sendMessageToAll(new PingMessage(true, randomPingCode));
+				this.gameNetworkServer.sendMessageToAll(new PingMessage(true, randomPingCode));
 			}
 
 			synchronized (this.clients) {
@@ -254,7 +254,7 @@ ICollisionListener<PhysicalEntity> {
 							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
 								eum.addEntityData(physicalEntity, false);
 								if (eum.isFull()) {
-									networkServer.sendMessageToAll(eum);	
+									gameNetworkServer.sendMessageToAll(eum);	
 									eum = new EntityUpdateMessage();
 								}
 							}
@@ -265,7 +265,7 @@ ICollisionListener<PhysicalEntity> {
 				}
 			}
 			if (sendUpdates) {
-				networkServer.sendMessageToAll(eum);	
+				gameNetworkServer.sendMessageToAll(eum);	
 			}
 			if (checkGameStatusInterval.hitInterval()) {
 				//this.checkGameStatus(false);
@@ -279,32 +279,37 @@ ICollisionListener<PhysicalEntity> {
 		loopTimer.start();
 	}
 
-	
+
 	private boolean doWeHaveSpaces() {
 		if (this.gameOptions.maxSides <= 0 || this.gameOptions.maxPlayersPerSide <= 0) {
 			return true;
 		}
-		int currentPlayers = this.clients.size(); // todo - only count players actually Accepted!
+		int currentPlayers = 0;
+		for(ClientData c : this.clients.values()) { // only count players actually Accepted!
+			if (c.clientStatus == ClientData.ClientStatus.Accepted) {
+				currentPlayers++;
+			}
+		}
 		int maxPlayers = this.gameOptions.maxSides * this.gameOptions.maxPlayersPerSide;
 		return currentPlayers < maxPlayers;
 	}
 
-	
-	private void playerJoined(ClientData client, MyAbstractMessage message) {
+
+	private synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
 		if (!this.doWeHaveSpaces()) {
-			this.networkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces"));
+			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces"));
 		}
-		
+
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 		int side = getSide(client);
 		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, side);
-		networkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
+		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
 		client.avatar = createPlayersAvatar(client, side);
 		sendAllEntitiesToClient(client);
 		client.clientStatus = ClientData.ClientStatus.Accepted;
 
 		this.sendGameStatusMessage();
-		this.networkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));
+		this.gameNetworkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));
 
 		gameStatusSystem.checkGameStatus(true);
 
@@ -382,16 +387,16 @@ ICollisionListener<PhysicalEntity> {
 					// Check code
 					if (pingMessage.randomCode == this.randomPingCode) {
 						try {
-						long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
-						if (client.playerData != null) {
-						client.playerData.pingRTT = client.pingCalc.add(rttDuration);
-						client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.playerData.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-						//Settings.p("Client rtt = " + client.pingRTT);
-						//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
-						if ((client.playerData.pingRTT/2) + Globals.SERVER_SEND_UPDATE_INTERVAL_MS > Globals.CLIENT_RENDER_DELAY) {
-							Globals.p("Warning: client ping is longer than client render delay!");
-						}
-						}
+							long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
+							if (client.playerData != null) {
+								client.playerData.pingRTT = client.pingCalc.add(rttDuration);
+								client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.playerData.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
+								//Settings.p("Client rtt = " + client.pingRTT);
+								//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
+								if ((client.playerData.pingRTT/2) + Globals.SERVER_SEND_UPDATE_INTERVAL_MS > Globals.CLIENT_RENDER_DELAY) {
+									Globals.p("Warning: client ping is longer than client render delay!");
+								}
+							}
 						} catch (NullPointerException ex) {
 							ex.printStackTrace();
 						}
@@ -404,7 +409,7 @@ ICollisionListener<PhysicalEntity> {
 			} else {
 				// Send it back to the client
 				pingMessage.responseSentTime = System.currentTimeMillis();
-				this.networkServer.sendMessageToClient(client, pingMessage);
+				this.gameNetworkServer.sendMessageToClient(client, pingMessage);
 			}
 
 		} else {
@@ -441,10 +446,10 @@ ICollisionListener<PhysicalEntity> {
 			for (IEntity e : entities.values()) {
 				//this.sendNewEntity(client, e);
 				NewEntityMessage nem = new NewEntityMessage(e);
-				this.networkServer.sendMessageToClient(client, nem);
+				this.gameNetworkServer.sendMessageToClient(client, nem);
 			}
 			GeneralCommandMessage aes = new GeneralCommandMessage(GeneralCommandMessage.Command.AllEntitiesSent);
-			this.networkServer.sendMessageToClient(client, aes);
+			this.gameNetworkServer.sendMessageToClient(client, aes);
 		}
 	}
 
@@ -461,11 +466,11 @@ ICollisionListener<PhysicalEntity> {
 	@Override
 	public void connectionAdded(int id, Object net) {
 		Globals.p("Client connected!");
-		ClientData client = new ClientData(id, net, this.getCamera(), this.getInputManager());
+		ClientData client = new ClientData(id, net);//, this.getCamera(), this.getInputManager());
 		synchronized (clients) {
 			clients.put(id, client);
 		}
-		this.networkServer.sendMessageToClient(client, new WelcomeClientMessage());
+		this.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
 	}
 
 
@@ -521,7 +526,7 @@ ICollisionListener<PhysicalEntity> {
 			NewEntityMessage nem = new NewEntityMessage(e);
 			for (ClientData client : this.clients.values()) {
 				if (client.clientStatus == ClientStatus.Accepted) {
-					networkServer.sendMessageToClient(client, nem);	
+					gameNetworkServer.sendMessageToClient(client, nem);	
 				}
 			}
 			this.console.appendText("Created " + e);
@@ -540,11 +545,9 @@ ICollisionListener<PhysicalEntity> {
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
 			if (e != null) {
-				Globals.p("Removing entity " + e.getName() + " / ID:" + id);
-				/*if (e instanceof PhysicalEntity) {
-					PhysicalEntity pe = (PhysicalEntity)e;
-					this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
-				}*/
+				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+					Globals.p("Actually removing entity " + e.getName() + " / ID:" + id);
+				}
 				this.entities.remove(id);
 				this.console.appendText("Removed " + e);
 			} else {
@@ -557,7 +560,7 @@ ICollisionListener<PhysicalEntity> {
 					return;
 				}
 			}
-			this.networkServer.sendMessageToAll(new RemoveEntityMessage(id));
+			this.gameNetworkServer.sendMessageToAll(new RemoveEntityMessage(id));
 		}
 
 	}
@@ -611,7 +614,7 @@ ICollisionListener<PhysicalEntity> {
 		} else if (cmd.equals("restart")) {
 			restartGame();
 		} else if (cmd.equals("quit")) {
-			this.networkServer.close();
+			this.gameNetworkServer.close();
 			this.stop();
 		}
 	}
@@ -698,7 +701,7 @@ ICollisionListener<PhysicalEntity> {
 		for(ClientData client : this.clients.values()) {
 			players.add(client.playerData);
 		}
-		this.networkServer.sendMessageToAll(new SimpleGameDataMessage(this.gameData, players));
+		this.gameNetworkServer.sendMessageToAll(new SimpleGameDataMessage(this.gameData, players));
 
 	}
 
@@ -748,7 +751,7 @@ ICollisionListener<PhysicalEntity> {
 		return rootNode;
 	}
 
-	
+
 	public void gameStatusChanged(int newStatus)  {
 		if (newStatus == SimpleGameData.ST_DEPLOYING || newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {

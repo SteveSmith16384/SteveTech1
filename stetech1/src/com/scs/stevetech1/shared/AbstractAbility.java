@@ -43,7 +43,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		timeUntilNextSend_secs -= tpf_secs;
 		if (timeUntilNextSend_secs <= 0) {
-			server.networkServer.sendMessageToAll(new AbilityUpdateMessage(false, this));
+			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(false, this));
 			timeUntilNextSend_secs = SEND_INT_SECS;
 		}
 	}

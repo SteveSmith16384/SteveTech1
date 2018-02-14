@@ -11,6 +11,7 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 	public static final boolean LIVE_SERVER = false; // Adjusts network idle thresholds etc...
 
+	public static final boolean DEBUG_SERVER_SHOOTING = true;
 	public static final boolean DEBUG_PLAYER_RESTART = true;
 	public static final boolean PLAYERS_START_IN_CORNER = true;
 	public static final boolean EMPTY_MAP = true;

@@ -9,7 +9,7 @@ import com.scs.stevetech1.shared.AverageNumberCalculator;
 
 public class ClientData {
 
-	public enum ClientStatus { Connected, Accepted }; // Accepted == has avatar and is in-game
+	public enum ClientStatus { Connected, Accepted, Spectating }; // Accepted == has been given a slot in the game
 
 	public Object networkObj;
 	public int id;
@@ -21,7 +21,9 @@ public class ClientData {
 	public SimplePlayerData playerData;
 	public ClientStatus clientStatus = ClientStatus.Connected;
 
-	public ClientData(int _id, Object _networkObj, Camera cam, InputManager _inputManager) {
+	public ClientData(int _id, Object _networkObj) {//, Camera cam, InputManager _inputManager) {
+		super();
+		
 		id = _id;
 		networkObj = _networkObj;
 	}

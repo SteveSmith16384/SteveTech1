@@ -91,7 +91,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
-					//Settings.p("Using " + this.ability.toString());
+					if (Globals.DEBUG_SERVER_SHOOTING) {
+						Globals.p("Using " + this.ability[i].getName());
+					}
 					newAnimCode = ANIM_SHOOTING;
 					this.ability[i].activate();
 				}
