@@ -13,6 +13,8 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
+import ssmith.lang.NumberFunctions;
+
 /*
  * The origin for this should be left/bottom/front
  *
@@ -33,8 +35,9 @@ public class MountainMapBorder extends PhysicalEntity {
 			// Add mountain models
 			for (float i=(InvisibleMapBorder.BORDER_WIDTH/2) ; i<size ; i+=InvisibleMapBorder.BORDER_WIDTH/2) { 
 				Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
-				JMEFunctions.scaleModelToWidth(model, InvisibleMapBorder.BORDER_WIDTH);
+				JMEFunctions.scaleModelToWidth(model, InvisibleMapBorder.BORDER_WIDTH+1); // Since we rotate it, needs to be slightly wider
 				model.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, 0, i);//-(InvisibleMapBorder.BORDER_WIDTH/2));
+				JMEFunctions.rotateToDirection(model, NumberFunctions.rnd(0, 359));
 				container.attachChild(model);
 			}
 			//container.setModelBound(new BoundingBox());  This stops it being drawn!?

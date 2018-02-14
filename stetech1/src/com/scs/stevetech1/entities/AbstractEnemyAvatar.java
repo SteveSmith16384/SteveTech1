@@ -4,16 +4,15 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
-import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IAvatarModel;
-import com.scs.stevetech1.components.IClientAvatar;
+import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 /*
  * This is only used client-side
  */
-public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IClientSideAnimated, IClientAvatar {
+public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IClientSideAnimated {
 	
 	protected IAvatarModel anim;
 

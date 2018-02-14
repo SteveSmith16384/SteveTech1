@@ -1,66 +1,53 @@
 STETECH1
 
 URGENT
-Server not always sending resurrect msg?
+Client shooting - send shot confirmed msg to server when bullet is launched
+Falling through floor?
 Sometimes, first bullet no killing snowman
-	Player who died not coming back properly
-	If player shoots, always send shoot
 Add snowtext to mountains
 Search for todos
 
 
 TODO
+Falling snow - started
 Warn if client and server have diff bullets left
 Use model woman
 Find sound effects
 Add client ping time to bullet ffwd
 Implement EntityNotFound message for entities that we still don't know about 10 seconds later
-Falling snow - started
 Why doesn't player slide along snowmen?
 Add open-source msg to the top of all files
 Record desktop showing two players
 Blog post progress
 Client can always jump, even when in the air
 Client connect to lobby first, then select server
-Create game modules?
 Players send ping to server from lobby to see which is best
 Sound Effect message
 Player dies - "Dead" in big letters
-Add entities to list immediately, but don't add to root node until scheduled?
 Ping system
 Split up client/server into systems
-	Auto-start lobby with server
 Try diff snow hills
 Tree - make serverside just a cyl on trunk
-UA - Players have one teleport
 Get tileable snow tex
-Use server-style simple models for collision checking on client side?
 Hitscan rifle - show line showing where server says bullet went
 Laser bullets
 Animate backwards when walking backwards
 Create moonbase map
 Look for soldiers for Moonbase Assault
 Simple console GUI for connecting to lobby
-Game lobby
-Do tracer-style rewind
 Check for packet loss
-Less damage from hitscan over distance
-Strict mode - check if position already exists in positioncalc!
-Lobby queue players
+Server queue players, spectators
 Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
 Walking up steps
 Physics test - do explosion
 Add lots of comments
-Spectator mode
 Create generic classes and test them
 Make vars private/protected
-Test with cheating client
 Reduce object creation, including calls to clone()
 Kryonet encryption?
 User enter name
-Have generic "entity owners"?
 
 
 LATER
@@ -74,6 +61,5 @@ Use tpf to ensure clients/server run at same speed
 Server tell client to slow down if server struggling
 Stop client if no comms for a while
 Only send entity messages to players that have joined the game
-Player groups
 
 

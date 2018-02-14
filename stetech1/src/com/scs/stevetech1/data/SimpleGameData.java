@@ -35,7 +35,7 @@ public class SimpleGameData { // pojo
 		case ST_WAITING_FOR_PLAYERS: return "Waiting for players";
 		case ST_DEPLOYING: return "Deploying";
 		case ST_STARTED: return "Started";
-		case ST_FINISHED: return "Started";
+		case ST_FINISHED: return "Finished";
 		default: throw new RuntimeException("Unknown status: " + s);
 		}
 	}

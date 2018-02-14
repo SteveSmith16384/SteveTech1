@@ -300,7 +300,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							AbilityUpdateMessage aum = (AbilityUpdateMessage) message;
 							IAbility a = (IAbility)entities.get(aum.entityID);
 							if (a != null) {
-								if (aum.timestamp > a.getLastUpdateTime()) {
+								if (aum.timestamp > a.getLastUpdateTime()) { // Is it the latest msg
 									a.decode(aum);
 									a.setLastUpdateTime(aum.timestamp);
 								}
@@ -536,7 +536,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			} else if (message instanceof SimpleGameDataMessage) {
 				SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 				this.gameData = gsm.gameData;
-
+				// todo - update hud
 			} else {
 				unprocessedMessages.add(message);
 

@@ -24,6 +24,7 @@ Elk.blend - no tex
 
 
 MODELS
+https://github.com/saniv/free-game-art-3d
 https://www.reddit.com/r/gamedev/comments/7jobpt/free_lowpoly_animated_woman/
 http://openarena.ws/svn/source/assets/models/
 https://www.blendswap.com/blends/search?keywords=game+ready&is_fan_art=0&blend_license=&render_engine=&sort=downloads&direction=desc&page=7

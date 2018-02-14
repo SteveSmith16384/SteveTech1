@@ -69,7 +69,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		if (Globals.PLAYERS_START_IN_CORNER) {
-			avatar.setWorldTranslation(new Vector3f(3f, 1f, 3f + (avatar.playerID*2)));
+			avatar.setWorldTranslation(new Vector3f(3f, .3f, 3f + (avatar.playerID*2)));
 		} else {
 			// Find a random position
 			SimpleRigidBody<PhysicalEntity> collider;
@@ -159,7 +159,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		PhysicalEntity peb = b.userObject;
 
 		if (pea instanceof SnowFloor == false && peb instanceof SnowFloor == false) {
-			Globals.p("Collision between " + pea + " and " + peb);
+			//Globals.p("Collision between " + pea + " and " + peb);
 		}
 
 		super.collisionOccurred(a, b, point);

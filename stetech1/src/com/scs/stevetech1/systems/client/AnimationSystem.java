@@ -24,7 +24,7 @@ public class AnimationSystem extends AbstractSystem {
 		//if (anim.getAnimList() != null) { // Might be unanimated
 		HistoricalAnimationData had = anim.getAnimList().get(client.renderTime, true);
 		if (had != null) {
-			if (!had.animationCode.equals(anim.getCurrentAnimCode())) {
+			if (!had.animationCode.equals(anim.getCurrentAnimCode())) { // Has the animation changed?
 				try {
 					if (Globals.DEBUG_PLAYER_RESTART) {
 						if (had.animationCode != null && had.animationCode.equals(AbstractAvatar.ANIM_DIED)) {

@@ -25,7 +25,6 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 		this.shotInterval_secs = shotInt;
 		this.reloadInterval_secs = reloadInt;
 		this.magazineSize = magSize;
-		//this.bulletsLeftInMag = this.magazineSize;
 	}
 
 
@@ -40,7 +39,6 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 		if (this.timeUntilShoot_secs <= 0 && getBulletsInMag() > 0) {
 			this.launchBullet();
 			timeUntilShoot_secs = this.shotInterval_secs;
-			//bulletsLeftInMag--;
 			return true;
 		} else {
 			if (getBulletsInMag() <= 0) {
@@ -67,7 +65,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 		if (this.getBulletsInMag() <= 0) {
 			// Reload
-			Globals.p("Reloading");
+			//Globals.p("Reloading");
 			reload(server);// Only server can reload
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
@@ -94,7 +92,6 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	@Override
 	public void encode(AbilityUpdateMessage aum) {
-		//aum.bulletsLeftInMag = bulletsLeftInMag;
 		aum.timeUntilShoot = timeUntilShoot_secs;
 
 	}
@@ -102,7 +99,6 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	@Override
 	public void decode(AbilityUpdateMessage aum) {
-		//this.bulletsLeftInMag = aum.bulletsLeftInMag;
 		timeUntilShoot_secs = aum.timeUntilShoot;
 	}
 

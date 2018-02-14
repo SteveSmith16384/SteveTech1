@@ -16,17 +16,15 @@ import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
 import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.components.IAvatarModel;
-import com.scs.stevetech1.components.IClientAvatar;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
-import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient, IClientAvatar {
+public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
 
 	public HUD hud;
 	public Camera cam;
@@ -35,9 +33,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	private Node debugNode;	
 
-	public AbstractClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, 
+	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, 
 			float x, float y, float z, int side, IAvatarModel _zm) { //, IGetAvatarAnimationString animCodes, float _camHeight) {
-		super(_module, _playerID, _input, eid, side, _zm);
+		super(_client, _playerID, _input, eid, side, _zm);
 
 		cam = _cam;
 		hud = _hud;
@@ -49,12 +47,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		//syncPos = new AdjustBasedOnDistance();
 		syncPos = new AdjustByFractionOfDistance();
 
-		//this.simpleRigidBody.setGravity(0);
-
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE);
 
-		_module.currentAvatar = this;
+		_client.currentAvatar = this;
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			createDebugBox();
@@ -110,11 +106,19 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 			storeAvatarPosition(serverTime);
 
-			// Position camera at node
-			Vector3f vec = this.getWorldTranslation();
-			cam.getLocation().x = vec.x;
-			cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
-			cam.getLocation().z = vec.z;
+			if (Globals.SHOW_CAM_FROM_ABOVE) {
+				// Position camera at node
+				Vector3f vec = this.getWorldTranslation();
+				cam.getLocation().x = vec.x;
+				cam.getLocation().y = vec.y + 5f;//avatarModel.getCameraHeight();
+				cam.getLocation().z = vec.z;
+			} else {
+				// Position camera at node
+				Vector3f vec = this.getWorldTranslation();
+				cam.getLocation().x = vec.x;
+				cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
+				cam.getLocation().z = vec.z;
+			}
 			cam.update();
 		}
 
@@ -151,7 +155,14 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			if (super.playerWalked) { // Only adjust us if the player tried to move
 				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
 				if (offset != null) {
-					this.syncPos.adjustPosition(this, offset, tpf_secs);
+					float diff = offset.length();
+					if (Float.isNaN(diff) || diff > 4) {
+						Globals.p("Far out! " + diff);
+						// They're so far out, just move them
+						this.setWorldTranslation(serverPositionData.getMostRecent().position); 
+					} else {
+						this.syncPos.adjustPosition(this, offset, tpf_secs);
+					}
 				}
 			}
 		}

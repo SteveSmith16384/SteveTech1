@@ -54,7 +54,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 		return null;
 	}
 
-	
+
 	public void remove() {
 		// Remove all owned bullets
 		while (!ammoCache.isEmpty()) {
@@ -70,7 +70,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility, I
 		SnowballBullet pe = new SnowballBullet(game, entityid, irac, side);
 		server.addEntity(pe);
 
-		
+
 	}
 
 
