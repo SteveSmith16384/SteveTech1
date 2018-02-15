@@ -319,6 +319,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							}
 							
 						} else if (message instanceof EntityLaunchedMessage) {
+							if (Globals.DEBUG_SERVER_SHOOTING) {
+								Globals.p("Received EntityLaunchedMessage");
+							}
 							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 							this.launchSystem.scheduleLaunch(elm); //this.entities
 
@@ -331,10 +334,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 								AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
 								avatar.setAlive(true); 
 								// Point camera fwds again
-								cam.lookAt(new Vector3f(15, .5f, 15), Vector3f.UNIT_Y);
+								cam.lookAt(avatar.getWorldTranslation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
 								cam.update();
 
 							}
+							
 						} else if (message instanceof ListOfGameServersMessage) {
 							ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
 							// todo - do something with message
@@ -375,28 +379,18 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					Iterator<IEntity> it = this.entitiesToAdd.iterator();
 					while (it.hasNext()) {
 						IEntity e = it.next();
-						//long timeToAdd = this.entitiesScheduledToBeAdded.get(e);
-						//if (timeToAdd < renderTime) { // Only remove them when its time
-						//it.remove();
 						this.actuallyAddEntity(e);
-						//}
 					}
 					it = null;
 					this.entitiesToAdd.clear();
 
 					// Remove entities
-					//for(Integer i : this.toRemove.keySet()) {
 					Iterator<Integer> it2 = this.entitiesToRemove.iterator();
 					while (it2.hasNext()) {
 						int i = it2.next();
-						//long timeToRemove = this.toRemove.get(i);
-						//if (timeToRemove < renderTime) { // Only remove them when its time
-						//this.toRemove.remove(i);
-						//it2.remove();
 						this.actuallyRemoveEntity(i);
-						//}
 					}
-					//it2 = null;
+					it2 = null;
 					this.entitiesToRemove.clear();
 
 					this.launchSystem.process(renderTime);
@@ -470,9 +464,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	}
 
 
-	/*
-	 * Mainly for when a client requests the server to create an entity, e.g. a grenade (for lobbing).
-	 */
 	protected final void createEntity(NewEntityMessage msg, long timeToCreate) {
 		IEntity e = this.entityCreator.createEntity(this, msg);
 		if (e != null) {

@@ -11,7 +11,7 @@ public class GameOptions {
 	public long finishedDurationMillis = 5 * 1000;
 	public String ourExternalIP, lobbyip;
 	public int ourExternalPort, lobbyport;
-	public float restartTimeSecs, invulnDurationSecs;
+	public float avatarRestartTimeSecs, avatarInvulnDurationSecs;
 
 	public GameOptions(String _displayName, int _maxPlayersPerSide, int _maxSides, long _deployDuration, long _gameDuration, long _finishedDuration,
 			String _ourExternalIP, int _ourExternalPort, String _lobbyip, int _lobbyport,
@@ -31,8 +31,8 @@ public class GameOptions {
 		lobbyip = _lobbyip;
 		lobbyport =_lobbyport;
 		
-		restartTimeSecs = _restartTime;
-		invulnDurationSecs = _invulnDuration;
+		avatarRestartTimeSecs = _restartTime;
+		avatarInvulnDurationSecs = _invulnDuration;
 	}
 	
 	

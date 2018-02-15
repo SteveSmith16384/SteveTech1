@@ -120,7 +120,7 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		} else if (binding.equals("Down")) {
 			down = isPressed;
 		} else if (binding.equals("Jump")) {
-			jump = isPressed;
+			jump = jump || isPressed;
 		} else if (binding.equals("Ability1")) {
 			ability1 = ability1 || isPressed;
 		} else if (binding.equals("Ability2")) {
@@ -158,18 +158,6 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		return jump;
 	}
 
-/*
-	@Override
-	public boolean isShootPressed() {
-		return shoot;
-	}
-
-
-	@Override
-	public boolean isAbilityOtherPressed() {
-		return ability1;
-	}
-*/
 
 	@Override
 	public boolean isAbilityPressed(int i) {
@@ -194,8 +182,9 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 
 
 	public void reset() {
-		this.ability1 = false;
+		this.ability1 = false; // todo - what about holding the fire button down?
 		this.ability2 = false;
+		this.jump = false;
 	}
 
 }

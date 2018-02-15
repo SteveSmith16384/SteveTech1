@@ -99,32 +99,24 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 			cam.lookAt(this.getWorldTranslation(), Vector3f.UNIT_Y);
 			cam.update();
-			return;
-		} else {
 
+		} else {
 			super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 
 			storeAvatarPosition(serverTime);
 
-			if (Globals.SHOW_CAM_FROM_ABOVE) {
-				// Position camera at node
-				Vector3f vec = this.getWorldTranslation();
-				cam.getLocation().x = vec.x;
-				cam.getLocation().y = vec.y + 5f;//avatarModel.getCameraHeight();
-				cam.getLocation().z = vec.z;
-			} else {
-				// Position camera at node
-				Vector3f vec = this.getWorldTranslation();
-				cam.getLocation().x = vec.x;
-				cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
-				cam.getLocation().z = vec.z;
-			}
+			// Position camera at node
+			Vector3f vec = this.getWorldTranslation();
+			cam.getLocation().x = vec.x;
+			cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
+			cam.getLocation().z = vec.z;
 			cam.update();
 		}
 
 		hud.processByClient(client, tpf_secs);
 
 		// These must be after we might use them, so the hud is correct 
+		// todo - loop through abilities
 		this.hud.setAbilityGunText(this.ability[0].getHudText());
 		if (this.ability[1] != null) {
 			this.hud.setAbilityOtherText(this.ability[1].getHudText());
@@ -137,18 +129,21 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				debugNode.setLocalTranslation(epd.position);
 			}
 		}
+		
+		if (Globals.DEBUG_CLIENT_ROTATION) {
+			Globals.p("Rot: " + this.getWorldRotation());
+		}
 
 	}
 
 
 	public void storeAvatarPosition(long serverTime) {
 		Vector3f pos = getWorldTranslation();
-		//Globals.p("Storing pos " + pos);
 		this.clientAvatarPositionData.addPositionData(pos, null, serverTime);
 	}
 
 
-	// Avatars have their own special position calculator
+	// Client Avatars have their own special position calculator
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		if (Globals.SYNC_AVATAR_POS) {
@@ -157,7 +152,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				if (offset != null) {
 					float diff = offset.length();
 					if (Float.isNaN(diff) || diff > 4) {
-						Globals.p("Far out! " + diff);
+						Globals.p("Far out, man! " + diff);
 						// They're so far out, just move them
 						this.setWorldTranslation(serverPositionData.getMostRecent().position); 
 					} else {

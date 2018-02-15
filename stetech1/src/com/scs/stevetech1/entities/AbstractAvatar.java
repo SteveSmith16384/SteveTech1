@@ -74,8 +74,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
 
-		//game.getRootNode().attachChild(this.mainNode);
-
 		playerGeometry.setUserData(Globals.ENTITY, this);
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -139,21 +137,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 		simpleRigidBody.process(tpf_secs);
 
-		
-		/*if (!this.alive) {
-			this.currentAnimCode = ANIM_DIED;
-		} else {*/
-			if (!newAnimCode.equals(currentAnimCode)) {
-				this.currentAnimCode = newAnimCode;
-			}
-		//}
+		if (!newAnimCode.equals(currentAnimCode)) {
+			this.currentAnimCode = newAnimCode;
+		}
 
-		// Point us in the right direction
-		/*if (this.game.isServer()) {
-			Vector3f lookAtPoint = camLeft.add(camDir.mult(10));
-			lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
-			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
-		}*/
 	}
 
 
@@ -163,7 +150,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 
 	public void jump() {
-		//Globals.p("Jumping!");
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		if (simplePlayerControl.jump()) {
 			lastMoveTime = System.currentTimeMillis();
@@ -275,11 +261,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		this.health = h;
 		this.statsChanged = true;
 	}
-	
+
 
 	public void decHealth(float h) {
 		this.health -= h;
 		this.statsChanged = true;
 	}
-	
+
 }

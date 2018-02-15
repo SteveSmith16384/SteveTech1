@@ -87,10 +87,9 @@ public class SimpleRigidBody<T> implements Collidable {
 					Vector3f ourPos = this.getSpatial().getWorldBound().getCenter();
 					Vector3f theirPos = tmpWasCollision.getSpatial().getWorldBound().getCenter();
 					Vector3f diff = ourPos.subtract(theirPos).normalizeLocal();
-					//tmpWasCollision = this.move(diff); // Move away until there's no more collisions
 					this.spatial.move(diff); // Move away until there's no more collisions
+					System.err.println("Automoved  " + this + " by " + diff);
 					tmpWasCollision = checkForCollisions();
-
 				} while (tmpWasCollision != null);
 			}
 

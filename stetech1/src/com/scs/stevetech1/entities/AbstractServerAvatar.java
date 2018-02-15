@@ -31,7 +31,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE); // Different to client side, since that doesn't have gravity!
 	}
 
-	
+
 	public void startAgain() {
 		alive = true;
 		this.setHealth(server.getAvatarStartHealth(this));
@@ -40,15 +40,15 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	}
 
-	
+
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
 		if (this.statsChanged) {
 			this.server.gameNetworkServer.sendMessageToAll(new AvatarStatusMessage(this));
 			this.statsChanged = false;
 		}
-		
-		
+
+
 		if (!this.alive) {
 			restartTimeSecs -= tpf;
 			this.currentAnimCode = ANIM_DIED;
@@ -59,34 +59,34 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 				if (Globals.DEBUG_PLAYER_RESTART) {
 					Globals.p("Sent AvatarStartedMessage");
 				}
-				
+
 				// Send position update
 				EntityUpdateMessage eum = new EntityUpdateMessage();
 				eum.addEntityData(this, true);
 				server.gameNetworkServer.sendMessageToAll(eum);
 			}
-			return;
-		}
+		} else {
 
-		if (invulnerableTimeSecs >= 0) {
-			invulnerableTimeSecs -= tpf;
-		}
+			if (invulnerableTimeSecs >= 0) {
+				invulnerableTimeSecs -= tpf;
+			}
 
-		super.serverAndClientProcess(server, null, tpf, System.currentTimeMillis());
+			super.serverAndClientProcess(server, null, tpf, System.currentTimeMillis());
 
-		// Point us in the right direction
-		Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
-		lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
-		this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
+			// Point us in the right direction
+			Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
+			lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
+			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 
-		if (getWorldTranslation().y < -1) {
-			// Dropped off the edge?
-			server.console.appendText(getName() + " has fallen off the edge");
-			fallenOffEdge();
-		}
+			if (getWorldTranslation().y < -1) {
+				// Dropped off the edge?
+				server.console.appendText(getName() + " has fallen off the edge");
+				fallenOffEdge();
+			}
 
-		if (this instanceof IRewindable) {
-			addPositionData();
+			if (this instanceof IRewindable) {
+				addPositionData();
+			}
 		}
 	}
 
@@ -108,11 +108,11 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	private void setDied(IEntity killer, String reason) {
 		Globals.p("Player " + this.getID() + " died: " + reason);
 		this.alive = false;
-		this.restartTimeSecs = server.gameOptions.restartTimeSecs;
+		this.restartTimeSecs = server.gameOptions.avatarRestartTimeSecs;
 		server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, killer));
 
 		this.currentAnimCode = ANIM_DIED; // Send death as an anim, so it gets scheduled and is not shown straight away
-		
+
 		if (killer != null && killer instanceof ICanScorePoints) {
 			ICanScorePoints csp = (ICanScorePoints)killer;
 			csp.incScore(1);
@@ -141,7 +141,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		this.setHealth(server.getAvatarStartHealth(this));
 		this.setScore(0);
 		this.invulnerableTimeSecs = 5;
-		
+
 	}
 
 }

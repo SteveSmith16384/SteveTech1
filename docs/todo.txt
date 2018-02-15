@@ -1,14 +1,15 @@
 STETECH1
 
 URGENT
-Client shooting - send shot confirmed msg to server when bullet is launched
-Falling through floor?
-Sometimes, first bullet no killing snowman
+Always send jump to server
+Client turning is push us through wall - test
 Add snowtext to mountains
+Add trees to scenery
 Search for todos
 
 
 TODO
+Sometimes, first bullet not killing snowman - is server also shooting? Client send shot confirmed msg to server when bullet is launched?
 Falling snow - started
 Warn if client and server have diff bullets left
 Use model woman
@@ -23,7 +24,6 @@ Client can always jump, even when in the air
 Client connect to lobby first, then select server
 Players send ping to server from lobby to see which is best
 Sound Effect message
-Player dies - "Dead" in big letters
 Ping system
 Split up client/server into systems
 Try diff snow hills
@@ -41,6 +41,7 @@ Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
 Walking up steps
+Game config interface
 Physics test - do explosion
 Add lots of comments
 Create generic classes and test them

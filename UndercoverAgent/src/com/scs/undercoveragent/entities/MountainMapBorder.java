@@ -35,23 +35,18 @@ public class MountainMapBorder extends PhysicalEntity {
 			// Add mountain models
 			for (float i=(InvisibleMapBorder.BORDER_WIDTH/2) ; i<size ; i+=InvisibleMapBorder.BORDER_WIDTH/2) { 
 				Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
+				JMEFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Textures/snow.jpg");
 				JMEFunctions.scaleModelToWidth(model, InvisibleMapBorder.BORDER_WIDTH+1); // Since we rotate it, needs to be slightly wider
 				model.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, 0, i);//-(InvisibleMapBorder.BORDER_WIDTH/2));
 				JMEFunctions.rotateToDirection(model, NumberFunctions.rnd(0, 359));
 				container.attachChild(model);
 			}
-			//container.setModelBound(new BoundingBox());  This stops it being drawn!?
-			//container.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, 0, 0);
-
 			mainNode.attachChild(container);
 			JMEFunctions.rotateToDirection(mainNode, dir);
 		} else {
 			// Do nothing on server
 		}
 
-		/*if (Globals.DEBUG_MOUNTAIN_BORDER) {
-			Globals.p("Moving mountain to " + x + ", " + y + ", " + z);
-		}*/
 		mainNode.setLocalTranslation(x, y, z);
 		
 		// Note we don't create a SimpleRigidBody, since this doesn't collide
