@@ -19,7 +19,7 @@ public class StaticSnowman extends PhysicalEntity {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("q", q);
+			//creationData.put("q", q);
 		}
 
 		SnowmanModel m = new SnowmanModel(game.getAssetManager());

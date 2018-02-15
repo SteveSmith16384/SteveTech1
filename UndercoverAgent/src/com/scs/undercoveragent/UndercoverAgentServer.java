@@ -17,6 +17,7 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.undercoveragent.entities.InvisibleMapBorder;
 import com.scs.undercoveragent.entities.MountainMapBorder;
 import com.scs.undercoveragent.entities.SnowFloor;
+import com.scs.undercoveragent.entities.SnowTree1;
 import com.scs.undercoveragent.entities.SnowmanServerAvatar;
 import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
@@ -28,7 +29,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	public static void main(String[] args) {
 		try {
 			startLobbyServer();
-			
+
 			AbstractGameServer app = new UndercoverAgentServer();
 			app.setPauseOnLostFocus(false);
 			app.start(JmeContext.Type.Headless);
@@ -37,7 +38,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		}
 	}
 
-	
+
 	private static void startLobbyServer() {
 		// Run the lobby server as well
 		Thread r = new Thread("LobbyServer") {
@@ -56,7 +57,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	}
 
-	
+
 	public UndercoverAgentServer() throws IOException {
 		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 5*60*1000, 10*1000, 
 				UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 
@@ -96,21 +97,17 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			// Place snowman
 			int numSnowmen = UndercoverAgentStaticData.MAP_SIZE;
 			for (int i=0 ; i<numSnowmen ; i++) {
-				//while (numSnowmen > 0) {
-				float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-				float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), x, 0, z, JMEFunctions.getRotation(-1, 0));
-				this.actuallyAddEntity(snowman);
-				SimpleRigidBody<PhysicalEntity> collider = snowman.simpleRigidBody.checkForCollisions();
-				while (collider != null) {
-					x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-					z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-					snowman.setWorldTranslation(x, z);
-					collider = snowman.simpleRigidBody.checkForCollisions();
-				}
-				// randomly rotate snowman
-				JMEFunctions.rotateToDirection(snowman.getMainNode(), NumberFunctions.rnd(0,  359));
+				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE/2, 0, UndercoverAgentStaticData.MAP_SIZE/2, JMEFunctions.getRotation(-1, 0));
+				this.addEntityToRandomPosition(snowman);
 				Globals.p("Placed " + i + " snowmen.");
+			}
+
+			// Place trees
+			int numTrees = UndercoverAgentStaticData.MAP_SIZE;
+			for (int i=0 ; i<numTrees ; i++) {
+				SnowTree1 tree1 = new SnowTree1(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE/2, 0, UndercoverAgentStaticData.MAP_SIZE/2, JMEFunctions.getRotation(-1, 0));
+				this.addEntityToRandomPosition(tree1);
+				Globals.p("Placed " + i + " tree.");
 			}
 		}
 
@@ -119,7 +116,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		this.actuallyAddEntity(floor);
 
 		// To make things easier for the server and client, we surround the map with a colliding but invisible wall.  We also place non-colliding but complex shapes in the same place.
-		
+
 		// Map border
 		InvisibleMapBorder borderL = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(borderL);
@@ -129,7 +126,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		this.actuallyAddEntity(borderBack);
 		InvisibleMapBorder borderFront = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
 		this.actuallyAddEntity(borderFront);
-		
+
 		MountainMapBorder mborderL = new MountainMapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(mborderL); // works
 		MountainMapBorder mborderR = new MountainMapBorder(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE+InvisibleMapBorder.BORDER_WIDTH, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
@@ -138,6 +135,28 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		this.actuallyAddEntity(mborderBack);
 		MountainMapBorder mborderFront = new MountainMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
 		this.actuallyAddEntity(mborderFront);
+	}
+
+
+	private void addEntityToRandomPosition(PhysicalEntity entity) {
+		float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+		float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+		//StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), x, 0, z, JMEFunctions.getRotation(-1, 0));
+		this.actuallyAddEntity(entity);
+		SimpleRigidBody<PhysicalEntity> collider = entity.simpleRigidBody.checkForCollisions();
+		while (collider != null) {
+			x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+			z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+			entity.setWorldTranslation(x, z);
+			collider = entity.simpleRigidBody.checkForCollisions();
+		}
+		// randomly rotate snowman
+		JMEFunctions.rotateToDirection(entity.getMainNode(), NumberFunctions.rnd(0,  359));
+		if (Globals.DEBUG_TREE_ROT) {
+			Globals.p("Tree rot2: " + entity.getMainNode().getLocalRotation());
+		}
+
+
 	}
 
 

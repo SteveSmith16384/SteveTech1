@@ -19,7 +19,7 @@ public class SnowTree2 extends PhysicalEntity {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("q", q);
+			//creationData.put("q", q);
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/SnowNature/Tree2.blend");

@@ -11,10 +11,14 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 	public static final boolean LIVE_SERVER = false; // Adjusts network idle thresholds etc...
 
-	public static final boolean EMPTY_MAP = true;
+	public static final boolean SIMULATE_DROPPED_PACKETS = true;
+	public static final int PCENT_DROPPED_PACKETS = 10;
 	public static final boolean DEBUG_SERVER_SHOOTING = true;
-	public static final boolean PLAYERS_START_IN_CORNER = true;
+	public static final int ARTIFICIAL_COMMS_DELAY = 0;
 	
+	public static final boolean DEBUG_TREE_ROT = false;
+	public static final boolean PLAYERS_START_IN_CORNER = false;
+	public static final boolean EMPTY_MAP = false;
 	public static final boolean DEBUG_CLIENT_ROTATION = false;
 	public static final boolean USE_SERVER_MODELS_ON_CLIENT = false;	
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
@@ -37,7 +41,6 @@ public class Globals {
 	public static final int SERVER_TICKRATE_MS = 25; // Source: 15ms
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 40; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 
 	public static final int CLIENT_RENDER_DELAY = 200; //SERVER_SEND_UPDATE_INTERVAL_MS*3; // How far in past the client should render the view.  Source: 50ms
-	public static final int ARTIFICIAL_COMMS_DELAY = 50;
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
 
 	public static final boolean SHOW_LOGO = false;

@@ -79,7 +79,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	public void simpleInitApp() {
 		super.simpleInitApp();
 
-		this.getViewPort().setBackgroundColor(ColorRGBA.Cyan);
+		this.getViewPort().setBackgroundColor(ColorRGBA.LightGray);
 
 		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 		

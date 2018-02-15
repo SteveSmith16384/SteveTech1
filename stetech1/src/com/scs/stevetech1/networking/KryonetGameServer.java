@@ -37,8 +37,10 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.systems.client.LaunchData;
 
+import ssmith.lang.NumberFunctions;
+
 public class KryonetGameServer implements IGameMessageServer {
-	
+
 	public static final int DEF_TIMEOUT = 10*1000;
 
 	private boolean debugging;
@@ -47,9 +49,9 @@ public class KryonetGameServer implements IGameMessageServer {
 
 	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener, boolean _debugging) throws IOException {
 		super();
-		
+
 		debugging =_debugging;
-		
+
 		server = new Server();
 		registerMessages(server.getKryo());
 		setListener(_listener);
@@ -134,6 +136,11 @@ public class KryonetGameServer implements IGameMessageServer {
 	}
 
 
+	private boolean isPacketDropped() {
+		return Globals.SIMULATE_DROPPED_PACKETS && NumberFunctions.rnd(0, 100) < Globals.PCENT_DROPPED_PACKETS;
+	}
+
+	
 	@Override
 	public void sendMessageToAll(final MyAbstractMessage msg) {
 		if (Globals.DEBUG_MSGS) {
@@ -144,7 +151,9 @@ public class KryonetGameServer implements IGameMessageServer {
 			if (msg.isReliable()) {
 				server.sendToAllTCP(msg);
 			} else {
-				server.sendToAllUDP(msg);
+				if (!this.isPacketDropped()) {
+					server.sendToAllUDP(msg);
+				}
 			}		
 		}
 		else {
@@ -159,7 +168,9 @@ public class KryonetGameServer implements IGameMessageServer {
 					if (msg.isReliable()) {
 						server.sendToAllTCP(msg);
 					} else {
-						server.sendToAllUDP(msg);
+						if (!isPacketDropped()) {
+							server.sendToAllUDP(msg);
+						}
 					}		
 				}
 			};
@@ -178,7 +189,9 @@ public class KryonetGameServer implements IGameMessageServer {
 				if (msg.isReliable()) {
 					server.sendToTCP(client.id, msg);
 				} else {
-					server.sendToUDP(client.id, msg);
+					if (!isPacketDropped()) {
+						server.sendToUDP(client.id, msg);
+					}
 				}		
 			}
 			else {
@@ -193,7 +206,9 @@ public class KryonetGameServer implements IGameMessageServer {
 						if (msg.isReliable()) {
 							server.sendToTCP(client.id, msg);
 						} else {
-							server.sendToUDP(client.id, msg);
+							if (!isPacketDropped()) {
+								server.sendToUDP(client.id, msg);
+							}
 						}		
 					}
 				};

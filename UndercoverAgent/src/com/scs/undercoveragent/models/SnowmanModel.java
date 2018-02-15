@@ -56,21 +56,6 @@ public class SnowmanModel implements IAvatarModel {
 		}
 	}
 
-	/*
-	@Override
-	public void setAnimationForCode(String code) {
-		if (code.equals(lastAnimCode)) {
-			return;
-		}
-		lastAnimCode = code;
-		if (Globals.DEBUG_ANIM) {
-			Globals.p("Showing anim for code " + code);
-		}
-		if (code == AbstractAvatar.ANIM_DIED) {
-			showDied = true;
-		}
-	}
-	 */
 
 	@Override
 	public float getCameraHeight() {

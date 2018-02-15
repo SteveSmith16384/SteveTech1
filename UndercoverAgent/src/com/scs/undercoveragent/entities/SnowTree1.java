@@ -19,7 +19,7 @@ public class SnowTree1 extends PhysicalEntity {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("q", q);
+			//creationData.put("q", q);
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/SnowNature/Tree.blend");
@@ -27,11 +27,10 @@ public class SnowTree1 extends PhysicalEntity {
 			JMEFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Models/SnowNature/Textures/TreeTexture.png");
 		}
 		this.mainNode.attachChild(model); //This creates the model bounds!
-
-		//float rads = (float)Math.toRadians(rotDegrees);
-		//mainNode.rotate(0, rads, 0);
 		mainNode.setLocalRotation(q);
-
+		if (Globals.DEBUG_TREE_ROT) {
+			Globals.p("Tree rot: " + q);
+		}
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
@@ -40,15 +39,12 @@ public class SnowTree1 extends PhysicalEntity {
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
-
 	}
 
-
+/*
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);
 	}
-
+*/
 }

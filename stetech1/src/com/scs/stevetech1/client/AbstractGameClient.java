@@ -402,7 +402,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							p.resetPlayerInput();
 						}
 						if (e instanceof PhysicalEntity) {
-							PhysicalEntity pe = (PhysicalEntity)e;  // pe.getWorldTranslation();  
+							PhysicalEntity pe = (PhysicalEntity)e;  //pe.getWorldRotation();
 							if (pe.moves) { // Only bother with things that can move
 								pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
 							}

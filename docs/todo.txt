@@ -1,19 +1,19 @@
 STETECH1
 
 URGENT
-Make default background grey
-Upoad to Digital Ocean
-Simulate missed packets
+Add igloos
+	Simulate missed packets
 Randomize packet delay
-	Client turning is push us through wall
+	Make default background grey
+Upoad to Digital Ocean
 	Add snowtext to mountains
-Add trees to scenery
 Search for todos
+Falling snow - started
 
 
 TODO
+Try desert models
 Sometimes, first bullet not killing snowman - is server also shooting? Client send shot confirmed msg to server when bullet is launched?
-Falling snow - started
 Warn if client and server have diff bullets left
 Use model woman
 Find sound effects
