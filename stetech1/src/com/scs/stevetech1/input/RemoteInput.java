@@ -58,13 +58,7 @@ public class RemoteInput implements IInputDevice {
 		return false;
 	}
 
-/*
-	@Override
-	public boolean isSelectNextAbilityPressed() {
-		return pim.selectNextAbility;
-	}
 
-*/
 	@Override
 	public Vector3f getDirection() {
 		return pim.direction;
@@ -74,13 +68,6 @@ public class RemoteInput implements IInputDevice {
 	@Override
 	public Vector3f getLeft() {
 		return pim.leftDir;
-	}
-
-
-	@Override
-	public void reset() {
-		// Do nothing?
-		
 	}
 
 

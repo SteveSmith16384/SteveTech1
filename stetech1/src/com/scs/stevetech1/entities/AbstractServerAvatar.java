@@ -1,6 +1,9 @@
 package com.scs.stevetech1.entities;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICanScorePoints;
@@ -21,6 +24,8 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame, ICanScorePoints {
 
 	private AbstractGameServer server;
+	//private Quaternion rotation; // Store it so we don't rotate the spatial, but can send rotation to other players
+	private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation
 
 	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side, IAvatarModel anim) {
 		super(_module, _playerID, _input, eid, side, anim);
@@ -29,6 +34,8 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE); // Different to client side, since that doesn't have gravity!
+		
+		this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}
 
 
@@ -76,7 +83,9 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			// Point us in the right direction
 			Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
 			lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
-			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
+			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
+			this.dummyNode.setLocalTranslation(this.getMainNode().getWorldTranslation());
+			this.dummyNode.lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 
 			if (getWorldTranslation().y < -1) {
 				// Dropped off the edge?
@@ -88,6 +97,20 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 				addPositionData();
 			}
 		}
+	}
+
+
+	@Override
+	public Quaternion getWorldRotation() {
+		//return this.getMainNode().getLocalRotation();
+		return this.dummyNode.getLocalRotation();//.rotation;
+	}
+
+
+	@Override
+	public void setWorldRotation(final Quaternion newRot2) {
+		//getMainNode().setLocalRotation(newRot2);
+		this.dummyNode.setLocalRotation(newRot2.clone()); // Don't rotate the model!  This causes the boundingbox to expand.
 	}
 
 

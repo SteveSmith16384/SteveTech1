@@ -120,11 +120,11 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		} else if (binding.equals("Down")) {
 			down = isPressed;
 		} else if (binding.equals("Jump")) {
-			jump = jump || isPressed;
+			jump = isPressed;
 		} else if (binding.equals("Ability1")) {
-			ability1 = ability1 || isPressed;
+			ability1 = isPressed;
 		} else if (binding.equals("Ability2")) {
-			ability2 = ability2 || isPressed;
+			ability2 = isPressed;
 		}		
 	}
 

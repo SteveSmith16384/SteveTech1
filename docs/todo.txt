@@ -1,9 +1,12 @@
 STETECH1
 
 URGENT
-Always send jump to server
-Client turning is push us through wall - test
-Add snowtext to mountains
+Make default background grey
+Upoad to Digital Ocean
+Simulate missed packets
+Randomize packet delay
+	Client turning is push us through wall
+	Add snowtext to mountains
 Add trees to scenery
 Search for todos
 

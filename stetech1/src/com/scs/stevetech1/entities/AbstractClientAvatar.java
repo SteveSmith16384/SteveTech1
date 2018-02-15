@@ -115,9 +115,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		hud.processByClient(client, tpf_secs);
 
-		// These must be after we might use them, so the hud is correct 
-		// todo - loop through abilities
-		this.hud.setAbilityGunText(this.ability[0].getHudText());
+		// These must be after we might use them, so the hud is correct
+		if (ability[0] != null) {
+			this.hud.setAbilityGunText(this.ability[0].getHudText());
+		}
 		if (this.ability[1] != null) {
 			this.hud.setAbilityOtherText(this.ability[1].getHudText());
 		}
@@ -130,9 +131,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			}
 		}
 		
-		if (Globals.DEBUG_CLIENT_ROTATION) {
+		/*if (Globals.DEBUG_CLIENT_ROTATION) {
 			Globals.p("Rot: " + this.getWorldRotation());
-		}
+		}*/
 
 	}
 

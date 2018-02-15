@@ -130,7 +130,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		InvisibleMapBorder borderFront = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
 		this.actuallyAddEntity(borderFront);
 		
-/*todo - re-add
 		MountainMapBorder mborderL = new MountainMapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(mborderL); // works
 		MountainMapBorder mborderR = new MountainMapBorder(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE+InvisibleMapBorder.BORDER_WIDTH, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
@@ -138,7 +137,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		MountainMapBorder mborderBack = new MountainMapBorder(this, getNextEntityID(), 0, 0, UndercoverAgentStaticData.MAP_SIZE, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
 		this.actuallyAddEntity(mborderBack);
 		MountainMapBorder mborderFront = new MountainMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
-		this.actuallyAddEntity(mborderFront);*/
+		this.actuallyAddEntity(mborderFront);
 	}
 
 

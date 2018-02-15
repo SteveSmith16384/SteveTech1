@@ -107,11 +107,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public void setWorldRotation(final Quaternion newRot2) {
-		getMainNode().setLocalRotation(newRot2);
-	}
-
-
 	@Override
 	public void remove() {
 		super.remove();
@@ -182,6 +177,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public Quaternion getWorldRotation() {
 		return this.getMainNode().getLocalRotation();
+		//return this.rotation;
+	}
+
+
+	public void setWorldRotation(final Quaternion newRot2) {
+		getMainNode().setLocalRotation(newRot2);
 	}
 
 

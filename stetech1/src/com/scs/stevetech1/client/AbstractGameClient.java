@@ -440,7 +440,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				}
 			}
 
-			input.reset();
+			//input.reset();
 			
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();

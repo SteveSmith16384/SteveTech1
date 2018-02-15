@@ -74,33 +74,16 @@ public class SnowmanModel implements IAvatarModel {
 
 	@Override
 	public float getCameraHeight() {
-		return MODEL_HEIGHT - 0.1f;
+		return MODEL_HEIGHT - 0.2f;
 	}
 
 
 	@Override
 	public float getBulletStartHeight() {
-		return MODEL_HEIGHT - 0.2f;
+		return MODEL_HEIGHT - 0.3f;
 	}
 
-	/*
-	@Override
-	public void showCurrentAnimation() {
-		if (showDied) {
-			showDied = false;
-			JMEFunctions.RotateToDirection(this.model, new Vector3f(0, 1, 0));
-		}
 
-	}
-	 */
-	/*
-	public void processAnimation(float tpf_secs) {
-		if (this.showDied) {
-			// Sink
-			this.model.move(0, -tpf_secs/10, 0);
-		}
-	}
-	 */
 	public void showDied(float tpf_secs) {
 		/*if (Globals.DEBUG_ANIM) {
 			Globals.p("Snowman sinking...");
