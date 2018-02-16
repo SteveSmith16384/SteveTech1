@@ -161,11 +161,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		}
 		// randomly rotate snowman
 		JMEFunctions.rotateToDirection(entity.getMainNode(), NumberFunctions.rnd(0,  359));
-		if (Globals.DEBUG_TREE_ROT) {
-			Globals.p("Tree rot2: " + entity.getMainNode().getLocalRotation());
-		}
-
-
 	}
 
 
@@ -204,13 +199,19 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	protected int getWinningSide() {
 		int highestScore = -1;
-		//ClientData winner = null;
 		int winningSide = -1;
+		boolean draw = false;
 		for(ClientData c : super.clients.values()) {
 			if (c.getScore() > highestScore) {
 				winningSide = c.side;
 				highestScore = c.getScore();
+				draw = false;
+			} else if (c.getScore() == highestScore) {
+				draw = true;
 			}
+		}
+		if (draw) {
+			return -1;
 		}
 		return winningSide;
 	}

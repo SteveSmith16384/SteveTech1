@@ -161,9 +161,6 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowTree1 tree = new SnowTree1(game, id, pos.x, pos.y, pos.z, q);
-			if (Globals.DEBUG_TREE_ROT) {
-				Globals.p("Tree rot: " + q);
-			}
 			return tree;
 		}
 

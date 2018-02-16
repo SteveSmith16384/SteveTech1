@@ -18,7 +18,7 @@ public class Globals {
 	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 60;
 	
 	public static final boolean DEBUG_SERVER_SHOOTING = false;
-	public static final boolean DEBUG_TREE_ROT = false;
+	//public static final boolean DEBUG_TREE_ROT = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean EMPTY_MAP = false;
 	public static final boolean DEBUG_CLIENT_ROTATION = false;

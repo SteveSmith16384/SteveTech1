@@ -28,9 +28,6 @@ public class SnowTree1 extends PhysicalEntity {
 		}
 		this.mainNode.attachChild(model); //This creates the model bounds!
 		mainNode.setLocalRotation(q);
-		if (Globals.DEBUG_TREE_ROT) {
-			Globals.p("Tree rot: " + q);
-		}
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);

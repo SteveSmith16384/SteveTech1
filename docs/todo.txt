@@ -1,12 +1,11 @@
 STETECH1
 
 URGENT
+Turn of swing widnows on server
 Show "winner"/"loser" at end
 Simulate packet loss and delay from client to server
 Show on hud "connecting to server.." etc...
 Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
-	Upload vid to youtube
-	Recreate all entities at start of game
 	Fix compile.sh
 Upload to Digital Ocean
 Search for todos

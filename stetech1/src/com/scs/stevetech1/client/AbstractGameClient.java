@@ -23,8 +23,8 @@ import com.jme3.system.AppSettings;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IClientControlled;
+import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IPlayerControlled;
@@ -45,6 +45,7 @@ import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
+import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -350,7 +351,18 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 								this.hud.setScoreText(asm.score);
 							}
 
+						} else if (message instanceof GameOverMessage) {
+							GameOverMessage gom = (GameOverMessage)message;
+							// todo - show image on HUD
+							if (gom.winningSide == -1) {
+								Globals.p("The game is a draw!");
+							} else if (gom.winningSide == this.side) {
+								Globals.p("You have won!");
+							} else {
+								Globals.p("You have lost!");
+							}
 						} else {
+							// todo - get superclass to handle it?
 							throw new RuntimeException("Unknown message type: " + message);
 						}
 					}
