@@ -60,8 +60,8 @@ public class ServerGameStatusSystem {
 		ArrayList<Integer> map = new ArrayList<Integer>();
 		for (ClientData client : server.clients.values()) {
 			if (client.avatar != null) {
-				if (!map.contains(client.avatar.side)) {
-					map.add(client.avatar.side);
+				if (!map.contains(client.side)) {
+					map.add(client.side);
 				}
 			}
 		}

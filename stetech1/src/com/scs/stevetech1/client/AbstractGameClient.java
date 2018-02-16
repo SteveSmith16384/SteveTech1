@@ -347,6 +347,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							AvatarStatusMessage asm = (AvatarStatusMessage)message;
 							if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 								this.hud.setHealthText((int)asm.health);
+								this.hud.setScoreText(asm.score);
 							}
 
 						} else {

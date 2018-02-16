@@ -34,6 +34,7 @@ import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
+import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
@@ -301,10 +302,10 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-		int side = getSide(client);
-		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, side);
-		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
-		client.avatar = createPlayersAvatar(client, side);
+		client.side = getSide(client);
+		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, client.side);
+		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
+		client.avatar = createPlayersAvatar(client);
 		sendAllEntitiesToClient(client);
 		client.clientStatus = ClientData.ClientStatus.Accepted;
 
@@ -351,12 +352,12 @@ ICollisionListener<PhysicalEntity> {
 		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 		for (ClientData client : this.clients.values()) {
 			if (client.avatar != null) {
-				if (!map.containsKey(client.avatar.side)) {
-					map.put(client.avatar.side, 0);
+				if (!map.containsKey(client.side)) {
+					map.put(client.side, 0);
 				}
-				int val = map.get(client.avatar.side);
+				int val = map.get(client.side);
 				val++;
-				map.put(client.avatar.side, val);
+				map.put(client.side, val);
 			}
 		}
 		return map;
@@ -423,9 +424,9 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	private AbstractServerAvatar createPlayersAvatar(ClientData client, int side) {
+	private AbstractServerAvatar createPlayersAvatar(ClientData client) {
 		int id = getNextEntityID();
-		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id, side);
+		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id);
 		this.actuallyAddEntity(avatar);
 
 		avatar.startAgain();
@@ -439,7 +440,7 @@ ICollisionListener<PhysicalEntity> {
 
 	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
 
-	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side);
+	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid);
 
 	private void sendAllEntitiesToClient(ClientData client) {
 		synchronized (entities) {
@@ -647,7 +648,7 @@ ICollisionListener<PhysicalEntity> {
 			for (ClientData client : this.clients.values()) {
 				int side = getSide(client); // New sides
 				client.playerData.side = side;
-				client.avatar = createPlayersAvatar(client, side);
+				client.avatar = createPlayersAvatar(client);
 				sendAllEntitiesToClient(client);
 			}
 		}
@@ -771,7 +772,13 @@ ICollisionListener<PhysicalEntity> {
 					}
 				}
 			}
+		} else if (newStatus == SimpleGameData.ST_FINISHED) {
+			int winningSide = this.getWinningSide();
+			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
 		}
 	}
+	
+	
+	protected abstract int getWinningSide();
 }
 

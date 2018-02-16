@@ -60,7 +60,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	public UndercoverAgentServer() throws IOException {
-		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 5*60*1000, 10*1000, 
+		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 60*1000, 10*1000, 
 				UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 
 				10, 5));
 
@@ -170,8 +170,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
-		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
+	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
+		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
 		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
 
 		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0);
@@ -198,6 +198,21 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	public float getAvatarStartHealth(AbstractAvatar avatar) {
 		return 1;
+	}
+
+
+	@Override
+	protected int getWinningSide() {
+		int highestScore = -1;
+		//ClientData winner = null;
+		int winningSide = -1;
+		for(ClientData c : super.clients.values()) {
+			if (c.getScore() > highestScore) {
+				winningSide = c.side;
+				highestScore = c.getScore();
+			}
+		}
+		return winningSide;
 	}
 
 

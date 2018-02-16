@@ -212,8 +212,8 @@ public class HUD extends Node implements IProcessByClient {
 	}
 
 
-	public void setHealthScore(int s) {
-		this.healthText.setText("Score: " + s);
+	public void setScoreText(int s) {
+		this.scoreText.setText("Score: " + s);
 	}
 
 

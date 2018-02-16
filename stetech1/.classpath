@@ -15,9 +15,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jogl"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl3"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-plugins"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-terrain"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-blender"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

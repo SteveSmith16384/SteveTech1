@@ -12,29 +12,34 @@ import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.IRewindable;
+import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame, ICanScorePoints {
 
 	private AbstractGameServer server;
+	public ClientData client;
+
 	//private Quaternion rotation; // Store it so we don't rotate the spatial, but can send rotation to other players
 	private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation
 
-	public AbstractServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side, IAvatarModel anim) {
-		super(_module, _playerID, _input, eid, side, anim);
+	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, IAvatarModel anim) {
+		super(_module, _playerID, _input, eid, _client.side, anim);
 
 		server = (AbstractGameServer)_module;
+		client = _client;
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE); // Different to client side, since that doesn't have gravity!
-		
+
 		this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}
 
@@ -50,10 +55,10 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
-		if (this.statsChanged) {
-			this.server.gameNetworkServer.sendMessageToAll(new AvatarStatusMessage(this));
+		/*if (this.statsChanged) {
+			this.server.gameNetworkServer.sendMessageToAll(new AvatarStatusMessage(this, client));
 			this.statsChanged = false;
-		}
+		}*/
 
 
 		if (!this.alive) {
@@ -116,13 +121,15 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
-		if (this.alive && invulnerableTimeSecs < 0) {
-			this.decHealth(amt);
-			if (this.getHealth() <= 0) {
-				IEntity killer = collider.getActualShooter();
-				setDied(killer, reason);
-			} else {
-				Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);
+		if (server.gameData.getGameStatus() == SimpleGameData.ST_STARTED) {
+			if (this.alive && invulnerableTimeSecs < 0) {
+				this.decHealth(amt);
+				if (this.getHealth() <= 0) {
+					IEntity killer = collider.getActualShooter();
+					setDied(killer, reason);
+				} else {
+					Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);
+				}
 			}
 		}
 	}
@@ -162,9 +169,37 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	public void getReadyForGame() {
 		alive = true;
 		this.setHealth(server.getAvatarStartHealth(this));
-		this.setScore(0);
+		this.client.setScore(0);
 		this.invulnerableTimeSecs = 5;
 
+	}
+
+
+
+	@Override
+	public void incScore(int i) {
+		client.incScore(i);
+		this.sendStatusUpdateMessage();
+	}
+
+	
+	protected void sendStatusUpdateMessage() {
+		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
+
+	}
+
+
+	@Override
+	public void setHealth(float h) {
+		super.setHealth(h);
+		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
+	}
+
+
+	@Override
+	public void decHealth(float h) {
+		super.decHealth(h);
+		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
 	}
 
 }

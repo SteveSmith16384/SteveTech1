@@ -1,7 +1,5 @@
 package com.scs.stevetech1.server;
 
-import com.jme3.input.InputManager;
-import com.jme3.renderer.Camera;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.input.RemoteInput;
@@ -21,6 +19,10 @@ public class ClientData {
 	public SimplePlayerData playerData;
 	public ClientStatus clientStatus = ClientStatus.Connected;
 
+	private int score;
+	public int side = -1;
+	//protected boolean statsChanged = false;
+
 	public ClientData(int _id, Object _networkObj) {//, Camera cam, InputManager _inputManager) {
 		super();
 		
@@ -37,5 +39,23 @@ public class ClientData {
 	public int getPlayerID() {
 		return id;
 	}
+	
+	
+	public int getScore() {
+		return this.score;
+	}
+
+
+	public void incScore(int i) {
+		this.score += i;
+		//this.statsChanged = true;
+	}
+
+
+	public void setScore(int i) {
+		this.score = i;
+		//this.statsChanged = true;
+	}
+
 
 }

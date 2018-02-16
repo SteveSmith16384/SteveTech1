@@ -3,13 +3,14 @@ package com.scs.stevetech1.data;
 import com.jme3.network.serializing.Serializable;
 
 /*
- * This should only contain stuff that is completely replaced when a new "mission" starts.
+ * This should only contain stuff that is completely replaced when a new game starts.
  */
 @Serializable
 public class SimpleGameData { // pojo
 
+	// Game statuses
 	public static final int ST_WAITING_FOR_PLAYERS = 0;
-	public static final int ST_DEPLOYING = 1; // Players waiting in spawn area 
+	public static final int ST_DEPLOYING = 1; // Players typically waiting in spawn area 
 	public static final int ST_STARTED = 2; // Players released!
 	public static final int ST_FINISHED = 3;
 

@@ -47,9 +47,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected boolean playerWalked; // Has the player tried to move us?
 
 	// Send messages when changed
-	protected boolean statsChanged = false;
+	//protected boolean statsChanged = false;
 	private float health;
-	private int score;
+	//private int score;
 
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _anim) {
@@ -175,7 +175,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	//	@Override
 	public int getSide() {
 		return side;
 	}
@@ -235,23 +234,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	public int getScore() {
-		return this.score;
-	}
-
-
-	public void incScore(int i) {
-		this.score += i;
-		this.statsChanged = true;
-	}
-
-
-	public void setScore(int i) {
-		this.score = i;
-		this.statsChanged = true;
-	}
-
-
 	public float getHealth() {
 		return this.health;
 	}
@@ -259,13 +241,13 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	public void setHealth(float h) {
 		this.health = h;
-		this.statsChanged = true;
+		//this.statsChanged = true;
 	}
 
 
-	public void decHealth(float h) {
+	public void decHealth(float h) { // todo - why not use damaged()?
 		this.health -= h;
-		this.statsChanged = true;
+		//this.statsChanged = true;
 	}
 
 }

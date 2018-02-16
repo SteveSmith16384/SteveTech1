@@ -11,12 +11,13 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 	public static final boolean LIVE_SERVER = false; // Adjusts network idle thresholds etc...
 
+	// Lots of consts for specific debugging output
 	public static final boolean SIMULATE_DROPPED_PACKETS = true;
 	public static final int PCENT_DROPPED_PACKETS = 10;
-	public static final boolean DEBUG_SERVER_SHOOTING = true;
 	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 20;
 	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 60;
 	
+	public static final boolean DEBUG_SERVER_SHOOTING = false;
 	public static final boolean DEBUG_TREE_ROT = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean EMPTY_MAP = false;
@@ -37,7 +38,7 @@ public class Globals {
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
 
-	public static final float CONNECTION_IDLE_THRESH = 1000000;
+	//public static final float CONNECTION_IDLE_THRESH = 1000000;
 
 	public static final int SERVER_TICKRATE_MS = 25; // Source: 15ms
 	public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 40; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 

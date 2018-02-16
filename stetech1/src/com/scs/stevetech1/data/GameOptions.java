@@ -13,7 +13,8 @@ public class GameOptions {
 	public int ourExternalPort, lobbyport;
 	public float avatarRestartTimeSecs, avatarInvulnDurationSecs;
 
-	public GameOptions(String _displayName, int _maxPlayersPerSide, int _maxSides, long _deployDuration, long _gameDuration, long _finishedDuration,
+	public GameOptions(String _displayName, int _maxPlayersPerSide, int _maxSides, 
+			long _deployDuration, long _gameDuration, long _finishedDuration,
 			String _ourExternalIP, int _ourExternalPort, String _lobbyip, int _lobbyport,
 			float _restartTime, float _invulnDuration) {
 		

@@ -1,16 +1,14 @@
 STETECH1
 
 URGENT
-Recreate all entities at start of game
-Show on hud "connecting to server.." etc...
 Show "winner"/"loser" at end
-Randomize packet delay
-	Add igloos
-	Simulate missed packets
-	Make default background grey
-Fix ompile.sh
+Simulate packet loss and delay from client to server
+Show on hud "connecting to server.." etc...
+Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
+	Upload vid to youtube
+	Recreate all entities at start of game
+	Fix compile.sh
 Upload to Digital Ocean
-	Add snowtext to mountains
 Search for todos
 
 
