@@ -1,17 +1,23 @@
 STETECH1
 
 URGENT
-Add igloos
-	Simulate missed packets
+Recreate all entities at start of game
+Show on hud "connecting to server.." etc...
+Show "winner"/"loser" at end
 Randomize packet delay
+	Add igloos
+	Simulate missed packets
 	Make default background grey
-Upoad to Digital Ocean
+Fix ompile.sh
+Upload to Digital Ocean
 	Add snowtext to mountains
 Search for todos
-Falling snow - started
 
 
 TODO
+Falling snow - started
+Pause game time if not enough players
+Server tell client to slow down if server struggling
 Try desert models
 Sometimes, first bullet not killing snowman - is server also shooting? Client send shot confirmed msg to server when bullet is launched?
 Warn if client and server have diff bullets left
@@ -62,7 +68,6 @@ Simple physics - pushing
 Don't use broadcast()?s
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed
-Server tell client to slow down if server struggling
 Stop client if no comms for a while
 Only send entity messages to players that have joined the game
 

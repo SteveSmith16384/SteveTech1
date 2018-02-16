@@ -9,8 +9,8 @@ import com.jme3.network.serializing.Serializable;
 public class SimpleGameData { // pojo
 
 	public static final int ST_WAITING_FOR_PLAYERS = 0;
-	public static final int ST_DEPLOYING = 1;
-	public static final int ST_STARTED = 2;
+	public static final int ST_DEPLOYING = 1; // Players waiting in spawn area 
+	public static final int ST_STARTED = 2; // Players released!
 	public static final int ST_FINISHED = 3;
 
 	private int gameStatus = ST_WAITING_FOR_PLAYERS;

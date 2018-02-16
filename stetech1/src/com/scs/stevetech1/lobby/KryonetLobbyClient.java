@@ -11,6 +11,8 @@ import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.sun.media.jfxmedia.logging.Logger;
 
+import ssmith.lang.NumberFunctions;
+
 public class KryonetLobbyClient {
 
 	private IMessageClientListener listener;
@@ -60,7 +62,7 @@ public class KryonetLobbyClient {
 			Globals.p("Sending to server: " + msg);
 		}
 
-		if (Globals.ARTIFICIAL_COMMS_DELAY == 0) {
+		if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				client.sendTCP(msg);
 			} else {
@@ -72,7 +74,7 @@ public class KryonetLobbyClient {
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(Globals.ARTIFICIAL_COMMS_DELAY);
+						Thread.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

@@ -14,6 +14,7 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
+import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.InvisibleMapBorder;
 import com.scs.undercoveragent.entities.MountainMapBorder;
 import com.scs.undercoveragent.entities.SnowFloor;
@@ -108,6 +109,14 @@ public class UndercoverAgentServer extends AbstractGameServer {
 				SnowTree1 tree1 = new SnowTree1(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE/2, 0, UndercoverAgentStaticData.MAP_SIZE/2, JMEFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(tree1);
 				Globals.p("Placed " + i + " tree.");
+			}
+
+			// Place igloos
+			int numIgloos = UndercoverAgentStaticData.MAP_SIZE/2;
+			for (int i=0 ; i<numIgloos ; i++) {
+				Igloo igloo = new Igloo(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE/2, 0, UndercoverAgentStaticData.MAP_SIZE/2, JMEFunctions.getRotation(-1, 0));
+				this.addEntityToRandomPosition(igloo);
+				Globals.p("Placed " + i + " igloo.");
 			}
 		}
 

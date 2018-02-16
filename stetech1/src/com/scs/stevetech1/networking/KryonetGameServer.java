@@ -147,7 +147,7 @@ public class KryonetGameServer implements IGameMessageServer {
 			Globals.p("Sending to all " + msg);
 		}
 
-		if (Globals.ARTIFICIAL_COMMS_DELAY == 0) {
+		if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				server.sendToAllTCP(msg);
 			} else {
@@ -161,7 +161,7 @@ public class KryonetGameServer implements IGameMessageServer {
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(Globals.ARTIFICIAL_COMMS_DELAY);
+						Thread.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -185,7 +185,7 @@ public class KryonetGameServer implements IGameMessageServer {
 			Globals.p("Sending to client: " + msg);
 		}
 		try {
-			if (Globals.ARTIFICIAL_COMMS_DELAY == 0) {
+			if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 				if (msg.isReliable()) {
 					server.sendToTCP(client.id, msg);
 				} else {
@@ -199,7 +199,7 @@ public class KryonetGameServer implements IGameMessageServer {
 					@Override
 					public void run() {
 						try {
-							Thread.sleep(Globals.ARTIFICIAL_COMMS_DELAY);
+							Thread.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}

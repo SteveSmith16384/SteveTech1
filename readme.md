@@ -9,9 +9,10 @@ SteveTech1 is a complete 3D multiplayer FPS framework and engine, designed to cr
 * Client lag-compensation
 * TCP and UDP for networking
 * Position interpolation
-* Avatar "rewinding" for accurate shooting
+* Time "rewinding" for accurate shooting
 * Simple physics
 * Includes some simple example games
+* Simulate packet delay/loss
 * Game lobby
 
 

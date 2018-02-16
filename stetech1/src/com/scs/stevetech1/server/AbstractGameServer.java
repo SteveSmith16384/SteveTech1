@@ -285,8 +285,8 @@ ICollisionListener<PhysicalEntity> {
 			return true;
 		}
 		int currentPlayers = 0;
-		for(ClientData c : this.clients.values()) { // only count players actually Accepted!
-			if (c.clientStatus == ClientData.ClientStatus.Accepted) {
+		for(ClientData c : this.clients.values()) {
+			if (c.clientStatus == ClientData.ClientStatus.Accepted) {  // only count players actually Accepted!
 				currentPlayers++;
 			}
 		}
@@ -611,8 +611,6 @@ ICollisionListener<PhysicalEntity> {
 					break;
 				}
 			}
-		} else if (cmd.equals("restart")) {
-			restartGame();
 		} else if (cmd.equals("quit")) {
 			this.gameNetworkServer.close();
 			this.stop();
@@ -636,10 +634,24 @@ ICollisionListener<PhysicalEntity> {
 			e.remove();
 		}
 
-		this.getGameNode().detachAllChildren();
-		this.getPhysicsController().removeAllEntities();
+		if (this.getGameNode().getChildren().size() > 0) {
+			throw new RuntimeException("Todo");
+		}
+		//this.getGameNode().detachAllChildren(); todo -re-add?
+		//this.getPhysicsController().removeAllEntities(); todo -re-add?
 
-		gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
+		this.createGame();
+
+		// Create avatars
+		synchronized (this.clients) {
+			for (ClientData client : this.clients.values()) {
+				int side = getSide(client); // New sides
+				client.playerData.side = side;
+				client.avatar = createPlayersAvatar(client, side);
+				sendAllEntitiesToClient(client);
+			}
+		}
+
 	}
 
 
@@ -681,12 +693,7 @@ ICollisionListener<PhysicalEntity> {
 			ic.collided(pea);
 		}
 
-		//if (a != null && b != null) {
 		collisionLogic.collision(pea, peb);
-		/*} else {
-			Settings.p("null object in collision");
-		}*/
-
 	}
 
 
@@ -753,7 +760,9 @@ ICollisionListener<PhysicalEntity> {
 
 
 	public void gameStatusChanged(int newStatus)  {
-		if (newStatus == SimpleGameData.ST_DEPLOYING || newStatus == SimpleGameData.ST_STARTED) {
+		if (newStatus == SimpleGameData.ST_DEPLOYING) {
+			restartGame();
+		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {
 				for (IEntity e : entities.values()) {
 					if (e instanceof IGetReadyForGame) {

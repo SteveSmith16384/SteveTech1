@@ -14,7 +14,8 @@ public class Globals {
 	public static final boolean SIMULATE_DROPPED_PACKETS = true;
 	public static final int PCENT_DROPPED_PACKETS = 10;
 	public static final boolean DEBUG_SERVER_SHOOTING = true;
-	public static final int ARTIFICIAL_COMMS_DELAY = 0;
+	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 20;
+	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 60;
 	
 	public static final boolean DEBUG_TREE_ROT = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
@@ -64,7 +65,7 @@ public class Globals {
 	public static final Random rnd = new Random();
 
 	static {
-		if (ARTIFICIAL_COMMS_DELAY + SERVER_SEND_UPDATE_INTERVAL_MS >= CLIENT_RENDER_DELAY) {
+		if (MIN_ARTIFICIAL_COMMS_DELAY + SERVER_SEND_UPDATE_INTERVAL_MS >= CLIENT_RENDER_DELAY) {
 			throw new RuntimeException("Data will not be sent in time for the client to use it to render");
 		}
 	}
