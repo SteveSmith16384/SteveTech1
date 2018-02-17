@@ -14,7 +14,7 @@ public class EntityPositionData {
 	}
 
 
-	private EntityPositionData(Vector3f pos, Quaternion rot, long time) {
+	private EntityPositionData(Vector3f pos, Quaternion rot, long time) { // todo - delete
 		this();
 
 		this.position = pos;
@@ -27,7 +27,8 @@ public class EntityPositionData {
 		// interpolate between timestamps
 		float frac = ((float)(serverTimestamp - time) / (float)(serverTimestamp - other.serverTimestamp));
 		Vector3f posToSet = new Vector3f();
-		posToSet.interpolateLocal(this.position, other.position, frac);
+		//posToSet.interpolateLocal(this.position, other.position, frac);
+		posToSet = posToSet.interpolate(this.position, other.position, frac); // todo - check what changes
 
 		Quaternion newRot = new Quaternion();
 		Quaternion newRot2 = newRot;

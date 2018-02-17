@@ -81,7 +81,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 		this.getViewPort().setBackgroundColor(ColorRGBA.LightGray);
 
-		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
+		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", false));//SkyFactory.EnvMapType.CubeMap));
 		
 		this.snowflakeSystem = new FallingSnowflakeSystem(this);
 	}

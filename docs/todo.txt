@@ -1,7 +1,8 @@
 STETECH1
 
 URGENT
-Turn of swing widnows on server
+Clear client-only entities at the start of the game
+Turn off swing widnows on server
 Show "winner"/"loser" at end
 Simulate packet loss and delay from client to server
 Show on hud "connecting to server.." etc...
