@@ -94,7 +94,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 			if (getWorldTranslation().y < -1) {
 				// Dropped off the edge?
-				server.console.appendText(getName() + " has fallen off the edge");
+				//server.console.appendText(getName() + " has fallen off the edge");
 				fallenOffEdge();
 			}
 

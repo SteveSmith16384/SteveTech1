@@ -60,7 +60,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		if (getWorldTranslation().y < -1) {
 			// Dropped away?
-			server.console.appendText(getName() + " has fallen off the edge");
+			//server.console.appendText(getName() + " has fallen off the edge");
 			Globals.p(getName() + " has fallen off the edge");
 			fallenOffEdge();
 		}

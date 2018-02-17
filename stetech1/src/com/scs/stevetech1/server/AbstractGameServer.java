@@ -76,8 +76,8 @@ ICollisionListener<PhysicalEntity> {
 	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Globals.SERVER_SEND_UPDATE_INTERVAL_MS);
 
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
-	protected LogWindow logWindow;
-	public IConsole console;
+	//protected LogWindow logWindow;
+	//public IConsole console;
 	public SimpleGameData gameData;
 	public ServerSideCollisionLogic collisionLogic = new ServerSideCollisionLogic();
 	public GameOptions gameOptions;
@@ -92,8 +92,8 @@ ICollisionListener<PhysicalEntity> {
 		gameOptions = _gameOptions;
 
 		//properties = new GameProperties(PROPS_FILE);
-		logWindow = new LogWindow("Server", 400, 300);
-		console = new ServerConsole(this);
+		//logWindow = new LogWindow("Server", 400, 300);
+		//console = new ServerConsole(this);
 
 		gameData = new SimpleGameData();
 		gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, !Globals.LIVE_SERVER);
@@ -106,11 +106,12 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void simpleInitApp() {
+		// todo - what if inside jar?
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
 		createGame();
-		console.appendText("Game created");
+		//console.appendText("Game created");
 
 		loopTimer.start();
 	}
@@ -274,7 +275,7 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 
-		this.logWindow.setText(strDebug.toString());
+		//this.logWindow.setText(strDebug.toString());
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
 		loopTimer.start();
@@ -530,7 +531,7 @@ ICollisionListener<PhysicalEntity> {
 					gameNetworkServer.sendMessageToClient(client, nem);	
 				}
 			}
-			this.console.appendText("Created " + e);
+			//this.console.appendText("Created " + e);
 		}
 
 	}
@@ -550,7 +551,7 @@ ICollisionListener<PhysicalEntity> {
 					Globals.p("Actually removing entity " + e.getName() + " / ID:" + id);
 				}
 				this.entities.remove(id);
-				this.console.appendText("Removed " + e);
+				//this.console.appendText("Removed " + e);
 			} else {
 				Globals.pe("Warning - entity " + id + " doesn't exist for removal");
 			}
