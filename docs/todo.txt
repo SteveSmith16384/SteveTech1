@@ -1,18 +1,21 @@
 STETECH1
 
 URGENT
+Config files!
+Remove GLobals. from kryonet
+Command line parameters
+Load models from jar file
 Clear client-only entities at the start of the game
-Turn off swing widnows on server
+	Turn off swing widnows on server
 Show "winner"/"loser" at end
 Simulate packet loss and delay from client to server
 Show on hud "connecting to server.." etc...
-Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
-	Fix compile.sh
-Upload to Digital Ocean
+	Upload to Digital Ocean
 Search for todos
 
 
 TODO
+Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
 Falling snow - started
 Pause game time if not enough players
 Server tell client to slow down if server struggling

@@ -10,18 +10,20 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 	public int entityID;
 	public float health;
 	public int score;
+	public boolean damaged; // Signal to show HUD effect
 	
 	public AvatarStatusMessage() {
 		super();
 	}
 
 
-	public AvatarStatusMessage(AbstractServerAvatar avatar, ClientData client) {
+	public AvatarStatusMessage(AbstractServerAvatar avatar, ClientData client, boolean _damaged) {
 		super(true, true);
 		
 		this.entityID = avatar.getID();
 		this.health = avatar.getHealth();
 		this.score = client.getScore();
+		damaged = _damaged;
 	}
 
 }

@@ -14,8 +14,8 @@ public class Globals {
 	// Lots of consts for specific debugging output
 	public static final boolean SIMULATE_DROPPED_PACKETS = true;
 	public static final int PCENT_DROPPED_PACKETS = 10;
-	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 20;
-	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 60;
+	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;
+	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0;
 	
 	public static final boolean DEBUG_SERVER_SHOOTING = false;
 	//public static final boolean DEBUG_TREE_ROT = false;
@@ -54,11 +54,7 @@ public class Globals {
 
 	public static final float CAM_DIST = 50f;
 	public static final boolean LIGHTING = true;
-	public static final String NAME = "SteTech1";
-
-	// Changing settings
-	public static boolean SYNC_AVATAR_POS = true;
-	public static boolean SYNC_GRENADE_POS = true;
+	//public static final String NAME = "SteveTech1";
 
 	// User Data
 	public static final String ENTITY = "Entity";

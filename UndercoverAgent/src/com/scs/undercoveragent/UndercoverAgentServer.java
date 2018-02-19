@@ -32,9 +32,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			startLobbyServer();
 
 			AbstractGameServer app = new UndercoverAgentServer();
-			app.setShowSettings(false); // Don't show settings dialog
-			app.setPauseOnLostFocus(false);
-			app.start(JmeContext.Type.Headless);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

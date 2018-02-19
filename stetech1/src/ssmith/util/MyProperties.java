@@ -14,8 +14,8 @@ public class MyProperties {
 	private Properties properties;
 	private boolean needsSaving = false;
 
-	public MyProperties(String _name) throws IOException {
-		filename = _name;
+	public MyProperties(String _filename) throws IOException {
+		filename = _filename;
 		this.loadProperties();
 	}
 
@@ -35,7 +35,7 @@ public class MyProperties {
 			String filepath = filename;
 			File propsFile = new File(filepath);
 			try {
-				properties.store(new FileOutputStream(propsFile), Globals.NAME + " settings file");
+				properties.store(new FileOutputStream(propsFile), "Settings file");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

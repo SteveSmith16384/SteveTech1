@@ -28,7 +28,7 @@ public class EntityPositionData {
 		float frac = ((float)(serverTimestamp - time) / (float)(serverTimestamp - other.serverTimestamp));
 		Vector3f posToSet = new Vector3f();
 		//posToSet.interpolateLocal(this.position, other.position, frac);
-		posToSet = posToSet.interpolate(this.position, other.position, frac); // todo - check what changes
+		posToSet.interpolateLocal(this.position, other.position, frac); // todo - check what changes
 
 		Quaternion newRot = new Quaternion();
 		Quaternion newRot2 = newRot;

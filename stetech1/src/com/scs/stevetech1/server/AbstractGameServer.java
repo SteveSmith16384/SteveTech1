@@ -15,6 +15,7 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.system.JmeContext;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -101,6 +102,10 @@ ICollisionListener<PhysicalEntity> {
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
 
 		this.gameStatusSystem = new ServerGameStatusSystem(this);
+
+		setShowSettings(false); // Don't show settings dialog
+		setPauseOnLostFocus(false);
+		start(JmeContext.Type.Headless);
 	}
 
 
@@ -111,7 +116,6 @@ ICollisionListener<PhysicalEntity> {
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
 		createGame();
-		//console.appendText("Game created");
 
 		loopTimer.start();
 	}
