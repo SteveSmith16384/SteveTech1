@@ -43,9 +43,13 @@ public class RealtimeInterval {
 	}
 	
 	
-	
 	public void fireInterval() {
 		this.next_check_time = System.currentTimeMillis(); // Fire straight away
+	}
+	
+	
+	public long getInterval() {
+		return this.durationMS;
 	}
 
 }

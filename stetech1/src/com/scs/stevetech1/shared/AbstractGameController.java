@@ -18,7 +18,7 @@ import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
 /*
- * This class is shared by bother the abstract client and abstract server.
+ * This class is shared by both the abstract client and abstract server.
  * 
  */
 public abstract class AbstractGameController extends SimpleApplication implements ICollisionListener<PhysicalEntity>{
@@ -26,15 +26,23 @@ public abstract class AbstractGameController extends SimpleApplication implement
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
-	protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
-	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
+	protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>(); // todo - sync around this
+	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>(); // todo - sync around this
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
-	protected FixedLoopTime loopTimer = new FixedLoopTime(Globals.SERVER_TICKRATE_MS); // Keep client and server running at the same time
+	protected FixedLoopTime loopTimer;// = new FixedLoopTime(Globals.SERVER_TICKRATE_MS); // Keep client and server running at the same time
 	protected RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
+	
+	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
 
-	public AbstractGameController() {
+	public AbstractGameController(int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis) {
 		super();
+		
+		tickrateMillis = _tickrateMillis;
+		clientRenderDelayMillis = _clientRenderDelayMillis;
+		timeoutMillis = _timeoutMillis;
+		
+		loopTimer = new FixedLoopTime(tickrateMillis);
 	}
 
 	

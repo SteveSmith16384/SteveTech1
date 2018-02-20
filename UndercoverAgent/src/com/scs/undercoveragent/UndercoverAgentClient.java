@@ -1,68 +1,42 @@
 package com.scs.undercoveragent;
 
-import java.util.prefs.BackingStoreException;
-
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.system.AppSettings;
 import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.systems.client.FallingSnowflakeSystem;
 
+import ssmith.util.MyProperties;
+
 public class UndercoverAgentClient extends AbstractGameClient {
 
+	private UndercoverAgentClientEntityCreator entityCreator = new UndercoverAgentClientEntityCreator();
 	private FallingSnowflakeSystem snowflakeSystem;
 	
 	public static void main(String[] args) {
 		try {
-			settings = new AppSettings(true);
-			try {
-				settings.load(Globals.NAME);
-			} catch (BackingStoreException e) {
-				e.printStackTrace();
-			}
-			settings.setUseJoysticks(true);
-			settings.setAudioRenderer(null); // Avoid error with no soundcard
-			settings.setTitle(Globals.NAME);// + " (v" + Settings.VERSION + ")");
-			if (Globals.SHOW_LOGO) {
-				//settings.setSettingsDialogImage("/game_logo.png");
+			MyProperties props = null;
+			if (args.length > 0) {
+				props = new MyProperties(args[0]);
 			} else {
-				settings.setSettingsDialogImage(null);
+				props = new MyProperties();
+				Globals.p("Warning: No config file specified");
 			}
-
-			AbstractGameClient app = new UndercoverAgentClient();
-			//instance = app;
-			app.setSettings(settings);
-			app.setPauseOnLostFocus(false); // Needs to always be in sync with server!
-
-			/*File video, audio;
-			if (Settings.RECORD_VID) {
-				//app.setTimer(new IsoTimer(60));
-				video = File.createTempFile("JME-water-video", ".avi");
-				audio = File.createTempFile("JME-water-audio", ".wav");
-				Capture.captureVideo(app, video);
-				Capture.captureAudio(app, audio);
-			}*/
-
-			app.start();
-
-			/*if (Settings.RECORD_VID) {
-				System.out.println("Video saved at " + video.getCanonicalPath());
-				System.out.println("Audio saved at " + audio.getCanonicalPath());
-			}*/
-
-			try {
-				settings.save(Globals.NAME);
-			} catch (BackingStoreException e) {
-				e.printStackTrace();
-			}
-
+			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
+			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
+			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
+			float gravity = props.getPropertyAsFloat("gravity", -5);
+			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
+			
+			new UndercoverAgentClient(tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
 			e.printStackTrace();
@@ -70,8 +44,9 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 
 
-	public UndercoverAgentClient() {
-		super(UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, new UndercoverAgentClientEntityCreator());
+	public UndercoverAgentClient(int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) {
+		super(UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 
+				tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 	}
 
 
@@ -81,7 +56,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 		this.getViewPort().setBackgroundColor(ColorRGBA.LightGray);
 
-		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", false));//SkyFactory.EnvMapType.CubeMap));
+		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 		
 		this.snowflakeSystem = new FallingSnowflakeSystem(this);
 	}
@@ -121,6 +96,12 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 		super.collisionOccurred(a, b, point);
 
+	}
+
+
+	@Override
+	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg) {
+		return entityCreator.createEntity(client, msg);
 	}
 
 

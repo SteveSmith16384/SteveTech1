@@ -15,6 +15,7 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.system.JmeContext;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -70,14 +71,14 @@ ICollisionListener<PhysicalEntity> {
 	public IGameMessageServer gameNetworkServer;
 	private KryonetLobbyClient clientToLobbyServer;
 	public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
+	private LinkedList<ClientData> clientsToAdd = new LinkedList<>();
+	private LinkedList<Integer> clientsToRemove = new LinkedList<>();
 
 	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
 	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
-	private RealtimeInterval sendEntityUpdatesInterval = new RealtimeInterval(Globals.SERVER_SEND_UPDATE_INTERVAL_MS);
+	private RealtimeInterval sendEntityUpdatesInterval;// = new RealtimeInterval(Globals.SERVER_SEND_UPDATE_INTERVAL_MS);
 
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
-	//protected LogWindow logWindow;
-	//public IConsole console;
 	public SimpleGameData gameData;
 	public ServerSideCollisionLogic collisionLogic = new ServerSideCollisionLogic();
 	public GameOptions gameOptions;
@@ -86,21 +87,26 @@ ICollisionListener<PhysicalEntity> {
 	// Systems
 	private ServerGameStatusSystem gameStatusSystem;
 
-	public AbstractGameServer(GameOptions _gameOptions) throws IOException {
-		super();
+	public AbstractGameServer(GameOptions _gameOptions, int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
+		super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
 
 		gameOptions = _gameOptions;
+		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
 
 		//properties = new GameProperties(PROPS_FILE);
 		//logWindow = new LogWindow("Server", 400, 300);
 		//console = new ServerConsole(this);
 
 		gameData = new SimpleGameData();
-		gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, !Globals.LIVE_SERVER);
+		gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, timeoutMillis);
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, gravity, aerodynamicness);
 
 		this.gameStatusSystem = new ServerGameStatusSystem(this);
+
+		setShowSettings(false); // Don't show settings dialog
+		setPauseOnLostFocus(false);
+		start(JmeContext.Type.Headless);
 	}
 
 
@@ -111,7 +117,6 @@ ICollisionListener<PhysicalEntity> {
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
 		createGame();
-		//console.appendText("Game created");
 
 		loopTimer.start();
 	}
@@ -122,7 +127,7 @@ ICollisionListener<PhysicalEntity> {
 
 	private void connectToLobby() {
 		try {
-			clientToLobbyServer = new KryonetLobbyClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this, !Globals.LIVE_SERVER);
+			clientToLobbyServer = new KryonetLobbyClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this, timeoutMillis);
 			Globals.p("Connected to lobby server");
 		} catch (IOException e) {
 			Globals.p("Unable to connect to lobby server");
@@ -141,6 +146,28 @@ ICollisionListener<PhysicalEntity> {
 			if (clientToLobbyServer != null) {
 				boolean spaces = this.doWeHaveSpaces();
 				this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), spaces));
+			}
+		}
+
+
+		// Add/remove queued clients
+		synchronized (clientsToAdd) {
+			while (this.clientsToAdd.size() > 0) {
+				ClientData client = this.clientsToAdd.remove();
+				this.clients.put(client.id, client);
+				this.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
+				Globals.p("Actually added client " + client.id);
+			}
+		}
+
+		synchronized (clientsToRemove) {
+			while (this.clientsToRemove.size() > 0) {
+				int id = this.clientsToRemove.remove();
+				ClientData client = this.clients.remove(id);
+				if (client != null) {
+					this.playerLeft(client);
+				}
+				Globals.p("Actually removed client " + id);
 			}
 		}
 
@@ -194,7 +221,7 @@ ICollisionListener<PhysicalEntity> {
 					}
 				}
 				if (areAnyPlayersShooting) {
-					long timeTo = System.currentTimeMillis() - Globals.CLIENT_RENDER_DELAY; // Should this be by their ping time?
+					long timeTo = System.currentTimeMillis() - clientRenderDelayMillis; // Should this be by their ping time?
 					this.rewindEntities(timeTo);
 					this.rootNode.updateGeometricState();
 					for (ClientData c : this.clients.values()) {
@@ -395,7 +422,7 @@ ICollisionListener<PhysicalEntity> {
 								client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.playerData.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
 								//Settings.p("Client rtt = " + client.pingRTT);
 								//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
-								if ((client.playerData.pingRTT/2) + Globals.SERVER_SEND_UPDATE_INTERVAL_MS > Globals.CLIENT_RENDER_DELAY) {
+								if ((client.playerData.pingRTT/2) + sendEntityUpdatesInterval.getInterval() > clientRenderDelayMillis) {
 									Globals.p("Warning: client ping is longer than client render delay!");
 								}
 							}
@@ -428,9 +455,9 @@ ICollisionListener<PhysicalEntity> {
 	private AbstractServerAvatar createPlayersAvatar(ClientData client) {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id);
+		avatar.startAgain(); // Must be before we add it, since that needs a position!
 		this.actuallyAddEntity(avatar);
 
-		avatar.startAgain();
 		//avatar.setHealth(getAvatarStartHealth(avatar));
 		//this.moveAvatarToStartPosition(avatar);
 		return avatar;
@@ -446,6 +473,12 @@ ICollisionListener<PhysicalEntity> {
 	private void sendAllEntitiesToClient(ClientData client) {
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {
+				if (Globals.DEBUG_TOO_MANY_AVATARS) {
+					if (e instanceof AbstractAvatar) {
+						Globals.p("Sending avatar msg");
+					}
+				}
+
 				//this.sendNewEntity(client, e);
 				NewEntityMessage nem = new NewEntityMessage(e);
 				this.gameNetworkServer.sendMessageToClient(client, nem);
@@ -455,44 +488,39 @@ ICollisionListener<PhysicalEntity> {
 		}
 	}
 
-	/*
-	private void sendNewEntity(ClientData client, IEntity e) {
-		//if (e instanceof PhysicalEntity) {  Why was this here?  It prevented sending SnowballLauncher
-		//PhysicalEntity se = (PhysicalEntity)e;
-		NewEntityMessage nem = new NewEntityMessage(e);
-		this.networkServer.sendMessageToClient(client, nem);
-		//}
-	}
-	 */
 
 	@Override
 	public void connectionAdded(int id, Object net) {
 		Globals.p("Client connected!");
-		ClientData client = new ClientData(id, net);//, this.getCamera(), this.getInputManager());
-		synchronized (clients) {
+		ClientData client = new ClientData(id, net);
+		/*synchronized (clients) {
 			clients.put(id, client);
+		}*/
+		synchronized (clientsToAdd) {
+			clientsToAdd.add(client);
 		}
-		this.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
+		//this.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
 	}
 
 
 	@Override
 	public void connectionRemoved(int id) {
-		//Globals.p("connectionRemoved()");
-		synchronized (clients) {
+		Globals.p("connectionRemoved()");
+		/*synchronized (clients) {
 			ClientData client = clients.get(id);
 			if (client != null) { // For some reason, connectionRemoved() gets called multiple times
 				this.playerLeft(client);
 			}
-		}
+		}*/
+		this.clientsToRemove.add(id);
 	}
 
 
 	protected void playerLeft(ClientData client) {
 		Globals.p("Removing player " + client.getPlayerID());
-		synchronized (clients) {
+		/*synchronized (clients) { No longer in the list
 			this.clients.remove(client.getPlayerID());
-		}
+		}*/
 		// Remove avatar
 		if (client.avatar != null) {
 			client.avatar.remove();
@@ -515,17 +543,23 @@ ICollisionListener<PhysicalEntity> {
 				throw new RuntimeException("Entity id " + e.getID() + " already exists: " + e);
 			}
 			this.entities.put(e.getID(), e);
-
-			if (e instanceof PhysicalEntity) {
-				PhysicalEntity pe = (PhysicalEntity)e;
-				if (pe.getMainNode().getParent() != null) {
-					throw new RuntimeException("Entity already has a node");
-				}
-				this.getGameNode().attachChild(pe.getMainNode());
+		}
+		if (e instanceof PhysicalEntity) {
+			PhysicalEntity pe = (PhysicalEntity)e;
+			if (pe.getMainNode().getParent() != null) {
+				throw new RuntimeException("Entity already has a node");
 			}
+			this.getGameNode().attachChild(pe.getMainNode());
+		}
 
-			// Tell clients
-			NewEntityMessage nem = new NewEntityMessage(e);
+		// Tell clients
+		if (Globals.DEBUG_TOO_MANY_AVATARS) {
+			if (e instanceof AbstractAvatar) {
+				Globals.p("Sending avatar msg");
+			}
+		}
+		NewEntityMessage nem = new NewEntityMessage(e);
+		synchronized (clients) {
 			for (ClientData client : this.clients.values()) {
 				if (client.clientStatus == ClientStatus.Accepted) {
 					gameNetworkServer.sendMessageToClient(client, nem);	
@@ -637,10 +671,13 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		if (this.getGameNode().getChildren().size() > 0) {
-			throw new RuntimeException("Todo");
+			Globals.p("Warning: There are still " + this.getGameNode().getChildren().size() + " children in the game node!  Forcing removal...");
+			this.getGameNode().detachAllChildren();
 		}
-		//this.getGameNode().detachAllChildren(); todo -re-add?
-		//this.getPhysicsController().removeAllEntities(); todo -re-add?
+		if (this.getPhysicsController().getEntities().size() > 0) {
+			Globals.p("Warning: There are still " + this.getPhysicsController().getEntities().size() + " children in the physics world!  Forcing removal...");
+			this.getPhysicsController().removeAllEntities();
+		}
 
 		this.createGame();
 
@@ -778,8 +815,8 @@ ICollisionListener<PhysicalEntity> {
 			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
 		}
 	}
-	
-	
+
+
 	protected abstract int getWinningSide();
 }
 

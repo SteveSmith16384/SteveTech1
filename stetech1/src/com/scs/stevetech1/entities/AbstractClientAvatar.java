@@ -91,7 +91,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		final long serverTime = client.getServerTime();// System.currentTimeMillis() + client.clientToServerDiffTime;
 
 		if (!this.alive) {
-			// Position cam above avatar - todo - move gradually
+			// Position cam above avatar
 			Vector3f vec = this.getWorldTranslation();
 			cam.getLocation().x = vec.x;
 			cam.getLocation().y = 10f;
@@ -147,12 +147,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	// Client Avatars have their own special position calculator
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
-		if (Globals.SYNC_AVATAR_POS) {
+		//if (Globals.SYNC_AVATAR_POS) {
 			if (super.playerWalked) { // Only adjust us if the player tried to move
 				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
 				if (offset != null) {
 					float diff = offset.length();
-					if (Float.isNaN(diff) || diff > 4) {
+					if (Float.isNaN(diff) || diff > 4) { // todo - store in globals
 						Globals.p("Far out, man! " + diff);
 						// They're so far out, just move them
 						this.setWorldTranslation(serverPositionData.getMostRecent().position); 
@@ -161,7 +161,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 					}
 				}
 			}
-		}
+		//}
 	}
 
 

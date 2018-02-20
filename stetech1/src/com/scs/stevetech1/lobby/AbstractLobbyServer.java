@@ -18,8 +18,8 @@ public abstract class AbstractLobbyServer implements IMessageServerListener {
 	private KryonetLobbyServer lobbyServer;
 
 
-	public AbstractLobbyServer(int port) throws IOException {
-		lobbyServer = new KryonetLobbyServer(port, port, this, !Globals.LIVE_SERVER);
+	public AbstractLobbyServer(int port, int timeout) throws IOException {
+		lobbyServer = new KryonetLobbyServer(port, port, this, timeout);
 		// todo - loop through and remove game servers that we haven't heard of for a while
 	}
 

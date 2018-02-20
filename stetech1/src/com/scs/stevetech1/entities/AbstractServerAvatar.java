@@ -38,7 +38,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		client = _client;
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE); // Different to client side, since that doesn't have gravity!
+		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE);
 
 		this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}
@@ -179,12 +179,12 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	@Override
 	public void incScore(int i) {
 		client.incScore(i);
-		this.sendStatusUpdateMessage();
+		this.sendStatusUpdateMessage(false);
 	}
 
 	
-	protected void sendStatusUpdateMessage() {
-		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
+	protected void sendStatusUpdateMessage(boolean damaged) {
+		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client, damaged));
 
 	}
 
@@ -192,14 +192,16 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	@Override
 	public void setHealth(float h) {
 		super.setHealth(h);
-		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
+		//this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
+		this.sendStatusUpdateMessage(false);
 	}
 
 
 	@Override
 	public void decHealth(float h) {
 		super.decHealth(h);
-		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
+		//this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
+		this.sendStatusUpdateMessage(true);
 	}
 
 }

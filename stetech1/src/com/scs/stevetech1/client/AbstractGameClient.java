@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.prefs.BackingStoreException;
 
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.plugins.ClasspathLocator;
@@ -85,13 +86,16 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public static final int STATUS_JOINED_GAME = 5; // About to be sent all the entities
 	public static final int STATUS_STARTED = 6; // Have received all entities
 
+	private static final String JME_SETTINGS_NAME = "jme_client_settings.txt";
+
+	// Global controls
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
 
 	public static BitmapFont guiFont_small;
-	public static AppSettings settings;
+	//public static AppSettings settings;
 	private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
 	public HUD hud;
@@ -107,7 +111,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public SimpleGameData gameData;
 	protected Node gameNode = new Node("GameNode");
 
-	//private RealtimeInterval sendInputsInterval = new RealtimeInterval(Globals.SERVER_TICKRATE_MS);
 	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
@@ -117,20 +120,48 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	// Entity systems
 	private AnimationSystem animSystem;
-	private AbstractClientEntityCreator entityCreator;
 	private ClientEntityLauncherSystem launchSystem;
 
-	protected AbstractGameClient(String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, AbstractClientEntityCreator _entityCreator) {
-		super();
+	protected AbstractGameClient(String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
+			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) {//AbstractClientEntityCreator _entityCreator) {
+		super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
 
 		gameServerIP = _gameServerIP;
 		gamePort = _gamePort;
 		lobbyIP = _lobbyIP;
 		lobbyPort = _lobbyPort;
-		this.entityCreator =_entityCreator;
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
+		
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, gravity, aerodynamicness);
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
+
+		settings = new AppSettings(true);
+		try {
+			settings.load(JME_SETTINGS_NAME);
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
+		settings.setUseJoysticks(true);
+		settings.setAudioRenderer(null); // Avoid error with no soundcard - todo - remove
+		//settings.setTitle(Globals.NAME);// + " (v" + Settings.VERSION + ")");
+		if (Globals.SHOW_LOGO) {
+			//settings.setSettingsDialogImage("/game_logo.png");
+		} else {
+			settings.setSettingsDialogImage(null);
+		}
+
+		setSettings(settings);
+		setPauseOnLostFocus(false); // Needs to always be in sync with server!
+
+		start();
+
+		try {
+			settings.save(JME_SETTINGS_NAME);
+		} catch (BackingStoreException e) {
+			e.printStackTrace();
+		}
+
+
 
 	}
 
@@ -167,7 +198,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		// Don't connect to network until JME is up and running!
 		try {
-			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this, !Globals.LIVE_SERVER);
+			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this, timeoutMillis);
 			this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
 			lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
 		} catch (IOException e) {
@@ -175,7 +206,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 
 		try {
-			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, !Globals.LIVE_SERVER); // todo - connect to lobby first!
+			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis); // todo - connect to lobby first!
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -219,13 +250,13 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		if (tpf_secs > 1) { this.getRootNode();
-		tpf_secs = 1;
+		if (tpf_secs > 1) { 
+			tpf_secs = 1;
 		}
 
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
-			renderTime = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
+			renderTime = serverTime - clientRenderDelayMillis; // Render from history
 
 			if (networkClient != null && networkClient.isConnected()) {
 
@@ -242,129 +273,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							}
 						}
 						mit.remove();
-
-						if (message instanceof NewEntityMessage) {
-							NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-							if (!this.entities.containsKey(newEntityMessage.entityID)) {
-								createEntity(newEntityMessage, newEntityMessage.timestamp);
-							} else {
-								// We already know about it
-							}
-
-						} else if (message instanceof EntityUpdateMessage) {
-							if (clientStatus >= STATUS_JOINED_GAME) {
-								EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
-								for(EntityUpdateMessage.UpdateData eum : mainmsg.data) {
-									IEntity e = this.entities.get(eum.entityID);
-									if (e != null) {
-										//Settings.p("Received EntityUpdateMessage for " + e);
-										//EntityPositionData epd = new EntityPositionData(eum.pos, eum.dir, mainmsg.timestamp);
-										PhysicalEntity pe = (PhysicalEntity)e;
-										if (eum.force) {
-											// Set it now!
-											pe.setWorldTranslation(eum.pos);
-											pe.setWorldRotation(eum.dir);
-											pe.clearPositiondata();
-											if (pe == this.currentAvatar) {
-												currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
-												currentAvatar.storeAvatarPosition(serverTime);
-											}
-										}
-										pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
-										if (pe instanceof IClientSideAnimated && eum.animationCode != null) {
-											IClientSideAnimated ia = (IClientSideAnimated)pe;
-											ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animationCode));
-											/*if (eum.animationCode != null && eum.animationCode.equals(AbstractAvatar.ANIM_DIED)) {
-												int dfgdfg = 456456;
-											}*/
-										}
-									} else {
-										// Globals.p("Unknown entity ID for update: " + eum.entityID);
-										// Ask the server for entity details since we don't know about it.
-										// No, since we might not have joined the game yet! (server uses broadcast()
-										// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
-									}
-								}
-							}
-						} else if (message instanceof RemoveEntityMessage) {
-							RemoveEntityMessage rem = (RemoveEntityMessage)message;
-							this.removeEntity(rem.entityID);
-
-						} else if (message instanceof GeneralCommandMessage) {
-							GeneralCommandMessage msg = (GeneralCommandMessage)message;
-							if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
-								clientStatus = STATUS_STARTED;
-								this.getRootNode().attachChild(this.gameNode);
-							}
-
-						} else if (message instanceof AbilityUpdateMessage) {
-							AbilityUpdateMessage aum = (AbilityUpdateMessage) message;
-							IAbility a = (IAbility)entities.get(aum.entityID);
-							if (a != null) {
-								if (aum.timestamp > a.getLastUpdateTime()) { // Is it the latest msg
-									a.decode(aum);
-									a.setLastUpdateTime(aum.timestamp);
-								}
-							}
-
-						} else if (message instanceof EntityKilledMessage) {
-							EntityKilledMessage asm = (EntityKilledMessage) message;
-							PhysicalEntity killed = (PhysicalEntity)this.entities.get(asm.killedEntityID);
-							PhysicalEntity killer = (PhysicalEntity)this.entities.get(asm.killerEntityID);
-							if (killed == this.currentAvatar) {
-								Globals.p("You have been killed by " + killer);
-								AbstractAvatar avatar = (AbstractAvatar)killed;
-								avatar.setAlive(false);
-							} else if (killer == this.currentAvatar) {
-								Globals.p("You have killed " + killed);
-							}
-							
-						} else if (message instanceof EntityLaunchedMessage) {
-							if (Globals.DEBUG_SERVER_SHOOTING) {
-								Globals.p("Received EntityLaunchedMessage");
-							}
-							EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
-							this.launchSystem.scheduleLaunch(elm); //this.entities
-
-						} else if (message instanceof AvatarStartedMessage) {
-							if (Globals.DEBUG_PLAYER_RESTART) {
-								Globals.p("Rcvd AvatarStartedMessage");
-							}
-							AvatarStartedMessage asm = (AvatarStartedMessage)message;
-							if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
-								AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
-								avatar.setAlive(true); 
-								// Point camera fwds again
-								cam.lookAt(avatar.getWorldTranslation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
-								cam.update();
-
-							}
-							
-						} else if (message instanceof ListOfGameServersMessage) {
-							ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
-							// todo - do something with message
-
-						} else if (message instanceof AvatarStatusMessage) {
-							AvatarStatusMessage asm = (AvatarStatusMessage)message;
-							if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
-								this.hud.setHealthText((int)asm.health);
-								this.hud.setScoreText(asm.score);
-							}
-
-						} else if (message instanceof GameOverMessage) {
-							GameOverMessage gom = (GameOverMessage)message;
-							// todo - show image on HUD
-							if (gom.winningSide == -1) {
-								Globals.p("The game is a draw!");
-							} else if (gom.winningSide == this.side) {
-								Globals.p("You have won!");
-							} else {
-								Globals.p("You have lost!");
-							}
-						} else {
-							// todo - get superclass to handle it?
-							throw new RuntimeException("Unknown message type: " + message);
-						}
+						this.handleMessage(message);
 					}
 				}
 
@@ -454,7 +363,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			}
 
 			//input.reset();
-			
+
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
 
@@ -464,6 +373,134 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 	}
 
+
+	protected void handleMessage(MyAbstractMessage message) {
+		if (message instanceof NewEntityMessage) {
+			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
+			if (!this.entities.containsKey(newEntityMessage.entityID)) {
+				createEntity(newEntityMessage, newEntityMessage.timestamp);
+			} else {
+				// We already know about it
+			}
+
+		} else if (message instanceof EntityUpdateMessage) {
+			if (clientStatus >= STATUS_JOINED_GAME) {
+				EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
+				for(EntityUpdateMessage.UpdateData eum : mainmsg.data) {
+					IEntity e = this.entities.get(eum.entityID);
+					if (e != null) {
+						//Settings.p("Received EntityUpdateMessage for " + e);
+						//EntityPositionData epd = new EntityPositionData(eum.pos, eum.dir, mainmsg.timestamp);
+						PhysicalEntity pe = (PhysicalEntity)e;
+						if (eum.force) {
+							// Set it now!
+							pe.setWorldTranslation(eum.pos);
+							pe.setWorldRotation(eum.dir);
+							pe.clearPositiondata();
+							if (pe == this.currentAvatar) {
+								currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
+								currentAvatar.storeAvatarPosition(serverTime);
+							}
+						}
+						pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
+						if (pe instanceof IClientSideAnimated && eum.animationCode != null) {
+							IClientSideAnimated ia = (IClientSideAnimated)pe;
+							ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animationCode));
+							/*if (eum.animationCode != null && eum.animationCode.equals(AbstractAvatar.ANIM_DIED)) {
+								int dfgdfg = 456456;
+							}*/
+						}
+					} else {
+						// Globals.p("Unknown entity ID for update: " + eum.entityID);
+						// Ask the server for entity details since we don't know about it.
+						// No, since we might not have joined the game yet! (server uses broadcast()
+						// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
+					}
+				}
+			}
+		} else if (message instanceof RemoveEntityMessage) {
+			RemoveEntityMessage rem = (RemoveEntityMessage)message;
+			this.removeEntity(rem.entityID);
+
+		} else if (message instanceof GeneralCommandMessage) {
+			GeneralCommandMessage msg = (GeneralCommandMessage)message;
+			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
+				clientStatus = STATUS_STARTED;
+				this.getRootNode().attachChild(this.gameNode);
+			}
+
+		} else if (message instanceof AbilityUpdateMessage) {
+			AbilityUpdateMessage aum = (AbilityUpdateMessage) message;
+			IAbility a = (IAbility)entities.get(aum.entityID);
+			if (a != null) {
+				if (aum.timestamp > a.getLastUpdateTime()) { // Is it the latest msg
+					a.decode(aum);
+					a.setLastUpdateTime(aum.timestamp);
+				}
+			}
+
+		} else if (message instanceof EntityKilledMessage) {
+			EntityKilledMessage asm = (EntityKilledMessage) message;
+			PhysicalEntity killed = (PhysicalEntity)this.entities.get(asm.killedEntityID);
+			PhysicalEntity killer = (PhysicalEntity)this.entities.get(asm.killerEntityID);
+			if (killed == this.currentAvatar) {
+				Globals.p("You have been killed by " + killer);
+				AbstractAvatar avatar = (AbstractAvatar)killed;
+				avatar.setAlive(false);
+			} else if (killer == this.currentAvatar) {
+				Globals.p("You have killed " + killed);
+			}
+
+		} else if (message instanceof EntityLaunchedMessage) {
+			if (Globals.DEBUG_SERVER_SHOOTING) {
+				Globals.p("Received EntityLaunchedMessage");
+			}
+			EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
+			this.launchSystem.scheduleLaunch(elm); //this.entities
+
+		} else if (message instanceof AvatarStartedMessage) {
+			if (Globals.DEBUG_PLAYER_RESTART) {
+				Globals.p("Rcvd AvatarStartedMessage");
+			}
+			AvatarStartedMessage asm = (AvatarStartedMessage)message;
+			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
+				AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
+				avatar.setAlive(true); 
+				// Point camera fwds again
+				cam.lookAt(avatar.getWorldTranslation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
+				cam.update();
+
+			}
+
+		} else if (message instanceof ListOfGameServersMessage) {
+			ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
+			// todo - do something with message
+
+		} else if (message instanceof AvatarStatusMessage) {
+			AvatarStatusMessage asm = (AvatarStatusMessage)message;
+			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
+				this.hud.setHealthText((int)asm.health);
+				this.hud.setScoreText(asm.score);
+				if (asm.damaged) {
+					hud.showDamageBox();
+				}
+			}
+
+		} else if (message instanceof GameOverMessage) {
+			GameOverMessage gom = (GameOverMessage)message;
+			// todo - show image on HUD
+			if (gom.winningSide == -1) {
+				Globals.p("The game is a draw!");
+			} else if (gom.winningSide == this.side) {
+				Globals.p("You have won!");
+			} else {
+				Globals.p("You have lost!");
+			}
+		} else {
+			throw new RuntimeException("Unknown message type: " + message);
+		}
+
+	}
 
 	private void sendInputs() {
 		if (this.currentAvatar != null) {
@@ -478,7 +515,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	protected final void createEntity(NewEntityMessage msg, long timeToCreate) {
-		IEntity e = this.entityCreator.createEntity(this, msg);
+		IEntity e = actuallyCreateEntity(this, msg);//this.entityCreator.createEntity(this, msg);
 		if (e != null) {
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Created " + e);
@@ -492,6 +529,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
+	
+	protected abstract IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg);
+	
 
 	@Override
 	public void messageReceived(MyAbstractMessage message) { // todo - catch exception and stop main program
@@ -540,7 +580,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			} else if (message instanceof SimpleGameDataMessage) {
 				SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 				this.gameData = gsm.gameData;
-				// todo - update hud
+
 			} else {
 				unprocessedMessages.add(message);
 
@@ -619,10 +659,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
 				//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
-
-				// Toggle client sync
-				Globals.SYNC_AVATAR_POS = !Globals.SYNC_AVATAR_POS;
-				Globals.p("Client sync is " + Globals.SYNC_AVATAR_POS);
 			}
 		}
 	}

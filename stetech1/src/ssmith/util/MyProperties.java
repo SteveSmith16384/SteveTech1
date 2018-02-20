@@ -14,8 +14,17 @@ public class MyProperties {
 	private Properties properties;
 	private boolean needsSaving = false;
 
-	public MyProperties(String _name) throws IOException {
-		filename = _name;
+	public MyProperties() throws IOException {
+		super();
+		
+		properties = new Properties();
+	}
+	
+	
+	public MyProperties(String _filename) throws IOException {
+		this();
+		
+		filename = _filename;
 		this.loadProperties();
 	}
 
@@ -23,7 +32,7 @@ public class MyProperties {
 	private void loadProperties() throws IOException {
 		String filepath = filename;
 		File propsFile = new File(filepath);
-		properties = new Properties();
+		//properties = new Properties();
 		if (propsFile.canRead()) {
 			properties.load(new FileInputStream(new File(filepath)));
 		}
@@ -35,7 +44,7 @@ public class MyProperties {
 			String filepath = filename;
 			File propsFile = new File(filepath);
 			try {
-				properties.store(new FileOutputStream(propsFile), Globals.NAME + " settings file");
+				properties.store(new FileOutputStream(propsFile), "Settings file");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -46,6 +55,19 @@ public class MyProperties {
 	public int getPropertyAsInt(String name, int def) {
 		try {
 			int value = Integer.parseInt(properties.getProperty(name));
+			return value;
+		} catch (Exception ex) {
+			//ex.printStackTrace();
+			properties.put(name, ""+def);
+			needsSaving = true;
+			return def;
+		}
+	}
+
+
+	public long getPropertyAsLong(String name, long def) {
+		try {
+			long value = Long.parseLong(properties.getProperty(name));
 			return value;
 		} catch (Exception ex) {
 			//ex.printStackTrace();

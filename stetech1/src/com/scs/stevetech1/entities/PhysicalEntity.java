@@ -44,7 +44,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		moves =_moves;
 		serverPositionData = new PositionCalculator(true, 100);
-		mainNode = new Node(name + "_MainNode");
+		mainNode = new Node(name + "_MainNode_" + id);
 	}
 
 

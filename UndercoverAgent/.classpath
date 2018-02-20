@@ -4,40 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="assets"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/stetech1"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/eventbus.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/j-ogg-oggd.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/j-ogg-vorbisd.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jbullet.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jglfont-core.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jinput.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-android.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-blender.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-bullet-natives-android.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-bullet-natives.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-bullet.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-core.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-desktop.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-effects.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-ios.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-jbullet.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-jogg.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-jogl.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-lwjgl-natives.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-lwjgl.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-networking.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-niftygui.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-openal-soft-natives-android.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-plugins.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jME3-terrain.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/joal.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/jogl-all.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/launch4j.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/lwjgl.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/retrace.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/stack-alloc.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/vecmath.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/xmlpull-xpp3.jar"/>
-	<classpathentry kind="lib" path="/stetech1/libs/jme/xstream.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
