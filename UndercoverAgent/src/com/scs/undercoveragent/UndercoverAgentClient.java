@@ -30,13 +30,19 @@ public class UndercoverAgentClient extends AbstractGameClient {
 				props = new MyProperties();
 				Globals.p("Warning: No config file specified");
 			}
+			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
+			int gamePort = props.getPropertyAsInt("gamePort", 6143);
+			String lobbyIpAddress = props.getPropertyAsString("lobbyIpAddress", "localhost");
+			int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
+			
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 			float gravity = props.getPropertyAsFloat("gravity", -5);
 			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 			
-			new UndercoverAgentClient(tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
+			new UndercoverAgentClient(gameIpAddress, gamePort, lobbyIpAddress, lobbyPort,
+					tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
 			e.printStackTrace();
@@ -44,8 +50,9 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 
 
-	public UndercoverAgentClient(int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) {
-		super(UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 
+	public UndercoverAgentClient(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
+			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) {
+		super(UndercoverAgentStaticData.NAME, null, gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 	}
 

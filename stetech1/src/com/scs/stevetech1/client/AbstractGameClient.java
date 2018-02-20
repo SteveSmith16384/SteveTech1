@@ -122,7 +122,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
 
-	protected AbstractGameClient(String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
+	protected AbstractGameClient(String name, String logoImage, String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
 			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) {//AbstractClientEntityCreator _entityCreator) {
 		super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
 
@@ -143,9 +143,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 		settings.setUseJoysticks(true);
 		settings.setAudioRenderer(null); // Avoid error with no soundcard - todo - remove
-		//settings.setTitle(Globals.NAME);// + " (v" + Settings.VERSION + ")");
+		settings.setTitle(name);// + " (v" + Settings.VERSION + ")");
 		if (Globals.SHOW_LOGO) {
-			//settings.setSettingsDialogImage("/game_logo.png");
+			settings.setSettingsDialogImage(logoImage);
 		} else {
 			settings.setSettingsDialogImage(null);
 		}

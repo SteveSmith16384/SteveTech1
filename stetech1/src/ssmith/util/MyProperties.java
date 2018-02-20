@@ -65,6 +65,19 @@ public class MyProperties {
 	}
 
 
+	public String getPropertyAsString(String name, String def) {
+		try {
+			String value = properties.getProperty(name);
+			return value;
+		} catch (Exception ex) {
+			//ex.printStackTrace();
+			properties.put(name, ""+def);
+			needsSaving = true;
+			return def;
+		}
+	}
+
+
 	public long getPropertyAsLong(String name, long def) {
 		try {
 			long value = Long.parseLong(properties.getProperty(name));

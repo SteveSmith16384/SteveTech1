@@ -28,6 +28,8 @@ import ssmith.util.MyProperties;
 
 public class UndercoverAgentServer extends AbstractGameServer {
 
+	private int mapSize;
+	
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -37,30 +39,39 @@ public class UndercoverAgentServer extends AbstractGameServer {
 				props = new MyProperties();
 				Globals.p("Warning: No config file specified");
 			}
+			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
+			int gamePort = props.getPropertyAsInt("gamePort", 6143);
+			String lobbyIpAddress = props.getPropertyAsString("lobbyIpAddress", "localhost");
+			int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
+			
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 			float gravity = props.getPropertyAsFloat("gravity", -5);
 			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
+			
+			// Game specific
+			int mapSize = props.getPropertyAsInt("mapSize", 20);
 
-			startLobbyServer(timeoutMillis);
+			startLobbyServer(lobbyPort, timeoutMillis); // Start the lobby in the same process, why not?  Feel from to comment this line out and run it seperately.  If you want a lobby.
 
-			new UndercoverAgentServer(tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
+			new UndercoverAgentServer(mapSize, 
+					gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
+					tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 
-	private static void startLobbyServer(int timeout) {
-		// Run the lobby server as well
+	private static void startLobbyServer(int lobbyPort, int timeout) {
 		Thread r = new Thread("LobbyServer") {
 
 			@Override
 			public void run() {
 				try {
-					new UndercoverAgentLobbyServer(timeout);
+					new UndercoverAgentLobbyServer(lobbyPort, timeout);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -72,12 +83,14 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	}
 
 
-	public UndercoverAgentServer(int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
+	public UndercoverAgentServer(int _mapSize, 
+			String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
+	int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
 		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 60*1000, 10*1000, 
-				UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 
+				gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 
-		//properties = new GameProperties(PROPS_FILE);
+		mapSize = _mapSize;
 	}
 
 
@@ -90,8 +103,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			// Find a random position
 			SimpleRigidBody<PhysicalEntity> collider;
 			do {
-				float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-				float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+				float x = NumberFunctions.rndFloat(2, mapSize-3);
+				float z = NumberFunctions.rndFloat(2, mapSize-3);
 				avatar.setWorldTranslation(x, startHeight, z);
 				collider = avatar.simpleRigidBody.checkForCollisions();
 			} while (collider != null);
@@ -110,66 +123,66 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 		if (!Globals.EMPTY_MAP) {
 			// Place snowman
-			int numSnowmen = UndercoverAgentStaticData.MAP_SIZE;
+			int numSnowmen = mapSize;
 			for (int i=0 ; i<numSnowmen ; i++) {
-				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE/2, 0, UndercoverAgentStaticData.MAP_SIZE/2, JMEFunctions.getRotation(-1, 0));
+				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(snowman);
 				Globals.p("Placed " + i + " snowmen.");
 			}
 
 			// Place trees
-			int numTrees = UndercoverAgentStaticData.MAP_SIZE;
+			int numTrees = mapSize;
 			for (int i=0 ; i<numTrees ; i++) {
-				SnowTree1 tree1 = new SnowTree1(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE/2, 0, UndercoverAgentStaticData.MAP_SIZE/2, JMEFunctions.getRotation(-1, 0));
+				SnowTree1 tree1 = new SnowTree1(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(tree1);
 				Globals.p("Placed " + i + " tree.");
 			}
 
 			// Place igloos
-			int numIgloos = UndercoverAgentStaticData.MAP_SIZE/2;
+			int numIgloos = mapSize/2;
 			for (int i=0 ; i<numIgloos ; i++) {
-				Igloo igloo = new Igloo(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE/2, 0, UndercoverAgentStaticData.MAP_SIZE/2, JMEFunctions.getRotation(-1, 0));
+				Igloo igloo = new Igloo(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(igloo);
 				Globals.p("Placed " + i + " igloo.");
 			}
 		}
 
 		// Place floor last so the snowmen don't collide with it when being placed
-		SnowFloor floor = new SnowFloor(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, .5f, UndercoverAgentStaticData.MAP_SIZE, "Textures/snow.jpg");
+		SnowFloor floor = new SnowFloor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/snow.jpg");
 		this.actuallyAddEntity(floor);
 
 		// To make things easier for the server and client, we surround the map with a colliding but invisible wall.  We also place non-colliding but complex shapes in the same place.
 
 		// Map border
-		InvisibleMapBorder borderL = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		InvisibleMapBorder borderL = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, 0, mapSize, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(borderL);
-		InvisibleMapBorder borderR = new InvisibleMapBorder(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		InvisibleMapBorder borderR = new InvisibleMapBorder(this, getNextEntityID(), mapSize, 0, 0, mapSize, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(borderR);
-		InvisibleMapBorder borderBack = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, UndercoverAgentStaticData.MAP_SIZE, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
+		InvisibleMapBorder borderBack = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, mapSize, mapSize, Vector3f.UNIT_X);
 		this.actuallyAddEntity(borderBack);
-		InvisibleMapBorder borderFront = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
+		InvisibleMapBorder borderFront = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, mapSize, Vector3f.UNIT_X);
 		this.actuallyAddEntity(borderFront);
 
-		MountainMapBorder mborderL = new MountainMapBorder(this, getNextEntityID(), 0, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		MountainMapBorder mborderL = new MountainMapBorder(this, getNextEntityID(), 0, 0, 0, mapSize, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(mborderL); // works
-		MountainMapBorder mborderR = new MountainMapBorder(this, getNextEntityID(), UndercoverAgentStaticData.MAP_SIZE+InvisibleMapBorder.BORDER_WIDTH, 0, 0, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_Z);
+		MountainMapBorder mborderR = new MountainMapBorder(this, getNextEntityID(), mapSize+InvisibleMapBorder.BORDER_WIDTH, 0, 0, mapSize, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(mborderR); // works
-		MountainMapBorder mborderBack = new MountainMapBorder(this, getNextEntityID(), 0, 0, UndercoverAgentStaticData.MAP_SIZE, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
+		MountainMapBorder mborderBack = new MountainMapBorder(this, getNextEntityID(), 0, 0, mapSize, mapSize, Vector3f.UNIT_X);
 		this.actuallyAddEntity(mborderBack);
-		MountainMapBorder mborderFront = new MountainMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, UndercoverAgentStaticData.MAP_SIZE, Vector3f.UNIT_X);
+		MountainMapBorder mborderFront = new MountainMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, mapSize, Vector3f.UNIT_X);
 		this.actuallyAddEntity(mborderFront);
 	}
 
 
 	private void addEntityToRandomPosition(PhysicalEntity entity) {
-		float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-		float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+		float x = NumberFunctions.rndFloat(2, mapSize-3);
+		float z = NumberFunctions.rndFloat(2, mapSize-3);
 		//StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), x, 0, z, JMEFunctions.getRotation(-1, 0));
 		this.actuallyAddEntity(entity);
 		SimpleRigidBody<PhysicalEntity> collider = entity.simpleRigidBody.checkForCollisions();
 		while (collider != null) {
-			x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-			z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
+			x = NumberFunctions.rndFloat(2, mapSize-3);
+			z = NumberFunctions.rndFloat(2, mapSize-3);
 			entity.setWorldTranslation(x, z);
 			collider = entity.simpleRigidBody.checkForCollisions();
 		}
