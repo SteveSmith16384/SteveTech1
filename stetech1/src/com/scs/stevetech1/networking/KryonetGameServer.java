@@ -42,18 +42,15 @@ import ssmith.lang.NumberFunctions;
 
 public class KryonetGameServer implements IGameMessageServer {
 
-	public static final int DEF_TIMEOUT = 10*1000;
-
-	private boolean debugging;
 	private IMessageServerListener listener;
 	private Server server;
-
-	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener, boolean _debugging) throws IOException {
+	private int timeout;
+	
+	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener, int _timeout) throws IOException {
 		super();
 
-		debugging =_debugging;
-
 		server = new Server();
+		timeout = _timeout;
 		registerMessages(server.getKryo());
 		setListener(_listener);
 		server.bind(tcpport, udpport);
@@ -77,8 +74,8 @@ public class KryonetGameServer implements IGameMessageServer {
 			}
 
 			public void connected (Connection connection) {
-				connection.setIdleThreshold(debugging ? 0 : DEF_TIMEOUT);
-				connection.setTimeout(debugging ? 0 : DEF_TIMEOUT);
+				connection.setIdleThreshold(timeout);
+				connection.setTimeout(timeout);
 
 				listener.connectionAdded(connection.getID(), connection);
 			}
@@ -88,7 +85,7 @@ public class KryonetGameServer implements IGameMessageServer {
 			}
 
 			public void idle(Connection connection) {
-				Globals.p("Idle!");
+				//Globals.p(this.getClass().getSimpleName() + " is Idle!");
 			}
 		});
 

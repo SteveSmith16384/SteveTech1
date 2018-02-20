@@ -1,13 +1,15 @@
 STETECH1
 
 URGENT
-Config files!
-Remove GLobals. from kryonet
-Command line parameters
+Show game name on JME options form
+Write code to add 100 clients instantly
+	Players starting on top of each other?
+Remove settings from UndercoverAgentStaticData
+	Config files!
 Load models from jar file
 Clear client-only entities at the start of the game
-	Turn off swing widnows on server
 Show "winner"/"loser" at end
+Show "hit!" if a player hit
 Simulate packet loss and delay from client to server
 Show on hud "connecting to server.." etc...
 	Upload to Digital Ocean

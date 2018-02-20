@@ -4,6 +4,7 @@ public class UndercoverAgentStaticData {
 
 	public static final String VERSION_ = "0.01";
 	
+	 // todo - move all these to props file
 	public static final String GAME_IP_ADDRESS = "localhost";
 	public static final String LOBBY_IP_ADDRESS = "localhost";
 	public static final int GAME_PORT = 6143;

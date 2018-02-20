@@ -7,18 +7,36 @@ import com.jme3.math.Vector3f;
 import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.systems.client.FallingSnowflakeSystem;
 
+import ssmith.util.MyProperties;
+
 public class UndercoverAgentClient extends AbstractGameClient {
 
+	private UndercoverAgentClientEntityCreator entityCreator = new UndercoverAgentClientEntityCreator();
 	private FallingSnowflakeSystem snowflakeSystem;
 	
 	public static void main(String[] args) {
 		try {
-			AbstractGameClient app = new UndercoverAgentClient();
+			MyProperties props = null;
+			if (args.length > 0) {
+				props = new MyProperties(args[0]);
+			} else {
+				props = new MyProperties();
+				Globals.p("Warning: No config file specified");
+			}
+			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
+			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
+			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
+			float gravity = props.getPropertyAsFloat("gravity", -5);
+			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
+			
+			new UndercoverAgentClient(tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
 			e.printStackTrace();
@@ -26,8 +44,9 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 
 
-	public UndercoverAgentClient() {
-		super(UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, new UndercoverAgentClientEntityCreator());
+	public UndercoverAgentClient(int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) {
+		super(UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 
+				tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 	}
 
 
@@ -77,6 +96,12 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 		super.collisionOccurred(a, b, point);
 
+	}
+
+
+	@Override
+	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg) {
+		return entityCreator.createEntity(client, msg);
 	}
 
 

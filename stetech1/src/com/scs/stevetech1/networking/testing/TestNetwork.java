@@ -21,9 +21,9 @@ public class TestNetwork implements IMessageServerListener, IMessageClientListen
 	private IGameMessageClient client;
 
 	public TestNetwork() throws IOException {
-		server = new KryonetGameServer(GAME_PORT, GAME_PORT, this, true);
+		server = new KryonetGameServer(GAME_PORT, GAME_PORT, this, 10000);
 		//server.setListener(this);
-		client = new KryonetGameClient(GAME_IP_ADDRESS, GAME_PORT, GAME_PORT, this, true);
+		client = new KryonetGameClient(GAME_IP_ADDRESS, GAME_PORT, GAME_PORT, this, 10000);
 		
 	}
 

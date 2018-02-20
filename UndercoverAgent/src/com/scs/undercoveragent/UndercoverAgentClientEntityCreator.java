@@ -88,6 +88,10 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			int side = (int)msg.data.get("side");
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 
+			if (Globals.DEBUG_TOO_MANY_AVATARS) {
+				Globals.p("Creating avatar id " + id + " for " + playerID + " at " + pos);
+			}
+			
 			if (playerID == game.playerID) {
 				AbstractClientAvatar avatar = new SnowmanClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
 				game.getCamera().lookAt(new Vector3f(15, .5f, 15), Vector3f.UNIT_Y);

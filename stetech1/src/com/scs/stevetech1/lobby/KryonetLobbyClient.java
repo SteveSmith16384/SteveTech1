@@ -18,15 +18,15 @@ public class KryonetLobbyClient {
 	private IMessageClientListener listener;
 	private Client client;
 
-	public KryonetLobbyClient(String ip, int tcpPort, int udpPort, IMessageClientListener _listener, boolean debugging) throws IOException {
+	public KryonetLobbyClient(String ip, int tcpPort, int udpPort, IMessageClientListener _listener, int timeout) throws IOException {
 		listener = _listener;
 
 		Logger.setLevel(Logger.DEBUG);
 
 		client = new Client();
 		KryonetLobbyServer.registerMessages(client.getKryo());
-		client.setIdleThreshold(debugging ? 0 : KryonetGameServer.DEF_TIMEOUT);
-		client.setTimeout(debugging ? 0 : KryonetGameServer.DEF_TIMEOUT);
+		client.setIdleThreshold(timeout);
+		client.setTimeout(timeout);
 
 		client.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
@@ -48,7 +48,7 @@ public class KryonetLobbyClient {
 			}
 			
 			public void idle(Connection connection) {
-				Globals.p("Idle!");
+				//Globals.p(this.getClass().getSimpleName() + " is Idle!");
 			}
 		});
 

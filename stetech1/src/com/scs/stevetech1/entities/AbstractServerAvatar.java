@@ -38,7 +38,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		client = _client;
 
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE); // Different to client side, since that doesn't have gravity!
+		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE);
 
 		this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}

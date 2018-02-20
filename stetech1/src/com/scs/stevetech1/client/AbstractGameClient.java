@@ -120,18 +120,18 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	// Entity systems
 	private AnimationSystem animSystem;
-	private AbstractClientEntityCreator entityCreator;
 	private ClientEntityLauncherSystem launchSystem;
 
-	protected AbstractGameClient(String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, AbstractClientEntityCreator _entityCreator) {
-		super();
+	protected AbstractGameClient(String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
+			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) {//AbstractClientEntityCreator _entityCreator) {
+		super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
 
 		gameServerIP = _gameServerIP;
 		gamePort = _gamePort;
 		lobbyIP = _lobbyIP;
 		lobbyPort = _lobbyPort;
-		this.entityCreator =_entityCreator;
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this);
+		
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, gravity, aerodynamicness);
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
 
@@ -198,7 +198,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		// Don't connect to network until JME is up and running!
 		try {
-			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this, !Globals.LIVE_SERVER);
+			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this, timeoutMillis);
 			this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
 			lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
 		} catch (IOException e) {
@@ -206,7 +206,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 
 		try {
-			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, !Globals.LIVE_SERVER); // todo - connect to lobby first!
+			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis); // todo - connect to lobby first!
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -256,7 +256,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
-			renderTime = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
+			renderTime = serverTime - clientRenderDelayMillis; // Render from history
 
 			if (networkClient != null && networkClient.isConnected()) {
 
@@ -515,7 +515,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	protected final void createEntity(NewEntityMessage msg, long timeToCreate) {
-		IEntity e = this.entityCreator.createEntity(this, msg);
+		IEntity e = actuallyCreateEntity(this, msg);//this.entityCreator.createEntity(this, msg);
 		if (e != null) {
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Created " + e);
@@ -529,6 +529,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
+	
+	protected abstract IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg);
+	
 
 	@Override
 	public void messageReceived(MyAbstractMessage message) { // todo - catch exception and stop main program

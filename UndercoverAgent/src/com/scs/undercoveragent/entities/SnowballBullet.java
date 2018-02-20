@@ -24,6 +24,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.LaunchData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
@@ -114,10 +115,10 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			AbstractGameServer server = (AbstractGameServer)game;
 
 			// fast forward it!
-			float totalTimeToFFwd = Globals.CLIENT_RENDER_DELAY; // todo + clientPingTime
-			float tpf_secs = Globals.SERVER_TICKRATE_MS / 1000f;
+			float totalTimeToFFwd = server.clientRenderDelayMillis; // todo + clientPingTime
+			float tpf_secs = (float)server.tickrateMillis / 1000f;
 			while (totalTimeToFFwd > 0) {
-				totalTimeToFFwd -= Globals.SERVER_TICKRATE_MS;
+				totalTimeToFFwd -= server.tickrateMillis;
 				super.processByServer(server, tpf_secs);
 				if (this.removed) {
 					break;
@@ -126,7 +127,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 			// If server, send messages to clients to tell them it has been launched
 			//AbstractGameServer server = (AbstractGameServer)game;
-			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis()-Globals.CLIENT_RENDER_DELAY); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
+			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
 			server.gameNetworkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), ld));
 		} else {
 			// todo - client confirms that bullet launched

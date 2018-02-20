@@ -16,15 +16,15 @@ public class KryonetGameClient implements IGameMessageClient {
 	private IMessageClientListener listener;
 	private Client client;
 
-	public KryonetGameClient(String ip, int tcpPort, int udpPort, IMessageClientListener _listener, boolean debugging) throws IOException {
+	public KryonetGameClient(String ip, int tcpPort, int udpPort, IMessageClientListener _listener, int timeout) throws IOException {
 		listener = _listener;
 
 		Logger.setLevel(Logger.DEBUG);
 
 		client = new Client();
 		KryonetGameServer.registerMessages(client.getKryo());
-		client.setIdleThreshold(debugging ? 0 : KryonetGameServer.DEF_TIMEOUT);
-		client.setTimeout(debugging ? 0 : KryonetGameServer.DEF_TIMEOUT);
+		client.setIdleThreshold(timeout);
+		client.setTimeout(timeout);
 
 		client.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
@@ -46,12 +46,12 @@ public class KryonetGameClient implements IGameMessageClient {
 			}
 			
 			public void idle(Connection connection) {
-				Globals.p("Idle!");
+				//Globals.p(this.getClass().getSimpleName() + " is Idle!");
 			}
 		});
 
 		client.start();
-		client.connect(debugging ? 999*1000 : KryonetGameServer.DEF_TIMEOUT, ip, tcpPort, udpPort);
+		client.connect(timeout, ip, tcpPort, udpPort);
 	}
 
 

@@ -24,28 +24,43 @@ import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
 
 import ssmith.lang.NumberFunctions;
+import ssmith.util.MyProperties;
 
 public class UndercoverAgentServer extends AbstractGameServer {
 
 	public static void main(String[] args) {
 		try {
-			startLobbyServer();
+			MyProperties props = null;
+			if (args.length > 0) {
+				props = new MyProperties(args[0]);
+			} else {
+				props = new MyProperties();
+				Globals.p("Warning: No config file specified");
+			}
+			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
+			int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
+			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
+			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
+			float gravity = props.getPropertyAsFloat("gravity", -5);
+			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 
-			AbstractGameServer app = new UndercoverAgentServer();
+			startLobbyServer(timeoutMillis);
+
+			new UndercoverAgentServer(tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 
-	private static void startLobbyServer() {
+	private static void startLobbyServer(int timeout) {
 		// Run the lobby server as well
 		Thread r = new Thread("LobbyServer") {
 
 			@Override
 			public void run() {
 				try {
-					new UndercoverAgentLobbyServer();
+					new UndercoverAgentLobbyServer(timeout);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -57,10 +72,10 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	}
 
 
-	public UndercoverAgentServer() throws IOException {
+	public UndercoverAgentServer(int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
 		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 60*1000, 10*1000, 
 				UndercoverAgentStaticData.GAME_IP_ADDRESS, UndercoverAgentStaticData.GAME_PORT, UndercoverAgentStaticData.LOBBY_IP_ADDRESS, UndercoverAgentStaticData.LOBBY_PORT, 
-				10, 5));
+				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 
 		//properties = new GameProperties(PROPS_FILE);
 	}
@@ -68,15 +83,16 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
+		float startHeight = 3f; // Must be higher than the highest entity so they don't start "inside" something else
 		if (Globals.PLAYERS_START_IN_CORNER) {
-			avatar.setWorldTranslation(new Vector3f(3f, .3f, 3f + (avatar.playerID*2)));
+			avatar.setWorldTranslation(new Vector3f(3f, startHeight, 3f + (avatar.playerID*2)));
 		} else {
 			// Find a random position
 			SimpleRigidBody<PhysicalEntity> collider;
 			do {
 				float x = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
 				float z = NumberFunctions.rndFloat(2, UndercoverAgentStaticData.MAP_SIZE-3);
-				avatar.setWorldTranslation(x, 2f, z);
+				avatar.setWorldTranslation(x, startHeight, z);
 				collider = avatar.simpleRigidBody.checkForCollisions();
 			} while (collider != null);
 		}

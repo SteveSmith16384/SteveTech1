@@ -13,7 +13,7 @@ import com.scs.stevetech1.weapons.AbstractMagazineGun;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 import com.scs.undercoveragent.entities.SnowballBullet;
 
-public class SnowballLauncher extends AbstractMagazineGun implements IAbility, IEntityContainer<SnowballBullet> {
+public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implements IAbility, IEntityContainer<SnowballBullet> {
 
 	private static final int MAG_SIZE = 6;
 

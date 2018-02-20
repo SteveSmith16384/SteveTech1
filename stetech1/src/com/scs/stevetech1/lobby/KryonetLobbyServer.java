@@ -19,14 +19,14 @@ import ssmith.lang.NumberFunctions;
 
 public class KryonetLobbyServer {
 
-	private boolean debugging;
 	private IMessageServerListener listener;
 	private Server server;
+	private int timeoutMillis;
 
-	public KryonetLobbyServer(int tcpport, int udpport, IMessageServerListener _listener, boolean _debugging) throws IOException {
+	public KryonetLobbyServer(int tcpport, int udpport, IMessageServerListener _listener, int _timeoutMillis) throws IOException {
 		super();
 		
-		debugging = _debugging;
+		timeoutMillis = _timeoutMillis;
 		server = new Server();
 		registerMessages(server.getKryo());
 		setListener(_listener);
@@ -50,8 +50,8 @@ public class KryonetLobbyServer {
 			}
 
 			public void connected (Connection connection) {
-				connection.setIdleThreshold(debugging ? 0 : KryonetGameServer.DEF_TIMEOUT);
-				connection.setTimeout(debugging ? 0 : KryonetGameServer.DEF_TIMEOUT);
+				connection.setIdleThreshold(timeoutMillis);
+				connection.setTimeout(timeoutMillis);
 
 				listener.connectionAdded(connection.getID(), connection);
 			}
@@ -61,7 +61,7 @@ public class KryonetLobbyServer {
 			}
 
 			public void idle(Connection connection) {
-				Globals.p("Idle!");
+				//Globals.p(this.getClass().getSimpleName() + " is Idle!");
 			}
 		});
 
