@@ -50,11 +50,11 @@ public class Globals {
 	// Our movement speed
 	public static final float PLAYER_MOVE_SPEED = 3f;
 	public static final float JUMP_FORCE = 2f;
-	public static final float SMALLEST_MOVE_DIST = 0.02f;
+	public static final float SMALLEST_MOVE_DIST = 0.02f; // todo - rename
+	public static final float MAX_MOVE_DIST = 4f;
 
 	public static final float CAM_DIST = 50f;
 	public static final boolean LIGHTING = true;
-	//public static final String NAME = "SteveTech1";
 
 	// User Data
 	public static final String ENTITY = "Entity";

@@ -1,10 +1,9 @@
 STETECH1
 
 URGENT
-Show game name on JME options form
-Write code to add 100 clients instantly
+	Show game name on JME options form
 	Players starting on top of each other?
-Remove settings from UndercoverAgentStaticData
+	Remove settings from UndercoverAgentStaticData
 	Config files!
 Load models from jar file
 Clear client-only entities at the start of the game
@@ -17,6 +16,7 @@ Search for todos
 
 
 TODO
+Write code to add 100 clients instantly
 Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
 Falling snow - started
 Pause game time if not enough players

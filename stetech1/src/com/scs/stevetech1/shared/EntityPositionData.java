@@ -13,22 +13,22 @@ public class EntityPositionData {
 		super();
 	}
 
-
-	private EntityPositionData(Vector3f pos, Quaternion rot, long time) { // todo - delete
+/*
+	private EntityPositionData(Vector3f pos, Quaternion rot, long time) {
 		this();
 
 		this.position = pos;
 		this.rotation = rot;
 		this.serverTimestamp = time;
 	}
-
+*/
 
 	public EntityPositionData getInterpol(EntityPositionData other, long time) {
 		// interpolate between timestamps
 		float frac = ((float)(serverTimestamp - time) / (float)(serverTimestamp - other.serverTimestamp));
 		Vector3f posToSet = new Vector3f();
 		//posToSet.interpolateLocal(this.position, other.position, frac);
-		posToSet.interpolateLocal(this.position, other.position, frac); // todo - check what changes
+		posToSet.interpolateLocal(this.position, other.position, frac);
 
 		Quaternion newRot = new Quaternion();
 		Quaternion newRot2 = newRot;

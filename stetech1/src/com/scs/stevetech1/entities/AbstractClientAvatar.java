@@ -152,7 +152,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
 				if (offset != null) {
 					float diff = offset.length();
-					if (Float.isNaN(diff) || diff > 4) { // todo - store in globals
+					if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
 						Globals.p("Far out, man! " + diff);
 						// They're so far out, just move them
 						this.setWorldTranslation(serverPositionData.getMostRecent().position); 

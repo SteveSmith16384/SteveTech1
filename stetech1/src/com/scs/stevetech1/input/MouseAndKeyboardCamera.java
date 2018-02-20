@@ -180,11 +180,12 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		return cam.getLeft();
 	}
 
-
+/*
+	@Override
 	public void reset() {
-		this.ability1 = false; // todo - what about holding the fire button down?
+		this.ability1 = false;
 		this.ability2 = false;
 		this.jump = false;
 	}
-
+*/
 }
