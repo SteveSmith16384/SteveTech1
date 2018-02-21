@@ -4,7 +4,6 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICanScorePoints;
 import com.scs.stevetech1.components.ICausesHarmOnContact;

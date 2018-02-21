@@ -38,6 +38,7 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.hud.AbstractHUDImage;
 import com.scs.stevetech1.hud.HUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
@@ -133,7 +134,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		gamePort = _gamePort;
 		lobbyIP = _lobbyIP;
 		lobbyPort = _lobbyPort;
-		
+
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, gravity, aerodynamicness);
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
@@ -496,6 +497,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				Globals.p("The game is a draw!");
 			} else if (gom.winningSide == this.side) {
 				Globals.p("You have won!");
+				new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.hud.hud_width, this.hud.hud_height, 10);
 			} else {
 				Globals.p("You have lost!");
 			}
@@ -532,9 +534,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
-	
+
 	protected abstract IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg);
-	
+
 
 	@Override
 	public void messageReceived(MyAbstractMessage message) { // todo - catch exception and stop main program
@@ -662,6 +664,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			}
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
+				new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.hud.hud_width, this.hud.hud_height, 5);
 				//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
 			}
 		}

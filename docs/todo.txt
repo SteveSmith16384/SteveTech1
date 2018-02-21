@@ -1,28 +1,23 @@
 STETECH1
 
 URGENT
+Show "winner"/"loser" at end
+Play sounds from msgs
 	Don't show list of entities in hud
 	Show how many players
-	Post vid to blogger
-	Fill in licences in readme
 Add to readme
 open-sourcing checklist
 Create smaller vid and gif
 	Show game name on JME options form
-	Players starting on top of each other?
-	Remove settings from UndercoverAgentStaticData
-	Config files!
-Show "winner"/"loser" at end
-Show "hit!" if a player hit
 Show on hud "connecting to server.." etc...
 Search for todos
 
 
 TODO
+Show "hit!" effect if a player hit
 Clear client-only entities at the start of the game
 Use font from SF
 Game-specific HUD? - IHud
-Play sounds from msgs
 Simulate packet loss and delay from client to server
 Write code to add 100 clients instantly
 Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif

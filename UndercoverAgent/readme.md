@@ -1,6 +1,6 @@
 # Undercover Agent
 
-A simple multiplayer FPS to demonstarte the use of SteveTech1.
+A simple multiplayer FPS to demonstrate the use of SteveTech1.
 
 
 ## Overview

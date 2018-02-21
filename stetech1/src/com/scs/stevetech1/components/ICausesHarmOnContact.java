@@ -1,7 +1,7 @@
 package com.scs.stevetech1.components;
 
 
-public interface ICausesHarmOnContact {//extends ICollideable {
+public interface ICausesHarmOnContact {
 
 	float getDamageCaused();
 	
