@@ -1,24 +1,28 @@
 # SteveTech1
 
-SteveTech1 is a complete 3D multiplayer FPS framework and engine, designed to create games such as Team Fortress 2, Overwatch or PUBG.  It includes almost all the code you'll need to create your own multiplayer FPS, and is designed to be easily modifiable extendable (as the example games will show).  It is intended to be the Java equivalent of the Source engine (or whatever the latest-and-greatest FPS engine is these days).  You will need to provide your own assets of course.
+Complete open source multiplayer FPS framework for Java
+
+SteveTech1 is a 3D multiplayer FPS framework and engine, designed to help you create games such as Team Fortress 2, Overwatch, PUBG etc.. in Java.  It includes almost all the code you'll need to create your own multiplayer FPS, and is designed to be easily modifiable extendable (as the example games will show).  It is intended to be the Java equivalent of the Source engine (or whatever the latest-and-greatest FPS engine is these days).  You will need to provide your own assets of course.
+
+
+## STATUS
+All the basic features are complete.
 
 
 ## FEATURES:
-* Fully open source; use it even in commercial applications
+* Fully open source
 * Authoritative server
+* Client prediction
 * Client lag-compensation
 * TCP and UDP for networking
-* Position interpolation
 * Time "rewinding" for accurate shooting
 * Simple physics
-* Includes some simple example games
+* Includes simple example games
 * Simulate packet delay/loss
-* Game lobby
 
 
 ## GETTING STARTED
-
-You are advised to look at the example game Undercover Agent to see how to easily implement your own multiplayer FPS game using SteveTech1.
+You are advised to look at the example game Undercover Agent to see how to create your own multiplayer FPS game using SteveTech1.
 
 
 
@@ -29,9 +33,9 @@ Uses Kryonet for networking
 
 
 ## LICENCE
-The SteveTech code is licenced under MIT.
-JMonkeyEngine licence: [todo]
-Kryonet Licence: [todo]
-For the asset licences, so the file in the relevant assets folder.
+The SteveTech code is licenced under MIT: https://bitbucket.org/SteveSmith16384/stetech1/raw/5d3d7eb190119e4b77e4a3f5042a59906653b7a2/stevetech1_mit_licence.txt
+JMonkeyEngine licence: [https://jmonkeyengine.github.io/wiki/bsd_license.html#jme-s-bsd-license]
+Kryonet Licence: [https://raw.githubusercontent.com/EsotericSoftware/kryonet/master/license.txt]
+For the asset licences, see any file in the relevant assets folder.
  
 

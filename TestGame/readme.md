@@ -1,0 +1,3 @@
+# TestGame
+
+This "game" is a simple scratchpad game for testing and debugging new features, models etc....

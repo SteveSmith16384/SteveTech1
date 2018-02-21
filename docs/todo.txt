@@ -1,24 +1,27 @@
 STETECH1
 
 URGENT
+	Don't show list of entities in hud
+	Show how many players
+	Post vid to blogger
+	Fill in licences in readme
+Add to readme
 open-sourcing checklist
-Use font from SF
-Game-specific HUD?
 Create smaller vid and gif
 	Show game name on JME options form
 	Players starting on top of each other?
 	Remove settings from UndercoverAgentStaticData
 	Config files!
-Clear client-only entities at the start of the game
 Show "winner"/"loser" at end
 Show "hit!" if a player hit
 Show on hud "connecting to server.." etc...
-	Upload to Digital Ocean
 Search for todos
-Add open-source msg to the top of all files
 
 
 TODO
+Clear client-only entities at the start of the game
+Use font from SF
+Game-specific HUD? - IHud
 Play sounds from msgs
 Simulate packet loss and delay from client to server
 Write code to add 100 clients instantly
@@ -55,7 +58,6 @@ Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
 Walking up steps
-Game config interface
 Physics test - do explosion
 Add lots of comments
 Create generic classes and test them
@@ -63,6 +65,7 @@ Make vars private/protected
 Reduce object creation, including calls to clone()
 Kryonet encryption?
 User enter name
+Only send entity updates for entites the player can see?
 
 
 LATER
@@ -75,5 +78,4 @@ Kick players who don't move
 Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
 Only send entity messages to players that have joined the game
-
 
