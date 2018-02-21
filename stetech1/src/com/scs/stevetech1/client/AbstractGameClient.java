@@ -144,11 +144,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		settings.setUseJoysticks(true);
 		settings.setAudioRenderer(null); // Avoid error with no soundcard - todo - remove
 		settings.setTitle(name);// + " (v" + Settings.VERSION + ")");
-		if (Globals.SHOW_LOGO) {
-			settings.setSettingsDialogImage(logoImage);
-		} else {
-			settings.setSettingsDialogImage(null);
-		}
+		settings.setSettingsDialogImage(logoImage);
 
 		setSettings(settings);
 		setPauseOnLostFocus(false); // Needs to always be in sync with server!
@@ -481,6 +477,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 				this.hud.setHealthText((int)asm.health);
 				this.hud.setScoreText(asm.score);
+				this.currentAvatar.moveSpeed = asm.moveSpeed;
+				this.currentAvatar.setJumpForce(asm.jumpForce);
 				if (asm.damaged) {
 					hud.showDamageBox();
 				}

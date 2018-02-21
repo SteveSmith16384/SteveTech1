@@ -28,27 +28,28 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	private AbstractGameServer server;
 	public ClientData client;
 
-	//private Quaternion rotation; // Store it so we don't rotate the spatial, but can send rotation to other players
-	private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation
+	private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation.  We don't actually rotate!
 
 	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, IAvatarModel anim) {
 		super(_module, _playerID, _input, eid, _client.side, anim);
 
 		server = (AbstractGameServer)_module;
 		client = _client;
-
+/*
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE);
-
+		simplePlayerControl.setJumpForce(this.jumpForce);
+*/
 		this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}
 
 
 	public void startAgain() {
 		alive = true;
+		this.moveSpeed = server.getAvatarMoveSpeed(this); // todo - send to client if it changes
+		this.setJumpForce(server.getAvatarJumpForce(this)); // todo - send to client if it changes
 		this.setHealth(server.getAvatarStartHealth(this));
 		this.invulnerableTimeSecs = 5;
-		server.moveAvatarToStartPosition(this);
+		server.moveAvatarToStartPosition(this); // this also sends the update message to tell the client about the new move speed values etc...
 
 	}
 

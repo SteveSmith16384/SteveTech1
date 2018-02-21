@@ -34,7 +34,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	private Node debugNode;	
 
 	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, 
-			float x, float y, float z, int side, IAvatarModel _zm) { //, IGetAvatarAnimationString animCodes, float _camHeight) {
+			float x, float y, float z, int side, IAvatarModel _zm) {
 		super(_client, _playerID, _input, eid, side, _zm);
 
 		cam = _cam;
@@ -46,10 +46,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		//syncPos = new MoveSlowlyToCorrectPosition();
 		//syncPos = new AdjustBasedOnDistance();
 		syncPos = new AdjustByFractionOfDistance();
-
+		/*
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.setJumpForce(Globals.JUMP_FORCE);
-
+		simplePlayerControl.setJumpForce(jumpForce);
+		 */
 		_client.currentAvatar = this;
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
@@ -91,7 +91,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		final long serverTime = client.getServerTime();// System.currentTimeMillis() + client.clientToServerDiffTime;
 
 		if (!this.alive) {
-			// Position cam above avatar
+			// Position cam above avatar when they're dead
 			Vector3f vec = this.getWorldTranslation();
 			cam.getLocation().x = vec.x;
 			cam.getLocation().y = 10f;
@@ -130,11 +130,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				debugNode.setLocalTranslation(epd.position);
 			}
 		}
-		
-		/*if (Globals.DEBUG_CLIENT_ROTATION) {
-			Globals.p("Rot: " + this.getWorldRotation());
-		}*/
-
 	}
 
 
@@ -147,21 +142,19 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	// Client Avatars have their own special position calculator
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
-		//if (Globals.SYNC_AVATAR_POS) {
-			if (super.playerWalked) { // Only adjust us if the player tried to move
-				Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
-				if (offset != null) {
-					float diff = offset.length();
-					if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
-						Globals.p("Far out, man! " + diff);
-						// They're so far out, just move them
-						this.setWorldTranslation(serverPositionData.getMostRecent().position); 
-					} else {
-						this.syncPos.adjustPosition(this, offset, tpf_secs);
-					}
+		if (Globals.ONLY_ADJUST_CLIENT_ON_MOVE == false || super.playerWalked) { // Only adjust us if the player tried to move?
+			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
+			if (offset != null) {
+				float diff = offset.length();
+				if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
+					Globals.p("Far out, man! " + diff);
+					// They're so far out, just move them
+					this.setWorldTranslation(serverPositionData.getMostRecent().position); 
+				} else {
+					this.syncPos.adjustPosition(this, offset, tpf_secs);
 				}
 			}
-		//}
+		}
 	}
 
 
@@ -173,12 +166,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	public Camera getCamera() {
 		return this.cam;
-	}
-
-
-	public FrustumIntersect getInsideOutside(PhysicalEntity entity) {
-		FrustumIntersect insideoutside = cam.contains(entity.getMainNode().getWorldBound());
-		return insideoutside;
 	}
 
 

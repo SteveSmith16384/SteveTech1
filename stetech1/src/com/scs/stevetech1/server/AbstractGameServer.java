@@ -457,14 +457,15 @@ ICollisionListener<PhysicalEntity> {
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id);
 		avatar.startAgain(); // Must be before we add it, since that needs a position!
 		this.actuallyAddEntity(avatar);
-
-		//avatar.setHealth(getAvatarStartHealth(avatar));
-		//this.moveAvatarToStartPosition(avatar);
 		return avatar;
 	}
 
 
 	public abstract float getAvatarStartHealth(AbstractAvatar avatar);
+
+	public abstract float getAvatarMoveSpeed(AbstractAvatar avatar);
+
+	public abstract float getAvatarJumpForce(AbstractAvatar avatar);
 
 	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
 

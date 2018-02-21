@@ -1,25 +1,29 @@
 STETECH1
 
 URGENT
+open-sourcing checklist
+Use font from SF
+Game-specific HUD?
+Create smaller vid and gif
 	Show game name on JME options form
 	Players starting on top of each other?
 	Remove settings from UndercoverAgentStaticData
 	Config files!
-Load models from jar file
 Clear client-only entities at the start of the game
 Show "winner"/"loser" at end
 Show "hit!" if a player hit
-Simulate packet loss and delay from client to server
 Show on hud "connecting to server.." etc...
 	Upload to Digital Ocean
 Search for todos
+Add open-source msg to the top of all files
 
 
 TODO
+Play sounds from msgs
+Simulate packet loss and delay from client to server
 Write code to add 100 clients instantly
 Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
 Falling snow - started
-Pause game time if not enough players
 Server tell client to slow down if server struggling
 Try desert models
 Sometimes, first bullet not killing snowman - is server also shooting? Client send shot confirmed msg to server when bullet is launched?
@@ -27,9 +31,7 @@ Warn if client and server have diff bullets left
 Use model woman
 Find sound effects
 Add client ping time to bullet ffwd
-Implement EntityNotFound message for entities that we still don't know about 10 seconds later
 Why doesn't player slide along snowmen?
-Add open-source msg to the top of all files
 Record desktop showing two players
 Blog post progress
 Client can always jump, even when in the air

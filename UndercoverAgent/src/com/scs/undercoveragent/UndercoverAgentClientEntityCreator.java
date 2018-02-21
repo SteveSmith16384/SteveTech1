@@ -87,6 +87,8 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			int playerID = (int)msg.data.get("playerID");
 			int side = (int)msg.data.get("side");
 			Vector3f pos = (Vector3f)msg.data.get("pos");
+			float moveSpeed = (float)msg.data.get("moveSpeed");
+			float jumpForce = (float)msg.data.get("jumpForce");
 
 			if (Globals.DEBUG_TOO_MANY_AVATARS) {
 				Globals.p("Creating avatar id " + id + " for " + playerID + " at " + pos);
@@ -94,6 +96,8 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			
 			if (playerID == game.playerID) {
 				AbstractClientAvatar avatar = new SnowmanClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
+				avatar.moveSpeed = moveSpeed;
+				avatar.setJumpForce(jumpForce);
 				game.getCamera().lookAt(new Vector3f(15, .5f, 15), Vector3f.UNIT_Y);
 				return avatar;
 			} else {

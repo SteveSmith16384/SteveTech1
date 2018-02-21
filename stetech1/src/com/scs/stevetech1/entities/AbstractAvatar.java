@@ -28,7 +28,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public static final String ANIM_DIED = "Died";
 
 	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
-	public final float moveSpeed = Globals.PLAYER_MOVE_SPEED;
 	protected IInputDevice input;
 
 	//Temporary vectors used on each frame.
@@ -46,11 +45,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected long lastMoveTime = System.currentTimeMillis() + 5000;
 	protected boolean playerWalked; // Has the player tried to move us?
 
-	// Send messages when changed
-	//protected boolean statsChanged = false;
 	private float health;
-	//private int score;
-
+	public float moveSpeed = 0f;// = Globals.PLAYER_MOVE_SPEED;
+	private float jumpForce = 0;
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _anim) {
 		super(_game, eid, 1, "Player", true);
@@ -239,15 +236,37 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	public void setHealth(float h) {
+	protected void setHealth(float h) {
 		this.health = h;
 		//this.statsChanged = true;
 	}
 
 
-	public void decHealth(float h) {
+	protected void decHealth(float h) {
 		this.health -= h;
 		//this.statsChanged = true;
 	}
+	
+	
+	public void setJumpForce(float jf) {
+		jumpForce = jf;
+		
+		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+		simplePlayerControl.setJumpForce(jf);
+	}
+	
+	
+	public float getJumpForce() {
+		return this.jumpForce;
+	}
+
+
+	@Override
+	public HashMap<String, Object> getCreationData() {
+		creationData.put("moveSpeed", this.moveSpeed);
+		creationData.put("jumpForce", this.jumpForce);
+		return super.getCreationData();
+	}
+
 
 }

@@ -11,6 +11,7 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 	public float health;
 	public int score;
 	public boolean damaged; // Signal to show HUD effect
+	public float moveSpeed, jumpForce; // todo 
 	
 	public AvatarStatusMessage() {
 		super();
@@ -24,6 +25,8 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 		this.health = avatar.getHealth();
 		this.score = client.getScore();
 		damaged = _damaged;
+		this.moveSpeed = avatar.moveSpeed;
+		this.jumpForce = avatar.getJumpForce();
 	}
 
 }

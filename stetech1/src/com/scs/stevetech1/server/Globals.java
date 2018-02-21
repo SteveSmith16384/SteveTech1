@@ -38,18 +38,16 @@ public class Globals {
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
 
-	//public static final float CONNECTION_IDLE_THRESH = 1000000;
-
 	//public static final int SERVER_TICKRATE_MS = 25; // Source: 15ms
 	//public static final int SERVER_SEND_UPDATE_INTERVAL_MS = 40; // How often server sends entity updates.  This must be fast enough so the client has recent data to work with 
 	//public static final int CLIENT_RENDER_DELAY = 200; //SERVER_SEND_UPDATE_INTERVAL_MS*3; // How far in past the client should render the view.  Source: 50ms
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
-
-	public static final boolean SHOW_LOGO = false;
+	public static final boolean ONLY_ADJUST_CLIENT_ON_MOVE = false; // Only adjust the client avatar's position when the player moves them.
+	//public static final boolean SHOW_LOGO = false;
 
 	// Our movement speed
-	public static final float PLAYER_MOVE_SPEED = 3f;
-	public static final float JUMP_FORCE = 2f;
+	//public static final float PLAYER_MOVE_SPEED = 3f;
+	//public static final float JUMP_FORCE = 2f;
 	public static final float SMALLEST_MOVE_DIST = 0.02f; // todo - rename
 	public static final float MAX_MOVE_DIST = 4f;
 

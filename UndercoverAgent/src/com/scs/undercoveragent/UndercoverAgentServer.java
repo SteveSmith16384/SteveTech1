@@ -244,4 +244,16 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	}
 
 
+	@Override
+	public float getAvatarMoveSpeed(AbstractAvatar avatar) {
+		return 3f;
+	}
+
+
+	@Override
+	public float getAvatarJumpForce(AbstractAvatar avatar) {
+		return 2f;
+	}
+
+
 }
