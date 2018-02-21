@@ -746,7 +746,9 @@ ICollisionListener<PhysicalEntity> {
 	public void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
 		for(ClientData client : this.clients.values()) {
-			players.add(client.playerData);
+			if (client.clientStatus == ClientStatus.Accepted) {
+				players.add(client.playerData);
+			}
 		}
 		this.gameNetworkServer.sendMessageToAll(new SimpleGameDataMessage(this.gameData, players));
 

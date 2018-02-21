@@ -1,6 +1,7 @@
 package com.scs.stevetech1.client;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,6 +33,7 @@ import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
@@ -64,7 +66,6 @@ import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.KryonetGameClient;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.AverageNumberCalculator;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
@@ -109,6 +110,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private long clientToServerDiffTime; // Add to current time to get server time
 	public int clientStatus = STATUS_NOT_CONNECTED;
 	public SimpleGameData gameData;
+	private ArrayList<SimplePlayerData> playersList;
+
 	protected Node gameNode = new Node("GameNode");
 
 	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
@@ -346,7 +349,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						}
 					}
 
-					this.hud.log_ta.setText(strListEnts.toString());
+					//this.hud.log_ta.setText(strListEnts.toString());
 				}
 			}
 
@@ -354,7 +357,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				if (this.gameData != null) {
 					this.hud.setGameStatus(SimpleGameData.getStatusDesc(gameData.getGameStatus()));
 					this.hud.setGameTime(this.gameData.getTime(serverTime));
-
+					if (playersList != null) {
+						this.hud.setNumPlayers(this.playersList.size());
+					}
 				}
 			}
 
@@ -578,6 +583,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			} else if (message instanceof SimpleGameDataMessage) {
 				SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 				this.gameData = gsm.gameData;
+				this.playersList = gsm.players;
 
 			} else {
 				unprocessedMessages.add(message);
