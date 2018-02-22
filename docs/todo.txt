@@ -75,3 +75,5 @@ Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
 Only send entity messages to players that have joined the game
 
+FONT
+http://eu2.flamingtext.co.uk/net-fu/dynamic.cgi?script=clan-logo&text=waiting+for%0D%0Aplayers&fillTextType=1&fillTextPattern=Blue+Bar&backgroundRadio=0
