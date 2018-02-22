@@ -236,7 +236,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	protected void setHealth(float h) {
+	public void setHealth(float h) {
 		this.health = h;
 		//this.statsChanged = true;
 	}

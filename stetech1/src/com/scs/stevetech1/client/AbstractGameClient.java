@@ -41,7 +41,7 @@ import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.AbstractHUDImage;
-import com.scs.stevetech1.hud.HUD;
+import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
 import com.scs.stevetech1.lobby.KryonetLobbyClient;
@@ -99,26 +99,25 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
 
-	public static BitmapFont guiFont_small;
-	//public static AppSettings settings;
+	public static BitmapFont guiFont_small; // todo - re4move?
 	private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
-	public HUD hud;
+	public IHUD hud;
 	public IInputDevice input;
 
 	public AbstractClientAvatar currentAvatar;
 	public int playerID = -1;
 	public int side = -1;
+	public int score;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
 	public int clientStatus = STATUS_NOT_CONNECTED;
 	public SimpleGameData gameData;
-	private ArrayList<SimplePlayerData> playersList;
+	public ArrayList<SimplePlayerData> playersList;
 
 	protected Node gameNode = new Node("GameNode");
 
-	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public long serverTime, renderTime;
@@ -190,7 +189,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		setUpLight();
 
-		hud = this.createHUD(getCamera());
+		hud = this.createHUD();
+		getGuiNode().attachChild(hud.getRootNode());
+
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager());
 
 		if (Globals.RECORD_VID) {
@@ -223,18 +224,23 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
+	
+	protected abstract IHUD createHUD();
 
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;
 	}
 
+	/*
 	private HUD createHUD(Camera c) {
 		BitmapFont guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		HUD hud = new HUD(this, guiFont_small, c);
 		getGuiNode().attachChild(hud);
 		return hud;
 	}
-
+*/
+	
+	
 
 	/*
 	 * Default light; override if required.
@@ -357,18 +363,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				}
 			}
 
-			if (showGameTimeInterval.hitInterval()) {
-				if (this.gameData != null) {
-					this.hud.setGameStatus(SimpleGameData.getStatusDesc(gameData.getGameStatus()));
-					this.hud.setGameTime(this.gameData.getTime(serverTime));
-					if (playersList != null) {
-						this.hud.setNumPlayers(this.playersList.size());
-					}
-				}
-			}
-
-			//input.reset();
-
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
 
@@ -484,8 +478,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		} else if (message instanceof AvatarStatusMessage) {
 			AvatarStatusMessage asm = (AvatarStatusMessage)message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
-				this.hud.setHealthText((int)asm.health);
-				this.hud.setScoreText(asm.score);
+				this.currentAvatar.setHealth(asm.health);
+				this.score = asm.score;
 				this.currentAvatar.moveSpeed = asm.moveSpeed;
 				this.currentAvatar.setJumpForce(asm.jumpForce);
 				if (asm.damaged) {
@@ -495,14 +489,15 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		} else if (message instanceof GameOverMessage) {
 			GameOverMessage gom = (GameOverMessage)message;
-			// todo - show image on HUD
 			if (gom.winningSide == -1) {
 				Globals.p("The game is a draw!");
+				this.gameIsDrawn();
 			} else if (gom.winningSide == this.side) {
 				Globals.p("You have won!");
-				new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.hud.hud_width, this.hud.hud_height, 10);
+				this.playerHasWon();
 			} else {
 				Globals.p("You have lost!");
+				this.playerHasLost();
 			}
 
 		} else if (message instanceof PlaySoundMessage) {
@@ -515,6 +510,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
+	
+	protected abstract void playerHasWon();
+
+	protected abstract void playerHasLost();
+
+	protected abstract void gameIsDrawn();
 
 	private void playSound(PlaySoundMessage psm) {
 		try {
@@ -524,7 +525,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			node.setLooping(false);
 			node.play();
 
-			this.gameNode.attachChild(node); // todo - remove afterwards?
+			this.gameNode.attachChild(node); // todo - remove afterwards in thread?
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -575,9 +576,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					long p2 = System.currentTimeMillis() - pingMessage.originalSentTime;
 					this.pingRTT = this.pingCalc.add(p2);
 					clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-					this.hud.setPing(pingRTT);
-					//Settings.p("pingRTT = " + pingRTT);
-					//Settings.p("clientToServerDiffTime = " + clientToServerDiffTime);
 
 				} else {
 					pingMessage.responseSentTime = System.currentTimeMillis();
@@ -688,7 +686,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			}
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
-				new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.hud.hud_width, this.hud.hud_height, 5);
+				//new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.cam.getWidth(), this.cam.getHeight(), 5);
 				//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
 			}
 		}

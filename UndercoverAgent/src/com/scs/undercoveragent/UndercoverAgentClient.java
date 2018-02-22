@@ -4,11 +4,14 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.hud.AbstractHUDImage;
+import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.undercoveragent.entities.SnowFloor;
@@ -109,6 +112,32 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	@Override
 	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg) {
 		return entityCreator.createEntity(client, msg);
+	}
+
+
+	@Override
+	protected void playerHasWon() {
+		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/winner.png", this.cam.getWidth(), this.cam.getHeight(), 10);
+	}
+
+
+	@Override
+	protected void playerHasLost() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected void gameIsDrawn() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected IHUD createHUD() {
+		return new HUD(this, this.getCamera());
 	}
 
 

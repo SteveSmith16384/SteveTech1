@@ -4,13 +4,11 @@ import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
-import com.jme3.renderer.Camera.FrustumIntersect;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
@@ -18,7 +16,7 @@ import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
-import com.scs.stevetech1.hud.HUD;
+import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
@@ -26,14 +24,14 @@ import com.scs.stevetech1.shared.PositionCalculator;
 
 public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
 
-	public HUD hud;
+	public IHUD hud;
 	public Camera cam;
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 
 	private Node debugNode;	
 
-	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, HUD _hud, int eid, 
+	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
 			float x, float y, float z, int side, IAvatarModel _zm) {
 		super(_client, _playerID, _input, eid, side, _zm);
 
@@ -115,14 +113,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		hud.processByClient(client, tpf_secs);
 
-		// These must be after we might use them, so the hud is correct
-		if (ability[0] != null) {
-			this.hud.setAbilityGunText(this.ability[0].getHudText());
-		}
-		if (this.ability[1] != null) {
-			this.hud.setAbilityOtherText(this.ability[1].getHudText());
-		}
-
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			//long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis(), false);
@@ -168,5 +158,5 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		return this.cam;
 	}
 
-
+	
 }

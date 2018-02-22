@@ -15,7 +15,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 	private float timeLeft;
 	private int id;
 
-	public AbstractHUDImage(AbstractGameClient _game, int _id, Node guiNode, String tex, float w, float h, float dur) {
+	public AbstractHUDImage(AbstractGameClient _game, int _id, Node guiNode, String tex, int w, int h, float dur) {
 		super("AbstractHUDImage");
 
 		id = _id;
