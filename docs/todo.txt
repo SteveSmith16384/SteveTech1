@@ -1,15 +1,11 @@
 STETECH1
 
 URGENT
-Put mountains in corner
-Use font from SF
-make billboards smaller
-	Show "waiting for players"
-	Show other text 
-	Show "winner"/"loser" at end
-	Try turning audio back on
-Test Play sounds from msgs
-	Show how many players
+Pause between removing all entities and adding new ones at end/start of level
+Client not receiving all entities?  Lots missing
+back wall not in right place
+Write code to add 100 clients instantly
+	Put mountains in corner
 Add to readme
 open-sourcing checklist
 Create smaller vid and gif
@@ -18,14 +14,16 @@ Search for todos
 Blog post progress
 
 
+BEFORE RELEASE
+Test Play sounds from msgs
+
+
 TODO
+Falling snow - started
+Use font from SF
 Show "hit!" effect if a player hit
 Clear client-only entities at the start of the game
-Game-specific HUD? - IHud
-Simulate packet loss and delay from client to server
-Write code to add 100 clients instantly
 Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
-Falling snow - started
 Server tell client to slow down if server struggling
 Try desert models
 Sometimes, first bullet not killing snowman - is server also shooting? Client send shot confirmed msg to server when bullet is launched?

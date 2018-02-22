@@ -23,7 +23,7 @@ import ssmith.util.RealtimeInterval;
  * Positioning text = the co-ords of BitmapText are for the top-left of the first line of text, and they go down from there.
  * 
  */
-public class HUD extends Node implements IHUD { //IProcessByClient {
+public class UndercoverAgentHUD extends Node implements IHUD { //IProcessByClient {
 
 	private static final float LINE_SPACING = 10;
 
@@ -42,7 +42,7 @@ public class HUD extends Node implements IHUD { //IProcessByClient {
 
 	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
 
-	public HUD(AbstractGameClient _game, Camera _cam) { // BitmapFont font_small, 
+	public UndercoverAgentHUD(AbstractGameClient _game, Camera _cam) { // BitmapFont font_small, 
 		super("HUD");
 
 		game = _game;
@@ -51,6 +51,7 @@ public class HUD extends Node implements IHUD { //IProcessByClient {
 		cam = _cam;
 		
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
+		//font_small = _game.getAssetManager().loadFont("Fonts/Xenotron.ttf");
 
 		super.setLocalTranslation(0, 0, 0);
 

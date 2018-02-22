@@ -33,7 +33,7 @@ public class MountainMapBorder extends PhysicalEntity {
 		if (!_game.isServer()) { // Not running in server
 			Node container = new Node("MountainContainer");
 			// Add mountain models
-			for (float i=(InvisibleMapBorder.BORDER_WIDTH/2) ; i<size ; i+=InvisibleMapBorder.BORDER_WIDTH/2) { 
+			for (float i=-(InvisibleMapBorder.BORDER_WIDTH/2) ; i<size+1 ; i+=InvisibleMapBorder.BORDER_WIDTH/2) { 
 				Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
 				JMEFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Textures/snow.jpg");
 				JMEFunctions.scaleModelToWidth(model, InvisibleMapBorder.BORDER_WIDTH+1); // Since we rotate it, needs to be slightly wider

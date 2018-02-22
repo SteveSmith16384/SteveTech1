@@ -71,7 +71,9 @@ public class KryonetGameClient implements IGameMessageClient {
 			if (msg.isReliable()) {
 				client.sendTCP(msg);
 			} else {
-				client.sendUDP(msg);
+				if (!KryonetGameServer.isPacketDropped()) {
+					client.sendUDP(msg);
+				}
 			}
 		}
 		else {

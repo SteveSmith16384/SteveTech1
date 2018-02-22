@@ -118,39 +118,41 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected void playerHasWon() {
-		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", this.cam.getWidth(), this.cam.getHeight(), 10);
+		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
 	}
 
 
 	@Override
 	protected void playerHasLost() {
-		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth(), this.cam.getHeight(), 10);
+		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
 	}
 
 
 	@Override
 	protected void gameIsDrawn() {
-		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth(), this.cam.getHeight(), 10);
+		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
 	}
 
 
 	@Override
 	protected IHUD createHUD() {
-		return new HUD(this, this.getCamera());
+		return new UndercoverAgentHUD(this, this.getCamera());
 	}
 
 
 	@Override
 	protected void gameStatusChanged(int oldStatus, int newStatus) {
+		int width = this.cam.getWidth()/2;
+		int height = this.cam.getHeight()/2;
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
-			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_DEPLOYING:
-			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", this.cam.getWidth(), this.cam.getHeight(), 5);
+			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_STARTED:
-			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", this.cam.getWidth(), this.cam.getHeight(), 5);
+			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_FINISHED:
 			// Don't show anything, this will be handled with a win/lose message

@@ -114,13 +114,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	protected void createGame() {
-		/*
-		new Igloo(this, getNextEntityID(), 5, 0, 5, JMEFunctions.GetRotation(-1, 0));
-		//new SnowHill1(this, getNextEntityID(), 10, 0, 10, 0);
-		new StaticSnowman(this, getNextEntityID(), 5, 0, 10, JMEFunctions.GetRotation(-1, 0));
-		new SnowTree2(this, getNextEntityID(), 10, 0, 5, JMEFunctions.GetRotation(-1, 0));
-		 */
-
 		if (!Globals.EMPTY_MAP) {
 			// Place snowman
 			int numSnowmen = mapSize;

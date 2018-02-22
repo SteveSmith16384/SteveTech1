@@ -99,6 +99,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private static final String TEST = "Test";
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
+	private List<IEntity> clientOnlyEntitiesToAdd = new LinkedList<IEntity>();
+	private List<Integer> clientOnlyEntitiesToRemove = new LinkedList<Integer>();
 
 	//public static BitmapFont guiFont_small;
 	private KryonetLobbyClient lobbyClient;
@@ -325,6 +327,24 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					it2 = null;
 					this.entitiesToRemove.clear();
 
+					// Add client-only entities
+					Iterator<IEntity> coit = this.clientOnlyEntitiesToAdd.iterator();
+					while (coit.hasNext()) {
+						IEntity e = coit.next();
+						this.clientOnlyEntities.put(e.getID(), e);
+					}
+					coit = null;
+					this.clientOnlyEntitiesToAdd.clear();
+
+					// Remove entities
+					Iterator<Integer> coit2 = this.clientOnlyEntitiesToRemove.iterator();
+					while (coit2.hasNext()) {
+						int i = coit2.next();
+						this.clientOnlyEntities.remove(i);
+					}
+					coit2 = null;
+					this.clientOnlyEntitiesToRemove.clear();
+
 					this.launchSystem.process(renderTime);
 
 					// Loop through each entity and process them				
@@ -375,7 +395,52 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	protected void handleMessage(MyAbstractMessage message) {
-		if (message instanceof NewEntityMessage) {
+		if (message instanceof PingMessage) {
+			PingMessage pingMessage = (PingMessage) message;
+			if (!pingMessage.s2c) {
+				long p2 = System.currentTimeMillis() - pingMessage.originalSentTime;
+				this.pingRTT = this.pingCalc.add(p2);
+				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (pingRTT/2); // If running on the same server, this should be 0! (or close enough)
+
+			} else {
+				pingMessage.responseSentTime = System.currentTimeMillis();
+				networkClient.sendMessageToServer(message); // Send it straight back
+			}
+
+		} else if (message instanceof GameSuccessfullyJoinedMessage) {
+			GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
+			if (this.playerID <= 0) {
+				this.playerID = npcm.playerID;
+				this.side = npcm.side;
+				//this.hud.setDebugText("PlayerID=" + this.playerID);
+				//Settings.p("We are player " + playerID);
+				clientStatus = STATUS_JOINED_GAME;
+			} else {
+				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
+			}
+
+		} else if (message instanceof WelcomeClientMessage) {
+			WelcomeClientMessage rem = (WelcomeClientMessage)message;
+			if (clientStatus < STATUS_RCVD_WELCOME) {
+				clientStatus = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
+				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
+				clientStatus = STATUS_SENT_JOIN_REQUEST;
+			} else {
+				throw new RuntimeException("Received second welcome message");
+			}
+
+		} else if (message instanceof SimpleGameDataMessage) {
+			SimpleGameData oldGameData = this.gameData;
+			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
+			this.gameData = gsm.gameData;
+			this.playersList = gsm.players;
+			if (oldGameData == null) {
+				this.gameStatusChanged(-1, this.gameData.getGameStatus());
+			} else if (this.gameData.getGameStatus() != oldGameData.getGameStatus()) {
+				this.gameStatusChanged(oldGameData.getGameStatus(), this.gameData.getGameStatus());
+			}
+
+		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 			if (!this.entities.containsKey(newEntityMessage.entityID)) {
 				createEntity(newEntityMessage, newEntityMessage.timestamp);
@@ -418,6 +483,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					}
 				}
 			}
+
 		} else if (message instanceof RemoveEntityMessage) {
 			RemoveEntityMessage rem = (RemoveEntityMessage)message;
 			this.removeEntity(rem.entityID);
@@ -537,7 +603,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					node.removeFromParent();
+					node.removeFromParent(); // todo - not in sep thread!
 				}
 			};
 			t.start();
@@ -586,68 +652,15 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 
 		synchronized (unprocessedMessages) {
-			if (message instanceof PingMessage) {
-				PingMessage pingMessage = (PingMessage) message;
-				if (!pingMessage.s2c) {
-					long p2 = System.currentTimeMillis() - pingMessage.originalSentTime;
-					this.pingRTT = this.pingCalc.add(p2);
-					clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-
-				} else {
-					pingMessage.responseSentTime = System.currentTimeMillis();
-					networkClient.sendMessageToServer(message); // Send it straight back
-				}
-
-			} else if (message instanceof GameSuccessfullyJoinedMessage) {
-				GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
-				if (this.playerID <= 0) {
-					this.playerID = npcm.playerID;
-					this.side = npcm.side;
-					//this.hud.setDebugText("PlayerID=" + this.playerID);
-					//Settings.p("We are player " + playerID);
-					clientStatus = STATUS_JOINED_GAME;
-				} else {
-					throw new RuntimeException("Already rcvd NewPlayerAckMessage");
-				}
-
-			} else if (message instanceof WelcomeClientMessage) {
-				WelcomeClientMessage rem = (WelcomeClientMessage)message;
-				if (clientStatus < STATUS_RCVD_WELCOME) {
-					clientStatus = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
-					networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
-					clientStatus = STATUS_SENT_JOIN_REQUEST;
-				} else {
-					throw new RuntimeException("Received second welcome message");
-				}
-
-			} else if (message instanceof SimpleGameDataMessage) {
-				SimpleGameData oldGameData = this.gameData;
-				SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
-				this.gameData = gsm.gameData;
-				this.playersList = gsm.players;
-				if (oldGameData == null) {
-					this.gameStatusChanged(-1, this.gameData.getGameStatus());
-				} else if (this.gameData.getGameStatus() != oldGameData.getGameStatus()) {
-					this.gameStatusChanged(oldGameData.getGameStatus(), this.gameData.getGameStatus());
-				}
-
-			} else {
-				unprocessedMessages.add(message);
-
-			}
-
-			if (Globals.DEBUG_MSGS) {
-				if (clientStatus < STATUS_RCVD_WELCOME) {
-					Globals.p("Still not received Welcome message");
-				}
-			}
+			unprocessedMessages.add(message);
 		}
+
 	}
 
 
 	protected abstract void gameStatusChanged(int oldStatus, int newStatus);
-	
-	
+
+
 	@Override
 	public void addEntity(IEntity e) {
 		if (e.getID() <= 0) {
@@ -794,12 +807,12 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	//@Override
 	public void addClientOnlyEntity(IEntity e) {
-		this.clientOnlyEntities.put(e.getID(), e); // todo - create toAdd
+		this.clientOnlyEntitiesToAdd.add(e);
 	}
 
 
 	public void removeClientOnlyEntity(IEntity e) {
-		this.clientOnlyEntities.remove(e.getID());
+		this.clientOnlyEntitiesToRemove.add(e.getID());
 	}
 
 

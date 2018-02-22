@@ -137,7 +137,7 @@ public class KryonetGameServer implements IGameMessageServer {
 	}
 
 
-	private boolean isPacketDropped() {
+	public static boolean isPacketDropped() {
 		return Globals.SIMULATE_DROPPED_PACKETS && NumberFunctions.rnd(0, 100) < Globals.PCENT_DROPPED_PACKETS;
 	}
 

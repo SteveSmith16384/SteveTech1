@@ -12,20 +12,20 @@ import com.scs.stevetech1.shared.IEntityController;
 public class AbstractHUDImage extends Picture implements IEntity, IProcessByClient {
 
 	private AbstractGameClient game;
-	private float timeLeft;
+	private float timeLeftSecs;
 	private int id;
 
-	public AbstractHUDImage(AbstractGameClient _game, int _id, Node guiNode, String tex, int w, int h, float dur) {
+	public AbstractHUDImage(AbstractGameClient _game, int _id, Node guiNode, String tex, int w, int h, float durSecs) {
 		super("AbstractHUDImage");
 
 		id = _id;
 		game = _game;
-		this.timeLeft = dur;
+		this.timeLeftSecs = durSecs;
 
 		setImage(game.getAssetManager(), tex, true);
 		setWidth(w);
 		setHeight(h);
-		//this.setPosition(w/2, h/2);
+		this.setPosition(w/2, h/2); // Centre it
 
 		guiNode.attachChild(this);
 		game.addClientOnlyEntity(this);
@@ -35,9 +35,9 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf) {
-		if (timeLeft > 0) {
-			this.timeLeft -= tpf;
-			if (this.timeLeft <= 0) {
+		if (timeLeftSecs > 0) {
+			this.timeLeftSecs -= tpf;
+			if (this.timeLeftSecs <= 0) {
 				this.remove();
 			}
 		}
