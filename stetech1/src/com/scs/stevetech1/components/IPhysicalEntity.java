@@ -2,7 +2,7 @@ package com.scs.stevetech1.components;
 
 import com.jme3.math.Vector3f;
 
-public interface IPhysicalEntity {
+public interface IPhysicalEntity extends IEntity { // todo - where is this used?
 
 	Vector3f getWorldTranslation();
 	
