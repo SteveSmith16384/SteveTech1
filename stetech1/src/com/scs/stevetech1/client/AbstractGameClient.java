@@ -11,6 +11,8 @@ import java.util.prefs.BackingStoreException;
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
+import com.jme3.audio.AudioData;
+import com.jme3.audio.AudioNode;
 import com.jme3.font.BitmapFont;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -56,6 +58,7 @@ import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
+import com.scs.stevetech1.netmessages.PlaySoundMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
@@ -501,11 +504,32 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			} else {
 				Globals.p("You have lost!");
 			}
+
+		} else if (message instanceof PlaySoundMessage) {
+			PlaySoundMessage psm = (PlaySoundMessage)message;
+			playSound(psm);
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 
 	}
+
+
+	private void playSound(PlaySoundMessage psm) {
+		try {
+			AudioNode node = new AudioNode(this.getAssetManager(), psm.sound, psm.stream ?  AudioData.DataType.Stream : AudioData.DataType.Buffer);
+			node.setLocalTranslation(psm.pos);
+			node.setVolume(psm.volume);
+			node.setLooping(false);
+			node.play();
+
+			this.gameNode.attachChild(node); // todo - remove afterwards?
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 
 	private void sendInputs() {
 		if (this.currentAvatar != null) {

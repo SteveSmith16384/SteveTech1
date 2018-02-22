@@ -8,16 +8,20 @@ public class PlaySoundMessage extends MyAbstractMessage {
 
 	public String sound;
 	public Vector3f pos;
+	public float volume;
+	public boolean stream;
 	
 	public PlaySoundMessage() {
 		super(true, true);
 	}
 	
 	
-	public PlaySoundMessage(String _sound, Vector3f _pos) {
-		super(true, true);
+	public PlaySoundMessage(String _sound, Vector3f _pos, float _volume, boolean _stream) {
+		this();
 		
 		sound = _sound;
 		pos = _pos;
+		volume = _volume;
+		stream = _stream;
 	}
 }

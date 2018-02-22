@@ -1,6 +1,7 @@
 STETECH1
 
 URGENT
+Try turning audio back on
 Show "winner"/"loser" at end
 Play sounds from msgs
 	Don't show list of entities in hud
