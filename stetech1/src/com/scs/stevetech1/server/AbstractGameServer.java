@@ -112,7 +112,6 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void simpleInitApp() {
-		// todo - what if inside jar?
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 

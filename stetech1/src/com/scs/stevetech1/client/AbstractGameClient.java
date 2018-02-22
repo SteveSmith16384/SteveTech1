@@ -78,6 +78,7 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.AnimationSystem;
 import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
 
+import ssmith.lang.NumberFunctions;
 import ssmith.util.RealtimeInterval;
 
 public abstract class AbstractGameClient extends AbstractGameController implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
@@ -99,7 +100,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
 
-	public static BitmapFont guiFont_small; // todo - re4move?
+	//public static BitmapFont guiFont_small;
 	private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
 	public IHUD hud;
@@ -148,7 +149,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			e.printStackTrace();
 		}
 		settings.setUseJoysticks(true);
-		settings.setAudioRenderer(null); // Avoid error with no soundcard - todo - remove
+		//settings.setAudioRenderer(null); // Avoid error with no soundcard
 		settings.setTitle(name);// + " (v" + Settings.VERSION + ")");
 		settings.setSettingsDialogImage(logoImage);
 
@@ -177,7 +178,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
-		guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
+		//guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Globals.CAM_DIST);
 
@@ -224,7 +225,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
-	
+
 	protected abstract IHUD createHUD();
 
 	public long getServerTime() {
@@ -238,9 +239,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		getGuiNode().attachChild(hud);
 		return hud;
 	}
-*/
-	
-	
+	 */
+
+
 
 	/*
 	 * Default light; override if required.
@@ -510,7 +511,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
-	
+
 	protected abstract void playerHasWon();
 
 	protected abstract void playerHasLost();
@@ -525,7 +526,22 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			node.setLooping(false);
 			node.play();
 
-			this.gameNode.attachChild(node); // todo - remove afterwards in thread?
+			this.gameNode.attachChild(node);
+
+			// Remove afterwards in thread
+			Thread t = new Thread("Remvoe AudioNode Thread") {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep((long)node.getPlaybackTime());
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					node.removeFromParent();
+				}
+			};
+			t.start();
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -605,9 +621,15 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				}
 
 			} else if (message instanceof SimpleGameDataMessage) {
+				SimpleGameData oldGameData = this.gameData;
 				SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 				this.gameData = gsm.gameData;
 				this.playersList = gsm.players;
+				if (oldGameData == null) {
+					this.gameStatusChanged(-1, this.gameData.getGameStatus());
+				} else if (this.gameData.getGameStatus() != oldGameData.getGameStatus()) {
+					this.gameStatusChanged(oldGameData.getGameStatus(), this.gameData.getGameStatus());
+				}
 
 			} else {
 				unprocessedMessages.add(message);
@@ -623,6 +645,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	}
 
 
+	protected abstract void gameStatusChanged(int oldStatus, int newStatus);
+	
+	
 	@Override
 	public void addEntity(IEntity e) {
 		if (e.getID() <= 0) {

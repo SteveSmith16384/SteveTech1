@@ -1,23 +1,26 @@
 STETECH1
 
 URGENT
-Try turning audio back on
-Show "winner"/"loser" at end
-Play sounds from msgs
-	Don't show list of entities in hud
+Put mountains in corner
+Use font from SF
+make billboards smaller
+	Show "waiting for players"
+	Show other text 
+	Show "winner"/"loser" at end
+	Try turning audio back on
+Test Play sounds from msgs
 	Show how many players
 Add to readme
 open-sourcing checklist
 Create smaller vid and gif
-	Show game name on JME options form
 Show on hud "connecting to server.." etc...
 Search for todos
+Blog post progress
 
 
 TODO
 Show "hit!" effect if a player hit
 Clear client-only entities at the start of the game
-Use font from SF
 Game-specific HUD? - IHud
 Simulate packet loss and delay from client to server
 Write code to add 100 clients instantly
@@ -32,11 +35,9 @@ Find sound effects
 Add client ping time to bullet ffwd
 Why doesn't player slide along snowmen?
 Record desktop showing two players
-Blog post progress
 Client can always jump, even when in the air
 Client connect to lobby first, then select server
 Players send ping to server from lobby to see which is best
-Sound Effect message
 Ping system
 Split up client/server into systems
 Try diff snow hills

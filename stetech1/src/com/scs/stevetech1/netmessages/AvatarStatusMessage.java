@@ -11,7 +11,7 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 	public float health;
 	public int score;
 	public boolean damaged; // Signal to show HUD effect
-	public float moveSpeed, jumpForce; // todo 
+	public float moveSpeed, jumpForce; 
 	
 	public AvatarStatusMessage() {
 		super();

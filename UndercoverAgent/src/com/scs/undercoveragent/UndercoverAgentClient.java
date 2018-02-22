@@ -9,6 +9,7 @@ import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.AbstractHUDImage;
 import com.scs.stevetech1.hud.IHUD;
@@ -23,7 +24,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	private UndercoverAgentClientEntityCreator entityCreator = new UndercoverAgentClientEntityCreator();
 	private FallingSnowflakeSystem snowflakeSystem;
-	
+
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -37,13 +38,13 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
 			String lobbyIpAddress = props.getPropertyAsString("lobbyIpAddress", "localhost");
 			int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
-			
+
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 			float gravity = props.getPropertyAsFloat("gravity", -5);
 			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
-			
+
 			new UndercoverAgentClient(gameIpAddress, gamePort, lobbyIpAddress, lobbyPort,
 					tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 		} catch (Exception e) {
@@ -67,7 +68,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		this.getViewPort().setBackgroundColor(ColorRGBA.LightGray);
 
 		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
-		
+
 		this.snowflakeSystem = new FallingSnowflakeSystem(this);
 	}
 
@@ -88,13 +89,13 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		super.simpleUpdate(tpf_secs);
-		
+
 		if (this.clientStatus == AbstractGameClient.STATUS_STARTED) {
 			snowflakeSystem.process(tpf_secs);
 		}
 	}
-	
-	
+
+
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
 		PhysicalEntity pea = a.userObject;
@@ -117,27 +118,47 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected void playerHasWon() {
-		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/winner.png", this.cam.getWidth(), this.cam.getHeight(), 10);
+		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", this.cam.getWidth(), this.cam.getHeight(), 10);
 	}
 
 
 	@Override
 	protected void playerHasLost() {
-		// TODO Auto-generated method stub
-		
+		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth(), this.cam.getHeight(), 10);
 	}
 
 
 	@Override
 	protected void gameIsDrawn() {
-		// TODO Auto-generated method stub
-		
+		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth(), this.cam.getHeight(), 10);
 	}
 
 
 	@Override
 	protected IHUD createHUD() {
 		return new HUD(this, this.getCamera());
+	}
+
+
+	@Override
+	protected void gameStatusChanged(int oldStatus, int newStatus) {
+		switch (newStatus) {
+		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
+			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+			break;
+		case SimpleGameData.ST_DEPLOYING:
+			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", this.cam.getWidth(), this.cam.getHeight(), 5);
+			break;
+		case SimpleGameData.ST_STARTED:
+			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", this.cam.getWidth(), this.cam.getHeight(), 5);
+			break;
+		case SimpleGameData.ST_FINISHED:
+			// Don't show anything, this will be handled with a win/lose message
+			break;
+		default:
+			// DO nothing
+		}
+
 	}
 
 
