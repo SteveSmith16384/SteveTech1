@@ -21,8 +21,10 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
@@ -571,17 +573,16 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
-
 	}
 
 
 	private void addDebugBox(ModelBoundsMessage msg) {
 		if (msg.bounds instanceof BoundingBox) {
 			BoundingBox bb = (BoundingBox)msg.bounds;
-			Mesh sphere = new Box(bb.getXExtent(), bb.getYExtent(), bb.getZExtent());
-			Geometry debuggingBox = new Geometry("DebuggingBox", sphere);
+			Mesh box = new Box(bb.getXExtent(), bb.getYExtent(), bb.getZExtent());
+			Geometry debuggingBox = new Geometry("DebuggingBox", box);
 
-			TextureKey key3 = new TextureKey( "Textures/greensun.jpg");
+			TextureKey key3 = new TextureKey( "Textures/fence.png");
 			Texture tex3 = getAssetManager().loadTexture(key3);
 			Material floor_mat = null;
 			if (Globals.LIGHTING) {
@@ -594,6 +595,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			debuggingBox.setMaterial(floor_mat);
 			debuggingBox.setLocalTranslation(msg.bounds.getCenter().x, msg.bounds.getCenter().y, msg.bounds.getCenter().z);
 			debugNode.attachChild(debuggingBox);
+			
+			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			debuggingBox.setQueueBucket(Bucket.Transparent);
+
+			Globals.p("Created bounding box");
 		}
 	}
 
@@ -806,29 +812,22 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		/*if (a.userObject instanceof Floor == false && b.userObject instanceof Floor == false) {
-			Globals.p("Collision between " + a.userObject + " and " + b.userObject);
-		}*/
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
 
 		if (pea instanceof IClientControlled) {
 			IClientControlled cc = (IClientControlled)pea;
-			//if (cc.isItOurEntity()) {
 			if (pea instanceof IRemoveOnContact) {
 				IRemoveOnContact roc = (IRemoveOnContact)pea;
 				roc.remove();
 			}
-			//}
 		}
 		if (peb instanceof IClientControlled) {
 			IClientControlled cc = (IClientControlled)peb;
-			//if (cc.isItOurEntity()) {
 			if (peb instanceof IRemoveOnContact) {
 				IRemoveOnContact roc = (IRemoveOnContact)peb;
 				roc.remove();
 			}
-			//}
 		}
 
 	}

@@ -563,7 +563,7 @@ ConsoleInputListener {
 		}
 
 		// Tell clients
-		//if (sendToClients) { todo - re-add?
+		//if (sendToClients) {
 			if (Globals.DEBUG_TOO_MANY_AVATARS) {
 				if (e instanceof AbstractAvatar) {
 					Globals.p("Sending avatar msg");
@@ -854,9 +854,11 @@ ConsoleInputListener {
 
 	@Override
 	public void processConsoleInput(String s) {
-		Globals.p("Recieved input: " + s);
+		//Globals.p("Recieved input: " + s);
 		if (s.equalsIgnoreCase("mb")) {
 			sendDebuggingBoxes();
+		} else {
+			Globals.p("Unknown command: " + s);
 		}
 
 	}
@@ -872,6 +874,7 @@ ConsoleInputListener {
 				}
 			}
 		}
+		Globals.p("Sent model bounds to all clients");
 	}
 
 

@@ -25,6 +25,9 @@ All the basic features are complete.
 You are advised to look at the example game Undercover Agent to see how to create your own multiplayer FPS game using SteveTech1.
 
 
+## TECHNICAL OVERVIEW
+* The code is designed so that as much identical code as possible is run on both the client and the server.
+
 
 ## CREDITS
 Designed and developed by Stephen Carlyle-Smith (http://twitter.com/stephencsmith/, stephen.carlylesmith@googlemail.com)

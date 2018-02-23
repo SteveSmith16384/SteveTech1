@@ -44,7 +44,7 @@ public class Globals {
 	public static final boolean ONLY_ADJUST_CLIENT_ON_MOVE = false; // Only adjust the client avatar's position when the player moves them.
 
 	// Our movement speed
-	public static final float SMALLEST_MOVE_DIST = 0.02f; // todo - rename
+	public static final float SMALLEST_MOVE_DIST = 0.02f;
 	public static final float MAX_MOVE_DIST = 4f;
 
 	public static final float CAM_DIST = 50f;

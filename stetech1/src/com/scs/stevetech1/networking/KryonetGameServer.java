@@ -101,7 +101,9 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(byte[].class);
 		kryo.register(java.util.LinkedList.class);
 		kryo.register(java.util.ArrayList.class);
-
+		kryo.register(com.jme3.bounding.BoundingBox.class);
+		kryo.register(com.jme3.bounding.BoundingSphere.class);
+		
 		// Messages
 		kryo.register(MyAbstractMessage.class);
 		kryo.register(WelcomeClientMessage.class);

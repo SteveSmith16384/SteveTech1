@@ -1,24 +1,14 @@
-Start Game
-	Create ent - no send
-Mid game ent
-	Create ent - send
-Restart game
-	Create ent - no send
-
-
-
 STETECH1
 
 URGENT
+Don't remove audionode in diff thread!
 	If dupe ent sent, just replace it?
-	All entities on same spot
 	Long Pause between removing all entities and adding new ones at end/start of level
 	Server send model bounds to client
 	Snowmen starting inside igloos and trees
 back wall not in right place
 Show on hud "connecting to server.." etc...
 Search for todos
-
 
 TODO
 Test Play sounds from msgs
@@ -88,5 +78,13 @@ Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
 Only send entity messages to players that have joined the game
 
+
 FONT
 http://eu2.flamingtext.co.uk/net-fu/dynamic.cgi?script=clan-logo&text=waiting+for%0D%0Aplayers&fillTextType=1&fillTextPattern=Blue+Bar&backgroundRadio=0
+
+
+protected boolean isRenderThread() {
+        return Thread.currentThread() == renderThread; //You get renderThread from application thread.
+    }
+	
+	
