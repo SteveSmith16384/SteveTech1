@@ -34,23 +34,23 @@ public class ServerGameStatusSystem {
 			}
 		}
 
-		long duration = System.currentTimeMillis() - gameData.getStatusStartTimeMS();
+		long currentDuration = System.currentTimeMillis() - gameData.getStatusStartTimeMS();
 		if (gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
 			// Do nothing...
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_CLEAR_OLD_GAME) {
-			if (duration >= gameOptions.deployDurationMillis) {
+			if (currentDuration >= gameData.getStatusDuration()) {
 				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
-				if (duration >= gameOptions.deployDurationMillis) {
+			if (currentDuration >= gameData.getStatusDuration()) {
 					gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDurationMillis);
 				}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_STARTED) {
-			if (duration >= gameOptions.gameDurationMillis) {
+			if (currentDuration >= gameData.getStatusDuration()) {
 				gameData.setGameStatus(SimpleGameData.ST_FINISHED, gameOptions.finishedDurationMillis);
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_FINISHED) {
-			if (duration >= gameOptions.finishedDurationMillis) {
+			if (currentDuration >= gameData.getStatusDuration()) {
 				gameData.setGameStatus(SimpleGameData.ST_CLEAR_OLD_GAME, CLEAR_OLD_GAME_DURATION_MILLIS);
 			}
 		} else {

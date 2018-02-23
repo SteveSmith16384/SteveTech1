@@ -1,12 +1,20 @@
+Start Game
+	Create ent - no send
+Mid game ent
+	Create ent - send
+Restart game
+	Create ent - no send
+
+
+
 STETECH1
 
 URGENT
-Flag to say if entity has been sent?
-All entities on same spot
-	Pause between removing all entities and adding new ones at end/start of level
-	Server console
-Server send model bounds to client
-Snowmen starting inside igloos and trees
+	If dupe ent sent, just replace it?
+	All entities on same spot
+	Long Pause between removing all entities and adding new ones at end/start of level
+	Server send model bounds to client
+	Snowmen starting inside igloos and trees
 back wall not in right place
 Show on hud "connecting to server.." etc...
 Search for todos

@@ -124,6 +124,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 					snowman.setWorldTranslation(x, z);
 				}
 			}
+		} else if (Globals.FEW_MODELS) {
+			for (int z=1 ; z<mapSize-1 ; z+=2) {
+					StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
+					this.actuallyAddEntity(snowman);
+					snowman.setWorldTranslation(3, z+2);
+			}
 		} else {
 			// Place snowman
 			int numSnowmen = mapSize;
@@ -180,7 +186,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	private void addEntityToRandomPosition(PhysicalEntity entity) {
 		float x = NumberFunctions.rndFloat(2, mapSize-3);
 		float z = NumberFunctions.rndFloat(2, mapSize-3);
-		//StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), x, 0, z, JMEFunctions.getRotation(-1, 0));
 		this.actuallyAddEntity(entity);
 		SimpleRigidBody<PhysicalEntity> collider = entity.simpleRigidBody.checkForCollisions();
 		while (collider != null) {
@@ -189,7 +194,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			entity.setWorldTranslation(x, z);
 			collider = entity.simpleRigidBody.checkForCollisions();
 		}
-		// randomly rotate snowman
+		// randomly rotate
 		JMEFunctions.rotateToDirection(entity.getMainNode(), NumberFunctions.rnd(0,  359));
 	}
 

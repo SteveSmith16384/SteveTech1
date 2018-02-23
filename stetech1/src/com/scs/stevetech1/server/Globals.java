@@ -11,7 +11,7 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 
 	// Lots of consts for specific debugging output
-	public static final boolean MODELS_IN_GRID = false;
+	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
 	
 	public static final boolean SIMULATE_DROPPED_PACKETS = false;
@@ -20,6 +20,7 @@ public class Globals {
 	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0;
 	
 	public static final boolean EMPTY_MAP = false;
+	public static final boolean MODELS_IN_GRID = false;
 	public static final boolean DEBUG_TOO_MANY_AVATARS = false;
 	public static final boolean DEBUG_SERVER_SHOOTING = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;

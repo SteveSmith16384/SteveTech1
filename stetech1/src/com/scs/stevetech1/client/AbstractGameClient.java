@@ -435,11 +435,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-			if (!this.entities.containsKey(newEntityMessage.entityID)) {
+			//if (!this.entities.containsKey(newEntityMessage.entityID)) {
 				createEntity(newEntityMessage, newEntityMessage.timestamp);
-			} else {
-				// We already know about it
-			}
+			/*} else {
+				// We already know about it  NO! Replace the entity!
+			}*/
 
 		} else if (message instanceof EntityUpdateMessage) {
 			if (clientStatus >= STATUS_JOINED_GAME) {
@@ -647,7 +647,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	protected final void createEntity(NewEntityMessage msg, long timeToCreate) {
-		IEntity e = actuallyCreateEntity(this, msg);//this.entityCreator.createEntity(this, msg);
+		IEntity e = actuallyCreateEntity(this, msg);
 		if (e != null) {
 			if (e instanceof AbstractAvatar || e instanceof IAbility || e instanceof AbstractEnemyAvatar) {
 				this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to, or a grenade launcher to add a bullet to
@@ -693,7 +693,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				throw new RuntimeException("No entity id!");
 			}
 			if (this.entities.containsKey(e.getID())) {
-				throw new RuntimeException("todo");
+				//throw new RuntimeException("Entity " + e.getID() + " already exists");
+				this.actuallyRemoveEntity(e.getID()); // Replace it, since it might be a static entity but its position has changed
 			}
 			this.entities.put(e.getID(), e);
 

@@ -256,7 +256,7 @@ ConsoleInputListener {
 			synchronized (entities) {
 				// Add and remove entities
 				for(IEntity e : this.entitiesToAdd) {
-					this.actuallyAddEntity(e);
+					this.actuallyAddEntity(e, true);
 				}
 				this.entitiesToAdd.clear();
 
@@ -457,7 +457,7 @@ ConsoleInputListener {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id);
 		avatar.startAgain(); // Must be before we add it, since that needs a position!
-		this.actuallyAddEntity(avatar);
+		this.actuallyAddEntity(avatar, true);
 		return avatar;
 	}
 
@@ -537,7 +537,12 @@ ConsoleInputListener {
 	}
 
 
-	public void actuallyAddEntity(IEntity e) {//, boolean sendToClients) {
+	public void actuallyAddEntity(IEntity e) {
+		this.actuallyAddEntity(e, false);
+	}
+
+
+	public void actuallyAddEntity(IEntity e, boolean sendToClients) {
 		synchronized (entities) {
 			//Settings.p("Trying to add " + e + " (id " + e.getID() + ")");
 			if (this.entities.containsKey(e.getID())) {
@@ -558,7 +563,7 @@ ConsoleInputListener {
 		}
 
 		// Tell clients
-		//if (sendToClients) {
+		//if (sendToClients) { todo - re-add?
 			if (Globals.DEBUG_TOO_MANY_AVATARS) {
 				if (e instanceof AbstractAvatar) {
 					Globals.p("Sending avatar msg");
@@ -573,7 +578,6 @@ ConsoleInputListener {
 				}
 			}
 		//}
-
 	}
 
 
@@ -685,13 +689,13 @@ ConsoleInputListener {
 
 	private void startNewGame() {
 		if (this.entities.size() > 0) {
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Outstanding entities");
 		}
 		if (this.entitiesToAdd.size() > 0) {
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Entities waiting to be added");
 		}
 		if (this.entitiesToRemove.size() > 0) {
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Entities waiting to be removed");
 		}
 
 		if (this.getGameNode().getChildren().size() > 0) {

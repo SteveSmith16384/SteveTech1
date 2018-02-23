@@ -81,5 +81,10 @@ public class SimpleGameData { // pojo
 			throw new RuntimeException("Unknown status: " + gameStatus);
 		}
 	}
+	
+	
+	public long getStatusDuration() {
+		return this.statusDurationMS;
+	}
 
 }
