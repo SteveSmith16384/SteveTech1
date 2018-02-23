@@ -33,9 +33,9 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 		if (!ammoCache.isEmpty()) {
 			SnowballBullet g = ammoCache.remove();
 			ICanShoot ic = (ICanShoot)owner;
-			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Manually launching entity " + g.id);
-			}
+			}*/
 			g.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			return true;
 		}

@@ -9,21 +9,26 @@ import java.util.List;
 import java.util.prefs.BackingStoreException;
 
 import com.jme3.app.state.VideoRecorderAppState;
+import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.audio.AudioData;
 import com.jme3.audio.AudioNode;
-import com.jme3.font.BitmapFont;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
+import com.jme3.texture.Texture;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -40,7 +45,6 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.hud.AbstractHUDImage;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
@@ -54,6 +58,7 @@ import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
+import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
@@ -77,9 +82,6 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.AnimationSystem;
 import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
-
-import ssmith.lang.NumberFunctions;
-import ssmith.util.RealtimeInterval;
 
 public abstract class AbstractGameClient extends AbstractGameController implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
 
@@ -120,6 +122,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public ArrayList<SimplePlayerData> playersList;
 
 	protected Node gameNode = new Node("GameNode");
+	protected Node debugNode = new Node("DebugNode");
 
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
@@ -180,8 +183,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
-		//guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Globals.CAM_DIST);
 
 		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
@@ -225,6 +226,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		setDisplayFps(false);
 		setDisplayStatView(false);
 
+		this.getRootNode().attachChild(this.debugNode);
+
 	}
 
 
@@ -233,16 +236,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;
 	}
-
-	/*
-	private HUD createHUD(Camera c) {
-		BitmapFont guiFont_small = getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-		HUD hud = new HUD(this, guiFont_small, c);
-		getGuiNode().attachChild(hud);
-		return hud;
-	}
-	 */
-
 
 
 	/*
@@ -571,10 +564,37 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			PlaySoundMessage psm = (PlaySoundMessage)message;
 			playSound(psm);
 
+		} else if (message instanceof ModelBoundsMessage) {
+			ModelBoundsMessage psm = (ModelBoundsMessage)message;
+			addDebugBox(psm);
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 
+	}
+
+
+	private void addDebugBox(ModelBoundsMessage msg) {
+		if (msg.bounds instanceof BoundingBox) {
+			BoundingBox bb = (BoundingBox)msg.bounds;
+			Mesh sphere = new Box(bb.getXExtent(), bb.getYExtent(), bb.getZExtent());
+			Geometry debuggingBox = new Geometry("DebuggingBox", sphere);
+
+			TextureKey key3 = new TextureKey( "Textures/greensun.jpg");
+			Texture tex3 = getAssetManager().loadTexture(key3);
+			Material floor_mat = null;
+			if (Globals.LIGHTING) {
+				floor_mat = new Material(getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+				floor_mat.setTexture("DiffuseMap", tex3);
+			} else {
+				floor_mat = new Material(getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+				floor_mat.setTexture("ColorMap", tex3);
+			}
+			debuggingBox.setMaterial(floor_mat);
+			debuggingBox.setLocalTranslation(msg.bounds.getCenter().x, msg.bounds.getCenter().y, msg.bounds.getCenter().z);
+			debugNode.attachChild(debuggingBox);
+		}
 	}
 
 
@@ -629,9 +649,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	protected final void createEntity(NewEntityMessage msg, long timeToCreate) {
 		IEntity e = actuallyCreateEntity(this, msg);//this.entityCreator.createEntity(this, msg);
 		if (e != null) {
-			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-				Globals.p("Created " + e);
-			}
 			if (e instanceof AbstractAvatar || e instanceof IAbility || e instanceof AbstractEnemyAvatar) {
 				this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to, or a grenade launcher to add a bullet to
 			} else {
@@ -675,15 +692,26 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			if (e.getID() <= 0) {
 				throw new RuntimeException("No entity id!");
 			}
+			if (this.entities.containsKey(e.getID())) {
+				throw new RuntimeException("todo");
+			}
 			this.entities.put(e.getID(), e);
 
 			if (e instanceof PhysicalEntity) {
-				if (e instanceof ILaunchable == false) { // Don't draw bullets yet! 
+				if (e instanceof ILaunchable == false) { // Don't add bullets until they are fired! 
 					PhysicalEntity pe = (PhysicalEntity)e;
 					this.getGameNode().attachChild(pe.getMainNode());
 				}
 			}
 
+		}
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			if (e instanceof PhysicalEntity) {
+				PhysicalEntity pe = (PhysicalEntity)e;
+				Globals.p("Created " + pe + " at " + pe.getWorldTranslation());
+			} else {
+				Globals.p("Created " + e);
+			}
 		}
 	}
 

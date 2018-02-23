@@ -1,52 +1,39 @@
-package com.scs.undercoveragent.entities;
+package com.scs.stevetech1.entities;
 
 import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
-public class DebuggingSphere extends PhysicalEntity implements IProcessByClient {
+public class DebuggingBox extends PhysicalEntity implements IProcessByClient {
 	
-	private static final float DURATION = 5;
+	private static final float DURATION = 10;
 	
 	private float timeLeft = DURATION;
 
-	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z, boolean server) {
-		super(_game, id, UndercoverAgentClientEntityCreator.DEBUGGING_SPHERE, "DebuggingSphere", false);
+	public DebuggingBox(IEntityController _game, int type, int id, float x, float y, float z, float w, float h, float d) {
+		super(_game, id, type, "DebuggingBox", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
+			creationData.put("size", new Vector3f(w, h, d));
 		}
 		
 		this.collideable = false;
 		
-		Mesh sphere = null;
-		if (server) {
-			sphere = new Sphere(8, 8, 0.2f, true, false);
-		} else {
-			sphere = new Box(0.2f, 0.2f, 0.2f);
-		}
-		//sphere.setTextureMode(TextureMode.Projected);
-		Geometry ball_geo = new Geometry("DebuggingSphere", sphere);
+		Mesh sphere = new Box(w, h, d);
+		Geometry ball_geo = new Geometry("DebuggingBox", sphere);
 
-		TextureKey key3 = null;
-		if (server) {
-			key3 = new TextureKey( "Textures/sun.jpg");
-		} else {
-			key3 = new TextureKey( "Textures/greensun.jpg");
-		}
+		TextureKey key3 = new TextureKey( "Textures/greensun.jpg");
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
 		Material floor_mat = null;
 		if (Globals.LIGHTING) {
@@ -60,18 +47,10 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 
 		this.mainNode.attachChild(ball_geo);
 		this.mainNode.setLocalTranslation(x, y, z);
-		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
-		
-		//this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-		//this.simpleRigidBody.setMovable(false);
-
 		this.getMainNode().setUserData(Globals.ENTITY, this);
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
-
 	}
 
-
+/*
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (game.isServer()) {
@@ -80,12 +59,6 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 				this.remove();
 			}
 		}
-	}
-
-/*
-	@Override
-	public boolean canMove() {
-		return false;
 	}
 */
 

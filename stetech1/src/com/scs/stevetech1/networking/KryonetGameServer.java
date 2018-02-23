@@ -23,6 +23,7 @@ import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage.Command;
+import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
@@ -128,6 +129,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(AvatarStatusMessage.class);
 		kryo.register(GameOverMessage.class);
 		kryo.register(PlaySoundMessage.class);
+		kryo.register(ModelBoundsMessage.class);
 	}
 
 

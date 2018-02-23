@@ -39,6 +39,7 @@ import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
+import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
@@ -112,7 +113,7 @@ ConsoleInputListener {
 	public void simpleInitApp() {
 		// Start console
 		new TextConsole(this);
-		
+
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
@@ -480,7 +481,6 @@ ConsoleInputListener {
 					}
 				}
 
-				//this.sendNewEntity(client, e);
 				NewEntityMessage nem = new NewEntityMessage(e);
 				this.gameNetworkServer.sendMessageToClient(client, nem);
 			}
@@ -537,7 +537,7 @@ ConsoleInputListener {
 	}
 
 
-	public void actuallyAddEntity(IEntity e) {
+	public void actuallyAddEntity(IEntity e) {//, boolean sendToClients) {
 		synchronized (entities) {
 			//Settings.p("Trying to add " + e + " (id " + e.getID() + ")");
 			if (this.entities.containsKey(e.getID())) {
@@ -550,24 +550,29 @@ ConsoleInputListener {
 			if (pe.getMainNode().getParent() != null) {
 				throw new RuntimeException("Entity already has a node");
 			}
-			this.getGameNode().attachChild(pe.getMainNode());
+			this.getGameNode().attachChild(pe.getMainNode()); //pe.getMainNode().getWorldTranslation();
+		}
+
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			Globals.p("Created and added " + e);
 		}
 
 		// Tell clients
-		if (Globals.DEBUG_TOO_MANY_AVATARS) {
-			if (e instanceof AbstractAvatar) {
-				Globals.p("Sending avatar msg");
-			}
-		}
-		NewEntityMessage nem = new NewEntityMessage(e);
-		synchronized (clients) {
-			for (ClientData client : this.clients.values()) {
-				if (client.clientStatus == ClientStatus.Accepted) {
-					gameNetworkServer.sendMessageToClient(client, nem);	
+		//if (sendToClients) {
+			if (Globals.DEBUG_TOO_MANY_AVATARS) {
+				if (e instanceof AbstractAvatar) {
+					Globals.p("Sending avatar msg");
 				}
 			}
-			//this.console.appendText("Created " + e);
-		}
+			NewEntityMessage nem = new NewEntityMessage(e);
+			synchronized (clients) {
+				for (ClientData client : this.clients.values()) {
+					if (client.clientStatus == ClientStatus.Accepted) {
+						gameNetworkServer.sendMessageToClient(client, nem);	
+					}
+				}
+			}
+		//}
 
 	}
 
@@ -580,7 +585,7 @@ ConsoleInputListener {
 
 	private void actuallyRemoveEntity(int id) {
 		synchronized (entities) {
-			IEntity e = this.entities.get(id);
+			IEntity e = this.entities.get(id); // this.entitiesToAdd
 			if (e != null) {
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Actually removing entity " + e.getName() + " / ID:" + id);
@@ -588,7 +593,7 @@ ConsoleInputListener {
 				this.entities.remove(id);
 				//this.console.appendText("Removed " + e);
 			} else {
-				Globals.pe("Warning - entity " + id + " doesn't exist for removal");
+				//Globals.pe("Warning - entity " + id + " doesn't exist for removal");  Probably an entity that is owned by another removed entity, e.g. SnowballLauncher
 			}
 
 			if (e instanceof IClientControlled) {
@@ -655,7 +660,11 @@ ConsoleInputListener {
 	}
 
 
-	private void restartGame() {
+	private void removeOldGame() {
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			Globals.p("Removing all entities");
+		}
+
 		// remove All Entities
 		synchronized (this.clients) {
 			for (ClientData c : this.clients.values()) {
@@ -671,6 +680,20 @@ ConsoleInputListener {
 			e.remove();
 		}
 
+	}
+
+
+	private void startNewGame() {
+		if (this.entities.size() > 0) {
+			throw new RuntimeException("todo");
+		}
+		if (this.entitiesToAdd.size() > 0) {
+			throw new RuntimeException("todo");
+		}
+		if (this.entitiesToRemove.size() > 0) {
+			throw new RuntimeException("todo");
+		}
+
 		if (this.getGameNode().getChildren().size() > 0) {
 			Globals.p("Warning: There are still " + this.getGameNode().getChildren().size() + " children in the game node!  Forcing removal...");
 			this.getGameNode().detachAllChildren();
@@ -682,7 +705,7 @@ ConsoleInputListener {
 
 		this.createGame();
 
-		// Create avatars
+		// Create avatars and send new entities to players
 		synchronized (this.clients) {
 			for (ClientData client : this.clients.values()) {
 				int side = getSide(client); // New sides
@@ -802,8 +825,10 @@ ConsoleInputListener {
 
 
 	public void gameStatusChanged(int newStatus)  {
-		if (newStatus == SimpleGameData.ST_DEPLOYING) {
-			restartGame();
+		if (newStatus == SimpleGameData.ST_CLEAR_OLD_GAME) {
+			removeOldGame();
+		} else if (newStatus == SimpleGameData.ST_DEPLOYING) {
+			startNewGame();
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {
 				for (IEntity e : entities.values()) {
@@ -826,8 +851,23 @@ ConsoleInputListener {
 	@Override
 	public void processConsoleInput(String s) {
 		Globals.p("Recieved input: " + s);
-		// todo
-		
+		if (s.equalsIgnoreCase("mb")) {
+			sendDebuggingBoxes();
+		}
+
+	}
+
+
+	private void sendDebuggingBoxes() {
+		synchronized (entities) {
+			// Loop through the entities
+			for (IEntity e : entities.values()) {
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity pe  = (PhysicalEntity)e;
+					this.gameNetworkServer.sendMessageToAll(new ModelBoundsMessage(pe));
+				}
+			}
+		}
 	}
 
 

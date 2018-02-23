@@ -9,6 +9,8 @@ import com.scs.stevetech1.server.ClientData;
 
 public class ServerGameStatusSystem {
 	
+	private static final long CLEAR_OLD_GAME_DURATION_MILLIS = 1000;
+	
 	private AbstractGameServer server;
 	
 	public ServerGameStatusSystem(AbstractGameServer _server) {
@@ -28,25 +30,35 @@ public class ServerGameStatusSystem {
 			if (!enoughPlayers && gameData.isInGame()) {
 				gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 			} else if (enoughPlayers && gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
-				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
+				gameData.setGameStatus(SimpleGameData.ST_CLEAR_OLD_GAME, CLEAR_OLD_GAME_DURATION_MILLIS);
 			}
 		}
 
 		long duration = System.currentTimeMillis() - gameData.getStatusStartTimeMS();
-		if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
+		if (gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
+			// Do nothing...
+		} else if (gameData.getGameStatus() == SimpleGameData.ST_CLEAR_OLD_GAME) {
 			if (duration >= gameOptions.deployDurationMillis) {
-				gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDurationMillis);
+				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 			}
+		} else if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
+				if (duration >= gameOptions.deployDurationMillis) {
+					gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDurationMillis);
+				}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_STARTED) {
 			if (duration >= gameOptions.gameDurationMillis) {
 				gameData.setGameStatus(SimpleGameData.ST_FINISHED, gameOptions.finishedDurationMillis);
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_FINISHED) {
 			if (duration >= gameOptions.finishedDurationMillis) {
-				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
+				gameData.setGameStatus(SimpleGameData.ST_CLEAR_OLD_GAME, CLEAR_OLD_GAME_DURATION_MILLIS);
 			}
+		} else {
+			throw new RuntimeException("Unknown game status: " + gameData.getGameStatus());
 		}
+		
 		server.sendGameStatusMessage();
+		
 		if (oldStatus != gameData.getGameStatus()) {
 			server.gameStatusChanged(gameData.getGameStatus());
 		}

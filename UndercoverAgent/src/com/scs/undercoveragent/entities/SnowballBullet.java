@@ -20,6 +20,7 @@ import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.components.IEntityContainer;
+import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -45,9 +46,9 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 		}
 
 		if (owner != null) { // Only snowball fired by us have an owner
-			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Adding snowball entity " + id + " to owner " + owner.getID());
-			}
+			}*/
 			owner.addToCache(this);
 		}
 
@@ -94,9 +95,9 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			throw new RuntimeException("Null launcher");
 		}
 
-		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Launching entity " + this.getID());
-		}
+		}*/
 
 		launched = true;
 		shooter = _shooter;
@@ -197,7 +198,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			if (game.isServer()) {
 				// Create debugging sphere
 				Vector3f pos = this.getWorldTranslation();
-				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true);
+				DebuggingSphere ds = new DebuggingSphere(game, UndercoverAgentClientEntityCreator.DEBUGGING_SPHERE, game.getNextEntityID(), pos.x, pos.y, pos.z, true);
 				game.addEntity(ds);
 			}
 		}

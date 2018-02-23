@@ -117,8 +117,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		if (Globals.EMPTY_MAP) {
 			// Do nothing
 		} else if (Globals.MODELS_IN_GRID) {
-			for (int z=1 ; z<mapSize-1 ; z++) {
-				for (int x=1 ; x<mapSize-1 ; x++) {
+			for (int z=1 ; z<mapSize-1 ; z+=2) {
+				for (int x=1 ; x<mapSize-1 ; x+=2) {
 					StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
 					this.actuallyAddEntity(snowman);
 					snowman.setWorldTranslation(x, z);

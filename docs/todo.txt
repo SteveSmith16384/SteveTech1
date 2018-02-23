@@ -1,31 +1,29 @@
 STETECH1
 
 URGENT
-Server console
+Flag to say if entity has been sent?
+All entities on same spot
+	Pause between removing all entities and adding new ones at end/start of level
+	Server console
 Server send model bounds to client
-	Place snowmen in grid
 Snowmen starting inside igloos and trees
-Pause between removing all entities and adding new ones at end/start of level
-Client not receiving all entities?  Lots missing
 back wall not in right place
-Write code to add 100 clients instantly
-	Put mountains in corner
-Add to readme
-open-sourcing checklist
-Create smaller vid and gif
 Show on hud "connecting to server.." etc...
 Search for todos
-Blog post progress
 
 
-BEFORE RELEASE
+TODO
 Test Play sounds from msgs
 readme: Technical overview
 Server force jump
 Jump is UA specific
-
-
-TODO
+Create smaller vid and gif
+Only show one text overlay at a time
+Long pause before game started
+Add to readme
+Blog post progress
+Write code to add 100 clients instantly
+Check for dropped messages
 Adjust mouse sens
 Falling snow - started
 Use font from SF
