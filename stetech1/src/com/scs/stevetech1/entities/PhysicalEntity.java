@@ -30,7 +30,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public boolean collideable = true;
 	
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first sendUpdates check returns true
-	private Quaternion prevRot = new Quaternion();
+	private Quaternion prevRot = new Quaternion(); // todo - use this
 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();

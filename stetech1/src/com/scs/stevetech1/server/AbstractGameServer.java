@@ -59,14 +59,16 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
 
 import ssmith.lang.NumberFunctions;
-import ssmith.swing.LogWindow;
+import ssmith.util.ConsoleInputListener;
 import ssmith.util.RealtimeInterval;
+import ssmith.util.TextConsole;
 
 public abstract class AbstractGameServer extends AbstractGameController implements 
 IEntityController, 
 IMessageServerListener, // To listen for connecting game clients 
 IMessageClientListener, // For sending messages to the lobby server
-ICollisionListener<PhysicalEntity> {
+ICollisionListener<PhysicalEntity>,
+ConsoleInputListener {
 
 	public IGameMessageServer gameNetworkServer;
 	private KryonetLobbyClient clientToLobbyServer;
@@ -93,10 +95,6 @@ ICollisionListener<PhysicalEntity> {
 		gameOptions = _gameOptions;
 		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
 
-		//properties = new GameProperties(PROPS_FILE);
-		//logWindow = new LogWindow("Server", 400, 300);
-		//console = new ServerConsole(this);
-
 		gameData = new SimpleGameData();
 		gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, timeoutMillis);
 
@@ -112,6 +110,9 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void simpleInitApp() {
+		// Start console
+		new TextConsole(this);
+		
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
@@ -820,5 +821,15 @@ ICollisionListener<PhysicalEntity> {
 
 
 	protected abstract int getWinningSide();
+
+
+	@Override
+	public void processConsoleInput(String s) {
+		Globals.p("Recieved input: " + s);
+		// todo
+		
+	}
+
+
 }
 
