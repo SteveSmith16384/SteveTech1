@@ -29,7 +29,7 @@ import ssmith.util.MyProperties;
 public class UndercoverAgentServer extends AbstractGameServer {
 
 	private int mapSize;
-	
+
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -43,14 +43,14 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
 			String lobbyIpAddress = props.getPropertyAsString("lobbyIpAddress", "localhost");
 			int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
-			
+
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 			float gravity = props.getPropertyAsFloat("gravity", -5);
 			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
-			
+
 			// Game specific
 			int mapSize = props.getPropertyAsInt("mapSize", 20);
 
@@ -85,7 +85,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	public UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
-	int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
+			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
 		super(new GameOptions("Undercover Agent", 1, 999, 10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
@@ -114,13 +114,23 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	protected void createGame() {
-		if (!Globals.EMPTY_MAP) {
+		if (Globals.EMPTY_MAP) {
+			// Do nothing
+		} else if (Globals.MODELS_IN_GRID) {
+			for (int z=1 ; z<mapSize-1 ; z++) {
+				for (int x=1 ; x<mapSize-1 ; x++) {
+					StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
+					this.actuallyAddEntity(snowman);
+					snowman.setWorldTranslation(x, z);
+				}
+			}
+		} else {
 			// Place snowman
 			int numSnowmen = mapSize;
 			for (int i=0 ; i<numSnowmen ; i++) {
 				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(snowman);
-				Globals.p("Placed " + i + " snowmen.");
+				//Globals.p("Placed " + i + " snowmen.");
 			}
 
 			// Place trees
@@ -128,7 +138,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			for (int i=0 ; i<numTrees ; i++) {
 				SnowTree1 tree1 = new SnowTree1(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(tree1);
-				Globals.p("Placed " + i + " tree.");
+				//Globals.p("Placed " + i + " tree.");
 			}
 
 			// Place igloos
@@ -136,7 +146,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			for (int i=0 ; i<numIgloos ; i++) {
 				Igloo igloo = new Igloo(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(igloo);
-				Globals.p("Placed " + i + " igloo.");
+				//Globals.p("Placed " + i + " igloo.");
 			}
 		}
 

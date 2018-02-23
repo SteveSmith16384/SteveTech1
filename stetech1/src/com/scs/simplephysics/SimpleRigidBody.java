@@ -197,14 +197,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * Returns object they collided with
 	 */
 	public SimpleRigidBody<T> checkForCollisions() {
-		collisionResults.clear();
 		SimpleRigidBody<T> collidedWith = null;
-		//Collection<SimpleRigidBody<T>> entities = physicsController.getEntities();
 		List<SimpleRigidBody<T>> entities = physicsController.getEntities();
 		synchronized (entities) {
 			// Loop through the entities
 			//for(SimpleRigidBody<T> e : entities) { // CCM exception
 			for (int i=0 ; i<entities.size() ; i++) {
+				collisionResults.clear();
 				SimpleRigidBody<T> e = entities.get(i);
 				if (e != this) { // Don't check ourselves
 					if (this.physicsController.getCollisionListener().canCollide(this, e)) {
@@ -224,7 +223,7 @@ public class SimpleRigidBody<T> implements Collidable {
 						if (res > 0) {
 							collidedWith = e;
 							this.physicsController.getCollisionListener().collisionOccurred(this, e, collisionResults.getClosestCollision().getContactPoint());
-							collisionResults.clear();
+							//collisionResults.clear();
 						}
 					}
 				}

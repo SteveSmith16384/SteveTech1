@@ -13,7 +13,7 @@ All the basic features are complete.
 * Fully open source
 * Authoritative server
 * Client prediction
-* Client lag-compensation
+* Lag-compensation
 * TCP and UDP for networking
 * Time "rewinding" for accurate shooting
 * Simple physics

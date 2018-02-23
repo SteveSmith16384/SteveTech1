@@ -1,6 +1,10 @@
 STETECH1
 
 URGENT
+Server console
+Server send model bounds to client
+	Place snowmen in grid
+Snowmen starting inside igloos and trees
 Pause between removing all entities and adding new ones at end/start of level
 Client not receiving all entities?  Lots missing
 back wall not in right place
@@ -16,9 +20,13 @@ Blog post progress
 
 BEFORE RELEASE
 Test Play sounds from msgs
+readme: Technical overview
+Server force jump
+Jump is UA specific
 
 
 TODO
+Adjust mouse sens
 Falling snow - started
 Use font from SF
 Show "hit!" effect if a player hit
