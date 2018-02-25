@@ -1,14 +1,23 @@
 STETECH1
 
 URGENT
+Dont create avatsars if not in game
+Clear old entities again just before starting game
+List outstanding entities
 Don't remove audionode in diff thread!
 	If dupe ent sent, just replace it?
 	Long Pause between removing all entities and adding new ones at end/start of level
 	Server send model bounds to client
 	Snowmen starting inside igloos and trees
 back wall not in right place
-Show on hud "connecting to server.." etc...
+Show on hud "connecting to server..", game restarting etc...
 Search for todos
+Shows "victory" when player killed
+only jump if in game
+Server cmd: help, stats
+Remove skybox and gamendoe at end of game
+Handle losing connectioon to server gracefully
+
 
 TODO
 Test Play sounds from msgs
