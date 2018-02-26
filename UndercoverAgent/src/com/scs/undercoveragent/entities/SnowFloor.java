@@ -72,13 +72,9 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 		mainNode.setLocalTranslation(x, yTop, z); // Move it into position
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
-		//this.simpleRigidBody.setMovable(false);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
 	}
 
 

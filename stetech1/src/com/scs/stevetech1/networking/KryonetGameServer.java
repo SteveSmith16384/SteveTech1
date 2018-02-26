@@ -23,6 +23,7 @@ import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage.Command;
+import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
@@ -132,6 +133,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(GameOverMessage.class);
 		kryo.register(PlaySoundMessage.class);
 		kryo.register(ModelBoundsMessage.class);
+		kryo.register(GenericStringMessage.class);
 	}
 
 
@@ -189,13 +191,18 @@ public class KryonetGameServer implements IGameMessageServer {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Sending to client: " + msg);
 		}
+		this.sendMessage(client.id, msg);
+	}
+	
+	
+	private void sendMessage(final int id, final MyAbstractMessage msg) {
 		try {
 			if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 				if (msg.isReliable()) {
-					server.sendToTCP(client.id, msg);
+					server.sendToTCP(id, msg);
 				} else {
 					if (!isPacketDropped()) {
-						server.sendToUDP(client.id, msg);
+						server.sendToUDP(id, msg);
 					}
 				}		
 			}
@@ -209,10 +216,10 @@ public class KryonetGameServer implements IGameMessageServer {
 							e.printStackTrace();
 						}
 						if (msg.isReliable()) {
-							server.sendToTCP(client.id, msg);
+							server.sendToTCP(id, msg);
 						} else {
 							if (!isPacketDropped()) {
-								server.sendToUDP(client.id, msg);
+								server.sendToUDP(id, msg);
 							}
 						}		
 					}
@@ -229,6 +236,16 @@ public class KryonetGameServer implements IGameMessageServer {
 	public void close() {
 		server.close();
 
+	}
+
+
+	@Override
+	public void sendMessageToAllExcept(ClientData client, MyAbstractMessage msg) {
+		for (Connection c : this.server.getConnections()) {
+			if (c.getID() != client.id) {
+				this.sendMessage(client.id, msg);
+			}
+		}		
 	}
 
 }

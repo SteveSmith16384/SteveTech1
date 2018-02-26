@@ -1,27 +1,29 @@
 STETECH1
 
+https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
+
 URGENT
+BlenderGameCompo
+Check for dropped messages
+back wall not in right place
+Add links to SteveTech1
+	Create hud log - 
+	show "Player joined", "player left"
 	Only show one text overlay at a time
 CreateSkyBox message
-	Add client ping time to bullet ffwd
-	Adjust mouse sens
-BlenderGameCompo
-Model bounds not showing
-Don't remove audionode in diff thread!
+	Model bounds not showing
+	Don't remove audionode in diff thread!
 Shows "victory" when player killed?
 	only jump if in game
 	HandleError()
-	Dont create avatsars if not in game
 	Server send model bounds to client
-back wall not in right place
 Search for todos
 Server force jump
+Find font for JME
 
 
 TODO
 Show on hud "connecting to server..", game restarting etc...
-Remove skybox and gamendoe at end of game?
-Handle losing connection to server gracefully
 List outstanding entities
 Test Play sounds from msgs
 readme: Technical overview
@@ -29,11 +31,10 @@ Create smaller vid and gif
 Add to readme
 Blog post progress
 Write code to add 100 clients instantly
-Check for dropped messages
 Falling snow - started
 Use font from SF
 Show "hit!" effect if a player hit
-Clear client-only entities at the start of the game
+Clear client-only entities at the start of the game?
 Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
 Server tell client to slow down if server struggling
 Try desert models
@@ -58,7 +59,6 @@ Look for soldiers for Moonbase Assault
 Simple console GUI for connecting to lobby
 Check for packet loss
 Server queue players, spectators
-Games - "powered by SteveTech"
 Add Features to readme
 Should not have a generic "process()" or preprocess() method?
 Walking up steps

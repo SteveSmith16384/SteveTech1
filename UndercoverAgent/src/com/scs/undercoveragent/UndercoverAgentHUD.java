@@ -1,5 +1,8 @@
 package com.scs.undercoveragent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jme3.bounding.BoundingBox;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
@@ -23,22 +26,25 @@ import ssmith.util.RealtimeInterval;
  * Positioning text = the co-ords of BitmapText are for the top-left of the first line of text, and they go down from there.
  * 
  */
-public class UndercoverAgentHUD extends Node implements IHUD { //IProcessByClient {
+public class UndercoverAgentHUD extends Node implements IHUD {
 
 	private static final float LINE_SPACING = 10;
+	private static final int MAX_LINES = 5;
 
 	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
 
 	private static ColorRGBA defaultColour = ColorRGBA.Black;
 
-	public TextArea log_ta;
-	public float hud_width, hud_height;
+	private TextArea log_ta;
+	private List<String> logLines = new ArrayList<String>();
+	
+	private float hud_width, hud_height;
 	private Camera cam;
 	private Geometry damage_box;
 	private ColorRGBA dam_box_col = new ColorRGBA(1, 0, 0, 0.0f);
 	private boolean process_damage_box;
 	private AbstractGameClient game;
-	public static BitmapFont font_small;
+	private static BitmapFont font_small;
 
 	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
 
@@ -174,8 +180,6 @@ public class UndercoverAgentHUD extends Node implements IHUD { //IProcessByClien
 		this.setModelBound(new BoundingBox());
 		this.updateModelBound();
 
-		//_game.addEntity(this);
-
 	}
 
 
@@ -216,7 +220,15 @@ public class UndercoverAgentHUD extends Node implements IHUD { //IProcessByClien
 
 
 	public void log(String s) {
-		this.log_ta.addLine(s);
+		this.logLines.add(s);
+		while (this.logLines.size() > MAX_LINES) {
+			this.logLines.remove(0);
+		}
+		StringBuilder str = new StringBuilder();
+		for(String line : this.logLines) {
+			str.append(line + "\n");
+		}
+		this.log_ta.setText(str.toString());
 	}
 
 
@@ -301,4 +313,11 @@ public class UndercoverAgentHUD extends Node implements IHUD { //IProcessByClien
 	public Node getRootNode() {
 		return this;
 	}
+
+
+	@Override
+	public void showMessage(String s) {
+		this.log(s);
+	}
+	
 }

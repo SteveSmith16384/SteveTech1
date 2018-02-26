@@ -12,4 +12,6 @@ public interface IHUD {
 	void setDebugText(String s);
 	
 	void showDamageBox();
+	
+	void showMessage(String s);
 }

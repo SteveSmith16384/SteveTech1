@@ -38,6 +38,7 @@ import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
+import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -341,7 +342,9 @@ ConsoleInputListener {
 		client.clientStatus = ClientData.ClientStatus.Accepted;
 
 		this.sendGameStatusMessage();
-		this.gameNetworkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));
+		
+		this.gameNetworkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));		
+		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 
 		gameStatusSystem.checkGameStatus(true);
 	
@@ -496,13 +499,9 @@ ConsoleInputListener {
 	public void connectionAdded(int id, Object net) {
 		Globals.p("Client connected!");
 		ClientData client = new ClientData(id, net);
-		/*synchronized (clients) {
-			clients.put(id, client);
-		}*/
 		synchronized (clientsToAdd) {
 			clientsToAdd.add(client);
 		}
-		//this.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
 	}
 
 
@@ -528,6 +527,8 @@ ConsoleInputListener {
 		if (client.avatar != null) {
 			client.avatar.remove();
 		}
+
+		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 		this.sendGameStatusMessage();
 		gameStatusSystem.checkGameStatus(true);
 	}
@@ -693,7 +694,7 @@ ConsoleInputListener {
 
 
 	private void startNewGame() {
-		if (this.entities.size() > 0) {
+		/*if (this.entities.size() > 0) {
 			throw new RuntimeException("Outstanding entities");
 		}
 		if (this.entitiesToAdd.size() > 0) {
@@ -711,7 +712,7 @@ ConsoleInputListener {
 			Globals.p("Warning: There are still " + this.getPhysicsController().getEntities().size() + " children in the physics world!  Forcing removal...");
 			this.getPhysicsController().removeAllEntities();
 		}
-
+*/
 		this.createGame();
 
 		// Create avatars and send new entities to players

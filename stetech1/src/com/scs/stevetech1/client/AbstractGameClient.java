@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.prefs.BackingStoreException;
 
 import com.jme3.app.state.VideoRecorderAppState;
@@ -23,11 +24,13 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
@@ -60,6 +63,7 @@ import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
+import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
@@ -106,7 +110,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private List<IEntity> clientOnlyEntitiesToAdd = new LinkedList<IEntity>();
 	private List<Integer> clientOnlyEntitiesToRemove = new LinkedList<Integer>();
 
-	//public static BitmapFont guiFont_small;
 	private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
 	public IHUD hud;
@@ -132,7 +135,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private String gameServerIP, lobbyIP;
 	private int gamePort, lobbyPort;
 	private float mouseSens;
-	
+
 	// Entity systems
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
@@ -149,7 +152,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, gravity, aerodynamicness);
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
-		
+
 		mouseSens = _mouseSens;
 
 		settings = new AppSettings(true);
@@ -200,6 +203,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		hud = this.createHUD();
 		getGuiNode().attachChild(hud.getRootNode());
+		this.getRootNode().attachChild(this.debugNode);
 
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
 
@@ -225,13 +229,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			throw new RuntimeException(e.getMessage());
 		}
 
-		loopTimer.start();
-
 		// Turn off stats
 		setDisplayFps(false);
 		setDisplayStatView(false);
 
-		this.getRootNode().attachChild(this.debugNode);
+		loopTimer.start();
 
 	}
 
@@ -405,6 +407,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				networkClient.sendMessageToServer(message); // Send it straight back
 			}
 
+		} else if (message instanceof GenericStringMessage) {
+			GenericStringMessage gsm = (GenericStringMessage)message;
+			this.hud.showMessage(gsm.msg);
+			
 		} else if (message instanceof GameSuccessfullyJoinedMessage) {
 			GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
 			if (this.playerID <= 0) {
@@ -441,7 +447,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 			//if (!this.entities.containsKey(newEntityMessage.entityID)) {
-				createEntity(newEntityMessage, newEntityMessage.timestamp);
+			createEntity(newEntityMessage, newEntityMessage.timestamp);
 			/*} else {
 				// We already know about it. -  NO! Replace the entity!
 			}*/
@@ -583,6 +589,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		if (msg.bounds instanceof BoundingBox) {
 			BoundingBox bb = (BoundingBox)msg.bounds;
 			Mesh box = new Box(bb.getXExtent(), bb.getYExtent(), bb.getZExtent());
+			box.scaleTextureCoordinates(new Vector2f(bb.getXExtent(), bb.getYExtent()));
 			Geometry debuggingBox = new Geometry("DebuggingBox", box);
 
 			TextureKey key3 = new TextureKey( "Textures/fence.png");
@@ -598,7 +605,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			debuggingBox.setMaterial(floor_mat);
 			debuggingBox.setLocalTranslation(msg.bounds.getCenter().x, msg.bounds.getCenter().y, msg.bounds.getCenter().z);
 			debugNode.attachChild(debuggingBox);
-			
+
 			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 			debuggingBox.setQueueBucket(Bucket.Transparent);
 
@@ -623,19 +630,18 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 			this.gameNode.attachChild(node);
 
-			// Remove afterwards in thread
-			Thread t = new Thread("Remvoe AudioNode Thread") {
-				@Override
-				public void run() {
+			// Create thread to remove it
+			this.enqueue(new Callable<Spatial>() {
+				public Spatial call() throws Exception {
 					try {
 						Thread.sleep((long)node.getPlaybackTime());
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					node.removeFromParent(); // todo - not in sep thread!
+					node.removeFromParent();
+					return node;
 				}
-			};
-			t.start();
+			});
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
