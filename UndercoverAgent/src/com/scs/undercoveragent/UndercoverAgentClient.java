@@ -44,7 +44,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 			
-			float gravity = props.getPropertyAsFloat("gravity", -5);
+			float gravity = props.getPropertyAsFloat("gravity", -5f);
 			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 
 			float mouseSensitivity = props.getPropertyAsFloat("mouseSensitivity", 1f);

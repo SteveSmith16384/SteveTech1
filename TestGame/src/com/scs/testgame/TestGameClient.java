@@ -1,18 +1,18 @@
 package com.scs.testgame;
 
-import java.util.prefs.BackingStoreException;
-
-import com.jme3.system.AppSettings;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.hud.IHUD;
+import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 
 public class TestGameClient extends AbstractGameClient {
 
-	//private TestGameClientEntityCreator creator;
+	private TestGameClientEntityCreator creator = new TestGameClientEntityCreator();
 
 	public static void main(String[] args) {
 		try {
-			settings = new AppSettings(true);
+			/*settings = new AppSettings(true);
 			try {
 				settings.load(Globals.NAME);
 			} catch (BackingStoreException e) {
@@ -26,11 +26,10 @@ public class TestGameClient extends AbstractGameClient {
 			} else {
 				settings.setSettingsDialogImage(null);
 			}
-
+*/
 			AbstractGameClient app = new TestGameClient();
-			//instance = app;
-			app.setSettings(settings);
-			app.setPauseOnLostFocus(false); // Needs to always be in sync with server!
+			//app.setSettings(settings);
+			//app.setPauseOnLostFocus(false); // Needs to always be in sync with server!
 
 			/*File video, audio;
 			if (Settings.RECORD_VID) {
@@ -41,19 +40,19 @@ public class TestGameClient extends AbstractGameClient {
 				Capture.captureAudio(app, audio);
 			}*/
 
-			app.start();
+			//app.start();
 
 			/*if (Settings.RECORD_VID) {
 				System.out.println("Video saved at " + video.getCanonicalPath());
 				System.out.println("Audio saved at " + audio.getCanonicalPath());
 			}*/
-
+/*
 			try {
 				settings.save(Globals.NAME);
 			} catch (BackingStoreException e) {
 				e.printStackTrace();
 			}
-
+*/
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
 			e.printStackTrace();
@@ -63,7 +62,44 @@ public class TestGameClient extends AbstractGameClient {
 
 
 	public TestGameClient() {
-		super(TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, "unused", -1, new TestGameClientEntityCreator());
+		super("test Game", null, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, null, -1, 
+				25, 200, 10000, -5f, 0.99f, 1f);
+	}
+
+
+	@Override
+	protected IHUD createHUD() {
+		return null;
+	}
+
+
+	@Override
+	protected void playerHasWon() {
+		// Do nothing
+	}
+
+
+	@Override
+	protected void playerHasLost() {
+		// Do nothing
+	}
+
+
+	@Override
+	protected void gameIsDrawn() {
+		// Do nothing
+	}
+
+
+	@Override
+	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg) {
+		return creator.createEntity(client, msg);
+	}
+
+
+	@Override
+	protected void gameStatusChanged(int oldStatus, int newStatus) {
+		// Do nothing
 	}
 
 }

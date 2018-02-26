@@ -8,8 +8,8 @@ import com.scs.testgame.models.CharacterModel;
 
 public class TestGameServerAvatar extends AbstractServerAvatar {
 	
-	public TestGameServerAvatar(IEntityController _module, int _playerID, IInputDevice _input, int eid, int side) {
-		super(_module, _playerID, _input, eid, side, new CharacterModel(_module.getAssetManager()));
+	public TestGameServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid) {
+		super(_module, _client, _playerID, _input, eid, new CharacterModel(_module.getAssetManager()));
 	}
 	
 

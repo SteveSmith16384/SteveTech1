@@ -202,7 +202,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		setUpLight();
 
 		hud = this.createHUD();
-		getGuiNode().attachChild(hud.getRootNode());
+		if (hud != null) {
+			getGuiNode().attachChild(hud.getRootNode());
+		}
 		this.getRootNode().attachChild(this.debugNode);
 
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
@@ -215,9 +217,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 		// Don't connect to network until JME is up and running!
 		try {
+			if (lobbyIP != null) {
 			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this, timeoutMillis);
 			this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
 			lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}

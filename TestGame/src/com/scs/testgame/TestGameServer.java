@@ -28,7 +28,8 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	public TestGameServer() throws IOException {
-		super(new GameOptions("Test Game", 1, 999, 10*1000, 5*60*1000, 10*1000, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, TestGameStaticData.LOBBY_IP_ADDRESS, TestGameStaticData.LOBBY_PORT, 5, 5));
+		super(new GameOptions("Test Game", 1, 999, 10*1000, 5*60*1000, 10*1000, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, TestGameStaticData.LOBBY_IP_ADDRESS, TestGameStaticData.LOBBY_PORT, 5, 5),
+				25, 40, 200, 10000, -5f, 0.99f);
 	}
 
 
@@ -56,10 +57,10 @@ public class TestGameServer extends AbstractGameServer {
 		new House(this, getNextEntityID(), 20, 0, 20, 0);
 	}
 
-
+/*
 	@Override
-	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid, int side) {
-		return new TestGameServerAvatar(this, client.getPlayerID(), client.remoteInput, entityid, side);
+	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
+		return new TestGameServerAvatar(this, client.getPlayerID(), client.getPlayerID(), client.remoteInput, entityid);
 	}
 
 /*
@@ -77,6 +78,30 @@ public class TestGameServer extends AbstractGameServer {
 	@Override
 	public float getAvatarStartHealth(AbstractAvatar avatar) {
 		return 1;
+	}
+
+
+	@Override
+	public float getAvatarMoveSpeed(AbstractAvatar avatar) {
+		return 3f;
+	}
+
+
+	@Override
+	public float getAvatarJumpForce(AbstractAvatar avatar) {
+		return 2f;
+	}
+
+
+	@Override
+	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
+		return new TestGameServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
+	}
+
+
+	@Override
+	protected int getWinningSide() {
+		return 0;
 	}
 
 }

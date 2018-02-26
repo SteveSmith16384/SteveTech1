@@ -38,7 +38,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 	public static final int HITSCAN_RIFLE = 7;
 	public static final int LASER_RIFLE = 8;
 
-	
+
 	public static final int CRATE = 100;
 	public static final int FLOOR = 101;
 	public static final int FENCE = 102;
@@ -46,12 +46,10 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 	public static final int FLAT_FLOOR = 104;
 	public static final int ZOMBIE = 105;
 	public static final int HOUSE = 106;
-	
-	
+
+
 	public TestGameClientEntityCreator() {
 		super();
-		
-		//game =_game;
 	}
 
 
@@ -79,7 +77,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 				return avatar;
 			}
 		}
-/*
+		/*
 		case GRENADE:
 		{
 			int containerID = (int) msg.data.get("containerID");
@@ -87,14 +85,14 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 			Grenade grenade = new Grenade(game, id, irac);
 			return grenade;
 		}
-*/
+		 */
 		case DEBUGGING_SPHERE:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			DebuggingSphere laser = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true);
 			return laser;
 		}
-/*
+		/*
 		case GRENADE_LAUNCHER: 
 		{
 			int ownerid = (int)msg.data.get("ownerid");
@@ -106,7 +104,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 			}
 			return null;
 		}
-*/
+		 */
 		case LASER_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
@@ -219,8 +217,8 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 			return super.createEntity(game, msg);
 		}
 	}
-	
-	
+
+
 	public static String getName(int type) {
 		switch (type) {
 		case AVATAR: return "Avatar";

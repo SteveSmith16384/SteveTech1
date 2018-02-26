@@ -5,18 +5,14 @@ https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-
 URGENT
 BlenderGameCompo
 Check for dropped messages
-back wall not in right place
+	back wall not in right place
 Add links to SteveTech1
 	Create hud log - 
 	show "Player joined", "player left"
 	Only show one text overlay at a time
-CreateSkyBox message
-	Model bounds not showing
+CreateSkyBox as entity
 	Don't remove audionode in diff thread!
-Shows "victory" when player killed?
-	only jump if in game
 	HandleError()
-	Server send model bounds to client
 Search for todos
 Server force jump
 Find font for JME
@@ -24,7 +20,6 @@ Find font for JME
 
 TODO
 Show on hud "connecting to server..", game restarting etc...
-List outstanding entities
 Test Play sounds from msgs
 readme: Technical overview
 Create smaller vid and gif

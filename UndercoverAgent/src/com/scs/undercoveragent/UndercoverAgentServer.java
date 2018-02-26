@@ -165,7 +165,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		// Map border
 		InvisibleMapBorder borderL = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, 0, mapSize, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(borderL);
-		InvisibleMapBorder borderR = new InvisibleMapBorder(this, getNextEntityID(), mapSize, 0, 0, mapSize, Vector3f.UNIT_Z);
+		InvisibleMapBorder borderR = new InvisibleMapBorder(this, getNextEntityID(), mapSize+InvisibleMapBorder.BORDER_WIDTH, 0, 0, mapSize, Vector3f.UNIT_Z);
 		this.actuallyAddEntity(borderR);
 		InvisibleMapBorder borderBack = new InvisibleMapBorder(this, getNextEntityID(), 0, 0, mapSize, mapSize, Vector3f.UNIT_X);
 		this.actuallyAddEntity(borderBack);
