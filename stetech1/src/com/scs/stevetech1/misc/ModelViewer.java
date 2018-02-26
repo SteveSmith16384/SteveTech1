@@ -44,20 +44,9 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		model.scale(.125f);
 		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 */
-		/*
-		Spatial model = assetManager.loadModel("Models/Holiday/Snowman.obj");
-		model.setLocalTranslation(0, .3f, 0);
-		model.scale(.36f);
-		*/
-/*
-		Spatial model = assetManager.loadModel("Models/Holiday/Igloo.blend");
-		//model.setLocalTranslation(0, .3f, 0);
-		//model.scale(.36f);
-*/
-		Spatial model = assetManager.loadModel("Models/Long_way_home_v02.blend");
-		
-//		Spatial model = assetManager.loadModel("Models/SnowNature/Tree.blend");
-//		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/SnowNature/Textures/TreeTexture.png");
+
+		Spatial model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
+		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/ClothedDarkSkin2.png");
 
 		JMEFunctions.scaleModelToHeight(model, 10f);
 		JMEFunctions.moveYOriginTo(model, 0f);
@@ -68,7 +57,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 				control.addListener(this);
 				Globals.p("Animations: " + control.getAnimationNames());
 				AnimChannel channel = control.createChannel();
-				channel.setAnim("ZombieWalk");
+				channel.setAnim("Walk");
 			} else {
 				Globals.p("No animation control");
 			}

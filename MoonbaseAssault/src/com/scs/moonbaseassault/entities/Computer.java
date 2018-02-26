@@ -11,7 +11,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import com.scs.moonbaseassault.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
@@ -51,8 +51,8 @@ public class Computer extends PhysicalEntity implements IDamagable {
 			}
 
 			geometry.setMaterial(floor_mat);
-			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-			geometry.setQueueBucket(Bucket.Transparent);
+			//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			//geometry.setQueueBucket(Bucket.Transparent);
 		}
 		this.mainNode.attachChild(geometry); //This creates the model bounds!  mainNode.getWorldBound();
 		geometry.setLocalTranslation(0, h/2, 0);

@@ -57,23 +57,6 @@ public class TestGameServer extends AbstractGameServer {
 		new House(this, getNextEntityID(), 20, 0, 20, 0);
 	}
 
-/*
-	@Override
-	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
-		return new TestGameServerAvatar(this, client.getPlayerID(), client.getPlayerID(), client.remoteInput, entityid);
-	}
-
-/*
-	//@Override
-	public IEntity createGameSpecificEntiy(int type, int entityid, int side, IRequiresAmmoCache irac) {
-		switch (type) {
-		case TestGameClientEntityCreator.LASER_BULLET:
-			return new LaserBullet(this, entityid, irac, side);
-		default:
-			return null;//super.createEntity(type, entityid, side, irac);
-		}
-	}
-*/
 
 	@Override
 	public float getAvatarStartHealth(AbstractAvatar avatar) {
