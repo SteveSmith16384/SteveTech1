@@ -430,13 +430,13 @@ ConsoleInputListener {
 								}
 							}
 						} catch (NullPointerException ex) {
-							ex.printStackTrace();
+							Globals.HandleError(ex);
 						}
 					} else {
 						Globals.pe("Unexpected ping response code!");
 					}
 				} catch (NullPointerException npe) {
-					npe.printStackTrace();
+					Globals.HandleError(npe);
 				}
 			} else {
 				// Send it back to the client

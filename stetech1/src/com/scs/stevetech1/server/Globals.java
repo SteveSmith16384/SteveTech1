@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
+import ssmith.lang.Functions;
+
 
 public class Globals {
 	
@@ -55,6 +57,8 @@ public class Globals {
 
 	public static final Random rnd = new Random();
 
+	private static final long GAME_START_TIME = System.currentTimeMillis();
+	
 	/*static {
 		if (MIN_ARTIFICIAL_COMMS_DELAY + SERVER_SEND_UPDATE_INTERVAL_MS >= CLIENT_RENDER_DELAY) {
 			throw new RuntimeException("Data will not be sent in time for the client to use it to render");
@@ -71,6 +75,14 @@ public class Globals {
 		System.err.println(System.currentTimeMillis() + ": " + s);
 	}
 
+	
+	public static void HandleError(Exception ex) {
+		ex.printStackTrace();
+		
+		String filename = "Errors_" + GAME_START_TIME + ".log";
+		appendToFile(filename, Functions.Exception2String(ex));
+		
+	}
 	
 	public static void appendToFile(String path, String text) {
 		BufferedWriter bw = null;

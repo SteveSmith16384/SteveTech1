@@ -1,11 +1,11 @@
 STETECH1
 
 URGENT
-Modeb bounds not showing
+Model bounds not showing
 Shows "victory" when player killed
 	only jump if in game
 	Server cmd: help, stats
-HandleError()
+	HandleError()
 Send input msg on fire pressed
 	Dont create avatsars if not in game
 	Clear old entities again just before starting game
