@@ -440,7 +440,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			//if (!this.entities.containsKey(newEntityMessage.entityID)) {
 				createEntity(newEntityMessage, newEntityMessage.timestamp);
 			/*} else {
-				// We already know about it  NO! Replace the entity!
+				// We already know about it. -  NO! Replace the entity!
 			}*/
 
 		} else if (message instanceof EntityUpdateMessage) {

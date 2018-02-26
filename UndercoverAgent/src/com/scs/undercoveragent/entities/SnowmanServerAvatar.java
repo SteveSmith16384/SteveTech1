@@ -18,7 +18,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar {
 	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);
 		
-		if (this.alive) {
+		if (this.alive && server.gameData.isInGame()) {
 			long timeSinceMove = System.currentTimeMillis() - super.lastMoveTime;
 			if (timeSinceMove > 5 * 1000) {
 				//Globals.p("Forcing client to jump");

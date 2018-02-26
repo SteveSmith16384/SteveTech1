@@ -71,7 +71,7 @@ public class Globals {
 		System.err.println(System.currentTimeMillis() + ": " + s);
 	}
 
-
+	
 	public static void appendToFile(String path, String text) {
 		BufferedWriter bw = null;
 

@@ -1,11 +1,14 @@
 STETECH1
 
 URGENT
+Modeb bounds not showing
+Shows "victory" when player killed
+	only jump if in game
+	Server cmd: help, stats
 HandleError()
 Send input msg on fire pressed
-Dont create avatsars if not in game
-Clear old entities again just before starting game
-List outstanding entities
+	Dont create avatsars if not in game
+	Clear old entities again just before starting game
 Don't remove audionode in diff thread!
 	If dupe ent sent, just replace it?
 	Long Pause between removing all entities and adding new ones at end/start of level
@@ -14,14 +17,12 @@ Don't remove audionode in diff thread!
 back wall not in right place
 Show on hud "connecting to server..", game restarting etc...
 Search for todos
-Shows "victory" when player killed
-only jump if in game
-Server cmd: help, stats
-Remove skybox and gamendoe at end of game
-Handle losing connectioon to server gracefully
 
 
 TODO
+Remove skybox and gamendoe at end of game?
+Handle losing connection to server gracefully
+List outstanding entities
 Test Play sounds from msgs
 readme: Technical overview
 Server force jump

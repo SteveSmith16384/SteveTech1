@@ -172,6 +172,19 @@ ConsoleInputListener {
 			}
 		}
 
+		// Add and remove entities
+		synchronized (entities) {
+			for(IEntity e : this.entitiesToAdd) {
+				this.actuallyAddEntity(e, true);
+			}
+			this.entitiesToAdd.clear();
+
+			for(Integer i : this.entitiesToRemove) {
+				this.actuallyRemoveEntity(i);
+			}
+			this.entitiesToRemove.clear();
+		}
+		
 		if (gameNetworkServer.getNumClients() > 0) {
 			// Process all messages
 			synchronized (unprocessedMessages) {
@@ -254,17 +267,6 @@ ConsoleInputListener {
 			}
 
 			synchronized (entities) {
-				// Add and remove entities
-				for(IEntity e : this.entitiesToAdd) {
-					this.actuallyAddEntity(e, true);
-				}
-				this.entitiesToAdd.clear();
-
-				for(Integer i : this.entitiesToRemove) {
-					this.actuallyRemoveEntity(i);
-				}
-				this.entitiesToRemove.clear();
-
 				// Loop through the entities
 				for (IEntity e : entities.values()) {
 					if (e instanceof IPlayerControlled) {
@@ -683,6 +685,9 @@ ConsoleInputListener {
 		for (IEntity e : this.entities.values()) {
 			e.remove();
 		}
+		
+		//this.entitiesToAdd.clear();  Not needed?
+		//this.entitiesToRemove.clear(); Not needed?
 
 	}
 
@@ -830,7 +835,8 @@ ConsoleInputListener {
 
 	public void gameStatusChanged(int newStatus)  {
 		/*if (newStatus == SimpleGameData.ST_CLEAR_OLD_GAME) {
-		} else */if (newStatus == SimpleGameData.ST_DEPLOYING) {
+		} else */
+		if (newStatus == SimpleGameData.ST_DEPLOYING) {
 			removeOldGame();
 			startNewGame();
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
@@ -855,8 +861,12 @@ ConsoleInputListener {
 	@Override
 	public void processConsoleInput(String s) {
 		//Globals.p("Recieved input: " + s);
-		if (s.equalsIgnoreCase("mb")) {
-			sendDebuggingBoxes();
+		if (s.equalsIgnoreCase("help") || s.equalsIgnoreCase("?")) {
+			Globals.p("mb, stats");
+		} else if (s.equalsIgnoreCase("mb")) {
+				sendDebuggingBoxes();
+		} else if (s.equalsIgnoreCase("stats")) {
+				showStats();
 		} else {
 			Globals.p("Unknown command: " + s);
 		}
@@ -877,6 +887,11 @@ ConsoleInputListener {
 		Globals.p("Sent model bounds to all clients");
 	}
 
+
+	private void showStats() {
+		Globals.p("Num Entities: " + this.entities.size());
+		Globals.p("Num Clients: " + this.clients.size());
+	}
 
 }
 
