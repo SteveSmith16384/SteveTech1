@@ -9,7 +9,7 @@ import com.scs.stevetech1.server.ClientData;
 
 public class ServerGameStatusSystem {
 	
-	private static final long CLEAR_OLD_GAME_DURATION_MILLIS = 1000;
+	//private static final long CLEAR_OLD_GAME_DURATION_MILLIS = 1000;
 	
 	private AbstractGameServer server;
 	
@@ -30,17 +30,17 @@ public class ServerGameStatusSystem {
 			if (!enoughPlayers && gameData.isInGame()) {
 				gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 			} else if (enoughPlayers && gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
-				gameData.setGameStatus(SimpleGameData.ST_CLEAR_OLD_GAME, CLEAR_OLD_GAME_DURATION_MILLIS);
+				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 			}
 		}
 
 		long currentDuration = System.currentTimeMillis() - gameData.getStatusStartTimeMS();
 		if (gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
 			// Do nothing...
-		} else if (gameData.getGameStatus() == SimpleGameData.ST_CLEAR_OLD_GAME) {
+		/*} else if (gameData.getGameStatus() == SimpleGameData.ST_CLEAR_OLD_GAME) {
 			if (currentDuration >= gameData.getStatusDuration()) {
 				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
-			}
+			}*/
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
 			if (currentDuration >= gameData.getStatusDuration()) {
 					gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDurationMillis);
@@ -51,7 +51,7 @@ public class ServerGameStatusSystem {
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_FINISHED) {
 			if (currentDuration >= gameData.getStatusDuration()) {
-				gameData.setGameStatus(SimpleGameData.ST_CLEAR_OLD_GAME, CLEAR_OLD_GAME_DURATION_MILLIS);
+				gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 			}
 		} else {
 			throw new RuntimeException("Unknown game status: " + gameData.getGameStatus());

@@ -1,6 +1,8 @@
 STETECH1
 
 URGENT
+HandleError()
+Send input msg on fire pressed
 Dont create avatsars if not in game
 Clear old entities again just before starting game
 List outstanding entities

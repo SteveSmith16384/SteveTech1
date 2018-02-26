@@ -10,7 +10,7 @@ public class SimpleGameData { // pojo
 
 	// Game statuses
 	public static final int ST_WAITING_FOR_PLAYERS = 0;
-	public static final int ST_CLEAR_OLD_GAME = 1; // Players typically waiting in spawn area 
+	//public static final int ST_CLEAR_OLD_GAME = 1; // Players typically waiting in spawn area 
 	public static final int ST_DEPLOYING = 2; // Players typically waiting in spawn area 
 	public static final int ST_STARTED = 3; // Players released!
 	public static final int ST_FINISHED = 4;
@@ -35,7 +35,7 @@ public class SimpleGameData { // pojo
 	public static String getStatusDesc(int s) {
 		switch (s) {
 		case ST_WAITING_FOR_PLAYERS: return "Waiting for players";
-		case ST_CLEAR_OLD_GAME: return "Removing Old Game";
+		//case ST_CLEAR_OLD_GAME: return "Removing Old Game";
 		case ST_DEPLOYING: return "Deploying";
 		case ST_STARTED: return "Started";
 		case ST_FINISHED: return "Finished";
@@ -71,7 +71,7 @@ public class SimpleGameData { // pojo
 		switch (this.gameStatus) {
 		case ST_WAITING_FOR_PLAYERS: 
 			return (now-statusStartTimeMS)/1000 + " seconds";
-		case ST_CLEAR_OLD_GAME:
+		//case ST_CLEAR_OLD_GAME:
 		case ST_DEPLOYING:
 		case ST_STARTED: 
 		case ST_FINISHED:

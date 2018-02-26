@@ -342,7 +342,7 @@ ConsoleInputListener {
 		this.gameNetworkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));
 
 		gameStatusSystem.checkGameStatus(true);
-
+	
 	}
 
 
@@ -829,9 +829,9 @@ ConsoleInputListener {
 
 
 	public void gameStatusChanged(int newStatus)  {
-		if (newStatus == SimpleGameData.ST_CLEAR_OLD_GAME) {
+		/*if (newStatus == SimpleGameData.ST_CLEAR_OLD_GAME) {
+		} else */if (newStatus == SimpleGameData.ST_DEPLOYING) {
 			removeOldGame();
-		} else if (newStatus == SimpleGameData.ST_DEPLOYING) {
 			startNewGame();
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {
