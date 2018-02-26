@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -17,10 +18,13 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 
 	private static final int MAG_SIZE = 6;
 
-	private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>(); 
+	private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>();
+	private ClientData client; // Only used server-side
 
-	public SnowballLauncher(IEntityController game, int id, ICanShoot owner, int num) {
+	public SnowballLauncher(IEntityController game, int id, ICanShoot owner, int num, ClientData _client) {
 		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, owner, num, "SnowballLauncher", 1, 3, MAG_SIZE);
+		
+		client = _client;
 
 	}
 
@@ -67,7 +71,7 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 
 	@Override
 	protected void createBullet(AbstractGameServer server, int entityid, IEntityContainer irac, int side) {
-		SnowballBullet pe = new SnowballBullet(game, entityid, irac, side);
+		SnowballBullet pe = new SnowballBullet(game, entityid, irac, side, client);
 		server.addEntity(pe);
 
 

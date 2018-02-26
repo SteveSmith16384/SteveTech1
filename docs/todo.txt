@@ -1,25 +1,25 @@
 STETECH1
 
 URGENT
+BlenderGameCompo
 Model bounds not showing
-Shows "victory" when player killed
-	only jump if in game
-	Server cmd: help, stats
-	HandleError()
-Send input msg on fire pressed
-	Dont create avatsars if not in game
-	Clear old entities again just before starting game
 Don't remove audionode in diff thread!
-	If dupe ent sent, just replace it?
-	Long Pause between removing all entities and adding new ones at end/start of level
+Shows "victory" when player killed?
+	only jump if in game
+	HandleError()
+	Dont create avatsars if not in game
 	Server send model bounds to client
-	Snowmen starting inside igloos and trees
 back wall not in right place
 Show on hud "connecting to server..", game restarting etc...
 Search for todos
+Only show one text overlay at a time
+CreateSkyBox message
+Add client ping time to bullet ffwd
+Adjust mouse sens
 
 
 TODO
+Send input msg on fire pressed - but won't make any diff if it's stopped being pressed
 Remove skybox and gamendoe at end of game?
 Handle losing connection to server gracefully
 List outstanding entities
@@ -28,13 +28,10 @@ readme: Technical overview
 Server force jump
 Jump is UA specific
 Create smaller vid and gif
-Only show one text overlay at a time
-Long pause before game started
 Add to readme
 Blog post progress
 Write code to add 100 clients instantly
 Check for dropped messages
-Adjust mouse sens
 Falling snow - started
 Use font from SF
 Show "hit!" effect if a player hit
@@ -44,9 +41,7 @@ Server tell client to slow down if server struggling
 Try desert models
 Sometimes, first bullet not killing snowman - is server also shooting? Client send shot confirmed msg to server when bullet is launched?
 Warn if client and server have diff bullets left
-Use model woman
 Find sound effects
-Add client ping time to bullet ffwd
 Why doesn't player slide along snowmen?
 Record desktop showing two players
 Client can always jump, even when in the air

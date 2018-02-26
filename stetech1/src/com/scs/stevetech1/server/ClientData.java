@@ -21,9 +21,8 @@ public class ClientData {
 
 	private int score;
 	public int side = -1;
-	//protected boolean statsChanged = false;
 
-	public ClientData(int _id, Object _networkObj) {//, Camera cam, InputManager _inputManager) {
+	public ClientData(int _id, Object _networkObj) {
 		super();
 		
 		id = _id;
@@ -48,14 +47,11 @@ public class ClientData {
 
 	public void incScore(int i) {
 		this.score += i;
-		//this.statsChanged = true;
 	}
 
 
 	public void setScore(int i) {
 		this.score = i;
-		//this.statsChanged = true;
 	}
-
 
 }

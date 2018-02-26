@@ -15,17 +15,17 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
-import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.LaunchData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
@@ -35,10 +35,13 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 	private boolean launched = false;
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
+	private ClientData client; // Only used server-side
 
-	public SnowballBullet(IEntityController _game, int id, IEntityContainer<SnowballBullet> owner, int _side) {
+	public SnowballBullet(IEntityController _game, int id, IEntityContainer<SnowballBullet> owner, int _side, ClientData _client) {
 		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", true);
 
+		client = _client;
+		
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
@@ -77,8 +80,6 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
-		//syncPos = new AdjustByFractionOfDistance();
-
 		this.collideable = false;
 
 	}
@@ -116,7 +117,7 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			AbstractGameServer server = (AbstractGameServer)game;
 
 			// fast forward it!
-			float totalTimeToFFwd = server.clientRenderDelayMillis; // todo + clientPingTime
+			float totalTimeToFFwd = server.clientRenderDelayMillis + (client.playerData.pingRTT/2);
 			float tpf_secs = (float)server.tickrateMillis / 1000f;
 			while (totalTimeToFFwd > 0) {
 				totalTimeToFFwd -= server.tickrateMillis;
@@ -127,7 +128,6 @@ public class SnowballBullet extends PhysicalEntity implements IProcessByClient, 
 			}
 
 			// If server, send messages to clients to tell them it has been launched
-			//AbstractGameServer server = (AbstractGameServer)game;
 			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
 			server.gameNetworkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), ld));
 		} else {

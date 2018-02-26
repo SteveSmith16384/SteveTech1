@@ -204,7 +204,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
 		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
 
-		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0);
+		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0, client);
 		this.actuallyAddEntity(abilityGun);
 
 		return avatar;

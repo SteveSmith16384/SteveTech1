@@ -55,12 +55,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
-		/*if (this.statsChanged) {
-			this.server.gameNetworkServer.sendMessageToAll(new AvatarStatusMessage(this, client));
-			this.statsChanged = false;
-		}*/
-
-
 		if (!this.alive) {
 			restartTimeSecs -= tpf;
 			this.currentAnimCode = ANIM_DIED;

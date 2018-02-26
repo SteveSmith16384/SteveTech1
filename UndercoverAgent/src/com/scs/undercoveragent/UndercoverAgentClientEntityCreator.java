@@ -197,7 +197,7 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 				if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 					AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 					int num = (int)msg.data.get("num");
-					SnowballLauncher gl = new SnowballLauncher(game, id, owner, num);
+					SnowballLauncher gl = new SnowballLauncher(game, id, owner, num, null);
 					return gl;
 				}
 			}
@@ -209,7 +209,7 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
 			IEntityContainer<SnowballBullet> irac = (IEntityContainer<SnowballBullet>)game.entities.get(containerID);
-			SnowballBullet snowball = new SnowballBullet(game, id, irac, side);
+			SnowballBullet snowball = new SnowballBullet(game, id, irac, side, null);
 			return snowball;
 		}
 
