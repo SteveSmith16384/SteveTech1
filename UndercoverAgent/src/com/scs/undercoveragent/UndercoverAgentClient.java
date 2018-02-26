@@ -24,6 +24,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	private UndercoverAgentClientEntityCreator entityCreator = new UndercoverAgentClientEntityCreator();
 	private FallingSnowflakeSystem snowflakeSystem;
+	private AbstractHUDImage currentHUDImage;
 
 	public static void main(String[] args) {
 		try {
@@ -42,11 +43,15 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
+			
 			float gravity = props.getPropertyAsFloat("gravity", -5);
 			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 
+			float mouseSensitivity = props.getPropertyAsFloat("mouseSensitivity", 1f);
+
 			new UndercoverAgentClient(gameIpAddress, gamePort, lobbyIpAddress, lobbyPort,
-					tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
+					tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness,
+					mouseSensitivity);
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
 			e.printStackTrace();
@@ -55,9 +60,10 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 
 	public UndercoverAgentClient(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
-			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) {
+			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness,
+			float mouseSensitivity) {
 		super(UndercoverAgentStaticData.NAME, null, gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
-				tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
+				tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness, mouseSensitivity);
 	}
 
 
@@ -118,19 +124,22 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected void playerHasWon() {
-		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+		removeCurrentHUDImage();
+		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
 	}
 
 
 	@Override
 	protected void playerHasLost() {
-		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+		removeCurrentHUDImage();
+		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
 	}
 
 
 	@Override
 	protected void gameIsDrawn() {
-		new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+		removeCurrentHUDImage();
+		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
 	}
 
 
@@ -146,13 +155,16 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		int height = this.cam.getHeight()/2;
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
-			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
+			removeCurrentHUDImage();
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_DEPLOYING:
-			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", width, height, 5);
+			removeCurrentHUDImage();
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_STARTED:
-			new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", width, height, 5);
+			removeCurrentHUDImage();
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_FINISHED:
 			// Don't show anything, this will be handled with a win/lose message
@@ -163,5 +175,13 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	}
 
+	
+	private void removeCurrentHUDImage() {
+		if (this.currentHUDImage != null) {
+			if (currentHUDImage.getParent() != null) {
+				currentHUDImage.remove();
+			}
+		}
+	}
 
 }

@@ -14,11 +14,13 @@ import com.jme3.renderer.Camera;
 public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListener, IInputDevice { 
 
 	private boolean left = false, right = false, up = false, down = false, jump = false, ability1 = false, ability2 = false;//, cycleAbility = false;
+	private float mouseSens;
 
-	public MouseAndKeyboardCamera(Camera cam, InputManager _inputManager) {
+	public MouseAndKeyboardCamera(Camera cam, InputManager _inputManager, float _mouseSens) {
 		super(cam);
 
 		this.inputManager = _inputManager;
+		mouseSens = _mouseSens;
 
 		inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addListener(this, "Left");
@@ -80,6 +82,8 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		if (!enabled) {
 			return;
 		}
+		
+		value = value * mouseSens;
 		
 		if (name.equals("mFLYCAM_Left")){
 			//Settings.p("name=" + name);

@@ -1,6 +1,10 @@
 STETECH1
 
 URGENT
+	Only show one text overlay at a time
+CreateSkyBox message
+	Add client ping time to bullet ffwd
+	Adjust mouse sens
 BlenderGameCompo
 Model bounds not showing
 Don't remove audionode in diff thread!
@@ -10,23 +14,17 @@ Shows "victory" when player killed?
 	Dont create avatsars if not in game
 	Server send model bounds to client
 back wall not in right place
-Show on hud "connecting to server..", game restarting etc...
 Search for todos
-Only show one text overlay at a time
-CreateSkyBox message
-Add client ping time to bullet ffwd
-Adjust mouse sens
+Server force jump
 
 
 TODO
-Send input msg on fire pressed - but won't make any diff if it's stopped being pressed
+Show on hud "connecting to server..", game restarting etc...
 Remove skybox and gamendoe at end of game?
 Handle losing connection to server gracefully
 List outstanding entities
 Test Play sounds from msgs
 readme: Technical overview
-Server force jump
-Jump is UA specific
 Create smaller vid and gif
 Add to readme
 Blog post progress

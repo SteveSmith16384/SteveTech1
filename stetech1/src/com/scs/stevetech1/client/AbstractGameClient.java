@@ -131,13 +131,14 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public long serverTime, renderTime;
 	private String gameServerIP, lobbyIP;
 	private int gamePort, lobbyPort;
-
+	private float mouseSens;
+	
 	// Entity systems
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
 
 	protected AbstractGameClient(String name, String logoImage, String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
-			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) {//AbstractClientEntityCreator _entityCreator) {
+			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness, float _mouseSens) {//AbstractClientEntityCreator _entityCreator) {
 		super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
 
 		gameServerIP = _gameServerIP;
@@ -148,6 +149,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, gravity, aerodynamicness);
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
+		
+		mouseSens = _mouseSens;
 
 		settings = new AppSettings(true);
 		try {
@@ -198,7 +201,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		hud = this.createHUD();
 		getGuiNode().attachChild(hud.getRootNode());
 
-		input = new MouseAndKeyboardCamera(getCamera(), getInputManager());
+		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
 
 		if (Globals.RECORD_VID) {
 			Globals.p("Recording video");
