@@ -4,49 +4,35 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import com.jme3.util.BufferUtils;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class Floor extends PhysicalEntity {//implements IProcessByClient {
+public class Wall extends PhysicalEntity {
 
-	private Box box1;
-	private float w, h, d;
-
-	public Floor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR, "Floor", false);
+	public Wall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
+		super(_game, id, MoonbaseAssaultClientEntityCreator.WALL, "Wall", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("size", new Vector3f(w, h, d));
+			//creationData.put("pos", new Vector3f(x, yBottom, z));
+			creationData.put("w", w);
+			creationData.put("h", h);
 			creationData.put("tex", tex);
+			creationData.put("rot", rotDegrees);
 		}
 
-		this.w = w;
-		this.h = h;
-		this.d = d;
+		float d = 0.1f;
 
-		box1 = new Box(w/2, h/2, d/2);
-
-		box1.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(new float[]{
-				0, h, w, h, w, 0, 0, 0, // back
-				0, h, d, h, d, 0, 0, 0, // right
-				0, h, w, h, w, 0, 0, 0, // front
-				0, h, d, h, d, 0, 0, 0, // left
-				w, 0, w, d, 0, d, 0, 0, // top
-				w, 0, w, d, 0, d, 0, 0  // bottom
-		}));
-
-		Geometry geometry = new Geometry("FloorGeom", box1);
+		Box box1 = new Box(w/2, h/2, d/2);
+		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
+		Geometry geometry = new Geometry("Wall", box1);
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
@@ -61,29 +47,24 @@ public class Floor extends PhysicalEntity {//implements IProcessByClient {
 				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 				floor_mat.setTexture("ColorMap", tex3);
 			}
+
 			geometry.setMaterial(floor_mat);
 		}
 		this.mainNode.attachChild(geometry);
-		geometry.setLocalTranslation((w/2), -(h/2), (d/2)); // Move it into position
-		mainNode.setLocalTranslation(x, yTop, z); // Move it into position
+		if (rotDegrees != 0) {
+			float rads = (float)Math.toRadians(rotDegrees);
+			mainNode.rotate(0, rads, 0);
+		}
+		geometry.setLocalTranslation(w/2, h/2, d/2); // Never change position of mainNode (unless the whole object is moving)
+		mainNode.setLocalTranslation(x, yBottom, z); // Never change position of mainNode (unless the whole object is moving)
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
+		//this.simpleRigidBody.setMovable(false);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-	}
-/*
-
-	@Override
-	public void processByClient(AbstractGameClient client, float tpf) {
 
 	}
 
 
-	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
-		// Do nothing
-
-	}
-*/
 }

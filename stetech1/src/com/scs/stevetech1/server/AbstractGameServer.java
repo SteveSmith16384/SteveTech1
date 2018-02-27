@@ -99,6 +99,8 @@ ConsoleInputListener {
 
 		gameData = new SimpleGameData();
 		gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, timeoutMillis);
+		
+		Globals.p("Listening on port " + gameOptions.ourExternalPort);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, gravity, aerodynamicness);
 

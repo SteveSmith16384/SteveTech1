@@ -216,15 +216,15 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}
 
 		// Don't connect to network until JME is up and running!
-		try {
+		/*try {
 			if (lobbyIP != null) {
-			lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this, timeoutMillis);
-			this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
-			lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
+				lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this, timeoutMillis);
+				this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
+				lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
-		}
+		}*/
 
 		try {
 			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis); // todo - connect to lobby first!
@@ -682,7 +682,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 
 	@Override
-	public void messageReceived(MyAbstractMessage message) { // todo - catch exception and stop main program
+	public void messageReceived(MyAbstractMessage message) {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Rcvd " + message.getClass().getSimpleName());
 		}

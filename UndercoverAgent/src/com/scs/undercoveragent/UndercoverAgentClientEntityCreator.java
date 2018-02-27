@@ -12,7 +12,6 @@ import com.scs.stevetech1.entities.DebuggingBox;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.undercoveragent.entities.BigTreeWithLeaves;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.InvisibleMapBorder;
@@ -30,7 +29,7 @@ import com.scs.undercoveragent.entities.SnowmanEnemyAvatar;
 import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
 
-public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCreator {
+public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntityCreator {
 
 	public static final int AVATAR = 1;
 	public static final int FLOOR = 2;
@@ -76,7 +75,8 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		}
 	}
 
-	@Override
+	
+	//@Override
 	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
 		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Creating " + TypeToString(msg.type));
@@ -247,7 +247,8 @@ public class UndercoverAgentClientEntityCreator extends AbstractClientEntityCrea
 		}
 
 		default:
-			return super.createEntity(game, msg);
+			//return super.createEntity(game, msg);
+			throw new RuntimeException("Todo");
 		}
 	}
 }

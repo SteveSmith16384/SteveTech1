@@ -3,18 +3,18 @@ STETECH1
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
 
 URGENT
+Does testgame still work?
 Add links to SteveTech1
-	BlenderGameCompo
 	Create hud log - 
 	show "Player joined", "player left"
 	Only show one text overlay at a time
 CreateSkyBox as entity
-	Don't remove audionode in diff thread!
 	HandleError()
 Search for todos
 
 
 TODO
+Tree - make serverside just a cyl on trunk
 Server force jump
 Find font for JME
 Check for dropped messages
@@ -26,7 +26,7 @@ Add to readme
 Blog post progress
 Write code to add 100 clients instantly
 Falling snow - started
-Use font from SF
+Use better font
 Show "hit!" effect if a player hit
 Clear client-only entities at the start of the game?
 Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
@@ -43,8 +43,6 @@ Players send ping to server from lobby to see which is best
 Ping system
 Split up client/server into systems
 Try diff snow hills
-Tree - make serverside just a cyl on trunk
-Get tileable snow tex
 Hitscan rifle - show line showing where server says bullet went
 Laser bullets
 Animate backwards when walking backwards
@@ -75,15 +73,9 @@ Don't use broadcast()?s
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
-Only send entity messages to players that have joined the game
 
 
 FONT
 http://eu2.flamingtext.co.uk/net-fu/dynamic.cgi?script=clan-logo&text=waiting+for%0D%0Aplayers&fillTextType=1&fillTextPattern=Blue+Bar&backgroundRadio=0
 
 
-protected boolean isRenderThread() {
-        return Thread.currentThread() == renderThread; //You get renderThread from application thread.
-    }
-	
-	

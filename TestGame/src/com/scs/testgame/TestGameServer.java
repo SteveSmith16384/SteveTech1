@@ -19,8 +19,8 @@ public class TestGameServer extends AbstractGameServer {
 	public static void main(String[] args) {
 		try {
 			AbstractGameServer app = new TestGameServer();
-			app.setPauseOnLostFocus(false);
-			app.start(JmeContext.Type.Headless);
+			//app.setPauseOnLostFocus(false);
+			//app.start(JmeContext.Type.Headless);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -40,13 +40,18 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	protected void createGame() {
-		new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
+		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
+		this.actuallyAddEntity(floor);
 		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 		//new Crate(this, getNextEntityID(), 8, 5, 8, 1, 1, 1f, "Textures/crate.png", 65);
-		new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
-		new Wall(this, getNextEntityID(), 10, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
-		new Wall(this, getNextEntityID(), 20, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
-		new Wall(this, getNextEntityID(), 30, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 270);
+		Wall w1 = new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
+		this.actuallyAddEntity(w1);
+		Wall w2 = new Wall(this, getNextEntityID(), 10, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
+		this.actuallyAddEntity(w2);
+		Wall w3 = new Wall(this, getNextEntityID(), 20, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
+		this.actuallyAddEntity(w3);
+		Wall w4 = new Wall(this, getNextEntityID(), 30, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 270);
+		this.actuallyAddEntity(w4);
 
 		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 		
@@ -54,7 +59,8 @@ public class TestGameServer extends AbstractGameServer {
 		
 		//new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
 		
-		new House(this, getNextEntityID(), 20, 0, 20, 0);
+		House house = new House(this, getNextEntityID(), 20, 0, 20, 0);
+		this.actuallyAddEntity(house);
 	}
 
 

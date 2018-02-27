@@ -1,10 +1,11 @@
-package com.scs.testgame.entities;
+package com.scs.moonbaseassault.entities;
 
 import java.util.HashMap;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -19,20 +20,17 @@ import com.scs.stevetech1.models.BeamLaserModel;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameClientEntityCreator;
 
 public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, ILaunchable, IRemoveOnContact, IClientControlled {
 
 	private float timeLeft = 3f;
 
-	//private ICorrectClientEntityPosition syncPos;
-	//public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	private boolean launched = false;
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
 
 	public LaserBullet(IEntityController _game, int id, IEntityContainer<LaserBullet> owner, int _side) {
-		super(_game, id, TestGameClientEntityCreator.LASER_BULLET, "LaserBullet", true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.LASER_BULLET, "LaserBullet", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -46,11 +44,6 @@ public class LaserBullet extends PhysicalEntity implements IProcessByClient, ICa
 
 		side = _side;
 		
-
-		//game.addEntity(this);
-		
-		//syncPos = new InstantPositionAdjustment();
-
 		this.collideable = false;
 	}
 
