@@ -28,6 +28,7 @@ You are advised to look at the example game Undercover Agent to see how to creat
 ## TECHNICAL OVERVIEW
 * The code is designed so that as much identical code as possible is run on both the client and the server.
 * Have a look in the /docs folder for various notes on specific aspects of the game.
+* Network communication (which uses Kryonet) works on Messages, which are serialized classes (POJOs) containing the required information.
 
 
 ## DEBUGGING
