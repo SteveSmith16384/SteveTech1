@@ -3,13 +3,12 @@ STETECH1
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
 
 URGENT
+Tree - make serverside just a cyl on trunk
 Add links to SteveTech1
-	BlenderGameCompo
 	Create hud log - 
 	show "Player joined", "player left"
 	Only show one text overlay at a time
 CreateSkyBox as entity
-	Don't remove audionode in diff thread!
 	HandleError()
 Search for todos
 
@@ -43,8 +42,6 @@ Players send ping to server from lobby to see which is best
 Ping system
 Split up client/server into systems
 Try diff snow hills
-Tree - make serverside just a cyl on trunk
-Get tileable snow tex
 Hitscan rifle - show line showing where server says bullet went
 Laser bullets
 Animate backwards when walking backwards
@@ -82,8 +79,3 @@ FONT
 http://eu2.flamingtext.co.uk/net-fu/dynamic.cgi?script=clan-logo&text=waiting+for%0D%0Aplayers&fillTextType=1&fillTextPattern=Blue+Bar&backgroundRadio=0
 
 
-protected boolean isRenderThread() {
-        return Thread.currentThread() == renderThread; //You get renderThread from application thread.
-    }
-	
-	
