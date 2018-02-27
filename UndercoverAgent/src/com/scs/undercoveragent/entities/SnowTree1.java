@@ -38,10 +38,4 @@ public class SnowTree1 extends PhysicalEntity {
 
 	}
 
-/*
-	@Override
-	public void processByServer(AbstractGameServer server, float tpf) {
-		super.processByServer(server, tpf);
-	}
-*/
 }

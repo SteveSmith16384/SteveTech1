@@ -37,8 +37,8 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			}
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
-			String lobbyIpAddress = props.getPropertyAsString("lobbyIpAddress", "localhost");
-			int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
+			//String lobbyIpAddress = props.getPropertyAsString("lobbyIpAddress", "localhost");
+			//int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
 
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
@@ -49,7 +49,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 			float mouseSensitivity = props.getPropertyAsFloat("mouseSensitivity", 1f);
 
-			new UndercoverAgentClient(gameIpAddress, gamePort, lobbyIpAddress, lobbyPort,
+			new UndercoverAgentClient(gameIpAddress, gamePort, null, -1,
 					tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness,
 					mouseSensitivity);
 		} catch (Exception e) {

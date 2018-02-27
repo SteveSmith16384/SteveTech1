@@ -18,6 +18,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar {
 	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);
 		
+		// Force player to jump if they haven't moved!
 		if (this.alive && server.gameData.isInGame()) {
 			long timeSinceMove = System.currentTimeMillis() - super.lastMoveTime;
 			if (timeSinceMove > 5 * 1000) {
