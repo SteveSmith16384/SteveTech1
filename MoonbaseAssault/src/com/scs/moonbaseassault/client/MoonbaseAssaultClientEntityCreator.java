@@ -1,11 +1,15 @@
 package com.scs.moonbaseassault.client;
 
 import com.jme3.math.Vector3f;
+import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.LaserBullet;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IEntityContainer;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
@@ -19,6 +23,8 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 	public static final int DOOR = 4;
 	public static final int CRATE = 5;
 	public static final int WALL = 6;
+	public static final int LASER_BULLET = 7;
+	public static final int LASER_RIFLE = 8;
 
 	public MoonbaseAssaultClientEntityCreator() {
 	}
@@ -74,6 +80,29 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			Floor floor = new Floor(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex);
 			return floor;
 		}
+
+		case LASER_RIFLE:
+		{
+			int ownerid = (int)msg.data.get("ownerid");
+			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+				int num = (int)msg.data.get("num");
+				LaserRifle gl = new LaserRifle(game, id, owner, num);
+				return gl;
+			}
+			return null;
+
+		}
+
+		case LASER_BULLET:
+		{
+			int containerID = (int) msg.data.get("containerID");
+			int side = (int) msg.data.get("side");
+			IEntityContainer<LaserBullet> irac = (IEntityContainer<LaserBullet>)game.entities.get(containerID);
+			LaserBullet bullet = new LaserBullet(game, id, irac, side);
+			return bullet;
+		}
+
 		default:
 			throw new RuntimeException("Todo");
 		}

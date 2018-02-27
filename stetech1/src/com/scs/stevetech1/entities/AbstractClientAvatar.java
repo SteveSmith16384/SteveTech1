@@ -111,8 +111,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			cam.update();
 		}
 
+		if (hud != null) {
 		hud.processByClient(client, tpf_secs);
-
+		}
+		
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			//long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis(), false);

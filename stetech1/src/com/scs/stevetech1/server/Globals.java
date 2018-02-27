@@ -22,7 +22,6 @@ public class Globals {
 	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean EMPTY_MAP = false;
-	public static final boolean MODELS_IN_GRID = false;
 	public static final boolean DEBUG_TOO_MANY_AVATARS = false;
 	public static final boolean DEBUG_SERVER_SHOOTING = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;

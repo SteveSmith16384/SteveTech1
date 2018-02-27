@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
+import com.scs.moonbaseassault.abilities.LaserRifle;
+import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.SoldierServerAvatar;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -14,7 +17,6 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 
-import ssmith.lang.NumberFunctions;
 import ssmith.util.MyProperties;
 
 public class MoonbaseAssaultServer extends AbstractGameServer {
@@ -88,20 +90,27 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 	protected void createGame() {
 		// todo
+		float mapSize = 30f;
+		float ceilingHeight = 3f;
+
+		// Place floor last
+		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/snow.jpg");
+		this.actuallyAddEntity(floor);
+
+		Floor ceiling = new Floor(this, getNextEntityID(), 0, ceilingHeight, 0, mapSize, .5f, mapSize, "Textures/snow.jpg");
+		this.actuallyAddEntity(ceiling);
 	}
 
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
-		/*todo - SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
+		SoldierServerAvatar avatar = new SoldierServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
 		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
 
-		//todo IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), avatar, 0, client);
+		IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0);
 		this.actuallyAddEntity(abilityGun);
 
-		return avatar;*/
-		
-		return null;
+		return avatar;
 	}
 
 

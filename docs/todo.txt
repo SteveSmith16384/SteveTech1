@@ -3,7 +3,7 @@ STETECH1
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
 
 URGENT
-Tree - make serverside just a cyl on trunk
+Does testgame still work?
 Add links to SteveTech1
 	Create hud log - 
 	show "Player joined", "player left"
@@ -14,6 +14,7 @@ Search for todos
 
 
 TODO
+Tree - make serverside just a cyl on trunk
 Server force jump
 Find font for JME
 Check for dropped messages
@@ -25,7 +26,7 @@ Add to readme
 Blog post progress
 Write code to add 100 clients instantly
 Falling snow - started
-Use font from SF
+Use better font
 Show "hit!" effect if a player hit
 Clear client-only entities at the start of the game?
 Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
@@ -72,7 +73,6 @@ Don't use broadcast()?s
 Kick players who don't move
 Use tpf to ensure clients/server run at same speed
 Stop client if no comms for a while
-Only send entity messages to players that have joined the game
 
 
 FONT

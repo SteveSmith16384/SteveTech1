@@ -15,11 +15,11 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	private static final float SEND_INT_SECS = 5;
 
 	protected AbstractAvatar owner;
-	public int num;
+	public int abilityNum;
 	private float timeUntilNextSend_secs = SEND_INT_SECS;
 	private long lastUpdateMsgTime;
 
-	public AbstractAbility(IEntityController _game, int _id, int type, AbstractAvatar _owner, int _num, String _name) {
+	public AbstractAbility(IEntityController _game, int _id, int type, AbstractAvatar _owner, int _abilityNum, String _name) {
 		super(_game, _id, type, _name);
 
 		if (_owner == null) {
@@ -27,15 +27,15 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 		}
 
 		owner = _owner;
-		num = _num;
+		abilityNum = _abilityNum;
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("ownerid", owner.getID());
-			creationData.put("num", num);
+			creationData.put("num", abilityNum);
 		}
 		
-		owner.ability[num] = this;
+		owner.ability[abilityNum] = this;
 	}
 
 

@@ -4,30 +4,26 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractClientEntityCreator;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.DebuggingSphere;
 import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.House;
-import com.scs.testgame.entities.LaserBullet;
 import com.scs.testgame.entities.MovingTarget;
 import com.scs.testgame.entities.TestGameClientAvatar;
 import com.scs.testgame.entities.TestGameEnemyAvatar;
 import com.scs.testgame.entities.Wall;
 import com.scs.testgame.weapons.HitscanRifle;
-import com.scs.testgame.weapons.LaserRifle;
 
 /*
  * This is only used client-side.
  */
-public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
+public class TestGameClientEntityCreator {
 
 	public static final int AVATAR = 1;
 	public static final int DEBUGGING_SPHERE = 2;
@@ -53,7 +49,6 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 	}
 
 
-	@Override
 	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Creating " + getName(msg.type));
@@ -105,28 +100,6 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 			return null;
 		}
 		 */
-		case LASER_RIFLE:
-		{
-			int ownerid = (int)msg.data.get("ownerid");
-			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
-				int num = (int)msg.data.get("num");
-				LaserRifle gl = new LaserRifle(game, id, owner, num);
-				return gl;
-			}
-			return null;
-
-		}
-
-		case LASER_BULLET:
-		{
-			int containerID = (int) msg.data.get("containerID");
-			int side = (int) msg.data.get("side");
-			IEntityContainer<LaserBullet> irac = (IEntityContainer<LaserBullet>)game.entities.get(containerID);
-			LaserBullet bullet = new LaserBullet(game, id, irac, side);
-			return bullet;
-		}
-
 		case HITSCAN_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
@@ -214,7 +187,7 @@ public class TestGameClientEntityCreator extends AbstractClientEntityCreator {
 		}
 
 		default:
-			return super.createEntity(game, msg);
+			throw new RuntimeException("todo");
 		}
 	}
 
