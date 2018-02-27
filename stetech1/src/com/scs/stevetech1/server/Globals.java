@@ -13,11 +13,6 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 
 	// Lots of consts for specific debugging output
-<<<<<<< HEAD
-	public static final boolean FEW_MODELS = false;
-=======
->>>>>>> 8df17f33104c3c981fd7e0d7a9b0d692d25c2277
-	
 	public static final boolean SIMULATE_DROPPED_PACKETS = false;
 	public static final int PCENT_DROPPED_PACKETS = 0;
 	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;
