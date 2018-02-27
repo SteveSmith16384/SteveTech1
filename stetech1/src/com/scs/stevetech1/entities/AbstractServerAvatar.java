@@ -34,10 +34,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 		server = (AbstractGameServer)_module;
 		client = _client;
-/*
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.setJumpForce(this.jumpForce);
-*/
+
 		this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}
 

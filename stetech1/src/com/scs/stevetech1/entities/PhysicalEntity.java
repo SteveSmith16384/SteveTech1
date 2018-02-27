@@ -28,14 +28,14 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 	public PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public boolean collideable = true;
-	
+
 	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first sendUpdates check returns true
-	private Quaternion prevRot = new Quaternion(); // todo - use this
+	private Quaternion prevRot = new Quaternion();
 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
 	private Quaternion originalRot = new Quaternion();
-	
+
 	protected String currentAnimCode = null;
 	public boolean moves;
 
@@ -53,7 +53,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		if (this instanceof AbstractAvatar) {
 			throw new RuntimeException("Do not call this for avatars!");
 		}
-		
+
 		if (simpleRigidBody != null) {
 			simpleRigidBody.process(tpf_secs);
 		}
@@ -88,7 +88,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		this.serverPositionData.addPositionData(pos, q, time);	
 	}
 
-	
+
 	// This is overridden by client avatars to take into account local position
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse, false);
@@ -110,11 +110,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	@Override
 	public void remove() {
 		super.remove();
-		
+
 		if (simpleRigidBody != null) {
 			this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
 		}
-		
+
 		if (this.mainNode.getParent() == null) {
 			//Globals.pe(this + " has no parent!");  Might be an unlaunched launchable
 		} else {
@@ -139,14 +139,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return dist;
 	}
 
-
-	/*	public RayCollisionData calcHitEntity(Vector3f shootDir, float range) {
-		Vector3f from = this.getWorldTranslation().add(shootDir.mult(1f)); // Prevent us shooting ourselves
-		AbstractGameServer server = (AbstractGameServer)game;
-		Ray ray = new Ray(from, shootDir);
-		return server.checkForCollisions(ray);
-	}
-	 */
 
 	public Vector3f getWorldTranslation() {
 		//return this.main_node.getWorldTranslation();  // 000?
@@ -197,13 +189,15 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			this.prevPos.set(currentPos);
 		}
 
-		// Check if rotation changed
-		/*todo Quaternion currentRot = this.getWorldRotation(); //prevRot.subtract(currentRot);
-		boolean rotChanged = !currentRot.equals(this.prevRot); // todo - check diff!
-		if (rotChanged) {
-			prevRot.set(currentRot);
+		if (!hasMoved) {
+			// Check if rotation changed
+			Quaternion currentRot = this.getWorldRotation(); //prevRot.subtract(currentRot);
+			boolean rotChanged = !currentRot.equals(this.prevRot); // todo - check diff!
+			if (rotChanged) {
+				prevRot.set(currentRot);
+			}
+			hasMoved = hasMoved || rotChanged;
 		}
-		hasMoved = hasMoved || rotChanged;*/
 
 		return hasMoved;
 	}
@@ -279,12 +273,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		return null;
 	}
-	
+
 	/*
 	public boolean canMove() {
 		return true;
 	}
-*/
+	 */
 
 	@Override
 	public HashMap<String, Object> getCreationData() {

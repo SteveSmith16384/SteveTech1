@@ -16,14 +16,14 @@ public class MyProperties {
 
 	public MyProperties() throws IOException {
 		super();
-		
+
 		properties = new Properties();
 	}
-	
-	
+
+
 	public MyProperties(String _filename) throws IOException {
 		this();
-		
+
 		filename = _filename;
 		this.loadProperties();
 	}
@@ -66,15 +66,13 @@ public class MyProperties {
 
 
 	public String getPropertyAsString(String name, String def) {
-		try {
-			String value = properties.getProperty(name);
-			return value;
-		} catch (Exception ex) {
-			//ex.printStackTrace();
+		String value = properties.getProperty(name);
+		if (value == null) {
+			value = def;
 			properties.put(name, ""+def);
 			needsSaving = true;
-			return def;
 		}
+		return value;
 	}
 
 

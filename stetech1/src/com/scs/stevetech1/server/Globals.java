@@ -13,13 +13,13 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 
 	// Lots of consts for specific debugging output
-	public static final boolean FEW_MODELS = true;
 	
 	public static final boolean SIMULATE_DROPPED_PACKETS = false;
 	public static final int PCENT_DROPPED_PACKETS = 0;
 	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;
 	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0;
 	
+	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean EMPTY_MAP = false;
 	public static final boolean MODELS_IN_GRID = false;
