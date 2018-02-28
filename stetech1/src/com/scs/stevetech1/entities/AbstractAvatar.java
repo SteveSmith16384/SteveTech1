@@ -24,6 +24,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	// Animation Codes
 	public static final String ANIM_IDLE = "Idle";
 	public static final String ANIM_WALKING = "Walking";
+	public static final String ANIM_JUMP = "Jump";
 	public static final String ANIM_SHOOTING = "Shooting";
 	public static final String ANIM_DIED = "Died";
 
@@ -116,8 +117,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 			newAnimCode = ANIM_WALKING;
 			lastMoveTime = System.currentTimeMillis();
 		}
-		if (input.isJumpPressed()){
-			this.jump();
+		if (input.isJumpPressed()) {
+			if (this.jump()) {
+				newAnimCode = ANIM_JUMP;
+			}
 		}
 
 		playerWalked = false;
@@ -146,11 +149,13 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	public void jump() {
+	public boolean jump() {
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		if (simplePlayerControl.jump()) {
 			lastMoveTime = System.currentTimeMillis();
+			return true;
 		}
+		return false;
 	}
 
 

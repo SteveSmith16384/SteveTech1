@@ -2,8 +2,8 @@ package com.scs.moonbaseassault.models;
 
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
+import com.jme3.animation.AnimEventListener;
 import com.jme3.asset.AssetManager;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -14,20 +14,19 @@ import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.Globals;
 
 //Punch, Walk, Working, ArmatureAction.002, Idle, Death, Run, Jump
-public class SoldierModel implements IAvatarModel {
+public class SoldierModel implements IAvatarModel, AnimEventListener {
 
-	private static final float MODEL_WIDTH = 0.4f;
-	private static final float MODEL_DEPTH = 0.3f;
+	private static final float MODEL_WIDTH = 0.25f;
+	private static final float MODEL_DEPTH = 0.25f;
 	private static final float MODEL_HEIGHT = 0.7f;
 
 	private AssetManager assetManager;
 	private Spatial model;
 	private AnimChannel channel;
-
+	private boolean isJumping = false;
 	
 	public SoldierModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
-
 	}
 
 
@@ -42,9 +41,9 @@ public class SoldierModel implements IAvatarModel {
 			}
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEFunctions.moveYOriginTo(model, 0f);
-			//JMEFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 
 			AnimControl control = JMEFunctions.getNodeWithControls((Node)model);
+			control.addListener(this);
 			channel = control.createChannel();
 
 			return model;
@@ -76,23 +75,50 @@ public class SoldierModel implements IAvatarModel {
 
 
 	public void setAnim(String animCode) {
+		if (this.isJumping && !animCode.equals(AbstractAvatar.ANIM_DIED)) {
+			// Do nothing; only dying can stop a jumping anim
+			return;
+		}
+		
 		switch (animCode) {
 		case AbstractAvatar.ANIM_DIED:
 			channel.setAnim("Death");
 			break;
+			
 		case AbstractAvatar.ANIM_IDLE:
 			channel.setAnim("Idle");
 			break;
+			
 		case AbstractAvatar.ANIM_WALKING:
 			channel.setAnim("Run");
 			break;
+			
 		case AbstractAvatar.ANIM_SHOOTING:
 			channel.setAnim("Punch");
+			break;
+			
+		case AbstractAvatar.ANIM_JUMP:
+			channel.setAnim("Jump");
+			isJumping = true;
 			break;
 
 		default:
 			Globals.pe(this.getClass().getSimpleName() + ": Unable to show anim " + animCode);
 		}
+	}
+
+
+	@Override
+	public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
+		if (animName.equals("Jump")) {
+			isJumping = false;
+		}
+	}
+
+
+	@Override
+	public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
+		// Do nothing
 	}
 
 }

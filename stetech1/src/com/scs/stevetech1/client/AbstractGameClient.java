@@ -541,7 +541,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
 				avatar.setAlive(true); 
 				// Point camera fwds again
-				cam.lookAt(avatar.getWorldTranslation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
+				cam.lookAt(cam.getLocation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
 				cam.update();
 
 			}

@@ -3,21 +3,19 @@ STETECH1
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
 
 URGENT
+	Use jump anim
 Post to JME forum
-Player always looking down when restarting
-MB: Change colours of human
-Diff skybox for moonbase assault
-	Remove "entities"
+HUD log - "You have shot the enemy", "you have been shot"
+	Player always looking down when restarting
 	Create hud log - 
 	show "Player joined", "player left"
-	Only show one text overlay at a time
 CreateSkyBox as entity
-	HandleError()
 Search for todos
+Create moonbase map
 
 
 TODO
-Create moonbase map
+Diff skybox for moonbase assault
 Check for packet loss
 Add links to SteveTech1
 Tree - make serverside just a cyl on trunk
