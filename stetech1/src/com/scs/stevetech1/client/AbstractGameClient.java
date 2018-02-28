@@ -392,7 +392,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			loopTimer.start();
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			Globals.HandleError(ex);
 			this.quit("Error: " + ex);
 		}
 	}
@@ -793,7 +793,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			this.networkClient.close();
 		}
 		this.stop();
-
+		System.exit(0);
 	}
 
 

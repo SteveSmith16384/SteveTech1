@@ -3,8 +3,12 @@ STETECH1
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
 
 URGENT
-Does testgame still work?
-Add links to SteveTech1
+	MB model not facing correct direction
+MB: fix wall scaling
+MB: Change colours of human
+Check for dropped messages
+Diff skybox for moonbase assault
+	Remove "entities"
 	Create hud log - 
 	show "Player joined", "player left"
 	Only show one text overlay at a time
@@ -14,10 +18,10 @@ Search for todos
 
 
 TODO
+Add links to SteveTech1
 Tree - make serverside just a cyl on trunk
 Server force jump
 Find font for JME
-Check for dropped messages
 Show on hud "connecting to server..", game restarting etc...
 Test Play sounds from msgs
 readme: Technical overview

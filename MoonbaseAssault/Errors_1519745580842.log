@@ -1,0 +1,13 @@
+java.lang.NullPointerException
+ com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator:99 - createEntity
+ com.scs.moonbaseassault.client.MoonbaseAssaultClient:109 - actuallyCreateEntity
+ com.scs.stevetech1.client.AbstractGameClient:669 - createEntity
+ com.scs.stevetech1.client.AbstractGameClient:454 - handleMessage
+ com.scs.stevetech1.client.AbstractGameClient:292 - simpleUpdate
+ com.scs.moonbaseassault.client.MoonbaseAssaultClient:93 - simpleUpdate
+ com.jme3.app.SimpleApplication:239 - update
+ com.jme3.system.lwjgl.LwjglAbstractDisplay:151 - runLoop
+ com.jme3.system.lwjgl.LwjglDisplay:193 - runLoop
+ com.jme3.system.lwjgl.LwjglAbstractDisplay:232 - run
+ java.lang.Thread:-1 - run
+

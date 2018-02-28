@@ -3,6 +3,7 @@ package com.scs.stevetech1.jme;
 import java.io.File;
 import java.io.IOException;
 
+import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.AssetNotFoundException;
 import com.jme3.asset.TextureKey;
@@ -190,5 +191,27 @@ public class JMEFunctions {
 		Vector3f dir = new Vector3f((float)Math.cos(ang), 0, (float)Math.sin(ang));
 		rotateToDirection(s, dir);
 	}
+
+
+	public static AnimControl getNodeWithControls(Node s) {
+		AnimControl control = null;
+		int ch = s.getChildren().size();
+		for (int i=0 ; i<ch ; i++) {
+			Spatial sp = s.getChild(i);
+			if (sp instanceof Node) {
+				Node n2 = (Node)sp;
+				if (n2.getNumControls() > 0) {
+					control = n2.getControl(AnimControl.class);
+					if (control != null) {
+						return control;
+					}
+				} else {
+					return getNodeWithControls((Node)sp);
+				}
+			}
+		}
+		return null;
+	}
+
 
 }

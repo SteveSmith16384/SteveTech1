@@ -9,7 +9,7 @@ public interface IClientSideAnimated {
 	
 	String getCurrentAnimCode();
 	
-	void setCurrentAnimForCode(String s);
+	void animCodeChanged(String s);
 	
 	void processAnimation(float tpf_secs);
 	

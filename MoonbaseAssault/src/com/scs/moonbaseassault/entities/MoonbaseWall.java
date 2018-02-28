@@ -14,23 +14,22 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class Wall extends PhysicalEntity {
+public class MoonbaseWall extends PhysicalEntity {
 
-	public Wall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
+	public MoonbaseWall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.WALL, "Wall", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("pos", new Vector3f(x, yBottom, z));
 			creationData.put("w", w);
 			creationData.put("h", h);
 			creationData.put("tex", tex);
 			creationData.put("rot", rotDegrees);
 		}
 
-		float d = 0.1f;
+		float depth = 0.1f; // Default wall thickness
 
-		Box box1 = new Box(w/2, h/2, d/2);
+		Box box1 = new Box(w/2, h/2, depth/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Wall", box1);
 		if (!_game.isServer()) { // Not running in server
@@ -55,8 +54,8 @@ public class Wall extends PhysicalEntity {
 			float rads = (float)Math.toRadians(rotDegrees);
 			mainNode.rotate(0, rads, 0);
 		}
-		geometry.setLocalTranslation(w/2, h/2, d/2); // Never change position of mainNode (unless the whole object is moving)
-		mainNode.setLocalTranslation(x, yBottom, z); // Never change position of mainNode (unless the whole object is moving)
+		geometry.setLocalTranslation(w/2, h/2, depth/2); // Never change position of mainNode (unless the whole object is moving)
+		mainNode.setLocalTranslation(x, yBottom, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		//this.simpleRigidBody.setMovable(false);

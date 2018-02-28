@@ -1,11 +1,15 @@
 package com.scs.moonbaseassault.models;
 
+import com.jme3.animation.AnimChannel;
+import com.jme3.animation.AnimControl;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.scs.stevetech1.components.IAvatarModel;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.Globals;
 
@@ -18,10 +22,9 @@ public class SoldierModel implements IAvatarModel {
 
 	private AssetManager assetManager;
 	private Spatial model;
-	private Vector3f origPos;
+	private AnimChannel channel;
 
-	private boolean showingDied = false;
-
+	
 	public SoldierModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
 
@@ -35,10 +38,11 @@ public class SoldierModel implements IAvatarModel {
 			JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/ClothedDarkSkin2.png");
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEFunctions.moveYOriginTo(model, 0f);
-			JMEFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
-			
-			origPos = model.getLocalTranslation().clone();
-			
+			//JMEFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
+
+			AnimControl control = JMEFunctions.getNodeWithControls((Node)model);
+			channel = control.createChannel();
+
 			return model;
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
@@ -67,19 +71,24 @@ public class SoldierModel implements IAvatarModel {
 	}
 
 
-	public void showDied(float tpf_secs) {
-		// todo
-		showingDied = true;
+	public void setAnim(String animCode) {
+		switch (animCode) {
+		case AbstractAvatar.ANIM_DIED:
+			channel.setAnim("Death");
+			break;
+		case AbstractAvatar.ANIM_IDLE:
+			channel.setAnim("Idle");
+			break;
+		case AbstractAvatar.ANIM_WALKING:
+			channel.setAnim("Run");
+			break;
+		case AbstractAvatar.ANIM_SHOOTING:
+			channel.setAnim("Punch");
+			break;
 
+		default:
+			Globals.pe(this.getClass().getSimpleName() + ": Unable to show anim " + animCode);
+		}
 	}
 
-
-	public void showAlive(float tpf_secs) {
-		if (!showingDied) {
-			return;
-		} 
-		// todo
-		showingDied = false;
-
-	}
 }

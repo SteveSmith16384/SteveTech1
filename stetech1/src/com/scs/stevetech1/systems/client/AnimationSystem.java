@@ -21,24 +21,17 @@ public class AnimationSystem extends AbstractSystem {
 
 
 	public void process(IClientSideAnimated anim, float tpf_secs) {
-		//if (anim.getAnimList() != null) { // Might be unanimated
 		HistoricalAnimationData had = anim.getAnimList().get(client.renderTime, true);
 		if (had != null) {
 			if (!had.animationCode.equals(anim.getCurrentAnimCode())) { // Has the animation changed?
 				try {
-					if (Globals.DEBUG_PLAYER_RESTART) {
-						if (had.animationCode != null && had.animationCode.equals(AbstractAvatar.ANIM_DIED)) {
-							int dfgdfg = 456456;
-						}
-					}
-					anim.setCurrentAnimForCode(had.animationCode);
+					anim.animCodeChanged(had.animationCode);
 				} catch (IllegalArgumentException ex) {
 					Globals.pe(ex.getMessage());
 				}
 			}
 		}
 		anim.processAnimation(tpf_secs);
-		//}
 	}
 
 

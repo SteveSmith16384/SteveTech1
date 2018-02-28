@@ -7,6 +7,7 @@ import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
+import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -31,9 +32,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 				Globals.p("Warning: No config file specified");
 			}
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
-			int gamePort = props.getPropertyAsInt("gamePort", 6143);
-			String lobbyIpAddress = props.getPropertyAsString("lobbyIpAddress", "localhost");
-			int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
+			int gamePort = props.getPropertyAsInt("gamePort", 6145);
+			String lobbyIpAddress = null;//props.getPropertyAsString("lobbyIpAddress", "localhost");
+			int lobbyPort = props.getPropertyAsInt("lobbyPort", 6146);
 
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
@@ -81,23 +82,24 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		// todo
-		float startHeight = 3f;
+		float startHeight = 2f;
 		avatar.setWorldTranslation(new Vector3f(3f, startHeight, 3f + (avatar.playerID*2)));
 		Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
 
 
 	protected void createGame() {
-		// todo
 		float mapSize = 30f;
-		float ceilingHeight = 3f;
+		float ceilingHeight = 4f;
 
-		// Place floor last
-		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/snow.jpg");
+		MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 0, 0, 0, 10, ceilingHeight, "Textures/spacewall2.png", 0);
+		this.actuallyAddEntity(wall);
+
+		// Place floor & ceiling last
+		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/floor0041.png");
 		this.actuallyAddEntity(floor);
 
-		Floor ceiling = new Floor(this, getNextEntityID(), 0, ceilingHeight, 0, mapSize, .5f, mapSize, "Textures/snow.jpg");
+		Floor ceiling = new Floor(this, getNextEntityID(), 0, ceilingHeight, 0, mapSize, .5f, mapSize, "Textures/bluemetal.png");
 		this.actuallyAddEntity(ceiling);
 	}
 

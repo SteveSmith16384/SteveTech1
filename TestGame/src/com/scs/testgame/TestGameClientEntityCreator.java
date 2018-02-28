@@ -187,7 +187,7 @@ public class TestGameClientEntityCreator {
 		}
 
 		default:
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Unknown entity type: " + msg.type);
 		}
 	}
 

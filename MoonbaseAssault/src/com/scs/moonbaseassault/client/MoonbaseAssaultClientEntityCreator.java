@@ -6,6 +6,7 @@ import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.LaserBullet;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
+import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
@@ -81,10 +82,21 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			return floor;
 		}
 
+		case WALL:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			float w = (float)msg.data.get("w");
+			float h = (float)msg.data.get("h");
+			String tex = (String)msg.data.get("tex");
+			float rot = (Float)msg.data.get("rot");
+			MoonbaseWall wall = new MoonbaseWall(game, id, pos.x, pos.y, pos.z, w, h, tex, rot);
+			return wall;
+		}
+
 		case LASER_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				LaserRifle gl = new LaserRifle(game, id, owner, num);
@@ -104,7 +116,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		}
 
 		default:
-			throw new RuntimeException("Todo");
+			throw new RuntimeException("Unknown entity type: " + msg.type);
 		}
 	}
 

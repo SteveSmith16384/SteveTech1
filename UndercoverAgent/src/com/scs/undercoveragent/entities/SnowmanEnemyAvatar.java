@@ -30,10 +30,7 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 	
 
 	@Override
-	public void setCurrentAnimForCode(String s) {
-		if (Globals.DEBUG_PLAYER_RESTART) {
-			//Globals.p("SnowmanEnemyAvatar: Showing anim " + s);
-		}
+	public void animCodeChanged(String s) {
 		if (s.equals(AbstractAvatar.ANIM_DIED)) {
 			this.showDied = true;
 		} else {

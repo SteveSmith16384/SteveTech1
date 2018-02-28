@@ -99,7 +99,7 @@ ConsoleInputListener {
 
 		gameData = new SimpleGameData();
 		gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, timeoutMillis);
-		
+
 		Globals.p("Listening on port " + gameOptions.ourExternalPort);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, gravity, aerodynamicness);
@@ -187,7 +187,7 @@ ConsoleInputListener {
 			}
 			this.entitiesToRemove.clear();
 		}
-		
+
 		if (gameNetworkServer.getNumClients() > 0) {
 			// Process all messages
 			synchronized (unprocessedMessages) {
@@ -344,12 +344,12 @@ ConsoleInputListener {
 		client.clientStatus = ClientData.ClientStatus.Accepted;
 
 		this.sendGameStatusMessage();
-		
+
 		this.gameNetworkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));		
 		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 
 		gameStatusSystem.checkGameStatus(true);
-	
+
 	}
 
 
@@ -569,19 +569,19 @@ ConsoleInputListener {
 
 		// Tell clients
 		//if (sendToClients) {
-			if (Globals.DEBUG_TOO_MANY_AVATARS) {
-				if (e instanceof AbstractAvatar) {
-					Globals.p("Sending avatar msg");
+		if (Globals.DEBUG_TOO_MANY_AVATARS) {
+			if (e instanceof AbstractAvatar) {
+				Globals.p("Sending avatar msg");
+			}
+		}
+		NewEntityMessage nem = new NewEntityMessage(e);
+		synchronized (clients) {
+			for (ClientData client : this.clients.values()) {
+				if (client.clientStatus == ClientStatus.Accepted) {
+					gameNetworkServer.sendMessageToClient(client, nem);	
 				}
 			}
-			NewEntityMessage nem = new NewEntityMessage(e);
-			synchronized (clients) {
-				for (ClientData client : this.clients.values()) {
-					if (client.clientStatus == ClientStatus.Accepted) {
-						gameNetworkServer.sendMessageToClient(client, nem);	
-					}
-				}
-			}
+		}
 		//}
 	}
 
@@ -688,7 +688,7 @@ ConsoleInputListener {
 		for (IEntity e : this.entities.values()) {
 			e.remove();
 		}
-		
+
 		//this.entitiesToAdd.clear();  Not needed?
 		//this.entitiesToRemove.clear(); Not needed?
 
@@ -714,7 +714,7 @@ ConsoleInputListener {
 			Globals.p("Warning: There are still " + this.getPhysicsController().getEntities().size() + " children in the physics world!  Forcing removal...");
 			this.getPhysicsController().removeAllEntities();
 		}
-*/
+		 */
 		this.createGame();
 
 		// Create avatars and send new entities to players
@@ -863,13 +863,15 @@ ConsoleInputListener {
 
 	@Override
 	public void processConsoleInput(String s) {
-		//Globals.p("Recieved input: " + s);
+		//Globals.p("Received input: " + s);
 		if (s.equalsIgnoreCase("help") || s.equalsIgnoreCase("?")) {
-			Globals.p("mb, stats");
+			Globals.p("mb, stats, entities");
 		} else if (s.equalsIgnoreCase("mb")) {
-				sendDebuggingBoxes();
+			sendDebuggingBoxes();
 		} else if (s.equalsIgnoreCase("stats")) {
-				showStats();
+			showStats();
+		} else if (s.equalsIgnoreCase("entities")) {
+			listEntities();
 		} else {
 			Globals.p("Unknown command: " + s);
 		}
@@ -888,6 +890,16 @@ ConsoleInputListener {
 			}
 		}
 		Globals.p("Sent model bounds to all clients");
+	}
+
+
+	private void listEntities() {
+		synchronized (entities) {
+			// Loop through the entities
+			for (IEntity e : entities.values()) {
+				Globals.p("Entity " + e.getID() + ": " + e.getName() + " (" + e + ")");
+			}
+		}
 	}
 
 

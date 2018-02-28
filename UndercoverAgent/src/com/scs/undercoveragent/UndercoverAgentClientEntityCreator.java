@@ -247,8 +247,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		}
 
 		default:
-			//return super.createEntity(game, msg);
-			throw new RuntimeException("Todo");
+			throw new RuntimeException("Unknown entity type: " + msg.type);
 		}
 	}
 }

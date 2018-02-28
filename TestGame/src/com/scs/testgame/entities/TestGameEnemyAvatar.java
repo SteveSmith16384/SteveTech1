@@ -31,7 +31,7 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 	}
 
 	@Override
-	public void setCurrentAnimForCode(String s) {
+	public void animCodeChanged(String s) {
 		// TODO Auto-generated method stub
 		
 	}
