@@ -82,17 +82,17 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		float startHeight = 2f;
+		float startHeight = .1f;
 		avatar.setWorldTranslation(new Vector3f(3f, startHeight, 3f + (avatar.playerID*2)));
 		Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
 
 
 	protected void createGame() {
-		float mapSize = 30f;
-		float ceilingHeight = 4f;
+		float mapSize = 20f;
+		float ceilingHeight = 1.5f;
 
-		MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 0, 0, 0, 10, ceilingHeight, "Textures/spacewall2.png", 0);
+		MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 0, 0, 0, mapSize, ceilingHeight, "Textures/spacewall2.png", 0);
 		this.actuallyAddEntity(wall);
 
 		// Place floor & ceiling last

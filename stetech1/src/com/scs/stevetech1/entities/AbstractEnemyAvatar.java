@@ -16,12 +16,12 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 	
 	protected IAvatarModel anim;
 
-	public AbstractEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z, IAvatarModel _anim) {
-		super(game, eid, 1, "EnemyAvatar", true);
+	public AbstractEnemyAvatar(IEntityController game, int type, int pid, int eid, float x, float y, float z, IAvatarModel _anim, int side) {
+		super(game, eid, type, "EnemyAvatar", true);
 
 		anim = _anim;
 		
-		Spatial geometry = anim.createAndGetModel(true);// getPlayersModel(game, pid);
+		Spatial geometry = anim.createAndGetModel(true, side);// getPlayersModel(game, pid);
 
 		this.mainNode.attachChild(geometry);
 

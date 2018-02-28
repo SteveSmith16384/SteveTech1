@@ -64,8 +64,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		side =_side;
 		avatarModel = _anim;
 
-		playerGeometry = avatarModel.createAndGetModel(!game.isServer());// getPlayersModel(game, playerID);
-		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves - yet?
+		playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);
+		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
 
 		this.getMainNode().attachChild(playerGeometry);
 

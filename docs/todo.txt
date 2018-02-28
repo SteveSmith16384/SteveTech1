@@ -3,10 +3,9 @@ STETECH1
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
 
 URGENT
-	MB model not facing correct direction
-MB: fix wall scaling
+Post to JME forum
+Player always looking down when restarting
 MB: Change colours of human
-Check for dropped messages
 Diff skybox for moonbase assault
 	Remove "entities"
 	Create hud log - 
@@ -18,45 +17,39 @@ Search for todos
 
 
 TODO
+Create moonbase map
+Check for packet loss
 Add links to SteveTech1
 Tree - make serverside just a cyl on trunk
-Server force jump
+UA: Server force jump
 Find font for JME
 Show on hud "connecting to server..", game restarting etc...
 Test Play sounds from msgs
 readme: Technical overview
-Create smaller vid and gif
+	Create smaller vid and gif
 Add to readme
 Blog post progress
 Write code to add 100 clients instantly
 Falling snow - started
 Use better font
-Show "hit!" effect if a player hit
-Clear client-only entities at the start of the game?
-Upload gif to Twitter -https://www.onlineconverter.com/avi-to-gif
+UA: Show "hit!" effect if a player hit
+Upload gif to Twitter
 Server tell client to slow down if server struggling
 Try desert models
 Sometimes, first bullet not killing snowman - is server also shooting? Client send shot confirmed msg to server when bullet is launched?
 Warn if client and server have diff bullets left
 Find sound effects
-Why doesn't player slide along snowmen?
-Record desktop showing two players
-Client can always jump, even when in the air
 Client connect to lobby first, then select server
 Players send ping to server from lobby to see which is best
 Ping system
 Split up client/server into systems
 Try diff snow hills
 Hitscan rifle - show line showing where server says bullet went
-Laser bullets
 Animate backwards when walking backwards
-Create moonbase map
 Look for soldiers for Moonbase Assault
 Simple console GUI for connecting to lobby
-Check for packet loss
 Server queue players, spectators
 Add Features to readme
-Should not have a generic "process()" or preprocess() method?
 Walking up steps
 Physics test - do explosion
 Add lots of comments

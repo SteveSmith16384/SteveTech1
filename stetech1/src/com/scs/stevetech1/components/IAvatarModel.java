@@ -4,7 +4,7 @@ import com.jme3.scene.Spatial;
 
 public interface IAvatarModel {
 
-	Spatial createAndGetModel(boolean forClient);
+	Spatial createAndGetModel(boolean forClient, int side);
 	
 	float getCameraHeight();
 	

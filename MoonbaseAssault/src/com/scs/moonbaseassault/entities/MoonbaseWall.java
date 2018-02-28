@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
@@ -30,7 +31,7 @@ public class MoonbaseWall extends PhysicalEntity {
 		float depth = 0.1f; // Default wall thickness
 
 		Box box1 = new Box(w/2, h/2, depth/2);
-		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
+		box1.scaleTextureCoordinates(new Vector2f(w, 1)); // Don't scale vertically
 		Geometry geometry = new Geometry("Wall", box1);
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);

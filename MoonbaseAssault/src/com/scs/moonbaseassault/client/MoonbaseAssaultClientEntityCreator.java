@@ -18,7 +18,7 @@ import com.scs.stevetech1.server.Globals;
 
 public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntityCreator {
 
-	public static final int AVATAR = 1;
+	public static final int SOLDIER_AVATAR = 1;
 	public static final int COMPUTER = 2;
 	public static final int FLOOR = 3;
 	public static final int DOOR = 4;
@@ -33,8 +33,14 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 
 	public static String TypeToString(int type) {
 		switch (type) {
-		case AVATAR: return "Avatar";
+		case SOLDIER_AVATAR: return "Avatar";
+		case COMPUTER: return "COMPUTER";
 		case FLOOR: return "FLOOR";
+		case DOOR: return "DOOR";
+		case CRATE: return "CRATE";
+		case WALL: return "WALL";
+		case LASER_BULLET: return "LASER_BULLET";
+		case LASER_RIFLE: return "LASER_RIFLE";
 		default: return "Unknown (" + type + ")";
 		}
 	}
@@ -48,7 +54,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		int id = msg.entityID;
 
 		switch (msg.type) {
-		case AVATAR:
+		case SOLDIER_AVATAR:
 		{
 			int playerID = (int)msg.data.get("playerID");
 			int side = (int)msg.data.get("side");
@@ -68,7 +74,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				AbstractEnemyAvatar avatar = new SoldierEnemyAvatar(game, playerID, id, pos.x, pos.y, pos.z);
+				AbstractEnemyAvatar avatar = new SoldierEnemyAvatar(game, SOLDIER_AVATAR, playerID, id, pos.x, pos.y, pos.z, side);
 				return avatar;
 			}
 		}

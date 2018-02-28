@@ -14,3 +14,4 @@ jinput-raw_64.dll
 
 /.recommenders/
 sources.txt
+*.log

@@ -41,7 +41,7 @@ public class ZombieModel implements IAvatarModel {
 
 
 	@Override
-	public Spatial createAndGetModel(boolean forClient) {
+	public Spatial createAndGetModel(boolean forClient, int side) {
 		if (forClient) {
 			Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
 			model.scale(.125f); // Make 1 high

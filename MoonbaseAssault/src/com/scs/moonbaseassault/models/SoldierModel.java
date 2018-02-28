@@ -32,10 +32,14 @@ public class SoldierModel implements IAvatarModel {
 
 
 	@Override
-	public Spatial createAndGetModel(boolean forClient) {
+	public Spatial createAndGetModel(boolean forClient, int side) {
 		if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
 			model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
-			JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/ClothedDarkSkin2.png");
+			if (side == 1) {
+				JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side1.png");
+			} else if (side == 2) {
+				JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side2.png");
+			}
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEFunctions.moveYOriginTo(model, 0f);
 			//JMEFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds

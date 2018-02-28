@@ -31,7 +31,7 @@ public class CharacterModel implements IAvatarModel {
 
 
 	@Override
-	public Spatial createAndGetModel(boolean forClient) {
+	public Spatial createAndGetModel(boolean forClient, int side) {
 		if (forClient) {
 			Spatial model = assetManager.loadModel("Models/3d-character/character/character.blend");
 			model.scale(.125f); // Make 1 high

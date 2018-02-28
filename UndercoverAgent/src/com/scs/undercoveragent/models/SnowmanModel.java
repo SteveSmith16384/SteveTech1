@@ -32,7 +32,7 @@ public class SnowmanModel implements IAvatarModel {
 
 
 	@Override
-	public Spatial createAndGetModel(boolean forClient) {
+	public Spatial createAndGetModel(boolean forClient, int side) {
 		if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
 			model = assetManager.loadModel("Models/Holiday/Snowman.obj");
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
