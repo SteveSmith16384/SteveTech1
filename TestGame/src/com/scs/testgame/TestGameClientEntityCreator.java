@@ -61,10 +61,11 @@ public class TestGameClientEntityCreator {
 			int playerID = (int)msg.data.get("playerID");
 			int side = (int)msg.data.get("side");
 			Vector3f pos = (Vector3f)msg.data.get("pos");
+			float moveSpeed = (float)msg.data.get("moveSpeed");
+			float jumpForce = (float)msg.data.get("jumpForce");
 
 			if (playerID == game.playerID) {
-				AbstractClientAvatar avatar = new TestGameClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
-				//game.avatar = avatar;
+				AbstractClientAvatar avatar = new TestGameClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side, moveSpeed, jumpForce);
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these

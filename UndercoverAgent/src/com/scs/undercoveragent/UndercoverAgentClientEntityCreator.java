@@ -97,9 +97,9 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 			}
 			
 			if (playerID == game.playerID) {
-				AbstractClientAvatar avatar = new SnowmanClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
-				avatar.moveSpeed = moveSpeed;
-				avatar.setJumpForce(jumpForce);
+				AbstractClientAvatar avatar = new SnowmanClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side, moveSpeed, jumpForce);
+				//avatar.moveSpeed = moveSpeed;
+				//avatar.setJumpForce(jumpForce);
 				//game.getCamera().lookAt(new Vector3f(15, .5f, 15), Vector3f.UNIT_Y);
 				return avatar;
 			} else {

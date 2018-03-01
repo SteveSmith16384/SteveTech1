@@ -1,7 +1,5 @@
 package ssmith.util;
 
-import com.scs.stevetech1.server.Globals;
-
 public class FixedLoopTime {
 
 	private long duration;

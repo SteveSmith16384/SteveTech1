@@ -68,9 +68,9 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	public void simpleInitApp() {
 		super.simpleInitApp();
 
-		this.getViewPort().setBackgroundColor(ColorRGBA.LightGray);
+		this.getViewPort().setBackgroundColor(ColorRGBA.Black);
 
-		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
+		//getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 
 	}
 

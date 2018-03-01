@@ -82,12 +82,13 @@ import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.KryonetGameClient;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractGameController;
-import com.scs.stevetech1.shared.AverageNumberCalculator;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.AnimationSystem;
 import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
+
+import ssmith.util.AverageNumberCalculator;
 
 public abstract class AbstractGameClient extends AbstractGameController implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
 
@@ -119,7 +120,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public int playerID = -1;
 	public int side = -1;
 	public int score;
-	private AverageNumberCalculator pingCalc = new AverageNumberCalculator();
+	private AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
 	public int clientStatus = STATUS_NOT_CONNECTED;

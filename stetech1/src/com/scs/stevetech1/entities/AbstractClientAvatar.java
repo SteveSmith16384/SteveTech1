@@ -32,11 +32,13 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	private Node debugNode;	
 
 	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
-			float x, float y, float z, int side, IAvatarModel _zm) {
+			float x, float y, float z, int side, IAvatarModel _zm, float _moveSpeed, float _jumpSpeed) {
 		super(_client, _playerID, _input, eid, side, _zm);
 
 		cam = _cam;
 		hud = _hud;
+		moveSpeed = _moveSpeed;
+		this.setJumpForce(_jumpSpeed);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 

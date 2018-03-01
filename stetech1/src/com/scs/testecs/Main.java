@@ -5,6 +5,10 @@ import com.scs.testecs.components.PositionData;
 import com.scs.testecs.systems.ISystem;
 import com.scs.testecs.systems.MovementSystem;
 
+/*
+ * Simple stand-alone project to test out an Entity Component System.
+ * 
+ */
 public class Main {
 
 	public Main() {

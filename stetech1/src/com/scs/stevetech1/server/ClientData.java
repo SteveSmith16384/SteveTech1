@@ -3,7 +3,8 @@ package com.scs.stevetech1.server;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.input.RemoteInput;
-import com.scs.stevetech1.shared.AverageNumberCalculator;
+
+import ssmith.util.AverageNumberCalculator;
 
 public class ClientData {
 
@@ -11,7 +12,7 @@ public class ClientData {
 
 	public Object networkObj;
 	public int id;
-	public AverageNumberCalculator pingCalc = new AverageNumberCalculator();
+	public AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long latestInputTimestamp;
 	public AbstractServerAvatar avatar;
 	public RemoteInput remoteInput = new RemoteInput(); // For storing message that are translated into input

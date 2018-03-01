@@ -7,6 +7,9 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
+/*
+ * This is so the client and the server can handle entities.
+ */
 public interface IEntityController {
 
 	boolean isServer();
