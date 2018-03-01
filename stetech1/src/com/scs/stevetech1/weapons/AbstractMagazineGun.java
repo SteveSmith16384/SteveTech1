@@ -17,14 +17,15 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	protected float timeUntilShoot_secs = 0;
 	protected int magazineSize;
 	protected float shotInterval_secs, reloadInterval_secs;
+	protected ClientData client; // Only used server-side
 
-
-	public AbstractMagazineGun(IEntityController _game, int id, int type, ICanShoot owner, int abilityNum, String _name, float shotInt, float reloadInt, int magSize) { 
+	public AbstractMagazineGun(IEntityController _game, int id, int type, ICanShoot owner, int abilityNum, String _name, float shotInt, float reloadInt, int magSize, ClientData _client) { 
 		super(_game, id, type, (AbstractAvatar)owner, abilityNum, _name);
 
 		this.shotInterval_secs = shotInt;
 		this.reloadInterval_secs = reloadInt;
 		this.magazineSize = magSize;
+		this.client = _client;
 	}
 
 

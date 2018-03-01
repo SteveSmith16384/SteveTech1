@@ -11,6 +11,7 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
@@ -26,8 +27,8 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	public RayCollisionData hitThisMoment = null; // Only used server-side
 	private int bulletsInMag = MAG_SIZE;
 
-	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num) {
-		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE);
+	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num, ClientData client) {
+		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
 
 	}
 

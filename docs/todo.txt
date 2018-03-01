@@ -3,19 +3,15 @@ STETECH1
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
 
 URGENT
+Avatar keeps jumping
 Post to JME forum
-	Delete unused models
-	Add quaternius file to model folder
 Create moonbase map
-	Use jump anim
-HUD log - "You have shot the enemy", "you have been shot"
-	Player always looking down when restarting
-	Create hud log - 
-	show "Player joined", "player left"
+Change anim codes to ints
 Search for todos
 
 
 TODO
+HUD log - "You have shot the enemy", "you have been shot"
 CreateSkyBox as entity
 Player send UID
 MA: Planets and ship model

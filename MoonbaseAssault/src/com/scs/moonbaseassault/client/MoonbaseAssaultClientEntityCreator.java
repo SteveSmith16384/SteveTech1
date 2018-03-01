@@ -105,7 +105,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
-				LaserRifle gl = new LaserRifle(game, id, owner, num);
+				LaserRifle gl = new LaserRifle(game, id, owner, num, null);
 				return gl;
 			}
 			return null;
@@ -117,7 +117,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
 			IEntityContainer<LaserBullet> irac = (IEntityContainer<LaserBullet>)game.entities.get(containerID);
-			LaserBullet bullet = new LaserBullet(game, id, irac, side);
+			LaserBullet bullet = new LaserBullet(game, id, irac, side, null);
 			return bullet;
 		}
 

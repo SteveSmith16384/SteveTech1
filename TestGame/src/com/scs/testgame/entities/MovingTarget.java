@@ -24,6 +24,8 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 
+import ssmith.io.IOFunctions;
+
 public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, IRewindable, IDamagable {
 
 	private static final float DURATION = 3;
@@ -91,7 +93,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		super.processByServer(server, tpf_secs);
 
 		if (Globals.LOG_MOVING_TARGET_POS) {
-			Globals.appendToFile("ServerMovingtarget.csv", "ServerMovingTarget," + System.currentTimeMillis() + "," + this.getWorldTranslation());
+			IOFunctions.appendToFile("ServerMovingtarget.csv", "ServerMovingTarget," + System.currentTimeMillis() + "," + this.getWorldTranslation());
 		}
 		
 	}
@@ -131,7 +133,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		super.calcPosition(mainApp, serverTimeToUse, tpf_secs);
 		
 		if (Globals.LOG_MOVING_TARGET_POS) {
-			Globals.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + serverTimeToUse + "," + this.getWorldTranslation());
+			IOFunctions.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + serverTimeToUse + "," + this.getWorldTranslation());
 		}
 		
 	}

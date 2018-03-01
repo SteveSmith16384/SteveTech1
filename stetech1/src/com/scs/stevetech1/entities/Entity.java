@@ -10,7 +10,7 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class Entity implements IEntity, Savable {
-	
+
 	public final int id;
 	public final int type;
 	protected transient IEntityController game;
@@ -35,20 +35,22 @@ public abstract class Entity implements IEntity, Savable {
 
 
 	public void remove() {
-		game.removeEntity(this.id);
-		removed = true;
+		if (!removed) {
+			game.removeEntity(this.id);
+			removed = true;
+		}
 	}
-	
-	
+
+
 	@Override
 	public void write(JmeExporter ex) throws IOException {
-		
+
 	}
 
 
 	@Override
 	public void read(JmeImporter im) throws IOException {
-		
+
 	}
 
 

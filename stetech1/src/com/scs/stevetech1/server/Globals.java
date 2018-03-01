@@ -1,10 +1,8 @@
 package com.scs.stevetech1.server;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Random;
 
+import ssmith.io.IOFunctions;
 import ssmith.lang.Functions;
 
 
@@ -72,30 +70,8 @@ public class Globals {
 		ex.printStackTrace();
 		
 		String filename = "Errors_" + GAME_START_TIME + ".log";
-		appendToFile(filename, Functions.Exception2String(ex));
+		IOFunctions.appendToFile(filename, Functions.Exception2String(ex));
 		
 	}
 	
-	public static void appendToFile(String path, String text) {
-		BufferedWriter bw = null;
-
-		try {
-			bw = new BufferedWriter(new FileWriter(path, true));
-			bw.write(text);
-			bw.newLine();
-			bw.flush();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} finally { // always close the file
-			if (bw != null) {
-				try {
-					bw.close();
-				} catch (IOException ioe2) {
-					// just ignore it
-				}
-			}
-
-		}
-	}
-
 }

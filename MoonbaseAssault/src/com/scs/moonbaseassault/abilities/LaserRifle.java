@@ -9,6 +9,7 @@ import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
@@ -20,8 +21,8 @@ public class LaserRifle extends AbstractMagazineGun<LaserBullet> implements IAbi
 
 	private LinkedList<LaserBullet> ammoCache = new LinkedList<LaserBullet>(); 
 
-	public LaserRifle(IEntityController game, int id, AbstractAvatar owner, int abilityNum) {
-		super(game, id, MoonbaseAssaultClientEntityCreator.LASER_RIFLE, owner, abilityNum, "Laser Rifle", .2f, 2, 10);
+	public LaserRifle(IEntityController game, int id, AbstractAvatar owner, int abilityNum, ClientData client) {
+		super(game, id, MoonbaseAssaultClientEntityCreator.LASER_RIFLE, owner, abilityNum, "Laser Rifle", .2f, 2, 10, client);
 
 	}
 
@@ -67,7 +68,7 @@ public class LaserRifle extends AbstractMagazineGun<LaserBullet> implements IAbi
 
 	@Override
 	protected void createBullet(AbstractGameServer server, int entityid, IEntityContainer irac, int side) {
-		LaserBullet l = new LaserBullet(game, entityid, irac, side);
+		LaserBullet l = new LaserBullet(game, entityid, irac, side, client);
 		server.addEntity(l);
 
 	}

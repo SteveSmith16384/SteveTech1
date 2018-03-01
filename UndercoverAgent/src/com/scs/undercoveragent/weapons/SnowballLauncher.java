@@ -19,13 +19,10 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 	private static final int MAG_SIZE = 6;
 
 	private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>();
-	private ClientData client; // Only used server-side
 
 	public SnowballLauncher(IEntityController game, int id, ICanShoot owner, int num, ClientData _client) {
-		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, owner, num, "SnowballLauncher", 1, 3, MAG_SIZE);
+		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, owner, num, "SnowballLauncher", 1, 3, MAG_SIZE, _client);
 		
-		client = _client;
-
 	}
 
 
