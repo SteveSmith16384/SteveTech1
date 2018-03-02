@@ -8,13 +8,14 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.Globals;
 
 //Punch, Walk, Working, ArmatureAction.002, Idle, Death, Run, Jump
-public class SoldierModel implements IAvatarModel, AnimEventListener {
+public class SoldierModel implements IAvatarModel {
 
 	private static final float MODEL_WIDTH = 0.25f;
 	private static final float MODEL_DEPTH = 0.25f;
@@ -23,8 +24,9 @@ public class SoldierModel implements IAvatarModel, AnimEventListener {
 	private AssetManager assetManager;
 	private Spatial model;
 	private AnimChannel channel;
-	private boolean isJumping = false;
-	
+	private AnimEventListener l;
+	public boolean isJumping = false;
+
 	public SoldierModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
 	}
@@ -33,6 +35,7 @@ public class SoldierModel implements IAvatarModel, AnimEventListener {
 	@Override
 	public Spatial createAndGetModel(boolean forClient, int side) {
 		if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
+			//l = _l;
 			model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
 			if (side == 1) {
 				JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side1.png");
@@ -43,7 +46,7 @@ public class SoldierModel implements IAvatarModel, AnimEventListener {
 			JMEFunctions.moveYOriginTo(model, 0f);
 
 			AnimControl control = JMEFunctions.getNodeWithControls((Node)model);
-			control.addListener(this);
+			control.addListener(l);
 			channel = control.createChannel();
 
 			return model;
@@ -74,8 +77,8 @@ public class SoldierModel implements IAvatarModel, AnimEventListener {
 	}
 
 
-	public void setAnim(String animCode) {
-		if (this.isJumping && !animCode.equals(AbstractAvatar.ANIM_DIED)) {
+	public void setAnim(int animCode) {
+		if (this.isJumping && animCode != AbstractAvatar.ANIM_DIED) {
 			// Do nothing; only dying can stop a jumping anim
 			return;
 		}
@@ -107,18 +110,5 @@ public class SoldierModel implements IAvatarModel, AnimEventListener {
 		}
 	}
 
-
-	@Override
-	public void onAnimCycleDone(AnimControl control, AnimChannel channel, String animName) {
-		if (animName.equals("Jump")) {
-			isJumping = false;
-		}
-	}
-
-
-	@Override
-	public void onAnimChange(AnimControl control, AnimChannel channel, String animName) {
-		// Do nothing
-	}
 
 }

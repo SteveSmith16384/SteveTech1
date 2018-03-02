@@ -201,7 +201,6 @@ public class SimpleRigidBody<T> implements Collidable {
 		List<SimpleRigidBody<T>> entities = physicsController.getEntities();
 		synchronized (entities) {
 			// Loop through the entities
-			//for(SimpleRigidBody<T> e : entities) { // CCM exception
 			for (int i=0 ; i<entities.size() ; i++) {
 				collisionResults.clear();
 				SimpleRigidBody<T> e = entities.get(i);

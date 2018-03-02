@@ -1,5 +1,8 @@
 package com.scs.stevetech1.shared;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
@@ -25,5 +28,7 @@ public interface IEntityController {
 	Node getGameNode();
 	
 	int getNextEntityID();
+	
+	public <V> Future<V> enqueue(Callable<V> callable);
 	
 }

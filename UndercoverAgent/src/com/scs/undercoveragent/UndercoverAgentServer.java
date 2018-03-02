@@ -113,6 +113,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	}
 
 
+	@Override
 	protected void createGame() {
 		if (Globals.EMPTY_MAP) {
 			// Do nothing

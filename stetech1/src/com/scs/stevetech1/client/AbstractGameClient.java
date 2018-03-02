@@ -76,7 +76,6 @@ import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
-import com.scs.stevetech1.netmessages.lobby.RequestListOfGameServersMessage;
 import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.KryonetGameClient;
@@ -477,7 +476,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							}
 						}
 						pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
-						if (pe instanceof IClientSideAnimated && eum.animationCode != null) {
+						if (pe instanceof IClientSideAnimated) {// && eum.animationCode != null) {
 							IClientSideAnimated ia = (IClientSideAnimated)pe;
 							ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animationCode));
 							/*if (eum.animationCode != null && eum.animationCode.equals(AbstractAvatar.ANIM_DIED)) {

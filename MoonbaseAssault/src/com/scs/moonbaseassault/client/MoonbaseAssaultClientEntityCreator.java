@@ -4,9 +4,10 @@ import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.LaserBullet;
+import com.scs.moonbaseassault.entities.MoonbaseWall;
+import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
-import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
@@ -119,6 +120,17 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			IEntityContainer<LaserBullet> irac = (IEntityContainer<LaserBullet>)game.entities.get(containerID);
 			LaserBullet bullet = new LaserBullet(game, id, irac, side, null);
 			return bullet;
+		}
+
+		case DOOR:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			float w = (float)msg.data.get("w");
+			float h = (float)msg.data.get("h");
+			String tex = (String)msg.data.get("tex");
+			float rot = (Float)msg.data.get("rot");
+			SlidingDoor wall = new SlidingDoor(game, id, pos.x, pos.y, pos.z, w, h, tex, rot);
+			return wall;
 		}
 
 		default:

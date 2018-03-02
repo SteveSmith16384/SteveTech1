@@ -22,11 +22,11 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerControlled, IProcessByServer, ICanShoot, IAffectedByPhysics {
 
 	// Animation Codes
-	public static final String ANIM_IDLE = "Idle";
-	public static final String ANIM_WALKING = "Walking";
-	public static final String ANIM_JUMP = "Jump";
-	public static final String ANIM_SHOOTING = "Shooting";
-	public static final String ANIM_DIED = "Died";
+	public static final int ANIM_IDLE = 0;
+	public static final int ANIM_WALKING = 1;
+	public static final int ANIM_JUMP = 2;
+	public static final int ANIM_SHOOTING = 3;
+	public static final int ANIM_DIED = 4;
 
 	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	protected IInputDevice input;
@@ -81,7 +81,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
 		this.resetWalkDir();
 
-		String newAnimCode = ANIM_IDLE; // Default
+		int newAnimCode = ANIM_IDLE; // Default
 
 		// Check for any abilities/guns being fired
 		for (int i=0 ; i< this.ability.length ; i++) {
@@ -137,9 +137,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 		simpleRigidBody.process(tpf_secs);
 
-		if (!newAnimCode.equals(currentAnimCode)) {
+		//if (newAnimCode.equals(currentAnimCode)) {
 			this.currentAnimCode = newAnimCode;
-		}
+		//}
 
 	}
 

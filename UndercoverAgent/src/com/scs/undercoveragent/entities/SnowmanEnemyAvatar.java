@@ -30,8 +30,8 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 	
 
 	@Override
-	public void animCodeChanged(String s) {
-		if (s.equals(AbstractAvatar.ANIM_DIED)) {
+	public void setAnimCode(int s) {
+		if (s == AbstractAvatar.ANIM_DIED) {
 			this.showDied = true;
 		} else {
 			this.showDied = false;
@@ -39,12 +39,12 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 		this.currentAnimCode = s;
 	}
 
-	
+	/*
 	@Override
-	public String getCurrentAnimCode() {
+	public int getCurrentAnimCode() {
 		return this.currentAnimCode;
 	}
-
+*/
 
 	@Override
 	public void processAnimation(float tpf_secs) {

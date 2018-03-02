@@ -28,7 +28,7 @@ public class MoonbaseWall extends PhysicalEntity {
 			creationData.put("rot", rotDegrees);
 		}
 
-		float depth = 0.1f; // Default wall thickness
+		float depth = 1f;//0.1f; // Default wall thickness
 
 		Box box1 = new Box(w/2, h/2, depth/2);
 		box1.scaleTextureCoordinates(new Vector2f(w, 1)); // Don't scale vertically
@@ -59,7 +59,6 @@ public class MoonbaseWall extends PhysicalEntity {
 		mainNode.setLocalTranslation(x, yBottom, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
-		//this.simpleRigidBody.setMovable(false);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

@@ -7,9 +7,9 @@ public interface IClientSideAnimated {
 
 	ChronologicalLookup<HistoricalAnimationData> getAnimList();
 	
-	String getCurrentAnimCode();
+	//int getCurrentAnimCode();
 	
-	void animCodeChanged(String s);
+	void setAnimCode(int s);
 	
 	void processAnimation(float tpf_secs);
 	

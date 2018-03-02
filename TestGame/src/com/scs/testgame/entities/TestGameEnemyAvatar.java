@@ -32,14 +32,13 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 	}
 
 	@Override
-	public void animCodeChanged(String s) {
-		// TODO Auto-generated method stub
+	public void setAnimCode(int s) {
 		
 	}
 
+	
 	@Override
 	public void processAnimation(float tpf_secs) {
-		// TODO Auto-generated method stub
 		
 	}
 

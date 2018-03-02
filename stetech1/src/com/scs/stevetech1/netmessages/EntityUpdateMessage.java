@@ -29,12 +29,6 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		updateData.force = force;
 		updateData.animationCode = sc.getCurrentAnimCode();
 		
-		/*
-		if (sc.getCurrentAnimCode() != null && sc.getCurrentAnimCode().equals(AbstractAvatar.ANIM_DIED)) {
-			int dfgdfg = 45656;
-		}
-		*/
-		
 		this.data.add(updateData);
 
 	}
@@ -52,7 +46,7 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		public Vector3f pos;
 		public Quaternion dir;
 		public boolean force; // Force new position on client, e.g. avatar restarting.
-		public String animationCode;
+		public int animationCode;
 		
 	}
 	

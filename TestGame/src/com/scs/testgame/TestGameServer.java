@@ -39,6 +39,7 @@ public class TestGameServer extends AbstractGameServer {
 	}
 
 
+	@Override
 	protected void createGame() {
 		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		this.actuallyAddEntity(floor);

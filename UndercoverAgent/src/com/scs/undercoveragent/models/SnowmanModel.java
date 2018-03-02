@@ -1,12 +1,12 @@
 package com.scs.undercoveragent.models;
 
+import com.jme3.animation.AnimEventListener;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.scs.stevetech1.components.IAvatarModel;
-import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.Globals;
 

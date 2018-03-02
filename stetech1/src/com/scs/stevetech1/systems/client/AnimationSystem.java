@@ -23,13 +23,13 @@ public class AnimationSystem extends AbstractSystem {
 	public void process(IClientSideAnimated anim, float tpf_secs) {
 		HistoricalAnimationData had = anim.getAnimList().get(client.renderTime, true);
 		if (had != null) {
-			if (!had.animationCode.equals(anim.getCurrentAnimCode())) { // Has the animation changed?
+			//if (had.animationCode != .equals(anim.getCurrentAnimCode())) { // Has the animation changed?
 				try {
-					anim.animCodeChanged(had.animationCode);
+					anim.setAnimCode(had.animationCode);
 				} catch (IllegalArgumentException ex) {
 					Globals.pe(ex.getMessage());
 				}
-			}
+			//}
 		}
 		anim.processAnimation(tpf_secs);
 	}

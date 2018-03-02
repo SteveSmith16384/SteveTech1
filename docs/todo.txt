@@ -3,10 +3,13 @@ STETECH1
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
 
 URGENT
+Sliding doors not colliding
+MA: Planets and ship model
 Avatar keeps jumping
-Post to JME forum
+server Avatar getting stuck on moonbase walls
 Create moonbase map
-Change anim codes to ints
+	Change anim codes to ints
+Blog laser squad fps
 Search for todos
 
 
@@ -14,11 +17,10 @@ TODO
 HUD log - "You have shot the enemy", "you have been shot"
 CreateSkyBox as entity
 Player send UID
-MA: Planets and ship model
 MA: Diff skybox for moonbase assault
 Check for packet loss
 Add links to SteveTech1
-Tree - make serverside just a cyl on trunk
+Tree - make serverside just a cyl on trunk?
 UA: Server force jump
 Find font for JME
 Show on hud "connecting to server..", game restarting etc...
@@ -40,8 +42,8 @@ Client connect to lobby first, then select server
 Players send ping to server from lobby to see which is best
 Ping system
 Split up client/server into systems
-Try diff snow hills
 Hitscan rifle - show line showing where server says bullet went
+Load models in thread?
 Animate backwards when walking backwards
 Server queue players, spectators
 Walking up steps

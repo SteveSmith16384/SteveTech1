@@ -1,6 +1,7 @@
 package com.scs.undercoveragent.entities;
 
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
@@ -32,9 +33,16 @@ public class Igloo extends PhysicalEntity {
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
+	}
+	
+/*	
+	private void loadInThread() {
+		game.enqueue(new Callable<Spatial>() {
+			public Spatial call() throws Exception {
+				return node;
+			}
+		});
 
 	}
-
+*/
 }

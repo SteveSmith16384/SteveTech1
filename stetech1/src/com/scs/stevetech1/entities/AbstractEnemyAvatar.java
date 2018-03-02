@@ -15,13 +15,15 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IClientSideAnimated {
 	
 	protected IAvatarModel anim;
+	//public int side;
 
-	public AbstractEnemyAvatar(IEntityController game, int type, int pid, int eid, float x, float y, float z, IAvatarModel _anim, int side) {
+	public AbstractEnemyAvatar(IEntityController game, int type, int pid, int eid, float x, float y, float z, IAvatarModel _anim, int _side) {
 		super(game, eid, type, "EnemyAvatar", true);
 
 		anim = _anim;
+		//side = _side;
 		
-		Spatial geometry = anim.createAndGetModel(true, side);// getPlayersModel(game, pid);
+		Spatial geometry = anim.createAndGetModel(true, _side);// getPlayersModel(game, pid);
 
 		this.mainNode.attachChild(geometry);
 

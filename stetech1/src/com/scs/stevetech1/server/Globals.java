@@ -9,6 +9,7 @@ import ssmith.lang.Functions;
 public class Globals {
 	
 	public static final boolean RECORD_VID = false;
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
 
 	// Lots of consts for specific debugging output
 	public static final boolean SIMULATE_DROPPED_PACKETS = false;
@@ -23,8 +24,7 @@ public class Globals {
 	public static final boolean DEBUG_SERVER_SHOOTING = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_CLIENT_ROTATION = false;
-	public static final boolean USE_SERVER_MODELS_ON_CLIENT = false;	
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
+	public static final boolean USE_SERVER_MODELS_ON_CLIENT = false;
 	public static final boolean DEBUG_PLAYER_RESTART = false;
 	public static final boolean DEBUG_MOUNTAIN_BORDER = false;
 	public static final boolean SHOW_SNOWBALL_COLLISION_POS = false;
