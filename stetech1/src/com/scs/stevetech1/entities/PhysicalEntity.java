@@ -167,7 +167,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public Quaternion getWorldRotation() {
 		return this.getMainNode().getLocalRotation();
-		//return this.rotation;
 	}
 
 
@@ -177,14 +176,14 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public boolean sendUpdates() {
+		if (!this.moves) { // todo - scs new!
+			return false;
+		}
+		
 		Vector3f currentPos = this.getWorldTranslation();
 		float dist = currentPos.distance(prevPos);
 		boolean hasMoved = dist > 0.01f; 
 		if (hasMoved) {
-			/*if (dist > 10f) {
-				Settings.p(this.toString() + " has moved A LOT " + dist);
-			}*/
-			//Settings.p(this.toString() + " has moved " + dist);
 			this.prevPos.set(currentPos);
 		}
 
@@ -195,7 +194,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			if (rotChanged) {
 				prevRot.set(currentRot);
 			}
-			hasMoved = hasMoved || rotChanged;
+			hasMoved = rotChanged;
 		}
 
 		return hasMoved;

@@ -33,7 +33,7 @@ public class CharacterModel implements IAvatarModel {
 
 	@Override
 	public Spatial createAndGetModel(boolean forClient, int side) {
-		if (forClient) {
+		//if (forClient) {
 			Spatial model = assetManager.loadModel("Models/3d-character/character/character.blend");
 			model.scale(.125f); // Make 1 high
 			model.setModelBound(new BoundingBox());
@@ -46,12 +46,12 @@ public class CharacterModel implements IAvatarModel {
 			AnimControl control = s.getControl(AnimControl.class);
 			channel = control.createChannel();
 			return model;
-		} else {
+		/*} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
 			Geometry geometry = new Geometry("CharacterBox", box1);
 			geometry.setLocalTranslation(0, MODEL_HEIGHT/2, 0); // Move origin to floor
 			return geometry;
-		}
+		}*/
 	}
 
 /*

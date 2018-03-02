@@ -141,7 +141,7 @@ ConsoleInputListener {
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		StringBuilder strDebug = new StringBuilder();
+		StringBuilder strDebug = new StringBuilder(); // todo - remove
 
 		if (updateLobbyInterval.hitInterval()) {
 			if (clientToLobbyServer == null) {
@@ -244,8 +244,6 @@ ConsoleInputListener {
 					for (ClientData c : this.clients.values()) {
 						AbstractServerAvatar avatar = c.avatar;
 						if (avatar != null) {
-							//&& avatar.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
-							//ICalcHitInPast chip = (ICalcHitInPast) avatar.abilityGun;
 							ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
 							Vector3f from = avatar.getBulletStartPos();
 							if (Globals.DEBUG_SHOOTING_POS) {
@@ -284,7 +282,14 @@ ConsoleInputListener {
 
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity physicalEntity = (PhysicalEntity)e;
-						strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
+						if (Globals.STRICT) {
+							if (physicalEntity.simpleRigidBody != null) {
+								if (physicalEntity.simpleRigidBody.canMove() != physicalEntity.moves) {
+									Globals.pe("Warning!  Entity " + physicalEntity.name + ": Discrepancy between canMove() in rigid body and entity");
+								}
+							}
+						}
+						//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 						if (sendUpdates) {
 							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
 								eum.addEntityData(physicalEntity, false);

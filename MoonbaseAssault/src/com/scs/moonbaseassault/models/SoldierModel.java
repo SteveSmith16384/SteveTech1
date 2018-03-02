@@ -34,8 +34,7 @@ public class SoldierModel implements IAvatarModel {
 
 	@Override
 	public Spatial createAndGetModel(boolean forClient, int side) {
-		if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
-			//l = _l;
+		//if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
 			model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
 			if (side == 1) {
 				JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side1.png");
@@ -50,7 +49,7 @@ public class SoldierModel implements IAvatarModel {
 			channel = control.createChannel();
 
 			return model;
-		} else {
+		/*} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
 			model = new Geometry("Soldier", box1);
 			model.setLocalTranslation(0, MODEL_HEIGHT/2, 0); // Move origin to floor
@@ -61,7 +60,7 @@ public class SoldierModel implements IAvatarModel {
 			}
 
 			return model;
-		}
+		}*/
 	}
 
 

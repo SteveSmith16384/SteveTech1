@@ -274,5 +274,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	public void setModelComplexity(int i) {
 		this.modelComplexity = i;
 	}
+	
+	
+	public boolean canMove() {
+		return this.canMove;
+	}
 }
 

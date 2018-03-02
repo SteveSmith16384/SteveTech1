@@ -1,6 +1,5 @@
 package com.scs.undercoveragent.models;
 
-import com.jme3.animation.AnimEventListener;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -33,7 +32,7 @@ public class SnowmanModel implements IAvatarModel {
 
 	@Override
 	public Spatial createAndGetModel(boolean forClient, int side) {
-		if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
+		//if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
 			model = assetManager.loadModel("Models/Holiday/Snowman.obj");
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEFunctions.moveYOriginTo(model, 0f);
@@ -42,7 +41,7 @@ public class SnowmanModel implements IAvatarModel {
 			origPos = model.getLocalTranslation().clone();
 			
 			return model;
-		} else {
+		/*} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
 			model = new Geometry("Snowman", box1);
 			model.setLocalTranslation(0, MODEL_HEIGHT/2, 0); // Move origin to floor
@@ -53,7 +52,7 @@ public class SnowmanModel implements IAvatarModel {
 			}
 
 			return model;
-		}
+		}*/
 	}
 
 

@@ -22,7 +22,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision, IProcessByServer {
 
-	private static final Vector3f MOVE_UP = new Vector3f(0, .1f, 0);
+	private static final Vector3f MOVE_UP = new Vector3f(0, .6f, 0);
 	private static final float STAY_OPEN_DURATION = 5f;
 
 	private Vector3f origPosition;
@@ -30,7 +30,7 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 	private float timeUntilClose;
 
 	public SlidingDoor(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.DOOR, "SlidingDoor", false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.DOOR, "SlidingDoor", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -88,13 +88,20 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 		if (this.isOpening) {
 			if (this.getWorldTranslation().y <= MoonbaseAssaultServer.CEILING_HEIGHT) {
 				this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs));
+				if (Globals.DEBUG_SLIDING_DOORS) {
+					Globals.p("Door is opening");
+				}
 			} else {
+				this.isOpening = false;
 				timeUntilClose -= tpf_secs;
 			}
 		} else {
-			if (timeUntilClose < 0) {
+			if (timeUntilClose <= 0) {
 				if (this.getWorldTranslation().y >= 0) {
 					this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs).mult(-1));
+					if (Globals.DEBUG_SLIDING_DOORS) {
+						Globals.p("Door is closing");
+					}
 				}
 			}
 		}

@@ -134,7 +134,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		}
 
 		default:
-			throw new RuntimeException("Unknown entity type: " + msg.type);
+			throw new RuntimeException("Unknown entity type for creation: " + msg.type);
 		}
 	}
 

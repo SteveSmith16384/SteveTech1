@@ -3,10 +3,12 @@ STETECH1
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
 
 URGENT
-Sliding doors not colliding
+Moonbase walls not in right place
+	Discrepancy between server avatar size and client avatar size?
+	Sliding doors not colliding
 MA: Planets and ship model
 Avatar keeps jumping
-server Avatar getting stuck on moonbase walls
+	server Avatar getting stuck on moonbase walls
 Create moonbase map
 	Change anim codes to ints
 Blog laser squad fps
@@ -54,7 +56,7 @@ Make vars private/protected
 Reduce object creation, including calls to clone()
 Kryonet encryption?
 User enter name
-Only send entity updates for entites the player can see?
+Only send entity updates for entities the player can see?
 
 
 LATER

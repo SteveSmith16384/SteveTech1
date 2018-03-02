@@ -6,6 +6,8 @@ import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -21,7 +23,7 @@ import com.scs.stevetech1.shared.IAbility;
 import ssmith.util.MyProperties;
 
 public class MoonbaseAssaultServer extends AbstractGameServer {
-	
+
 	public static final float CEILING_HEIGHT = 1.5f;
 
 	public static void main(String[] args) {
@@ -54,7 +56,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 		}
 	}
 
-/*
+	/*
 	private static void startLobbyServer(int lobbyPort, int timeout) {
 		Thread r = new Thread("LobbyServer") {
 
@@ -71,7 +73,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 
 	}
-*/
+	 */
 
 	public MoonbaseAssaultServer(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
@@ -94,28 +96,31 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 	protected void createGame() {
 		MapLoader map = new MapLoader(this);
 		try {
-			map.loadMap("/serverdata/moonbaseassault.csv");
+			//map.loadMap("/serverdata/moonbaseassault.csv");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
+		// Testing
 		SlidingDoor door = new SlidingDoor(this, getNextEntityID(), 4, 0, 4, 1, CEILING_HEIGHT, "Textures/door_lr.png", 270);
 		this.actuallyAddEntity(door);
 
-		/*
 		float mapSize = 20f;
 
-		MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 4, 0, 4, mapSize, CEILING_HEIGHT, "Textures/spacewall2.png", 270);
+		MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 4, 0, 4, 3, CEILING_HEIGHT, "Textures/spacewall2.png", 270);
 		this.actuallyAddEntity(wall);
 
+		MoonbaseWall wall2 = new MoonbaseWall(this, getNextEntityID(), 6, 0, 4, 3, CEILING_HEIGHT, "Textures/spacewall2.png", 0);
+		this.actuallyAddEntity(wall2);
+
 		// Place floor & ceiling last
-		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/floor0041.png");
+		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
 		this.actuallyAddEntity(floor);
 
 		/*
 		Floor ceiling = new Floor(this, getNextEntityID(), 0, CEILING_HEIGHT, 0, mapSize, .5f, mapSize, "Textures/bluemetal.png");
 		this.actuallyAddEntity(ceiling);
-		*/
+		 */
 	}
 
 
@@ -133,13 +138,14 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
-		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
-		
-		if (pa.type != MoonbaseAssaultClientEntityCreator.FLOOR && pb.type != MoonbaseAssaultClientEntityCreator.FLOOR) {
-			Globals.p("dd");
-		}
+		if (Globals.DEBUG_SLIDING_DOORS) {
+			PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
+			PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
 
+			if (pa.type != MoonbaseAssaultClientEntityCreator.FLOOR && pb.type != MoonbaseAssaultClientEntityCreator.FLOOR) {
+				Globals.p("Collision between " + pa + " and " + pb);
+			}
+		}
 		super.collisionOccurred(a, b, point);
 
 	}
@@ -188,12 +194,13 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
 		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
-		
+
+		// Sliding doors shouldn't collide with floor/ceiling
 		if ((pa.type == MoonbaseAssaultClientEntityCreator.FLOOR && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.FLOOR) {
 			return false;
 		}
 		return super.canCollide(a, b);
 
 	}
-	
+
 }
