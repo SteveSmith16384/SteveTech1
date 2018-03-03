@@ -1,6 +1,12 @@
 STETECH1
 
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
+https://opengameart.org/content/heavy-turret
+https://www.blendswap.com/blends/view/78118
+https://opengameart.org/content/turret-gun
+Reload: https://opengameart.org/content/replenish-life-force-sound
+https://opengameart.org/content/3-2-1-go
+
 
 URGENT
 Avatar keeps jumping
