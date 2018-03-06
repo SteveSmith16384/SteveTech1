@@ -114,6 +114,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public IGameMessageClient networkClient;
 	public IHUD hud;
 	public IInputDevice input;
+	private Node playersWeaponNode;
 
 	public AbstractClientAvatar currentAvatar;
 	public int playerID = -1;
@@ -386,6 +387,13 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 					//this.hud.log_ta.setText(strListEnts.toString());
 				}
+				
+				// Show players gun
+				if (playersWeaponNode != null) {
+					playersWeaponNode.setLocalTranslation(cam.getLocation());
+					playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
+				}
+
 			}
 
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
@@ -867,5 +875,17 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	public Node getGameNode() {
 		return gameNode;
 	}
+	
+	
+	private void showPlayersWeapon() {
+		if (playersWeaponNode == null) {
+			playersWeaponNode = new Node("PlayersWeapon");
+		}
+		playersWeaponNode.detachAllChildren();
+		playersWeaponNode.attachChild(getPlayersWeaponModel());
+	}
 
+	
+	protected abstract Spatial getPlayersWeaponModel();
+	
 }

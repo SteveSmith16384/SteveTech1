@@ -4,6 +4,7 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 import com.jme3.util.SkyFactory;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -170,6 +171,12 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 				currentHUDImage.remove();
 			}
 		}
+	}
+
+
+	@Override
+	protected Spatial getPlayersWeaponModel() {
+		return null; // todo
 	}
 
 }

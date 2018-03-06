@@ -72,8 +72,7 @@ public class MapLoader {
 					checkForHorizontalWalls(x, y);
 				}				
 				x++;
-			}
-						
+			}						
 			y++;
 		}
 
@@ -82,12 +81,11 @@ public class MapLoader {
 		while (y < mapsize-1) {
 			int x = 0;
 			while (x < mapsize) {
-				if (handled[x][y] == WALL && handled[x][y+1] == WALL) {
+				if (handled[x][y] == WALL) {// && handled[x][y+1] == WALL) {
 					checkForVerticalWalls(x, y);
 				}				
 				x++;
-			}
-						
+			}						
 			y++;
 		}
 
@@ -112,7 +110,7 @@ public class MapLoader {
 		}
 		x--;
 		//Globals.p("Creating wall at " + sx + ", " + sy + " length: " + (x-sx));
-		MoonbaseWall wall = new MoonbaseWall(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0f, sy, x-sx, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/ufo2_03.png", 0f);
+		MoonbaseWall wall = new MoonbaseWall(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0f, sy, x-sx+1, MoonbaseAssaultServer.CEILING_HEIGHT, 1, "Textures/ufo2_03.png");
 		moonbaseAssaultServer.actuallyAddEntity(wall);
 		totalWalls++;
 	}
@@ -128,7 +126,7 @@ public class MapLoader {
 		}
 		y--;
 		//Globals.p("Creating wall at " + sx + ", " + sy + " length: " + (y-sy));
-		MoonbaseWall wall = new MoonbaseWall(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0f, sy, y-sy, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/spacewall2.png", 270f);
+		MoonbaseWall wall = new MoonbaseWall(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0f, sy, 1, MoonbaseAssaultServer.CEILING_HEIGHT, y-sy+1, "Textures/spacewall2.png");
 		moonbaseAssaultServer.actuallyAddEntity(wall);
 		totalWalls++;
 	}

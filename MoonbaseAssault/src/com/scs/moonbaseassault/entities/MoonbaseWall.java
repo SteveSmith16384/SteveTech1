@@ -17,20 +17,21 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class MoonbaseWall extends PhysicalEntity {
 
-	public MoonbaseWall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
+	public MoonbaseWall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, float d, String tex) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.WALL, "Wall", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("w", w);
 			creationData.put("h", h);
+			creationData.put("d", d);
 			creationData.put("tex", tex);
-			creationData.put("rot", rotDegrees);
+			//creationData.put("rot", rotDegrees);
 		}
 
-		float depth = 1f;//0.1f; // Default wall thickness
+		//float depth = 1f;//0.1f; // Default wall thickness
 
-		Box box1 = new Box(w/2, h/2, depth/2);
+		Box box1 = new Box(w/2, h/2, d/2);
 		box1.scaleTextureCoordinates(new Vector2f(w, 1)); // Don't scale vertically
 		Geometry geometry = new Geometry("Wall", box1);
 		if (!_game.isServer()) { // Not running in server
@@ -51,11 +52,11 @@ public class MoonbaseWall extends PhysicalEntity {
 			geometry.setMaterial(floor_mat);
 		}
 		this.mainNode.attachChild(geometry);
-		if (rotDegrees != 0) {
+		geometry.setLocalTranslation((w/2), h/2, (d/2)); // Never change position of mainNode (unless the whole object is moving)
+		/*if (rotDegrees != 0) {
 			float rads = (float)Math.toRadians(rotDegrees);
 			mainNode.rotate(0, rads, 0);
-		}
-		geometry.setLocalTranslation(w/2, h/2, depth/2); // Never change position of mainNode (unless the whole object is moving)
+		}*/
 		mainNode.setLocalTranslation(x, yBottom, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);

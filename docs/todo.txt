@@ -10,23 +10,28 @@ https://opengameart.org/content/3-2-1-go
 
 URGENT
 Moonbase walls not in right place
+Slide doors sideways
+Show players gun
+Stars skybox
 	Discrepancy between server avatar size and client avatar size?
 	Sliding doors not colliding
-MA: Planets and ship model
 Avatar keeps jumping
 	server Avatar getting stuck on moonbase walls
-Create moonbase map
+	Create moonbase map
 	Change anim codes to ints
-Blog laser squad fps
 Search for todos
-Tutorial
 
 
 TODO
+Tutorial
+Blog laser squad fps
+MA: Planets and ship model
+UA: Leave footsteps?
+Test all sfx
+Fog
 HUD log - "You have shot the enemy", "you have been shot"
 CreateSkyBox as entity
 Player send UID
-MA: Diff skybox for moonbase assault
 Check for packet loss
 Add links to SteveTech1
 Tree - make serverside just a cyl on trunk?

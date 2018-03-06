@@ -1,5 +1,6 @@
 package com.scs.testgame;
 
+import com.jme3.scene.Spatial;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.hud.IHUD;
@@ -100,6 +101,12 @@ public class TestGameClient extends AbstractGameClient {
 	@Override
 	protected void gameStatusChanged(int oldStatus, int newStatus) {
 		// Do nothing
+	}
+
+
+	@Override
+	protected Spatial getPlayersWeaponModel() {
+		return null;
 	}
 
 }

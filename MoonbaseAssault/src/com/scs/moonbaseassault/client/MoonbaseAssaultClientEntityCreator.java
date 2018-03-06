@@ -94,9 +94,10 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			float w = (float)msg.data.get("w");
 			float h = (float)msg.data.get("h");
+			float d = (float)msg.data.get("d");
 			String tex = (String)msg.data.get("tex");
-			float rot = (Float)msg.data.get("rot");
-			MoonbaseWall wall = new MoonbaseWall(game, id, pos.x, pos.y, pos.z, w, h, tex, rot);
+			//float rot = (Float)msg.data.get("rot");
+			MoonbaseWall wall = new MoonbaseWall(game, id, pos.x, pos.y, pos.z, w, h, d, tex);
 			return wall;
 		}
 

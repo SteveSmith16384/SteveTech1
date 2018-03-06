@@ -87,7 +87,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		float startHeight = .1f;
-		avatar.setWorldTranslation(new Vector3f(3f, startHeight, 3f + (avatar.playerID*2)));
+		avatar.setWorldTranslation(new Vector3f(2f, startHeight, 2f + (avatar.playerID*2)));
 		Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
 
@@ -96,22 +96,25 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 	protected void createGame() {
 		MapLoader map = new MapLoader(this);
 		try {
-			//map.loadMap("/serverdata/moonbaseassault.csv");
+			map.loadMap("/serverdata/moonbaseassault.csv");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		// Testing
-		SlidingDoor door = new SlidingDoor(this, getNextEntityID(), 4, 0, 4, 1, CEILING_HEIGHT, "Textures/door_lr.png", 270);
-		this.actuallyAddEntity(door);
-
+		SlidingDoor door = new SlidingDoor(this, getNextEntityID(), 0, 0, 5, 1, CEILING_HEIGHT, "Textures/door_lr.png", 270);
+		//this.actuallyAddEntity(door);
+/*
 		float mapSize = 20f;
 
-		MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 4, 0, 4, 3, CEILING_HEIGHT, "Textures/spacewall2.png", 270);
-		this.actuallyAddEntity(wall);
+		//MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 0, 0, 0, 1, CEILING_HEIGHT, 1, "Textures/spacewall2.png");//, 270);
+		//this.actuallyAddEntity(wall);
 
-		MoonbaseWall wall2 = new MoonbaseWall(this, getNextEntityID(), 6, 0, 4, 3, CEILING_HEIGHT, "Textures/spacewall2.png", 0);
-		this.actuallyAddEntity(wall2);
+		//MoonbaseWall wall2 = new MoonbaseWall(this, getNextEntityID(), 4, 0, 4, 3, CEILING_HEIGHT, 1, "Textures/spacewall2.png");//, 0);
+		//this.actuallyAddEntity(wall2);
+
+		MoonbaseWall wall3 = new MoonbaseWall(this, getNextEntityID(), 6, 0, 4, 1, CEILING_HEIGHT, 3, "Textures/spacewall2.png");//, 0);
+		this.actuallyAddEntity(wall3);
 
 		// Place floor & ceiling last
 		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
