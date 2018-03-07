@@ -23,19 +23,25 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class Computer extends PhysicalEntity implements IDamagable {
 
-	public Computer(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex) {
+	private static final float SIZE = 0.9f;
+	private float health = 1;
+	
+	public Computer(IEntityController _game, int id, float x, float y, float z, String tex) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
 		}
 
+		float w = SIZE;
+		float h = SIZE;
+		float d = SIZE;
+		
 		Box box1 = new Box(w/2, h/2, d/2);
 
 		Geometry geometry = new Geometry("Crate", box1);
-		if (!_game.isServer()) { // Not running in server
+		if (!_game.isServer()) {
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
@@ -51,28 +57,26 @@ public class Computer extends PhysicalEntity implements IDamagable {
 			}
 
 			geometry.setMaterial(floor_mat);
-			//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-			//geometry.setQueueBucket(Bucket.Transparent);
 		}
-		this.mainNode.attachChild(geometry); //This creates the model bounds!  mainNode.getWorldBound();
-		geometry.setLocalTranslation(0, h/2, 0);
+		this.mainNode.attachChild(geometry);
+		geometry.setLocalTranslation(w/2, h/2, d/2);
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-
-		//game.getGameNode().attachChild(this.mainNode);
-		//game.addEntity(this);
-
 	}
 
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
-		// TODO Auto-generated method stub
-		
+		Globals.p("Computer hit!");
+		this.health -= amt;
+		if (this.health <= 0) {
+			// todo - replace with damaged model
+		}
+			
 	}
 
 

@@ -285,7 +285,8 @@ ConsoleInputListener {
 						if (Globals.STRICT) {
 							if (physicalEntity.simpleRigidBody != null) {
 								if (physicalEntity.simpleRigidBody.canMove() != physicalEntity.moves) {
-									Globals.pe("Warning!  Entity " + physicalEntity.name + ": Discrepancy between canMove() in rigid body and entity");
+									// Todo - fix this, handloe kinematic objects
+									//Globals.pe("Warning!  Entity " + physicalEntity.name + ": Discrepancy between canMove() in rigid body and entity");
 								}
 							}
 						}

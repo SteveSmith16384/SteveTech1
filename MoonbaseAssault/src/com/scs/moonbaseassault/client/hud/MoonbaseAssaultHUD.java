@@ -1,4 +1,4 @@
-package com.scs.moonbaseassault.client;
+package com.scs.moonbaseassault.client.hud;
 
 import java.util.ArrayList;
 import java.util.List;

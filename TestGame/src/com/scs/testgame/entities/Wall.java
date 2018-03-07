@@ -61,21 +61,11 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 		mainNode.setLocalTranslation(x, yBottom, z); // Never change position of mainNode (unless the whole object is moving)
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
-		//this.simpleRigidBody.setMovable(false);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
-
 	}
 
-	/*
-	@Override
-	public boolean canMove() {
-		return false;
-	}
-*/
 
 }

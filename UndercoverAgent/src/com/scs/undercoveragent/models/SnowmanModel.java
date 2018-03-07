@@ -14,8 +14,8 @@ import com.scs.stevetech1.server.Globals;
  */
 public class SnowmanModel implements IAvatarModel {
 
-	private static final float MODEL_WIDTH = 0.4f;
-	private static final float MODEL_DEPTH = 0.3f;
+	//private static final float MODEL_WIDTH = 0.4f;
+	//private static final float MODEL_DEPTH = 0.3f;
 	private static final float MODEL_HEIGHT = 0.7f;
 
 	private AssetManager assetManager;

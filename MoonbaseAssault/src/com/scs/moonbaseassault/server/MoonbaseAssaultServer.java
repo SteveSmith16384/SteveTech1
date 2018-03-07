@@ -6,8 +6,8 @@ import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
-import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -87,7 +87,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		float startHeight = .1f;
-		avatar.setWorldTranslation(new Vector3f(2f, startHeight, 2f + (avatar.playerID*2)));
+		avatar.setWorldTranslation(new Vector3f(3f, startHeight, 3f + (avatar.playerID*2)));
 		Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
 
@@ -100,12 +100,20 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		// Testing
-		SlidingDoor door = new SlidingDoor(this, getNextEntityID(), 0, 0, 5, 1, CEILING_HEIGHT, "Textures/door_lr.png", 270);
-		//this.actuallyAddEntity(door);
 /*
+		// Testing
+		SlidingDoor door = new SlidingDoor(this, getNextEntityID(), 2, 0, 2, 1, CEILING_HEIGHT, "Textures/door_lr.png", 0);
+		this.actuallyAddEntity(door);
+		
+		//SlidingDoor doorUD = new SlidingDoor(this, getNextEntityID(), 3, 0, 3, 1, CEILING_HEIGHT, "Textures/door_lr.png", 270);
+		//this.actuallyAddEntity(doorUD);
+
+		Computer computer = new Computer(this, getNextEntityID(), 5, 0, 5, 1f, 1f, 1f, "Textures/computerconsole2.jpg");
+		this.actuallyAddEntity(computer);
+
+
 		float mapSize = 20f;
+		/*
 
 		//MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 0, 0, 0, 1, CEILING_HEIGHT, 1, "Textures/spacewall2.png");//, 270);
 		//this.actuallyAddEntity(wall);
@@ -115,15 +123,11 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 		MoonbaseWall wall3 = new MoonbaseWall(this, getNextEntityID(), 6, 0, 4, 1, CEILING_HEIGHT, 3, "Textures/spacewall2.png");//, 0);
 		this.actuallyAddEntity(wall3);
-
+*/
 		// Place floor & ceiling last
-		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
-		this.actuallyAddEntity(floor);
+		//Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
+		//this.actuallyAddEntity(floor);
 
-		/*
-		Floor ceiling = new Floor(this, getNextEntityID(), 0, CEILING_HEIGHT, 0, mapSize, .5f, mapSize, "Textures/bluemetal.png");
-		this.actuallyAddEntity(ceiling);
-		 */
 	}
 
 
@@ -200,6 +204,10 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 		// Sliding doors shouldn't collide with floor/ceiling
 		if ((pa.type == MoonbaseAssaultClientEntityCreator.FLOOR && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.FLOOR) {
+			return false;
+		}
+		// Sliding doors shouldn't collide with wall
+		if ((pa.type == MoonbaseAssaultClientEntityCreator.WALL && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.WALL) {
 			return false;
 		}
 		return super.canCollide(a, b);

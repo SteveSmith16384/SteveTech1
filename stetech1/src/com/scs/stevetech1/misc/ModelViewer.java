@@ -39,17 +39,15 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
 
 		setupLight();
-/*
-		Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
-		model.scale(.125f);
-		JMEFunctions.SetTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
-*/
 
+/*
 		Spatial model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
 		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/ClothedDarkSkin2.png");
-
 		JMEFunctions.scaleModelToHeight(model, 10f);
 		JMEFunctions.moveYOriginTo(model, 0f);
+*/
+		Spatial model = assetManager.loadModel("Models/pistol/pistol.blend");
+		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);

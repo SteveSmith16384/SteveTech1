@@ -7,6 +7,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.util.SkyFactory;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
+import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;

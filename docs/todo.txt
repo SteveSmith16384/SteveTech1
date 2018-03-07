@@ -9,20 +9,24 @@ https://opengameart.org/content/3-2-1-go
 
 
 URGENT
-Moonbase walls not in right place
-Slide doors sideways
+Copy modelviewer from StetEch to MA
+HUD map image
+	Doors not moving up/down
+	Scale wall tex correctly
+	Add computers
+Add ceiling
+Use moonrock tex
+	Moonbase walls not in right place
 Show players gun
-Stars skybox
-	Discrepancy between server avatar size and client avatar size?
-	Sliding doors not colliding
 Avatar keeps jumping
-	server Avatar getting stuck on moonbase walls
-	Create moonbase map
-	Change anim codes to ints
 Search for todos
 
 
 TODO
+Add greebles to moonbase
+Stars skybox
+Make laserbolt a cone
+Slide doors sideways
 Tutorial
 Blog laser squad fps
 MA: Planets and ship model
@@ -34,7 +38,6 @@ CreateSkyBox as entity
 Player send UID
 Check for packet loss
 Add links to SteveTech1
-Tree - make serverside just a cyl on trunk?
 UA: Server force jump
 Find font for JME
 Show on hud "connecting to server..", game restarting etc...
@@ -49,7 +52,7 @@ UA: Show "hit!" effect if a player hit
 Upload gif to Twitter
 Server tell client to slow down if server struggling?
 UA: Try desert models
-Sometimes, first bullet not killing snowman - is server also shooting? Client send shot confirmed msg to server when bullet is launched?
+Client send shot confirmed msg to server when bullet is launched?
 Warn if client and server have diff bullets left
 Find sound effects
 Client connect to lobby first, then select server

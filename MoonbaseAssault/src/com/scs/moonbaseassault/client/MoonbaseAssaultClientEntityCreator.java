@@ -2,6 +2,7 @@ package com.scs.moonbaseassault.client;
 
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.abilities.LaserRifle;
+import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.LaserBullet;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
@@ -132,6 +133,14 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			float rot = (Float)msg.data.get("rot");
 			SlidingDoor wall = new SlidingDoor(game, id, pos.x, pos.y, pos.z, w, h, tex, rot);
 			return wall;
+		}
+
+		case COMPUTER:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			String tex = (String)msg.data.get("tex");
+			Computer computer = new Computer(game, id, pos.x, pos.y, pos.z, tex);
+			return computer;
 		}
 
 		default:

@@ -20,9 +20,12 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
+/*
+ * origin is the bottom.
+ */
 public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision, IProcessByServer {
 
-	private static final Vector3f MOVE_UP = new Vector3f(0, .6f, 0);
+	private static final Vector3f MOVE_UP = new Vector3f(0, 1f, 0);
 	private static final float STAY_OPEN_DURATION = 5f;
 
 	private Vector3f origPosition;
@@ -44,7 +47,7 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 
 		Box box1 = new Box(w/2, h/2, depth/2);
 		box1.scaleTextureCoordinates(new Vector2f(w, 1)); // Don't scale vertically
-		Geometry geometry = new Geometry("Wall", box1);
+		Geometry geometry = new Geometry("SlidingDoor", box1);
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
@@ -67,10 +70,10 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 			float rads = (float)Math.toRadians(rotDegrees);
 			mainNode.rotate(0, rads, 0);
 		}
-		geometry.setLocalTranslation(w/2, h/2, depth/2); // Never change position of mainNode (unless the whole object is moving)
+		geometry.setLocalTranslation(w/2, h/2, depth/2 + (w/2)); // Never change position of mainNode (unless the whole object is moving)
 		mainNode.setLocalTranslation(x, yBottom, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
 		simpleRigidBody.setGravity(0f);
 
 		geometry.setUserData(Globals.ENTITY, this);
@@ -93,7 +96,6 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 				}
 			} else {
 				this.isOpening = false;
-				timeUntilClose -= tpf_secs;
 			}
 		} else {
 			if (timeUntilClose <= 0) {
@@ -103,6 +105,8 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 						Globals.p("Door is closing");
 					}
 				}
+			} else {
+				timeUntilClose -= tpf_secs;
 			}
 		}
 	}

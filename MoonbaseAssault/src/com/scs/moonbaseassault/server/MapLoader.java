@@ -6,14 +6,19 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
+import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.stevetech1.server.Globals;
 
 public class MapLoader {
 
 	private static final int FLOOR = 1;
 	private static final int WALL = 2;
+	private static final int DOOR_LR = 3;
+	private static final int DOOR_UD = 4;
+	private static final int COMPUTER = 5;
 
 	private int handled[][];
 	private int mapsize;
@@ -22,7 +27,7 @@ public class MapLoader {
 
 	public MapLoader(MoonbaseAssaultServer _moonbaseAssaultServer) {
 		super();
-		
+
 		moonbaseAssaultServer = _moonbaseAssaultServer;
 	}
 
@@ -41,8 +46,17 @@ public class MapLoader {
 				String cell = tokens[x];
 				String[] subtokens = cell.split("\\|");  // FLOOR:1|DEPLOY:2|
 				for(String part : subtokens) {
-					if (part.startsWith("WALL:")) {
+					String stringAndCode[] = part.split(":");
+					if (stringAndCode[0].equals("WALL")) {
 						handled[x][y-1] = WALL;
+					} else if (stringAndCode[0].equals("COMP")) {
+						handled[x][y-1] = COMPUTER;
+					} else if (stringAndCode[0].equals("DOOR")) {
+						if (stringAndCode[1].equals("1")) {
+							handled[x][y-1] = DOOR_UD;
+						} else if (stringAndCode[1].equals("2")) {
+							handled[x][y-1] = DOOR_LR;
+						}
 					}					
 				}
 			}
@@ -53,6 +67,12 @@ public class MapLoader {
 			for (int x=0 ; x<mapsize ; x++) {
 				if (handled[x][y] == WALL) {
 					System.out.print("X");
+				} else if (handled[x][y] == COMPUTER) {
+					System.out.print("C");
+				} else if (handled[x][y] == DOOR_LR) {
+					System.out.print("L");
+				} else if (handled[x][y] == DOOR_UD) {
+					System.out.print("U");
 				} else {
 					System.out.print(" ");
 				}					
@@ -60,37 +80,60 @@ public class MapLoader {
 			System.out.println("");
 		}
 
-		
+
 		// Generate map!
 		totalWalls = 0;
-		
-		int y = 0;
-		while (y < mapsize) {
-			int x = 0;
-			while (x < mapsize-1) {
-				if (handled[x][y] == WALL && handled[x+1][y] == WALL) {
-					checkForHorizontalWalls(x, y);
-				}				
-				x++;
-			}						
-			y++;
+
+		{
+			int y = 0;
+			while (y < mapsize) {
+				int x = 0;
+				while (x < mapsize-1) {
+					if (handled[x][y] == WALL && handled[x+1][y] == WALL) {
+						checkForHorizontalWalls(x, y);
+					}				
+					x++;
+				}						
+				y++;
+			}
 		}
 
-		// Vertical walls
-		y = 0;
-		while (y < mapsize-1) {
-			int x = 0;
-			while (x < mapsize) {
-				if (handled[x][y] == WALL) {// && handled[x][y+1] == WALL) {
-					checkForVerticalWalls(x, y);
-				}				
-				x++;
-			}						
-			y++;
+		{
+			// Vertical walls
+			int y = 0;
+			while (y < mapsize-1) {
+				int x = 0;
+				while (x < mapsize) {
+					if (handled[x][y] == WALL) {// && handled[x][y+1] == WALL) {
+						checkForVerticalWalls(x, y);
+					}				
+					x++;
+				}						
+				y++;
+			}
 		}
+
+		// Doors && comps
+		{
+			for (int y=0 ; y<mapsize ; y++) {
+				for (int x=0 ; x<mapsize ; x++) {
+					if (handled[x][y] == DOOR_LR) {
+						SlidingDoor door = new SlidingDoor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, 1, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/door_lr.png", 0);
+						moonbaseAssaultServer.actuallyAddEntity(door);
+					} else if (handled[x][y] == DOOR_UD) {
+						SlidingDoor door = new SlidingDoor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, 1, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/door_lr.png", 270);
+						moonbaseAssaultServer.actuallyAddEntity(door);
+					} else if (handled[x][y] == COMPUTER) {
+						Computer comp = new Computer(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, "Textures/door_lr.png");
+						moonbaseAssaultServer.actuallyAddEntity(comp);
+					}
+				}
+			}
+		}
+
 
 		// Place floor & ceiling last
-		Floor floor = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, .5f, mapsize, "Textures/bluemetal.png");
+		Floor floor = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, .5f, mapsize, "Textures/escape_hatch.jpg");
 		moonbaseAssaultServer.actuallyAddEntity(floor);
 
 		Floor ceiling = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, MoonbaseAssaultServer.CEILING_HEIGHT, 0, mapsize, .5f, mapsize, "Textures/moonbase_ceiling.png");
@@ -98,8 +141,8 @@ public class MapLoader {
 
 		Globals.p("Finished.  Created " + this.totalWalls + " walls");
 	}
-	
-	
+
+
 	private void checkForHorizontalWalls(int sx, int sy) {
 		int x;
 		for (x=sx ; x<mapsize ; x++) {
@@ -111,10 +154,10 @@ public class MapLoader {
 		x--;
 		//Globals.p("Creating wall at " + sx + ", " + sy + " length: " + (x-sx));
 		MoonbaseWall wall = new MoonbaseWall(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0f, sy, x-sx+1, MoonbaseAssaultServer.CEILING_HEIGHT, 1, "Textures/ufo2_03.png");
-		moonbaseAssaultServer.actuallyAddEntity(wall);
+		//moonbaseAssaultServer.actuallyAddEntity(wall);
 		totalWalls++;
 	}
-	
+
 
 	private void checkForVerticalWalls(int sx, int sy) {
 		int y;
@@ -127,9 +170,9 @@ public class MapLoader {
 		y--;
 		//Globals.p("Creating wall at " + sx + ", " + sy + " length: " + (y-sy));
 		MoonbaseWall wall = new MoonbaseWall(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0f, sy, 1, MoonbaseAssaultServer.CEILING_HEIGHT, y-sy+1, "Textures/spacewall2.png");
-		moonbaseAssaultServer.actuallyAddEntity(wall);
+		//moonbaseAssaultServer.actuallyAddEntity(wall);
 		totalWalls++;
 	}
-	
+
 }
 
