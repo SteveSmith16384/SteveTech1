@@ -124,13 +124,12 @@ public class MapLoader {
 						SlidingDoor door = new SlidingDoor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, 1, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/door_lr.png", 270);
 						moonbaseAssaultServer.actuallyAddEntity(door);
 					} else if (handled[x][y] == COMPUTER) {
-						Computer comp = new Computer(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, "Textures/door_lr.png");
+						Computer comp = new Computer(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, "Textures/computerconsole2.jpg");
 						moonbaseAssaultServer.actuallyAddEntity(comp);
 					}
 				}
 			}
 		}
-
 
 		// Place floor & ceiling last
 		Floor floor = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, .5f, mapsize, "Textures/escape_hatch.jpg");
@@ -154,7 +153,7 @@ public class MapLoader {
 		x--;
 		//Globals.p("Creating wall at " + sx + ", " + sy + " length: " + (x-sx));
 		MoonbaseWall wall = new MoonbaseWall(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0f, sy, x-sx+1, MoonbaseAssaultServer.CEILING_HEIGHT, 1, "Textures/ufo2_03.png");
-		//moonbaseAssaultServer.actuallyAddEntity(wall);
+		moonbaseAssaultServer.actuallyAddEntity(wall);
 		totalWalls++;
 	}
 
@@ -170,7 +169,7 @@ public class MapLoader {
 		y--;
 		//Globals.p("Creating wall at " + sx + ", " + sy + " length: " + (y-sy));
 		MoonbaseWall wall = new MoonbaseWall(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0f, sy, 1, MoonbaseAssaultServer.CEILING_HEIGHT, y-sy+1, "Textures/spacewall2.png");
-		//moonbaseAssaultServer.actuallyAddEntity(wall);
+		moonbaseAssaultServer.actuallyAddEntity(wall);
 		totalWalls++;
 	}
 

@@ -22,7 +22,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	private Spatial spatial;
 	public T userObject; // Attach any object
-	private boolean canMove = true; // Set to false to make "kinematic"
+	private boolean canMove = true; // Set to false to make "kinematic" - todo - rename
 	protected boolean isOnGround = false;
 	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.
 	private int modelComplexity = 0; // For determining which way round to check

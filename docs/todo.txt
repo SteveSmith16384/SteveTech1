@@ -9,13 +9,13 @@ https://opengameart.org/content/3-2-1-go
 
 
 URGENT
-Copy modelviewer from StetEch to MA
 HUD map image
+Use moonrock tex
+Add ceiling
+Copy modelviewer from StetEch to MA
 	Doors not moving up/down
 	Scale wall tex correctly
 	Add computers
-Add ceiling
-Use moonrock tex
 	Moonbase walls not in right place
 Show players gun
 Avatar keeps jumping

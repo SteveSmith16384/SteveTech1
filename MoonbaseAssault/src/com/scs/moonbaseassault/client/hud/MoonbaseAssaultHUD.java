@@ -58,6 +58,8 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		super.setLocalTranslation(0, 0, 0);
 
 		//this.addTargetter();
+		
+		addMapImage();
 
 		if (Globals.DEBUG_HUD) {
 			for (int i=0; i<100 ; i+=10) {
@@ -305,6 +307,17 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	}
 
 
+	private void addMapImage() {
+		Picture hmi = new HUDMapImage(game.getAssetManager());
+		float w = cam.getWidth()/10;
+		hmi.setWidth(w);
+		float h = cam.getHeight()/10;
+		hmi.setHeight(h);
+		this.setLocalTranslation((cam.getWidth() - w)/2, (cam.getHeight() - h)/2, 0);
+		this.attachChild(hmi);
+	}
+	
+	
 	@Override
 	public Node getRootNode() {
 		return this;
