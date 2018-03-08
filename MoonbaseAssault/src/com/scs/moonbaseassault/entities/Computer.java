@@ -7,6 +7,7 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
@@ -42,6 +43,8 @@ public class Computer extends PhysicalEntity implements IDamagable {
 
 		Geometry geometry = new Geometry("Crate", box1);
 		if (!_game.isServer()) {
+			geometry.setShadowMode(ShadowMode.CastAndReceive);
+			
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);

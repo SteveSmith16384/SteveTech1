@@ -9,22 +9,19 @@ https://opengameart.org/content/3-2-1-go
 
 
 URGENT
+Shadows in moonbase
 Look for interior design of moonbase
 Use moonrock tex
-Improve client adjustment - google?
 HUD map image - server needs to send map data
 	Add ceiling
 Copy modelviewer from StetEch to MA
-	Doors not moving up/down
-	Scale wall tex correctly
-	Add computers
-	Moonbase walls not in right place
 Show players gun
 Avatar keeps jumping
 Search for todos
 
 
 TODO
+Improve client adjustment - google?
 Add greebles to moonbase
 Stars skybox
 Make laserbolt a cone

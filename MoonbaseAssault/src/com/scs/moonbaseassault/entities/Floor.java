@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.scene.shape.Box;
@@ -48,6 +49,8 @@ public class Floor extends PhysicalEntity {//implements IProcessByClient {
 
 		Geometry geometry = new Geometry("FloorGeom", box1);
 		if (!_game.isServer()) { // Not running in server
+			geometry.setShadowMode(ShadowMode.Receive);
+
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);

@@ -67,7 +67,7 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 				floor_mat.setTexture("ColorMap", tex3);
 			}
 			geometry.setMaterial(floor_mat);
-				geometry.setShadowMode(ShadowMode.CastAndReceive);
+			geometry.setShadowMode(ShadowMode.Receive);
 		}
 		this.mainNode.attachChild(geometry);
 		geometry.setLocalTranslation((w/2), -(h/2), (d/2)); // Move it into position

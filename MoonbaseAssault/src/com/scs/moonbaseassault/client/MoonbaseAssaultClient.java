@@ -5,6 +5,7 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.util.SkyFactory;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
@@ -24,7 +25,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 	private MoonbaseAssaultClientEntityCreator entityCreator = new MoonbaseAssaultClientEntityCreator();
 	private AbstractHUDImage currentHUDImage;
-
+	private DirectionalLight sun;
+	
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -74,6 +76,12 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 		//getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 
+		// Add shadows
+		final int SHADOWMAP_SIZE = 1024;
+		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
+		dlsr.setLight(sun);
+		this.viewPort.addProcessor(dlsr);
+
 	}
 
 
@@ -83,7 +91,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		al.setColor(ColorRGBA.White.mult(.3f));
 		getGameNode().addLight(al);
 
-		DirectionalLight sun = new DirectionalLight();
+		sun = new DirectionalLight();
 		sun.setColor(ColorRGBA.White);
 		sun.setDirection(new Vector3f(.5f, -1f, .5f).normalizeLocal());
 		getGameNode().addLight(sun);

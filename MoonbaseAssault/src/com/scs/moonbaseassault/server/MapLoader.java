@@ -70,7 +70,7 @@ public class MapLoader {
 				}
 			}
 		}
-		
+
 		// Copy for scanner data
 		scannerData = new int[mapsize][mapsize];
 		for (int y=0 ; y<mapsize ; y++) {
@@ -153,10 +153,12 @@ public class MapLoader {
 		}
 
 		doCeilings();
-		
+
+		doFloors();
+
 		// Place floor & ceiling last
-		Floor floor = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, .5f, mapsize, "Textures/escape_hatch.jpg");
-		moonbaseAssaultServer.actuallyAddEntity(floor);
+		//Floor floor = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, .5f, mapsize, "Textures/escape_hatch.jpg");
+		//moonbaseAssaultServer.actuallyAddEntity(floor);
 
 		/*		Floor ceiling = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, MoonbaseAssaultServer.CEILING_HEIGHT, 0, mapsize, .5f, mapsize, "Textures/moonbase_ceiling.png");
 		moonbaseAssaultServer.actuallyAddEntity(ceiling);
@@ -168,7 +170,6 @@ public class MapLoader {
 
 
 	private void doCeilings() {
-		// Ceilings
 		boolean found = true;
 		while (found) {
 			found = false;
@@ -184,8 +185,8 @@ public class MapLoader {
 		}
 
 	}
-	
-	
+
+
 	private void ceilings(int sx, int sy) {
 		// Go across
 		int ex;
@@ -195,7 +196,6 @@ public class MapLoader {
 			}
 			mapCode[ex][sy] = HANDLED;
 		}
-		//ex--;
 		// Go cover rect
 		boolean breakout = false;
 		int ey;
@@ -205,16 +205,17 @@ public class MapLoader {
 					breakout = true;
 					break;
 				}
-				//mapCode[x][sy] = HANDLED;
 			}
 			if (breakout) {
 				break;
 			}
 		}
-		//ey--;
-		//Floor ceiling = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, MoonbaseAssaultServer.CEILING_HEIGHT+0.5f, sy, ey-sy, .5f, ex-sx, "Textures/moonbase_ceiling.png");
+		Floor floor = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0, sy, ex-sx, .5f, ey-sy, "Textures/escape_hatch.jpg");
+		moonbaseAssaultServer.actuallyAddEntity(floor);
+
 		Floor ceiling = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, MoonbaseAssaultServer.CEILING_HEIGHT+0.5f, sy, ex-sx, .5f, ey-sy, "Textures/moonbase_ceiling.png");
 		moonbaseAssaultServer.actuallyAddEntity(ceiling);
+		
 		//Globals.p("Added ceiling");
 
 		// Mark area as handled
@@ -257,6 +258,60 @@ public class MapLoader {
 		moonbaseAssaultServer.actuallyAddEntity(wall);
 		totalWalls++;
 	}
+
+
+	private void doFloors() {
+		boolean found = true;
+		while (found) {
+			found = false;
+			for (int y=0 ; y<mapsize ; y++) {
+				for (int x=0 ; x<mapsize ; x++) {
+					if (mapCode[x][y] == EXT_FLOOR) {
+						found = true;
+						floor(x, y);
+					}
+				}
+			}
+		}
+
+	}
+
+
+	private void floor(int sx, int sy) {
+		// Go across
+		int ex;
+		for (ex=sx ; ex<mapsize ; ex++) {
+			if (mapCode[ex][sy] != EXT_FLOOR) {
+				break;
+			}
+			mapCode[ex][sy] = HANDLED;
+		}
+		// Go cover rect
+		boolean breakout = false;
+		int ey;
+		for (ey=sy+1 ; ey<mapsize ; ey++) {
+			for (int x=sx ; x<=ex ; x++) {
+				if (mapCode[x][sy] != EXT_FLOOR) {
+					breakout = true;
+					break;
+				}
+			}
+			if (breakout) {
+				break;
+			}
+		}
+		Floor moonrock = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, MoonbaseAssaultServer.CEILING_HEIGHT+0.5f, sy, ex-sx, .5f, ey-sy, "Textures/moonrock.png");
+		moonbaseAssaultServer.actuallyAddEntity(moonrock);
+
+		// Mark area as handled
+		for (int y=sy ; y<ey ; y++) {
+			for (int x=sx ; x<ex ; x++) {
+				mapCode[x][sy] = HANDLED;
+			}
+		}
+
+	}
+
 
 }
 

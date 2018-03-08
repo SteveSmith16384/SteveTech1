@@ -2,6 +2,7 @@ package com.scs.moonbaseassault.entities;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -62,6 +63,7 @@ public class LaserBullet extends AbstractBullet {// implements IProcessByClient,
 	protected void createSimpleRigidBody(Vector3f dir) {
 		Vector3f origin = Vector3f.ZERO;
 		Node laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(1)), ColorRGBA.Pink, !game.isServer());
+		laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
