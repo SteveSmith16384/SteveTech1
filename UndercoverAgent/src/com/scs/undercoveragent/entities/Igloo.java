@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 import com.jme3.math.Quaternion;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -22,6 +23,9 @@ public class Igloo extends PhysicalEntity {
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/Holiday/Igloo.blend");
+		if (_game.isServer()) {
+			model.setShadowMode(ShadowMode.CastAndReceive);
+		}
 		this.mainNode.attachChild(model); //This creates the model bounds!  mainNode.getWorldBound();
 
 		mainNode.setLocalRotation(q);

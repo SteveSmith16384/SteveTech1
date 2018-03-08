@@ -3,6 +3,7 @@ package com.scs.undercoveragent.entities;
 import java.util.HashMap;
 
 import com.jme3.math.Quaternion;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -22,6 +23,9 @@ public class SnowHill4 extends PhysicalEntity {
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain4.blend");
+		if (_game.isServer()) {
+			model.setShadowMode(ShadowMode.CastAndReceive);
+		}
 		JMEFunctions.moveYOriginTo(model, -.5f);
 		this.mainNode.attachChild(model);
 		

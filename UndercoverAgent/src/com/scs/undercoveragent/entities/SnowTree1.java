@@ -3,6 +3,7 @@ package com.scs.undercoveragent.entities;
 import java.util.HashMap;
 
 import com.jme3.math.Quaternion;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -25,6 +26,7 @@ public class SnowTree1 extends PhysicalEntity {
 		Spatial model = game.getAssetManager().loadModel("Models/SnowNature/Tree.blend");
 		if (!_game.isServer()) {
 			JMEFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Models/SnowNature/Textures/TreeTexture.png");
+				model.setShadowMode(ShadowMode.CastAndReceive);
 		}
 		this.mainNode.attachChild(model); //This creates the model bounds!
 		mainNode.setLocalRotation(q);

@@ -3,7 +3,6 @@ package com.scs.undercoveragent;
 import java.io.IOException;
 
 import com.jme3.math.Vector3f;
-import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -19,6 +18,7 @@ import com.scs.undercoveragent.entities.InvisibleMapBorder;
 import com.scs.undercoveragent.entities.MountainMapBorder;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowTree1;
+import com.scs.undercoveragent.entities.SnowTree2;
 import com.scs.undercoveragent.entities.SnowmanServerAvatar;
 import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
@@ -119,9 +119,9 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			// Do nothing
 		} else if (Globals.FEW_MODELS) {
 			for (int z=1 ; z<mapSize-1 ; z+=2) {
-					StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
-					this.actuallyAddEntity(snowman);
-					snowman.setWorldTranslation(3, z+2);
+				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
+				this.actuallyAddEntity(snowman);
+				snowman.setWorldTranslation(3, z+2);
 			}
 		} else {
 			// Place snowman
@@ -133,9 +133,14 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			}
 
 			// Place trees
-			int numTrees = mapSize;
+			int numTrees = mapSize/2;
 			for (int i=0 ; i<numTrees ; i++) {
 				SnowTree1 tree1 = new SnowTree1(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
+				this.addEntityToRandomPosition(tree1);
+				//Globals.p("Placed " + i + " tree.");
+			}
+			for (int i=0 ; i<numTrees ; i++) {
+				SnowTree2 tree1 = new SnowTree2(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(tree1);
 				//Globals.p("Placed " + i + " tree.");
 			}

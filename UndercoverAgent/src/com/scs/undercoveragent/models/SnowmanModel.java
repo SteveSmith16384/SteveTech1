@@ -2,6 +2,7 @@ package com.scs.undercoveragent.models;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
@@ -34,6 +35,7 @@ public class SnowmanModel implements IAvatarModel {
 	public Spatial createAndGetModel(boolean forClient, int side) {
 		//if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
 			model = assetManager.loadModel("Models/Holiday/Snowman.obj");
+			model.setShadowMode(ShadowMode.CastAndReceive);
 			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEFunctions.moveYOriginTo(model, 0f);
 			JMEFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds

@@ -4,6 +4,7 @@ import com.jme3.asset.TextureKey;
 import com.jme3.bounding.BoundingSphere;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
@@ -29,6 +30,7 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 		Geometry ball_geo = new Geometry("grenade", sphere);
 
 		if (!_game.isServer()) { // Not running in server
+				ball_geo.setShadowMode(ShadowMode.CastAndReceive);
 			TextureKey key3 = new TextureKey( "Textures/snow.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			Material floor_mat = null;
