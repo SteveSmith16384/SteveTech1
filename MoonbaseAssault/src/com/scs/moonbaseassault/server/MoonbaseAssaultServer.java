@@ -25,6 +25,7 @@ import ssmith.util.MyProperties;
 public class MoonbaseAssaultServer extends AbstractGameServer {
 
 	public static final float CEILING_HEIGHT = 1.5f;
+	private int scannerData[][];
 
 	public static void main(String[] args) {
 		try {
@@ -97,6 +98,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 		MapLoader map = new MapLoader(this);
 		try {
 			map.loadMap("/serverdata/moonbaseassault.csv");
+			scannerData = map.scannerData;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -204,11 +206,11 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 		// Sliding doors shouldn't collide with floor/ceiling
 		if ((pa.type == MoonbaseAssaultClientEntityCreator.FLOOR && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.FLOOR) {
-			return false;
+			//scs new return false;
 		}
 		// Sliding doors shouldn't collide with wall
 		if ((pa.type == MoonbaseAssaultClientEntityCreator.WALL && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.WALL) {
-			return false;
+			//scs new return false;
 		}
 		return super.canCollide(a, b);
 

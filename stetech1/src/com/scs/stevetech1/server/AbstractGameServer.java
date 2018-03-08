@@ -198,14 +198,6 @@ ConsoleInputListener {
 					if (message instanceof NewPlayerRequestMessage) {
 						this.playerConnected(client, message);
 
-						/*} else if (message instanceof UnknownEntityMessage) {
-						UnknownEntityMessage uem = (UnknownEntityMessage) message;
-						IEntity e = null;
-						synchronized (entities) {
-							e = this.entities.get(uem.entityID);
-						}
-						this.sendNewEntity(client, e);*/
-
 					} else if (message instanceof PlayerLeftMessage) {
 						this.connectionRemoved(client.getPlayerID());
 
@@ -339,6 +331,7 @@ ConsoleInputListener {
 	private synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
 		if (!this.doWeHaveSpaces()) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces"));
+			return;
 		}
 
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;

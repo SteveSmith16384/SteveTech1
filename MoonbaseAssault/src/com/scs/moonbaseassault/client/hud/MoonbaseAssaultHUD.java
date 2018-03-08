@@ -302,8 +302,6 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		targetting_reticule.setHeight(crosshairs_h);
 		this.setLocalTranslation((cam.getWidth() - crosshairs_w)/2, (cam.getHeight() - crosshairs_h)/2, 0);
 		this.attachChild(targetting_reticule);
-
-		//this.targetting_reticules.add(targetting_reticule);
 	}
 
 
@@ -313,7 +311,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		hmi.setWidth(w);
 		float h = cam.getHeight()/10;
 		hmi.setHeight(h);
-		this.setLocalTranslation((cam.getWidth() - w)/2, (cam.getHeight() - h)/2, 0);
+		hmi.setLocalTranslation((cam.getWidth() - w)/2, (cam.getHeight() - h)/2, 0);
 		this.attachChild(hmi);
 	}
 	

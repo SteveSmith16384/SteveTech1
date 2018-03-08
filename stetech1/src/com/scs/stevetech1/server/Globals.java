@@ -10,10 +10,10 @@ public class Globals {
 	
 	public static final boolean RECORD_VID = false;
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
-	public static final boolean DEBUG_SLIDING_DOORS = true;
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_SLIDING_DOORS = false;
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean SIMULATE_DROPPED_PACKETS = false;
 	public static final int PCENT_DROPPED_PACKETS = 0;
 	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;
