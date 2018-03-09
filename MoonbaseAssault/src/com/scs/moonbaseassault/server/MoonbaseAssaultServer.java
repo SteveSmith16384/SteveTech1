@@ -192,11 +192,11 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 		// Sliding doors shouldn't collide with floor/ceiling
 		if ((pa.type == MoonbaseAssaultClientEntityCreator.FLOOR && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.FLOOR) {
-			//scs new return false;
+			return false;
 		}
 		// Sliding doors shouldn't collide with wall
 		if ((pa.type == MoonbaseAssaultClientEntityCreator.WALL && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.WALL) {
-			//scs new return false;
+			return false;
 		}
 		return super.canCollide(a, b);
 
@@ -205,7 +205,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 	@Override
 	protected void playerJoinedGame(ClientData client) {
-		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage());
+		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.scannerData));
 	}
 
 	@Override

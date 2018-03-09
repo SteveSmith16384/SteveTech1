@@ -112,6 +112,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	protected void handleMessage(MyAbstractMessage message) {
 		if (message instanceof HudDataMessage) {
 			HudDataMessage hdm = (HudDataMessage) message;
+			this.hud.hudMapImage.gaugeImage.setMapData(hdm.scannerData);
 			// todo
 		} else {
 			super.handleMessage(message);
@@ -203,8 +204,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	protected Spatial getPlayersWeaponModel() {
 		Spatial model = assetManager.loadModel("Models/pistol/pistol.blend");
 		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
-		model.scale(0.2f);
-		model.setLocalTranslation(0f, 0f, -3f);
+		model.scale(0.3f);
+		model.setLocalTranslation(0.1f, -.2f, .5f);
 		return model;
 	}
 

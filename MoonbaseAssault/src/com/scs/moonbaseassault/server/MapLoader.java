@@ -20,10 +20,10 @@ public class MapLoader {
 	private static final int HANDLED = 0;
 	private static final int INT_FLOOR = 1;
 	private static final int EXT_FLOOR = 2;
-	private static final int WALL = 3;
+	public static final int WALL = 3;
 	private static final int DOOR_LR = 4;
 	private static final int DOOR_UD = 5;
-	private static final int COMPUTER = 6;
+	public static final int COMPUTER = 6;
 
 	private int mapCode[][];
 	private int mapsize;

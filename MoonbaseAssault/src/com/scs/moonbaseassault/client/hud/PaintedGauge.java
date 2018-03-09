@@ -9,34 +9,21 @@ import java.awt.Graphics2D;
 public class PaintedGauge extends PaintableImage {
 
 	private static final int MAXIMUM = 100;
-
 	private int value = 0;
-
-
 
 	public PaintedGauge() {
 		super(64, 64);
-
 		refreshImage();
-
 	}
-
 
 
 	public void setValue(int newValue) {
-
 		newValue %= MAXIMUM;
-
 		if (newValue != value) {
-
 			value = newValue;
-
 			refreshImage();
-
 		}
-
 	}
-
 
 
 	public void paint(Graphics2D g) {

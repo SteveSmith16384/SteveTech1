@@ -1,3 +1,9 @@
+Remove Excl!!
+Walking around the Moonbase in Laser Squad
+
+https://www.youtube.com/watch?v=wUcSbAPDWzc
+
+
 STETECH1
 
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
@@ -9,8 +15,10 @@ https://opengameart.org/content/3-2-1-go
 
 
 URGENT
+Post to vid to Reddit
+MA: Showing ceiling on runway
 Post link to SF
-Player hit by door?
+	Player hit by door?
 Show players gun
 MA: Improve start position - deploy squares?
 	Kryonet buffer overflow error - send slowly in thread?
@@ -24,6 +32,10 @@ Move light with player?
 
 
 TODO
+Send entities in sep thread?
+Post to blog
+Post to JGO
+MA: Map border
 Copy modelviewer from StetEch to MA
 Improve client adjustment - google?
 Stars skybox

@@ -41,6 +41,8 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	private boolean process_damage_box;
 	private AbstractGameClient game;
 	private static BitmapFont font_small;
+	
+	public HUDMapImage hudMapImage;
 
 	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
 
@@ -59,7 +61,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 
 		//this.addTargetter();
 		
-		addMapImage();
+		hudMapImage = addMapImage();
 
 		if (Globals.DEBUG_HUD) {
 			for (int i=0; i<100 ; i+=10) {
@@ -305,14 +307,15 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	}
 
 
-	private void addMapImage() {
-		Picture hmi = new HUDMapImage(game.getAssetManager());
+	private HUDMapImage addMapImage() {
+		HUDMapImage hmi = new HUDMapImage(game.getAssetManager(), 65);// todo - pass 65 as param
 		float w = cam.getWidth()/10;
 		hmi.setWidth(w);
 		float h = cam.getHeight()/10;
 		hmi.setHeight(h);
 		hmi.setLocalTranslation((cam.getWidth() - w)/2, cam.getHeight() *.2f, 0);
 		this.attachChild(hmi);
+		return hmi;
 	}
 	
 	
