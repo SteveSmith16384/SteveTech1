@@ -311,7 +311,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		hmi.setWidth(w);
 		float h = cam.getHeight()/10;
 		hmi.setHeight(h);
-		hmi.setLocalTranslation((cam.getWidth() - w)/2, (cam.getHeight() - h)/2, 0);
+		hmi.setLocalTranslation((cam.getWidth() - w)/2, cam.getHeight() *.2f, 0);
 		this.attachChild(hmi);
 	}
 	

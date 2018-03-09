@@ -72,18 +72,6 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	public float getAvatarMoveSpeed(AbstractAvatar avatar) {
-		return 3f;
-	}
-
-
-	@Override
-	public float getAvatarJumpForce(AbstractAvatar avatar) {
-		return 2f;
-	}
-
-
-	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		return new TestGameServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
 	}
@@ -92,6 +80,12 @@ public class TestGameServer extends AbstractGameServer {
 	@Override
 	protected int getWinningSide() {
 		return 0;
+	}
+
+
+	@Override
+	protected Class[] getListofMessageClasses() {
+		return null;
 	}
 
 }

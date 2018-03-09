@@ -9,26 +9,29 @@ https://opengameart.org/content/3-2-1-go
 
 
 URGENT
-Shadows in moonbase
-Look for interior design of moonbase
-Use moonrock tex
-HUD map image - server needs to send map data
-	Add ceiling
-Copy modelviewer from StetEch to MA
+Post link to SF
+Player hit by door?
 Show players gun
+MA: Improve start position - deploy squares?
+	Kryonet buffer overflow error - send slowly in thread?
+HUD map image - server needs to send map data
+Look for interior design of moonbase
 Avatar keeps jumping
 Search for todos
+Add greebles to moonbase
+Flying spaceship
+Move light with player?
 
 
 TODO
+Copy modelviewer from StetEch to MA
 Improve client adjustment - google?
-Add greebles to moonbase
 Stars skybox
 Make laserbolt a cone
 Slide doors sideways
 Tutorial
 Blog laser squad fps
-MA: Planets and ship model
+MA: Planets
 UA: Leave footsteps?
 Test all sfx
 Fog
@@ -44,9 +47,8 @@ Test Play sounds from msgs
 	Create smaller vid and gif
 Add to readme
 Blog post progress
-Write code to add 100 clients instantly
+Write code to add 10 clients instantly
 UA: Falling snow - started
-Use better font
 UA: Show "hit!" effect if a player hit
 Upload gif to Twitter
 Server tell client to slow down if server struggling?

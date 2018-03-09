@@ -97,14 +97,7 @@ ConsoleInputListener {
 		gameOptions = _gameOptions;
 		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
 
-		gameData = new SimpleGameData();
-		gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, timeoutMillis);
-
-		Globals.p("Listening on port " + gameOptions.ourExternalPort);
-
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, gravity, aerodynamicness);
-
-		this.gameStatusSystem = new ServerGameStatusSystem(this);
 
 		setShowSettings(false); // Don't show settings dialog
 		setPauseOnLostFocus(false);
@@ -114,6 +107,17 @@ ConsoleInputListener {
 
 	@Override
 	public void simpleInitApp() {
+		gameData = new SimpleGameData();
+		try {
+			gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, timeoutMillis, getListofMessageClasses());
+			Globals.p("Listening on port " + gameOptions.ourExternalPort);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+
+		this.gameStatusSystem = new ServerGameStatusSystem(this);
+
 		// Start console
 		new TextConsole(this);
 
@@ -125,6 +129,8 @@ ConsoleInputListener {
 		loopTimer.start();
 	}
 
+
+	protected abstract Class[] getListofMessageClasses();
 
 	protected abstract void createGame();
 
@@ -347,8 +353,15 @@ ConsoleInputListener {
 		this.gameNetworkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));		
 		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 
+		playerJoinedGame(client);
+		
 		gameStatusSystem.checkGameStatus(true);
 
+	}
+	
+	
+	protected void playerJoinedGame(ClientData client) {
+		// Override if required
 	}
 
 
@@ -470,9 +483,14 @@ ConsoleInputListener {
 
 	public abstract float getAvatarStartHealth(AbstractAvatar avatar);
 
-	public abstract float getAvatarMoveSpeed(AbstractAvatar avatar);
+	public float getAvatarMoveSpeed(AbstractAvatar avatar) {
+		return 3f; // Override if required
+	}
 
-	public abstract float getAvatarJumpForce(AbstractAvatar avatar);
+
+	public float getAvatarJumpForce(AbstractAvatar avatar) {
+		return 2f; // Override if required
+	}
 
 	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
 
@@ -481,14 +499,13 @@ ConsoleInputListener {
 	private void sendAllEntitiesToClient(ClientData client) {
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {
-				if (Globals.DEBUG_TOO_MANY_AVATARS) {
-					if (e instanceof AbstractAvatar) {
-						Globals.p("Sending avatar msg");
-					}
-				}
-
 				NewEntityMessage nem = new NewEntityMessage(e);
 				this.gameNetworkServer.sendMessageToClient(client, nem);
+				try {
+					Thread.sleep(5); // scs new
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 			}
 			GeneralCommandMessage aes = new GeneralCommandMessage(GeneralCommandMessage.Command.AllEntitiesSent);
 			this.gameNetworkServer.sendMessageToClient(client, aes);
@@ -521,9 +538,6 @@ ConsoleInputListener {
 
 	protected void playerLeft(ClientData client) {
 		Globals.p("Removing player " + client.getPlayerID());
-		/*synchronized (clients) { No longer in the list
-			this.clients.remove(client.getPlayerID());
-		}*/
 		// Remove avatar
 		if (client.avatar != null) {
 			client.avatar.remove();
@@ -568,11 +582,6 @@ ConsoleInputListener {
 
 		// Tell clients
 		//if (sendToClients) {
-		if (Globals.DEBUG_TOO_MANY_AVATARS) {
-			if (e instanceof AbstractAvatar) {
-				Globals.p("Sending avatar msg");
-			}
-		}
 		NewEntityMessage nem = new NewEntityMessage(e);
 		synchronized (clients) {
 			for (ClientData client : this.clients.values()) {

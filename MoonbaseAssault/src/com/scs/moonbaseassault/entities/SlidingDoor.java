@@ -104,8 +104,14 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 			if (timeUntilClose <= 0) {
 				if (this.getWorldTranslation().y >= 0) {
 					this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs).mult(-1));
-					if (Globals.DEBUG_SLIDING_DOORS) {
-						Globals.p("Door is closing");
+					if (this.simpleRigidBody.checkForCollisions() != null) {
+						// Move back up
+						this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs));
+						this.startOpening();
+					} else {
+						if (Globals.DEBUG_SLIDING_DOORS) {
+							Globals.p("Door is closing");
+						}
 					}
 				}
 			} else {
@@ -117,6 +123,11 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 
 	@Override
 	public void collided(PhysicalEntity pe) {
+		this.startOpening();
+	}
+
+
+	private void startOpening() {
 		this.isOpening = true;
 		timeUntilClose = STAY_OPEN_DURATION;
 

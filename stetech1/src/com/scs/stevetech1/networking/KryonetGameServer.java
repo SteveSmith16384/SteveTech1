@@ -49,12 +49,19 @@ public class KryonetGameServer implements IGameMessageServer {
 	private Server server;
 	private int timeout;
 	
-	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener, int _timeout) throws IOException {
+	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener, int _timeout, Class[] msgClasses) throws IOException {
 		super();
 
-		server = new Server();
+		server = new Server(Globals.KRYO_WRITE_BUFFER_SIZE, Globals.KRYO_OBJECT_BUFFER_SIZE);
 		timeout = _timeout;
+		
 		registerMessages(server.getKryo());
+		if (msgClasses != null) {
+			for(Class c : msgClasses) {
+				server.getKryo().register(c);
+			}
+		}
+		
 		setListener(_listener);
 		server.bind(tcpport, udpport);
 		server.start();
@@ -100,6 +107,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(Vector3f.class);
 		kryo.register(HashMap.class);
 		kryo.register(byte[].class);
+		kryo.register(int[][].class);
 		kryo.register(java.util.LinkedList.class);
 		kryo.register(java.util.ArrayList.class);
 		kryo.register(com.jme3.bounding.BoundingBox.class);

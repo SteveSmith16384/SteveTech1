@@ -16,13 +16,18 @@ public class KryonetGameClient implements IGameMessageClient {
 	private IMessageClientListener listener;
 	private Client client;
 
-	public KryonetGameClient(String ip, int tcpPort, int udpPort, IMessageClientListener _listener, int timeout) throws IOException {
+	public KryonetGameClient(String ip, int tcpPort, int udpPort, IMessageClientListener _listener, int timeout, Class[] msgClasses) throws IOException {
 		listener = _listener;
 
 		Logger.setLevel(Logger.DEBUG);
 
-		client = new Client();
+		client = new Client(Globals.KRYO_WRITE_BUFFER_SIZE, Globals.KRYO_OBJECT_BUFFER_SIZE);
 		KryonetGameServer.registerMessages(client.getKryo());
+		if (msgClasses != null) {
+			for(Class c : msgClasses) {
+				client.getKryo().register(c);
+			}
+		}
 		client.setIdleThreshold(timeout);
 		client.setTimeout(timeout);
 

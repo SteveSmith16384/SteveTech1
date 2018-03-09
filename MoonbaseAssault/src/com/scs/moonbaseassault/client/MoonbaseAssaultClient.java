@@ -6,9 +6,9 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
-import com.jme3.util.SkyFactory;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
+import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
@@ -16,7 +16,10 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.AbstractHUDImage;
 import com.scs.stevetech1.hud.IHUD;
+import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.server.Globals;
 
 import ssmith.util.MyProperties;
@@ -24,8 +27,9 @@ import ssmith.util.MyProperties;
 public class MoonbaseAssaultClient extends AbstractGameClient {
 
 	private MoonbaseAssaultClientEntityCreator entityCreator = new MoonbaseAssaultClientEntityCreator();
-	private AbstractHUDImage currentHUDImage;
 	private DirectionalLight sun;
+	private AbstractHUDImage currentHUDTextImage;
+	private MoonbaseAssaultHUD hud;
 	
 	public static void main(String[] args) {
 		try {
@@ -77,7 +81,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		//getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 
 		// Add shadows
-		final int SHADOWMAP_SIZE = 1024;
+		final int SHADOWMAP_SIZE = 1024*2;
 		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
@@ -88,7 +92,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	@Override
 	protected void setUpLight() {
 		AmbientLight al = new AmbientLight();
-		al.setColor(ColorRGBA.White.mult(.3f));
+		al.setColor(ColorRGBA.White.mult(.6f));
 		getGameNode().addLight(al);
 
 		sun = new DirectionalLight();
@@ -103,6 +107,17 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		super.simpleUpdate(tpf_secs);
 	}
 
+
+	@Override
+	protected void handleMessage(MyAbstractMessage message) {
+		if (message instanceof HudDataMessage) {
+			HudDataMessage hdm = (HudDataMessage) message;
+			// todo
+		} else {
+			super.handleMessage(message);
+		}
+	}
+	
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
@@ -122,28 +137,29 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 	@Override
 	protected void playerHasWon() {
-		removeCurrentHUDImage();
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+		removeCurrentHUDTextImage();
+		currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
 	}
 
 
 	@Override
 	protected void playerHasLost() {
-		removeCurrentHUDImage();
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+		removeCurrentHUDTextImage();
+		currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
 	}
 
 
 	@Override
 	protected void gameIsDrawn() {
-		removeCurrentHUDImage();
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+		removeCurrentHUDTextImage();
+		currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
 	}
 
 
 	@Override
 	protected IHUD createHUD() {
-		return new MoonbaseAssaultHUD(this, this.getCamera());
+		hud = new MoonbaseAssaultHUD(this, this.getCamera());
+		return hud;
 	}
 
 
@@ -153,16 +169,16 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		int height = this.cam.getHeight()/2;
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
-			removeCurrentHUDImage();
-			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
+			removeCurrentHUDTextImage();
+			currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_DEPLOYING:
-			removeCurrentHUDImage();
-			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", width, height, 5);
+			removeCurrentHUDTextImage();
+			currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_STARTED:
-			removeCurrentHUDImage();
-			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", width, height, 5);
+			removeCurrentHUDTextImage();
+			currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_FINISHED:
 			// Don't show anything, this will be handled with a win/lose message
@@ -174,10 +190,10 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	}
 
 	
-	private void removeCurrentHUDImage() {
-		if (this.currentHUDImage != null) {
-			if (currentHUDImage.getParent() != null) {
-				currentHUDImage.remove();
+	private void removeCurrentHUDTextImage() {
+		if (this.currentHUDTextImage != null) {
+			if (currentHUDTextImage.getParent() != null) {
+				currentHUDTextImage.remove();
 			}
 		}
 	}
@@ -185,7 +201,17 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 	@Override
 	protected Spatial getPlayersWeaponModel() {
-		return null; // todo
+		Spatial model = assetManager.loadModel("Models/pistol/pistol.blend");
+		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
+		model.scale(0.2f);
+		model.setLocalTranslation(0f, 0f, -3f);
+		return model;
+	}
+
+
+	@Override
+	protected Class[] getListofMessageClasses() {
+		return new Class[] {HudDataMessage.class};
 	}
 
 }

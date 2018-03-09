@@ -11,8 +11,8 @@ public class MyAbstractMessage { //extends AbstractMessage {
 
 	private transient static AtomicLong nextMsgID = new AtomicLong();
 
-	private boolean reliable = true;
-	public boolean scheduled = false;
+	private boolean reliable = true; // Use TCP if true
+	public boolean scheduled = false; // If true, the client should not process it until the client render time reaches the msg timestamp
 	
 	public long msgId;
 	public long timestamp = System.currentTimeMillis();

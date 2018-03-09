@@ -228,7 +228,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 		}*/
 
 		try {
-			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis); // todo - connect to lobby first!
+			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis, getListofMessageClasses()); // todo - connect to lobby first!
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -242,6 +242,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 	}
 
+	protected abstract Class[] getListofMessageClasses();
 
 	protected abstract IHUD createHUD();
 
@@ -280,7 +281,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				// Process messages in JME thread
 				synchronized (unprocessedMessages) {
 					// Check we don't already know about it
-					//while (!this.unprocessedMessages.isEmpty()) {
 					Iterator<MyAbstractMessage> mit = this.unprocessedMessages.iterator();
 					while (mit.hasNext()) {
 						MyAbstractMessage message = mit.next();// this.unprocessedMessages.remove(0);
@@ -311,8 +311,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						}
 					}
 
-
-					StringBuffer strListEnts = new StringBuffer(); // Log entities
+					//StringBuffer strListEnts = new StringBuffer(); // Log entities
 
 					// Add entities
 					Iterator<IEntity> it = this.entitiesToAdd.iterator();
@@ -363,7 +362,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							if (pe.moves) { // Only bother with things that can move
 								pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
 							}
-							strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
+							//strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 						}
 
 						if (e instanceof IProcessByClient) {
@@ -392,6 +391,9 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				if (playersWeaponNode != null) {
 					playersWeaponNode.setLocalTranslation(cam.getLocation());
 					playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
+					playersWeaponNode.updateGeometricState(); 
+					//playersWeaponNode.getChild(0).getWorldTranslation();
+					//playersWeaponNode.getWorldTranslation();
 				}
 
 			}
@@ -429,7 +431,6 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				this.playerID = npcm.playerID;
 				this.side = npcm.side;
 				//this.hud.setDebugText("PlayerID=" + this.playerID);
-				//Settings.p("We are player " + playerID);
 				clientStatus = STATUS_JOINED_GAME;
 			} else {
 				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
@@ -509,6 +510,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
 				clientStatus = STATUS_STARTED;
 				this.getRootNode().attachChild(this.gameNode);
+				this.showPlayersWeapon();
 			}
 
 		} else if (message instanceof AbilityUpdateMessage) {
@@ -880,6 +882,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private void showPlayersWeapon() {
 		if (playersWeaponNode == null) {
 			playersWeaponNode = new Node("PlayersWeapon");
+			this.getGameNode().attachChild(playersWeaponNode);
 		}
 		playersWeaponNode.detachAllChildren();
 		playersWeaponNode.attachChild(getPlayersWeaponModel());

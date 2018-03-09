@@ -1,5 +1,6 @@
 package com.scs.moonbaseassault.client;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.entities.Computer;
@@ -9,6 +10,7 @@ import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
+import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
@@ -28,6 +30,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 	public static final int WALL = 6;
 	public static final int LASER_BULLET = 7;
 	public static final int LASER_RIFLE = 8;
+	public static final int SPACESHIP1 = 9;
 
 	public MoonbaseAssaultClientEntityCreator() {
 	}
@@ -43,6 +46,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		case WALL: return "WALL";
 		case LASER_BULLET: return "LASER_BULLET";
 		case LASER_RIFLE: return "LASER_RIFLE";
+		case SPACESHIP1: return "SPACESHIP1";
 		default: return "Unknown (" + type + ")";
 		}
 	}
@@ -63,10 +67,6 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			float moveSpeed = (float)msg.data.get("moveSpeed");
 			float jumpForce = (float)msg.data.get("jumpForce");
-
-			if (Globals.DEBUG_TOO_MANY_AVATARS) {
-				Globals.p("Creating avatar id " + id + " for " + playerID + " at " + pos);
-			}
 
 			if (playerID == game.playerID) {
 				AbstractClientAvatar avatar = new SoldierClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side, moveSpeed, jumpForce);
@@ -141,6 +141,14 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			String tex = (String)msg.data.get("tex");
 			Computer computer = new Computer(game, id, pos.x, pos.y, pos.z, tex);
 			return computer;
+		}
+
+		case SPACESHIP1:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Quaternion q = (Quaternion)msg.data.get("quat");
+			Spaceship1 spaceship1 = new Spaceship1(game, id, pos.x, pos.y, pos.z, q);
+			return spaceship1;
 		}
 
 		default:

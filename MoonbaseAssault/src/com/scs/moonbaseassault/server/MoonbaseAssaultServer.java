@@ -6,10 +6,8 @@ import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
-import com.scs.moonbaseassault.entities.Computer;
-import com.scs.moonbaseassault.entities.Floor;
-import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
+import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -188,18 +186,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 
 	@Override
-	public float getAvatarMoveSpeed(AbstractAvatar avatar) {
-		return 3f;
-	}
-
-
-	@Override
-	public float getAvatarJumpForce(AbstractAvatar avatar) {
-		return 2f;
-	}
-
-
-	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
 		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
@@ -215,5 +201,17 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 		return super.canCollide(a, b);
 
 	}
+
+
+	@Override
+	protected void playerJoinedGame(ClientData client) {
+		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage());
+	}
+
+	@Override
+	protected Class[] getListofMessageClasses() {
+		return new Class[] {HudDataMessage.class};
+	}
+
 
 }

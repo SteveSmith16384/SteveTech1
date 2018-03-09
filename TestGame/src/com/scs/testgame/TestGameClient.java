@@ -109,4 +109,10 @@ public class TestGameClient extends AbstractGameClient {
 		return null;
 	}
 
+
+	@Override
+	protected Class[] getListofMessageClasses() {
+		return null;
+	}
+
 }
