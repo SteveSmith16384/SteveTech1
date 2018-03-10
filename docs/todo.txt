@@ -1,21 +1,9 @@
-Remove Excl!!
-Walking around the Moonbase in Laser Squad
-
-https://www.youtube.com/watch?v=wUcSbAPDWzc
-
-
 STETECH1
 
 https://gaming.stackexchange.com/questions/270174/why-do-i-sometimes-experience-a-delay-despite-a-very-low-ping?rq=1
-https://opengameart.org/content/heavy-turret
-https://www.blendswap.com/blends/view/78118
-https://opengameart.org/content/turret-gun
-Reload: https://opengameart.org/content/replenish-life-force-sound
-https://opengameart.org/content/3-2-1-go
 
 
 URGENT
-Post to vid to Reddit
 MA: Showing ceiling on runway
 Post link to SF
 	Player hit by door?
@@ -32,6 +20,7 @@ Move light with player?
 
 
 TODO
+Post LS vid to Reddit Retro
 Send entities in sep thread?
 Post to blog
 Post to JGO
