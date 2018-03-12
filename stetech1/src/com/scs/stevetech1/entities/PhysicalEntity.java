@@ -182,7 +182,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		
 		Vector3f currentPos = this.getWorldTranslation();
 		float dist = currentPos.distance(prevPos);
-		boolean hasMoved = dist > 0.01f; 
+		boolean hasMoved = dist >= Globals.SMALLEST_MOVE_DIST; 
 		if (hasMoved) {
 			this.prevPos.set(currentPos);
 		}

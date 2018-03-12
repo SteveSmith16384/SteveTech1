@@ -15,6 +15,7 @@ import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.House;
 import com.scs.testgame.entities.MovingTarget;
+import com.scs.testgame.entities.RoamingZombie;
 import com.scs.testgame.entities.TestGameClientAvatar;
 import com.scs.testgame.entities.TestGameEnemyAvatar;
 import com.scs.testgame.entities.Wall;
@@ -172,12 +173,12 @@ public class TestGameClientEntityCreator {
 			return laser;
 		}
 
-		/*case ZOMBIE:
+		case ZOMBIE:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			RoamingZombie z = new RoamingZombie(game, id, pos.x, pos.y, pos.z);
 			return z;
-		}*/
+		}
 
 		case HOUSE:
 		{

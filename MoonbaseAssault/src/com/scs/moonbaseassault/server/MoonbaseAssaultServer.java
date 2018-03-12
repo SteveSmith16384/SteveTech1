@@ -6,6 +6,7 @@ import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -46,7 +47,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 			float gravity = props.getPropertyAsFloat("gravity", -5);
 			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 
-			//startLobbyServer(lobbyPort, timeoutMillis); // Start the lobby in the same process, why not?  Feel from to comment this line out and run it seperately.  If you want a lobby.
+			//startLobbyServer(lobbyPort, timeoutMillis); // Start the lobby in the same process, why not?  Feel from to comment this line out and run it seperately (If you want a lobby).
 
 			new MoonbaseAssaultServer(gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 					tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
@@ -76,7 +77,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 	public MoonbaseAssaultServer(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
-		super(new GameOptions(MoonbaseAssaultStaticData.NAME, 1, 999, 10*1000, 60*1000, 10*1000, 
+		super(new GameOptions(MoonbaseAssaultStaticData.NAME, 6, 2, 
+				10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 
@@ -97,6 +99,10 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 		try {
 			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
+			
+			AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.x + 0.5f, .3f, map.firstInteriorFloor.y + 0.5f, 2);
+			this.actuallyAddEntity(s);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

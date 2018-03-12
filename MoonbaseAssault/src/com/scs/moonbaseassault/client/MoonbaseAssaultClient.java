@@ -8,6 +8,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
+import com.scs.moonbaseassault.models.StarDust;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
@@ -19,7 +20,6 @@ import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
-import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.server.Globals;
 
 import ssmith.util.MyProperties;
@@ -88,7 +88,9 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
-
+		
+		StarDust sd = new StarDust("StarDust", 100, Globals.CAM_DIST-1f, cam, this.getAssetManager());
+		this.getGameNode().attachChild(sd);
 	}
 
 

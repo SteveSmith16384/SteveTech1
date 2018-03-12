@@ -1,12 +1,12 @@
 package com.scs.moonbaseassault.server;
 
+import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.jme3.math.Quaternion;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
@@ -30,6 +30,8 @@ public class MapLoader {
 	private int totalWalls;
 	private MoonbaseAssaultServer moonbaseAssaultServer;
 	public int scannerData[][];
+	
+	public Point firstInteriorFloor = null;
 
 	public MapLoader(MoonbaseAssaultServer _moonbaseAssaultServer) {
 		super();
@@ -68,6 +70,9 @@ public class MapLoader {
 							mapCode[x][y-1] = EXT_FLOOR;
 						} else {
 							mapCode[x][y-1] = INT_FLOOR;
+							if (this.firstInteriorFloor == null) {
+								this.firstInteriorFloor = new Point(x, y-1);
+							}
 						}
 					}					
 				}

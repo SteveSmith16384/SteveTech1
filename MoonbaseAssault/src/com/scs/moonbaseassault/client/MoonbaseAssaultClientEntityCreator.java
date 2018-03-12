@@ -3,6 +3,7 @@ package com.scs.moonbaseassault.client;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.abilities.LaserRifle;
+import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.LaserBullet;
@@ -18,7 +19,6 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
-import com.scs.stevetech1.server.Globals;
 
 public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntityCreator {
 
@@ -31,6 +31,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 	public static final int LASER_BULLET = 7;
 	public static final int LASER_RIFLE = 8;
 	public static final int SPACESHIP1 = 9;
+	public static final int AI_SOLDIER = 10;
 
 	public MoonbaseAssaultClientEntityCreator() {
 	}
@@ -149,6 +150,14 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			Spaceship1 spaceship1 = new Spaceship1(game, id, pos.x, pos.y, pos.z, q);
 			return spaceship1;
+		}
+
+		case AI_SOLDIER:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			int side = (int)msg.data.get("side");
+			AISoldier z = new AISoldier(game, id, pos.x, pos.y, pos.z, side);
+			return z;
 		}
 
 		default:
