@@ -26,7 +26,7 @@ import ssmith.util.MyProperties;
 
 public class MoonbaseAssaultClient extends AbstractGameClient {
 
-	private MoonbaseAssaultClientEntityCreator entityCreator = new MoonbaseAssaultClientEntityCreator();
+	private MoonbaseAssaultClientEntityCreator entityCreator;
 	private DirectionalLight sun;
 	private AbstractHUDImage currentHUDTextImage;
 	private MoonbaseAssaultHUD hud;
@@ -69,12 +69,15 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 			float mouseSensitivity) {
 		super(MoonbaseAssaultStaticData.NAME, null, gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness, mouseSensitivity);
+		
 	}
 
 
 	@Override
 	public void simpleInitApp() {
 		super.simpleInitApp();
+
+		entityCreator = new MoonbaseAssaultClientEntityCreator();
 
 		this.getViewPort().setBackgroundColor(ColorRGBA.Black);
 
@@ -205,7 +208,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		Spatial model = assetManager.loadModel("Models/pistol/pistol.blend");
 		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
 		model.scale(0.3f);
-		model.setLocalTranslation(0.1f, -.2f, .5f);
+		//model.setLocalTranslation(0.1f, -.2f, .5f);
+		model.setLocalTranslation(0.2f, -.2f, .5f);
 		return model;
 	}
 

@@ -11,7 +11,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-desktop"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-effects"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl3"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jbullet"/>
