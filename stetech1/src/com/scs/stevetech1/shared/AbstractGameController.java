@@ -31,7 +31,6 @@ public abstract class AbstractGameController extends SimpleApplication implement
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer;// = new FixedLoopTime(Globals.SERVER_TICKRATE_MS); // Keep client and server running at the same time
-	protected RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 	
 	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
 

@@ -59,6 +59,7 @@ import com.scs.stevetech1.server.ClientData.ClientStatus;
 import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
+import com.scs.stevetech1.systems.server.ServerPingSystem;
 
 import ssmith.lang.NumberFunctions;
 import ssmith.util.ConsoleInputListener;
@@ -86,10 +87,10 @@ ConsoleInputListener {
 	public SimpleGameData gameData;
 	public ServerSideCollisionLogic collisionLogic = new ServerSideCollisionLogic();
 	public GameOptions gameOptions;
-	private int randomPingCode = NumberFunctions.rnd(0,  999999);
 
 	// Systems
 	private ServerGameStatusSystem gameStatusSystem;
+	private ServerPingSystem pingSystem;
 
 	public AbstractGameServer(GameOptions _gameOptions, int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
 		super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
@@ -117,6 +118,7 @@ ConsoleInputListener {
 		}
 
 		this.gameStatusSystem = new ServerGameStatusSystem(this);
+		this.pingSystem = new ServerPingSystem(this);
 
 		// Start console
 		new TextConsole(this);
@@ -130,6 +132,10 @@ ConsoleInputListener {
 	}
 
 
+	/**
+	 *  
+	 * @return a list of classes that must be registered in order to be sent from client to server or vice-versa.
+	 */
 	protected abstract Class[] getListofMessageClasses();
 
 	protected abstract void createGame();
@@ -220,11 +226,13 @@ ConsoleInputListener {
 				}
 			}
 
+			this.pingSystem.process();
+			/*
 			if (sendPingInterval.hitInterval()) {
 				randomPingCode = NumberFunctions.rnd(0,  999999);
 				this.gameNetworkServer.sendMessageToAll(new PingMessage(true, randomPingCode));
 			}
-
+*/
 			synchronized (this.clients) {
 				// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
 				boolean areAnyPlayersShooting = false;
@@ -350,7 +358,8 @@ ConsoleInputListener {
 
 		this.sendGameStatusMessage();
 
-		this.gameNetworkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));		
+		//this.gameNetworkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));
+		this.pingSystem.sendPingToClient(client);
 		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 
 		playerJoinedGame(client);
@@ -431,35 +440,7 @@ ConsoleInputListener {
 
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
-			if (pingMessage.s2c) {
-				try {
-					// Check code
-					if (pingMessage.randomCode == this.randomPingCode) {
-						try {
-							long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
-							if (client.playerData != null) {
-								client.playerData.pingRTT = client.pingCalc.add(rttDuration);
-								client.serverToClientDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (client.playerData.pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-								//Settings.p("Client rtt = " + client.pingRTT);
-								//Settings.p("serverToClientDiffTime = " + client.serverToClientDiffTime);
-								if ((client.playerData.pingRTT/2) + sendEntityUpdatesInterval.getInterval() > clientRenderDelayMillis) {
-									Globals.p("Warning: client ping is longer than client render delay!");
-								}
-							}
-						} catch (NullPointerException ex) {
-							Globals.HandleError(ex);
-						}
-					} else {
-						Globals.pe("Unexpected ping response code!");
-					}
-				} catch (NullPointerException npe) {
-					Globals.HandleError(npe);
-				}
-			} else {
-				// Send it back to the client
-				pingMessage.responseSentTime = System.currentTimeMillis();
-				this.gameNetworkServer.sendMessageToClient(client, pingMessage);
-			}
+			this.pingSystem.handleMessage(pingMessage, client);
 
 		} else {
 			msg.client = client;

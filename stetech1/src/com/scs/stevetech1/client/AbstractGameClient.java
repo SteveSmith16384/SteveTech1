@@ -88,6 +88,7 @@ import com.scs.stevetech1.systems.client.AnimationSystem;
 import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
 
 import ssmith.util.AverageNumberCalculator;
+import ssmith.util.RealtimeInterval;
 
 public abstract class AbstractGameClient extends AbstractGameController implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
 
@@ -105,6 +106,8 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	// Global controls
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
+
+	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
 	private List<IEntity> clientOnlyEntitiesToAdd = new LinkedList<IEntity>();
