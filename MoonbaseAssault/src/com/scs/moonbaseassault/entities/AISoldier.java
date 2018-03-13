@@ -28,8 +28,7 @@ public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDa
 	private static final float d = .7f;
 	private static final float h = .5f;
 
-	//private static final float DURATION = 3;
-	private static final float SPEED = .47f; // 3f
+	private static final float SPEED = .5f;//.47f;
 
 	private SoldierModel soldierModel;
 	private float health = 1f;
@@ -78,9 +77,10 @@ public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDa
 		if (health > 0) {
 			this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 			this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
+
 			this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
+			this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
 		}
-		this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
 
 		super.processByServer(server, tpf_secs);
 	}
