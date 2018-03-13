@@ -31,17 +31,18 @@ public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDa
 	//private static final float DURATION = 3;
 	private static final float SPEED = .47f; // 3f
 
-	private SoldierModel zm;
+	private SoldierModel soldierModel;
 	private float health = 1f;
 	private Vector3f currDir = new Vector3f(1f, 0, 0);
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	private int side;
-	
+	private int currentAnimCode = -1;
+
 	public AISoldier(IEntityController _game, int id, float x, float y, float z, int _side) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, "AISoldier", true);
 
 		side = _side;
-		
+
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
@@ -51,8 +52,8 @@ public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDa
 		//if (!_game.isServer()) { // Not running in server
 		//spatial = game.getAssetManager().loadModel("Models/zombie/Zombie.blend");
 		//JMEFunctions.SetTextureOnSpatial(game.getAssetManager(), spatial, "Models/zombie/ZombieTexture.png");
-		zm = new SoldierModel(game.getAssetManager());
-		spatial = zm.createAndGetModel(true, side);
+		soldierModel = new SoldierModel(game.getAssetManager());
+		spatial = soldierModel.createAndGetModel(true, side);
 		/*} else {
 			// Server
 			Box box1 = new Box(w/2, h/2, d/2);
@@ -75,14 +76,12 @@ public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDa
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (health > 0) {
-		this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
-		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
-
-		//if (this.currentAnimCode != AbstractAvatar.ANIM_WALKING) {
-		this.zm.setAnim(AbstractAvatar.ANIM_WALKING);
-		this.currentAnimCode = this.zm.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
-		//}
+			this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
+			this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
+			this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
 		}
+		this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
+
 		super.processByServer(server, tpf_secs);
 	}
 
@@ -92,7 +91,7 @@ public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDa
 		//this.respawn();
 	}
 
-
+	/*
 	private void respawn() {
 		this.setWorldTranslation(new Vector3f(10, 10, 10));
 
@@ -102,13 +101,15 @@ public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDa
 		server.gameNetworkServer.sendMessageToAll(eum);
 
 	}
-
+	 */
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
-		this.health -= amt;
-		if (health <= 0) {
-		this.zm.setAnim(AbstractAvatar.ANIM_DIED);
+		if (health > 0) {
+			this.health -= amt;
+			if (health <= 0) {
+				this.soldierModel.setAnim(AbstractAvatar.ANIM_DIED);
+			}
 		}
 	}
 
@@ -121,10 +122,12 @@ public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDa
 
 	@Override
 	public void collided(PhysicalEntity pe) {
-		if (pe instanceof Floor == false) {
-			Globals.p("AISoldier has collided with " + pe);
-			// turn around
-			currDir.multLocal(-1);
+		if (health > 0) {
+			if (pe instanceof Floor == false) {
+				Globals.p("AISoldier has collided with " + pe);
+				// turn around
+				currDir.multLocal(-1);
+			}
 		}
 	}
 
@@ -137,14 +140,20 @@ public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDa
 
 	@Override
 	public void setAnimCode(int animCode) {
-		this.zm.setAnim(animCode);
-		
+		this.soldierModel.setAnim(animCode);
+
 	}
 
 
 	@Override
 	public void processAnimation(float tpf_secs) {
 		// Do nothing, already handled
+	}
+
+
+	@Override
+	public int getCurrentAnimCode() {
+		return currentAnimCode;
 	}
 
 }

@@ -102,10 +102,11 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
 			
+			//todo - re-add 
 			//Spaceship1 ss = new Spaceship1(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 8, 0f, 8, JMEFunctions.getRotation(-1, 0));
 			//moonbaseAssaultServer.actuallyAddEntity(ss);
 
-			AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.y + 0.5f, .3f, map.firstInteriorFloor.x + 0.5f, 2);
+			AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.x + 0.5f, .3f, map.firstInteriorFloor.y + 0.5f, 2);
 			this.actuallyAddEntity(s);
 			
 		} catch (Exception e) {
@@ -216,8 +217,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 	@Override
 	protected void playerJoinedGame(ClientData client) {
-		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.scannerData));
+		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.scannerData, null)); // todo - send unit data
 	}
+	
 
 	@Override
 	protected Class[] getListofMessageClasses() {

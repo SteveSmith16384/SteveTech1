@@ -308,12 +308,12 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 
 
 	private HUDMapImage addMapImage() {
-		float w = cam.getWidth()/2;
-		float h = cam.getHeight()/2;
-		HUDMapImage hmi = new HUDMapImage(game.getAssetManager(), (int)w, (int)h);
+		float w = cam.getWidth()/5;
+		float h = cam.getHeight()/5;
+		HUDMapImage hmi = new HUDMapImage(game.getAssetManager());//, (int)w, (int)h);
 		hmi.setWidth(w);
 		hmi.setHeight(h);
-		hmi.setLocalTranslation((cam.getWidth() - w)/2, cam.getHeight() *.2f, 0);
+		hmi.setLocalTranslation((cam.getWidth() - w)/2, cam.getHeight() *.1f, 0);
 		this.attachChild(hmi);
 		return hmi;
 	}

@@ -3,6 +3,7 @@ package com.scs.moonbaseassault.models;
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
+import com.jme3.animation.LoopMode;
 import com.jme3.asset.AssetManager;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
@@ -96,21 +97,26 @@ public class SoldierModel implements IAvatarModel {
 		switch (animCode) {
 		case AbstractAvatar.ANIM_DIED:
 			channel.setAnim("Death");
+			channel.setLoopMode(LoopMode.DontLoop);
 			break;
 
 		case AbstractAvatar.ANIM_IDLE:
+			channel.setLoopMode(LoopMode.Loop);
 			channel.setAnim("Idle");
 			break;
 
 		case AbstractAvatar.ANIM_WALKING:
+			channel.setLoopMode(LoopMode.Loop);
 			channel.setAnim("Walk"); // Was "Run"
 			break;
 
 		case AbstractAvatar.ANIM_SHOOTING:
+			channel.setLoopMode(LoopMode.DontLoop);
 			channel.setAnim("Punch");
 			break;
 
 		case AbstractAvatar.ANIM_JUMP:
+			channel.setLoopMode(LoopMode.DontLoop);
 			channel.setAnim("Jump");
 			isJumping = true;
 			break;

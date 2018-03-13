@@ -49,6 +49,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	private float health;
 	public float moveSpeed = 0f;// = Globals.PLAYER_MOVE_SPEED;
 	private float jumpForce = 0;
+	protected int currentAnimCode = -1;
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _anim) {
 		super(_game, eid, 1, "Player", true);

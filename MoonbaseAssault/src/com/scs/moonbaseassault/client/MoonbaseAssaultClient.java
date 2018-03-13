@@ -117,7 +117,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	protected void handleMessage(MyAbstractMessage message) {
 		if (message instanceof HudDataMessage) {
 			HudDataMessage hdm = (HudDataMessage) message;
-			this.hud.hudMapImage.mapImage.setMapData(hdm.scannerData);
+			this.hud.hudMapImage.mapImageTex.setMapData(hdm.scannerData, hdm.units);
 		} else {
 			super.handleMessage(message);
 		}

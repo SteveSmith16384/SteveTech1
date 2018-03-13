@@ -64,15 +64,15 @@ public class MapLoader {
 							mapCode[x][y-1] = DOOR_UD;
 						} else if (stringAndCode[1].equals("2")) {
 							mapCode[x][y-1] = DOOR_LR;
+							if (this.firstInteriorFloor == null && x < 30) {
+								this.firstInteriorFloor = new Point(x, y); // Put soldier behind door
+							}
 						}
 					} else if (stringAndCode[0].equals("FLOOR")) {
 						if (stringAndCode[1].equals("2")) {
 							mapCode[x][y-1] = EXT_FLOOR;
 						} else {
 							mapCode[x][y-1] = INT_FLOOR;
-							if (this.firstInteriorFloor == null) {
-								this.firstInteriorFloor = new Point(y, x-1);
-							}
 						}
 					}					
 				}
@@ -88,7 +88,7 @@ public class MapLoader {
 		}
 
 		// print map
-		/*for (int y=0 ; y<mapsize ; y++) {
+		for (int y=0 ; y<mapsize ; y++) {
 			for (int x=0 ; x<mapsize ; x++) {
 				if (mapCode[x][y] == WALL) {
 					System.out.print("X");
@@ -107,7 +107,7 @@ public class MapLoader {
 				}					
 			}
 			System.out.println("");
-		}*/
+		}
 
 
 		// Generate map!

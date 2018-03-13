@@ -5,9 +5,8 @@ import java.util.LinkedList;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;
-import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.netmessages.EntityUpdateMessage.UpdateData;
 
 @Serializable
 public class EntityUpdateMessage extends MyAbstractMessage {
@@ -27,7 +26,10 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		updateData.pos = sc.getWorldTranslation();
 		updateData.dir = sc.getWorldRotation();
 		updateData.force = force;
-		updateData.animationCode = sc.getCurrentAnimCode();
+		if (sc instanceof IClientSideAnimated) {
+			IClientSideAnimated csa =(IClientSideAnimated)sc;
+			updateData.animationCode = csa.getCurrentAnimCode();
+		}
 		
 		this.data.add(updateData);
 

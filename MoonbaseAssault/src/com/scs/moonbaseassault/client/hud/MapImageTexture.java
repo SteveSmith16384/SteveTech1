@@ -2,21 +2,25 @@ package com.scs.moonbaseassault.client.hud;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.List;
 
 import com.scs.moonbaseassault.server.MapLoader;
 
-public class MapImage extends PaintableImage {
+public class MapImageTexture extends PaintableImage {
 
 	private int[][] data;
+	public List<Point> units;
 
-	public MapImage(int w, int h) {
+	public MapImageTexture(int w, int h) {
 		super(w, h);
 		refreshImage();
 	}
 
 
-	public void setMapData(int[][] _data) {
+	public void setMapData(int[][] _data, List<Point> _units) {
 		data = _data;
+		units = _units;
 		this.refreshImage();
 	}
 
@@ -27,11 +31,20 @@ public class MapImage extends PaintableImage {
 
 		if (data != null) {
 			g.setColor(new Color(1f, 1f, 1f, .7f));
+
 			for (int y=0 ; y<data.length ; y++) {
 				for (int x=0 ; x<data[y].length ; x++) {
 					if (data[y][x] == MapLoader.WALL) {
-						g.fillRect(y, x, 1, 1);
+						g.fillRect(data.length-y, data.length-x, 1, 1);
 					}
+				}
+			}			
+			if (units != null) {
+				g.setColor(new Color(1f, 0f, 0f, .7f));
+
+				for (int i=0 ; i<units.size() ; i++) {
+					Point p = units.get(i);
+					g.fillRect(data.length-p.y, p.x, 1, 1);
 				}			
 			}
 		}

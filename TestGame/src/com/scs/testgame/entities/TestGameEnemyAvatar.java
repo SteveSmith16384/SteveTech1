@@ -18,18 +18,18 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 		model = (CharacterModel)super.anim;
 	}
 
-	/*
-	@Override
-	protected Spatial getPlayersModel(IEntityController game, int pid) {
-		return model.getModel(true);
-
-	}
-*/
 
 	@Override
 	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
 		return animList;
 	}
+
+
+	@Override
+	public int getCurrentAnimCode() {
+		return -1;
+	}
+
 
 	@Override
 	public void setAnimCode(int s) {

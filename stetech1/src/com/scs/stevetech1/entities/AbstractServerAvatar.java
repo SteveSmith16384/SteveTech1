@@ -26,7 +26,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	private AbstractGameServer server;
 	public ClientData client;
-
 	private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation.  We don't actually rotate!
 
 	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, IAvatarModel anim) {

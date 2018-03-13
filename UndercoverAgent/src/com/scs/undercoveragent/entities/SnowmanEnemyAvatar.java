@@ -12,7 +12,8 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 	
 	private ChronologicalLookup<HistoricalAnimationData> animData = new ChronologicalLookup<HistoricalAnimationData>(true, 500);
 	private SnowmanModel snowman;
-	
+	private int currentAnimCode = -1;
+
 	// Animation
 	public boolean showDied = false;
 	
@@ -56,6 +57,11 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 		
 	}
 
+
+	@Override
+	public int getCurrentAnimCode() {
+		return currentAnimCode;
+	}
 
 
 }

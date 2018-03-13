@@ -7,6 +7,8 @@ public interface IClientSideAnimated {
 
 	ChronologicalLookup<HistoricalAnimationData> getAnimList();
 	
+	int getCurrentAnimCode();
+	
 	void setAnimCode(int animCode);
 	
 	void processAnimation(float tpf_secs); // Todo - rename to ManualAnim
