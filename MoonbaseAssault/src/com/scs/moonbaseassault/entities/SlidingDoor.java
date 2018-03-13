@@ -92,7 +92,7 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 		super.processByServer(server, tpf_secs);
 
 		if (this.isOpening) {
-			if (this.getWorldTranslation().y <= MoonbaseAssaultServer.CEILING_HEIGHT) {
+			if (this.getWorldTranslation().y <= MoonbaseAssaultServer.CEILING_HEIGHT-.1f) {
 				this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs));
 				if (Globals.DEBUG_SLIDING_DOORS) {
 					Globals.p("Door is opening");

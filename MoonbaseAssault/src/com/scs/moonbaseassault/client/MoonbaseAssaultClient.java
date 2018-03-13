@@ -89,8 +89,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
 		
-		StarDust sd = new StarDust("StarDust", 100, Globals.CAM_DIST-1f, cam, this.getAssetManager());
-		this.getGameNode().attachChild(sd);
+		//StarDust sd = new StarDust("StarDust", 100, Globals.CAM_DIST-1f, cam, this.getAssetManager());
+		//this.getGameNode().attachChild(sd);
 	}
 
 
@@ -117,8 +117,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	protected void handleMessage(MyAbstractMessage message) {
 		if (message instanceof HudDataMessage) {
 			HudDataMessage hdm = (HudDataMessage) message;
-			this.hud.hudMapImage.gaugeImage.setMapData(hdm.scannerData);
-			// todo
+			this.hud.hudMapImage.mapImage.setMapData(hdm.scannerData);
 		} else {
 			super.handleMessage(message);
 		}
@@ -176,7 +175,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
 			removeCurrentHUDTextImage();
-			currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
+			//currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_DEPLOYING:
 			removeCurrentHUDTextImage();

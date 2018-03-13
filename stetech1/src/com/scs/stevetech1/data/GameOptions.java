@@ -4,7 +4,7 @@ public class GameOptions {
 
 	public String displayName;
 	public int maxPlayersPerSide;
-	public int maxSides;
+	public int maxSides; // Sides start at 1
 	private boolean allPlayersOnDifferentSides;
 	public long deployDurationMillis = 10 * 1000;
 	public long gameDurationMillis = 60 * 1000;

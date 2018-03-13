@@ -193,6 +193,13 @@ public class JMEFunctions {
 	}
 
 
+	public static void rotateBy(Spatial s, int angdeg) {
+		double ang = Math.toRadians(angdeg);
+		Quaternion q = getRotation((float)Math.cos(ang), (float)Math.sin(ang));
+		s.rotate(q);
+	}
+
+
 	public static AnimControl getNodeWithControls(Node s) {
 		AnimControl control = null;
 		int ch = s.getChildren().size();

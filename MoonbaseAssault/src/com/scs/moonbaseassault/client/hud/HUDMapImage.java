@@ -8,17 +8,16 @@ import com.jme3.ui.Picture;
 
 public class HUDMapImage extends Picture {
 
-	public MapImage gaugeImage;
+	public MapImage mapImage;
 	
-	public HUDMapImage(AssetManager assetManager, int size) {
+	public HUDMapImage(AssetManager assetManager, int w, int h) {
 		super("HUDMapImage");
 		
-		gaugeImage = new MapImage(size);
-		//gaugeImage.setValue(99);
-		Texture2D texture = new Texture2D(64, 64, Format.ABGR8);
+		mapImage = new MapImage(w, h);
+		Texture2D texture = new Texture2D(w, h, Format.ABGR8);
 		texture.setMinFilter(Texture.MinFilter.Trilinear);
 		texture.setMagFilter(Texture.MagFilter.Bilinear);
-		texture.setImage(gaugeImage);
+		texture.setImage(mapImage);
 		this.setTexture(assetManager, texture, true);
 	}
 

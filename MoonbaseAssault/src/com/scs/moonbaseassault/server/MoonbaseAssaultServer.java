@@ -8,12 +8,14 @@ import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
+import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -100,7 +102,10 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
 			
-			AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.x + 0.5f, .3f, map.firstInteriorFloor.y + 0.5f, 2);
+			//Spaceship1 ss = new Spaceship1(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 8, 0f, 8, JMEFunctions.getRotation(-1, 0));
+			//moonbaseAssaultServer.actuallyAddEntity(ss);
+
+			AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.y + 0.5f, .3f, map.firstInteriorFloor.x + 0.5f, 2);
 			this.actuallyAddEntity(s);
 			
 		} catch (Exception e) {

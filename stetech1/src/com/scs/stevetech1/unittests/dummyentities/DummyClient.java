@@ -9,7 +9,6 @@ public class DummyClient extends AbstractGameClient {
 
 	@Override
 	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg) {
-		// TODO Auto-generated method stub
 		return new DummyPhysicalEntity();
 	}
 }

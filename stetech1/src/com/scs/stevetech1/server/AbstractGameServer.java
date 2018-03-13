@@ -153,7 +153,7 @@ ConsoleInputListener {
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		StringBuilder strDebug = new StringBuilder(); // todo - remove
+		//StringBuilder strDebug = new StringBuilder(); // todo - remove
 
 		if (updateLobbyInterval.hitInterval()) {
 			if (clientToLobbyServer == null) {
@@ -306,8 +306,6 @@ ConsoleInputListener {
 								}
 							}
 						}
-					} else {
-						strDebug.append(e.getID() + ": " + e.getName() + "\n");
 					}
 				}
 			}
@@ -358,7 +356,6 @@ ConsoleInputListener {
 
 		this.sendGameStatusMessage();
 
-		//this.gameNetworkServer.sendMessageToClient(client, new PingMessage(true, this.randomPingCode));
 		this.pingSystem.sendPingToClient(client);
 		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 
@@ -407,6 +404,13 @@ ConsoleInputListener {
 
 	private HashMap<Integer, Integer> getPlayersPerSide() {
 		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		
+		// Load with empty side data
+		for (int i=1 ; i<=this.gameOptions.maxSides ; i++) {
+			map.put(i,  0);
+		}
+		
+		
 		for (ClientData client : this.clients.values()) {
 			if (client.avatar != null) {
 				if (!map.containsKey(client.side)) {

@@ -9,8 +9,8 @@ public class MapImage extends PaintableImage {
 
 	private int[][] data;
 
-	public MapImage(int size) {
-		super(size, size);
+	public MapImage(int w, int h) {
+		super(w, h);
 		refreshImage();
 	}
 

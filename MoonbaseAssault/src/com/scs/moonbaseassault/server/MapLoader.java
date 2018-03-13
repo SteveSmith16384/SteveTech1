@@ -71,7 +71,7 @@ public class MapLoader {
 						} else {
 							mapCode[x][y-1] = INT_FLOOR;
 							if (this.firstInteriorFloor == null) {
-								this.firstInteriorFloor = new Point(x, y-1);
+								this.firstInteriorFloor = new Point(y, x-1);
 							}
 						}
 					}					
@@ -165,9 +165,6 @@ public class MapLoader {
 
 		doInteriorFloorsAndCeilings();
 		doExteriorFloors();
-
-		Spaceship1 ss = new Spaceship1(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 8, 0f, 8, JMEFunctions.getRotation(-1, 0));
-		moonbaseAssaultServer.actuallyAddEntity(ss);
 
 		Globals.p("Finished.  Created " + this.totalWalls + " walls");
 	}
