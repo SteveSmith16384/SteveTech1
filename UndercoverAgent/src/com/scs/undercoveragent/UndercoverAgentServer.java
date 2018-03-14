@@ -255,5 +255,17 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		return null;
 	}
 
+
+	@Override
+	public int getSide(ClientData client) {
+		return client.id; // Everyone is on a different side
+	}
+
+
+	@Override
+	public boolean doWeHaveSpaces() {
+		return true; // Always!
+	}
+
 }
 

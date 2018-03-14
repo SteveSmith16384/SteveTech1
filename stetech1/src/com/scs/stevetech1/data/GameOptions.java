@@ -3,9 +3,9 @@ package com.scs.stevetech1.data;
 public class GameOptions {
 
 	public String displayName;
-	public int maxPlayersPerSide;
-	public int maxSides; // Sides start at 1
-	private boolean allPlayersOnDifferentSides;
+	//public int maxPlayersPerSide;
+	//public int maxSides; // Sides start at 1
+	//private boolean allPlayersOnDifferentSides;
 	public long deployDurationMillis = 10 * 1000;
 	public long gameDurationMillis = 60 * 1000;
 	public long finishedDurationMillis = 5 * 1000;
@@ -16,12 +16,12 @@ public class GameOptions {
 	public GameOptions(String _displayName, int _maxPlayersPerSide, int _maxSides, 
 			long _deployDuration, long _gameDuration, long _finishedDuration,
 			String _ourExternalIP, int _ourExternalPort, String _lobbyip, int _lobbyport,
-			float _restartTime, float _invulnDuration) {
+			float _restartTime, float _invulnDuration) { // todo - remove unused params
 		
 		displayName =_displayName;
-		maxPlayersPerSide = _maxPlayersPerSide;
-		maxSides = _maxSides;
-		allPlayersOnDifferentSides = (maxPlayersPerSide == 1);
+		//maxPlayersPerSide = _maxPlayersPerSide;
+		//maxSides = _maxSides;
+		//allPlayersOnDifferentSides = (maxPlayersPerSide == 1);
 		
 		deployDurationMillis = _deployDuration;
 		gameDurationMillis = _gameDuration;
@@ -36,9 +36,9 @@ public class GameOptions {
 		avatarInvulnDurationSecs = _invulnDuration;
 	}
 	
-	
+	/*
 	public boolean areAllPlayersOnDifferentSides() {
 		return this.allPlayersOnDifferentSides;
 	}
-
+*/
 }

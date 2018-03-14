@@ -153,8 +153,6 @@ ConsoleInputListener {
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		//StringBuilder strDebug = new StringBuilder(); // todo - remove
-
 		if (updateLobbyInterval.hitInterval()) {
 			if (clientToLobbyServer == null) {
 				connectToLobby();
@@ -324,7 +322,7 @@ ConsoleInputListener {
 		loopTimer.start();
 	}
 
-
+/*
 	private boolean doWeHaveSpaces() {
 		if (this.gameOptions.maxSides <= 0 || this.gameOptions.maxPlayersPerSide <= 0) {
 			return true;
@@ -338,16 +336,18 @@ ConsoleInputListener {
 		int maxPlayers = this.gameOptions.maxSides * this.gameOptions.maxPlayersPerSide;
 		return currentPlayers < maxPlayers;
 	}
-
+*/
 
 	private synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
-		if (!this.doWeHaveSpaces()) {
+		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
+		int side = getSide(client);
+		if (side < 0) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces"));
+			//todo? this.clientsToRemove.add(client);
 			return;
 		}
 
-		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-		client.side = getSide(client);
+		client.side = side; //getSide(client);
 		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, client.side);
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
 		client.avatar = createPlayersAvatar(client);
@@ -370,7 +370,7 @@ ConsoleInputListener {
 		// Override if required
 	}
 
-
+/*
 	private int getSide(ClientData client) {
 		if (this.gameOptions.areAllPlayersOnDifferentSides()) {
 			return client.id;
@@ -423,7 +423,7 @@ ConsoleInputListener {
 		}
 		return map;
 	}
-
+*/
 
 
 	@Override
@@ -721,6 +721,16 @@ ConsoleInputListener {
 		}
 
 	}
+	
+	
+	/**
+	 * Determine the side for a player
+	 * @param client
+	 * @return The side, or -1 if no spaces available
+	 */
+	public abstract int getSide(ClientData client);
+	
+	public abstract boolean doWeHaveSpaces();
 
 
 	public ArrayList<RayCollisionData> checkForEntityCollisions(Ray r) {

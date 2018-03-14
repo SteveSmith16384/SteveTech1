@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.components.IUnit;
 import com.scs.moonbaseassault.models.SoldierModel;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
@@ -15,14 +16,14 @@ import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, IRewindable, IClientSideAnimated {
+public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
+IRewindable, IClientSideAnimated, IUnit {
 
 	private static final float w = .5f;
 	private static final float d = .7f;

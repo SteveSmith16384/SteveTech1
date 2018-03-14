@@ -8,7 +8,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
-import com.scs.moonbaseassault.models.StarDust;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
@@ -91,6 +90,14 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		
 		//StarDust sd = new StarDust("StarDust", 100, Globals.CAM_DIST-1f, cam, this.getAssetManager());
 		//this.getGameNode().attachChild(sd);
+
+		// todo - delete this
+		Spatial model = assetManager.loadModel("Models/pistol/pistol.blend");
+		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
+		model.scale(0.4f);
+		model.setLocalTranslation(0, .5f, 0);
+		this.getGameNode().attachChild(model);
+
 	}
 
 
@@ -102,7 +109,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 		sun = new DirectionalLight();
 		sun.setColor(ColorRGBA.White);
-		sun.setDirection(new Vector3f(.5f, -1f, .5f).normalizeLocal());
+		sun.setDirection(new Vector3f(.4f, -1f, .4f).normalizeLocal());
 		getGameNode().addLight(sun);
 	}
 
@@ -210,9 +217,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
 		model.scale(0.3f);
 		// x moves l-r, z moves further away
-		//model.setLocalTranslation(0.1f, -.2f, .5f);
-		//model.setLocalTranslation(0.2f, -.3f, .8f);
-		model.setLocalTranslation(-0.35f, -.3f, .5f);
+		//model.setLocalTranslation(-0.35f, -.3f, .5f);
+		model.setLocalTranslation(-0.35f, -.3f, 10.5f);
 		return model;
 	}
 

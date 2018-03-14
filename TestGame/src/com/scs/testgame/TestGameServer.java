@@ -88,4 +88,16 @@ public class TestGameServer extends AbstractGameServer {
 		return null;
 	}
 
+
+	@Override
+	public int getSide(ClientData client) {
+		return 1;
+	}
+
+
+	@Override
+	public boolean doWeHaveSpaces() {
+		return true;
+	}
+
 }

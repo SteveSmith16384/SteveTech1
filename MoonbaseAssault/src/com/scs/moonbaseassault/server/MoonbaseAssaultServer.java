@@ -1,6 +1,8 @@
 package com.scs.moonbaseassault.server;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
@@ -8,14 +10,12 @@ import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
-import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.jme.JMEFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -101,22 +101,22 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 		try {
 			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
-			
+
 			//todo - re-add 
 			//Spaceship1 ss = new Spaceship1(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 8, 0f, 8, JMEFunctions.getRotation(-1, 0));
 			//moonbaseAssaultServer.actuallyAddEntity(ss);
 
 			AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.x + 0.5f, .3f, map.firstInteriorFloor.y + 0.5f, 2);
 			this.actuallyAddEntity(s);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-/*
+		/*
 		// Testing
 		SlidingDoor door = new SlidingDoor(this, getNextEntityID(), 2, 0, 2, 1, CEILING_HEIGHT, "Textures/door_lr.png", 0);
 		this.actuallyAddEntity(door);
-		
+
 		//SlidingDoor doorUD = new SlidingDoor(this, getNextEntityID(), 3, 0, 3, 1, CEILING_HEIGHT, "Textures/door_lr.png", 270);
 		//this.actuallyAddEntity(doorUD);
 
@@ -135,7 +135,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 		MoonbaseWall wall3 = new MoonbaseWall(this, getNextEntityID(), 6, 0, 4, 1, CEILING_HEIGHT, 3, "Textures/spacewall2.png");//, 0);
 		this.actuallyAddEntity(wall3);
-*/
+		 */
 		// Place floor & ceiling last
 		//Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
 		//this.actuallyAddEntity(floor);
@@ -219,11 +219,74 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 	protected void playerJoinedGame(ClientData client) {
 		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.scannerData, null)); // todo - send unit data
 	}
-	
+
 
 	@Override
 	protected Class[] getListofMessageClasses() {
 		return new Class[] {HudDataMessage.class};
+	}
+
+
+	@Override
+	public int getSide(ClientData client) {
+		// todo - Check maxPlayersPerside, maxSides
+		HashMap<Integer, Integer> map = getPlayersPerSide();
+		// Get lowest amount
+		int lowest = 999;
+		int highest = -1;
+		for (int i : map.values()) {
+			if (i < lowest) {
+				lowest = i;
+			}
+			if (i > highest) {
+				highest = i;
+			}
+		}
+		// Get the side
+		Iterator<Integer> it = map.keySet().iterator();
+		while (it.hasNext()) {
+			int i = it.next();
+			int val = map.get(i);
+			if (val <= lowest) {
+				return i;
+			}
+		}
+		throw new RuntimeException("Should not get here");	
+	}
+
+
+	private HashMap<Integer, Integer> getPlayersPerSide() {
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+		// Load with empty side data
+		for (int side=1 ; side<=2 ; side++) {
+			map.put(side,  0);
+		}
+
+
+		for (ClientData client : this.clients.values()) {
+			if (client.avatar != null) {
+				if (!map.containsKey(client.side)) {
+					map.put(client.side, 0);
+				}
+				int val = map.get(client.side);
+				val++;
+				map.put(client.side, val);
+			}
+		}
+		return map;
+	}
+
+
+	@Override
+	public boolean doWeHaveSpaces() {
+		int currentPlayers = 0;
+		for(ClientData c : this.clients.values()) {
+			if (c.clientStatus == ClientData.ClientStatus.Accepted) {  // only count players actually Accepted!
+				currentPlayers++;
+			}
+		}
+		return currentPlayers < 12; // 2 sides, 6 per side
 	}
 
 
