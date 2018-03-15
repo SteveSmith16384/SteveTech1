@@ -11,6 +11,6 @@ public interface IClientSideAnimated {
 	
 	void setAnimCode(int animCode);
 	
-	void processAnimation(float tpf_secs); // Todo - rename to ManualAnim
+	void processManualAnimation(float tpf_secs);
 	
 }

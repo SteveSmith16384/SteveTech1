@@ -7,7 +7,7 @@ import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -25,7 +25,7 @@ public class BigTreeWithLeaves extends PhysicalEntity {
 
 		Spatial model = game.getAssetManager().loadModel("Models/SnowNature/BigTreeWithLeaves.blend");
 		if (!_game.isServer()) {
-			JMEFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Models/SnowNature/Textures/TreeTexture.png");
+			JMEModelFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Models/SnowNature/Textures/TreeTexture.png");
 			model.setShadowMode(ShadowMode.CastAndReceive);
 		}
 		this.mainNode.attachChild(model); //This creates the model bounds!

@@ -2,15 +2,13 @@ package com.scs.undercoveragent.entities;
 
 import java.util.HashMap;
 
-import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.Spatial.CullHint;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.jme.JMEFunctions;
-import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
@@ -37,14 +35,14 @@ public class MountainMapBorder extends PhysicalEntity {
 			for (float i=-(InvisibleMapBorder.BORDER_WIDTH/2) ; i<size+1 ; i+=InvisibleMapBorder.BORDER_WIDTH/2) { 
 				Spatial model = game.getAssetManager().loadModel("Models/Holiday/Terrain2.blend");
 					model.setShadowMode(ShadowMode.CastAndReceive);
-				JMEFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Textures/snow.jpg");
-				JMEFunctions.scaleModelToWidth(model, InvisibleMapBorder.BORDER_WIDTH+1); // Since we rotate it, needs to be slightly wider
+				JMEModelFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Textures/snow.jpg");
+				JMEModelFunctions.scaleModelToWidth(model, InvisibleMapBorder.BORDER_WIDTH+1); // Since we rotate it, needs to be slightly wider
 				model.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, 0, i);//-(InvisibleMapBorder.BORDER_WIDTH/2));
-				JMEFunctions.rotateToDirection(model, NumberFunctions.rnd(0, 359));
+				JMEAngleFunctions.rotateToDirection(model, NumberFunctions.rnd(0, 359));
 				container.attachChild(model);
 			}
 			mainNode.attachChild(container);
-			JMEFunctions.rotateToDirection(mainNode, dir);
+			JMEAngleFunctions.rotateToDirection(mainNode, dir);
 		} else {
 			// Do nothing on server
 		}

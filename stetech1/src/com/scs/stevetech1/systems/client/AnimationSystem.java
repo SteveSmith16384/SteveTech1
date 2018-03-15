@@ -31,7 +31,7 @@ public class AnimationSystem extends AbstractSystem {
 				}
 			//}
 		}
-		anim.processAnimation(tpf_secs);
+		anim.processManualAnimation(tpf_secs);
 	}
 
 

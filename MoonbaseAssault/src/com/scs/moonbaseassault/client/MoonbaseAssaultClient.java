@@ -1,15 +1,19 @@
 package com.scs.moonbaseassault.client;
 
+import java.awt.Point;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
 import com.scs.moonbaseassault.entities.AISoldier;
+import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
@@ -18,12 +22,13 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.AbstractHUDImage;
 import com.scs.stevetech1.hud.IHUD;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 
 import ssmith.util.MyProperties;
+import ssmith.util.RealtimeInterval;
 
 public class MoonbaseAssaultClient extends AbstractGameClient {
 
@@ -31,7 +36,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	private DirectionalLight sun;
 	private AbstractHUDImage currentHUDTextImage;
 	private MoonbaseAssaultHUD hud;
-	
+	private RealtimeInterval updateHUDInterval;// = new RealtimeInterval(2000);
+
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -90,6 +96,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
 		
+		updateHUDInterval = new RealtimeInterval(2000);
+		
 	}
 
 
@@ -109,6 +117,20 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		super.simpleUpdate(tpf_secs);
+		
+		if (this.updateHUDInterval.hitInterval()) {
+			List<Point> units = new LinkedList<Point>();
+			for (IEntity e : this.entities.values()) {
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity pe = (PhysicalEntity)e;  //pe.getWorldRotation();
+					if (pe instanceof Computer || pe instanceof AISoldier) {
+						Vector3f pos = pe.getWorldTranslation();
+						units.add(new Point((int)pos.x, (int)pos.z));
+					}
+				}
+			}
+			this.hud.hudMapImage.mapImageTex.setUnits(units);
+		}
 	}
 
 
@@ -116,7 +138,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	protected void handleMessage(MyAbstractMessage message) {
 		if (message instanceof HudDataMessage) {
 			HudDataMessage hdm = (HudDataMessage) message;
-			this.hud.hudMapImage.mapImageTex.setMapData(hdm.scannerData, hdm.units);
+			this.hud.hudMapImage.mapImageTex.setMapData(hdm.scannerData);
 		} else {
 			super.handleMessage(message);
 		}
@@ -174,7 +196,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
 			removeCurrentHUDTextImage();
-			//currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
+			//todo - re-add currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
 			break;
 		case SimpleGameData.ST_DEPLOYING:
 			removeCurrentHUDTextImage();
@@ -206,14 +228,11 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	@Override
 	protected Spatial getPlayersWeaponModel() {
 		Spatial model = assetManager.loadModel("Models/pistol/pistol.blend");
-		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
 		model.scale(0.1f);
 		// x moves l-r, z moves further away
 		//model.setLocalTranslation(-0.35f, -.3f, .5f);
-		model.setLocalTranslation(-0.25f, -.3f, 0.5f);
-
-		//Node node = new Node();
-		//node.attachChild(model);
+		model.setLocalTranslation(-0.20f, -.3f, 0.4f);
 		return model;
 	}
 

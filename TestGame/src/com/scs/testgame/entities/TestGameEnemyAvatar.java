@@ -38,7 +38,7 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 
 	
 	@Override
-	public void processAnimation(float tpf_secs) {
+	public void processManualAnimation(float tpf_secs) {
 		
 	}
 

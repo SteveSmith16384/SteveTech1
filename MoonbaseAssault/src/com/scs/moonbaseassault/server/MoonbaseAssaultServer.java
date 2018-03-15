@@ -29,11 +29,12 @@ import ssmith.util.MyProperties;
 
 public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
 
-	public static final float CEILING_HEIGHT = 1.5f;
+	public static final float CEILING_HEIGHT = 1.4f;
+	
 	private int scannerData[][];
 	private List<Point> computerSquares;
 	
-	public static SoldierServerAvatar player;
+	public static SoldierServerAvatar player; // todo - remove
 
 	public static void main(String[] args) {
 		try {
@@ -237,7 +238,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected void playerJoinedGame(ClientData client) {
-		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.scannerData, null)); // todo - send unit data
+		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.scannerData));
 	}
 
 
@@ -319,26 +320,25 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	
 	@Override
 	public int getMapWidth() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.scannerData[0].length;
 	}
 
+	
 	@Override
 	public int getMapHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.scannerData.length;
 	}
 
+	
 	@Override
 	public boolean isMapSquareTraversable(int x, int z) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.scannerData[x][z] != MapLoader.WALL && this.scannerData[x][z] != MapLoader.COMPUTER;
 	}
 
+	
 	@Override
 	public float getMapSquareDifficulty(int x, int z) {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	//--------------------------------

@@ -286,14 +286,6 @@ ConsoleInputListener {
 
 					if (e instanceof PhysicalEntity) {
 						PhysicalEntity physicalEntity = (PhysicalEntity)e;
-						if (Globals.STRICT) {
-							if (physicalEntity.simpleRigidBody != null) {
-								if (physicalEntity.simpleRigidBody.canMove() != physicalEntity.moves) {
-									// Todo - fix this, handloe kinematic objects
-									//Globals.pe("Warning!  Entity " + physicalEntity.name + ": Discrepancy between canMove() in rigid body and entity");
-								}
-							}
-						}
 						//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 						if (sendUpdates) {
 							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
@@ -369,61 +361,6 @@ ConsoleInputListener {
 	protected void playerJoinedGame(ClientData client) {
 		// Override if required
 	}
-
-/*
-	private int getSide(ClientData client) {
-		if (this.gameOptions.areAllPlayersOnDifferentSides()) {
-			return client.id;
-		} else {
-			// todo - Check maxPlayersPerside, maxSides
-			HashMap<Integer, Integer> map = getPlayersPerSide();
-			// Get lowest amount
-			int lowest = 999;
-			int highest = -1;
-			for (int i : map.values()) {
-				if (i < lowest) {
-					lowest = i;
-				}
-				if (i > highest) {
-					highest = i;
-				}
-			}
-			// Get the side
-			Iterator<Integer> it = map.keySet().iterator();
-			while (it.hasNext()) {
-				int i = it.next();
-				int val = map.get(i);
-				if (val <= lowest) {
-					return i;
-				}
-			}
-			throw new RuntimeException("Should not get here");
-		}
-	}
-
-
-	private HashMap<Integer, Integer> getPlayersPerSide() {
-		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-		
-		// Load with empty side data
-		for (int i=1 ; i<=this.gameOptions.maxSides ; i++) {
-			map.put(i,  0);
-		}
-		
-		
-		for (ClientData client : this.clients.values()) {
-			if (client.avatar != null) {
-				if (!map.containsKey(client.side)) {
-					map.put(client.side, 0);
-				}
-				int val = map.get(client.side);
-				val++;
-				map.put(client.side, val);
-			}
-		}
-		return map;
-	}
-*/
 
 
 	@Override

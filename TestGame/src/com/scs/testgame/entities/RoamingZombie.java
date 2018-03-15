@@ -128,7 +128,6 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 /*
 	@Override
 	public void setCurrentAnim(Object s) {
-		// TODO Auto-generated method stub
 		
 	}
 

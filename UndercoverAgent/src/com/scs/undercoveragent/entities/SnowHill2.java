@@ -7,7 +7,7 @@ import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
@@ -26,7 +26,7 @@ public class SnowHill2 extends PhysicalEntity {
 		if (_game.isServer()) {
 			model.setShadowMode(ShadowMode.CastAndReceive);
 		}
-		JMEFunctions.moveYOriginTo(model, -.5f);
+		JMEModelFunctions.moveYOriginTo(model, -.5f);
 		this.mainNode.attachChild(model);
 		
 		mainNode.setLocalRotation(q);

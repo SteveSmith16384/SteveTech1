@@ -3,12 +3,10 @@ package com.scs.undercoveragent.models;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import com.scs.stevetech1.components.IAvatarModel;
-import com.scs.stevetech1.jme.JMEFunctions;
-import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 
 /*
  * This class, and classes like this, are designed to keep all the model-specific settings in one place.
@@ -36,9 +34,9 @@ public class SnowmanModel implements IAvatarModel {
 		//if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
 			model = assetManager.loadModel("Models/Holiday/Snowman.obj");
 			model.setShadowMode(ShadowMode.CastAndReceive);
-			JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
-			JMEFunctions.moveYOriginTo(model, 0f);
-			JMEFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
+			JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
+			JMEModelFunctions.moveYOriginTo(model, 0f);
+			JMEAngleFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 			
 			origPos = model.getLocalTranslation().clone();
 			

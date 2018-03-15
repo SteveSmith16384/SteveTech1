@@ -18,8 +18,13 @@ public class MapImageTexture extends PaintableImage {
 	}
 
 
-	public void setMapData(int[][] _data, List<Point> _units) {
+	public void setMapData(int[][] _data) {
 		data = _data;
+		this.refreshImage();
+	}
+	
+	
+	public void setUnits(List<Point> _units) {
 		units = _units;
 		this.refreshImage();
 	}
@@ -30,7 +35,7 @@ public class MapImageTexture extends PaintableImage {
 		g.clearRect(0, 0, getWidth(), getHeight());
 
 		if (data != null) {
-			g.setColor(new Color(1f, 1f, 1f, .7f));
+			g.setColor(new Color(1f, 1f, 1f, .8f));
 
 			for (int y=0 ; y<data.length ; y++) {
 				for (int x=0 ; x<data[y].length ; x++) {
@@ -40,7 +45,7 @@ public class MapImageTexture extends PaintableImage {
 				}
 			}			
 			if (units != null) {
-				g.setColor(new Color(1f, 0f, 0f, .7f));
+				g.setColor(new Color(1f, 0f, 0f, 1f));
 
 				for (int i=0 ; i<units.size() ; i++) {
 					Point p = units.get(i);

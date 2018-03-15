@@ -91,13 +91,14 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
 			} else {
 				if (MoonbaseAssaultServer.player != null) {
-					Globals.p("Soldier can see: " + this.canSee(MoonbaseAssaultServer.player, 100f));
+					boolean cansee = this.canSee(MoonbaseAssaultServer.player, 100f);
+					//Globals.p("Soldier can see: " + cansee);					
 				}
 			}
 			
 			this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
-			this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
 		}
+		this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
 
 		super.processByServer(server, tpf_secs);
 	}
@@ -163,7 +164,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 
 	@Override
-	public void processAnimation(float tpf_secs) {
+	public void processManualAnimation(float tpf_secs) {
 		// Do nothing, already handled
 	}
 

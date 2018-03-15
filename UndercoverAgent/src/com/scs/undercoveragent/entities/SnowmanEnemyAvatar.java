@@ -48,7 +48,7 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 */
 
 	@Override
-	public void processAnimation(float tpf_secs) {
+	public void processManualAnimation(float tpf_secs) {
 		if (this.showDied) {
 			this.snowman.showDied(tpf_secs);
 		} else {

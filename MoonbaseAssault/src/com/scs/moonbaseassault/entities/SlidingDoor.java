@@ -92,9 +92,13 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 		super.processByServer(server, tpf_secs);
 
 		if (this.isOpening) {
-			if (this.getWorldTranslation().y <= MoonbaseAssaultServer.CEILING_HEIGHT-.1f) {
-				// todo - position accurately at top in case of large jump
+			float topPos = MoonbaseAssaultServer.CEILING_HEIGHT-.1f;
+			if (this.getWorldTranslation().y <= topPos) {
 				this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs));
+				// position accurately at top in case of large jump
+				if (this.getWorldTranslation().y > topPos) {
+					this.getWorldTranslation().y = topPos;
+				}
 				if (Globals.DEBUG_SLIDING_DOORS) {
 					Globals.p("Door is opening");
 				}
@@ -103,9 +107,13 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 			}
 		} else {
 			if (timeUntilClose <= 0) {
-				if (this.getWorldTranslation().y >= 0) {
+				if (this.getWorldTranslation().y > 0) {
 					this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs).mult(-1));
-					// todo - position accurately at top in case of large jump
+					// position accurately at top in case of large jump
+					if (this.getWorldTranslation().y < 0) {
+						this.getWorldTranslation().y = 0;
+						this.getMainNode().updateGeometricState();
+					}
 					if (this.simpleRigidBody.checkForCollisions() != null) {
 						// Move back up
 						this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs));

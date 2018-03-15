@@ -16,7 +16,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class LaserBullet extends AbstractBullet {// implements IProcessByClient, ICausesHarmOnContact, ILaunchable, IRemoveOnContact, IClientControlled {
+public class LaserBullet extends AbstractBullet {
 
 	private float timeLeft = 3f;
 

@@ -13,7 +13,7 @@ import com.jme3.scene.shape.Box;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.entities.AbstractAvatar;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.Globals;
 
 //Punch, Walk, Working, ArmatureAction.002, Idle, Death, Run, Jump
@@ -40,16 +40,16 @@ public class SoldierModel implements IAvatarModel {
 		model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		if (side == 1) {
-			JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side1.png");
+			JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side1.png");
 		} else if (side == 2) {
-			JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side2.png");
+			JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side2.png");
 		} else {
 			throw new RuntimeException("Unknown side: " + side);
 		}
-		JMEFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
-		JMEFunctions.moveYOriginTo(model, 0f);
+		JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
+		JMEModelFunctions.moveYOriginTo(model, 0f);
 
-		AnimControl control = JMEFunctions.getNodeWithControls((Node)model);
+		AnimControl control = JMEModelFunctions.getNodeWithControls((Node)model);
 		//control.addListener(l);
 		channel = control.createChannel();
 

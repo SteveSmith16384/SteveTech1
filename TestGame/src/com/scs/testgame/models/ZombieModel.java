@@ -12,7 +12,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.scs.stevetech1.components.IAvatarModel;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 
 /*
 INFO: Found animation: ZombieAttack.
@@ -49,7 +49,7 @@ public class ZombieModel implements IAvatarModel {
 			model.setModelBound(new BoundingBox());
 			//model.updateModelBound();
 
-			JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
+			JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 
 			Node s = (Node)model;
 			while (s.getNumControls() == 0) {

@@ -14,7 +14,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.util.BufferUtils;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 
 public class CustomMeshViewer extends SimpleApplication {
 
@@ -81,7 +81,7 @@ public class CustomMeshViewer extends SimpleApplication {
 		rootNode.attachChild(geo);
 		
 		
-		this.rootNode.attachChild(JMEFunctions.getGrid(assetManager, 10));
+		this.rootNode.attachChild(JMEModelFunctions.getGrid(assetManager, 10));
 		rootNode.updateGeometricState();
 
 	}

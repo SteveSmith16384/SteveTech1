@@ -46,7 +46,7 @@ public class SoldierEnemyAvatar extends AbstractEnemyAvatar implements AnimEvent
 
 
 	@Override
-	public void processAnimation(float tpf_secs) {
+	public void processManualAnimation(float tpf_secs) {
 		// Do nothing, JME handles it
 	}
 

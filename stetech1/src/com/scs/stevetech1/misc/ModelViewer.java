@@ -13,7 +13,7 @@ import com.jme3.light.LightList;
 import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.Globals;
 
 public class ModelViewer extends SimpleApplication implements AnimEventListener {
@@ -47,7 +47,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		JMEFunctions.moveYOriginTo(model, 0f);
 */
 		Spatial model = assetManager.loadModel("Models/pistol/pistol.blend");
-		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);
@@ -64,7 +64,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		model.setModelBound(new BoundingBox());
 		rootNode.attachChild(model);
 
-		this.rootNode.attachChild(JMEFunctions.getGrid(assetManager, 10));
+		this.rootNode.attachChild(JMEModelFunctions.getGrid(assetManager, 10));
 
 		rootNode.updateGeometricState();
 

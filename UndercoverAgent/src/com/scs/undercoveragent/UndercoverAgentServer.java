@@ -8,7 +8,8 @@ import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -119,7 +120,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			// Do nothing
 		} else if (Globals.FEW_MODELS) {
 			for (int z=1 ; z<mapSize-1 ; z+=2) {
-				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
+				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEAngleFunctions.getRotation(-1, 0));
 				this.actuallyAddEntity(snowman);
 				snowman.setWorldTranslation(3, z+2);
 			}
@@ -127,7 +128,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			// Place snowman
 			int numSnowmen = mapSize;
 			for (int i=0 ; i<numSnowmen ; i++) {
-				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
+				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEAngleFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(snowman);
 				//Globals.p("Placed " + i + " snowmen.");
 			}
@@ -135,12 +136,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			// Place trees
 			int numTrees = mapSize/2;
 			for (int i=0 ; i<numTrees ; i++) {
-				SnowTree1 tree1 = new SnowTree1(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
+				SnowTree1 tree1 = new SnowTree1(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEAngleFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(tree1);
 				//Globals.p("Placed " + i + " tree.");
 			}
 			for (int i=0 ; i<numTrees ; i++) {
-				SnowTree2 tree1 = new SnowTree2(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
+				SnowTree2 tree1 = new SnowTree2(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEAngleFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(tree1);
 				//Globals.p("Placed " + i + " tree.");
 			}
@@ -148,7 +149,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			// Place igloos
 			int numIgloos = mapSize/2;
 			for (int i=0 ; i<numIgloos ; i++) {
-				Igloo igloo = new Igloo(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEFunctions.getRotation(-1, 0));
+				Igloo igloo = new Igloo(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEAngleFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(igloo);
 				//Globals.p("Placed " + i + " igloo.");
 			}
@@ -193,7 +194,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			collider = entity.simpleRigidBody.checkForCollisions();
 		}
 		// randomly rotate
-		JMEFunctions.rotateToDirection(entity.getMainNode(), NumberFunctions.rnd(0,  359));
+		JMEAngleFunctions.rotateToDirection(entity.getMainNode(), NumberFunctions.rnd(0,  359));
 	}
 
 

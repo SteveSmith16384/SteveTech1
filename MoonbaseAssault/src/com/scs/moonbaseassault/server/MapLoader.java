@@ -12,17 +12,17 @@ import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.models.Spaceship1;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.Globals;
 
 public class MapLoader {
 
 	private static final int HANDLED = 0;
-	private static final int INT_FLOOR = 1;
-	private static final int EXT_FLOOR = 2;
+	public static final int INT_FLOOR = 1;
+	public static final int EXT_FLOOR = 2;
 	public static final int WALL = 3;
-	private static final int DOOR_LR = 4;
-	private static final int DOOR_UD = 5;
+	public static final int DOOR_LR = 4;
+	public static final int DOOR_UD = 5;
 	public static final int COMPUTER = 6;
 
 	private int mapCode[][];

@@ -8,7 +8,7 @@ import com.jme3.scene.Spatial;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.jme.JMEFunctions;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
@@ -22,7 +22,7 @@ public class Spaceship1 extends PhysicalEntity {
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/spaceships/Spaceship.blend");
-		JMEFunctions.moveYOriginTo(model, 0.1f);
+		JMEModelFunctions.moveYOriginTo(model, 0.1f);
 		if (!_game.isServer()) {
 			model.setShadowMode(ShadowMode.CastAndReceive);
 		}

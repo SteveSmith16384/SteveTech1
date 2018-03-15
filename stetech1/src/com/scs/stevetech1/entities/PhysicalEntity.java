@@ -286,13 +286,14 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	
 	public boolean canSee(PhysicalEntity target, float range) {
+		// Test the ray from the middle of the entity
 		Ray r = new Ray(this.getMainNode().getWorldBound().getCenter(), target.getMainNode().getWorldBound().getCenter().subtract(this.getMainNode().getWorldBound().getCenter()).normalizeLocal());
 		r.setLimit(range);
 		CollisionResults res = new CollisionResults();
 		int c = game.getGameNode().collideWith(r, res);
 		if (c == 0) {
-			Globals.p("No Ray collisions?!");
-			return true;
+			//Globals.p("No Ray collisions?!");
+			return false;
 		}
 		Iterator<CollisionResult> it = res.iterator();
 		while (it.hasNext()) {
@@ -320,38 +321,4 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	/*
-	public boolean canSee(PhysicalEntity cansee) {
-		Ray r = new Ray(this.getNode().getWorldTranslation(), cansee.getNode().getWorldTranslation().subtract(this.getNode().getWorldTranslation()).normalizeLocal());
-		//synchronized (module.objects) {
-		//if (go.collides) {
-		CollisionResults results = new CollisionResults();
-		Iterator<IProcessable> it = module.getGameObjects().iterator();
-		while (it.hasNext()) {
-			IProcessable o = it.next();
-			if (o instanceof GameObject && o != this) {
-				GameObject go = (GameObject)o;
-				if (go.collides) {
-					if (go.getNode().getWorldBound() != null) {
-						results.clear();
-						try {
-							go.getNode().collideWith(r, results);
-						} catch (UnsupportedCollisionException ex) {
-							System.out.println("Spatial: " + go.getNode());
-							ex.printStackTrace();
-						}
-						if (results.size() > 0) {
-							float go_dist = this.distance(cansee)-1;
-							CollisionResult cr = results.getClosestCollision();
-							if (cr.getDistance() < go_dist) { // todo - check
-								return false;
-							}
-						}
-					}
-				}
-			}
-		}
-		return true;
-	}
-*/
 }
