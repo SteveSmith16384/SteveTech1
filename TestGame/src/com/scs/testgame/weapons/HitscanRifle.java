@@ -58,7 +58,6 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				Globals.p("Client shooting from " + from);
 			}
 			Ray ray = new Ray(from, shooter.getShootDir());
-			/* todo - re-add
 			RayCollisionData rcd = shooter.checkForCollisions(ray, RANGE);
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
@@ -66,7 +65,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, false);
 			} else {
 				Globals.p("Not hit anything");
-			}*/
+			}
 		}
 		return true;
 	}

@@ -272,11 +272,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return null;
 	}
 
-	/*
-	public boolean canMove() {
-		return true;
-	}
-	 */
 
 	@Override
 	public HashMap<String, Object> getCreationData() {
@@ -289,14 +284,43 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return super.getCreationData();
 	}
 
-/*
-	public int getCurrentAnimCode() {
-		// Override if animated
-		return -1; //this.currentAnimCode;
-	}
-*/
+	
+	public boolean canSee(PhysicalEntity target, float range) {
+		Ray r = new Ray(this.getMainNode().getWorldBound().getCenter(), target.getMainNode().getWorldBound().getCenter().subtract(this.getMainNode().getWorldBound().getCenter()).normalizeLocal());
+		r.setLimit(range);
+		CollisionResults res = new CollisionResults();
+		int c = game.getGameNode().collideWith(r, res);
+		if (c == 0) {
+			Globals.p("No Ray collisions?!");
+			return true;
+		}
+		Iterator<CollisionResult> it = res.iterator();
+		while (it.hasNext()) {
+			CollisionResult col = it.next();
+			if (col.getDistance() > range) {
+				return false;
+			}
+			Spatial s = col.getGeometry();
+			while (s.getUserData(Globals.ENTITY) == null) {
+				s = s.getParent();
+				if (s == null) {
+					break;
+				}
+			}
+			if (s != null && s.getUserData(Globals.ENTITY) != null) {
+				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
+				if (pe != this && pe.collideable) {
+					//Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
+					return pe == target;
+				}
+			}
+		}
 
-/* todo
+		return false;
+	}
+
+
+	/*
 	public boolean canSee(PhysicalEntity cansee) {
 		Ray r = new Ray(this.getNode().getWorldTranslation(), cansee.getNode().getWorldTranslation().subtract(this.getNode().getWorldTranslation()).normalizeLocal());
 		//synchronized (module.objects) {
@@ -329,5 +353,5 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		}
 		return true;
 	}
-*/	
+*/
 }

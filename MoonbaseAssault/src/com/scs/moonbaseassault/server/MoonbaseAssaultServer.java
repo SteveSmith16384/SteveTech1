@@ -32,6 +32,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	public static final float CEILING_HEIGHT = 1.5f;
 	private int scannerData[][];
 	private List<Point> computerSquares;
+	
+	public static SoldierServerAvatar player;
 
 	public static void main(String[] args) {
 		try {
@@ -167,6 +169,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0, client);
 		this.actuallyAddEntity(abilityGun);
 
+		player = avatar;
+		
 		return avatar;
 	}
 

@@ -1,6 +1,5 @@
 package com.scs.moonbaseassault.entities;
 
-import com.scs.moonbaseassault.components.IUnit;
 import com.scs.moonbaseassault.models.SoldierModel;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.input.IInputDevice;

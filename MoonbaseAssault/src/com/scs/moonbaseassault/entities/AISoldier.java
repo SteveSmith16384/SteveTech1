@@ -11,6 +11,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.models.SoldierModel;
+import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -30,10 +31,6 @@ import com.scs.stevetech1.shared.IEntityController;
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
 IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
-	/*private static final float w = .5f;
-	private static final float d = .7f;
-	private static final float h = .5f;
-*/
 	private static final float SPEED = .5f;//.47f;
 
 	private SoldierModel soldierModel;
@@ -90,8 +87,14 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (health > 0) {
 			this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
-			this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
-
+			if (!Globals.DEBUG_CAN_SEE) {
+				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
+			} else {
+				if (MoonbaseAssaultServer.player != null) {
+					Globals.p("Soldier can see: " + this.canSee(MoonbaseAssaultServer.player, 100f));
+				}
+			}
+			
 			this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
 			this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
 		}
@@ -175,7 +178,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	public void drawOnHud(Camera cam) {
 		FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 		if (insideoutside != FrustumIntersect.Outside) {
-			Vector3f pos = this.getWorldTranslation().add(0, SoldierModel.MODEL_HEIGHT + 0.1f , 0);
+			Vector3f pos = this.getWorldTranslation().add(0, SoldierModel.MODEL_HEIGHT, 0);
 			Vector3f screen_pos = cam.getScreenCoordinates(pos);
 			this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 		}

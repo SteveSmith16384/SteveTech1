@@ -733,7 +733,7 @@ ConsoleInputListener {
 	public abstract boolean doWeHaveSpaces();
 
 
-	public ArrayList<RayCollisionData> checkForEntityCollisions(Ray r) {
+	public ArrayList<RayCollisionData> checkForEntityCollisions_UNUSED(Ray r) { // todo - is this use?
 		CollisionResults res = new CollisionResults();
 		ArrayList<RayCollisionData> myList = new ArrayList<RayCollisionData>(); 
 		synchronized (entities) {
