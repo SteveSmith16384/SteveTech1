@@ -1,8 +1,11 @@
 package com.scs.moonbaseassault.server;
 
+import java.awt.Point;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
@@ -21,12 +24,14 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 
+import ssmith.astar.IAStarMapInterface;
 import ssmith.util.MyProperties;
 
-public class MoonbaseAssaultServer extends AbstractGameServer {
+public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
 
 	public static final float CEILING_HEIGHT = 1.5f;
 	private int scannerData[][];
+	private List<Point> computerSquares;
 
 	public static void main(String[] args) {
 		try {
@@ -79,7 +84,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 
 	public MoonbaseAssaultServer(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
-		super(new GameOptions(MoonbaseAssaultStaticData.NAME, 6, 2, 
+		super(new GameOptions(MoonbaseAssaultStaticData.NAME,  
 				10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
@@ -101,6 +106,17 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 		try {
 			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
+			
+			// Get comp squares
+			this.computerSquares = new ArrayList<Point>();
+			for (int y=0 ; y<scannerData.length ; y++) {
+				for (int x=0 ; x<scannerData.length ; x++) {
+					if (this.scannerData[x][y] == MapLoader.COMPUTER) {
+						computerSquares.add(new Point(x, y));
+					}
+				}
+			}
+
 
 			//todo - re-add 
 			//Spaceship1 ss = new Spaceship1(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 8, 0f, 8, JMEFunctions.getRotation(-1, 0));
@@ -290,4 +306,36 @@ public class MoonbaseAssaultServer extends AbstractGameServer {
 	}
 
 
+	public List<Point> getComputerSquares() {
+		return this.computerSquares;
+	}
+	
+	
+	// AStar --------------------------------
+	
+	@Override
+	public int getMapWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getMapHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean isMapSquareTraversable(int x, int z) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public float getMapSquareDifficulty(int x, int z) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	//--------------------------------
 }

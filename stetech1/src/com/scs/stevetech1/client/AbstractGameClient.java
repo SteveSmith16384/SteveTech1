@@ -39,6 +39,7 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IClientSideAnimated;
+import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IPlayerControlled;
@@ -354,7 +355,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 
 					this.launchSystem.process(renderTime);
 
-					// Loop through each entity and process them				
+					// Loop through each entity and process them
 					for (IEntity e : this.entities.values()) {
 						if (e instanceof IPlayerControlled) {
 							IPlayerControlled p = (IPlayerControlled)e;
@@ -377,6 +378,11 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 							IClientSideAnimated pbc = (IClientSideAnimated)e;
 							this.animSystem.process(pbc, tpf_secs);
 						}
+						
+						if (e instanceof IDrawOnHUD) {
+							IDrawOnHUD doh = (IDrawOnHUD)e;
+							doh.drawOnHud(cam);
+						}
 					}
 
 					// Now do client-only entities
@@ -394,9 +400,7 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 				if (playersWeaponNode != null) {
 					playersWeaponNode.setLocalTranslation(cam.getLocation());
 					playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
-					playersWeaponNode.updateGeometricState(); 
-					//playersWeaponNode.getChild(0).getWorldTranslation();
-					//playersWeaponNode.getWorldTranslation();
+					//playersWeaponNode.updateGeometricState();  // Makes the gun black for some reason
 				}
 
 			}
@@ -736,6 +740,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 					this.getGameNode().attachChild(pe.getMainNode());
 				}
 			}
+			if (e instanceof IDrawOnHUD) {
+				IDrawOnHUD doh = (IDrawOnHUD)e;
+				this.hud.addItem(doh.getHUDItem());
+			}
 
 		}
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
@@ -768,6 +776,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 						this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
 					}
 					pe.getMainNode().removeFromParent();
+				}
+				if (e instanceof IDrawOnHUD) {
+					IDrawOnHUD doh = (IDrawOnHUD)e;
+					doh.getHUDItem().removeFromParent();
 				}
 				this.entities.remove(id);
 			} else {

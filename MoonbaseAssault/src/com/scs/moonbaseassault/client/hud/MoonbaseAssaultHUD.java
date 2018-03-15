@@ -46,7 +46,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 
 	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
 
-	public MoonbaseAssaultHUD(AbstractGameClient _game, Camera _cam) { // BitmapFont font_small, 
+	public MoonbaseAssaultHUD(AbstractGameClient _game, Camera _cam) { 
 		super("HUD");
 
 		game = _game;
@@ -55,7 +55,6 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		cam = _cam;
 		
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-		//font_small = _game.getAssetManager().loadFont("Fonts/Xenotron.ttf");
 
 		super.setLocalTranslation(0, 0, 0);
 
@@ -310,7 +309,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	private HUDMapImage addMapImage() {
 		float w = cam.getWidth()/5;
 		float h = cam.getHeight()/5;
-		HUDMapImage hmi = new HUDMapImage(game.getAssetManager());//, (int)w, (int)h);
+		HUDMapImage hmi = new HUDMapImage(game.getAssetManager());
 		hmi.setWidth(w);
 		hmi.setHeight(h);
 		hmi.setLocalTranslation((cam.getWidth() - w)/2, cam.getHeight() *.1f, 0);
@@ -329,5 +328,12 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	public void showMessage(String s) {
 		this.log(s);
 	}
+	
+
+	@Override
+	public void addItem(Node n) {
+		this.attachChild(n);
+	}
+
 	
 }

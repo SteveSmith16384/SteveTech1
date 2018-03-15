@@ -295,4 +295,39 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return -1; //this.currentAnimCode;
 	}
 */
+
+/* todo
+	public boolean canSee(PhysicalEntity cansee) {
+		Ray r = new Ray(this.getNode().getWorldTranslation(), cansee.getNode().getWorldTranslation().subtract(this.getNode().getWorldTranslation()).normalizeLocal());
+		//synchronized (module.objects) {
+		//if (go.collides) {
+		CollisionResults results = new CollisionResults();
+		Iterator<IProcessable> it = module.getGameObjects().iterator();
+		while (it.hasNext()) {
+			IProcessable o = it.next();
+			if (o instanceof GameObject && o != this) {
+				GameObject go = (GameObject)o;
+				if (go.collides) {
+					if (go.getNode().getWorldBound() != null) {
+						results.clear();
+						try {
+							go.getNode().collideWith(r, results);
+						} catch (UnsupportedCollisionException ex) {
+							System.out.println("Spatial: " + go.getNode());
+							ex.printStackTrace();
+						}
+						if (results.size() > 0) {
+							float go_dist = this.distance(cansee)-1;
+							CollisionResult cr = results.getClosestCollision();
+							if (cr.getDistance() < go_dist) { // todo - check
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
+*/	
 }

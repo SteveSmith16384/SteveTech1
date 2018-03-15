@@ -19,9 +19,7 @@ import com.scs.stevetech1.server.Globals;
 //Punch, Walk, Working, ArmatureAction.002, Idle, Death, Run, Jump
 public class SoldierModel implements IAvatarModel {
 
-	private static final float MODEL_WIDTH = 0.25f;
-	private static final float MODEL_DEPTH = 0.25f;
-	private static final float MODEL_HEIGHT = 0.7f;
+	public static final float MODEL_HEIGHT = 0.7f;
 
 	private AssetManager assetManager;
 	private Spatial model;

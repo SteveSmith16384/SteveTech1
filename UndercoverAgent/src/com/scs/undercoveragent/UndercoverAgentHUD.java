@@ -319,5 +319,12 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 	public void showMessage(String s) {
 		this.log(s);
 	}
+
+
+	@Override
+	public void addItem(Node n) {
+		this.attachChild(n);
+	}
+
 	
 }

@@ -13,15 +13,12 @@ public class GameOptions {
 	public int ourExternalPort, lobbyport;
 	public float avatarRestartTimeSecs, avatarInvulnDurationSecs;
 
-	public GameOptions(String _displayName, int _maxPlayersPerSide, int _maxSides, 
+	public GameOptions(String _displayName,  
 			long _deployDuration, long _gameDuration, long _finishedDuration,
 			String _ourExternalIP, int _ourExternalPort, String _lobbyip, int _lobbyport,
-			float _restartTime, float _invulnDuration) { // todo - remove unused params
+			float _restartTime, float _invulnDuration) {
 		
 		displayName =_displayName;
-		//maxPlayersPerSide = _maxPlayersPerSide;
-		//maxSides = _maxSides;
-		//allPlayersOnDifferentSides = (maxPlayersPerSide == 1);
 		
 		deployDurationMillis = _deployDuration;
 		gameDurationMillis = _gameDuration;
@@ -36,9 +33,4 @@ public class GameOptions {
 		avatarInvulnDurationSecs = _invulnDuration;
 	}
 	
-	/*
-	public boolean areAllPlayersOnDifferentSides() {
-		return this.allPlayersOnDifferentSides;
-	}
-*/
 }

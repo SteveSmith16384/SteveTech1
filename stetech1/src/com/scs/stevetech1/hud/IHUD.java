@@ -14,4 +14,9 @@ public interface IHUD {
 	void showDamageBox();
 	
 	void showMessage(String s);
+	
+	void addItem(Node n);
+	
+	//void removeItem(Node n);
+	
 }
