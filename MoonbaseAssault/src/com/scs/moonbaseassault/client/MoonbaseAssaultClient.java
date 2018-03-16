@@ -55,7 +55,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
-			
+
 			float gravity = props.getPropertyAsFloat("gravity", -5f);
 			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 
@@ -76,7 +76,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 			float mouseSensitivity) {
 		super(MoonbaseAssaultStaticData.NAME, null, gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness, mouseSensitivity);
-		
+
 	}
 
 
@@ -95,9 +95,9 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
-		
+
 		updateHUDInterval = new RealtimeInterval(2000);
-		
+
 	}
 
 
@@ -117,19 +117,28 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		super.simpleUpdate(tpf_secs);
-		
+
 		if (this.updateHUDInterval.hitInterval()) {
 			List<Point> units = new LinkedList<Point>();
+			List<Point> computers = new LinkedList<Point>();
 			for (IEntity e : this.entities.values()) {
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe = (PhysicalEntity)e;  //pe.getWorldRotation();
-					if (pe instanceof Computer || pe instanceof AISoldier) {
+					if (pe instanceof Computer) {
+						Vector3f pos = pe.getWorldTranslation();
+						computers.add(new Point((int)pos.x, (int)pos.z));
+					} else if (pe instanceof AISoldier) {
 						Vector3f pos = pe.getWorldTranslation();
 						units.add(new Point((int)pos.x, (int)pos.z));
 					}
 				}
 			}
-			this.hud.hudMapImage.mapImageTex.setUnits(units);
+			Point player = null;
+			if (currentAvatar != null) {
+				Vector3f v = this.currentAvatar.getWorldTranslation();
+				player = new Point((int)v.x, (int)v.z);
+			}
+			this.hud.hudMapImage.mapImageTex.setotherData(player, units, computers);
 		}
 	}
 
@@ -143,7 +152,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 			super.handleMessage(message);
 		}
 	}
-	
+
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
@@ -215,7 +224,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 	}
 
-	
+
 	private void removeCurrentHUDTextImage() {
 		if (this.currentHUDTextImage != null) {
 			if (currentHUDTextImage.getParent() != null) {
@@ -232,7 +241,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		model.scale(0.1f);
 		// x moves l-r, z moves further away
 		//model.setLocalTranslation(-0.35f, -.3f, .5f);
-		model.setLocalTranslation(-0.20f, -.3f, 0.4f);
+		model.setLocalTranslation(-0.20f, -.2f, 0.4f);
 		return model;
 	}
 

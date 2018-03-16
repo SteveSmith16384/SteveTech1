@@ -93,11 +93,12 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 
 		if (this.isOpening) {
 			float topPos = MoonbaseAssaultServer.CEILING_HEIGHT-.1f;
-			if (this.getWorldTranslation().y <= topPos) {
+			if (this.getWorldTranslation().y < topPos) {
 				this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs));
 				// position accurately at top in case of large jump
 				if (this.getWorldTranslation().y > topPos) {
 					this.getWorldTranslation().y = topPos;
+					//this.isOpening = false;
 				}
 				if (Globals.DEBUG_SLIDING_DOORS) {
 					Globals.p("Door is opening");
@@ -112,7 +113,7 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 					// position accurately at top in case of large jump
 					if (this.getWorldTranslation().y < 0) {
 						this.getWorldTranslation().y = 0;
-						this.getMainNode().updateGeometricState();
+						//this.getMainNode().updateGeometricState();
 					}
 					if (this.simpleRigidBody.checkForCollisions() != null) {
 						// Move back up

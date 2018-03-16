@@ -13,12 +13,14 @@ import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
+import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -30,10 +32,10 @@ import ssmith.util.MyProperties;
 public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
 
 	public static final float CEILING_HEIGHT = 1.4f;
-	
+
 	private int scannerData[][];
 	private List<Point> computerSquares;
-	
+
 	public static SoldierServerAvatar player; // todo - remove
 
 	public static void main(String[] args) {
@@ -109,24 +111,30 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		try {
 			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
-			
-			// Get comp squares
+
+			int maxSoldiers = 2;
+
 			this.computerSquares = new ArrayList<Point>();
 			for (int y=0 ; y<scannerData.length ; y++) {
 				for (int x=0 ; x<scannerData.length ; x++) {
 					if (this.scannerData[x][y] == MapLoader.COMPUTER) {
 						computerSquares.add(new Point(x, y));
+					} else if (this.scannerData[x][y] == MapLoader.DOOR_LR) { // || this.scannerData[x][y] == MapLoader.DOOR_UD) {
+						if (maxSoldiers > 0) {
+							AISoldier s = new AISoldier(this, this.getNextEntityID(), x + 0.5f, .3f, y + 1.5f, 2);
+							this.actuallyAddEntity(s);
+							Globals.p("Adding soldier to " + x + ", " + y);
+							maxSoldiers--;
+						}
 					}
 				}
 			}
 
+			//AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.x + 0.5f, .3f, map.firstInteriorFloor.y + 0.5f, 2);
+			//this.actuallyAddEntity(s);
 
-			//todo - re-add 
-			//Spaceship1 ss = new Spaceship1(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 8, 0f, 8, JMEFunctions.getRotation(-1, 0));
-			//moonbaseAssaultServer.actuallyAddEntity(ss);
-
-			AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.x + 0.5f, .3f, map.firstInteriorFloor.y + 0.5f, 2);
-			this.actuallyAddEntity(s);
+			Spaceship1 ss = new Spaceship1(this, this.getNextEntityID(), 8, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
+			//todo - re-add this.actuallyAddEntity(ss);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -165,13 +173,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		SoldierServerAvatar avatar = new SoldierServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
-		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
 
 		IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0, client);
 		this.actuallyAddEntity(abilityGun);
 
 		player = avatar;
-		
+
 		return avatar;
 	}
 
@@ -314,28 +321,28 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	public List<Point> getComputerSquares() {
 		return this.computerSquares;
 	}
-	
-	
+
+
 	// AStar --------------------------------
-	
+
 	@Override
 	public int getMapWidth() {
 		return this.scannerData[0].length;
 	}
 
-	
+
 	@Override
 	public int getMapHeight() {
 		return this.scannerData.length;
 	}
 
-	
+
 	@Override
 	public boolean isMapSquareTraversable(int x, int z) {
 		return this.scannerData[x][z] != MapLoader.WALL && this.scannerData[x][z] != MapLoader.COMPUTER;
 	}
 
-	
+
 	@Override
 	public float getMapSquareDifficulty(int x, int z) {
 		return 1;

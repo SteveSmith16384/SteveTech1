@@ -28,6 +28,8 @@ import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 
+import ssmith.lang.NumberFunctions;
+
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
 IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
@@ -35,11 +37,11 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	private SoldierModel soldierModel;
 	private float health = 1f;
-	private Vector3f currDir = new Vector3f(1f, 0, 0);
+	private Vector3f currDir;// = new Vector3f(1f, 0, 0);
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	private int side;
-	private int currentAnimCode = -1;
-	
+	//private int currentAnimCode = -1;
+
 	private BitmapText hudNode;
 	private static BitmapFont font_small;
 
@@ -47,6 +49,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, "AISoldier", true);
 
 		side = _side;
+		currDir = this.getRandomDirection();
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -75,30 +78,38 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 		spatial.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-		
+
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
 		hudNode.setText("Cpl. Jonlan");
-		
+
 	}
 
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (health > 0) {
+			
+			if (NumberFunctions.rnd(1, 200) == 1) {
+				Globals.p("Changing direction");
+				this.currDir = this.getRandomDirection();
+			}
+			
 			this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 			if (!Globals.DEBUG_CAN_SEE) {
-				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
+				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // Walk forwards
 			} else {
 				if (MoonbaseAssaultServer.player != null) {
 					boolean cansee = this.canSee(MoonbaseAssaultServer.player, 100f);
-					//Globals.p("Soldier can see: " + cansee);					
+					if (cansee) {
+						//Globals.p("Soldier can see player");
+					}
 				}
 			}
-			
+
 			this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
 		}
-		this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
+		//this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
 
 		super.processByServer(server, tpf_secs);
 	}
@@ -107,19 +118,9 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	@Override
 	public void fallenOffEdge() {
 		//this.respawn();
+		this.remove();
 	}
 
-	/*
-	private void respawn() {
-		this.setWorldTranslation(new Vector3f(10, 10, 10));
-
-		EntityUpdateMessage eum = new EntityUpdateMessage();
-		eum.addEntityData(this, true);
-		AbstractGameServer server = (AbstractGameServer)this.game;
-		server.gameNetworkServer.sendMessageToAll(eum);
-
-	}
-	 */
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
@@ -127,6 +128,8 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 			this.health -= amt;
 			if (health <= 0) {
 				this.soldierModel.setAnim(AbstractAvatar.ANIM_DIED);
+				//this.simpleRigidBody.setMovable(false); // Stop it being pushed
+				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
 			}
 		}
 	}
@@ -171,7 +174,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	@Override
 	public int getCurrentAnimCode() {
-		return currentAnimCode;
+		return this.soldierModel.getCurrentAnimCode();
 	}
 
 
@@ -183,7 +186,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 			Vector3f screen_pos = cam.getScreenCoordinates(pos);
 			this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 		}
-		
+
 	}
 
 
@@ -192,4 +195,15 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		return this.hudNode;
 	}
 
+
+	private Vector3f getRandomDirection() {
+		int i = NumberFunctions.rnd(0,  3);
+		switch (i) {
+		case 0: return new Vector3f(1f, 0, 0);
+		case 1: return new Vector3f(-1f, 0, 0);
+		case 2: return new Vector3f(0f, 0, 1f);
+		case 3: return new Vector3f(0f, 0, -1f);
+		}
+		throw new RuntimeException("Todo");
+	}
 }
