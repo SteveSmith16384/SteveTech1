@@ -53,7 +53,7 @@ public class MapImageTexture extends PaintableImage {
 
 				for (int i=0 ; i<units.size() ; i++) {
 					Point p = units.get(i);
-					g.fillRect(data.length-p.y, p.x, 2, 2);
+					g.fillRect(data.length-p.y, data.length-p.x, 2, 2);
 				}			
 			}
 			if (computers != null) {
@@ -61,12 +61,12 @@ public class MapImageTexture extends PaintableImage {
 
 				for (int i=0 ; i<computers.size() ; i++) {
 					Point p = computers.get(i);
-					g.fillRect(data.length-p.y, p.x, 1, 1);
+					g.fillRect(data.length-p.y, data.length-p.x, 1, 1);
 				}			
 			}
 			if (player != null) {
 				g.setColor(new Color(1f, 1f, 1f, 1f));
-				g.fillRect(data.length-player.y, player.x, 2, 2);
+				g.fillRect(data.length-player.y, data.length-player.x, 2, 2);
 			}
 		}
 	}

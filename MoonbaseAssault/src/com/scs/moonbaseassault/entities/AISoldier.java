@@ -40,7 +40,6 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	private Vector3f currDir;// = new Vector3f(1f, 0, 0);
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	private int side;
-	//private int currentAnimCode = -1;
 
 	private BitmapText hudNode;
 	private static BitmapFont font_small;
@@ -92,10 +91,11 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 			
 			if (NumberFunctions.rnd(1, 200) == 1) {
 				Globals.p("Changing direction");
-				this.currDir = this.getRandomDirection();
+				Vector3f newdir = this.getRandomDirection();
+				this.changeDirection(newdir);
 			}
 			
-			this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
+			//this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 			if (!Globals.DEBUG_CAN_SEE) {
 				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // Walk forwards
 			} else {
@@ -108,6 +108,8 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 			}
 
 			this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
+		} else {
+			//this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // Walk forwards
 		}
 		//this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
 
@@ -147,7 +149,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 			if (pe instanceof Floor == false) {
 				Globals.p("AISoldier has collided with " + pe);
 				// turn around
-				currDir.multLocal(-1);
+				changeDirection(currDir.mult(-1));
 			}
 		}
 	}
@@ -205,5 +207,11 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		case 3: return new Vector3f(0f, 0, -1f);
 		}
 		throw new RuntimeException("Todo");
+	}
+	
+	
+	private void changeDirection(Vector3f dir) {
+		this.currDir.set(dir);
+		this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 	}
 }

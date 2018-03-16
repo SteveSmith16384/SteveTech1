@@ -155,7 +155,7 @@ public class MapLoader {
 						moonbaseAssaultServer.actuallyAddEntity(door);
 						mapCode[x][y] = INT_FLOOR; // So we create a floor below it
 					} else if (mapCode[x][y] == COMPUTER) {
-						Computer comp = new Computer(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, "Textures/computerconsole2.jpg");
+						Computer comp = new Computer(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y);
 						moonbaseAssaultServer.actuallyAddEntity(comp);
 						mapCode[x][y] = INT_FLOOR; // So we create a floor below it
 					}

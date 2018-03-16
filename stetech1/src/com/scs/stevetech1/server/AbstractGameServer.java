@@ -308,27 +308,10 @@ ConsoleInputListener {
 			}
 		}
 
-		//this.logWindow.setText(strDebug.toString());
-
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
 		loopTimer.start();
 	}
 
-/*
-	private boolean doWeHaveSpaces() {
-		if (this.gameOptions.maxSides <= 0 || this.gameOptions.maxPlayersPerSide <= 0) {
-			return true;
-		}
-		int currentPlayers = 0;
-		for(ClientData c : this.clients.values()) {
-			if (c.clientStatus == ClientData.ClientStatus.Accepted) {  // only count players actually Accepted!
-				currentPlayers++;
-			}
-		}
-		int maxPlayers = this.gameOptions.maxSides * this.gameOptions.maxPlayersPerSide;
-		return currentPlayers < maxPlayers;
-	}
-*/
 
 	private synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
@@ -448,12 +431,6 @@ ConsoleInputListener {
 	@Override
 	public void connectionRemoved(int id) {
 		Globals.p("connectionRemoved()");
-		/*synchronized (clients) {
-			ClientData client = clients.get(id);
-			if (client != null) { // For some reason, connectionRemoved() gets called multiple times
-				this.playerLeft(client);
-			}
-		}*/
 		this.clientsToRemove.add(id);
 	}
 

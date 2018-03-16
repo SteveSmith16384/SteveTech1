@@ -5,6 +5,7 @@ import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
+import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.InvisibleMapBorder;
 import com.scs.moonbaseassault.entities.LaserBullet;
@@ -34,6 +35,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 	public static final int SPACESHIP1 = 9;
 	public static final int AI_SOLDIER = 10;
 	public static final int INVISIBLE_MAP_BORDER = 11;
+	public static final int DESTROYED_COMPUTER = 12;
 
 	public MoonbaseAssaultClientEntityCreator() {
 	}
@@ -142,9 +144,15 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		case COMPUTER:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			String tex = (String)msg.data.get("tex");
-			Computer computer = new Computer(game, id, pos.x, pos.y, pos.z, tex);
+			Computer computer = new Computer(game, id, pos.x, pos.y, pos.z);
 			return computer;
+		}
+
+		case DESTROYED_COMPUTER:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			DestroyedComputer dcomputer = new DestroyedComputer(game, id, pos.x, pos.y, pos.z);
+			return dcomputer;
 		}
 
 		case SPACESHIP1:

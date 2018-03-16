@@ -27,12 +27,11 @@ public class Computer extends PhysicalEntity implements IDamagable {
 	private static final float SIZE = 0.9f;
 	private float health = 1;
 	
-	public Computer(IEntityController _game, int id, float x, float y, float z, String tex) {
+	public Computer(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("tex", tex);
 		}
 
 		float w = SIZE;
@@ -45,7 +44,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 		if (!_game.isServer()) {
 			geometry.setShadowMode(ShadowMode.CastAndReceive);
 			
-			TextureKey key3 = new TextureKey(tex);
+			TextureKey key3 = new TextureKey("Textures/computerconsole2.jpg");
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
@@ -77,7 +76,11 @@ public class Computer extends PhysicalEntity implements IDamagable {
 		Globals.p("Computer hit!");
 		this.health -= amt;
 		if (this.health <= 0) {
-			// todo - replace with damaged model
+			this.remove();
+			
+			Vector3f pos = this.getWorldTranslation();
+			DestroyedComputer dc = new DestroyedComputer(game, game.getNextEntityID(), pos.x, pos.y, pos.z);
+			game.addEntity(dc);
 		}
 			
 	}
