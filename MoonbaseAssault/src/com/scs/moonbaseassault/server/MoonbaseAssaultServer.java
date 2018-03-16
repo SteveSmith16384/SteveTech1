@@ -112,7 +112,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
 
-			int maxSoldiers = 2;
+			int maxSoldiers = 6;
 
 			this.computerSquares = new ArrayList<Point>();
 			for (int y=0 ; y<scannerData.length ; y++) {

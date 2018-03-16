@@ -35,7 +35,7 @@ public class MapImageTexture extends PaintableImage {
 
 
 	public void paint(Graphics2D g) {
-		g.setBackground(new Color(0f, 0f, 0f, .4f));
+		g.setBackground(new Color(0f, 0f, 0f, .6f));
 		g.clearRect(0, 0, getWidth(), getHeight());
 
 		if (data != null) {
@@ -53,7 +53,7 @@ public class MapImageTexture extends PaintableImage {
 
 				for (int i=0 ; i<units.size() ; i++) {
 					Point p = units.get(i);
-					g.fillRect(data.length-p.y, p.x, 1, 1);
+					g.fillRect(data.length-p.y, p.x, 2, 2);
 				}			
 			}
 			if (computers != null) {
@@ -66,7 +66,7 @@ public class MapImageTexture extends PaintableImage {
 			}
 			if (player != null) {
 				g.setColor(new Color(1f, 1f, 1f, 1f));
-				g.fillRect(data.length-player.y, player.x, 1, 1);
+				g.fillRect(data.length-player.y, player.x, 2, 2);
 			}
 		}
 	}

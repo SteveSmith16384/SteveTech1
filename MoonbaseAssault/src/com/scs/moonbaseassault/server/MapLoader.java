@@ -7,12 +7,12 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.InvisibleMapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
-import com.scs.moonbaseassault.models.Spaceship1;
-import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.Globals;
 
 public class MapLoader {
@@ -167,6 +167,15 @@ public class MapLoader {
 		this.totalCeilings = 0;
 		doInteriorFloorsAndCeilings();
 		doExteriorFloors();
+
+		InvisibleMapBorder borderL = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, Vector3f.UNIT_Z);
+		moonbaseAssaultServer.actuallyAddEntity(borderL);
+		InvisibleMapBorder borderR = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), mapsize+InvisibleMapBorder.BORDER_WIDTH, 0, 0, mapsize, Vector3f.UNIT_Z);
+		moonbaseAssaultServer.actuallyAddEntity(borderR);
+		InvisibleMapBorder borderBack = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, mapsize, mapsize, Vector3f.UNIT_X);
+		moonbaseAssaultServer.actuallyAddEntity(borderBack);
+		InvisibleMapBorder borderFront = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, mapsize, Vector3f.UNIT_X);
+		moonbaseAssaultServer.actuallyAddEntity(borderFront);
 
 		Globals.p("Finished.  Created " + this.totalWalls + " walls, " + this.totalFloors + " floors, " + this.totalCeilings + " ceilings");
 	}

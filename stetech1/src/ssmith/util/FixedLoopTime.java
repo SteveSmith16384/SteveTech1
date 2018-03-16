@@ -1,5 +1,7 @@
 package ssmith.util;
 
+import com.scs.stevetech1.server.Globals;
+
 public class FixedLoopTime {
 
 	private long duration;
@@ -29,7 +31,7 @@ public class FixedLoopTime {
 				//e.printStackTrace();
 			}
 		} else {
-			//Globals.p("Too slow! " + diff);
+			Globals.p("Too slow! " + diff);
 		}
 	}
 
