@@ -12,6 +12,7 @@ import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IEntityController;
@@ -127,7 +128,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (launched) {
 			super.processByServer(server, tpf_secs);
 		}

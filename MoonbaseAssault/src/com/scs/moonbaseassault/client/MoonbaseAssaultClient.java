@@ -15,6 +15,7 @@ import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
+import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
@@ -37,6 +38,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	private AbstractHUDImage currentHUDTextImage;
 	private MoonbaseAssaultHUD hud;
 	private RealtimeInterval updateHUDInterval;// = new RealtimeInterval(2000);
+	private MoonbaseAssaultCollisionValidator collisionValidator;
 
 	public static void main(String[] args) {
 		try {
@@ -85,7 +87,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		super.simpleInitApp();
 
 		entityCreator = new MoonbaseAssaultClientEntityCreator();
-
+		collisionValidator = new MoonbaseAssaultCollisionValidator();
+		
 		this.getViewPort().setBackgroundColor(ColorRGBA.Black);
 
 		//getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
@@ -151,6 +154,12 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		} else {
 			super.handleMessage(message);
 		}
+	}
+
+
+	@Override
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) { // Todo - do this on client as well
+		return this.collisionValidator.canCollide(a, b);
 	}
 
 

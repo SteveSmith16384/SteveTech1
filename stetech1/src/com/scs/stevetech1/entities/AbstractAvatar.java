@@ -14,7 +14,7 @@ import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.input.IInputDevice;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -79,7 +79,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	protected void serverAndClientProcess(AbstractGameServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
+	protected void serverAndClientProcess(AbstractEntityServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
 		this.resetWalkDir();
 
 		int newAnimCode = ANIM_IDLE; // Default
@@ -274,5 +274,15 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		return super.getCreationData();
 	}
 
-
+/*
+	public boolean canCollideWith(PhysicalEntity other) {
+		if (other instanceof AbstractAvatar) {
+			AbstractAvatar otherA = (AbstractAvatar)other;
+			if (otherA.side == this.side) {
+				return false;
+			}
+		}
+		return super.canCollideWith(other);
+	}
+*/
 }

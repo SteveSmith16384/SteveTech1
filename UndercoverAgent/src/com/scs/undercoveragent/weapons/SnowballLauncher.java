@@ -5,9 +5,8 @@ import java.util.LinkedList;
 
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.ClientData;
-import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
@@ -67,7 +66,7 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 
 
 	@Override
-	protected void createBullet(AbstractGameServer server, int entityid, IEntityContainer irac, int side) {
+	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer irac, int side) {
 		SnowballBullet pe = new SnowballBullet(game, entityid, irac, side, client);
 		server.addEntity(pe);
 

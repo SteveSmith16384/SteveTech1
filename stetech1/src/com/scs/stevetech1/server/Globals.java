@@ -11,7 +11,8 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
+	public static final boolean PROFILE_SERVER = false;
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_CAN_SEE = false;

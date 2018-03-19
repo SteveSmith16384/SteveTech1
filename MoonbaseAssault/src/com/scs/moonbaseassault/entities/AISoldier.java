@@ -22,7 +22,7 @@ import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
@@ -86,7 +86,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (health > 0) {
 			
 			if (NumberFunctions.rnd(1, 200) == 1) {

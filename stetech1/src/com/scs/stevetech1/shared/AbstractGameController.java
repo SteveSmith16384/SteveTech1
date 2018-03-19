@@ -20,9 +20,10 @@ import ssmith.util.RealtimeInterval;
 /*
  * This class is shared by both the abstract client and abstract server.
  * 
- */
-public abstract class AbstractGameController extends SimpleApplication implements ICollisionListener<PhysicalEntity>{
+ *//*
+public abstract class AbstractGameController extends SimpleApplication implements ICollisionListener<PhysicalEntity>{ // todo - remove this class
 
+	// ----------
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
@@ -30,9 +31,10 @@ public abstract class AbstractGameController extends SimpleApplication implement
 	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
-	protected FixedLoopTime loopTimer;// = new FixedLoopTime(Globals.SERVER_TICKRATE_MS); // Keep client and server running at the same time
+	protected FixedLoopTime loopTimer;  // Keep client and server running at the same time
 	
 	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
+	// ----------
 
 	public AbstractGameController(int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis) {
 		super();
@@ -44,45 +46,6 @@ public abstract class AbstractGameController extends SimpleApplication implement
 		loopTimer = new FixedLoopTime(tickrateMillis);
 	}
 
-	
-	@Override
-	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
-		PhysicalEntity pa = a.userObject;
-		PhysicalEntity pb = b.userObject;
-
-		if (!pa.collideable || !pb.collideable) {
-			return false;
-		}
-
-		if (pa instanceof AbstractAvatar && pb instanceof AbstractAvatar) {
-			// Avatars on the same side don't collide
-			AbstractAvatar aa = (AbstractAvatar)pa;
-			AbstractAvatar ab = (AbstractAvatar)pb;
-			if (aa.side == ab.side) {
-				return false;
-			}
-		}
-		
-		// Prevent bullets getting hit by the shooter
-		if (pa instanceof ILaunchable) {
-			ILaunchable aa = (ILaunchable)pa;
-			if (aa.getLauncher() == pb) {
-				return false;
-			}
-		}
-		if (pb instanceof ILaunchable) {
-			ILaunchable ab = (ILaunchable)pb;
-			if (ab.getLauncher() == pa) {
-				return false;
-			}
-		}
-
-		if (pa instanceof ILaunchable && pb instanceof ILaunchable) {
-			// Bullets don't collide with each other
-			return false;
-		}
-
-		return true;
-	}
-
 }
+
+*/

@@ -17,7 +17,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
@@ -88,7 +88,7 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
 		if (this.isOpening) {

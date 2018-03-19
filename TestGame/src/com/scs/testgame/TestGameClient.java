@@ -1,15 +1,19 @@
 package com.scs.testgame;
 
 import com.jme3.scene.Spatial;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 public class TestGameClient extends AbstractGameClient {
 
 	private TestGameClientEntityCreator creator = new TestGameClientEntityCreator();
+	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
 	public static void main(String[] args) {
 		try {
@@ -113,6 +117,12 @@ public class TestGameClient extends AbstractGameClient {
 	@Override
 	protected Class[] getListofMessageClasses() {
 		return null;
+	}
+
+
+	@Override
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+		return collisionValidator.canCollide(a, b);
 	}
 
 }

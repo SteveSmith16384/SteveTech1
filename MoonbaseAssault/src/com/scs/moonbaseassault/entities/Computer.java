@@ -76,6 +76,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 		Globals.p("Computer hit!");
 		this.health -= amt;
 		if (this.health <= 0) {
+			// todo - inc score
 			this.remove();
 			
 			Vector3f pos = this.getWorldTranslation();

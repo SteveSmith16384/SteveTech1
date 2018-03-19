@@ -7,8 +7,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.prefs.BackingStoreException;
 
+import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.ClasspathLocator;
@@ -81,7 +83,6 @@ import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.KryonetGameClient;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractGameController;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -89,9 +90,10 @@ import com.scs.stevetech1.systems.client.AnimationSystem;
 import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
 
 import ssmith.util.AverageNumberCalculator;
+import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameClient extends AbstractGameController implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
+public abstract class AbstractGameClient extends SimpleApplication implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
 
 	// Statuses
 	public static final int STATUS_NOT_CONNECTED = 0;
@@ -107,6 +109,19 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	// Global controls
 	private static final String QUIT = "Quit";
 	private static final String TEST = "Test";
+
+	// ----------
+	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
+
+	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
+	protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
+	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
+
+	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
+	protected FixedLoopTime loopTimer;  // Keep client and server running at the same time
+	
+	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
+	// ----------
 
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
@@ -146,8 +161,15 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 	private ClientEntityLauncherSystem launchSystem;
 
 	protected AbstractGameClient(String name, String logoImage, String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
-			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness, float _mouseSens) {//AbstractClientEntityCreator _entityCreator) {
-		super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
+			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness, float _mouseSens) {
+		super();
+		//super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
+
+		tickrateMillis = _tickrateMillis;
+		clientRenderDelayMillis = _clientRenderDelayMillis;
+		timeoutMillis = _timeoutMillis;
+		
+		loopTimer = new FixedLoopTime(tickrateMillis);
 
 		gameServerIP = _gameServerIP;
 		gamePort = _gamePort;
@@ -900,7 +922,10 @@ public abstract class AbstractGameClient extends AbstractGameController implemen
 			this.getGameNode().attachChild(playersWeaponNode);
 		}
 		playersWeaponNode.detachAllChildren();
-		playersWeaponNode.attachChild(getPlayersWeaponModel());
+		Spatial s = getPlayersWeaponModel();
+		if (s != null) {
+			playersWeaponNode.attachChild(s);
+		}
 	}
 
 	

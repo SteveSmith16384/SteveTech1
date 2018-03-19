@@ -5,7 +5,7 @@ import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractAbility;
@@ -31,7 +31,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	public abstract boolean launchBullet();
 
-	protected abstract void createBullet(AbstractGameServer server, int entityid, IEntityContainer owner, int side);
+	protected abstract void createBullet(AbstractEntityServer server, int entityid, IEntityContainer owner, int side);
 
 	public abstract int getBulletsInMag();
 
@@ -52,7 +52,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	}
 
 
-	private void reload(AbstractGameServer server) {
+	private void reload(AbstractEntityServer server) {
 		IEntityContainer<T> irac = (IEntityContainer)this;
 		while (this.getBulletsInMag() < this.magazineSize) {
 			createBullet(server, server.getNextEntityID(), irac, -1);
@@ -61,7 +61,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
 		if (this.getBulletsInMag() <= 0) {

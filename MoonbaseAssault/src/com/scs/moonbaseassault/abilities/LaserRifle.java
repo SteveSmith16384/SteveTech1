@@ -8,7 +8,7 @@ import com.scs.moonbaseassault.entities.LaserBullet;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -67,7 +67,7 @@ public class LaserRifle extends AbstractMagazineGun<LaserBullet> implements IAbi
 
 
 	@Override
-	protected void createBullet(AbstractGameServer server, int entityid, IEntityContainer irac, int side) {
+	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer irac, int side) {
 		LaserBullet l = new LaserBullet(game, entityid, irac, side, client);
 		server.addEntity(l);
 

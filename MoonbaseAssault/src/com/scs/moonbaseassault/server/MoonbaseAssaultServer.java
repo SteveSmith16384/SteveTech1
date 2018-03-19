@@ -15,6 +15,7 @@ import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
 import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
+import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -37,7 +38,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	private List<Point> computerSquares;
 
 	public static SoldierServerAvatar player; // todo - remove
-
+	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
+	
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -226,20 +228,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 
 	@Override
-	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
-		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
-		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
-
-		// Sliding doors shouldn't collide with floor/ceiling
-		if ((pa.type == MoonbaseAssaultClientEntityCreator.FLOOR && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.FLOOR) {
-			return false;
-		}
-		// Sliding doors shouldn't collide with wall
-		if ((pa.type == MoonbaseAssaultClientEntityCreator.WALL && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.WALL) {
-			return false;
-		}
-		return super.canCollide(a, b);
-
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) { // Todo - do this on client as well
+		return this.collisionValidator.canCollide(a, b);
 	}
 
 

@@ -17,6 +17,7 @@ import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -50,7 +51,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf) {
+	public void processByServer(AbstractEntityServer server, float tpf) {
 		if (!this.alive) {
 			restartTimeSecs -= tpf;
 			this.currentAnimCode = ANIM_DIED;

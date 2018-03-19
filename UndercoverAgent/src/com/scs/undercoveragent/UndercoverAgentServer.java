@@ -13,6 +13,7 @@ import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractCollisionValidator;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.InvisibleMapBorder;
@@ -30,6 +31,7 @@ import ssmith.util.MyProperties;
 public class UndercoverAgentServer extends AbstractGameServer {
 
 	private int mapSize;
+	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
 	public static void main(String[] args) {
 		try {
@@ -266,6 +268,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	public boolean doWeHaveSpaces() {
 		return true; // Always!
+	}
+
+
+	@Override
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+		return collisionValidator.canCollide(a, b);
 	}
 
 }

@@ -10,6 +10,7 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -109,7 +110,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	protected void createBullet(AbstractGameServer server, int entityid, IEntityContainer irac, int side) {
+	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer irac, int side) {
 		this.bulletsInMag++; // No physical projectiles required!
 		
 	}

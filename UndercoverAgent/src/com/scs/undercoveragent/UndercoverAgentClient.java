@@ -17,6 +17,7 @@ import com.scs.stevetech1.hud.AbstractHUDImage;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractCollisionValidator;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.systems.client.FallingSnowflakeSystem;
 
@@ -24,11 +25,12 @@ import ssmith.util.MyProperties;
 
 public class UndercoverAgentClient extends AbstractGameClient {
 
-	private UndercoverAgentClientEntityCreator entityCreator = new UndercoverAgentClientEntityCreator();
+	private UndercoverAgentClientEntityCreator entityCreator;
 	private FallingSnowflakeSystem snowflakeSystem;
 	private AbstractHUDImage currentHUDImage;
 	private DirectionalLight sun;
-	
+	private AbstractCollisionValidator collisionValidator;
+
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -74,6 +76,9 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	public void simpleInitApp() {
 		super.simpleInitApp();
 
+		entityCreator = new UndercoverAgentClientEntityCreator();
+		collisionValidator = new AbstractCollisionValidator();
+				
 		this.getViewPort().setBackgroundColor(ColorRGBA.LightGray);
 
 		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
@@ -204,6 +209,12 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	@Override
 	protected Class[] getListofMessageClasses() {
 		return null;
+	}
+
+
+	@Override
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+		return collisionValidator.canCollide(a, b);
 	}
 
 }

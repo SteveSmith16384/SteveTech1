@@ -15,9 +15,9 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
-import com.scs.stevetech1.server.AbstractGameServer;
-import com.scs.stevetech1.server.RayCollisionData;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
@@ -49,7 +49,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (this instanceof AbstractAvatar) {
 			throw new RuntimeException("Do not call this for avatars!");
 		}
@@ -320,5 +320,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return false;
 	}
 
-
+/*	
+	public boolean canCollideWith(PhysicalEntity other) {
+		// override of required.
+		return true;
+	}
+*/
 }
