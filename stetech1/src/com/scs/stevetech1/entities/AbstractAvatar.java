@@ -138,10 +138,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 		simpleRigidBody.process(tpf_secs);
 
-		//if (newAnimCode.equals(currentAnimCode)) {
-			this.currentAnimCode = newAnimCode;
-		//}
-
+		this.currentAnimCode = newAnimCode;
 	}
 
 
@@ -252,16 +249,16 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		this.health -= h;
 		//this.statsChanged = true;
 	}
-	
-	
+
+
 	public void setJumpForce(float jf) {
 		jumpForce = jf;
-		
+
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.setJumpForce(jf);
 	}
-	
-	
+
+
 	public float getJumpForce() {
 		return this.jumpForce;
 	}
@@ -274,7 +271,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		return super.getCreationData();
 	}
 
-/*
+	/*
 	public boolean canCollideWith(PhysicalEntity other) {
 		if (other instanceof AbstractAvatar) {
 			AbstractAvatar otherA = (AbstractAvatar)other;
@@ -284,5 +281,5 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 		return super.canCollideWith(other);
 	}
-*/
+	 */
 }

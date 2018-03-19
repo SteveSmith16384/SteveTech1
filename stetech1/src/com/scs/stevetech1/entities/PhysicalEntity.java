@@ -45,7 +45,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		moves =_moves;
 		requiresProcessing = _requiresProcessing;
-		
+
 		serverPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode_" + id);
 	}
@@ -117,10 +117,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
 		}
 
-		if (this.mainNode.getParent() == null) {
-			//Globals.pe(this + " has no parent!");  Might be an unlaunched launchable
-		} else {
-			this.mainNode.removeFromParent(); // Don't need to remove left/right nodes as they are attached to the main node
+		if (this.mainNode.getParent() != null) { // Unlaunched bullets have no parent
+			this.mainNode.removeFromParent();
 		}
 	}
 
@@ -182,7 +180,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		if (!this.moves) { // todo - scs new!
 			return false;
 		}
-		
+
 		Vector3f currentPos = this.getWorldTranslation();
 		float dist = currentPos.distance(prevPos);
 		boolean hasMoved = dist >= Globals.SMALLEST_MOVE_DIST; 
@@ -287,7 +285,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return super.getCreationData();
 	}
 
-	
+
 	public boolean canSee(PhysicalEntity target, float range) {
 		// Test the ray from the middle of the entity
 		Ray r = new Ray(this.getMainNode().getWorldBound().getCenter(), target.getMainNode().getWorldBound().getCenter().subtract(this.getMainNode().getWorldBound().getCenter()).normalizeLocal());

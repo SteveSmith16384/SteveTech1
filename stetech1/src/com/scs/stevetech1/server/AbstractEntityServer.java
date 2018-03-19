@@ -21,7 +21,6 @@ import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.data.GameOptions;
-import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -29,7 +28,6 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
-import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
@@ -39,19 +37,15 @@ import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
-import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
 import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.IMessageServerListener;
 import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
-import com.scs.stevetech1.systems.server.ServerPingSystem;
 
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
-import ssmith.util.TextConsole;
 
 /**
  * This is a bare-bones entity server for controlling entites over a network.
@@ -131,8 +125,6 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		long startTime = System.currentTimeMillis();
-
 		// Add/remove queued clients
 		synchronized (clientsToAdd) {
 			while (this.clientsToAdd.size() > 0) {
@@ -266,15 +258,6 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 
-		if (Globals.PROFILE_SERVER) {
-			long endTime = System.currentTimeMillis();
-			long diff = endTime - startTime;
-			Globals.p("Num entities to loop through: " + this.entitiesForProcessing.size());
-			Globals.p("Server loop took " + diff);
-		}
-
-		loopTimer.waitForFinish(); // Keep clients and server running at same speed
-		loopTimer.start();
 	}
 
 
@@ -499,7 +482,7 @@ ICollisionListener<PhysicalEntity> {
 			if (pe.getMainNode().getParent() != null) {
 				throw new RuntimeException("Entity already has a node");
 			}
-			this.getGameNode().attachChild(pe.getMainNode()); //pe.getMainNode().getWorldTranslation();
+			this.getGameNode().attachChild(pe.getMainNode()); // todo - add to subnode?
 		}
 
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {

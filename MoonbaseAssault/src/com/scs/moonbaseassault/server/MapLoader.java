@@ -167,7 +167,7 @@ public class MapLoader {
 		this.totalCeilings = 0;
 		doInteriorFloorsAndCeilings();
 		//doExteriorFloors();
-		
+
 		Floor moonrock = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, .5f, mapsize, "Textures/moonrock.png");
 		moonbaseAssaultServer.actuallyAddEntity(moonrock);
 
@@ -257,7 +257,7 @@ public class MapLoader {
 		}
 		int w = ex-sx;
 		int d = ey-sy;
-		Floor floor = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0, sy, w, .5f, d, "Textures/escape_hatch.jpg");
+		Floor floor = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0.05f, sy, w, .5f, d, "Textures/escape_hatch.jpg");
 		moonbaseAssaultServer.actuallyAddEntity(floor);
 		this.totalFloors++;
 

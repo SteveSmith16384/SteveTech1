@@ -2,8 +2,6 @@ package com.scs.stevetech1.shared;
 
 import java.util.LinkedList;
 
-import com.scs.stevetech1.server.Globals;
-
 public class ChronologicalLookup<T extends ITimeStamped> {
 
 	private LinkedList<T> positionData = new LinkedList<>(); // Newest entry is at the start

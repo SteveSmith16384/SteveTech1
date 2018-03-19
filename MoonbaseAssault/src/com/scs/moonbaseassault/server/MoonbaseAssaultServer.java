@@ -124,7 +124,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 					} else if (this.scannerData[x][y] == MapLoader.DOOR_LR) { // || this.scannerData[x][y] == MapLoader.DOOR_UD) {
 						if (maxSoldiers > 0) {
 							AISoldier s = new AISoldier(this, this.getNextEntityID(), x + 0.5f, .3f, y + 1.5f, 2);
-							this.actuallyAddEntity(s);
+							//todo - re-add this.actuallyAddEntity(s);
 							Globals.p("Adding soldier to " + x + ", " + y);
 							maxSoldiers--;
 						}

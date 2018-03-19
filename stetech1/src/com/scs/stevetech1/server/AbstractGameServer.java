@@ -2,11 +2,7 @@ package com.scs.stevetech1.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
-import com.jme3.collision.CollisionResult;
-import com.jme3.collision.CollisionResults;
-import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.simplephysics.SimplePhysicsController;
@@ -89,7 +85,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		//long startTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis();
 
 		super.simpleUpdate(tpf_secs);
 
@@ -109,7 +105,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		}
 
 		this.pingSystem.process();
-/*
+
 		if (Globals.PROFILE_SERVER) {
 			long endTime = System.currentTimeMillis();
 			long diff = endTime - startTime;
@@ -118,7 +114,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		}
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
-		loopTimer.start();*/
+		loopTimer.start();
 	}
 
 
