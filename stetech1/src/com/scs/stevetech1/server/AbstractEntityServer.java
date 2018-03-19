@@ -66,7 +66,8 @@ ICollisionListener<PhysicalEntity> {
 
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 
-	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
+	protected HashMap<Integer, IEntity> entities = new HashMap<>(100);
+	public HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100);
 	protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
 	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
@@ -232,9 +233,9 @@ ICollisionListener<PhysicalEntity> {
 				eum = new EntityUpdateMessage();
 			}
 
-			synchronized (entities) {
+			synchronized (entitiesForProcessing) {
 				// Loop through the entities
-				for (IEntity e : entities.values()) {
+				for (IEntity e : entitiesForProcessing.values()) {
 					if (e instanceof IPlayerControlled) {
 						IPlayerControlled p = (IPlayerControlled)e;
 						p.resetPlayerInput();
@@ -265,10 +266,12 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 
-		long endTime = System.currentTimeMillis();
-		long diff = endTime - startTime;
-		Globals.p("Num entities to loop through: " + this.entities.size());
-		Globals.p("Server loop took " + diff);
+		if (Globals.PROFILE_SERVER) {
+			long endTime = System.currentTimeMillis();
+			long diff = endTime - startTime;
+			Globals.p("Num entities to loop through: " + this.entitiesForProcessing.size());
+			Globals.p("Server loop took " + diff);
+		}
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
 		loopTimer.start();
@@ -486,6 +489,10 @@ ICollisionListener<PhysicalEntity> {
 				throw new RuntimeException("Entity id " + e.getID() + " already exists: " + e);
 			}
 			this.entities.put(e.getID(), e);
+			if (e.requiresProcessing()) {
+				this.entitiesForProcessing.put(e.getID(), e);
+			}
+
 		}
 		if (e instanceof PhysicalEntity) {
 			PhysicalEntity pe = (PhysicalEntity)e;
@@ -527,6 +534,9 @@ ICollisionListener<PhysicalEntity> {
 					Globals.p("Actually removing entity " + e.getName() + " / ID:" + id);
 				}
 				this.entities.remove(id);
+				if (e.requiresProcessing()) {
+					this.entitiesForProcessing.remove(id);
+				}
 				//this.console.appendText("Removed " + e);
 			} else {
 				//Globals.pe("Warning - entity " + id + " doesn't exist for removal");  Probably an entity that is owned by another removed entity, e.g. SnowballLauncher
@@ -572,7 +582,7 @@ ICollisionListener<PhysicalEntity> {
 
 	private void rewindEntities(long toTime) {
 		synchronized (this.clients) {
-			for (IEntity e : entities.values()) {
+			for (IEntity e : this.entitiesForProcessing.values()) {
 				if (e instanceof IRewindable) {
 					IRewindable r = (IRewindable)e;
 					r.rewindPositionTo(toTime);
@@ -584,7 +594,7 @@ ICollisionListener<PhysicalEntity> {
 
 	private void restoreEntityPositions() {
 		synchronized (this.clients) {
-			for (IEntity e : entities.values()) {
+			for (IEntity e : entitiesForProcessing.values()) {
 				if (e instanceof IRewindable) {
 					IRewindable r = (IRewindable)e;
 					r.restorePosition();

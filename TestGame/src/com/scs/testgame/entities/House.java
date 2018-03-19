@@ -20,7 +20,7 @@ public class House extends PhysicalEntity {
 	private static final float d = 3f;
 	
 	public House(IEntityController _game, int id, float x, float y, float z, float rotDegrees) {
-		super(_game, id, TestGameClientEntityCreator.HOUSE, "House", false);
+		super(_game, id, TestGameClientEntityCreator.HOUSE, "House", false, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -59,5 +59,6 @@ public class House extends PhysicalEntity {
 	public void processByServer(AbstractEntityServer server, float tpf) {
 		super.processByServer(server, tpf);  //mainNode.getChild(0).getWorldTranslation();
 	}
+
 
 }

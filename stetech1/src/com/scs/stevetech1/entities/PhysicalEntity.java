@@ -38,11 +38,14 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	//protected int currentAnimCode = -1;
 	public boolean moves;
+	private boolean requiresProcessing;
 
-	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _moves) {
+	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _moves, boolean _requiresProcessing) {
 		super(_game, id, type, _name);
 
 		moves =_moves;
+		requiresProcessing = _requiresProcessing;
+		
 		serverPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode_" + id);
 	}
@@ -320,10 +323,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return false;
 	}
 
-/*	
-	public boolean canCollideWith(PhysicalEntity other) {
-		// override of required.
-		return true;
+
+	@Override
+	public final boolean requiresProcessing() {
+		return requiresProcessing;
 	}
-*/
+
 }

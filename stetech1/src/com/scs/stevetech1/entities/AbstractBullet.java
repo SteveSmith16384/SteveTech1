@@ -26,7 +26,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	private ClientData client; // Only used server-side
 
 	public AbstractBullet(IEntityController _game, int id, int type, String name, IEntityContainer owner, int _side, ClientData _client) {
-		super(_game, id, type, name, true);
+		super(_game, id, type, name, true, true);
 
 		client = _client;
 		

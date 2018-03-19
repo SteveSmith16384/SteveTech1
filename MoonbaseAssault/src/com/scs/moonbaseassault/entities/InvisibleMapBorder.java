@@ -28,7 +28,7 @@ public class InvisibleMapBorder extends PhysicalEntity {
 	public static final float BORDER_HEIGHT = 5f;
 
 	public InvisibleMapBorder(IEntityController _game, int id, float x, float y, float z, float size, Vector3f dir) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.INVISIBLE_MAP_BORDER, "InvisibleMapBorder", false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.INVISIBLE_MAP_BORDER, "InvisibleMapBorder", false, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -72,5 +72,6 @@ public class InvisibleMapBorder extends PhysicalEntity {
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 	}
+
 
 }

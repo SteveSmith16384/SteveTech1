@@ -20,7 +20,7 @@ import com.scs.testgame.TestGameClientEntityCreator;
 public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 
 	public Crate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, id, TestGameClientEntityCreator.CRATE, "Crate", true);
+		super(_game, id, TestGameClientEntityCreator.CRATE, "Crate", true, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

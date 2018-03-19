@@ -24,7 +24,7 @@ public class Floor extends PhysicalEntity {//implements IProcessByClient {
 	private float w, h, d;
 
 	public Floor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR, "Floor", false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR, "Floor", false, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -75,18 +75,6 @@ public class Floor extends PhysicalEntity {//implements IProcessByClient {
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 	}
-/*
-
-	@Override
-	public void processByClient(AbstractGameClient client, float tpf) {
-
-	}
 
 
-	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
-		// Do nothing
-
-	}
-*/
 }

@@ -127,4 +127,5 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 		return owner;
 	}
 
+
 }

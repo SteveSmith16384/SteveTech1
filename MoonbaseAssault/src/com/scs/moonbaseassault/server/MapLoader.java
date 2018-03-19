@@ -166,7 +166,10 @@ public class MapLoader {
 		this.totalFloors = 0;
 		this.totalCeilings = 0;
 		doInteriorFloorsAndCeilings();
-		doExteriorFloors();
+		//doExteriorFloors();
+		
+		Floor moonrock = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, .5f, mapsize, "Textures/moonrock.png");
+		moonbaseAssaultServer.actuallyAddEntity(moonrock);
 
 		InvisibleMapBorder borderL = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, Vector3f.UNIT_Z);
 		moonbaseAssaultServer.actuallyAddEntity(borderL);

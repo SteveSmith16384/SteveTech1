@@ -52,7 +52,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected int currentAnimCode = -1;
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _anim) {
-		super(_game, eid, 1, "Player", true);
+		super(_game, eid, 1, "Player", true, true);
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();

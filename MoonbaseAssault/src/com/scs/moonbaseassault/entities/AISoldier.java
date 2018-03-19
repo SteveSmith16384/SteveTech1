@@ -45,7 +45,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	private static BitmapFont font_small;
 
 	public AISoldier(IEntityController _game, int id, float x, float y, float z, int _side) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, "AISoldier", true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, "AISoldier", true, true);
 
 		side = _side;
 		currDir = this.getRandomDirection();
@@ -214,4 +214,6 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		this.currDir.set(dir);
 		this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 	}
+
+
 }

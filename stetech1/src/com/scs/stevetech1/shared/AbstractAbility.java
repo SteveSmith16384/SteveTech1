@@ -59,4 +59,9 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 		this.lastUpdateMsgTime = l;
 	}
 
+
+	@Override
+	public final boolean requiresProcessing() {
+		return true;
+	}
 }

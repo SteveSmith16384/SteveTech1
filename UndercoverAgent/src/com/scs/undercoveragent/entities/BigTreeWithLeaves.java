@@ -16,7 +16,7 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 public class BigTreeWithLeaves extends PhysicalEntity {
 
 	public BigTreeWithLeaves(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
-		super(_game, id, UndercoverAgentClientEntityCreator.BIG_TREE_WITH_LEAVES, "BigTreeWithLeaves", false);
+		super(_game, id, UndercoverAgentClientEntityCreator.BIG_TREE_WITH_LEAVES, "BigTreeWithLeaves", false, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -52,5 +52,6 @@ public class BigTreeWithLeaves extends PhysicalEntity {
 	public void processByServer(AbstractEntityServer server, float tpf) {
 		super.processByServer(server, tpf);
 	}
+
 
 }

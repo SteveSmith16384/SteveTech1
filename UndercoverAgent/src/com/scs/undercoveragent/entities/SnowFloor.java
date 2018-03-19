@@ -27,7 +27,7 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 	private float w, h, d;
 
 	public SnowFloor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex) {
-		super(_game, id, UndercoverAgentClientEntityCreator.FLOOR, "Floor", false);
+		super(_game, id, UndercoverAgentClientEntityCreator.FLOOR, "Floor", false, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

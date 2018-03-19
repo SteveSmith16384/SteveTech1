@@ -69,4 +69,10 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 		
 	}
 
+
+	@Override
+	public boolean requiresProcessing() {
+		return true;
+	}
+
 }

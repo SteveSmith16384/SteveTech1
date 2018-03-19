@@ -61,4 +61,9 @@ public class DummyPhysicalEntity implements IPhysicalEntity {
 	}
 
 
+	@Override
+	public boolean requiresProcessing() {
+		return false;
+	}
+
 }

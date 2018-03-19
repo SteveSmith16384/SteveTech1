@@ -28,7 +28,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 	private float health = 1;
 	
 	public Computer(IEntityController _game, int id, float x, float y, float z) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -91,5 +91,6 @@ public class Computer extends PhysicalEntity implements IDamagable {
 	public int getSide() {
 		return 2;
 	}
+
 
 }

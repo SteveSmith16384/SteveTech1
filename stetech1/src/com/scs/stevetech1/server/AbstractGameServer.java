@@ -53,18 +53,18 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	public AbstractGameServer(GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) throws IOException {
 		super(_gameOptions, _tickrateMillis, sendUpdateIntervalMillis, _clientRenderDelayMillis, _timeoutMillis, gravity, aerodynamicness);
-/*
+		/*
 		setShowSettings(false); // Don't show settings dialog
 		setPauseOnLostFocus(false);
 		start(JmeContext.Type.Headless);
-		*/
+		 */
 	}
 
 
 	@Override
 	public void simpleInitApp() {
 		super.simpleInitApp();
-		
+
 		gameData = new SimpleGameData();
 		this.gameStatusSystem = new ServerGameStatusSystem(this);
 		this.pingSystem = new ServerPingSystem(this);
@@ -89,7 +89,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		long startTime = System.currentTimeMillis();
+		//long startTime = System.currentTimeMillis();
 
 		super.simpleUpdate(tpf_secs);
 
@@ -109,16 +109,16 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		}
 
 		this.pingSystem.process();
-
+/*
 		if (Globals.PROFILE_SERVER) {
-		long endTime = System.currentTimeMillis();
-		long diff = endTime - startTime;
-		Globals.p("Num entities to loop through: " + this.entities.size());
-		Globals.p("Server loop took " + diff);
+			long endTime = System.currentTimeMillis();
+			long diff = endTime - startTime;
+			Globals.p("Num entities to loop through: " + this.entitiesForProcessing.size());
+			Globals.p("Server loop took " + diff);
 		}
-		
+
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
-		loopTimer.start();
+		loopTimer.start();*/
 	}
 
 
@@ -140,7 +140,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	public abstract boolean doWeHaveSpaces();
 
-
+/*
 	public ArrayList<RayCollisionData> checkForEntityCollisions_UNUSED(Ray r) { // todo - is this use?
 		CollisionResults res = new CollisionResults();
 		ArrayList<RayCollisionData> myList = new ArrayList<RayCollisionData>(); 
@@ -163,7 +163,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		Collections.sort(myList);
 		return myList;
 	}
-
+*/
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
@@ -288,13 +288,14 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	private void showStats() {
 		Globals.p("Num Entities: " + this.entities.size());
+		Globals.p("Num Entities for proc: " + this.entitiesForProcessing.size());
 		Globals.p("Num Clients: " + this.clients.size());
 	}
 
 
 	protected void playerLeft(ClientData client) {
 		super.playerLeft(client);
-		
+
 		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 		this.sendGameStatusMessage();
 		gameStatusSystem.checkGameStatus(true);
@@ -310,11 +311,11 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 
 		playerJoinedGame(client);
-		
+
 		gameStatusSystem.checkGameStatus(true);
 
 	}
-	
-	
+
+
 }
 

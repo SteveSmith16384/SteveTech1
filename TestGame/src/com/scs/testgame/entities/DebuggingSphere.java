@@ -27,7 +27,7 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 	private float timeLeft = DURATION;
 
 	public DebuggingSphere(IEntityController _game, int id, float x, float y, float z, boolean server) {
-		super(_game, id, TestGameClientEntityCreator.DEBUGGING_SPHERE, "DebuggingSphere", false);
+		super(_game, id, TestGameClientEntityCreator.DEBUGGING_SPHERE, "DebuggingSphere", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

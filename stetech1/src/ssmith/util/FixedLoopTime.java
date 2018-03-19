@@ -31,7 +31,7 @@ public class FixedLoopTime {
 				//e.printStackTrace();
 			}
 		} else {
-			Globals.p("Too slow! " + diff);
+			//Globals.p("Too slow! " + diff);
 		}
 	}
 

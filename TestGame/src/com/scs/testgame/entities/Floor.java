@@ -27,7 +27,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 	private float w, h, d;
 
 	public Floor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
-		super(_game, id, TestGameClientEntityCreator.FLOOR, "Floor", false);
+		super(_game, id, TestGameClientEntityCreator.FLOOR, "Floor", false, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -130,5 +130,6 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 		// Do nothing
 
 	}
+
 
 }
