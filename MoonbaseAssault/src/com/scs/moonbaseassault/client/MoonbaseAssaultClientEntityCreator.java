@@ -7,6 +7,7 @@ import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.Grenade;
 import com.scs.moonbaseassault.entities.InvisibleMapBorder;
 import com.scs.moonbaseassault.entities.LaserBullet;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
@@ -14,6 +15,7 @@ import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
 import com.scs.moonbaseassault.models.Spaceship1;
+import com.scs.moonbaseassault.weapons.GrenadeLauncher;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
@@ -36,6 +38,9 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 	public static final int AI_SOLDIER = 10;
 	public static final int INVISIBLE_MAP_BORDER = 11;
 	public static final int DESTROYED_COMPUTER = 12;
+	public static final int GRENADE = 13;
+	public static final int GRENADE_LAUNCHER = 14;
+
 
 	public MoonbaseAssaultClientEntityCreator() {
 	}
@@ -179,6 +184,29 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			float size = (float)msg.data.get("size");
 			InvisibleMapBorder hill = new InvisibleMapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
 			return hill;
+		}
+
+		case GRENADE_LAUNCHER: 
+		{
+			int ownerid = (int)msg.data.get("ownerid");
+			//if (game.currentAvatar != null) { // We might not have an avatar yet
+			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+				int num = (int)msg.data.get("num");
+				GrenadeLauncher gl = new GrenadeLauncher(game, id, owner, num, null);
+				return gl;
+			}
+			//}
+			return null;
+		}
+
+		case GRENADE:
+		{
+			int containerID = (int) msg.data.get("containerID");
+			int side = (int) msg.data.get("side");
+			IEntityContainer<Grenade> irac = (IEntityContainer<Grenade>)game.entities.get(containerID);
+			Grenade snowball = new Grenade(game, id, irac, side, null);
+			return snowball;
 		}
 
 		default:

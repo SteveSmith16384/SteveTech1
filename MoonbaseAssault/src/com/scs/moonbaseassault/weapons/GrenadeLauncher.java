@@ -1,8 +1,10 @@
-package com.scs.undercoveragent.weapons;
+package com.scs.moonbaseassault.weapons;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.entities.Grenade;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.server.AbstractEntityServer;
@@ -10,17 +12,15 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
-import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
-import com.scs.undercoveragent.entities.SnowballBullet;
 
-public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implements IAbility, IEntityContainer<SnowballBullet> {
+public class GrenadeLauncher extends AbstractMagazineGun<Grenade> implements IAbility, IEntityContainer<Grenade> {
 
 	private static final int MAG_SIZE = 6;
 
-	private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>();
+	private LinkedList<Grenade> ammoCache = new LinkedList<Grenade>();
 
-	public SnowballLauncher(IEntityController game, int id, ICanShoot owner, int num, ClientData _client) {
-		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, owner, num, "SnowballLauncher", 1, 3, MAG_SIZE, _client);
+	public GrenadeLauncher(IEntityController game, int id, ICanShoot owner, int num, ClientData _client) {
+		super(game, id, MoonbaseAssaultClientEntityCreator.GRENADE_LAUNCHER, owner, num, "GrenadeLauncher", 1, 3, MAG_SIZE, _client);
 		
 	}
 
@@ -31,11 +31,8 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 	@Override
 	public boolean launchBullet() {
 		if (!ammoCache.isEmpty()) {
-			SnowballBullet g = ammoCache.remove();
+			Grenade g = ammoCache.remove();
 			ICanShoot ic = (ICanShoot)owner;
-			/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-				Globals.p("Manually launching entity " + g.id);
-			}*/
 			g.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			return true;
 		}
@@ -59,7 +56,7 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 	public void remove() {
 		// Remove all owned bullets
 		while (!ammoCache.isEmpty()) {
-			SnowballBullet g = ammoCache.remove();
+			Grenade g = ammoCache.remove();
 			g.remove();
 		}
 		super.remove();
@@ -68,7 +65,7 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 
 	@Override
 	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer irac, int side) {
-		SnowballBullet pe = new SnowballBullet(game, entityid, irac, side, client);
+		Grenade pe = new Grenade(game, entityid, irac, side, client);
 		server.addEntity(pe);
 
 
@@ -82,7 +79,7 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 
 
 	@Override
-	public void addToCache(SnowballBullet o) {
+	public void addToCache(Grenade o) {
 		this.ammoCache.add(o);
 	}
 
