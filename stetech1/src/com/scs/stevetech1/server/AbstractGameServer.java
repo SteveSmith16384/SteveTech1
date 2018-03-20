@@ -45,7 +45,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
 	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
 	public SimpleGameData gameData;
-	//public GameOptions gameOptions;
 
 	// Systems
 	private ServerGameStatusSystem gameStatusSystem;
@@ -53,11 +52,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	public AbstractGameServer(GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) throws IOException {
 		super(_gameOptions, _tickrateMillis, sendUpdateIntervalMillis, _clientRenderDelayMillis, _timeoutMillis, gravity, aerodynamicness);
-		/*
-		setShowSettings(false); // Don't show settings dialog
-		setPauseOnLostFocus(false);
-		start(JmeContext.Type.Headless);
-		 */
+
 	}
 
 

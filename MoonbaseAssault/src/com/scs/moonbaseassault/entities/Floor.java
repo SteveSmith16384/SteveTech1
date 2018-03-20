@@ -21,20 +21,16 @@ import com.scs.stevetech1.shared.IEntityController;
 public class Floor extends PhysicalEntity {
 
 	private Box box1;
-	private float w, h, d;
 
-	public Floor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR, "Floor", false, false);
+	public Floor(IEntityController _game, int id, String name, float x, float yTop, float z, float w, float h, float d, String tex) {
+		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR, name, false, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
+			creationData.put("name", name);
 		}
-
-		this.w = w;
-		this.h = h;
-		this.d = d;
 
 		box1 = new Box(w/2, h/2, d/2);
 

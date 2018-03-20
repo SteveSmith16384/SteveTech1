@@ -100,11 +100,16 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed);
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 		if (input.getFwdValue()) {
-			//Settings.p("fwd=" + input.getFwdValue());
+			if (Globals.DEBUG_SERVER_AVATAR_NOT_MOVING && server != null) {
+				Globals.p("fwd=" + input.getFwdValue());
+			}
 			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
 			newAnimCode = ANIM_WALKING;
 			lastMoveTime = System.currentTimeMillis();
 		} else if (input.getBackValue()) {
+			if (Globals.DEBUG_SERVER_AVATAR_NOT_MOVING && server != null) {
+				Globals.p("Back=" + input.getBackValue());
+			}
 			walkDirection.addLocal(camDir.negate());
 			newAnimCode = ANIM_WALKING;
 			lastMoveTime = System.currentTimeMillis();
@@ -130,7 +135,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 				simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
 				if (Globals.SHOW_AVATAR_WALK_DIR) {
-					Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());// + "  walkDirection=" + walkDirection);
+					Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());
 				}
 			}
 			playerWalked = true;

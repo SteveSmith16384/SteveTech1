@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
@@ -39,7 +40,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	private List<Point> computerSquares;
 
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
-	
+
 	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode;
 
 
@@ -110,11 +111,11 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		subNodeX1Y1 = new Node("11");
 		ceilingNode = new Node("Ceiling");
 		floorNode = new Node("Floor");
-		
+
 		super.simpleInitApp();
 	}
-	
-	
+
+
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		float startHeight = .1f;
@@ -130,7 +131,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		this.getGameNode().attachChild(subNodeX0Y1);
 		this.getGameNode().attachChild(subNodeX1Y1);
 		this.getGameNode().attachChild(this.ceilingNode);
-		
+
 		MapLoader map = new MapLoader(this);
 		try {
 			map.loadMap("/serverdata/moonbaseassault.csv");
@@ -146,7 +147,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 					} else if (this.scannerData[x][y] == MapLoader.DOOR_LR) { // || this.scannerData[x][y] == MapLoader.DOOR_UD) {
 						if (maxSoldiers > 0) {
 							AISoldier s = new AISoldier(this, this.getNextEntityID(), x + 0.5f, .3f, y + 1.5f, 2);
-							this.actuallyAddEntity(s);
+							//todo - re-add this.actuallyAddEntity(s);
 							Globals.p("Adding soldier to " + x + ", " + y);
 							maxSoldiers--;
 						}
@@ -157,7 +158,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			//AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.x + 0.5f, .3f, map.firstInteriorFloor.y + 0.5f, 2);
 			//this.actuallyAddEntity(s);
 
-			Spaceship1 ss = new Spaceship1(this, this.getNextEntityID(), 8, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
+			//Spaceship1 ss = new Spaceship1(this, this.getNextEntityID(), 8, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
 			//todo - re-add this.actuallyAddEntity(ss);
 
 		} catch (Exception e) {
@@ -209,14 +210,13 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		if (Globals.DEBUG_SLIDING_DOORS) {
-			PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
-			PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
+		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
+		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
 
-			if (pa.type != MoonbaseAssaultClientEntityCreator.FLOOR && pb.type != MoonbaseAssaultClientEntityCreator.FLOOR) {
-				Globals.p("Collision between " + pa + " and " + pb);
-			}
+		if (pa.type != MoonbaseAssaultClientEntityCreator.FLOOR && pb.type != MoonbaseAssaultClientEntityCreator.FLOOR) {
+			Globals.p("Collision between " + pa + " and " + pb);
 		}
+
 		super.collisionOccurred(a, b, point);
 
 	}

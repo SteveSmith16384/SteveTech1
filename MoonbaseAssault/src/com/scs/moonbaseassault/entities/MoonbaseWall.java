@@ -83,7 +83,7 @@ public class MoonbaseWall extends PhysicalEntity {
 
 	}
 
-
+/*
 	public Node getOwnerNode() {
 		Vector3f pos = this.getWorldTranslation();
 		String s = "";
@@ -109,5 +109,5 @@ public class MoonbaseWall extends PhysicalEntity {
 		}
 		throw new RuntimeException("Node " + s + " not found");
 	}
-
+*/
 }

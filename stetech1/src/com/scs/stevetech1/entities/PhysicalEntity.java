@@ -30,8 +30,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public boolean collideable = true;
 
-	private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first sendUpdates check returns true
-	private Quaternion prevRot = new Quaternion();
+	//private Vector3f prevPos = new Vector3f(-100, -100, -100); // offset to ensure the first sendUpdates check returns true
+	//private Quaternion prevRot = new Quaternion();
 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
@@ -178,6 +178,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public void setWorldRotation(final Quaternion newRot2) {
 		getMainNode().setLocalRotation(newRot2);
+		this.sendPositionUpdate = true;
 	}
 
 

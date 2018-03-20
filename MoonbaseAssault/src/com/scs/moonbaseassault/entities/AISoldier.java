@@ -74,6 +74,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
+		simpleRigidBody.canWalkUpSteps = true;
 
 		spatial.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

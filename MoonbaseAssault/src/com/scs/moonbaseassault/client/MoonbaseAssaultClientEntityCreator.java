@@ -91,8 +91,9 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
+			String name = (String)msg.data.get("name");
 			String tex = (String)msg.data.get("tex");
-			Floor floor = new Floor(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex);
+			Floor floor = new Floor(game, id, name, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex);
 			return floor;
 		}
 

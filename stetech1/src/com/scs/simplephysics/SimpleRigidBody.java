@@ -2,11 +2,13 @@ package com.scs.simplephysics;
 
 import java.util.List;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
@@ -27,6 +29,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	protected boolean isOnGround = false;
 	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.
 	private int modelComplexity = 0; // For determining which way round to check
+	public boolean canWalkUpSteps = false;
 
 	private CollisionResults collisionResults = new CollisionResults();
 
@@ -114,13 +117,33 @@ public class SimpleRigidBody<T> implements Collidable {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
 					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 					if (collidedWith != null) {
-						float bounce = this.bounciness;// * body.bounciness; // Combine bounciness?
-						oneOffForce.x = oneOffForce.x * bounce * -1;
+						if (!checkForStep(collidedWith, tpf_secs)) {
+							float bounce = this.bounciness;// * body.bounciness; // Combine bounciness?
+							oneOffForce.x = oneOffForce.x * bounce * -1;
+						}
 					}
 				}
 				oneOffForce.x = oneOffForce.x * aerodynamicness; // Slow down
 			}
 
+			//Move along Z
+			{
+				float totalOffset = oneOffForce.z + additionalForce.z;
+				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
+					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
+					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
+					if (collidedWith != null) {
+						if (!checkForStep(collidedWith, tpf_secs)) {
+							float bounce = this.bounciness;// * body.bounciness;
+							oneOffForce.z = oneOffForce.z * bounce * -1; // Reverse direction
+						}
+					}
+				}
+				oneOffForce.z = oneOffForce.z * aerodynamicness; // Slow down
+			}
+
+
+			// Do Y last in case we're walking up steps
 			// Move along Y
 			{
 				float totalOffset = (oneOffForce.y + additionalForce.y + currentGravInc);
@@ -153,20 +176,29 @@ public class SimpleRigidBody<T> implements Collidable {
 				this.oneOffForce.y = oneOffForce.y * aerodynamicness; // Slow down
 			}
 
-			//Move along Z
-			{
-				float totalOffset = oneOffForce.z + additionalForce.z;
-				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
-					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
-					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
-					if (collidedWith != null) {
-						float bounce = this.bounciness;// * body.bounciness;
-						oneOffForce.z = oneOffForce.z * bounce * -1; // Reverse direction
-					}
-				}
-				oneOffForce.z = oneOffForce.z * aerodynamicness; // Slow down
-			}
 		}
+	}
+
+
+	private boolean checkForStep(SimpleRigidBody<T> other, float tpf_secs) {
+		if (!this.canWalkUpSteps) {
+			return false;
+		}
+		
+		BoundingBox bba = (BoundingBox)this.getSpatial().getWorldBound();
+		float aBottom = bba.getCenter().y - (bba.getYExtent());
+		BoundingBox bbb = (BoundingBox)other.getSpatial().getWorldBound();
+		float bTop = bbb.getCenter().y + (bbb.getYExtent());
+		float heightDiff = bTop - aBottom;
+
+		if (heightDiff >= 0 && heightDiff <= 0.15f) { // todo - make a setting
+			//Globals.p("Going up step: " + heightDiff); // todo - remove line
+			this.oneOffForce.y += heightDiff / tpf_secs;
+			return true;
+		}
+		
+		
+		return false;
 	}
 
 
@@ -270,7 +302,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		return this.isOnGround;
 	}
 
-	
+
 	/**
 	 * When comparing for collisions, it's only possible to check BB v Mesh or BB v BB, not Mesh v Mesh.
 	 * So to get the best kind of collision check, the model complexity value is used to determine which
@@ -279,8 +311,8 @@ public class SimpleRigidBody<T> implements Collidable {
 	public void setModelComplexity(int i) {
 		this.modelComplexity = i;
 	}
-	
-	
+
+
 	public boolean canMove() {
 		return this.canMove;
 	}

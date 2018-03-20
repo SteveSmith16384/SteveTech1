@@ -16,6 +16,7 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 		super(s, _controller, true, _tag);
 
 		this.setBounciness(0);
+		this.canWalkUpSteps = true;
 	}
 
 
