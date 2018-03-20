@@ -66,7 +66,7 @@ public class LaserBullet extends AbstractBullet {
 		laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		simpleRigidBody.setAerodynamicness(1);
 		simpleRigidBody.setGravity(0);
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(20));

@@ -59,7 +59,7 @@ public class Fence extends PhysicalEntity {
 		geometry.setLocalTranslation(WIDTH/2, height/2, 0.5f);
 		mainNode.setLocalTranslation(x, 0, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, (SimplePhysicsController)game, false, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, (SimplePhysicsController)game, false, this);
 		//this.simpleRigidBody.setMovable(false);
 
 		//game.getRootNode().attachChild(this.mainNode);

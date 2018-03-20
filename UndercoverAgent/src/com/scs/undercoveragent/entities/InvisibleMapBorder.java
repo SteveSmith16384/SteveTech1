@@ -66,7 +66,7 @@ public class InvisibleMapBorder extends PhysicalEntity {
 		JMEAngleFunctions.rotateToDirection(mainNode, dir);
 		mainNode.setLocalTranslation(x, y, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
 		simpleRigidBody.setModelComplexity(0);
 
 		geometry.setUserData(Globals.ENTITY, this);

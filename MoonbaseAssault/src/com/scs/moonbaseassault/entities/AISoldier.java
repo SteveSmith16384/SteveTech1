@@ -73,7 +73,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		this.mainNode.attachChild(spatial);
 		mainNode.setLocalTranslation(x, y, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 
 		spatial.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
@@ -95,7 +95,6 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 				this.changeDirection(newdir);
 			}
 			
-			//this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 			if (!Globals.DEBUG_CAN_SEE) {
 				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // Walk forwards
 			} else {
@@ -109,7 +108,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 			this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
 		} else {
-			//this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // Walk forwards
+			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
 		}
 		//this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
 

@@ -120,7 +120,7 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 
 	@Override
 	protected void createSimpleRigidBody(Vector3f dir) {
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		this.simpleRigidBody.setBounciness(0f);
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));
 		

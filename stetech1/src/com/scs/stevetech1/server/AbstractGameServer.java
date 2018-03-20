@@ -161,30 +161,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	}
 */
 
-	@Override
-	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
-		PhysicalEntity pea = a.userObject;
-		PhysicalEntity peb = b.userObject;
-
-		if (pea instanceof INotifiedOfCollision) {
-			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
-			ic.collided(peb);
-		}
-		if (peb instanceof INotifiedOfCollision) {
-			INotifiedOfCollision ic = (INotifiedOfCollision)peb;
-			ic.collided(pea);
-		}
-
-		collisionLogic.collision(pea, peb);
-	}
-
-
-	@Override
-	public SimplePhysicsController<PhysicalEntity> getPhysicsController() {
-		return physicsController;
-	}
-
-
 	public void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
 		for(ClientData client : this.clients.values()) {

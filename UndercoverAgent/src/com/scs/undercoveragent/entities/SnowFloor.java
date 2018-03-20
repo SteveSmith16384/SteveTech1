@@ -73,7 +73,7 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 		geometry.setLocalTranslation((w/2), -(h/2), (d/2)); // Move it into position
 		mainNode.setLocalTranslation(x, yTop, z); // Move it into position
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
@@ -122,6 +122,13 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		// Do nothing
 
+	}
+
+
+	@Override
+	public void hasMoved() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

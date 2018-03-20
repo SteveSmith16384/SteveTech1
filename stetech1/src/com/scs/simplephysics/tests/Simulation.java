@@ -2,8 +2,10 @@ package com.scs.simplephysics.tests;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import com.scs.simplephysics.ICollisionListener;
+import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 
@@ -31,7 +33,19 @@ public class Simulation implements ICollisionListener<String> {
 		Geometry ballGeometry = new Geometry("Sphere", sphere);
 		ballGeometry.setLocalTranslation(0, 10f, 0);
 
-		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(ballGeometry, physicsController, true, "Sphere");
+		ISimpleEntity<String> iePlayer = new ISimpleEntity<String>() { // todo - rename
+			@Override
+			public Spatial getSpatial() {
+				return ballGeometry;
+			}
+
+			@Override
+			public void hasMoved() {
+				// Do nothing
+			}
+		};
+
+		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(iePlayer, physicsController, true, "ballGeometry");
 		
 		float time = 1;
 		int prevReport = 0;

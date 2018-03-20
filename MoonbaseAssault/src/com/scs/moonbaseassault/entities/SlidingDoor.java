@@ -76,7 +76,7 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 		geometry.setLocalTranslation(w/2, h/2, depth/2 + (w/2)); // Never change position of mainNode (unless the whole object is moving)
 		mainNode.setLocalTranslation(x, yBottom, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
 		simpleRigidBody.setGravity(0f);
 
 		geometry.setUserData(Globals.ENTITY, this);

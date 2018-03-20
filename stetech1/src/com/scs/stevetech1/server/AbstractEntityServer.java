@@ -15,9 +15,11 @@ import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
@@ -226,6 +228,7 @@ ICollisionListener<PhysicalEntity> {
 				eum = new EntityUpdateMessage();
 			}
 
+			int numSent = 0;
 			synchronized (entitiesForProcessing) {
 				// Loop through the entities
 				for (IEntity e : entitiesForProcessing.values()) {
@@ -245,6 +248,8 @@ ICollisionListener<PhysicalEntity> {
 						if (sendUpdates) {
 							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
 								eum.addEntityData(physicalEntity, false);
+								numSent++;
+								physicalEntity.sendPositionUpdate = false;
 								if (eum.isFull()) {
 									gameNetworkServer.sendMessageToAll(eum);	
 									eum = new EntityUpdateMessage();
@@ -256,6 +261,11 @@ ICollisionListener<PhysicalEntity> {
 			}
 			if (sendUpdates) {
 				gameNetworkServer.sendMessageToAll(eum);	
+			}
+			if (Globals.SHOW_NUM_ENT_UPDATES_SENT) {
+				if (sendUpdates) {
+					Globals.p("Num entity updates sent: " + numSent);
+				}
 			}
 		}
 
@@ -566,6 +576,30 @@ ICollisionListener<PhysicalEntity> {
 	@Override
 	public int getNextEntityID() {
 		return nextEntityID.getAndAdd(1);
+	}
+
+
+	@Override
+	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
+		PhysicalEntity pea = a.userObject;
+		PhysicalEntity peb = b.userObject;
+
+		if (pea instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
+			ic.collided(peb);
+		}
+		if (peb instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)peb;
+			ic.collided(pea);
+		}
+
+		collisionLogic.collision(pea, peb);
+	}
+
+
+	@Override
+	public SimplePhysicsController<PhysicalEntity> getPhysicsController() {
+		return physicsController;
 	}
 
 

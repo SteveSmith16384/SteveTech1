@@ -385,9 +385,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						}
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;  //pe.getWorldRotation();
-							if (pe.moves) { // Only bother with things that can move
+							//if (pe.moves) { // Only bother with things that can move  scs new - removed
 								pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
-							}
+							//}
 							//strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
 						}
 

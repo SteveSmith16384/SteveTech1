@@ -54,7 +54,7 @@ public class FlatFloor extends PhysicalEntity {
 		geometry.setLocalRotation(new Quaternion(0, 0, 1, 1)); // wrong?
 		mainNode.setLocalTranslation(x, y, z); // Move it into position
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
 		//this.simpleRigidBody.setMovable(false);
 
 

@@ -33,7 +33,7 @@ public class StaticSnowman extends PhysicalEntity {
 		
 		mainNode.setLocalTranslation(x, y, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), false, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
 		simpleRigidBody.setModelComplexity(2);
 
 		model.setUserData(Globals.ENTITY, this);

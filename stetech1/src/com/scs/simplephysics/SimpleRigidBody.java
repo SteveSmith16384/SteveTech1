@@ -18,21 +18,23 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	// Gravity
 	private float gravInc; // How powerful is gravity
-	public float currentGravInc = 0; // The y-axis change this frame from gravity
+	public float currentGravInc = 0; // The y-axis change this frame caused by gravity
 
-	private Spatial spatial;
+	//private Spatial spatial;
 	public T userObject; // Attach any object
-	private boolean canMove = true; // Set to false to make "kinematic" - todo - rename
+	private ISimpleEntity<T> simpleEntity;
+	private boolean canMove = true; // Set to false to make "kinematic" - todo - rename?
 	protected boolean isOnGround = false;
 	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.
 	private int modelComplexity = 0; // For determining which way round to check
 
 	private CollisionResults collisionResults = new CollisionResults();
 
-	public SimpleRigidBody(Spatial s, SimplePhysicsController<T> _controller, boolean moves, T _tag) {
+	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean moves, T _tag) {
 		super();
 
-		spatial = s;  //spatial.getLocalTranslation();
+		simpleEntity =_ent;
+		//spatial = _spatial;  //spatial.getLocalTranslation();
 		physicsController = _controller;
 		this.canMove = moves;
 		userObject = _tag;
@@ -50,7 +52,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public Spatial getSpatial() {
-		return this.spatial;
+		return this.simpleEntity.getSpatial();
 	}
 
 
@@ -91,7 +93,8 @@ public class SimpleRigidBody<T> implements Collidable {
 						System.err.println("No direction, moving up!");
 						diff = new Vector3f(0, 1, 0);
 					}
-					this.spatial.move(diff); // Move away until there's no more collisions
+					this.getSpatial().move(diff); // Move away until there's no more collisions
+					this.simpleEntity.hasMoved();
 					//System.err.println("Automoved  " + this + " by " + diff);
 					tmpWasCollision = checkForCollisions();
 				} while (tmpWasCollision != null);
@@ -175,10 +178,10 @@ public class SimpleRigidBody<T> implements Collidable {
 			if (offset.length() > SimplePhysicsController.MAX_MOVE_DIST) {
 				offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
 			}
-			this.spatial.move(offset);
+			this.getSpatial().move(offset);
 			SimpleRigidBody<T> wasCollision = checkForCollisions();
 			if (wasCollision != null) {
-				this.spatial.move(offset.negateLocal()); // Move back
+				this.getSpatial().move(offset.negateLocal()); // Move back
 
 				/*if (STRICT) {
 					SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
@@ -186,6 +189,8 @@ public class SimpleRigidBody<T> implements Collidable {
 						System.err.println("Warning: " + this + " has collided with " + tmpWasCollision + " even after moving back");
 					}
 				}*/
+			} else {
+				this.simpleEntity.hasMoved();
 			}
 			return wasCollision;
 		}
@@ -209,15 +214,15 @@ public class SimpleRigidBody<T> implements Collidable {
 						// Check which object is the most complex, and collide that against the bounding box of the other
 						int res = 0;
 						if (this.modelComplexity >= e.modelComplexity) {
-							if (e.spatial.getWorldBound() == null) {
+							if (e.getSpatial().getWorldBound() == null) {
 								throw new RuntimeException(e.userObject + " has no bounds");
 							}
-							res = this.collideWith(e.spatial.getWorldBound(), collisionResults);
+							res = this.collideWith(e.getSpatial().getWorldBound(), collisionResults);
 						} else {
-							if (this.spatial.getWorldBound() == null) {
+							if (this.getSpatial().getWorldBound() == null) {
 								throw new RuntimeException(this.userObject + " has no bounds");
 							}
-							res = e.collideWith(this.spatial.getWorldBound(), collisionResults);
+							res = e.collideWith(this.getSpatial().getWorldBound(), collisionResults);
 						}
 						if (res > 0) {
 							collidedWith = e;
@@ -234,7 +239,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
-		return this.spatial.collideWith(other, results);
+		return this.getSpatial().collideWith(other, results);
 	}
 
 
@@ -257,7 +262,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public void setAdditionalForce(Vector3f force) {
-		this.additionalForce = force;
+		this.additionalForce.set(force);
 	}
 
 

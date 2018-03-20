@@ -10,6 +10,7 @@ import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IPhysicalEntity;
@@ -22,7 +23,7 @@ import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer {
+public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ISimpleEntity<PhysicalEntity> {
 
 	protected Node mainNode;
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
@@ -36,7 +37,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f originalPos = new Vector3f();
 	private Quaternion originalRot = new Quaternion();
 
-	public boolean moves;
+	public boolean moves; // todo - remove this?
+	public boolean sendPositionUpdate;
 	private boolean requiresProcessing;
 	public Node owner;
 
@@ -147,17 +149,20 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void setWorldTranslation(Vector3f pos) {
-		this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
+		//this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
+		this.setWorldTranslation(pos.x, pos.y, pos.z);
 	}
 
 
 	public void setWorldTranslation(float x, float z) {
-		this.getMainNode().setLocalTranslation(x, this.getWorldTranslation().y, z);
+		//this.getMainNode().setLocalTranslation(x, this.getWorldTranslation().y, z);
+		this.setWorldTranslation(x, this.getWorldTranslation().y, z);
 	}
 
 
 	public void setWorldTranslation(float x, float y, float z) {
 		this.getMainNode().setLocalTranslation(x, y, z);
+		sendPositionUpdate = true;
 	}
 
 
@@ -177,6 +182,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public boolean sendUpdates() {
+		return this.sendPositionUpdate;
+	}
+	
+	
+	public boolean sendUpdates_OLD() {
 		if (!this.moves) { // todo - scs new!
 			return false;
 		}
@@ -331,5 +341,19 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public Node getOwnerNode() {
 		return owner; // Override if the entity should have a different parent node to the default 
 	}
+
+
+	@Override
+	public Spatial getSpatial() {
+		return this.mainNode;
+	}
+
+
+	@Override
+	public void hasMoved() {
+		this.sendPositionUpdate = true;
+		
+	}
+
 
 }

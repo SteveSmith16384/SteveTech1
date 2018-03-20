@@ -6,6 +6,7 @@ import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
@@ -57,7 +58,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 		mainNode.rotate(0, rads, 0);
 		mainNode.setLocalTranslation(x, y, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
@@ -72,5 +73,6 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 	public void processByServer(AbstractEntityServer server, float tpf) {
 		super.processByServer(server, tpf);
 	}
+
 
 }

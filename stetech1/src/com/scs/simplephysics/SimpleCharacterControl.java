@@ -12,12 +12,10 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 	private float jumpForce = 5f;
 	private long lastJumpTime = 0;
 
-	public SimpleCharacterControl(Spatial s, SimplePhysicsController<T> _controller, T _tag) {
+	public SimpleCharacterControl(ISimpleEntity<T> s, SimplePhysicsController<T> _controller, T _tag) {
 		super(s, _controller, true, _tag);
 
 		this.setBounciness(0);
-		//this.setAerodynamicness(1);  Don't set to 1, otherwise an explosion will keep moving us forever
-		//super.setAdditionalForce(walkDir);
 	}
 
 
