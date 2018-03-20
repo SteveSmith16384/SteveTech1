@@ -61,6 +61,9 @@ public class SimplePhysicsController<T> {
 	
 	
 	public void addSimpleRigidBody(SimpleRigidBody<T> srb) {
+		if (srb == null) {
+			throw new RuntimeException("Todo");
+		}
 		synchronized (entities) {
 			this.entities.add(srb);
 		}

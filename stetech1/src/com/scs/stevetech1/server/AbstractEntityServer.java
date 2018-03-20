@@ -492,6 +492,9 @@ ICollisionListener<PhysicalEntity> {
 			} else {
 				this.getGameNode().attachChild(pe.getMainNode());
 			}
+			if (pe.simpleRigidBody != null) {
+				this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
+			}
 		}
 
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {

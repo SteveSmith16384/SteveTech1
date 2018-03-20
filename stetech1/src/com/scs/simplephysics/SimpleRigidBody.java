@@ -45,7 +45,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		this.gravInc = physicsController.getGravity(); 
 		this.aerodynamicness = physicsController.getAerodynamicness();
 
-		physicsController.addSimpleRigidBody(this);
+		//physicsController.addSimpleRigidBody(this); Don't add immediately!
 	}
 
 
