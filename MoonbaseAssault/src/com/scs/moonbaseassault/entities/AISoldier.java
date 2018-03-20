@@ -99,12 +99,12 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 			if (!Globals.DEBUG_CAN_SEE) {
 				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // Walk forwards
 			} else {
-				if (MoonbaseAssaultServer.player != null) {
+				/*if (MoonbaseAssaultServer.player != null) {
 					boolean cansee = this.canSee(MoonbaseAssaultServer.player, 100f);
 					if (cansee) {
 						//Globals.p("Soldier can see player");
 					}
-				}
+				}*/
 			}
 
 			this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);

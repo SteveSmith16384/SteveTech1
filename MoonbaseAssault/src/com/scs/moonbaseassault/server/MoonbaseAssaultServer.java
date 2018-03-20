@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
@@ -37,9 +38,11 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	private int scannerData[][];
 	private List<Point> computerSquares;
 
-	public static SoldierServerAvatar player; // todo - remove
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
 	
+	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode;
+
+
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -100,6 +103,18 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 
 	@Override
+	public void simpleInitApp() {
+		subNodeX0Y0 = new Node("00");
+		subNodeX1Y0 = new Node("10");
+		subNodeX0Y1 = new Node("01");
+		subNodeX1Y1 = new Node("11");
+		ceilingNode = new Node("Ceiling");
+		
+		super.simpleInitApp();
+	}
+	
+	
+	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		float startHeight = .1f;
 		avatar.setWorldTranslation(new Vector3f(3f, startHeight, 3f + (avatar.playerID*2)));
@@ -109,6 +124,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected void createGame() {
+		this.getGameNode().attachChild(subNodeX0Y0);
+		this.getGameNode().attachChild(subNodeX1Y0);
+		this.getGameNode().attachChild(subNodeX0Y1);
+		this.getGameNode().attachChild(subNodeX1Y1);
+		this.getGameNode().attachChild(this.ceilingNode);
+		
 		MapLoader map = new MapLoader(this);
 		try {
 			map.loadMap("/serverdata/moonbaseassault.csv");
@@ -124,7 +145,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 					} else if (this.scannerData[x][y] == MapLoader.DOOR_LR) { // || this.scannerData[x][y] == MapLoader.DOOR_UD) {
 						if (maxSoldiers > 0) {
 							AISoldier s = new AISoldier(this, this.getNextEntityID(), x + 0.5f, .3f, y + 1.5f, 2);
-							//todo - re-add this.actuallyAddEntity(s);
+							this.actuallyAddEntity(s);
 							Globals.p("Adding soldier to " + x + ", " + y);
 							maxSoldiers--;
 						}
@@ -179,7 +200,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0, client);
 		this.actuallyAddEntity(abilityGun);
 
-		player = avatar;
+		//player = avatar;
 
 		return avatar;
 	}

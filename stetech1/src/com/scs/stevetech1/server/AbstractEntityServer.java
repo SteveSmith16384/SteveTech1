@@ -11,6 +11,7 @@ import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
@@ -79,7 +80,7 @@ ICollisionListener<PhysicalEntity> {
 	private RealtimeInterval sendEntityUpdatesInterval;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
-
+	
 	public AbstractEntityServer(GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) {
 		super();
 
@@ -482,7 +483,12 @@ ICollisionListener<PhysicalEntity> {
 			if (pe.getMainNode().getParent() != null) {
 				throw new RuntimeException("Entity already has a node");
 			}
-			this.getGameNode().attachChild(pe.getMainNode()); // todo - add to subnode?
+			Node parent = pe.getOwnerNode();
+			if (parent != null) {
+				parent.attachChild(pe.getMainNode());
+			} else {
+				this.getGameNode().attachChild(pe.getMainNode());
+			}
 		}
 
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {

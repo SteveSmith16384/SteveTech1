@@ -18,7 +18,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class Floor extends PhysicalEntity {//implements IProcessByClient {
+public class Floor extends PhysicalEntity {
 
 	private Box box1;
 	private float w, h, d;

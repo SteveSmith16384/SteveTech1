@@ -141,7 +141,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 				Vector3f v = this.currentAvatar.getWorldTranslation();
 				player = new Point((int)v.x, (int)v.z);
 			}
-			this.hud.hudMapImage.mapImageTex.setotherData(player, units, computers);
+			this.hud.hudMapImage.mapImageTex.setOtherData(player, units, computers);
 		}
 	}
 

@@ -36,9 +36,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f originalPos = new Vector3f();
 	private Quaternion originalRot = new Quaternion();
 
-	//protected int currentAnimCode = -1;
 	public boolean moves;
 	private boolean requiresProcessing;
+	public Node owner;
 
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _moves, boolean _requiresProcessing) {
 		super(_game, id, type, _name);
@@ -325,6 +325,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	@Override
 	public final boolean requiresProcessing() {
 		return requiresProcessing;
+	}
+	
+	
+	public Node getOwnerNode() {
+		return owner; // Override if the entity should have a different parent node to the default 
 	}
 
 }

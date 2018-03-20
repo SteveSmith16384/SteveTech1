@@ -262,6 +262,7 @@ public class MapLoader {
 		this.totalFloors++;
 
 		Floor ceiling = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, MoonbaseAssaultServer.CEILING_HEIGHT+0.5f, sy, w, .5f, d, "Textures/ufo2_03.png");
+		ceiling.owner = moonbaseAssaultServer.ceilingNode;
 		moonbaseAssaultServer.actuallyAddEntity(ceiling);
 		this.totalCeilings++;
 		

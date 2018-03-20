@@ -26,7 +26,7 @@ public class MapImageTexture extends PaintableImage {
 	}
 	
 	
-	public void setotherData(Point _player, List<Point> _units, List<Point> _computers) {
+	public void setOtherData(Point _player, List<Point> _units, List<Point> _computers) {
 		player =_player;
 		units = _units;
 		computers = _computers;
