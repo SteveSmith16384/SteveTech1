@@ -125,10 +125,4 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 	}
 
 
-	@Override
-	public void hasMoved() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

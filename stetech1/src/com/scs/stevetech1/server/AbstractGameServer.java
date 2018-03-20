@@ -2,6 +2,7 @@ package com.scs.stevetech1.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -19,6 +20,7 @@ import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
+import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.lobby.UpdateLobbyMessage;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
@@ -35,6 +37,8 @@ import ssmith.util.TextConsole;
  *
  */
 public abstract class AbstractGameServer extends AbstractEntityServer implements ConsoleInputListener {
+
+	protected static AtomicInteger nextGameID = new AtomicInteger(1);
 
 	private KryonetLobbyClient clientToLobbyServer;
 
@@ -68,7 +72,8 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		// Start console
 		new TextConsole(this);
 
-		createGame();
+		//createGame();
+		startNewGame();
 
 	}
 
@@ -87,7 +92,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	public void simpleUpdate(float tpf_secs) {
 		long startTime = System.currentTimeMillis();
 
-		super.simpleUpdate(tpf_secs);
+		super.simpleUpdate(tpf_secs); // this.rootNode;
 
 		if (updateLobbyInterval.hitInterval()) {
 			if (clientToLobbyServer == null) {
@@ -115,6 +120,29 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
 		loopTimer.start();
+	}
+
+
+	@Override
+	public void messageReceived(int clientid, MyAbstractMessage message) {
+		if (message instanceof PingMessage) {
+			PingMessage pingMessage = (PingMessage) message;
+
+			ClientData client = null;
+			synchronized (clients) {
+				client = clients.get(clientid);
+			}
+
+			if (client == null) {
+				return;
+			}
+
+			this.pingSystem.handleMessage(pingMessage, client);
+
+		} else {
+			super.messageReceived(clientid, message);
+		}
+
 	}
 
 
@@ -195,6 +223,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	public void gameStatusChanged(int newStatus)  {
 		if (newStatus == SimpleGameData.ST_DEPLOYING) {
+			gameData.gameID++;
 			removeOldGame();
 			startNewGame();
 		} else if (newStatus == SimpleGameData.ST_STARTED) {

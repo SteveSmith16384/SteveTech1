@@ -33,7 +33,7 @@ public class Simulation implements ICollisionListener<String> {
 		Geometry ballGeometry = new Geometry("Sphere", sphere);
 		ballGeometry.setLocalTranslation(0, 10f, 0);
 
-		ISimpleEntity<String> iePlayer = new ISimpleEntity<String>() { // todo - rename
+		ISimpleEntity<String> entity = new ISimpleEntity<String>() {
 			@Override
 			public Spatial getSpatial() {
 				return ballGeometry;
@@ -45,7 +45,7 @@ public class Simulation implements ICollisionListener<String> {
 			}
 		};
 
-		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(iePlayer, physicsController, true, "ballGeometry");
+		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, true, "ballGeometry");
 		
 		float time = 1;
 		int prevReport = 0;

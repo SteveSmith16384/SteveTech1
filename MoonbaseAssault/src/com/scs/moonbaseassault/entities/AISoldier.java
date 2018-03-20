@@ -205,7 +205,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		case 2: return new Vector3f(0f, 0, 1f);
 		case 3: return new Vector3f(0f, 0, -1f);
 		}
-		throw new RuntimeException("Todo");
+		throw new RuntimeException("Invalid direction: " + i);
 	}
 	
 	

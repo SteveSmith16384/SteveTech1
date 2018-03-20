@@ -57,7 +57,7 @@ public class CharacterModel implements IAvatarModel {
 /*
 	@Override
 	public void setAnimationForCode(String code) {
-		//todo return animCodes.get(code);
+		//return animCodes.get(code);
 	}
 
 */
@@ -72,18 +72,5 @@ public class CharacterModel implements IAvatarModel {
 		return MODEL_HEIGHT - 0.1f;
 	}
 
-/*
-	@Override
-	public void showCurrentAnimation() {
-		// TODO Auto-generated method stub
-		
-	}
 
-
-	@Override
-	public void process(float tpf_secs) {
-		// TODO Auto-generated method stub
-		
-	}
-*/
 }

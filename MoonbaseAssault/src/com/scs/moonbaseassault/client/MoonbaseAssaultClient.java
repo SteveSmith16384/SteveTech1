@@ -158,7 +158,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 
 	@Override
-	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) { // Todo - do this on client as well
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		return this.collisionValidator.canCollide(a, b);
 	}
 

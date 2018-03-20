@@ -8,7 +8,7 @@ import com.scs.stevetech1.shared.AbstractCollisionValidator;
 public class MoonbaseAssaultCollisionValidator extends AbstractCollisionValidator {
 
 	@Override
-	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) { // Todo - do this on client as well
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
 		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
 

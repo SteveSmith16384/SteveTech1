@@ -82,7 +82,7 @@ ICollisionListener<PhysicalEntity> {
 	private RealtimeInterval sendEntityUpdatesInterval;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
-	
+
 	public AbstractEntityServer(GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) {
 		super();
 
@@ -382,16 +382,10 @@ ICollisionListener<PhysicalEntity> {
 		}
 		MyAbstractMessage msg = (MyAbstractMessage)message;
 
-		if (message instanceof PingMessage) {
-			PingMessage pingMessage = (PingMessage) message;
-			//todo this.pingSystem.handleMessage(pingMessage, client);
-
-		} else {
-			msg.client = client;
-			// Add it to list for processing in main thread
-			synchronized (this.unprocessedMessages) {
-				this.unprocessedMessages.add(msg);
-			}
+		msg.client = client;
+		// Add it to list for processing in main thread
+		synchronized (this.unprocessedMessages) {
+			this.unprocessedMessages.add(msg);
 		}
 
 	}

@@ -40,7 +40,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
 	
-	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode;
+	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode;
 
 
 	public static void main(String[] args) {
@@ -109,6 +109,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		subNodeX0Y1 = new Node("01");
 		subNodeX1Y1 = new Node("11");
 		ceilingNode = new Node("Ceiling");
+		floorNode = new Node("Floor");
 		
 		super.simpleInitApp();
 	}
@@ -249,7 +250,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 
 	@Override
-	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) { // Todo - do this on client as well
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		return this.collisionValidator.canCollide(a, b);
 	}
 

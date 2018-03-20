@@ -38,7 +38,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Quaternion originalRot = new Quaternion();
 
 	public boolean moves; // todo - remove this?
-	public boolean sendPositionUpdate;
+	public boolean sendPositionUpdate = true; // Send first time
 	private boolean requiresProcessing;
 	public Node owner;
 
@@ -185,7 +185,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return this.sendPositionUpdate;
 	}
 	
-	
+	/*
 	public boolean sendUpdates_OLD() {
 		if (!this.moves) { // todo - scs new!
 			return false;
@@ -210,7 +210,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		return hasMoved;
 	}
-
+*/
 
 	@Override
 	public String toString() {

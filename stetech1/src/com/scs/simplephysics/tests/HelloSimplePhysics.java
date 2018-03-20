@@ -136,7 +136,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(model);
 
-		ISimpleEntity<Spatial> iePlayer = new ISimpleEntity<Spatial>() { // todo - rename
+		ISimpleEntity<Spatial> hillEntity = new ISimpleEntity<Spatial>() {
 			@Override
 			public Spatial getSpatial() {
 				return model;
@@ -148,7 +148,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			}
 		};
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(iePlayer, physicsController, false, model);		
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(hillEntity, physicsController, false, model);		
 		srb.setModelComplexity(1);
 	}
 	
@@ -171,7 +171,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		floorGeometry.setShadowMode(ShadowMode.Receive);
 		this.rootNode.attachChild(floorGeometry);
 
-		ISimpleEntity<Spatial> iePlayer = new ISimpleEntity<Spatial>() { // todo - rename
+		ISimpleEntity<Spatial> floorEntity = new ISimpleEntity<Spatial>() {
 			@Override
 			public Spatial getSpatial() {
 				return floorGeometry;
@@ -183,7 +183,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			}
 		};
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(iePlayer, physicsController, false, floorGeometry);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floorEntity, physicsController, false, floorGeometry);
 	}
 
 
@@ -203,7 +203,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		wallGeometry.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(wallGeometry);
 
-		ISimpleEntity<Spatial> iePlayer = new ISimpleEntity<Spatial>() { // todo - rename
+		ISimpleEntity<Spatial> wallEntity = new ISimpleEntity<Spatial>() {
 			@Override
 			public Spatial getSpatial() {
 				return wallGeometry;
@@ -215,7 +215,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			}
 		};
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(iePlayer, physicsController, false, wallGeometry);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(wallEntity, physicsController, false, wallGeometry);
 	}
 
 
@@ -237,7 +237,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		boxGeometry.lookAt(new Vector3f(0, y, 0), Vector3f.UNIT_Y); // Rotate them to different angles
 		this.rootNode.attachChild(boxGeometry);
 
-		ISimpleEntity<Spatial> iePlayer = new ISimpleEntity<Spatial>() { // todo - rename
+		ISimpleEntity<Spatial> boxEntity = new ISimpleEntity<Spatial>() {
 			@Override
 			public Spatial getSpatial() {
 				return boxGeometry;
@@ -249,7 +249,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			}
 		};
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(iePlayer, physicsController, true, boxGeometry);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(boxEntity, physicsController, true, boxGeometry);
 		srb.setBounciness(bounciness);
 	}
 
@@ -270,7 +270,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		ballGeometry.setShadowMode(ShadowMode.Cast);
 		this.rootNode.attachChild(ballGeometry);
 
-		ISimpleEntity<Spatial> iePlayer = new ISimpleEntity<Spatial>() { // todo - rename
+		ISimpleEntity<Spatial> ballEntity = new ISimpleEntity<Spatial>() {
 			@Override
 			public Spatial getSpatial() {
 				return ballGeometry;
@@ -282,7 +282,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			}
 		};
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(iePlayer, physicsController, true, ballGeometry);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(ballEntity, physicsController, true, ballGeometry);
 		srb.setLinearVelocity(dir);
 		srb.setGravity(grav);
 		srb.setAerodynamicness(airRes);

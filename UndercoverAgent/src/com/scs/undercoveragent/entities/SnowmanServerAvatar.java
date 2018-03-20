@@ -19,13 +19,13 @@ public class SnowmanServerAvatar extends AbstractServerAvatar {
 		super.processByServer(server, tpf);
 		
 		// Force player to jump if they haven't moved!
-		/*todo if (this.alive && server.gameData.isInGame()) {
+		if (this.alive) {// && server.gameData.isInGame()) {
 			long timeSinceMove = System.currentTimeMillis() - super.lastMoveTime;
 			if (timeSinceMove > 5 * 1000) {
 				//Globals.p("Forcing client to jump");
 				this.jump();  //todo Send message forcing client to jump
 			}
-		}*/
+		}
 	}
 
 

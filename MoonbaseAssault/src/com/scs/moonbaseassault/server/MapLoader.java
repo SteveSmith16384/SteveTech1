@@ -168,7 +168,9 @@ public class MapLoader {
 		doInteriorFloorsAndCeilings();
 		//doExteriorFloors();
 
+		// One big moon floor
 		Floor moonrock = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, .5f, mapsize, "Textures/moonrock.png");
+		moonrock.owner = moonbaseAssaultServer.floorNode;
 		moonbaseAssaultServer.actuallyAddEntity(moonrock);
 
 		InvisibleMapBorder borderL = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, Vector3f.UNIT_Z);
@@ -258,6 +260,7 @@ public class MapLoader {
 		int w = ex-sx;
 		int d = ey-sy;
 		Floor floor = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx, 0.05f, sy, w, .5f, d, "Textures/escape_hatch.jpg");
+		floor.owner = moonbaseAssaultServer.floorNode;
 		moonbaseAssaultServer.actuallyAddEntity(floor);
 		this.totalFloors++;
 
