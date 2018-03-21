@@ -34,6 +34,8 @@ import ssmith.util.MyProperties;
 
 public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
 
+	public static final String GAME_ID = "Moonbase Assault";
+	
 	public static final float CEILING_HEIGHT = 1.4f;
 
 	private int scannerData[][];
@@ -95,7 +97,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	public MoonbaseAssaultServer(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
-		super(new GameOptions(MoonbaseAssaultStaticData.NAME,  
+		super(GAME_ID, new GameOptions("Moonbase Assault",  
 				10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
@@ -199,10 +201,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		SoldierServerAvatar avatar = new SoldierServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
 
-		IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0, client);
-		this.actuallyAddEntity(abilityGun);
-
-		//player = avatar;
+		//IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0, client);
+		//this.actuallyAddEntity(abilityGun);
 
 		return avatar;
 	}

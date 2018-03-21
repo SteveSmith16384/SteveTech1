@@ -81,10 +81,12 @@ ICollisionListener<PhysicalEntity> {
 	private RealtimeInterval sendEntityUpdatesInterval;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
+	private String gameID; // To prevent the wrong type of client connecting to the wrong type of server
 
-	public AbstractEntityServer(GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) {
+	public AbstractEntityServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) {
 		super();
 
+		gameID = _gameID;
 		gameOptions = _gameOptions;
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
@@ -273,6 +275,10 @@ ICollisionListener<PhysicalEntity> {
 
 	protected synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
+		if (!newPlayerMessage.gameID.equalsIgnoreCase(gameID)) {
+			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game ID"));
+			return;
+		}
 		int side = getSide(client);
 		if (side < 0) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces"));
@@ -281,7 +287,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		client.side = side; //getSide(client);
-		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.name, client.side);
+		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.playerName, client.side);
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
 		client.avatar = createPlayersAvatar(client);
 		sendAllEntitiesToClient(client);

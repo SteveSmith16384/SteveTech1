@@ -30,6 +30,9 @@ import ssmith.util.MyProperties;
 
 public class UndercoverAgentServer extends AbstractGameServer {
 
+	public static final String NAME = "Undercover Agent";
+	public static final String GAME_ID = "Undercover Agent";
+	
 	private int mapSize;
 	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
@@ -89,7 +92,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	public UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
-		super(new GameOptions(UndercoverAgentStaticData.NAME, 10*1000, 60*1000, 10*1000, 
+		super(GAME_ID, new GameOptions(NAME, 10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
 
@@ -267,7 +270,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	public boolean doWeHaveSpaces() {
-		return true; // Always!
+		return false; // todo - re-add  true; // Always!
 	}
 
 

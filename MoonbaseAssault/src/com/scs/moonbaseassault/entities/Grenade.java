@@ -23,7 +23,7 @@ public class Grenade extends AbstractBullet { //implements INotifiedOfCollision 
 	public Grenade(IEntityController _game, int id, IEntityContainer<Grenade> owner, int _side, ClientData _client) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.GRENADE, "Grenade", owner, _side, _client);
 
-		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
+		Sphere sphere = new Sphere(8, 8, 0.07f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("grenade", sphere);
 

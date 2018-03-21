@@ -50,8 +50,8 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	private ServerGameStatusSystem gameStatusSystem;
 	private ServerPingSystem pingSystem;
 
-	public AbstractGameServer(GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) throws IOException {
-		super(_gameOptions, _tickrateMillis, sendUpdateIntervalMillis, _clientRenderDelayMillis, _timeoutMillis, gravity, aerodynamicness);
+	public AbstractGameServer(String gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) throws IOException {
+		super(gameID, _gameOptions, _tickrateMillis, sendUpdateIntervalMillis, _clientRenderDelayMillis, _timeoutMillis, gravity, aerodynamicness);
 
 	}
 

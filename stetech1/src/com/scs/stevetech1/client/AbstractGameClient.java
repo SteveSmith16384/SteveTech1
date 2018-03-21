@@ -129,6 +129,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private List<IEntity> clientOnlyEntitiesToAdd = new LinkedList<IEntity>();
 	private List<Integer> clientOnlyEntitiesToRemove = new LinkedList<Integer>();
 
+	private String gameID;
+	private String playerName = "todo";
 	private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
 	public IHUD hud;
@@ -160,11 +162,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
 
-	protected AbstractGameClient(String name, String logoImage, String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
+	protected AbstractGameClient(String _gameID, String appTitle, String logoImage, String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness, float _mouseSens) {
 		super();
 		//super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
 
+		gameID = _gameID;
+		
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
 		timeoutMillis = _timeoutMillis;
@@ -190,7 +194,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		}
 		settings.setUseJoysticks(true);
 		//settings.setAudioRenderer(null); // Avoid error with no soundcard
-		settings.setTitle(name);// + " (v" + Settings.VERSION + ")");
+		settings.setTitle(appTitle);// + " (v" + Settings.VERSION + ")");
 		settings.setSettingsDialogImage(logoImage);
 
 		setSettings(settings);
@@ -469,7 +473,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
 			if (clientStatus < STATUS_RCVD_WELCOME) {
 				clientStatus = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
-				networkClient.sendMessageToServer(new NewPlayerRequestMessage("Mark Gray", 1));
+				networkClient.sendMessageToServer(new NewPlayerRequestMessage(gameID, playerName));
 				clientStatus = STATUS_SENT_JOIN_REQUEST;
 			} else {
 				throw new RuntimeException("Received second welcome message");
@@ -760,6 +764,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				if (e instanceof ILaunchable == false) { // Don't add bullets until they are fired! 
 					PhysicalEntity pe = (PhysicalEntity)e;
 					this.getGameNode().attachChild(pe.getMainNode());
+					if (pe.simpleRigidBody != null) {
+						this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
+					}
 				}
 			}
 			if (e instanceof IDrawOnHUD) {

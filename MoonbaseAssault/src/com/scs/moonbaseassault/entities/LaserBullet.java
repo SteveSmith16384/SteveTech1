@@ -8,6 +8,7 @@ import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntityContainer;
+import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
@@ -16,7 +17,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class LaserBullet extends AbstractBullet {
+public class LaserBullet extends AbstractBullet implements IRemoveOnContact {
 
 	private float timeLeft = 3f;
 

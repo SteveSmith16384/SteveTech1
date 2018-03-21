@@ -1,7 +1,6 @@
 package com.scs.undercoveragent;
 
-public class UndercoverAgentStaticData {
+public class UndercoverAgentStaticData { // todo - delete
 
-	public static final String NAME = "Undercover Agent";
 	
 }

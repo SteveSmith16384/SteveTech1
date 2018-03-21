@@ -193,7 +193,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 		if (heightDiff >= 0 && heightDiff <= 0.15f) { // todo - make a setting
 			//Globals.p("Going up step: " + heightDiff); // todo - remove line
-			this.oneOffForce.y += heightDiff / tpf_secs;
+			this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
 			return true;
 		}
 		

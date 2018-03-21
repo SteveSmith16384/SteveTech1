@@ -18,7 +18,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.LaunchData;
 
-public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, IRemoveOnContact, ICausesHarmOnContact, IClientControlled {
+public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, ICausesHarmOnContact, IClientControlled {
 
 	protected boolean launched = false;
 	public IEntity shooter; // So we know who not to collide with
@@ -45,30 +45,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 		side = _side;
 
-		/*
-		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
-		sphere.setTextureMode(TextureMode.Projected);
-		Geometry ball_geo = new Geometry("grenade", sphere);
-
-		if (!_game.isServer()) { // Not running in server
-			TextureKey key3 = new TextureKey( "Textures/snow.jpg");
-			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = null;
-			if (Globals.LIGHTING) {
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-				floor_mat.setTexture("DiffuseMap", tex3);
-			} else {
-				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-				floor_mat.setTexture("ColorMap", tex3);
-			}
-			ball_geo.setMaterial(floor_mat);
-		}
-
-		ball_geo.setModelBound(new BoundingSphere());
-		this.mainNode.attachChild(ball_geo); //ball_geo.getModelBound();
-
-		this.getMainNode().setUserData(Globals.ENTITY, this);
-*/
 		this.collideable = false;
 
 	}

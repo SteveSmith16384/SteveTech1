@@ -67,7 +67,7 @@ public class TestGameClient extends AbstractGameClient {
 
 
 	public TestGameClient() {
-		super("test Game", null, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, null, -1, 
+		super(TestGameServer.GAME_ID, "test Game", null, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, null, -1, 
 				25, 200, 10000, -5f, 0.99f, 1f);
 	}
 
