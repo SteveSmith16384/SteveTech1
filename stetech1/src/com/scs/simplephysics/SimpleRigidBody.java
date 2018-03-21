@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.Collidable;
+import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
@@ -37,7 +37,6 @@ public class SimpleRigidBody<T> implements Collidable {
 		super();
 
 		simpleEntity =_ent;
-		//spatial = _spatial;  //spatial.getLocalTranslation();
 		physicsController = _controller;
 		this.canMove = moves;
 		userObject = _tag;
@@ -157,7 +156,12 @@ public class SimpleRigidBody<T> implements Collidable {
 							// Bounce
 							float bounce = this.bounciness;
 							oneOffForce.y = oneOffForce.y * bounce * -1; // Reverse direction
-							currentGravInc = currentGravInc * bounce * -1;
+							if (Math.abs(this.currentGravInc) > 0.5f) {
+								currentGravInc = currentGravInc * bounce * -1;
+							} else {
+								// Avoid constantly bouncing
+								currentGravInc = 0;
+							}
 						}
 						if (totalOffset < 0) { // Going down?
 							isOnGround = true;
@@ -184,7 +188,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		if (!this.canWalkUpSteps) {
 			return false;
 		}
-		
+
 		BoundingBox bba = (BoundingBox)this.getSpatial().getWorldBound();
 		float aBottom = bba.getCenter().y - (bba.getYExtent());
 		BoundingBox bbb = (BoundingBox)other.getSpatial().getWorldBound();
@@ -196,8 +200,8 @@ public class SimpleRigidBody<T> implements Collidable {
 			this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
 			return true;
 		}
-		
-		
+
+
 		return false;
 	}
 
@@ -234,6 +238,19 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * Returns object they collided with
 	 */
 	public SimpleRigidBody<T> checkForCollisions() {
+		/*if (Globals.TEST_NEW_COLLISION_METHOD) {
+			CollisionResults tmpCR = new CollisionResults();
+			int num = this.physicsController.getCollisionListener().getRootNode().collideWith(this.getSpatial().getWorldBound(), tmpCR);
+			for (CollisionResult cr : tmpCR) {
+				
+				//PhysicalEntity e = (PhysicalEntity)cr.getGeometry().getUserData(Globals.ENTITY);
+				if (this.physicsController.getCollisionListener().canCollide(this, (SimpleRigidBody<T>)e.simpleRigidBody)) {
+					Globals.p("Collision between " + this + " and " + e);
+				}
+			}
+		}*/
+
+
 		SimpleRigidBody<T> collidedWith = null;
 		List<SimpleRigidBody<T>> entities = physicsController.getEntities();
 		synchronized (entities) {
