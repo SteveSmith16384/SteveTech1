@@ -34,7 +34,7 @@ public class DestroyedComputer extends PhysicalEntity{
 		
 		Box box1 = new Box(w/2, h/2, d/2);
 
-		Geometry geometry = new Geometry("Crate", box1);
+		Geometry geometry = new Geometry("DestroyedComputer", box1);
 		if (!_game.isServer()) {
 			geometry.setShadowMode(ShadowMode.CastAndReceive);
 			

@@ -17,6 +17,7 @@ import com.scs.moonbaseassault.entities.InvisibleMapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SpaceCrate;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 
@@ -32,7 +33,7 @@ public class MapLoader {
 
 	private int mapCode[][];
 	private int mapsize;
-	private int totalWalls, totalFloors, totalCeilings;
+	private int totalWalls, totalFloors, totalCeilings, numCrates;
 	private MoonbaseAssaultServer moonbaseAssaultServer;
 	public int scannerData[][];
 
@@ -52,8 +53,8 @@ public class MapLoader {
 		mapsize = Integer.parseInt(lines[0]);
 		mapCode = new int[mapsize][mapsize];
 
-		for (int y=1 ; y<lines.length ; y++) { // Skip line 1
-			String line = lines[y];
+		for (int lineNum=1 ; lineNum<lines.length ; lineNum++) { // Skip line 1
+			String line = lines[lineNum];
 			String[] tokens = line.split(",");
 			for (int x=0 ; x<tokens.length ; x++) {
 				String cell = tokens[x];
@@ -61,23 +62,23 @@ public class MapLoader {
 				for(String part : subtokens) {
 					String stringAndCode[] = part.split(":");
 					if (stringAndCode[0].equals("WALL")) {
-						mapCode[x][y-1] = WALL;
+						mapCode[x][lineNum-1] = WALL;
 					} else if (stringAndCode[0].equals("COMP")) {
-						mapCode[x][y-1] = COMPUTER;
+						mapCode[x][lineNum-1] = COMPUTER;
 					} else if (stringAndCode[0].equals("DOOR")) {
 						if (stringAndCode[1].equals("1")) {
-							mapCode[x][y-1] = DOOR_UD;
+							mapCode[x][lineNum-1] = DOOR_UD;
 						} else if (stringAndCode[1].equals("2")) {
-							mapCode[x][y-1] = DOOR_LR;
+							mapCode[x][lineNum-1] = DOOR_LR;
 							if (this.firstInteriorFloor == null && x < 30) {
-								this.firstInteriorFloor = new Point(x, y); // Put soldier behind door
+								this.firstInteriorFloor = new Point(x, lineNum); // Put soldier behind door
 							}
 						}
 					} else if (stringAndCode[0].equals("FLOOR")) {
 						if (stringAndCode[1].equals("2")) {
-							mapCode[x][y-1] = EXT_FLOOR;
+							mapCode[x][lineNum-1] = EXT_FLOOR;
 						} else {
-							mapCode[x][y-1] = INT_FLOOR;
+							mapCode[x][lineNum-1] = INT_FLOOR;
 						}
 					}					
 				}
@@ -156,12 +157,6 @@ public class MapLoader {
 						setParentNodeForSpatial(door);
 						moonbaseAssaultServer.actuallyAddEntity(door);
 						mapCode[x][y] = INT_FLOOR; // So we create a floor below it
-						/* todo - re-add
-						float size = .5f;
-						SpaceCrate crate = new SpaceCrate(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, size, size, size, "Textures/door_lr.png", 0);
-						moonbaseAssaultServer.actuallyAddEntity(crate);
-						moveEntityUntilItHitsSomething(crate, new Vector3f(1, 0, 0));
-						*/
 					} else if (mapCode[x][y] == DOOR_UD) {
 						SlidingDoor door = new SlidingDoor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, 1, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/door_lr.png", 270);
 						setParentNodeForSpatial(door);
@@ -201,7 +196,7 @@ public class MapLoader {
 			// todo
 		}
 
-		Globals.p("Finished.  Created " + this.totalWalls + " walls, " + this.totalFloors + " floors, " + this.totalCeilings + " ceilings");
+		Globals.p("Finished.  Created " + this.totalWalls + " walls, " + this.totalFloors + " floors, " + this.totalCeilings + " ceilings, " + numCrates + " spacecrates.");
 	}
 
 
@@ -284,6 +279,15 @@ public class MapLoader {
 		floor.owner = moonbaseAssaultServer.floorNode;
 		moonbaseAssaultServer.actuallyAddEntity(floor);
 		this.totalFloors++;
+
+		// Space crate
+		float size = .25f;
+		SpaceCrate crate = new SpaceCrate(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx+.5f, size, sy+.5f, size, size, size, "Textures/spacecrate1.png", 0);
+		moonbaseAssaultServer.actuallyAddEntity(crate);
+		if (moveEntityUntilItHitsSomething(crate, new Vector3f(1, 0, 0))) {
+			numCrates++;
+		}
+
 
 		Floor ceiling = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), "Ceiling", sx, MoonbaseAssaultServer.CEILING_HEIGHT+0.5f, sy, w, .5f, d, "Textures/ufo2_03.png");
 		ceiling.owner = moonbaseAssaultServer.ceilingNode;
@@ -382,13 +386,20 @@ public class MapLoader {
 	}
 	
 	
-	private void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
-		/*CollisionResults cr = new CollisionResults(); todo - re-add
-		while (this.moonbaseAssaultServer.getGameNode().collideWith(pe.simpleRigidBody, cr) == 0) {
-			//while (pe.simpleRigidBody.collideWith(this.moonbaseAssaultServer.getGameNode(), cr) == 0) {
+	private boolean moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
+		CollisionResults cr = new CollisionResults(); //todo - re-add
+		SimpleRigidBody<PhysicalEntity> srb = pe.simpleRigidBody.checkForCollisions();
+		if (srb != null) {
+			//throw new RuntimeException("Stuck in wall!");
+			pe.remove();
+			return false;
+		}
+		cr.clear();
+		while (pe.simpleRigidBody.checkForCollisions() != null) {
 			pe.getMainNode().move(dir.mult(0.1f));
 			cr.clear();
-		}*/
+		}
+		return true;
 	}
 }
 

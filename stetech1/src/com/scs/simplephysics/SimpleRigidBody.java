@@ -238,7 +238,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		List<SimpleRigidBody<T>> entities = physicsController.getEntities();
 		synchronized (entities) {
 			// Loop through the entities
-			for (int i=0 ; i<entities.size() ; i++) {
+			for (int i=0 ; i<entities.size() ; i++) { // todo - DONT loop through all entities!
 				collisionResults.clear();
 				SimpleRigidBody<T> e = entities.get(i);
 				if (e != this) { // Don't check ourselves

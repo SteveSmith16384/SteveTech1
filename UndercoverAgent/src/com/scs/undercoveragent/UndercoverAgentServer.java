@@ -47,7 +47,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			}
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
-			String lobbyIpAddress = props.getPropertyAsString("lobbyIpAddress", "localhost");
+			String lobbyIpAddress = null; //No lobby yet   props.getPropertyAsString("lobbyIpAddress", "localhost");
 			int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
 
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);

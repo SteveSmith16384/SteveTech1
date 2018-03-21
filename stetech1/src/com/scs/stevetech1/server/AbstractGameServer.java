@@ -33,7 +33,7 @@ import ssmith.util.TextConsole;
 
 
 /**
- * This extends the AbstractEntityServer to give it the concept 
+ * This extends the AbstractEntityServer to give it the concept of a game.
  *
  */
 public abstract class AbstractGameServer extends AbstractEntityServer implements ConsoleInputListener {
@@ -67,9 +67,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		// Start console
 		new TextConsole(this);
 
-		//createGame();
 		startNewGame();
-
 	}
 
 
@@ -87,7 +85,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	public void simpleUpdate(float tpf_secs) {
 		long startTime = System.currentTimeMillis();
 
-		super.simpleUpdate(tpf_secs); // this.rootNode;
+		super.simpleUpdate(tpf_secs);
 
 		if (updateLobbyInterval.hitInterval()) {
 			if (clientToLobbyServer == null) {
@@ -100,7 +98,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		}
 
 		if (checkGameStatusInterval.hitInterval()) {
-			//this.checkGameStatus(false);
 			gameStatusSystem.checkGameStatus(false);
 		}
 
