@@ -13,10 +13,11 @@ public class Globals {
 
 	// Lots of consts for specific debugging output
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
+	public static final boolean PROFILE_SERVER = false;
 	
+	public static final boolean TEST_NEW_COLLISION_METHOD = false;
 	public static final boolean DEBUG_SERVER_AVATAR_NOT_MOVING = false;
 	public static final boolean SHOW_AVATAR_WALK_DIR = false;
-	public static final boolean PROFILE_SERVER = false;
 	public static final boolean SHOW_NUM_ENT_UPDATES_SENT = false;
 	public static final boolean DEBUG_CAN_SEE = false;
 	public static final boolean DEBUG_SLIDING_DOORS = false;

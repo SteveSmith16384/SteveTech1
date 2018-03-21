@@ -281,12 +281,12 @@ public class MapLoader {
 		this.totalFloors++;
 
 		// Space crate
-		float size = .25f;
+		/*float size = .25f;
 		SpaceCrate crate = new SpaceCrate(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), sx+.5f, size, sy+.5f, size, size, size, "Textures/spacecrate1.png", 0);
 		moonbaseAssaultServer.actuallyAddEntity(crate);
 		if (moveEntityUntilItHitsSomething(crate, new Vector3f(1, 0, 0))) {
 			numCrates++;
-		}
+		}*/
 
 
 		Floor ceiling = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), "Ceiling", sx, MoonbaseAssaultServer.CEILING_HEIGHT+0.5f, sy, w, .5f, d, "Textures/ufo2_03.png");

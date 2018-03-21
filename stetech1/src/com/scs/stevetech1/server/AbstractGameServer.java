@@ -87,13 +87,15 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 		super.simpleUpdate(tpf_secs);
 
-		if (updateLobbyInterval.hitInterval()) {
-			if (clientToLobbyServer == null) {
-				connectToLobby();
-			}
-			if (clientToLobbyServer != null) {
-				boolean spaces = this.doWeHaveSpaces();
-				this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), spaces));
+		if (gameOptions.lobbyip != null) {
+			if (updateLobbyInterval.hitInterval()) {
+				if (clientToLobbyServer == null) {
+					connectToLobby();
+				}
+				if (clientToLobbyServer != null) {
+					boolean spaces = this.doWeHaveSpaces();
+					this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), spaces));
+				}
 			}
 		}
 
@@ -156,7 +158,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	public abstract boolean doWeHaveSpaces();
 
-/*
+	/*
 	public ArrayList<RayCollisionData> checkForEntityCollisions_UNUSED(Ray r) { // todo - is this use?
 		CollisionResults res = new CollisionResults();
 		ArrayList<RayCollisionData> myList = new ArrayList<RayCollisionData>(); 
@@ -179,7 +181,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		Collections.sort(myList);
 		return myList;
 	}
-*/
+	 */
 
 	public void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();

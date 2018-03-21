@@ -14,11 +14,16 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class Grenade extends AbstractBullet { //implements INotifiedOfCollision {
+public class Grenade extends AbstractBullet {
+	
+	private static final float DURATION = 3f;
+	
+	private float timeLeft = DURATION;
 
 	public Grenade(IEntityController _game, int id, IEntityContainer<Grenade> owner, int _side, ClientData _client) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.GRENADE, "Grenade", owner, _side, _client);
@@ -50,6 +55,20 @@ public class Grenade extends AbstractBullet { //implements INotifiedOfCollision 
 
 
 	@Override
+	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+		if (launched) {
+			super.processByServer(server, tpf_secs);
+			Globals.p("Grenade Y:" + this.getWorldTranslation().y);
+			this.timeLeft -= tpf_secs;
+			if (this.timeLeft <= 0) {
+				// todo - explode
+				// this.remove();
+			}
+		}
+	}
+
+
+	@Override
 	public float getDamageCaused() {
 		return 0;
 	}
@@ -58,7 +77,7 @@ public class Grenade extends AbstractBullet { //implements INotifiedOfCollision 
 	@Override
 	protected void createSimpleRigidBody(Vector3f dir) {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
-		//this.simpleRigidBody.setBounciness(0f);
+		this.simpleRigidBody.setAerodynamicness(0.98f); // Don't roll forever
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));
 
 	}
