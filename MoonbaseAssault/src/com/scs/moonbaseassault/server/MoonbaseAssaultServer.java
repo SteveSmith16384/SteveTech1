@@ -165,6 +165,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(-1);
 		}
 		/*
 		// Testing

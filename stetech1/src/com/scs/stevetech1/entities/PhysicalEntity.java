@@ -37,15 +37,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f originalPos = new Vector3f();
 	private Quaternion originalRot = new Quaternion();
 
-	public boolean moves; // todo - remove this?
 	public boolean sendPositionUpdate = true; // Send first time
 	private boolean requiresProcessing;
 	public Node owner;
 
-	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _moves, boolean _requiresProcessing) {
+	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing) {
 		super(_game, id, type, _name);
 
-		moves =_moves;
 		requiresProcessing = _requiresProcessing;
 
 		serverPositionData = new PositionCalculator(true, 100);

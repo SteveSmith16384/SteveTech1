@@ -14,6 +14,7 @@ import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
+import com.scs.moonbaseassault.entities.SpaceCrate;
 import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.moonbaseassault.weapons.GrenadeLauncher;
 import com.scs.stevetech1.client.AbstractGameClient;
@@ -207,6 +208,15 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			IEntityContainer<Grenade> irac = (IEntityContainer<Grenade>)game.entities.get(containerID);
 			Grenade snowball = new Grenade(game, id, irac, side, null);
 			return snowball;
+		}
+
+		case CRATE:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Vector3f size = (Vector3f)msg.data.get("size");
+			String tex = (String)msg.data.get("tex");
+			SpaceCrate crate = new SpaceCrate(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, 0); // Give def rotation of 0, since it will get rotated anyway
+			return crate;
 		}
 
 		default:

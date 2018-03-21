@@ -1,38 +1,36 @@
-package com.scs.testgame.entities;
+package com.scs.moonbaseassault.entities;
 
 import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Quad;
+import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.testgame.TestGameClientEntityCreator;
 
-public class FlatFloor extends PhysicalEntity {
+public class SpaceCrate extends PhysicalEntity implements IAffectedByPhysics {
 
-	public FlatFloor(IEntityController _game, int id, float x, float y, float z, float w, float d, String tex) {
-		super(_game, id, TestGameClientEntityCreator.FLAT_FLOOR, "FlatFloor", false);
+	public SpaceCrate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
+		super(_game, id, MoonbaseAssaultClientEntityCreator.CRATE, "SpaceCrate", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("pos", new Vector3f(x, yTop, z));
-			creationData.put("size", new Vector3f(w, 0, d));
+			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
 		}
 
+		Box box1 = new Box(w/2, h/2, d/2);
 
-		Quad q = new Quad(w, d);
-
-		Geometry geometry = new Geometry("FloorGeom", q);
+		Geometry geometry = new Geometry("Crate", box1);
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
 			key3.setGenerateMips(true);
@@ -47,31 +45,27 @@ public class FlatFloor extends PhysicalEntity {
 				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 				floor_mat.setTexture("ColorMap", tex3);
 			}
+
 			geometry.setMaterial(floor_mat);
+			//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			//geometry.setQueueBucket(Bucket.Transparent);
 		}
-		this.mainNode.attachChild(geometry);
-		geometry.setLocalTranslation((w/2), 0, (d/2)); // Move it into position
-		geometry.setLocalRotation(new Quaternion(0, 0, 1, 1)); // wrong?
-		mainNode.setLocalTranslation(x, y, z); // Move it into position
+		geometry.setLocalTranslation(0, h/2, 0);
+		this.mainNode.attachChild(geometry); //This creates the model bounds!  mainNode.getWorldBound();
+		float rads = (float)Math.toRadians(rotDegrees);
+		mainNode.rotate(0, rads, 0);
+		mainNode.setLocalTranslation(x, y, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
-		//this.simpleRigidBody.setMovable(false);
-
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
-
 	}
 
 
-
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
-		// Do nothing
-
+	public void processByServer(AbstractEntityServer server, float tpf) {
+		super.processByServer(server, tpf);
 	}
 
 

@@ -23,7 +23,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public class MoonbaseWall extends PhysicalEntity {
 
 	public MoonbaseWall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, float d, String tex) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.WALL, "Wall", false, false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.WALL, "Wall", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

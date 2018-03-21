@@ -12,9 +12,10 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
+	
 	public static final boolean DEBUG_SERVER_AVATAR_NOT_MOVING = false;
 	public static final boolean SHOW_AVATAR_WALK_DIR = false;
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean PROFILE_SERVER = false;
 	public static final boolean SHOW_NUM_ENT_UPDATES_SENT = false;
 	public static final boolean DEBUG_CAN_SEE = false;

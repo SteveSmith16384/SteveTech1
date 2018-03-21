@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -15,6 +16,7 @@ import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.InvisibleMapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
+import com.scs.moonbaseassault.entities.SpaceCrate;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 
@@ -154,6 +156,12 @@ public class MapLoader {
 						setParentNodeForSpatial(door);
 						moonbaseAssaultServer.actuallyAddEntity(door);
 						mapCode[x][y] = INT_FLOOR; // So we create a floor below it
+						/* todo - re-add
+						float size = .5f;
+						SpaceCrate crate = new SpaceCrate(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, size, size, size, "Textures/door_lr.png", 0);
+						moonbaseAssaultServer.actuallyAddEntity(crate);
+						moveEntityUntilItHitsSomething(crate, new Vector3f(1, 0, 0));
+						*/
 					} else if (mapCode[x][y] == DOOR_UD) {
 						SlidingDoor door = new SlidingDoor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, 1, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/door_lr.png", 270);
 						setParentNodeForSpatial(door);
@@ -187,6 +195,11 @@ public class MapLoader {
 		moonbaseAssaultServer.actuallyAddEntity(borderBack);
 		InvisibleMapBorder borderFront = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, mapsize, Vector3f.UNIT_X);
 		moonbaseAssaultServer.actuallyAddEntity(borderFront);
+		
+		// Add space crates
+		for (int i=0 ; i<10 ; i++) {
+			// todo
+		}
 
 		Globals.p("Finished.  Created " + this.totalWalls + " walls, " + this.totalFloors + " floors, " + this.totalCeilings + " ceilings");
 	}
@@ -366,6 +379,16 @@ public class MapLoader {
 			}			
 		}
 		throw new RuntimeException("Node " + s + " not found");
+	}
+	
+	
+	private void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
+		/*CollisionResults cr = new CollisionResults(); todo - re-add
+		while (this.moonbaseAssaultServer.getGameNode().collideWith(pe.simpleRigidBody, cr) == 0) {
+			//while (pe.simpleRigidBody.collideWith(this.moonbaseAssaultServer.getGameNode(), cr) == 0) {
+			pe.getMainNode().move(dir.mult(0.1f));
+			cr.clear();
+		}*/
 	}
 }
 

@@ -1,6 +1,7 @@
 package com.scs.stevetech1.entities;
 
 import com.jme3.asset.TextureKey;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -32,8 +33,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	private Node debugNode;	
 
 	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
-			float x, float y, float z, int side, IAvatarModel _zm, float _moveSpeed, float _jumpSpeed) {
-		super(_client, _playerID, _input, eid, side, _zm);
+			float x, float y, float z, int side, IAvatarModel avatarModel, float _moveSpeed, float _jumpSpeed) {
+		super(_client, _playerID, _input, eid, side, avatarModel);
 
 		cam = _cam;
 		hud = _hud;
@@ -59,8 +60,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 
 	private void createDebugBox() {
-		Box box1 = new Box(.5f, .5f, .5f);
-		Geometry g = new Geometry("DebugBox", box1);
+		//Box box1 = new Box(.5f, .5f, .5f);
+		BoundingBox bb = (BoundingBox)super.playerGeometry.getWorldBound();
+		Box box1 = new Box(bb.getXExtent()*2, bb.getYExtent()*2, bb.getZExtent()*2);
+		Geometry geometry = new Geometry("DebugBox", box1);
 		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
@@ -75,12 +78,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			floor_mat.setTexture("ColorMap", tex3);
 		}
 
-		g.setMaterial(floor_mat);
+		geometry.setMaterial(floor_mat);
 
-		g.setLocalTranslation(0, 1f, 0); // Origin is at the bottom
+		geometry.setLocalTranslation(0, bb.getYExtent(), 0); // Origin is at the bottom
 
 		debugNode = new Node();
-		debugNode.attachChild(g);
+		debugNode.attachChild(geometry);
 		game.getGameNode().attachChild(debugNode);
 
 	}

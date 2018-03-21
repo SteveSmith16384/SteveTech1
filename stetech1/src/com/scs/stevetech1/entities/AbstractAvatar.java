@@ -51,8 +51,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	private float jumpForce = 0;
 	protected int currentAnimCode = -1;
 
-	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _anim) {
-		super(_game, eid, 1, "Player", true, true);
+	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _avatarModel) {
+		super(_game, eid, 1, "Player", true);
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -64,7 +64,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		playerID = _playerID;
 		input = _input;
 		side =_side;
-		avatarModel = _anim;
+		avatarModel = _avatarModel;
 
 		playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves

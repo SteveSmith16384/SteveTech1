@@ -21,7 +21,7 @@ public class DebuggingBox extends PhysicalEntity implements IProcessByClient {
 	private float timeLeft = DURATION;
 
 	public DebuggingBox(IEntityController _game, int type, int id, float x, float y, float z, float w, float h, float d) {
-		super(_game, id, type, "DebuggingBox", false, true);
+		super(_game, id, type, "DebuggingBox", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

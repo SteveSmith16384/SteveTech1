@@ -45,7 +45,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	private static BitmapFont font_small;
 
 	public AISoldier(IEntityController _game, int id, float x, float y, float z, int _side) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, "AISoldier", true, true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, "AISoldier", true);
 
 		side = _side;
 		currDir = this.getRandomDirection();

@@ -129,7 +129,6 @@ public class TestGameClientEntityCreator {
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
-			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
 			Crate crate = new Crate(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, 0); // Give def rotation of 0, since it will get rotated anyway
 			return crate;  //crate.getMainNode().getWorldTranslation();
 		}

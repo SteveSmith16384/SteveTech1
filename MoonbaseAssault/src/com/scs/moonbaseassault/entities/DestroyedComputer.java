@@ -22,7 +22,7 @@ public class DestroyedComputer extends PhysicalEntity{
 	private static final float SIZE = 0.9f;
 	
 	public DestroyedComputer(IEntityController _game, int id, float x, float y, float z) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.DESTROYED_COMPUTER, "Destroyed Computer", false, false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.DESTROYED_COMPUTER, "Destroyed Computer", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

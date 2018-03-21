@@ -16,7 +16,7 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 public class SnowTree2 extends PhysicalEntity {
 
 	public SnowTree2(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
-		super(_game, id, UndercoverAgentClientEntityCreator.SNOW_TREE_2, "SnowTree2", false, false);
+		super(_game, id, UndercoverAgentClientEntityCreator.SNOW_TREE_2, "SnowTree2", false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

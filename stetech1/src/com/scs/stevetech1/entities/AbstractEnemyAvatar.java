@@ -18,7 +18,7 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 	//public int side;
 
 	public AbstractEnemyAvatar(IEntityController game, int type, int pid, int eid, float x, float y, float z, IAvatarModel _anim, int _side) {
-		super(game, eid, type, "EnemyAvatar", true, true);
+		super(game, eid, type, "EnemyAvatar", true);
 
 		anim = _anim;
 		//side = _side;

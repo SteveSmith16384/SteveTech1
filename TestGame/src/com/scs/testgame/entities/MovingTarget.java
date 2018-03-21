@@ -34,7 +34,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	private float timeUntilTurn = DURATION;
 
 	public MovingTarget(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, id, TestGameClientEntityCreator.MOVING_TARGET, "MovingTarget", true, true);
+		super(_game, id, TestGameClientEntityCreator.MOVING_TARGET, "MovingTarget", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
