@@ -28,10 +28,10 @@ public class Simulation implements ICollisionListener<String> {
 
 
 	private Simulation() {
-		physicsController = new SimplePhysicsController<String>(this);
+		physicsController = new SimplePhysicsController<String>(this, -1, -1);
 
 		Sphere sphere = new Sphere(8, 8, .5f);
-		Geometry ballGeometry = new Geometry("Sphere", sphere);
+		final Geometry ballGeometry = new Geometry("Sphere", sphere);
 		ballGeometry.setLocalTranslation(0, 10f, 0);
 
 		ISimpleEntity<String> entity = new ISimpleEntity<String>() {

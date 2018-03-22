@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.Collidable;
-import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
@@ -19,11 +18,11 @@ public class SimpleRigidBody<T> implements Collidable {
 	private float aerodynamicness; // 0=stops immediately, 1=goes on forever
 
 	// Gravity
-	private float gravInc; // How powerful is gravity
+	private float gravInc; // How powerful is gravity for this entity
 	public float currentGravInc = 0; // The y-axis change this frame caused by gravity
 
 	//private Spatial spatial;
-	public T userObject; // Attach any object
+	public T userObject; // Attach any object - todo - remove and use ISimpleEntity
 	private ISimpleEntity<T> simpleEntity;
 	private boolean canMove = true; // Set to false to make "kinematic" - todo - rename?
 	protected boolean isOnGround = false;
@@ -32,6 +31,8 @@ public class SimpleRigidBody<T> implements Collidable {
 	public boolean canWalkUpSteps = false;
 
 	private CollisionResults collisionResults = new CollisionResults();
+
+	private SimpleNode<T> parent;
 
 	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean moves, T _tag) {
 		super();
@@ -179,7 +180,6 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				this.oneOffForce.y = oneOffForce.y * aerodynamicness; // Slow down
 			}
-
 		}
 	}
 
@@ -207,7 +207,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	/*
-	 * Returns object they collided with
+	 * Returns object they collided with.  If there are multiple collisions, it could potentially be any of them that are returned.
 	 */
 	private SimpleRigidBody<T> move(Vector3f offset) {
 		if (offset.length() != 0) {
@@ -215,6 +215,13 @@ public class SimpleRigidBody<T> implements Collidable {
 				offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
 			}
 			this.getSpatial().move(offset);
+
+			/*if (SimplePhysicsController.DEBUG) {
+				if (this.getSpatial().getWorldTranslation().y <= 0) {
+					p("Here");
+				}
+			}*/
+
 			SimpleRigidBody<T> wasCollision = checkForCollisions();
 			if (wasCollision != null) {
 				this.getSpatial().move(offset.negateLocal()); // Move back
@@ -235,54 +242,75 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	/*
-	 * Returns object they collided with
+	 * Returns the last object they collided with.
 	 */
 	public SimpleRigidBody<T> checkForCollisions() {
-		/*if (Globals.TEST_NEW_COLLISION_METHOD) {
-			CollisionResults tmpCR = new CollisionResults();
-			int num = this.physicsController.getCollisionListener().getRootNode().collideWith(this.getSpatial().getWorldBound(), tmpCR);
-			for (CollisionResult cr : tmpCR) {
-				
-				//PhysicalEntity e = (PhysicalEntity)cr.getGeometry().getUserData(Globals.ENTITY);
-				if (this.physicsController.getCollisionListener().canCollide(this, (SimpleRigidBody<T>)e.simpleRigidBody)) {
-					Globals.p("Collision between " + this + " and " + e);
+		SimpleRigidBody<T> collidedWith = null;
+		if (SimplePhysicsController.USE_NEW_COLLISION_METHOD) {
+			for(SimpleNode<T> node : this.physicsController.nodes.values()) {
+				SimpleRigidBody<T> tmp = node.getCollisions(this);
+				if (tmp != null) {
+					collidedWith = tmp;
 				}
 			}
-		}*/
+			// Check against moving entities
+			List<SimpleRigidBody<T>> entities = physicsController.movingEntities;
+			synchronized (entities) {
+				// Loop through the entities
+				for (int i=0 ; i<entities.size() ; i++) {
+					SimpleRigidBody<T> e = entities.get(i);
+					if (this.checkSRBvSRB(e)) {
+						collidedWith = e;
+					}
+				}
+			}
 
 
-		SimpleRigidBody<T> collidedWith = null;
-		List<SimpleRigidBody<T>> entities = physicsController.getEntities();
-		synchronized (entities) {
-			// Loop through the entities
-			for (int i=0 ; i<entities.size() ; i++) { // todo - DONT loop through all entities!
-				collisionResults.clear();
-				SimpleRigidBody<T> e = entities.get(i);
-				if (e != this) { // Don't check ourselves
-					if (this.physicsController.getCollisionListener().canCollide(this, e)) {
-						// Check which object is the most complex, and collide that against the bounding box of the other
-						int res = 0;
-						if (this.modelComplexity >= e.modelComplexity) {
-							if (e.getSpatial().getWorldBound() == null) {
-								throw new RuntimeException(e.userObject + " has no bounds");
-							}
-							res = this.collideWith(e.getSpatial().getWorldBound(), collisionResults);
-						} else {
-							if (this.getSpatial().getWorldBound() == null) {
-								throw new RuntimeException(this.userObject + " has no bounds");
-							}
-							res = e.collideWith(this.getSpatial().getWorldBound(), collisionResults);
-						}
-						if (res > 0) {
-							collidedWith = e;
-							this.physicsController.getCollisionListener().collisionOccurred(this, e, collisionResults.getClosestCollision().getContactPoint());
-							//collisionResults.clear();
-						}
+		} else {
+			List<SimpleRigidBody<T>> entities = physicsController.getEntities();
+			synchronized (entities) {
+				// Loop through the entities
+				for (int i=0 ; i<entities.size() ; i++) {
+					SimpleRigidBody<T> e = entities.get(i);
+					if (this.checkSRBvSRB(e)) {
+						collidedWith = e;
 					}
 				}
 			}
 		}
 		return collidedWith;
+	}
+
+
+	/**
+	 * Returns whether the two SRB's collided.
+	 * @param e
+	 * @return
+	 */
+	public boolean checkSRBvSRB(SimpleRigidBody<T> e) {
+		if (e != this) { // Don't check ourselves
+			if (this.physicsController.getCollisionListener().canCollide(this, e)) {
+				collisionResults.clear();
+				// Check which object is the most complex, and collide that against the bounding box of the other
+				int res = 0;
+				if (this.modelComplexity >= e.modelComplexity) {
+					if (e.getSpatial().getWorldBound() == null) {
+						throw new RuntimeException(e.userObject + " has no bounds");
+					}
+					res = this.collideWith(e.getSpatial().getWorldBound(), collisionResults);
+				} else {
+					if (this.getSpatial().getWorldBound() == null) {
+						throw new RuntimeException(this.userObject + " has no bounds");
+					}
+					res = e.collideWith(this.getSpatial().getWorldBound(), collisionResults);
+				}
+				if (res > 0) {
+					this.physicsController.getCollisionListener().collisionOccurred(this, e, collisionResults.getClosestCollision().getContactPoint());
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 
@@ -333,5 +361,19 @@ public class SimpleRigidBody<T> implements Collidable {
 	public boolean canMove() {
 		return this.canMove;
 	}
+
+
+	public void removeFromParent() {
+		if (this.parent != null) {
+			this.parent.remove(this);
+		}
+	}
+
+
+	public static void p(String s) {
+		System.out.println(s);
+	}
+
+
 }
 

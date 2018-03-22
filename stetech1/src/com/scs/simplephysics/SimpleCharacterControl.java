@@ -4,7 +4,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 /*
- * Need this for walkDir
+ * A special version of SimpleRigidBody for walking around.  
  */
 public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 

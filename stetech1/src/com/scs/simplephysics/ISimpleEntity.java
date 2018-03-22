@@ -4,7 +4,7 @@ import com.jme3.scene.Spatial;
 
 public interface ISimpleEntity<T> {
 
-	Spatial getSpatial();
+	Spatial getSpatial(); // todo - change the getBoundingBox?
 	
 	void hasMoved();
 	

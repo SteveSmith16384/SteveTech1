@@ -10,7 +10,6 @@ public class SimpleGameData { // pojo
 
 	// Game statuses
 	public static final int ST_WAITING_FOR_PLAYERS = 0;
-	//public static final int ST_CLEAR_OLD_GAME = 1; // Players typically waiting in spawn area 
 	public static final int ST_DEPLOYING = 2; // Players typically waiting in spawn area 
 	public static final int ST_STARTED = 3; // Players released!
 	public static final int ST_FINISHED = 4;

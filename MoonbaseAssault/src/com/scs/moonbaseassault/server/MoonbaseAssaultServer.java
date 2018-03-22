@@ -35,12 +35,12 @@ import ssmith.util.MyProperties;
 public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
 
 	public static final String GAME_ID = "Moonbase Assault";
-	
+
 	public static final float CEILING_HEIGHT = 1.4f;
 
 	private int scannerData[][];
 	private List<Point> computerSquares;
-
+	public ArrayList<Point>[] deploySquares;// = new ArrayList<Point>()[2];
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
 
 	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode;
@@ -121,8 +121,20 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		float startHeight = .1f;
-		avatar.setWorldTranslation(new Vector3f(3f, startHeight, 3f + (avatar.playerID*2)));
-		Globals.p("Player starting at " + avatar.getWorldTranslation());
+		List<Point> deploySquares = this.deploySquares[avatar.side-1];
+		boolean found = false;
+		for (Point p : deploySquares) {
+			avatar.setWorldTranslation(new Vector3f(p.x, startHeight, p.y));
+			if (avatar.simpleRigidBody.checkForCollisions() == null) {
+				found = true;
+				break;
+			}
+		}
+		if (found) {
+			Globals.p("Player starting at " + avatar.getWorldTranslation());
+		} else {
+			throw new RuntimeException("No space to start!");
+		}
 	}
 
 
@@ -136,8 +148,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		MapLoader map = new MapLoader(this);
 		try {
-			map.loadMap("/serverdata/moonbaseassault.csv");
+			map.loadMap("/serverdata/moonbaseassault_small.csv");
 			scannerData = map.scannerData;
+			this.deploySquares = map.deploySquares;
 
 			int maxSoldiers = 6;
 

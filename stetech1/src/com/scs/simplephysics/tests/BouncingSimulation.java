@@ -25,7 +25,7 @@ public class BouncingSimulation implements ICollisionListener<String> {
 
 
 	private BouncingSimulation() {
-		physicsController = new SimplePhysicsController<String>(this);
+		physicsController = new SimplePhysicsController<String>(this, -1, -1);
 
 		this.createBall();
 		this.createFloor();
@@ -67,14 +67,14 @@ public class BouncingSimulation implements ICollisionListener<String> {
 
 
 	private void createFloor() {
-		Box box = new Box(10, 1, 10);
-		Geometry boxGeometry = new Geometry("box", box);
-		boxGeometry.setLocalTranslation(0, 0, 0);
+		Box floor = new Box(10, 1, 10);
+		final Geometry floorGeometry = new Geometry("floor", floor);
+		floorGeometry.setLocalTranslation(0, 0, 0);
 		ISimpleEntity<String> entity = new ISimpleEntity<String>() {
 
 			@Override
 			public Spatial getSpatial() {
-				return boxGeometry;
+				return floorGeometry;
 			}
 
 			@Override
@@ -83,7 +83,7 @@ public class BouncingSimulation implements ICollisionListener<String> {
 			}
 
 		};
-		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, false, "boxGeometry");
+		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, false, "floorGeometry");
 		this.physicsController.addSimpleRigidBody(srb);
 
 	}

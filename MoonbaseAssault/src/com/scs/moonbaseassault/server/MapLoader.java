@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
@@ -16,7 +18,6 @@ import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.InvisibleMapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
-import com.scs.moonbaseassault.entities.SpaceCrate;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
@@ -36,6 +37,7 @@ public class MapLoader {
 	private int totalWalls, totalFloors, totalCeilings, numCrates;
 	private MoonbaseAssaultServer moonbaseAssaultServer;
 	public int scannerData[][];
+	public ArrayList<Point>[] deploySquares;// = new ArrayList<Point>()[2];
 
 	public Point firstInteriorFloor = null;
 
@@ -43,6 +45,9 @@ public class MapLoader {
 		super();
 
 		moonbaseAssaultServer = _moonbaseAssaultServer;
+		deploySquares = new ArrayList[2];
+		this.deploySquares[0] = new ArrayList<Point>();
+		this.deploySquares[1] = new ArrayList<Point>();
 	}
 
 
@@ -50,7 +55,7 @@ public class MapLoader {
 		String text = new String(Files.readAllBytes(Paths.get(getClass().getResource(s).toURI())));
 		String[] lines = text.split(System.lineSeparator());
 
-		mapsize = Integer.parseInt(lines[0]);
+		mapsize = Integer.parseInt(lines[0].split(",")[0]);
 		mapCode = new int[mapsize][mapsize];
 
 		for (int lineNum=1 ; lineNum<lines.length ; lineNum++) { // Skip line 1
@@ -79,6 +84,12 @@ public class MapLoader {
 							mapCode[x][lineNum-1] = EXT_FLOOR;
 						} else {
 							mapCode[x][lineNum-1] = INT_FLOOR;
+						}
+					} else if (stringAndCode[0].equals("DEPLOY")) {
+						if (stringAndCode[1].equals("1")) {
+							this.deploySquares[0].add(new Point(x, lineNum-1));
+						} else {
+							this.deploySquares[1].add(new Point(x, lineNum-1));
 						}
 					}					
 				}

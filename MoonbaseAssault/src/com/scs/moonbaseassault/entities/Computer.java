@@ -4,21 +4,18 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
-import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
@@ -26,6 +23,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 
 	private static final float SIZE = 0.9f;
 	private float health = 1;
+//	private MoonbaseAssaultServer server;
 	
 	public Computer(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false);

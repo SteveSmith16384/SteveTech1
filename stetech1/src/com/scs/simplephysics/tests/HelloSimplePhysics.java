@@ -72,7 +72,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		cam.lookAt(new Vector3f(3, 1f, 20f), Vector3f.UNIT_Y);
 		viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
-		physicsController = new SimplePhysicsController<Spatial>(this);
+		physicsController = new SimplePhysicsController<Spatial>(this, 5, 2);
 		setUpKeys();
 
 
@@ -101,6 +101,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		setUpLight();
 
 		player = new SimpleCharacterControl<Spatial>(iePlayer, this.physicsController, this.playerModel);
+		this.physicsController.addSimpleRigidBody(player);
 		playerModel.setLocalTranslation(new Vector3f(1f, 4f, 1f)); 
 
 		this.addFloor();
@@ -113,7 +114,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			this.addBox(4f+(i*2), 7f, 9f, 1f, 1f, (i/10f));
 		}
 
-		addModel();
+		addMountainModel();
 		
 		// Add shadows
 		final int SHADOWMAP_SIZE = 1024;
@@ -129,9 +130,9 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 
 	
-	private void addModel() {
+	private void addMountainModel() {
 		// Add a model
-		Spatial model = getAssetManager().loadModel("Models/Holiday/Terrain.blend");
+		final Spatial model = getAssetManager().loadModel("Models/Holiday/Terrain.blend");
 		model.setLocalTranslation(13, 0, 13);
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(model);
@@ -149,6 +150,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		};
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(hillEntity, physicsController, false, model);		
+		this.physicsController.addSimpleRigidBody(srb);
 		srb.setModelComplexity(1);
 	}
 	
@@ -165,7 +167,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		tex3.setWrap(WrapMode.Repeat);
 		floorMaterial.setTexture("ColorMap", tex3);
 
-		Geometry floorGeometry = new Geometry("Floor", floor);
+		final Geometry floorGeometry = new Geometry("Floor", floor);
 		floorGeometry.setMaterial(floorMaterial);
 		floorGeometry.setLocalTranslation(0, -0.1f, 0);
 		floorGeometry.setShadowMode(ShadowMode.Receive);
@@ -184,6 +186,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		};
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floorEntity, physicsController, false, floorGeometry);
+		this.physicsController.addSimpleRigidBody(srb);
 	}
 
 
@@ -197,7 +200,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		tex3.setWrap(WrapMode.Repeat);
 		wallMaterial.setTexture("ColorMap", tex3);
 
-		Geometry wallGeometry = new Geometry("Wall", floor);
+		final Geometry wallGeometry = new Geometry("Wall", floor);
 		wallGeometry.setMaterial(wallMaterial);
 		wallGeometry.setLocalTranslation(3, 2.5f, 20);
 		wallGeometry.setShadowMode(ShadowMode.CastAndReceive);
@@ -216,6 +219,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		};
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(wallEntity, physicsController, false, wallGeometry);
+		this.physicsController.addSimpleRigidBody(srb);
 	}
 
 
@@ -230,7 +234,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		tex3.setWrap(WrapMode.Repeat);
 		material.setTexture("ColorMap", tex3);
 
-		Geometry boxGeometry = new Geometry("Box", box);
+		final Geometry boxGeometry = new Geometry("Box", box);
 		boxGeometry.setMaterial(material);
 		boxGeometry.setLocalTranslation(x, y, z);
 		boxGeometry.setShadowMode(ShadowMode.CastAndReceive);
@@ -250,6 +254,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		};
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(boxEntity, physicsController, true, boxGeometry);
+		this.physicsController.addSimpleRigidBody(srb);
 		srb.setBounciness(bounciness);
 	}
 
@@ -264,7 +269,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		tex3.setWrap(WrapMode.Repeat);
 		material.setTexture("ColorMap", tex3);
 
-		Geometry ballGeometry = new Geometry("Sphere", sphere);
+		final Geometry ballGeometry = new Geometry("Sphere", sphere);
 		ballGeometry.setMaterial(material);
 		ballGeometry.setLocalTranslation(x, y, z);
 		ballGeometry.setShadowMode(ShadowMode.Cast);
@@ -287,6 +292,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		srb.setGravity(grav);
 		srb.setAerodynamicness(airRes);
 		srb.setBounciness(bounce);
+		this.physicsController.addSimpleRigidBody(srb);
 	}
 
 
@@ -424,7 +430,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b, Vector3f point) {
-		p("Collision between " + a.userObject + " and " + b.userObject);
+		//p("Collision between " + a.userObject + " and " + b.userObject);
 
 	}
 
