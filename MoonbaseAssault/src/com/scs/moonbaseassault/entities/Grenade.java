@@ -11,6 +11,7 @@ import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -20,9 +21,9 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 public class Grenade extends AbstractBullet {
-	
+
 	private static final float DURATION = 3f;
-	
+
 	private float timeLeft = DURATION;
 
 	public Grenade(IEntityController _game, int id, IEntityContainer<Grenade> owner, int _side, ClientData _client) {
@@ -58,17 +59,35 @@ public class Grenade extends AbstractBullet {
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (launched) {
 			super.processByServer(server, tpf_secs);
-			Globals.p("Grenade Y:" + this.getWorldTranslation().y);
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft <= 0) {
-				this.remove();
-				
+
+			if (this.checkForExploded(tpf_secs)) {
 				ExplosionEffectEntity expl = new ExplosionEffectEntity(server, server.getNextEntityID(), this.getWorldTranslation());
 				server.addEntity(expl);
-
 				// todo - damage surrounding entities
+
 			}
 		}
+	}
+
+
+	@Override
+	public void processByClient(AbstractGameClient client, float tpf_secs) {
+		if (launched) {
+			simpleRigidBody.process(tpf_secs);
+			
+			this.checkForExploded(tpf_secs);			
+		}
+	}
+
+
+	private boolean checkForExploded(float tpf_secs) {
+		//Globals.p("Grenade Y:" + this.getWorldTranslation().y);
+		this.timeLeft -= tpf_secs;
+		if (this.timeLeft <= 0) {
+			this.remove();
+			return true;
+		}
+		return false;
 	}
 
 

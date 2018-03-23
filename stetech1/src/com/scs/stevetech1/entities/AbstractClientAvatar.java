@@ -6,14 +6,12 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
-import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
-import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
@@ -27,10 +25,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	public IHUD hud;
 	public Camera cam;
-	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	private float lastAvatarDiff = 0;
-	private Node debugNode;	
+	private Spatial debugNode;	
 
 	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
 			float x, float y, float z, int side, IAvatarModel avatarModel, float _moveSpeed, float _jumpSpeed) {
@@ -43,10 +40,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
-		//syncPos = new InstantPositionAdjustment();
-		//syncPos = new MoveSlowlyToCorrectPosition();
-		//syncPos = new AdjustBasedOnDistance();
-		syncPos = new AdjustByFractionOfDistance();
 		/*
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		simplePlayerControl.setJumpForce(jumpForce);
@@ -62,8 +55,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	private void createDebugBox() {
 		//Box box1 = new Box(.5f, .5f, .5f);
 		BoundingBox bb = (BoundingBox)super.playerGeometry.getWorldBound();
-		Box box1 = new Box(bb.getXExtent()*2, bb.getYExtent()*2, bb.getZExtent()*2);
-		Geometry geometry = new Geometry("DebugBox", box1);
+		//Box box1 = new Box(bb.getXExtent()*2, bb.getYExtent()*2, bb.getZExtent()*2);
+		Box box1 = new Box(.5f, .1f, .5f);
+		debugNode = new Geometry("DebugBox", box1);
 		TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
@@ -77,13 +71,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 			floor_mat.setTexture("ColorMap", tex3);
 		}
+		debugNode.setMaterial(floor_mat);
 
-		geometry.setMaterial(floor_mat);
+		debugNode.setLocalTranslation(0, box1.yExtent/2, 0); // Origin is at the bottom
 
-		geometry.setLocalTranslation(0, bb.getYExtent(), 0); // Origin is at the bottom
-
-		debugNode = new Node();
-		debugNode.attachChild(geometry);
+		//debugNode = new Node();
+		//debugNode.attachChild(geometry);
 		game.getGameNode().attachChild(debugNode);
 
 	}
@@ -152,7 +145,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 					// They're so far out, just move them
 					this.setWorldTranslation(serverPositionData.getMostRecent().position); 
 				} else {
-					this.syncPos.adjustPosition(this, offset, tpf_secs);
+					//this.syncPos.adjustPosition(this, offset, tpf_secs);
+					
+					//pe.adjustWorldTranslation(offset);
+					adjustWorldTranslation(offset.mult(.5f));
+
 				}
 			}
 		}
@@ -172,12 +169,14 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	@Override
 	protected boolean acceptInput() {
+		/*
 		// Don't allow client to manually move if too out of sync with server
 		boolean b = lastAvatarDiff < 0.1f; // todo - get more scientific distance
 		if (!b) {
 			Globals.p("Too far away - not accepting input");
 		}
-		return b; 
+		return b;*/
+		return true;
 	}
 
 }

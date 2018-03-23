@@ -142,7 +142,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 				Vector3f v = this.currentAvatar.getWorldTranslation();
 				player = new Point((int)v.x, (int)v.z);
 			}
-			this.hud.hudMapImage.mapImageTex.setOtherData(player, units, computers);
+			//this.hud.hudMapImage.mapImageTex.setOtherData(player, units, computers);
+			this.hud.setOtherData(player, units, computers);
 		}
 	}
 
@@ -151,7 +152,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	protected void handleMessage(MyAbstractMessage message) {
 		if (message instanceof HudDataMessage) {
 			HudDataMessage hdm = (HudDataMessage) message;
-			this.hud.hudMapImage.mapImageTex.setMapData(hdm.scannerData);
+			//this.hud.hudMapImage.mapImageTex.setMapData(hdm.scannerData);
+			this.hud.setMapData(hdm.scannerData);
 		} else {
 			super.handleMessage(message);
 		}
@@ -272,10 +274,10 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
-				SmallExplosionModel ex = new SmallExplosionModel(this.getAssetManager(), this.getRenderManager());
+				/*SmallExplosionModel ex = new SmallExplosionModel(this.getAssetManager(), this.getRenderManager());
 				ex.setLocalTranslation(0, 0, 0);
 				ex.process();
-				this.getGameNode().attachChild(ex);
+				this.getGameNode().attachChild(ex);*/
 			}
 		} else {
 			super.onAction(name, value, tpf);

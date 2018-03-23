@@ -27,7 +27,7 @@ public class SmallExplosionModel extends Node {
 		this.createFlame(assetManager);
 		this.createFlash(assetManager);
 
-		explosionEffect.scale(.2f);
+		explosionEffect.scale(.01f);
 		explosionEffect.updateModelBound();
 		
 		this.attachChild(explosionEffect);
@@ -61,7 +61,7 @@ public class SmallExplosionModel extends Node {
 		flame.setEndSize(2f);
 		flame.setShape(new EmitterSphereShape(Vector3f.ZERO, 1f));
 		flame.setParticlesPerSec(0);
-		flame.setGravity(0, -5, 0);
+		flame.setGravity(0, -10, 0);
 		flame.setLowLife(.4f);
 		flame.setHighLife(.5f);
 		flame.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 7, 0));

@@ -10,11 +10,11 @@ public class HUDMapImage extends Picture {
 
 	public MapImageTexture mapImageTex;
 	
-	public HUDMapImage(AssetManager assetManager) {
+	public HUDMapImage(AssetManager assetManager, int mapSize) {
 		super("HUDMapImage");
 		
-		int w = 65; // 1 pixel per map square
-		int h = 65;
+		int w = mapSize; // 1 pixel per map square
+		int h = mapSize;
 		
 		mapImageTex = new MapImageTexture(w, h);
 		

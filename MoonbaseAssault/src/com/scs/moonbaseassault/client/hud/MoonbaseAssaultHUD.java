@@ -1,5 +1,6 @@
 package com.scs.moonbaseassault.client.hud;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	private AbstractGameClient game;
 	private static BitmapFont font_small;
 	
-	public HUDMapImage hudMapImage;
+	private HUDMapImage hudMapImage;
 
 	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
 
@@ -60,7 +61,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 
 		//this.addTargetter();
 		
-		hudMapImage = addMapImage();
+		//hudMapImage = addMapImage();
 
 		if (Globals.DEBUG_HUD) {
 			for (int i=0; i<100 ; i+=10) {
@@ -296,7 +297,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 
 	private void addTargetter() {
 		Picture targetting_reticule = new Picture("HUD Picture");
-		targetting_reticule.setImage(game.getAssetManager(), "Textures/circular_recticle.png", true);
+		targetting_reticule.setImage(game.getAssetManager(), "Textures/centre_crosshairs.png", true);
 		float crosshairs_w = cam.getWidth()/10;
 		targetting_reticule.setWidth(crosshairs_w);
 		float crosshairs_h = cam.getHeight()/10;
@@ -306,15 +307,32 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	}
 
 
-	private HUDMapImage addMapImage() {
-		float w = cam.getWidth()/5;
-		float h = cam.getHeight()/5;
-		HUDMapImage hmi = new HUDMapImage(game.getAssetManager());
-		hmi.setWidth(w);
-		hmi.setHeight(h);
-		hmi.setLocalTranslation((cam.getWidth() - w)/2, cam.getHeight() *.1f, 0);
-		this.attachChild(hmi);
-		return hmi;
+	public void setMapData(int scannerData[][]) {
+		if (this.hudMapImage == null) {
+			this.addMapImage(scannerData.length);
+			this.hudMapImage.mapImageTex.setMapData(scannerData);
+		}
+		
+	}
+	
+	
+	public void setOtherData(Point _player, List<Point> _units, List<Point> _computers) {
+		if (this.hudMapImage != null) {
+			this.hudMapImage.mapImageTex.setOtherData(_player, _units, _computers);
+		}
+		
+	}
+	
+	
+	private HUDMapImage addMapImage(int mapSize) {
+		float w = cam.getWidth()/4;
+		float h = cam.getHeight()/4;
+		hudMapImage = new HUDMapImage(game.getAssetManager(), mapSize);
+		hudMapImage.setWidth(w);
+		hudMapImage.setHeight(h);
+		hudMapImage.setLocalTranslation((cam.getWidth() - w)/2, cam.getHeight() *.1f, 0);
+		this.attachChild(hudMapImage);
+		return hudMapImage;
 	}
 	
 	

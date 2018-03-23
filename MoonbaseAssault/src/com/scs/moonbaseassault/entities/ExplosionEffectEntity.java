@@ -12,7 +12,10 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class ExplosionEffectEntity extends PhysicalEntity implements IProcessByClient {
 
+	private static final float DURATION = 3;
+	
 	private SmallExplosionModel expl;
+	private float timeLeft = DURATION;
 	
 	public ExplosionEffectEntity(IEntityController _game, int id, Vector3f pos) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.EXPLOSION_EFFECT, "Explosion", true);
@@ -30,7 +33,10 @@ public class ExplosionEffectEntity extends PhysicalEntity implements IProcessByC
 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
-		// todo - remove after a while
+		timeLeft -= tpf_secs;
+		if (timeLeft <= 0) {
+			this.remove();
+		}
 	}
 
 }

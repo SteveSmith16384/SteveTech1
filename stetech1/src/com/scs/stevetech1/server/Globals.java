@@ -15,7 +15,7 @@ public class Globals {
 	// Lots of consts for specific debugging output
 	public static final boolean SHOW_IF_TOO_SLOW = true;
 	public static final boolean USE_BOXES_FOR_SOLDIER = true;
-	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = true;
+	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
 
 	public static final boolean SHOW_AVATAR_BOUNDS = false;

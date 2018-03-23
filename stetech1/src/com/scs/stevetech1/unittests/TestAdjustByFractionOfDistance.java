@@ -4,8 +4,6 @@ import org.junit.Test;
 
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
-import com.scs.stevetech1.client.syncposition.AdjustByFractionOfDistance;
-import com.scs.stevetech1.client.syncposition.ICorrectClientEntityPosition;
 import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.PositionCalculator;
@@ -25,7 +23,7 @@ public class TestAdjustByFractionOfDistance {
 
 		PositionCalculator serverPositionData = new PositionCalculator(false, -1);
 		PositionCalculator clientAvatarPositionData = new PositionCalculator(false, -1);
-
+/*
 		ICorrectClientEntityPosition ipa = new AdjustByFractionOfDistance();
 
 		for (int t=0 ; t<10000 ; t+=100) {
@@ -54,7 +52,7 @@ public class TestAdjustByFractionOfDistance {
 			Globals.p("Server pos at " + t + ": " + serverEntity.getWorldTranslation());
 
 		}
-		
+		*/
 	}
 
 }
