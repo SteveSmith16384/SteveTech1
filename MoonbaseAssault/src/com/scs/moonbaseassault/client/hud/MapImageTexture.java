@@ -13,9 +13,13 @@ public class MapImageTexture extends PaintableImage {
 	private Point player;
 	private List<Point> units;
 	private List<Point> computers;
+	private int pixelSize;
 
-	public MapImageTexture(int w, int h) {
-		super(w, h);
+	public MapImageTexture(int pxlw, int pxlh, int _pixelSize) {
+		super(pxlw, pxlh);
+		
+		pixelSize = _pixelSize;
+		
 		refreshImage();
 	}
 
@@ -44,7 +48,7 @@ public class MapImageTexture extends PaintableImage {
 			for (int y=0 ; y<data.length ; y++) {
 				for (int x=0 ; x<data[y].length ; x++) {
 					if (data[y][x] == MapLoader.WALL) {
-						g.fillRect(data.length-y, data.length-x, 1, 1);
+						g.fillRect((data.length-y)*pixelSize, (data.length-x)*pixelSize, pixelSize, pixelSize);
 					}
 				}
 			}
@@ -53,7 +57,7 @@ public class MapImageTexture extends PaintableImage {
 
 				for (int i=0 ; i<units.size() ; i++) {
 					Point p = units.get(i);
-					g.fillRect(data.length-p.y, data.length-p.x, 2, 2);
+					g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
 				}			
 			}
 			if (computers != null) {
@@ -61,12 +65,12 @@ public class MapImageTexture extends PaintableImage {
 
 				for (int i=0 ; i<computers.size() ; i++) {
 					Point p = computers.get(i);
-					g.fillRect(data.length-p.y, data.length-p.x, 1, 1);
+					g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
 				}			
 			}
 			if (player != null) {
 				g.setColor(new Color(1f, 1f, 1f, 1f));
-				g.fillRect(data.length-player.y, data.length-player.x, 2, 2);
+				g.fillRect((data.length-player.y)*pixelSize, (data.length-player.x)*pixelSize, pixelSize, pixelSize);
 			}
 		}
 	}

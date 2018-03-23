@@ -23,7 +23,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 
 	private static final float SIZE = 0.9f;
 	private float health = 1;
-//	private MoonbaseAssaultServer server;
+	private MoonbaseAssaultServer server;
 	
 	public Computer(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false);
@@ -57,6 +57,8 @@ public class Computer extends PhysicalEntity implements IDamagable {
 			}
 
 			geometry.setMaterial(floor_mat);
+		} else {
+			server = (MoonbaseAssaultServer)game;
 		}
 		this.mainNode.attachChild(geometry);
 		geometry.setLocalTranslation(w/2, h/2, d/2);
@@ -74,7 +76,8 @@ public class Computer extends PhysicalEntity implements IDamagable {
 		Globals.p("Computer hit!");
 		this.health -= amt;
 		if (this.health <= 0) {
-			// todo - inc score
+			server.computerDestroyed();
+			
 			this.remove();
 			
 			Vector3f pos = this.getWorldTranslation();

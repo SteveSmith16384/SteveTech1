@@ -132,25 +132,27 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	// Client Avatars have their own special position calculator
 	@Override
 	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
-		if (Globals.ONLY_ADJUST_CLIENT_ON_MOVE == false || super.playerWalked) { // Only adjust us if the player tried to move?
-			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
-			if (offset != null) {
-				float diff = offset.length();
-				if (Globals.SHOW_SERVER_CLIENT_AVATAR_DIST) {
-					Globals.p("Server and client avatars dist: " + diff);
-				}
-				lastAvatarDiff = diff;
-				if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
-					Globals.p("Server and client avatars very far apart, forcing move: " + diff);
-					// They're so far out, just move them
-					this.setWorldTranslation(serverPositionData.getMostRecent().position); 
-				} else {
-					//this.syncPos.adjustPosition(this, offset, tpf_secs);
-					
-					//pe.adjustWorldTranslation(offset);
-					adjustWorldTranslation(offset.mult(.5f));
+		if (Globals.ONLY_ADJUST_CLIENT_ON_MOVE && !super.playerWalked) { // Only adjust us if the player tried to move?
+			return;
+		}
+		if (Globals.TURN_OFF_CLIENT_POS_ADJ) {
+			return;
+		}
+		Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
+		if (offset != null) {
+			float diff = offset.length();
+			if (Globals.SHOW_SERVER_CLIENT_AVATAR_DIST) {
+				Globals.p("Server and client avatars dist: " + diff);
+			}
+			lastAvatarDiff = diff;
+			if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
+				Globals.p("Server and client avatars very far apart, forcing move: " + diff);
+				// They're so far out, just move them
+				this.setWorldTranslation(serverPositionData.getMostRecent().position); 
+			} else {
+				//pe.adjustWorldTranslation(offset);
+				adjustWorldTranslation(offset.mult(.5f));
 
-				}
 			}
 		}
 	}

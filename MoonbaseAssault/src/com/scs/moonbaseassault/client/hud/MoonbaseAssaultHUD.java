@@ -59,10 +59,10 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 
 		super.setLocalTranslation(0, 0, 0);
 
-		//this.addTargetter();
+		if (!Globals.HIDE_BELLS_WHISTLES) {
+			this.addTargetter();
+		}
 		
-		//hudMapImage = addMapImage();
-
 		if (Globals.DEBUG_HUD) {
 			for (int i=0; i<100 ; i+=10) {
 				BitmapText deleteme = new BitmapText(font_small, false);
@@ -325,12 +325,12 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	
 	
 	private HUDMapImage addMapImage(int mapSize) {
-		float w = cam.getWidth()/4;
-		float h = cam.getHeight()/4;
-		hudMapImage = new HUDMapImage(game.getAssetManager(), mapSize);
-		hudMapImage.setWidth(w);
-		hudMapImage.setHeight(h);
-		hudMapImage.setLocalTranslation((cam.getWidth() - w)/2, cam.getHeight() *.1f, 0);
+		float pxlw = cam.getWidth()/5;
+		float pxlh = cam.getHeight()/5;
+		hudMapImage = new HUDMapImage(game.getAssetManager(), (int)pxlw, (int)pxlh, mapSize);
+		hudMapImage.setWidth(pxlw);
+		hudMapImage.setHeight(pxlh);
+		hudMapImage.setLocalTranslation((cam.getWidth() - pxlw)/2, cam.getHeight() *.1f, 0);
 		this.attachChild(hudMapImage);
 		return hudMapImage;
 	}

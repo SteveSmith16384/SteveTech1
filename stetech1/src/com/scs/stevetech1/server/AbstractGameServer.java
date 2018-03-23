@@ -6,14 +6,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.scs.simplephysics.SimplePhysicsController;
-import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
-import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
+import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.GameOverMessage;
@@ -60,7 +58,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	public void simpleInitApp() {
 		super.simpleInitApp();
 
-		gameData = new SimpleGameData();
+		//gameData = new SimpleGameData();
 		this.gameStatusSystem = new ServerGameStatusSystem(this);
 		this.pingSystem = new ServerPingSystem(this);
 
@@ -310,5 +308,8 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	}
 
 
+	public void playerKilled(AbstractServerAvatar avatar) {
+		// Override if req
+	}
 }
 

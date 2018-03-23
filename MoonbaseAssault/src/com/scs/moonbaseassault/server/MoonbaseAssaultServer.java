@@ -7,27 +7,22 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
-import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
-import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
+import com.scs.moonbaseassault.shared.MoonbaseAssaultGameData;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.IAbility;
 
 import ssmith.astar.IAStarMapInterface;
 import ssmith.util.MyProperties;
@@ -40,9 +35,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	private int scannerData[][];
 	private List<Point> computerSquares;
-	public ArrayList<Point>[] deploySquares;// = new ArrayList<Point>()[2];
+	public ArrayList<Point>[] deploySquares;
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
-
+	private MoonbaseAssaultGameData gameData;
 	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode;
 
 
@@ -140,6 +135,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected void createGame() {
+		super.gameData = new MoonbaseAssaultGameData();
+		
 		this.getGameNode().attachChild(subNodeX0Y0);
 		this.getGameNode().attachChild(subNodeX1Y0);
 		this.getGameNode().attachChild(subNodeX0Y1);
@@ -244,7 +241,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected int getWinningSide() {
-		int highestScore = -1;
+		return 2;
+	/*	int highestScore = -1;
 		int winningSide = -1;
 		boolean draw = false;
 		for(ClientData c : super.clients.values()) {
@@ -259,10 +257,10 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		if (draw) {
 			return -1;
 		}
-		return winningSide;
+		return winningSide;*/
 	}
 
-
+	
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		return this.collisionValidator.canCollide(a, b);
@@ -348,6 +346,29 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		return this.computerSquares;
 	}
 
+	
+	public void computerDestroyed() {
+		this.gameData.pointsForSide[1] += 10;
+		checkForWinner();
+	}
+
+
+	@Override
+	public void playerKilled(AbstractServerAvatar avatar) {
+		super.playerKilled(avatar);
+		
+		if (avatar.side == 1) {
+			this.gameData.pointsForSide[2] += 10;
+			checkForWinner();
+		}
+	}
+	
+	
+	private void checkForWinner() {
+		// todo
+	}
+	
+	
 
 	// AStar --------------------------------
 

@@ -130,6 +130,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		Globals.p("Player " + this.getID() + " died: " + reason);
 		this.alive = false;
 		this.restartTimeSecs = server.gameOptions.avatarRestartTimeSecs;
+		server.playerKilled(this);
 		server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, killer));
 
 		this.currentAnimCode = ANIM_DIED; // Send death as an anim, so it gets scheduled and is not shown straight away
