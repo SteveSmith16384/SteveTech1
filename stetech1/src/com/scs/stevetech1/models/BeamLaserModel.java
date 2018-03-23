@@ -3,7 +3,7 @@ package com.scs.stevetech1.models;
 import java.util.ArrayList;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bounding.BoundingSphere;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
@@ -35,7 +35,7 @@ public class BeamLaserModel extends Node {
 		super("Laser");
 
 		cyl = new Cylinder(5, 10, 0.03f, start.distance(end), true);
-		cyl.setBound(new BoundingSphere());
+		cyl.setBound(new BoundingBox());
 		cyl.updateBound();
 		g = new Geometry();
 		g.setMesh(cyl);

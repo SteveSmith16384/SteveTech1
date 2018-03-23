@@ -1,7 +1,7 @@
 package com.scs.moonbaseassault.entities;
 
 import com.jme3.asset.TextureKey;
-import com.jme3.bounding.BoundingSphere;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
@@ -47,7 +47,7 @@ public class Grenade extends AbstractBullet {
 			ball_geo.setMaterial(floor_mat);
 		}
 
-		ball_geo.setModelBound(new BoundingSphere());
+		ball_geo.setModelBound(new BoundingBox());
 		this.mainNode.attachChild(ball_geo);
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 

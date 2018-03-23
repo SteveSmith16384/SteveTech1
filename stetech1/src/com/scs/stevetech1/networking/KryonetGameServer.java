@@ -24,6 +24,7 @@ import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage.Command;
 import com.scs.stevetech1.netmessages.GenericStringMessage;
+import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
@@ -143,6 +144,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(PlaySoundMessage.class);
 		kryo.register(ModelBoundsMessage.class);
 		kryo.register(GenericStringMessage.class);
+		kryo.register(JoinGameFailedMessage.class);
 	}
 
 

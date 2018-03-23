@@ -156,8 +156,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	}
 
 
-	public abstract boolean doWeHaveSpaces();
-
 	/*
 	public ArrayList<RayCollisionData> checkForEntityCollisions_UNUSED(Ray r) { // todo - is this use?
 		CollisionResults res = new CollisionResults();

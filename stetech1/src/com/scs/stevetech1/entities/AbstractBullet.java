@@ -100,7 +100,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	}
 
 	
-	protected abstract void createSimpleRigidBody(Vector3f dir);
+	protected abstract void createSimpleRigidBody(Vector3f dir); // todo - rename to createModel or something
 	
 
 	@Override

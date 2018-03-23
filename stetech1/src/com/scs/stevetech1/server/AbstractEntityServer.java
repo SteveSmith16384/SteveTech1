@@ -94,7 +94,7 @@ ICollisionListener<PhysicalEntity> {
 
 		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 15, gravity, aerodynamicness); // todo - get 15,15 params from parent
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1, gravity, aerodynamicness); // todo - get 15,1 params from parent
 
 		loopTimer = new FixedLoopTime(tickrateMillis);
 
@@ -279,14 +279,12 @@ ICollisionListener<PhysicalEntity> {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game ID"));
 			return;
 		}
-		int side = getSide(client);
-		if (side < 0) {
-			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces"));
-			//todo? this.clientsToRemove.add(client);
+		if (!this.doWeHaveSpaces()) {
+			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces available"));
 			return;
 		}
 
-		client.side = side; //getSide(client);
+		client.side = getSide(client);
 		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.playerName, client.side);
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
 		client.avatar = createPlayersAvatar(client);
@@ -295,6 +293,9 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
+	public abstract boolean doWeHaveSpaces();
+
+	
 	protected void removeOldGame() {
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Removing all entities");
@@ -359,7 +360,7 @@ ICollisionListener<PhysicalEntity> {
 	/**
 	 * Determine the side for a player
 	 * @param client
-	 * @return The side, or -1 if no spaces available
+	 * @return The side
 	 */
 	public abstract int getSide(ClientData client);
 

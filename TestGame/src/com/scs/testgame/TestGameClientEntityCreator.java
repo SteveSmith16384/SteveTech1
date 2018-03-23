@@ -166,8 +166,6 @@ public class TestGameClientEntityCreator {
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f) msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
-			Quaternion quat = (Quaternion)msg.data.get("quat"); // todo - use this
-			//float rot = (Float)msg.data.get("rot");
 			MovingTarget laser = new MovingTarget(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, 0);
 			return laser;
 		}

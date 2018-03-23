@@ -196,7 +196,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		float heightDiff = bTop - aBottom;
 
 		if (heightDiff >= 0 && heightDiff <= 0.15f) { // todo - make a setting
-			//Globals.p("Going up step: " + heightDiff); // todo - remove line
+			//p("Going up step: " + heightDiff);
 			this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
 			return true;
 		}
@@ -366,6 +366,9 @@ public class SimpleRigidBody<T> implements Collidable {
 	public void removeFromParent() {
 		if (this.parent != null) {
 			this.parent.remove(this);
+			if (this.parent.getNumChildren() == 0) {
+				this.physicsController.nodes.remove(this.parent.id);
+			}
 		}
 	}
 

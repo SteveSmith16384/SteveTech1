@@ -195,4 +195,10 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		this.sendStatusUpdateMessage(true);
 	}
 
+
+	@Override
+	protected boolean acceptInput() {
+		return true;
+	}
+
 }

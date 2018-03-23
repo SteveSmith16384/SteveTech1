@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
 
+import jdk.nashorn.internal.objects.Global;
+
 public class SimplePhysicsController<T> {
 
 	public static final boolean USE_NEW_COLLISION_METHOD = true;
@@ -26,7 +28,7 @@ public class SimplePhysicsController<T> {
 	private float aerodynamicness;
 
 	// Efficiency
-	private int nodeSizeXZ, nodeSizeY;
+	private int nodeSizeXZ, nodeSizeY; // The size of the node collections
 	public HashMap<String, SimpleNode<T>> nodes;
 	public ArrayList<SimpleRigidBody<T>> movingEntities;
 
@@ -35,6 +37,14 @@ public class SimplePhysicsController<T> {
 	}
 
 
+	/**
+	 * 
+	 * @param _collListener
+	 * @param _nodeSizeXZ
+	 * @param _nodeSizeY
+	 * @param _gravity
+	 * @param _aerodynamicness
+	 */
 	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSizeXZ, int _nodeSizeY, float _gravity, float _aerodynamicness) {
 		super();
 
@@ -82,15 +92,19 @@ public class SimplePhysicsController<T> {
 			this.entities.add(srb);
 		}
 		if (USE_NEW_COLLISION_METHOD) {
-			if (!srb.canMove() && this.nodeSizeXZ > 0 && this.nodeSizeY > 0) {
-				BoundingBox bb = (BoundingBox)srb.getSpatial().getWorldBound();
+			BoundingBox bb = (BoundingBox)srb.getSpatial().getWorldBound();
+			boolean tooBig = bb.getVolume() > (nodeSizeXZ * nodeSizeXZ * nodeSizeY);
+			if (tooBig) {
+				p(this.toString() + " is too big"); // todo - remove
+			}
+			if (!srb.canMove() && this.nodeSizeXZ > 0 && this.nodeSizeY > 0 && !tooBig) {
 				int x = (int)bb.getCenter().x / this.nodeSizeXZ;
 				int y = (int)bb.getCenter().y / this.nodeSizeY;
 				int z = (int)bb.getCenter().z / this.nodeSizeXZ;
 
 				String id = x + "_" + y + "_" + z;
 				if (!this.nodes.containsKey(id)) {
-					SimpleNode<T> node = new SimpleNode<T>();
+					SimpleNode<T> node = new SimpleNode<T>(id);
 					this.nodes.put(id, node);
 				}
 				SimpleNode<T> n = this.nodes.get(id);
@@ -138,5 +152,11 @@ public class SimplePhysicsController<T> {
 	public float getAerodynamicness() {
 		return this.aerodynamicness;
 	}
+
+
+	public static void p(String s) {
+		System.out.println(s);
+	}
+
 
 }

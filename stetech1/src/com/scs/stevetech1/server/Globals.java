@@ -8,11 +8,14 @@ import ssmith.lang.Functions;
 
 public class Globals {
 	
+	public static final boolean HIDE_BELLS_WHISTLES = true;
 	public static final boolean RECORD_VID = false;
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
+	public static final boolean SHOW_AVATAR_BOUNDS = true;
+	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean PROFILE_SERVER = false;
 	
 	public static final boolean TEST_NEW_COLLISION_METHOD = false;

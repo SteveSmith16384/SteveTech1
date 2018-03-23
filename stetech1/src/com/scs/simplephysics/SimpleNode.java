@@ -13,8 +13,10 @@ public class SimpleNode<T> { //extends ArrayList<SimpleRigidBody<T>> {
 	private List<SimpleRigidBody<T>> entities = new ArrayList<>();
 	private Vector3f min = new Vector3f();
 	private Vector3f max = new Vector3f();
+	public String id;
 
-	public SimpleNode() {
+	public SimpleNode(String _id) {
+		id = _id;
 		resetMinMax();
 	}
 
@@ -102,6 +104,11 @@ public class SimpleNode<T> { //extends ArrayList<SimpleRigidBody<T>> {
 			}
 		}
 		return collidedWith;
+	}
+	
+	
+	public int getNumChildren() {
+		return this.entities.size();
 	}
 
 }

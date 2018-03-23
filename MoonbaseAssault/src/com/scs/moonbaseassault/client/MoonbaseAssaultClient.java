@@ -10,10 +10,10 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
-import com.scs.moonbaseassault.MoonbaseAssaultStaticData;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
+import com.scs.moonbaseassault.models.SmallExplosion;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
@@ -89,7 +89,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 		entityCreator = new MoonbaseAssaultClientEntityCreator();
 		collisionValidator = new MoonbaseAssaultCollisionValidator();
-		
+
 		this.getViewPort().setBackgroundColor(ColorRGBA.Black);
 
 		//getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
@@ -215,7 +215,9 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
 			removeCurrentHUDTextImage();
-			//todo - re-add currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
+			if (!Globals.HIDE_BELLS_WHISTLES) {
+				currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
+			}
 			break;
 		case SimpleGameData.ST_DEPLOYING:
 			removeCurrentHUDTextImage();
@@ -246,13 +248,17 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 	@Override
 	protected Spatial getPlayersWeaponModel() {
-		Spatial model = assetManager.loadModel("Models/pistol/pistol.blend");
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
-		model.scale(0.1f);
-		// x moves l-r, z moves further away
-		//model.setLocalTranslation(-0.35f, -.3f, .5f);
-		model.setLocalTranslation(-0.20f, -.2f, 0.4f);
-		return model;
+		if (!Globals.HIDE_BELLS_WHISTLES) {
+			Spatial model = assetManager.loadModel("Models/pistol/pistol.blend");
+			JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
+			model.scale(0.1f);
+			// x moves l-r, z moves further away
+			//model.setLocalTranslation(-0.35f, -.3f, .5f);
+			model.setLocalTranslation(-0.20f, -.2f, 0.4f);
+			return model;
+		} else {
+			return null;
+		}
 	}
 
 
@@ -260,5 +266,22 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	protected Class[] getListofMessageClasses() {
 		return new Class[] {HudDataMessage.class};
 	}
+
+
+	@Override
+	public void onAction(String name, boolean value, float tpf) {
+		if (name.equalsIgnoreCase(TEST)) {
+			if (value) {
+				SmallExplosion ex = new SmallExplosion(this.getAssetManager(), this.getRenderManager());
+				ex.setLocalTranslation(0.5f, .5f, 3f);
+				this.getGameNode().attachChild(ex);
+				//new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.cam.getWidth(), this.cam.getHeight(), 5);
+				//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
+			}
+		} else {
+			super.onAction(name, value, tpf);
+		}
+	}
+
 
 }

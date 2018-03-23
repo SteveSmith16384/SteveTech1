@@ -124,7 +124,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		List<Point> deploySquares = this.deploySquares[avatar.side-1];
 		boolean found = false;
 		for (Point p : deploySquares) {
-			avatar.setWorldTranslation(new Vector3f(p.x, startHeight, p.y));
+			avatar.setWorldTranslation(new Vector3f(p.x+0.5f, startHeight, p.y+0.5f));
 			if (avatar.simpleRigidBody.checkForCollisions() == null) {
 				found = true;
 				break;
@@ -162,7 +162,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 					} else if (this.scannerData[x][y] == MapLoader.DOOR_LR) { // || this.scannerData[x][y] == MapLoader.DOOR_UD) {
 						if (maxSoldiers > 0) {
 							AISoldier s = new AISoldier(this, this.getNextEntityID(), x + 0.5f, .3f, y + 1.5f, 2);
-							//todo - re-add this.actuallyAddEntity(s);
+							this.actuallyAddEntity(s);
 							Globals.p("Adding soldier to " + x + ", " + y);
 							maxSoldiers--;
 						}

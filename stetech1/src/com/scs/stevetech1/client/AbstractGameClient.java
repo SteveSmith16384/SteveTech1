@@ -67,6 +67,7 @@ import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GenericStringMessage;
+import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
@@ -108,7 +109,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	// Global controls
 	private static final String QUIT = "Quit";
-	private static final String TEST = "Test";
+	protected static final String TEST = "Test";
 
 	// ----------
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
@@ -130,7 +131,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private List<Integer> clientOnlyEntitiesToRemove = new LinkedList<Integer>();
 
 	private String gameID;
-	private String playerName = "todo";
+	private String playerName = "[Player's Name]";
 	private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
 	public IHUD hud;
@@ -180,7 +181,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		lobbyIP = _lobbyIP;
 		lobbyPort = _lobbyPort;
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 15, gravity, aerodynamicness); // todo - get 15,15 params from parent
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1, gravity, aerodynamicness); // todo - get 15,15 params from parent?
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
 
@@ -626,6 +627,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			ModelBoundsMessage psm = (ModelBoundsMessage)message;
 			addDebugBox(psm);
 
+		} else if (message instanceof JoinGameFailedMessage) {
+			JoinGameFailedMessage jgfm = (JoinGameFailedMessage)message;
+			Globals.p("Join game failed: " + jgfm.reason);
+			this.quit(jgfm.reason);
+			
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}

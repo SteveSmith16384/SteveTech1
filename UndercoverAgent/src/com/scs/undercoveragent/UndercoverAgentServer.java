@@ -270,7 +270,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	public boolean doWeHaveSpaces() {
-		return false; // todo - re-add  true; // Always!
+		return true; // Always!
 	}
 
 

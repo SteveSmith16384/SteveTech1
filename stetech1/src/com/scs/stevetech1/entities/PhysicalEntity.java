@@ -186,7 +186,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	
 	/*
 	public boolean sendUpdates_OLD() {
-		if (!this.moves) { // todo - scs new!
+		if (!this.moves) {
 			return false;
 		}
 

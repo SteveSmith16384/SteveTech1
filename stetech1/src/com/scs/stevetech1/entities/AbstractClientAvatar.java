@@ -29,7 +29,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public Camera cam;
 	private ICorrectClientEntityPosition syncPos;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
-
+	private float lastAvatarDiff = 0;
 	private Node debugNode;	
 
 	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
@@ -117,9 +117,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		}
 
 		if (hud != null) {
-		hud.processByClient(client, tpf_secs);
+			hud.processByClient(client, tpf_secs);
 		}
-		
+
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			//long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = serverPositionData.calcPosition(System.currentTimeMillis(), false);
@@ -143,8 +143,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(serverPositionData, clientAvatarPositionData, serverTimeToUse);
 			if (offset != null) {
 				float diff = offset.length();
+				if (Globals.SHOW_SERVER_CLIENT_AVATAR_DIST) {
+					Globals.p("Server and client avatars dist: " + diff);
+				}
+				lastAvatarDiff = diff;
 				if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
-					Globals.p("Far out, man! " + diff);
+					Globals.p("Server and client avatars very far apart, forcing move: " + diff);
 					// They're so far out, just move them
 					this.setWorldTranslation(serverPositionData.getMostRecent().position); 
 				} else {
@@ -165,5 +169,15 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		return this.cam;
 	}
 
-	
+
+	@Override
+	protected boolean acceptInput() {
+		// Don't allow client to manually move if too out of sync with server
+		boolean b = lastAvatarDiff < 0.1f; // todo - get more scientific distance
+		if (!b) {
+			Globals.p("Too far away - not accepting input");
+		}
+		return b; 
+	}
+
 }

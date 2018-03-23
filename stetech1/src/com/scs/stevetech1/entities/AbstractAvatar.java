@@ -2,6 +2,7 @@ package com.scs.stevetech1.entities;
 
 import java.util.HashMap;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
@@ -132,8 +133,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		playerWalked = false;
 		if (this.walkDirection.length() != 0) {
 			if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
-				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-				simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
+				if (acceptInput()) {
+					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+					simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
+				}
 				if (Globals.SHOW_AVATAR_WALK_DIR) {
 					Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());
 				}
@@ -144,15 +147,22 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		simpleRigidBody.process(tpf_secs);
 
 		this.currentAnimCode = newAnimCode;
+		
+		if (Globals.SHOW_AVATAR_BOUNDS) {
+			BoundingBox bb = (BoundingBox)this.getMainNode().getWorldBound();
+			Globals.p("Avatar bounds: " + bb.getXExtent() + ", " + bb.getYExtent() + ", " + bb.getZExtent());
+		}
 	}
 
 
-	public void resetWalkDir() {
+	protected abstract boolean acceptInput();
+
+	protected void resetWalkDir() {
 		this.walkDirection.set(0, 0, 0);
 	}
 
 
-	public boolean jump() {
+	protected boolean jump() {
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 		if (simplePlayerControl.jump()) {
 			lastMoveTime = System.currentTimeMillis();
