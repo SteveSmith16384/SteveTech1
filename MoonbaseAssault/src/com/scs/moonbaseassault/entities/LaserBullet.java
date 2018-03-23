@@ -8,7 +8,7 @@ import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.components.IRemoveOnContact;
+import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
@@ -17,7 +17,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class LaserBullet extends AbstractBullet implements IRemoveOnContact {
+public class LaserBullet extends AbstractBullet implements INotifiedOfCollision {
 
 	private float timeLeft = 3f;
 
@@ -25,6 +25,21 @@ public class LaserBullet extends AbstractBullet implements IRemoveOnContact {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.LASER_BULLET, "LaserBullet", owner, _side, _client);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
+
+	}
+
+
+	@Override
+	protected void createSimpleRigidBody(Vector3f dir) {
+		Vector3f origin = Vector3f.ZERO;
+		Node laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(1)), ColorRGBA.Pink, !game.isServer());
+		laserNode.setShadowMode(ShadowMode.Cast);
+		this.mainNode.attachChild(laserNode);
+
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
+		simpleRigidBody.setAerodynamicness(1);
+		simpleRigidBody.setGravity(0);
+		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(20));
 
 	}
 
@@ -61,18 +76,24 @@ public class LaserBullet extends AbstractBullet implements IRemoveOnContact {
 
 
 	@Override
-	protected void createSimpleRigidBody(Vector3f dir) {
-		Vector3f origin = Vector3f.ZERO;
-		Node laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(1)), ColorRGBA.Pink, !game.isServer());
-		laserNode.setShadowMode(ShadowMode.Cast);
-		this.mainNode.attachChild(laserNode);
-
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
-		simpleRigidBody.setAerodynamicness(1);
-		simpleRigidBody.setGravity(0);
-		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(20));
-
+	public void collided(PhysicalEntity pe) {
+		if (game.isServer()) {
+			ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
+			game.addEntity(expl);
+		}
+		this.remove();
 	}
 
+/*
+	@Override
+	public void removeOnContact() {
+		if (game.isServer()) {
+			ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
+			game.addEntity(expl);
+		}
+		this.remove();
+
+	}
+*/
 
 }

@@ -39,14 +39,13 @@ import com.jme3.texture.Texture;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.components.IRemoveOnContact;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -887,22 +886,32 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
+		
+		if (pea instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
+			ic.collided(peb);
+		}
+		if (peb instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)peb;
+			ic.collided(pea);
+		}
 
+/*
 		if (pea instanceof IClientControlled) {
 			IClientControlled cc = (IClientControlled)pea;
 			if (pea instanceof IRemoveOnContact) {
 				IRemoveOnContact roc = (IRemoveOnContact)pea;
-				roc.remove();
+				roc.removeOnContact();
 			}
 		}
 		if (peb instanceof IClientControlled) {
 			IClientControlled cc = (IClientControlled)peb;
 			if (peb instanceof IRemoveOnContact) {
 				IRemoveOnContact roc = (IRemoveOnContact)peb;
-				roc.remove();
+				roc.removeOnContact();
 			}
 		}
-
+*/
 	}
 
 

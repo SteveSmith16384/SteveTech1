@@ -2,7 +2,6 @@ package com.scs.stevetech1.server;
 
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
-import com.scs.stevetech1.components.IRemoveOnContact;
 
 public class ServerSideCollisionLogic {
 
@@ -21,7 +20,7 @@ public class ServerSideCollisionLogic {
 			IDamagable id = (IDamagable)a;
 			checkForDamage(choc, id);
 		}
-		
+		/*
 		if (a instanceof IRemoveOnContact) {
 			IRemoveOnContact roc = (IRemoveOnContact)a;
 			markForRemoval(roc);
@@ -30,7 +29,7 @@ public class ServerSideCollisionLogic {
 			IRemoveOnContact roc = (IRemoveOnContact)b;
 			markForRemoval(roc);
 		}
-
+*/
 	}
 	
 	
@@ -41,9 +40,9 @@ public class ServerSideCollisionLogic {
 		
 	}
 
-
+/*
 	private void markForRemoval(IRemoveOnContact roc) {
-		roc.remove();
+		roc.removeOnContact();
 	}
-	
+	*/
 }

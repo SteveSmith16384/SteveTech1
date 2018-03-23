@@ -13,7 +13,7 @@ import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
-import com.scs.moonbaseassault.models.SmallExplosion;
+import com.scs.moonbaseassault.models.SmallExplosionModel;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
@@ -272,11 +272,10 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
-				SmallExplosion ex = new SmallExplosion(this.getAssetManager(), this.getRenderManager());
-				ex.setLocalTranslation(0.5f, .5f, 3f);
+				SmallExplosionModel ex = new SmallExplosionModel(this.getAssetManager(), this.getRenderManager());
+				ex.setLocalTranslation(0, 0, 0);
+				ex.process();
 				this.getGameNode().attachChild(ex);
-				//new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.cam.getWidth(), this.cam.getHeight(), 5);
-				//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
 			}
 		} else {
 			super.onAction(name, value, tpf);

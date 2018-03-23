@@ -2,16 +2,21 @@ package com.scs.moonbaseassault.entities;
 
 import java.util.HashMap;
 
+import com.jme3.asset.TextureKey;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
+import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.Camera.FrustumIntersect;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
+import com.jme3.texture.Texture;
+import com.jme3.texture.Texture.WrapMode;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.models.SoldierModel;
-import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -35,9 +40,14 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	private static final float SPEED = .5f;//.47f;
 
+	private static final float w = 0.3f;
+	private static final float d = 0.3f;
+	private static final float h = SoldierModel.MODEL_HEIGHT;
+
+
 	private SoldierModel soldierModel;
 	private float health = 1f;
-	private Vector3f currDir;// = new Vector3f(1f, 0, 0);
+	private Vector3f currDir;
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	private int side;
 
@@ -56,20 +66,29 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		}
 
 		Spatial spatial = null;
-		//if (!_game.isServer()) { // Not running in server
-		//spatial = game.getAssetManager().loadModel("Models/zombie/Zombie.blend");
-		//JMEFunctions.SetTextureOnSpatial(game.getAssetManager(), spatial, "Models/zombie/ZombieTexture.png");
-		soldierModel = new SoldierModel(game.getAssetManager());
-		spatial = soldierModel.createAndGetModel(true, side);
-		/*} else {
-			// Server
+		if (!Globals.USE_BOXES_FOR_SOLDIER) {
+			soldierModel = new SoldierModel(game.getAssetManager());
+			spatial = soldierModel.createAndGetModel(true, side);
+		} else {
 			Box box1 = new Box(w/2, h/2, d/2);
 			spatial = new Geometry("AISoldier", box1);
 			spatial.setLocalTranslation(0, h/2, 0); // Box origin is the centre
-			//zm = new ZombieModel(game.getAssetManager());
-			//spatial = zm.getModel(false);
 
-		}*/
+			TextureKey key3 = new TextureKey("Textures/fence.png");
+			key3.setGenerateMips(true);
+			Texture tex3 = game.getAssetManager().loadTexture(key3);
+			tex3.setWrap(WrapMode.Repeat);
+
+			Material floor_mat = null;
+			if (Globals.LIGHTING) {
+				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+				floor_mat.setTexture("DiffuseMap", tex3);
+			} else {
+				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+				floor_mat.setTexture("ColorMap", tex3);
+			}
+			spatial.setMaterial(floor_mat);
+		}
 		this.mainNode.attachChild(spatial);
 		mainNode.setLocalTranslation(x, y, z);
 
@@ -89,13 +108,13 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (health > 0) {
-			
+
 			if (NumberFunctions.rnd(1, 200) == 1) {
 				Globals.p("Changing direction");
 				Vector3f newdir = this.getRandomDirection();
 				this.changeDirection(newdir);
 			}
-			
+
 			if (!Globals.DEBUG_CAN_SEE) {
 				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // Walk forwards
 			} else {
@@ -107,7 +126,9 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 				}*/
 			}
 
-			this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
+			if (soldierModel != null) {
+				this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
+			}
 		} else {
 			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
 		}
@@ -129,7 +150,9 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		if (health > 0) {
 			this.health -= amt;
 			if (health <= 0) {
-				this.soldierModel.setAnim(AbstractAvatar.ANIM_DIED);
+				if (soldierModel != null) {
+					this.soldierModel.setAnim(AbstractAvatar.ANIM_DIED);
+				}
 				//this.simpleRigidBody.setMovable(false); // Stop it being pushed
 				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
 			}
@@ -163,8 +186,9 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	@Override
 	public void setAnimCode(int animCode) {
-		this.soldierModel.setAnim(animCode);
-
+		if (soldierModel != null) {
+			this.soldierModel.setAnim(animCode);
+		}
 	}
 
 
@@ -176,7 +200,11 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	@Override
 	public int getCurrentAnimCode() {
-		return this.soldierModel.getCurrentAnimCode();
+		if (soldierModel != null) {
+			return this.soldierModel.getCurrentAnimCode();
+		} else {
+			return -1;
+		}
 	}
 
 
@@ -208,8 +236,8 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		}
 		throw new RuntimeException("Invalid direction: " + i);
 	}
-	
-	
+
+
 	private void changeDirection(Vector3f dir) {
 		this.currDir.set(dir);
 		this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction

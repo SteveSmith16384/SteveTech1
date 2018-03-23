@@ -1,7 +1,8 @@
 package com.scs.stevetech1.components;
-
-public interface IRemoveOnContact {
+/*
+public interface IRemoveOnContact { todo - delete this
 
 	void remove();
 	
 }
+*/

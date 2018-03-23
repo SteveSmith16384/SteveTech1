@@ -61,8 +61,12 @@ public class Grenade extends AbstractBullet {
 			Globals.p("Grenade Y:" + this.getWorldTranslation().y);
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft <= 0) {
-				// todo - explode
-				// this.remove();
+				this.remove();
+				
+				ExplosionEffectEntity expl = new ExplosionEffectEntity(server, server.getNextEntityID(), this.getWorldTranslation());
+				server.addEntity(expl);
+
+				// todo - damage surrounding entities
 			}
 		}
 	}

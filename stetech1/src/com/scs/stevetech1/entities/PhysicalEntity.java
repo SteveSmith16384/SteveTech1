@@ -59,12 +59,14 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		if (simpleRigidBody != null) {
 			simpleRigidBody.process(tpf_secs);
-		}
 
-		if (getWorldTranslation().y < -1) {
-			// Dropped away?
-			Globals.p(getName() + " has fallen off the edge");
-			fallenOffEdge();
+		if (this.simpleRigidBody.canMove()) {
+			if (getWorldTranslation().y < -1) {
+				// Dropped away?
+				Globals.p(getName() + " has fallen off the edge");
+				fallenOffEdge();
+			}
+		}
 		}
 
 		if (this instanceof IRewindable) {
@@ -183,7 +185,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public boolean sendUpdates() {
 		return this.sendPositionUpdate;
 	}
-	
+
 	/*
 	public boolean sendUpdates_OLD() {
 		if (!this.moves) {
@@ -209,7 +211,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		return hasMoved;
 	}
-*/
+	 */
 
 	@Override
 	public String toString() {
@@ -335,8 +337,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public final boolean requiresProcessing() {
 		return requiresProcessing;
 	}
-	
-	
+
+
 	public Node getOwnerNode() {
 		return owner; // Override if the entity should have a different parent node to the default 
 	}
@@ -351,7 +353,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	@Override
 	public void hasMoved() {
 		this.sendPositionUpdate = true;
-		
+
 	}
 
 

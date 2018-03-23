@@ -11,7 +11,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Node;
 
-public class SmallExplosion extends Node {
+public class SmallExplosionModel extends Node {
 
 	private static final boolean POINT_SPRITE = true;
 	private static final Type EMITTER_TYPE = POINT_SPRITE ? Type.Point : Type.Triangle;
@@ -21,7 +21,7 @@ public class SmallExplosion extends Node {
 	private ParticleEmitter flame, flash;
 	private Node explosionEffect = new Node("explosionFX");
 
-	public SmallExplosion(AssetManager assetManager, RenderManager renderManager) {
+	public SmallExplosionModel(AssetManager assetManager, RenderManager renderManager) {
 		super("SmallExplosionModel");
 
 		this.createFlame(assetManager);
@@ -69,7 +69,7 @@ public class SmallExplosion extends Node {
 		flame.setImagesX(2);
 		flame.setImagesY(2);
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
-		mat.setTexture("Texture", assetManager.loadTexture("Effects/Explosion/flame.png"));
+		mat.setTexture("Texture", assetManager.loadTexture("Textures/flame.png"));
 		//mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
 		mat.setBoolean("PointSprite", POINT_SPRITE);
 		flame.setMaterial(mat);
@@ -93,7 +93,7 @@ public class SmallExplosion extends Node {
 		flash.setImagesX(2);
 		flash.setImagesY(2);
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
-		mat.setTexture("Texture", assetManager.loadTexture("Effects/Explosion/flash.png"));
+		mat.setTexture("Texture", assetManager.loadTexture("Textures/flash.png"));
 		//mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
 		mat.setBoolean("PointSprite", POINT_SPRITE);
 		flash.setMaterial(mat);

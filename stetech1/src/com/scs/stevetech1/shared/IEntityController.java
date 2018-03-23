@@ -4,8 +4,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
-import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -22,6 +22,8 @@ public interface IEntityController {
 	void removeEntity(int id);
 	
 	AssetManager getAssetManager();
+	
+	RenderManager getRenderManager();
 	
 	SimplePhysicsController<PhysicalEntity> getPhysicsController();
 	
