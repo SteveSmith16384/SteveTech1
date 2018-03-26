@@ -415,6 +415,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 		this.physicsController.update(tpf_secs);
 		
+		// Position the camera
 		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
 
 		//--------------------------------------------

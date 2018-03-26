@@ -8,6 +8,7 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
@@ -31,8 +32,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	public boolean canWalkUpSteps = false;
 
 	private CollisionResults collisionResults = new CollisionResults();
-
 	private SimpleNode<T> parent;
+	
+	private BoundingBox bb;
+	private Vector3f prevMoveDir = new Vector3f();
 
 	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean moves, T _tag) {
 		super();
@@ -80,6 +83,18 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public void process(float tpf_secs) {
+		if (Globals.WARN_IF_BB_CHANGES) {
+			if (bb == null) {
+				bb = (BoundingBox)this.getSpatial().getWorldBound().clone();
+			} else {
+				BoundingBox newbb = (BoundingBox)this.getSpatial().getWorldBound();
+				if (bb.getXExtent() != newbb.getXExtent() || bb.getYExtent() != newbb.getYExtent() || bb.getZExtent() != newbb.getZExtent()) {
+					p("Warning - boundingbox changed size!");
+					bb = (BoundingBox)newbb.clone();
+				}
+			}
+		}
+		
 		if (tpf_secs > 0.1f) {
 			tpf_secs = 0.1f; // Prevent stepping too far
 		}
@@ -88,27 +103,28 @@ public class SimpleRigidBody<T> implements Collidable {
 			SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
 			if (tmpWasCollision != null) {
 				System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision.userObject);
-				do {
-					Vector3f ourPos = this.getSpatial().getWorldBound().getCenter();
+				Vector3f diff = this.prevMoveDir.mult(-1);
+					/*Vector3f ourPos = this.getSpatial().getWorldBound().getCenter();
 					Vector3f theirPos = tmpWasCollision.getSpatial().getWorldBound().getCenter();
 					Vector3f diff = ourPos.subtract(theirPos).normalizeLocal();
 					if (diff.length() == 0) {
 						System.err.println("No direction, moving up!");
 						diff = new Vector3f(0, 1, 0);
-					}
+					}*/
+				do {
 					this.getSpatial().move(diff); // Move away until there's no more collisions
-					this.simpleEntity.hasMoved();
 					//System.err.println("Automoved  " + this + " by " + diff);
 					tmpWasCollision = checkForCollisions();
 				} while (tmpWasCollision != null);
+				this.simpleEntity.hasMoved();
 			}
-
-
 
 			Vector3f additionalForce = this.getAdditionalForce();
 			if (additionalForce == null) {
 				additionalForce = Vector3f.ZERO; // Prevent NPE
 			}
+
+			prevMoveDir.set(oneOffForce.add(additionalForce));
 
 			// Move along X
 			{
@@ -339,6 +355,9 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public void setAdditionalForce(Vector3f force) {
+		if (!this.canMove) {
+			p("Warning - setting additional force on non-moving entity");
+		}
 		this.additionalForce.set(force);
 	}
 

@@ -14,7 +14,7 @@ import com.scs.simplephysics.SimpleRigidBody;
  * Example for "simulating" physics without actually drawing anything.
  * 
  */
-public class Simulation implements ICollisionListener<String> {
+public class SimulateFallingBall implements ICollisionListener<String> {
 
 	private static final float LOOP_INTERVAL_SECS = .001f;
 	private static final int REPORT_INTERVAL_SECS = 1;
@@ -23,17 +23,16 @@ public class Simulation implements ICollisionListener<String> {
 	private SimplePhysicsController<String> physicsController;
 
 	public static void main(String args[]) {
-		new Simulation();
+		new SimulateFallingBall();
 	}
 
 
-	private Simulation() {
+	private SimulateFallingBall() {
 		physicsController = new SimplePhysicsController<String>(this, -1, -1);
 
 		Sphere sphere = new Sphere(8, 8, .5f);
 		final Geometry ballGeometry = new Geometry("Sphere", sphere);
 		ballGeometry.setLocalTranslation(0, 10f, 0);
-
 		ISimpleEntity<String> entity = new ISimpleEntity<String>() {
 			
 			@Override

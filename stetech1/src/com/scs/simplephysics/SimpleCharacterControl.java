@@ -39,7 +39,7 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
 
 	@Override
-	public Vector3f getAdditionalForce() {
+	public Vector3f getAdditionalForce() { // todo- rename
 		return additionalMoveDir; // Set this to be the direction to move in.
 	}
 

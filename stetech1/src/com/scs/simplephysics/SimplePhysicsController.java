@@ -94,9 +94,9 @@ public class SimplePhysicsController<T> {
 		if (USE_NEW_COLLISION_METHOD) {
 			BoundingBox bb = (BoundingBox)srb.getSpatial().getWorldBound();
 			boolean tooBig = bb.getVolume() > (nodeSizeXZ * nodeSizeXZ * nodeSizeY);
-			if (tooBig) {
+			/*if (tooBig) {
 				p(this.toString() + " is too big"); // todo - remove
-			}
+			}*/
 			if (!srb.canMove() && this.nodeSizeXZ > 0 && this.nodeSizeY > 0 && !tooBig) {
 				int x = (int)bb.getCenter().x / this.nodeSizeXZ;
 				int y = (int)bb.getCenter().y / this.nodeSizeY;
