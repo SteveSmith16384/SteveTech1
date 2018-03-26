@@ -3,9 +3,9 @@ package com.scs.testgame;
 import java.io.IOException;
 
 import com.jme3.math.Vector3f;
-import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
+import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -48,6 +48,8 @@ public class TestGameServer extends AbstractGameServer {
 
 	@Override
 	protected void createGame() {
+		super.gameData = new SimpleGameData();
+		
 		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		this.actuallyAddEntity(floor);
 		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);

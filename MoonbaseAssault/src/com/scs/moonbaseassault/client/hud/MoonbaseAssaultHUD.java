@@ -30,7 +30,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 
 	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
 
-	private static ColorRGBA defaultColour = ColorRGBA.Black;
+	private static ColorRGBA defaultColour = ColorRGBA.Green;
 
 	private TextArea log_ta;
 	private List<String> logLines = new ArrayList<String>();
@@ -45,7 +45,8 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	
 	private HUDMapImage hudMapImage;
 
-	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
+	//private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
+	private BitmapText textArea; 
 
 	public MoonbaseAssaultHUD(AbstractGameClient _game, Camera _cam) { 
 		super("HUD");
@@ -73,6 +74,13 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 			}
 		}
 
+		textArea = new BitmapText(font_small, false);
+		textArea.setColor(defaultColour);
+		textArea.setLocalTranslation(10, hud_height/2, 0);
+		this.attachChild(textArea);
+		textArea.setText("Waiting for data...\n...");
+
+		/*
 		float yPos = hud_height - LINE_SPACING;
 
 		yPos -= LINE_SPACING;
@@ -133,7 +141,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		log_ta.setColor(defaultColour);
 		log_ta.setLocalTranslation(0, hud_height/2, 0);
 		this.attachChild(log_ta);
-
+*/
 		// Damage box
 		{
 			Material mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -232,48 +240,65 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	}
 
 
+	private void updateTextArea() {
+		
+	}
+	
+	
 	public void setDebugText(String s) {
-		this.debugText.setText(s);
+		//this.debugText.setText(s);
+		this.updateTextArea();
 	}
 
 
 	public void setGameStatus(String s) {
-		this.gameStatus.setText("Game Status: " + s);
+		//this.gameStatus.setText("Game Status: " + s);
+		this.updateTextArea();
+
 	}
 
 
 	public void setGameTime(String s) {
-		this.gameTime.setText(s);
+		//this.gameTime.setText(s);
+		this.updateTextArea();
+	
 	}
 
 
 	public void setAbilityGunText(String s) {
-		this.abilityGun.setText(s);
+		//this.abilityGun.setText(s);
+		this.updateTextArea();
 	}
 
 
 	public void setAbilityOtherText(String s) {
-		this.abilityOther.setText(s);
+		//this.abilityOther.setText(s);
+		this.updateTextArea();
+
 	}
 
 
 	public void setHealthText(int s) {
-		this.healthText.setText("Health: " + s);
+		//this.healthText.setText("Health: " + s);
+		this.updateTextArea();
 	}
 
 
 	public void setScoreText(int s) {
-		this.scoreText.setText("Score: " + s);
+		//this.scoreText.setText("Score: " + s);
+		this.updateTextArea();
 	}
 
 
 	public void setPing(long i) {
-		this.pingText.setText("Ping: " + i);
+		//this.pingText.setText("Ping: " + i);
+		this.updateTextArea();
 	}
 
 
 	public void setNumPlayers(int i) {
-		this.numPlayers.setText("Num Players: " + i);
+		//this.numPlayers.setText("Num Players: " + i);
+		this.updateTextArea();
 	}
 
 

@@ -26,13 +26,13 @@ public class ExplosionEffectEntity extends PhysicalEntity implements IProcessByC
 		} else {
 			expl = new SmallExplosionModel(_game.getAssetManager(), _game.getRenderManager());
 			this.mainNode.attachChild(expl);
-			expl.process();
 		}
 
 	}
 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
+		expl.process();
 		timeLeft -= tpf_secs;
 		if (timeLeft <= 0) {
 			this.remove();

@@ -13,12 +13,14 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean DEBUG_SLOW_CLIENT_AVATAR = true;
-	public static final boolean TURN_OFF_CLIENT_POS_ADJ = true;
+	public static final boolean WARN_IF_BB_CHANGES = true;
+	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = true;
+	public static final boolean DEBUG_SLOW_CLIENT_AVATAR = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = true;
-	public static final boolean USE_BOXES_FOR_SOLDIER = true;
+	public static final boolean USE_BOXES_FOR_AI_SOLDIER = true;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
 
+	public static final boolean TURN_OFF_CLIENT_POS_ADJ = false;
 	public static final boolean SHOW_AVATAR_BOUNDS = false;
 	public static final boolean PROFILE_SERVER = false;
 	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;
@@ -32,7 +34,7 @@ public class Globals {
 	public static final boolean DEBUG_SERVER_SHOOTING = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_CLIENT_ROTATION = false;
-	public static final boolean USE_SERVER_MODELS_ON_CLIENT = false;
+	//public static final boolean USE_SERVER_MODELS_ON_CLIENT = false;
 	public static final boolean DEBUG_PLAYER_RESTART = false;
 	public static final boolean DEBUG_MOUNTAIN_BORDER = false;
 	public static final boolean SHOW_SNOWBALL_COLLISION_POS = false;

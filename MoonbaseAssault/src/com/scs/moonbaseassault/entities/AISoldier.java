@@ -66,7 +66,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		}
 
 		Spatial spatial = null;
-		if (!Globals.USE_BOXES_FOR_SOLDIER) {
+		if (!Globals.USE_BOXES_FOR_AI_SOLDIER) {
 			soldierModel = new SoldierModel(game.getAssetManager());
 			spatial = soldierModel.createAndGetModel(true, side);
 		} else {
@@ -108,9 +108,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (health > 0) {
-
 			if (NumberFunctions.rnd(1, 200) == 1) {
-				Globals.p("Changing direction");
 				Vector3f newdir = this.getRandomDirection();
 				this.changeDirection(newdir);
 			}
@@ -132,7 +130,6 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		} else {
 			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
 		}
-		//this.currentAnimCode = this.soldierModel.getCurrentAnimCode();// AbstractAvatar.ANIM_WALKING;
 
 		super.processByServer(server, tpf_secs);
 	}
@@ -140,7 +137,6 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	@Override
 	public void fallenOffEdge() {
-		//this.respawn();
 		this.remove();
 	}
 
@@ -239,6 +235,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 
 	private void changeDirection(Vector3f dir) {
+		Globals.p("Changing direction"); //this.getSpatial().getWorldBound();
 		this.currDir.set(dir);
 		this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 	}

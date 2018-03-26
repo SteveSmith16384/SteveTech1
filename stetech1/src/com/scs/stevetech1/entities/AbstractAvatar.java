@@ -102,7 +102,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 		if (input.getFwdValue()) {
 			if (Globals.DEBUG_SLOW_CLIENT_AVATAR) {
-				Globals.p("fwd=" + input.getFwdValue());
+				Globals.p("fwd=" + camDir);
 			}
 			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
 			newAnimCode = ANIM_WALKING;

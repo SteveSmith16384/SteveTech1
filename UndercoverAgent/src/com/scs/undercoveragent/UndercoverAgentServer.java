@@ -5,11 +5,11 @@ import java.io.IOException;
 import com.jme3.math.Vector3f;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
+import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
-import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -121,6 +121,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	protected void createGame() {
+		super.gameData = new SimpleGameData();
+		
 		if (Globals.EMPTY_MAP) {
 			// Do nothing
 		} else if (Globals.FEW_MODELS) {

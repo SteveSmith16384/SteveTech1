@@ -37,7 +37,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	private List<Point> computerSquares;
 	public ArrayList<Point>[] deploySquares;
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
-	private MoonbaseAssaultGameData gameData;
+	//private MoonbaseAssaultGameData gameData;
 	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode;
 
 
@@ -132,6 +132,11 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		}
 	}
 
+	
+	public MoonbaseAssaultGameData getMAGameData() {
+		return (MoonbaseAssaultGameData)super.gameData;
+	}
+	
 
 	@Override
 	protected void createGame() {
@@ -275,7 +280,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected Class[] getListofMessageClasses() {
-		return new Class[] {HudDataMessage.class};
+		return new Class[] {HudDataMessage.class, MoonbaseAssaultGameData.class};
 	}
 
 
@@ -348,7 +353,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	
 	public void computerDestroyed() {
-		this.gameData.pointsForSide[1] += 10;
+		this.getMAGameData().pointsForSide[1] += 10;
 		checkForWinner();
 	}
 
@@ -358,7 +363,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		super.playerKilled(avatar);
 		
 		if (avatar.side == 1) {
-			this.gameData.pointsForSide[2] += 10;
+			this.getMAGameData().pointsForSide[2] += 10;
 			checkForWinner();
 		}
 	}

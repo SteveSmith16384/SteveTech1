@@ -39,7 +39,7 @@ public class InvisibleMapBorder extends PhysicalEntity {
 		Box box1 = new Box(BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
 		Geometry geometry = new Geometry("MapBorderBox", box1);
 		if (!_game.isServer()) { // Not running in server
-			if (Globals.USE_SERVER_MODELS_ON_CLIENT) {
+			/*if (Globals.USE_SERVER_MODELS_ON_CLIENT) {
 				TextureKey key3 = new TextureKey("Textures/neon1.jpg");
 				//TextureKey key3 = new TextureKey("Textures/snow.jpg");
 				key3.setGenerateMips(true);
@@ -56,9 +56,9 @@ public class InvisibleMapBorder extends PhysicalEntity {
 				}
 
 				geometry.setMaterial(floor_mat);
-			} else {
+			} else {*/
 				geometry.setCullHint(CullHint.Always); // DOn't draw the box on the client
-			}
+			//}
 		}
 
 		geometry.setLocalTranslation(-BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
