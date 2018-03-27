@@ -180,7 +180,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		lobbyIP = _lobbyIP;
 		lobbyPort = _lobbyPort;
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1, gravity, aerodynamicness); // todo - get 15,15 params from parent?
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1, gravity, aerodynamicness); // todo - get 15,1 params from server?
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
 

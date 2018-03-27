@@ -9,6 +9,8 @@ import com.scs.moonbaseassault.server.MapLoader;
 
 public class MapImageTexture extends PaintableImage {
 
+	private static final float ALPHA = 0.3f;
+	
 	private int[][] data;
 	private Point player;
 	private List<Point> units;
@@ -43,7 +45,7 @@ public class MapImageTexture extends PaintableImage {
 		g.clearRect(0, 0, getWidth(), getHeight());
 
 		if (data != null) {
-			g.setColor(new Color(1f, 1f, 1f, .8f));
+			g.setColor(new Color(1f, 1f, 1f, ALPHA));
 
 			for (int y=0 ; y<data.length ; y++) {
 				for (int x=0 ; x<data[y].length ; x++) {
@@ -53,7 +55,7 @@ public class MapImageTexture extends PaintableImage {
 				}
 			}
 			if (units != null) {
-				g.setColor(new Color(1f, 0f, 0f, 1f));
+				g.setColor(new Color(1f, 0f, 0f, ALPHA));
 
 				for (int i=0 ; i<units.size() ; i++) {
 					Point p = units.get(i);
@@ -61,7 +63,7 @@ public class MapImageTexture extends PaintableImage {
 				}			
 			}
 			if (computers != null) {
-				g.setColor(new Color(0f, 0f, 1f, 1f));
+				g.setColor(new Color(0f, 0f, 1f, ALPHA));
 
 				for (int i=0 ; i<computers.size() ; i++) {
 					Point p = computers.get(i);
@@ -69,7 +71,7 @@ public class MapImageTexture extends PaintableImage {
 				}			
 			}
 			if (player != null) {
-				g.setColor(new Color(1f, 1f, 1f, 1f));
+				g.setColor(new Color(1f, 1f, 1f, ALPHA));
 				g.fillRect((data.length-player.y)*pixelSize, (data.length-player.x)*pixelSize, pixelSize, pixelSize);
 			}
 		}

@@ -12,6 +12,11 @@ import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
+	private static final float MAX_STEP_HEIGHT = 0.15f;
+	private static final float GRAVITY_WARNING = -5f;
+
+	private static final boolean ADJUST_USING_BOUNDING_BOX_POSITION = false;
+
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f(); // Gets reduced by air resistance each frame
 	private Vector3f tmpMoveDir = new Vector3f();
@@ -33,9 +38,10 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	private CollisionResults collisionResults = new CollisionResults();
 	private SimpleNode<T> parent;
-	
+
 	private BoundingBox bb;
 	private Vector3f prevMoveDir = new Vector3f();
+	public boolean removed = false;
 
 	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean moves, T _tag) {
 		super();
@@ -94,37 +100,24 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 			}
 		}
-		
-		if (tpf_secs > 0.1f) {
-			tpf_secs = 0.1f; // Prevent stepping too far
-		}
+
 		if (this.canMove) {
 			// Check we're not already colliding *before* we've even moved
 			SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
 			if (tmpWasCollision != null) {
 				System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision.userObject);
-				Vector3f diff = this.prevMoveDir.mult(-1);
-					/*Vector3f ourPos = this.getSpatial().getWorldBound().getCenter();
-					Vector3f theirPos = tmpWasCollision.getSpatial().getWorldBound().getCenter();
-					Vector3f diff = ourPos.subtract(theirPos).normalizeLocal();
-					if (diff.length() == 0) {
-						System.err.println("No direction, moving up!");
-						diff = new Vector3f(0, 1, 0);
-					}*/
-				do {
-					this.getSpatial().move(diff); // Move away until there's no more collisions
-					//System.err.println("Automoved  " + this + " by " + diff);
-					tmpWasCollision = checkForCollisions();
-				} while (tmpWasCollision != null);
-				this.simpleEntity.hasMoved();
+				this.moveAwayFrom(tmpWasCollision);
 			}
 
-			Vector3f additionalForce = this.getAdditionalForce();
-			if (additionalForce == null) {
-				additionalForce = Vector3f.ZERO; // Prevent NPE
-			}
+			/*Vector3f tmpAdditionalForce = this.getAdditionalForce();
+			if (tmpAdditionalForce == null) {
+				tmpAdditionalForce = Vector3f.ZERO; // Prevent NPE
+			}*/
 
-			prevMoveDir.set(oneOffForce.add(additionalForce));
+			if (this.oneOffForce.length() > 0 || this.additionalForce.length() != 0) {
+				prevMoveDir.set(oneOffForce.add(additionalForce));
+				Globals.p("Prev dir:" + prevMoveDir);
+			}
 
 			// Move along X
 			{
@@ -196,10 +189,47 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				this.oneOffForce.y = oneOffForce.y * aerodynamicness; // Slow down
 			}
+
+			if (this.currentGravInc < GRAVITY_WARNING) {
+				p("Warning - high gravity offset: " + this.currentGravInc);
+			}
 		}
 	}
 
 
+	private void moveAwayFrom(SimpleRigidBody<T> other) {
+		Vector3f diff = null;
+		if (ADJUST_USING_BOUNDING_BOX_POSITION) {
+			Vector3f ourPos = this.getSpatial().getWorldBound().getCenter();
+			Vector3f theirPos = other.getSpatial().getWorldBound().getCenter();
+			diff = ourPos.subtract(theirPos).normalizeLocal();
+		} else {
+			diff = this.prevMoveDir.mult(-0.1f);
+		}
+
+		if (diff.length() == 0) {
+			System.err.println("No direction!"); // Can't do anything
+		} else {
+			SimpleRigidBody<T> tmpWasCollision = null;
+			do {
+				this.getSpatial().move(diff); // Move away until there's no more collisions
+				if (Globals.DEBUG_PLAYER_MOVING_THRU_SOLDIER) {
+					p("Automoved  " + this + " by " + diff);
+				}
+				tmpWasCollision = checkForCollisions();
+			} while (tmpWasCollision != null && this.removed == false);
+			this.simpleEntity.hasMoved();
+		}
+	}
+
+
+	/**
+	 * Move the player up so they can walk up steps.
+	 * 
+	 * @param other
+	 * @param tpf_secs
+	 * @return
+	 */
 	private boolean checkForStep(SimpleRigidBody<T> other, float tpf_secs) {
 		if (!this.canWalkUpSteps) {
 			return false;
@@ -211,7 +241,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		float bTop = bbb.getCenter().y + (bbb.getYExtent());
 		float heightDiff = bTop - aBottom;
 
-		if (heightDiff >= 0 && heightDiff <= 0.15f) { // todo - make a setting
+		if (heightDiff >= 0 && heightDiff <= MAX_STEP_HEIGHT) {
 			//p("Going up step: " + heightDiff);
 			this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
 			return true;
@@ -231,23 +261,9 @@ public class SimpleRigidBody<T> implements Collidable {
 				offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
 			}
 			this.getSpatial().move(offset);
-
-			/*if (SimplePhysicsController.DEBUG) {
-				if (this.getSpatial().getWorldTranslation().y <= 0) {
-					p("Here");
-				}
-			}*/
-
 			SimpleRigidBody<T> wasCollision = checkForCollisions();
 			if (wasCollision != null) {
 				this.getSpatial().move(offset.negateLocal()); // Move back
-
-				/*if (STRICT) {
-					SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
-					if (tmpWasCollision != null) {
-						System.err.println("Warning: " + this + " has collided with " + tmpWasCollision + " even after moving back");
-					}
-				}*/
 			} else {
 				this.simpleEntity.hasMoved();
 			}
@@ -349,7 +365,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	/*
 	 * Override if required to set additional movement force, e.g. walking.
 	 */
-	public Vector3f getAdditionalForce() {
+	public Vector3f getWalkingForce() {
 		return additionalForce;
 	}
 

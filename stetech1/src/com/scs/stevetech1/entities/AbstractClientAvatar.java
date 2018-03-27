@@ -173,7 +173,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	protected boolean acceptInput() {
 		/*
 		// Don't allow client to manually move if too out of sync with server
-		boolean b = lastAvatarDiff < 0.1f; // todo - get more scientific distance
+		boolean b = lastAvatarDiff < 0.1f;
 		if (!b) {
 			Globals.p("Too far away - not accepting input");
 		}

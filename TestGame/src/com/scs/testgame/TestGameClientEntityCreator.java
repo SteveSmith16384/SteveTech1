@@ -180,7 +180,7 @@ public class TestGameClientEntityCreator {
 		case HOUSE:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			Quaternion rot = (Quaternion)msg.data.get("quat"); // todo - use this
+			Quaternion rot = (Quaternion)msg.data.get("quat");
 			House house = new House(game, id, pos.x, pos.y, pos.z, 0);
 			return house;
 		}

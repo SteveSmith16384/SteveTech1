@@ -32,31 +32,26 @@ public class DummyPhysicalEntity implements IPhysicalEntity {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int getID() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int getType() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public HashMap<String, Object> getCreationData() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void remove() {
-		// TODO Auto-generated method stub
 		
 	}
 

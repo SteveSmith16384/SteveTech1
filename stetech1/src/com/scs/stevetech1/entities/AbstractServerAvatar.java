@@ -44,8 +44,14 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		this.moveSpeed = server.getAvatarMoveSpeed(this); // todo - send to client if it changes
 		this.setJumpForce(server.getAvatarJumpForce(this)); // todo - send to client if it changes
 		this.setHealth(server.getAvatarStartHealth(this));
+		this.simpleRigidBody.currentGravInc = 0; // In case they fell off the edge
 		this.invulnerableTimeSecs = 5;
 		server.moveAvatarToStartPosition(this); // this also sends the update message to tell the client about the new move speed values etc...
+
+		server.gameNetworkServer.sendMessageToAll(new AvatarStartedMessage(this));
+		if (Globals.DEBUG_PLAYER_RESTART) {
+			Globals.p("Sent AvatarStartedMessage");
+		}
 
 	}
 
@@ -57,11 +63,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			this.currentAnimCode = ANIM_DIED;
 			if (this.restartTimeSecs <= 0) {
 				Globals.p("Resurrecting avatar");
-				this.startAgain();				
-				server.gameNetworkServer.sendMessageToAll(new AvatarStartedMessage(this));
-				if (Globals.DEBUG_PLAYER_RESTART) {
-					Globals.p("Sent AvatarStartedMessage");
-				}
+				this.startAgain();
 
 				// Send position update
 				EntityUpdateMessage eum = new EntityUpdateMessage();

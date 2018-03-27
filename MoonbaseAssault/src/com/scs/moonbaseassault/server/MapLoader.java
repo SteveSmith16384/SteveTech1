@@ -129,65 +129,66 @@ public class MapLoader {
 
 		// Generate map!
 		totalWalls = 0;
-
-		{
-			int y = 0;
-			while (y < mapsize) {
-				int x = 0;
-				while (x < mapsize-1) {
-					if (mapCode[x][y] == WALL && mapCode[x+1][y] == WALL) {
-						checkForHorizontalWalls(x, y);
-					}				
-					x++;
-				}						
-				y++;
+		//if (!Globals.DEBUG_PLAYER_MOVING_THRU_SOLDIER) { 
+			{
+				int y = 0;
+				while (y < mapsize) {
+					int x = 0;
+					while (x < mapsize-1) {
+						if (mapCode[x][y] == WALL && mapCode[x+1][y] == WALL) {
+							checkForHorizontalWalls(x, y);
+						}				
+						x++;
+					}						
+					y++;
+				}
 			}
-		}
 
-		{
-			// Vertical walls
-			int y = 0;
-			while (y < mapsize-1) {
-				int x = 0;
-				while (x < mapsize) {
-					if (mapCode[x][y] == WALL) {// && handled[x][y+1] == WALL) {
-						checkForVerticalWalls(x, y);
-					}				
-					x++;
-				}						
-				y++;
+			{
+				// Vertical walls
+				int y = 0;
+				while (y < mapsize-1) {
+					int x = 0;
+					while (x < mapsize) {
+						if (mapCode[x][y] == WALL) {// && handled[x][y+1] == WALL) {
+							checkForVerticalWalls(x, y);
+						}				
+						x++;
+					}						
+					y++;
+				}
 			}
-		}
 
-		// Doors && comps
-		{
-			for (int y=0 ; y<mapsize ; y++) {
-				for (int x=0 ; x<mapsize ; x++) {
-					if (mapCode[x][y] == DOOR_LR) {
-						SlidingDoor door = new SlidingDoor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, 1, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/door_lr.png", 0);
-						setParentNodeForSpatial(door);
-						moonbaseAssaultServer.actuallyAddEntity(door);
-						mapCode[x][y] = INT_FLOOR; // So we create a floor below it
-					} else if (mapCode[x][y] == DOOR_UD) {
-						SlidingDoor door = new SlidingDoor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, 1, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/door_lr.png", 270);
-						setParentNodeForSpatial(door);
-						moonbaseAssaultServer.actuallyAddEntity(door);
-						mapCode[x][y] = INT_FLOOR; // So we create a floor below it
-					} else if (mapCode[x][y] == COMPUTER) {
-						Computer comp = new Computer(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y);
-						setParentNodeForSpatial(comp);
-						moonbaseAssaultServer.actuallyAddEntity(comp);
-						mapCode[x][y] = INT_FLOOR; // So we create a floor below it
+			// Doors && comps
+			{
+				for (int y=0 ; y<mapsize ; y++) {
+					for (int x=0 ; x<mapsize ; x++) {
+						if (mapCode[x][y] == DOOR_LR) {
+							SlidingDoor door = new SlidingDoor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, 1, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/door_lr.png", 0);
+							setParentNodeForSpatial(door);
+							moonbaseAssaultServer.actuallyAddEntity(door);
+							mapCode[x][y] = INT_FLOOR; // So we create a floor below it
+						} else if (mapCode[x][y] == DOOR_UD) {
+							SlidingDoor door = new SlidingDoor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y, 1, MoonbaseAssaultServer.CEILING_HEIGHT, "Textures/door_lr.png", 270);
+							setParentNodeForSpatial(door);
+							moonbaseAssaultServer.actuallyAddEntity(door);
+							mapCode[x][y] = INT_FLOOR; // So we create a floor below it
+						} else if (mapCode[x][y] == COMPUTER) {
+							Computer comp = new Computer(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), x, 0, y);
+							setParentNodeForSpatial(comp);
+							moonbaseAssaultServer.actuallyAddEntity(comp);
+							mapCode[x][y] = INT_FLOOR; // So we create a floor below it
+						}
 					}
 				}
 			}
-		}
 
-		this.totalFloors = 0;
-		this.totalCeilings = 0;
-		doInteriorFloorsAndCeilings();
-		//doExteriorFloors();
-
+			this.totalFloors = 0;
+			this.totalCeilings = 0;
+			doInteriorFloorsAndCeilings();
+			//doExteriorFloors();
+		//}
+			
 		// One big moon floor
 		Floor moonrock = new Floor(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), "Big Ext Floor", 0, 0, 0, mapsize, .5f, mapsize, "Textures/moonrock.png");
 		moonrock.owner = moonbaseAssaultServer.floorNode;
@@ -201,7 +202,7 @@ public class MapLoader {
 		moonbaseAssaultServer.actuallyAddEntity(borderBack);
 		InvisibleMapBorder borderFront = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, mapsize, Vector3f.UNIT_X);
 		moonbaseAssaultServer.actuallyAddEntity(borderFront);
-		
+
 		// Add space crates
 		for (int i=0 ; i<10 ; i++) {
 			// todo
@@ -395,8 +396,8 @@ public class MapLoader {
 		}
 		throw new RuntimeException("Node " + s + " not found");
 	}
-	
-	
+
+
 	private boolean moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
 		CollisionResults cr = new CollisionResults(); //todo - re-add
 		SimpleRigidBody<PhysicalEntity> srb = pe.simpleRigidBody.checkForCollisions();

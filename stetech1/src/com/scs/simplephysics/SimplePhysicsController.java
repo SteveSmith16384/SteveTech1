@@ -88,15 +88,14 @@ public class SimplePhysicsController<T> {
 		if (srb == null) {
 			throw new RuntimeException("SimpleRigidBody is null");
 		}
+
 		synchronized (entities) {
 			this.entities.add(srb);
 		}
+
 		if (USE_NEW_COLLISION_METHOD) {
 			BoundingBox bb = (BoundingBox)srb.getSpatial().getWorldBound();
 			boolean tooBig = bb.getVolume() > (nodeSizeXZ * nodeSizeXZ * nodeSizeY);
-			/*if (tooBig) {
-				p(this.toString() + " is too big"); // todo - remove
-			}*/
 			if (!srb.canMove() && this.nodeSizeXZ > 0 && this.nodeSizeY > 0 && !tooBig) {
 				int x = (int)bb.getCenter().x / this.nodeSizeXZ;
 				int y = (int)bb.getCenter().y / this.nodeSizeY;
@@ -113,6 +112,16 @@ public class SimplePhysicsController<T> {
 				movingEntities.add(srb);
 			}
 		}
+
+		srb.removed = false;
+
+		if (srb.canMove()) {
+			// Check to see if they're not already colliding
+			SimpleRigidBody<T> tmpWasCollision = srb.checkForCollisions();
+			if (tmpWasCollision != null) {
+				System.err.println("Warning: " + this + " has collided immediately with " + tmpWasCollision.userObject);
+			}
+		}
 	}
 
 
@@ -123,10 +132,15 @@ public class SimplePhysicsController<T> {
 		if (USE_NEW_COLLISION_METHOD) {
 			srb.removeFromParent();
 		}
+		srb.removed = true;
 	}
 
 
 	public void update(float tpf_secs) {
+		if (tpf_secs > 0.1f) {
+			tpf_secs = 0.1f; // Prevent stepping too far
+		}
+
 		if (this.enabled) {
 			synchronized (entities) {
 				Iterator<SimpleRigidBody<T>> it = this.entities.iterator();

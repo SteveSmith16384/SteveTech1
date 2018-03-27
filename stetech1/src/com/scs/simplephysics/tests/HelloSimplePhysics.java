@@ -410,7 +410,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 			player.jump();
 		}
 		walkDirection.y = 0; // Prevent us walking up or down
-		player.getAdditionalForce().set(walkDirection);
+		player.getWalkingForce().set(walkDirection);
 		//p("Walk dir:" + walkDirection);
 
 		this.physicsController.update(tpf_secs);

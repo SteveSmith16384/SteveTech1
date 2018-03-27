@@ -98,7 +98,6 @@ public class SimpleNode<T> { //extends ArrayList<SimpleRigidBody<T>> {
 				for (SimpleRigidBody<T> other : this.entities) {
 					if (srb.checkSRBvSRB(other) ) {
 						collidedWith = other;
-						//count++;
 					}
 				}
 			}

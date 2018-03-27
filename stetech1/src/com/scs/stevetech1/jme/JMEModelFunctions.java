@@ -121,7 +121,7 @@ public class JMEModelFunctions {
 
 
 	public static void scaleModelToHeight(Spatial model, float height) {
-		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
+		BoundingBox bb = (BoundingBox)model.getWorldBound();
 		float currHeight = bb.getYExtent() * 2;
 		float frac = height/currHeight;
 		model.scale(frac);
@@ -129,7 +129,7 @@ public class JMEModelFunctions {
 
 
 	public static void scaleModelToWidth(Spatial model, float width) {
-		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
+		BoundingBox bb = (BoundingBox)model.getWorldBound();
 		float currWidth = bb.getXExtent() * 2;
 		float frac = width/currWidth;
 		model.scale(frac);
@@ -137,7 +137,7 @@ public class JMEModelFunctions {
 
 
 	public static void moveYOriginTo(Spatial model, float yPos) {
-		BoundingBox bb = (BoundingBox)model.getWorldBound(); // todo - what if sphere
+		BoundingBox bb = (BoundingBox)model.getWorldBound();
 		float currOrigin = bb.getCenter().y - bb.getYExtent();
 		model.move(new Vector3f(0, yPos - currOrigin, 0));
 

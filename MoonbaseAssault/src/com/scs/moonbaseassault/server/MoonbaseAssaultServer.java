@@ -37,7 +37,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	private List<Point> computerSquares;
 	public ArrayList<Point>[] deploySquares;
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
-	//private MoonbaseAssaultGameData gameData;
 	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode;
 
 
@@ -154,7 +153,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			scannerData = map.scannerData;
 			this.deploySquares = map.deploySquares;
 
-			int maxSoldiers = 6;
+			int maxSoldiers = 0;
 
 			this.computerSquares = new ArrayList<Point>();
 			for (int y=0 ; y<scannerData.length ; y++) {

@@ -60,7 +60,7 @@ public class ZombieModel implements IAvatarModel {
 
 			/*
 			Quaternion target_q = new Quaternion();
-			target_q.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y); // todo - was -1, 0, 0
+			target_q.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y);
 			model.setLocalRotation(target_q);
 	*/
 			return model;

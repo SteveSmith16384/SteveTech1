@@ -186,32 +186,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return this.sendPositionUpdate;
 	}
 
-	/*
-	public boolean sendUpdates_OLD() {
-		if (!this.moves) {
-			return false;
-		}
-
-		Vector3f currentPos = this.getWorldTranslation();
-		float dist = currentPos.distance(prevPos);
-		boolean hasMoved = dist >= Globals.SMALLEST_MOVE_DIST; 
-		if (hasMoved) {
-			this.prevPos.set(currentPos);
-		}
-
-		if (!hasMoved) {
-			// Check if rotation changed
-			Quaternion currentRot = this.getWorldRotation(); //prevRot.subtract(currentRot);
-			boolean rotChanged = !currentRot.equals(this.prevRot); // todo - check diff!
-			if (rotChanged) {
-				prevRot.set(currentRot);
-			}
-			hasMoved = rotChanged;
-		}
-
-		return hasMoved;
-	}
-	 */
 
 	@Override
 	public String toString() {
