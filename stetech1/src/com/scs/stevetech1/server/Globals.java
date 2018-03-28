@@ -14,8 +14,8 @@ public class Globals {
 
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_PLAYER_MOVING_THRU_SOLDIER = true;
-	public static final boolean USE_BOXES_FOR_AI_SOLDIER = true;
-	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = true;
+	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
+	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
 	public static final boolean WARN_IF_BB_CHANGES = true;
 
@@ -35,7 +35,6 @@ public class Globals {
 	public static final boolean DEBUG_SERVER_SHOOTING = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_CLIENT_ROTATION = false;
-	//public static final boolean USE_SERVER_MODELS_ON_CLIENT = false;
 	public static final boolean DEBUG_PLAYER_RESTART = false;
 	public static final boolean DEBUG_MOUNTAIN_BORDER = false;
 	public static final boolean SHOW_SNOWBALL_COLLISION_POS = false;
@@ -49,8 +48,7 @@ public class Globals {
 	public static final boolean DEBUG_SHOOTING_POS = false;
 
 	//----
-	public static final boolean SIMULATE_DROPPED_PACKETS = false;
-	public static final int PCENT_DROPPED_PACKETS = 0;
+	public static final int PCENT_DROPPED_PACKETS = 10;
 	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;
 	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0;
 	//----

@@ -127,6 +127,7 @@ ICollisionListener<PhysicalEntity> {
 	 */
 	protected abstract Class[] getListofMessageClasses();
 
+	
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		// Add/remove queued clients
@@ -509,7 +510,6 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		// Tell clients
-		//if (sendToClients) {
 		NewEntityMessage nem = new NewEntityMessage(e);
 		synchronized (clients) {
 			for (ClientData client : this.clients.values()) {
@@ -518,7 +518,6 @@ ICollisionListener<PhysicalEntity> {
 				}
 			}
 		}
-		//}
 	}
 
 
@@ -540,8 +539,6 @@ ICollisionListener<PhysicalEntity> {
 					this.entitiesForProcessing.remove(id);
 				}
 				//this.console.appendText("Removed " + e);
-			} else {
-				//Globals.pe("Warning - entity " + id + " doesn't exist for removal");  Probably an entity that is owned by another removed entity, e.g. SnowballLauncher
 			}
 
 			if (e instanceof IClientControlled) {

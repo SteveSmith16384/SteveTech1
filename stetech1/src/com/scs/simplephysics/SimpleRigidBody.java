@@ -30,9 +30,9 @@ public class SimpleRigidBody<T> implements Collidable {
 	//private Spatial spatial;
 	public T userObject; // Attach any object - todo - remove and use ISimpleEntity
 	private ISimpleEntity<T> simpleEntity;
-	private boolean canMove = true; // Set to false to make "kinematic" - todo - rename?
+	private boolean movedByForces = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
-	private Vector3f additionalForce = new Vector3f(); // Additional force to apply.  Does not get changed by this code.
+	protected Vector3f additionalForce = new Vector3f(); // Additional force to apply, e.g. walking force or explosion force.  Does not get changed by this code.
 	private int modelComplexity = 0; // For determining which way round to check
 	public boolean canWalkUpSteps = false;
 
@@ -42,13 +42,14 @@ public class SimpleRigidBody<T> implements Collidable {
 	private BoundingBox bb;
 	private Vector3f prevMoveDir = new Vector3f();
 	public boolean removed = false;
+	private boolean neverMoves;
 
-	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean moves, T _tag) {
+	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean _movedByForces, T _tag) {
 		super();
 
 		simpleEntity =_ent;
 		physicsController = _controller;
-		this.canMove = moves;
+		this.movedByForces = _movedByForces;
 		userObject = _tag;
 
 		this.gravInc = physicsController.getGravity(); 
@@ -74,7 +75,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public void setMovable(boolean b) {
-		this.canMove = b;
+		this.movedByForces = b;
 	}
 
 
@@ -89,6 +90,10 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public void process(float tpf_secs) {
+		if (tpf_secs > 0.1f) {
+			tpf_secs = 0.1f; // Prevent stepping too far
+		}
+
 		if (Globals.WARN_IF_BB_CHANGES) {
 			if (bb == null) {
 				bb = (BoundingBox)this.getSpatial().getWorldBound().clone();
@@ -101,7 +106,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 		}
 
-		if (this.canMove) {
+		if (this.movedByForces) {
 			// Check we're not already colliding *before* we've even moved
 			SimpleRigidBody<T> tmpWasCollision = checkForCollisions();
 			if (tmpWasCollision != null) {
@@ -116,7 +121,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 			if (this.oneOffForce.length() > 0 || this.additionalForce.length() != 0) {
 				prevMoveDir.set(oneOffForce.add(additionalForce));
-				Globals.p("Prev dir:" + prevMoveDir);
+				//Globals.p("Prev dir:" + prevMoveDir);
 			}
 
 			// Move along X
@@ -206,18 +211,19 @@ public class SimpleRigidBody<T> implements Collidable {
 		} else {
 			diff = this.prevMoveDir.mult(-0.1f);
 		}
+		diff.y = 0; // Only move horizontally
 
 		if (diff.length() == 0) {
-			System.err.println("No direction!"); // Can't do anything
+			//System.err.println("No direction!"); // Can't do anything
 		} else {
 			SimpleRigidBody<T> tmpWasCollision = null;
-			do {
-				this.getSpatial().move(diff); // Move away until there's no more collisions
-				if (Globals.DEBUG_PLAYER_MOVING_THRU_SOLDIER) {
-					p("Automoved  " + this + " by " + diff);
-				}
-				tmpWasCollision = checkForCollisions();
-			} while (tmpWasCollision != null && this.removed == false);
+			//do {
+			this.getSpatial().move(diff); // Move away
+			if (Globals.DEBUG_PLAYER_MOVING_THRU_SOLDIER) {
+				p("Automoved  " + this + " by " + diff);
+			}
+			tmpWasCollision = checkForCollisions();
+			//} while (tmpWasCollision != null && this.removed == false); Only adjust once, we'll do it again on the next iteration
 			this.simpleEntity.hasMoved();
 		}
 	}
@@ -365,13 +371,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	/*
 	 * Override if required to set additional movement force, e.g. walking.
 	 */
-	public Vector3f getWalkingForce() {
+	public Vector3f getAdditionalForce() {
 		return additionalForce;
 	}
 
 
 	public void setAdditionalForce(Vector3f force) {
-		if (!this.canMove) {
+		if (!this.movedByForces) {
 			p("Warning - setting additional force on non-moving entity");
 		}
 		this.additionalForce.set(force);
@@ -393,16 +399,24 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	public boolean canMove() {
-		return this.canMove;
+	/**
+	 * If flase, the body is kinematic
+	 * @return
+	 */
+	public boolean movedByForces() {
+		return this.movedByForces;
 	}
 
 
 	public void removeFromParent() {
-		if (this.parent != null) {
-			this.parent.remove(this);
-			if (this.parent.getNumChildren() == 0) {
-				this.physicsController.nodes.remove(this.parent.id);
+		if (SimplePhysicsController.USE_NEW_COLLISION_METHOD) {
+			if (this.parent != null) {
+				this.parent.remove(this);
+				if (this.parent.getNumChildren() == 0) {
+					this.physicsController.nodes.remove(this.parent.id);
+				} else {
+					this.parent.recalcBounds();
+				}
 			}
 		}
 	}
@@ -413,5 +427,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
+	public void setNeverMoves(boolean b) {
+		this.neverMoves = b;
+	}
+	
+	
+	public boolean getNeverMoves() {
+		return this.neverMoves;
+	}
 }
 

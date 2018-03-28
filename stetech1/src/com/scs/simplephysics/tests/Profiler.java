@@ -51,7 +51,7 @@ public class Profiler implements ICollisionListener<String> {
 		// List entities
 		if (SimplePhysicsController.DEBUG) {
 			for (SimpleRigidBody<String> e : this.physicsController.getEntities()) {
-				if (e.canMove()) {
+				if (e.movedByForces()) {
 					p(e.toString() + " is at " + e.getSpatial().getWorldTranslation());
 				}
 			}

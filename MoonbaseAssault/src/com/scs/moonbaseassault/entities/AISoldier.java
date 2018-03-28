@@ -3,6 +3,7 @@ package com.scs.moonbaseassault.entities;
 import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
@@ -17,6 +18,8 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.models.SoldierModel;
+import com.scs.moonbaseassault.server.ai.IArtificialIntelligence;
+import com.scs.moonbaseassault.server.ai.SimpleAI;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -38,6 +41,7 @@ import ssmith.lang.NumberFunctions;
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
 IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
+	private static final float WAIT_FOR_DOOR_DURATION = 3;
 	private static final float SPEED = .5f;//.47f;
 
 	private static final float w = 0.3f;
@@ -48,9 +52,12 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	private SoldierModel soldierModel;
 	private float health = 1f;
 	private Vector3f currDir;
+	//private Vector3f prevPos = new Vector3f(); // todo - remove.  We shouldnt need to do this, SimplePhysics should move us back
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	private int side;
+	private IArtificialIntelligence ai;
 
+	// HUD
 	private BitmapText hudNode;
 	private static BitmapFont font_small;
 
@@ -63,6 +70,8 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
+
+			ai = new SimpleAI(this);
 		}
 
 		Spatial spatial = null;
@@ -92,7 +101,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		this.mainNode.attachChild(spatial);
 		mainNode.setLocalTranslation(x, y, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this); // was false
 		simpleRigidBody.canWalkUpSteps = true;
 
 		spatial.setUserData(Globals.ENTITY, this);
@@ -101,19 +110,20 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
 		hudNode.setText("Cpl. Jonlan");
-
+		
 	}
 
 
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (health > 0) {
-			if (NumberFunctions.rnd(1, 200) == 1) {
+			/*if (NumberFunctions.rnd(1, 200) == 1) {
 				Vector3f newdir = this.getRandomDirection();
 				this.changeDirection(newdir);
-			}
+			}*/
 
 			if (!Globals.DEBUG_CAN_SEE) {
+				//Globals.p("Currdir: " + this.currDir);
 				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // Walk forwards
 			} else {
 				/*if (MoonbaseAssaultServer.player != null) {
@@ -131,6 +141,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
 		}
 
+		//this.prevPos.set(this.getMainNode().getWorldTranslation());
 		super.processByServer(server, tpf_secs);
 	}
 
@@ -165,10 +176,21 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (health > 0) {
-			if (pe instanceof Floor == false) {
-				Globals.p("AISoldier has collided with " + pe);
-				// turn around
-				changeDirection(currDir.mult(-1));
+			if (game.isServer()) {
+				if (pe instanceof Floor == false) {
+					Globals.p("AISoldier has collided with " + pe);
+					
+					// Change direction to away from blockage
+					if (pe instanceof MoonbaseWall || pe instanceof Computer) {
+						// Move in the opposite direction
+						BoundingBox ourBB = (BoundingBox)this.getMainNode().getWorldBound();
+						BoundingBox theirBB = (BoundingBox)pe.getMainNode().getWorldBound();
+						Vector3f diff = theirBB.getCenter().subtract(ourBB.getCenter());
+						diff.y = 0;
+						diff.normalizeLocal();
+						changeDirection(diff.multLocal(-1));
+					}
+				}
 			}
 		}
 	}

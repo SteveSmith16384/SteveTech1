@@ -96,7 +96,7 @@ public class SimplePhysicsController<T> {
 		if (USE_NEW_COLLISION_METHOD) {
 			BoundingBox bb = (BoundingBox)srb.getSpatial().getWorldBound();
 			boolean tooBig = bb.getVolume() > (nodeSizeXZ * nodeSizeXZ * nodeSizeY);
-			if (!srb.canMove() && this.nodeSizeXZ > 0 && this.nodeSizeY > 0 && !tooBig) {
+			if (srb.getNeverMoves() && this.nodeSizeXZ > 0 && this.nodeSizeY > 0 && !tooBig) {
 				int x = (int)bb.getCenter().x / this.nodeSizeXZ;
 				int y = (int)bb.getCenter().y / this.nodeSizeY;
 				int z = (int)bb.getCenter().z / this.nodeSizeXZ;
@@ -114,8 +114,9 @@ public class SimplePhysicsController<T> {
 		}
 
 		srb.removed = false;
-
-		if (srb.canMove()) {
+		srb.currentGravInc = 0;
+		
+		if (srb.movedByForces()) {
 			// Check to see if they're not already colliding
 			SimpleRigidBody<T> tmpWasCollision = srb.checkForCollisions();
 			if (tmpWasCollision != null) {

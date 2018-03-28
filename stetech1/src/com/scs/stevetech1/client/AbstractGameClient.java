@@ -39,6 +39,7 @@ import com.jme3.texture.Texture;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
@@ -110,7 +111,6 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	private static final String QUIT = "Quit";
 	protected static final String TEST = "Test";
 
-	// ----------
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
@@ -119,9 +119,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer;  // Keep client and server running at the same time
-	
+
 	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
-	// ----------
 
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
@@ -165,14 +164,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	protected AbstractGameClient(String _gameID, String appTitle, String logoImage, String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness, float _mouseSens) {
 		super();
-		//super(tickrateMillis, clientRenderDelayMillis, timeoutMillis);
 
 		gameID = _gameID;
-		
+
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
 		timeoutMillis = _timeoutMillis;
-		
+
 		loopTimer = new FixedLoopTime(tickrateMillis);
 
 		gameServerIP = _gameServerIP;
@@ -302,6 +300,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			tpf_secs = 1;
 		}
 
+
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 			renderTime = serverTime - clientRenderDelayMillis; // Render from history
@@ -390,9 +389,20 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;  //pe.getWorldRotation();
 							//if (pe.moves) { // Only bother with things that can move  scs new - removed
-								pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
+							pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
 							//}
 							//strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
+
+							if (Globals.STRICT) {
+								if (e instanceof AbstractClientAvatar == false && e instanceof IClientControlled == false) {
+									if (pe.simpleRigidBody != null) {
+										if (pe.simpleRigidBody.movedByForces()) {
+											Globals.p("Warning: client-side entity not kinematic");
+										}
+									}
+								}
+							}
+
 						}
 
 						if (e instanceof IProcessByClient) {
@@ -404,7 +414,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							IClientSideAnimated pbc = (IClientSideAnimated)e;
 							this.animSystem.process(pbc, tpf_secs);
 						}
-						
+
 						if (e instanceof IDrawOnHUD) {
 							IDrawOnHUD doh = (IDrawOnHUD)e;
 							doh.drawOnHud(cam);
@@ -421,7 +431,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 					//this.hud.log_ta.setText(strListEnts.toString());
 				}
-				
+
 				// Show players gun
 				if (playersWeaponNode != null) {
 					playersWeaponNode.setLocalTranslation(cam.getLocation());
@@ -457,7 +467,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		} else if (message instanceof GenericStringMessage) {
 			GenericStringMessage gsm = (GenericStringMessage)message;
 			this.hud.showMessage(gsm.msg);
-			
+
 		} else if (message instanceof GameSuccessfullyJoinedMessage) {
 			GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
 			if (this.playerID <= 0) {
@@ -630,7 +640,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			JoinGameFailedMessage jgfm = (JoinGameFailedMessage)message;
 			Globals.p("Join game failed: " + jgfm.reason);
 			this.quit(jgfm.reason);
-			
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
@@ -886,7 +896,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
-		
+
 		if (pea instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
 			ic.collided(peb);
@@ -896,7 +906,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			ic.collided(pea);
 		}
 
-/*
+		/*
 		if (pea instanceof IClientControlled) {
 			IClientControlled cc = (IClientControlled)pea;
 			if (pea instanceof IRemoveOnContact) {
@@ -911,7 +921,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				roc.removeOnContact();
 			}
 		}
-*/
+		 */
 	}
 
 
@@ -936,8 +946,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	public Node getGameNode() {
 		return gameNode;
 	}
-	
-	
+
+
 	private void showPlayersWeapon() {
 		if (playersWeaponNode == null) {
 			playersWeaponNode = new Node("PlayersWeapon");
@@ -950,7 +960,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		}
 	}
 
-	
+
 	protected abstract Spatial getPlayersWeaponModel();
-	
+
 }

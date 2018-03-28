@@ -40,10 +40,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
-		/*
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.setJumpForce(jumpForce);
-		 */
 		_client.currentAvatar = this;
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
@@ -53,8 +49,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 
 	private void createDebugBox() {
-		//Box box1 = new Box(.5f, .5f, .5f);
-		BoundingBox bb = (BoundingBox)super.playerGeometry.getWorldBound();
+		//BoundingBox bb = (BoundingBox)super.playerGeometry.getWorldBound();
 		//Box box1 = new Box(bb.getXExtent()*2, bb.getYExtent()*2, bb.getZExtent()*2);
 		Box box1 = new Box(.5f, .1f, .5f);
 		debugNode = new Geometry("DebugBox", box1);
@@ -75,8 +70,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		debugNode.setLocalTranslation(0, box1.yExtent/2, 0); // Origin is at the bottom
 
-		//debugNode = new Node();
-		//debugNode.attachChild(geometry);
 		game.getGameNode().attachChild(debugNode);
 
 	}

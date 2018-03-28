@@ -135,7 +135,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 			if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
 				if (acceptInput()) {
 					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-					simplePlayerControl.getWalkingForce().addLocal(walkDirection);
+					simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
 				}
 				if (Globals.SHOW_AVATAR_WALK_DIR) {
 					Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());
@@ -186,7 +186,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	@Override
 	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-		simplePlayerControl.getWalkingForce().addLocal(offset);
+		simplePlayerControl.getAdditionalForce().addLocal(offset);
 	}
 
 
@@ -203,7 +203,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	@Override
 	public void resetPlayerInput() {
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-		simplePlayerControl.getWalkingForce().set(0, 0, 0);
+		simplePlayerControl.getAdditionalForce().set(0, 0, 0);
 	}
 
 

@@ -86,7 +86,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 				AbstractClientAvatar avatar = new SoldierClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side, moveSpeed, jumpForce);
 				//avatar.moveSpeed = moveSpeed;
 				//avatar.setJumpForce(jumpForce);
-				//game.getCamera().lookAt(new Vector3f(15, .5f, 15), Vector3f.UNIT_Y); // Look somewhere
+				game.getCamera().lookAt(pos.add(Vector3f.UNIT_X), Vector3f.UNIT_Y); // Look somewhere
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
@@ -192,14 +192,14 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		case GRENADE_LAUNCHER: 
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			//if (game.currentAvatar != null) { // We might not have an avatar yet
+			if (game.currentAvatar != null) { // We might not have an avatar yet
 			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				GrenadeLauncher gl = new GrenadeLauncher(game, id, owner, num, null);
 				return gl;
 			}
-			//}
+			}
 			return null;
 		}
 

@@ -27,7 +27,7 @@ public class SmallExplosionModel extends Node {
 		this.createFlame(assetManager);
 		this.createFlash(assetManager);
 
-		explosionEffect.scale(.01f);
+		explosionEffect.scale(.03f);
 		explosionEffect.updateModelBound();
 		
 		this.attachChild(explosionEffect);

@@ -35,8 +35,8 @@ public class SimulateCollidingBoxes implements ICollisionListener<String> {
 		for (int i=0 ; i<TOTAL_ITERATIONS ; i++) {
 			//box1.setAdditionalForce(new Vector3f(0f, 0f, SPEED));
 			//box2.setAdditionalForce(new Vector3f(0f, 0f, -SPEED));
-			box1.getWalkingForce().set(new Vector3f(0f, 0f, SPEED));
-			box2.getWalkingForce().set(new Vector3f(0f, 0f, -SPEED));
+			box1.getAdditionalForce().set(new Vector3f(0f, 0f, SPEED));
+			box2.getAdditionalForce().set(new Vector3f(0f, 0f, -SPEED));
 			this.physicsController.update(LOOP_INTERVAL_SECS);
 
 			p("Iteration: " + i);
