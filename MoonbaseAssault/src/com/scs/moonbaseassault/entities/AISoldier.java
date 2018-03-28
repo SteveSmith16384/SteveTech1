@@ -30,6 +30,7 @@ import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.ChronologicalLookup;
@@ -113,6 +114,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (health > 0) {
+			// Randomly change direction
 			/*if (NumberFunctions.rnd(1, 200) == 1) {
 				Vector3f newdir = this.getRandomDirection();
 				this.changeDirection(newdir);
@@ -127,7 +129,6 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
 		}
 
-		//this.prevPos.set(this.getMainNode().getWorldTranslation());
 		super.processByServer(server, tpf_secs);
 	}
 
@@ -143,10 +144,11 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		if (health > 0) {
 			this.health -= amt;
 			if (health <= 0) {
+				AbstractEntityServer server = (AbstractEntityServer)game;
+				server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, collider.getActualShooter()));
 				if (soldierModel != null) {
 					this.soldierModel.setAnim(AbstractAvatar.ANIM_DIED);
 				}
-				//this.simpleRigidBody.setMovable(false); // Stop it being pushed
 				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
 			}
 		}

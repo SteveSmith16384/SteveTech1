@@ -570,6 +570,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			EntityKilledMessage asm = (EntityKilledMessage) message;
 			PhysicalEntity killed = (PhysicalEntity)this.entities.get(asm.killedEntityID);
 			PhysicalEntity killer = (PhysicalEntity)this.entities.get(asm.killerEntityID);
+			if (killed.simpleRigidBody != null) {
+				this.physicsController.removeSimpleRigidBody(killed.simpleRigidBody);
+			}
 			if (killed == this.currentAvatar) {
 				Globals.p("You have been killed by " + killer);
 				AbstractAvatar avatar = (AbstractAvatar)killed;

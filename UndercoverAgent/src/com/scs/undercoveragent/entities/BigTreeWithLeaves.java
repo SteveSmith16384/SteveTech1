@@ -38,6 +38,7 @@ public class BigTreeWithLeaves extends PhysicalEntity {
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
 		simpleRigidBody.setModelComplexity(3);
+		simpleRigidBody.setNeverMoves(true);
 
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

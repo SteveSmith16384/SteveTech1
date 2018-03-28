@@ -77,6 +77,7 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
 		//this.simpleRigidBody.setMovable(false);
+		simpleRigidBody.setNeverMoves(true);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

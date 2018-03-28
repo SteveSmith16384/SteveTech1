@@ -14,14 +14,14 @@ public class Globals {
 
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_DIE_ANIM = true;
-	public static final boolean TEST_BOUNDING_BOX = false;
 	public static final boolean TRANSPARENT_WALLS = true;
-	public static final boolean DEBUG_PLAYER_MOVING_THRU_SOLDIER = true;
-	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
-	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
+	public static final boolean DEBUG_AUTOMOVING = true;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
 	public static final boolean WARN_IF_BB_CHANGES = true;
 
+	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
+	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
+	public static final boolean TEST_BOUNDING_BOX = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;
 	public static final boolean DEBUG_SLOW_CLIENT_AVATAR = false;
 	public static final boolean TURN_OFF_CLIENT_POS_ADJ = false;

@@ -131,7 +131,8 @@ public class SimplePhysicsController<T> {
 			this.entities.remove(srb);
 		}
 		if (USE_NEW_COLLISION_METHOD) {
-			srb.removeFromParent();
+			srb.removeFromParent_INTERNAL();
+			this.movingEntities.remove(srb);
 		}
 		srb.removed = true;
 	}

@@ -42,7 +42,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	private BoundingBox bb;
 	private Vector3f prevMoveDir = new Vector3f();
 	public boolean removed = false;
-	private boolean neverMoves;
+	private boolean neverMoves = false; // More efficient if true
 
 	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean _movedByForces, T _tag) {
 		super();
@@ -128,7 +128,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
 					if (Globals.STRICT) {
 						BoundingBox bb = (BoundingBox) this.getSpatial().getWorldBound();
-						if (this.tmpMoveDir.x > bb.getXExtent()) {
+						if (this.tmpMoveDir.x > bb.getXExtent()*2) {
 							p("Warning - moving too far!");
 						}
 					}
@@ -150,7 +150,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
 					if (Globals.STRICT) {
 						BoundingBox bb = (BoundingBox) this.getSpatial().getWorldBound();
-						if (this.tmpMoveDir.z > bb.getZExtent()) {
+						if (this.tmpMoveDir.z > bb.getZExtent()*2) {
 							p("Warning - moving too far!");
 						}
 					}
@@ -175,7 +175,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
 					if (Globals.STRICT) {
 						BoundingBox bb = (BoundingBox) this.getSpatial().getWorldBound();
-						if (this.tmpMoveDir.y > bb.getXExtent()) {
+						if (this.tmpMoveDir.y > bb.getXExtent()*2) {
 							p("Warning - moving too far!");
 						}
 					}
@@ -232,7 +232,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			SimpleRigidBody<T> tmpWasCollision = null;
 			//do {
 			this.getSpatial().move(diff); // Move away
-			if (Globals.DEBUG_PLAYER_MOVING_THRU_SOLDIER) {
+			if (Globals.DEBUG_AUTOMOVING) {
 				p("Automoved  " + this + " by " + diff);
 			}
 			tmpWasCollision = checkForCollisions();
@@ -421,7 +421,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	public void removeFromParent() {
+	/**
+	 * This should only be called from SimplePhysicsController.
+	 */
+	public void removeFromParent_INTERNAL() {
 		if (SimplePhysicsController.USE_NEW_COLLISION_METHOD) {
 			if (this.parent != null) {
 				this.parent.remove(this);
