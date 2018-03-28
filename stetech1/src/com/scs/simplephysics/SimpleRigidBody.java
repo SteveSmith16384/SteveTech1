@@ -12,6 +12,7 @@ import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
+	private static final boolean WARN_IF_MOVING_TOO_FAR = true;
 	private static final float MAX_STEP_HEIGHT = 0.15f;
 	private static final float GRAVITY_WARNING = -5f;
 
@@ -27,7 +28,6 @@ public class SimpleRigidBody<T> implements Collidable {
 	private float gravInc; // How powerful is gravity for this entity
 	public float currentGravInc = 0; // The y-axis change this frame caused by gravity
 
-	//private Spatial spatial;
 	public T userObject; // Attach any object - todo - remove and use ISimpleEntity
 	private ISimpleEntity<T> simpleEntity;
 	private boolean movedByForces = true; // Set to false to make "kinematic"
@@ -112,16 +112,13 @@ public class SimpleRigidBody<T> implements Collidable {
 			if (tmpWasCollision != null) {
 				System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision.userObject);
 				this.moveAwayFrom(tmpWasCollision);
-			}
-
-			/*Vector3f tmpAdditionalForce = this.getAdditionalForce();
-			if (tmpAdditionalForce == null) {
-				tmpAdditionalForce = Vector3f.ZERO; // Prevent NPE
-			}*/
-
-			if (this.oneOffForce.length() > 0 || this.additionalForce.length() != 0) {
-				prevMoveDir.set(oneOffForce.add(additionalForce));
-				//Globals.p("Prev dir:" + prevMoveDir);
+				return; // Don't bother moving any more!
+			} else {
+				// Only set prevMoveDir if we're in the clear
+				if (this.oneOffForce.length() > 0 || this.additionalForce.length() != 0) {
+					prevMoveDir.set(oneOffForce.add(additionalForce));
+					//Globals.p("Prev dir:" + prevMoveDir);
+				}
 			}
 
 			// Move along X
@@ -129,6 +126,12 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.x + additionalForce.x;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
+					if (Globals.STRICT) {
+						BoundingBox bb = (BoundingBox) this.getSpatial().getWorldBound();
+						if (this.tmpMoveDir.x > bb.getXExtent()) {
+							p("Warning - moving too far!");
+						}
+					}
 					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 					if (collidedWith != null) {
 						if (!checkForStep(collidedWith, tpf_secs)) {
@@ -145,6 +148,12 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.z + additionalForce.z;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
+					if (Globals.STRICT) {
+						BoundingBox bb = (BoundingBox) this.getSpatial().getWorldBound();
+						if (this.tmpMoveDir.z > bb.getZExtent()) {
+							p("Warning - moving too far!");
+						}
+					}
 					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 					if (collidedWith != null) {
 						if (!checkForStep(collidedWith, tpf_secs)) {
@@ -164,19 +173,23 @@ public class SimpleRigidBody<T> implements Collidable {
 				boolean collided = false; 
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
+					if (Globals.STRICT) {
+						BoundingBox bb = (BoundingBox) this.getSpatial().getWorldBound();
+						if (this.tmpMoveDir.y > bb.getXExtent()) {
+							p("Warning - moving too far!");
+						}
+					}
 					SimpleRigidBody<T> collidedWith = this.move(tmpMoveDir);
 					if (collidedWith != null) {
-						{
-							collided = true;
-							// Bounce
-							float bounce = this.bounciness;
-							oneOffForce.y = oneOffForce.y * bounce * -1; // Reverse direction
-							if (Math.abs(this.currentGravInc) > 0.5f) {
-								currentGravInc = currentGravInc * bounce * -1;
-							} else {
-								// Avoid constantly bouncing
-								currentGravInc = 0;
-							}
+						collided = true;
+						// Bounce
+						float bounce = this.bounciness;
+						oneOffForce.y = oneOffForce.y * bounce * -1; // Reverse direction
+						if (Math.abs(this.currentGravInc) > 0.5f) {
+							currentGravInc = currentGravInc * bounce * -1;
+						} else {
+							// Avoid constantly bouncing
+							currentGravInc = 0;
 						}
 						if (totalOffset < 0) { // Going down?
 							isOnGround = true;
@@ -430,8 +443,8 @@ public class SimpleRigidBody<T> implements Collidable {
 	public void setNeverMoves(boolean b) {
 		this.neverMoves = b;
 	}
-	
-	
+
+
 	public boolean getNeverMoves() {
 		return this.neverMoves;
 	}

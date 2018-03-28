@@ -10,9 +10,12 @@ public class Globals {
 	
 	public static final boolean HIDE_BELLS_WHISTLES = true;
 	public static final boolean RECORD_VID = false;
-	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
+	public static final boolean STRICT = false; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_DIE_ANIM = true;
+	public static final boolean TEST_BOUNDING_BOX = false;
+	public static final boolean TRANSPARENT_WALLS = true;
 	public static final boolean DEBUG_PLAYER_MOVING_THRU_SOLDIER = true;
 	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;

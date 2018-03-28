@@ -19,7 +19,7 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.models.SoldierModel;
 import com.scs.moonbaseassault.server.ai.IArtificialIntelligence;
-import com.scs.moonbaseassault.server.ai.SimpleAI;
+import com.scs.moonbaseassault.server.ai.SimpleSoldierAI;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -41,8 +41,7 @@ import ssmith.lang.NumberFunctions;
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
 IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
-	private static final float WAIT_FOR_DOOR_DURATION = 3;
-	private static final float SPEED = .5f;//.47f;
+	public static final float SPEED = .5f;//.47f;
 
 	private static final float w = 0.3f;
 	private static final float d = 0.3f;
@@ -51,8 +50,6 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	private SoldierModel soldierModel;
 	private float health = 1f;
-	private Vector3f currDir;
-	//private Vector3f prevPos = new Vector3f(); // todo - remove.  We shouldnt need to do this, SimplePhysics should move us back
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	private int side;
 	private IArtificialIntelligence ai;
@@ -65,13 +62,12 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, "AISoldier", true);
 
 		side = _side;
-		currDir = this.getRandomDirection();
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
 
-			ai = new SimpleAI(this);
+			ai = new SimpleSoldierAI(this);
 		}
 
 		Spatial spatial = null;
@@ -110,7 +106,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
 		hudNode.setText("Cpl. Jonlan");
-		
+
 	}
 
 
@@ -122,17 +118,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 				this.changeDirection(newdir);
 			}*/
 
-			if (!Globals.DEBUG_CAN_SEE) {
-				//Globals.p("Currdir: " + this.currDir);
-				this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // Walk forwards
-			} else {
-				/*if (MoonbaseAssaultServer.player != null) {
-					boolean cansee = this.canSee(MoonbaseAssaultServer.player, 100f);
-					if (cansee) {
-						//Globals.p("Soldier can see player");
-					}
-				}*/
-			}
+			ai.process(tpf_secs);
 
 			if (soldierModel != null) {
 				this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
@@ -177,20 +163,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	public void collided(PhysicalEntity pe) {
 		if (health > 0) {
 			if (game.isServer()) {
-				if (pe instanceof Floor == false) {
-					Globals.p("AISoldier has collided with " + pe);
-					
-					// Change direction to away from blockage
-					if (pe instanceof MoonbaseWall || pe instanceof Computer) {
-						// Move in the opposite direction
-						BoundingBox ourBB = (BoundingBox)this.getMainNode().getWorldBound();
-						BoundingBox theirBB = (BoundingBox)pe.getMainNode().getWorldBound();
-						Vector3f diff = theirBB.getCenter().subtract(ourBB.getCenter());
-						diff.y = 0;
-						diff.normalizeLocal();
-						changeDirection(diff.multLocal(-1));
-					}
-				}
+				ai.collided(pe);
 			}
 		}
 	}
@@ -206,6 +179,11 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	public void setAnimCode(int animCode) {
 		if (soldierModel != null) {
 			this.soldierModel.setAnim(animCode);
+			if (Globals.DEBUG_DIE_ANIM) {
+				if (animCode == AbstractAvatar.ANIM_DIED) {
+					//Globals.p("Die anim");
+				}
+			}
 		}
 	}
 
@@ -243,24 +221,6 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		return this.hudNode;
 	}
 
-
-	private Vector3f getRandomDirection() {
-		int i = NumberFunctions.rnd(0,  3);
-		switch (i) {
-		case 0: return new Vector3f(1f, 0, 0);
-		case 1: return new Vector3f(-1f, 0, 0);
-		case 2: return new Vector3f(0f, 0, 1f);
-		case 3: return new Vector3f(0f, 0, -1f);
-		}
-		throw new RuntimeException("Invalid direction: " + i);
-	}
-
-
-	private void changeDirection(Vector3f dir) {
-		Globals.p("Changing direction"); //this.getSpatial().getWorldBound();
-		this.currDir.set(dir);
-		this.getMainNode().lookAt(this.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
-	}
 
 
 }

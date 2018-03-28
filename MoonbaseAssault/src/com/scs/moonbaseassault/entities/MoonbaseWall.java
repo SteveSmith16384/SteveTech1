@@ -4,7 +4,9 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -52,7 +54,12 @@ public class MoonbaseWall extends PhysicalEntity {
 		if (!_game.isServer()) { // Not running in server
 			geometry.setShadowMode(ShadowMode.CastAndReceive);
 
-			TextureKey key3 = new TextureKey(tex);
+			TextureKey key3 = null;
+			if (!Globals.TRANSPARENT_WALLS) {
+				key3 = new TextureKey(tex);
+			} else {
+				key3 = new TextureKey("Textures/fence.png");
+			}
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
@@ -67,6 +74,13 @@ public class MoonbaseWall extends PhysicalEntity {
 			}
 
 			geometry.setMaterial(floor_mat);
+			
+			if (Globals.TRANSPARENT_WALLS) {
+				floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+				geometry.setQueueBucket(Bucket.Transparent);
+
+			}
+
 		}
 		this.mainNode.attachChild(geometry);
 		geometry.setLocalTranslation((w/2), h/2, (d/2)); // Never change position of mainNode (unless the whole object is moving)

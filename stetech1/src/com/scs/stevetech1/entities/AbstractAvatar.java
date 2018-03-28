@@ -68,6 +68,21 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		avatarModel = _avatarModel;
 
 		playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);
+		
+		if (Globals.TEST_BOUNDING_BOX) {
+			BoundingBox bb1 = (BoundingBox)playerGeometry.getWorldBound();
+			Globals.p("bb1:" + bb1);
+
+			playerGeometry.lookAt(Vector3f.UNIT_X, Vector3f.UNIT_Y);
+			BoundingBox bb2 = (BoundingBox)playerGeometry.getWorldBound();
+			Globals.p("bb2:" + bb2);
+
+			playerGeometry.lookAt(Vector3f.UNIT_Z, Vector3f.UNIT_Y);
+			BoundingBox bb3 = (BoundingBox)playerGeometry.getWorldBound();
+			Globals.p("bb3:" + bb3);
+
+		}
+		
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
 
 		this.getMainNode().attachChild(playerGeometry);
