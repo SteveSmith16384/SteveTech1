@@ -150,6 +150,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 					this.soldierModel.setAnim(AbstractAvatar.ANIM_DIED);
 				}
 				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
+				this.hudNode.removeFromParent();
 			}
 		}
 	}
@@ -182,9 +183,9 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		if (soldierModel != null) {
 			this.soldierModel.setAnim(animCode);
 			if (Globals.DEBUG_DIE_ANIM) {
-				if (animCode == AbstractAvatar.ANIM_DIED) {
-					//Globals.p("Die anim");
-				}
+				//if (animCode == AbstractAvatar.ANIM_DIED) {
+					Globals.p("setAnimCode=" + animCode);
+				//}
 			}
 		}
 	}
@@ -198,6 +199,11 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	@Override
 	public int getCurrentAnimCode() {
+		if (Globals.DEBUG_DIE_ANIM) {
+			//if (animCode == AbstractAvatar.ANIM_DIED) {
+				Globals.p("getCurrentAnimCode=" + this.soldierModel.getCurrentAnimCode());
+			//}
+		}
 		if (soldierModel != null) {
 			return this.soldierModel.getCurrentAnimCode();
 		} else {
@@ -208,13 +214,14 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	@Override
 	public void drawOnHud(Camera cam) {
+		if (health > 0) {
 		FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 		if (insideoutside != FrustumIntersect.Outside) {
 			Vector3f pos = this.getWorldTranslation().add(0, SoldierModel.MODEL_HEIGHT, 0);
 			Vector3f screen_pos = cam.getScreenCoordinates(pos);
 			this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 		}
-
+		}
 	}
 
 

@@ -26,8 +26,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public IHUD hud;
 	public Camera cam;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
-	//private float lastAvatarDiff = 0;
-	private Spatial debugNode;	
+	private Spatial debugNode;
 
 	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
 			float x, float y, float z, int side, IAvatarModel avatarModel, float _moveSpeed, float _jumpSpeed) {
@@ -137,7 +136,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			if (Globals.SHOW_SERVER_CLIENT_AVATAR_DIST) {
 				Globals.p("Server and client avatars dist: " + diff);
 			}
-			//lastAvatarDiff = diff;
 			if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
 				Globals.p("Server and client avatars very far apart, forcing move: " + diff);
 				// They're so far out, just move them

@@ -84,8 +84,6 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 
 			if (playerID == game.playerID) {
 				AbstractClientAvatar avatar = new SoldierClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side, moveSpeed, jumpForce);
-				//avatar.moveSpeed = moveSpeed;
-				//avatar.setJumpForce(jumpForce);
 				game.getCamera().lookAt(pos.add(Vector3f.UNIT_X), Vector3f.UNIT_Y); // Look somewhere
 				return avatar;
 			} else {

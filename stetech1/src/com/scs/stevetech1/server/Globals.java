@@ -63,7 +63,7 @@ public class Globals {
 	public static final int KRYO_OBJECT_BUFFER_SIZE = 2048*6;
 	// Our movement speed
 	public static final float SMALLEST_MOVE_DIST = 0.001f;// 0.02f;
-	public static final float MAX_MOVE_DIST = 4f;
+	public static final float MAX_MOVE_DIST = 2f;
 
 	public static final float CAM_DIST = 50f;
 	public static final boolean LIGHTING = true;

@@ -63,11 +63,11 @@ public class SimpleRigidBody<T> implements Collidable {
 		this.oneOffForce = dir;
 	}
 
-
+/*
 	public Spatial getSpatial() {
 		return this.simpleEntity.getSpatial();
 	}
-
+*/
 
 	public Vector3f getLinearVelocity() {
 		return this.oneOffForce;
@@ -224,7 +224,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		} else {
 			diff = this.prevMoveDir.mult(-0.1f);
 		}
-		diff.y = 0; // Only move horizontally
+		diff.y = 0; // Only move horizontally?
 
 		if (diff.length() == 0) {
 			//System.err.println("No direction!"); // Can't do anything
