@@ -2,6 +2,7 @@ package com.scs.undercoveragent;
 
 import java.io.IOException;
 
+import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
@@ -112,8 +113,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 				float x = NumberFunctions.rndFloat(2, mapSize-3);
 				float z = NumberFunctions.rndFloat(2, mapSize-3);
 				avatar.setWorldTranslation(x, startHeight, z);
-				collider = avatar.simpleRigidBody.checkForCollisions();
-			} while (collider != null);
+			} while (avatar.simpleRigidBody.checkForCollisions().size() > 0);
 		}
 		Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
@@ -193,12 +193,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		float x = NumberFunctions.rndFloat(2, mapSize-3);
 		float z = NumberFunctions.rndFloat(2, mapSize-3);
 		this.actuallyAddEntity(entity);
-		SimpleRigidBody<PhysicalEntity> collider = entity.simpleRigidBody.checkForCollisions();
-		while (collider != null) {
+		CollisionResults crs = entity.simpleRigidBody.checkForCollisions();
+		while (crs.size() > 0) {
 			x = NumberFunctions.rndFloat(2, mapSize-3);
 			z = NumberFunctions.rndFloat(2, mapSize-3);
 			entity.setWorldTranslation(x, z);
-			collider = entity.simpleRigidBody.checkForCollisions();
+			crs = entity.simpleRigidBody.checkForCollisions();
 		}
 		// randomly rotate
 		JMEAngleFunctions.rotateToDirection(entity.getMainNode(), NumberFunctions.rnd(0,  359));

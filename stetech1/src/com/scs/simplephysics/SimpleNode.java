@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
+import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 
 public class SimpleNode<T> { //extends ArrayList<SimpleRigidBody<T>> {
 
@@ -90,19 +90,22 @@ public class SimpleNode<T> { //extends ArrayList<SimpleRigidBody<T>> {
 
 	}
 	
-	public SimpleRigidBody<T> getCollisions(SimpleRigidBody<T> srb) {
-		SimpleRigidBody<T> collidedWith = null;
+
+	public int getCollisions(SimpleRigidBody<T> srb, CollisionResults crs) {
+		int count = 0;
 		BoundingBox bb = srb.getBoundingBox();
 		if (this.intersects(bb)) {
 			synchronized (this.entities) {
 				for (SimpleRigidBody<T> other : this.entities) {
-					if (srb.checkSRBvSRB(other) ) {
-						collidedWith = other;
+					CollisionResult cr = srb.checkSRBvSRB(other); 
+					if (cr != null) {
+						crs.addCollision(cr);
+						count++;
 					}
 				}
 			}
 		}
-		return collidedWith;
+		return count;
 	}
 	
 	

@@ -400,8 +400,7 @@ public class MapLoader {
 
 	private boolean moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
 		CollisionResults cr = new CollisionResults(); //todo - re-add
-		SimpleRigidBody<PhysicalEntity> srb = pe.simpleRigidBody.checkForCollisions();
-		if (srb != null) {
+		if (pe.simpleRigidBody.checkForCollisions().size() > 0) {
 			//throw new RuntimeException("Stuck in wall!");
 			pe.remove();
 			return false;

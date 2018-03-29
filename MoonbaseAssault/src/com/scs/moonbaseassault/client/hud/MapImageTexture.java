@@ -45,8 +45,8 @@ public class MapImageTexture extends PaintableImage {
 		g.clearRect(0, 0, getWidth(), getHeight());
 
 		if (data != null) {
-			g.setColor(new Color(1f, 1f, 1f, ALPHA));
-
+			// Map walls
+			g.setColor(new Color(0f, 0f, 1f, ALPHA));
 			for (int y=0 ; y<data.length ; y++) {
 				for (int x=0 ; x<data[y].length ; x++) {
 					if (data[y][x] == MapLoader.WALL) {
@@ -54,6 +54,8 @@ public class MapImageTexture extends PaintableImage {
 					}
 				}
 			}
+			
+			// Units
 			if (units != null) {
 				g.setColor(new Color(1f, 0f, 0f, ALPHA));
 
@@ -62,16 +64,20 @@ public class MapImageTexture extends PaintableImage {
 					g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
 				}			
 			}
+			
+			// Computers
 			if (computers != null) {
-				g.setColor(new Color(0f, 0f, 1f, ALPHA));
+				g.setColor(new Color(0f, 1f, 1f, ALPHA));
 
 				for (int i=0 ; i<computers.size() ; i++) {
 					Point p = computers.get(i);
 					g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
 				}			
 			}
+			
+			// Player
 			if (player != null) {
-				g.setColor(new Color(1f, 1f, 1f, ALPHA));
+				g.setColor(new Color(0f, 1f, 0f, ALPHA));
 				g.fillRect((data.length-player.y)*pixelSize, (data.length-player.x)*pixelSize, pixelSize, pixelSize);
 			}
 		}

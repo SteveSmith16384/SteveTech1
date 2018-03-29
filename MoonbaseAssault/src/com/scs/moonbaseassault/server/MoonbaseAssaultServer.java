@@ -119,7 +119,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		boolean found = false;
 		for (Point p : deploySquares) {
 			avatar.setWorldTranslation(new Vector3f(p.x+0.5f, startHeight, p.y+0.5f));
-			if (avatar.simpleRigidBody.checkForCollisions() == null) {
+			if (avatar.simpleRigidBody.checkForCollisions().size() == 0) {
 				found = true;
 				break;
 			}
