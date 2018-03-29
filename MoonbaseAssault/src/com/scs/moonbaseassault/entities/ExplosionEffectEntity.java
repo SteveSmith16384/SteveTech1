@@ -12,7 +12,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class ExplosionEffectEntity extends PhysicalEntity implements IProcessByClient {
 
-	private static final float DURATION = 3;
+	private static final float DURATION = 1;
 	
 	private SmallExplosionModel expl;
 	private float timeLeft = DURATION;

@@ -13,8 +13,8 @@ import com.scs.stevetech1.server.Globals;
 public class SimpleRigidBody<T> implements Collidable {
 
 	private static final boolean WARN_IF_MOVING_TOO_FAR = true;
-	private static final float MAX_STEP_HEIGHT = 0.15f;
-	private static final float GRAVITY_WARNING = -5f;
+	private static final float MAX_STEP_HEIGHT = 0.25f;
+	private static final float GRAVITY_WARNING = -15f;
 
 	private static final boolean ADJUST_USING_BOUNDING_BOX_POSITION = false;
 
@@ -63,6 +63,10 @@ public class SimpleRigidBody<T> implements Collidable {
 		this.oneOffForce = dir;
 	}
 
+	
+	public BoundingBox getBoundingBox() {
+		return this.simpleEntity.getBoundingBox();
+	}
 /*
 	public Spatial getSpatial() {
 		return this.simpleEntity.getSpatial();
@@ -96,9 +100,9 @@ public class SimpleRigidBody<T> implements Collidable {
 
 		if (Globals.WARN_IF_BB_CHANGES) {
 			if (bb == null) {
-				bb = (BoundingBox)this.getSpatial().getWorldBound().clone();
+				bb = (BoundingBox)this.getBoundingBox().clone();
 			} else {
-				BoundingBox newbb = (BoundingBox)this.getSpatial().getWorldBound();
+				BoundingBox newbb = this.getBoundingBox();
 				if (bb.getXExtent() != newbb.getXExtent() || bb.getYExtent() != newbb.getYExtent() || bb.getZExtent() != newbb.getZExtent()) {
 					p("Warning - boundingbox changed size!");
 					bb = (BoundingBox)newbb.clone();
@@ -127,7 +131,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
 					if (Globals.STRICT) {
-						BoundingBox bb = (BoundingBox) this.getSpatial().getWorldBound();
+						BoundingBox bb = (BoundingBox) this.getBoundingBox();
 						if (this.tmpMoveDir.x > bb.getXExtent()*2) {
 							p("Warning - moving too far!");
 						}
@@ -149,7 +153,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
 					if (Globals.STRICT) {
-						BoundingBox bb = (BoundingBox) this.getSpatial().getWorldBound();
+						BoundingBox bb = (BoundingBox) this.getBoundingBox();
 						if (this.tmpMoveDir.z > bb.getZExtent()*2) {
 							p("Warning - moving too far!");
 						}
@@ -174,7 +178,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
 					if (Globals.STRICT) {
-						BoundingBox bb = (BoundingBox) this.getSpatial().getWorldBound();
+						BoundingBox bb = (BoundingBox) this.getBoundingBox();
 						if (this.tmpMoveDir.y > bb.getXExtent()*2) {
 							p("Warning - moving too far!");
 						}
@@ -218,8 +222,8 @@ public class SimpleRigidBody<T> implements Collidable {
 	private void moveAwayFrom(SimpleRigidBody<T> other) {
 		Vector3f diff = null;
 		if (ADJUST_USING_BOUNDING_BOX_POSITION) {
-			Vector3f ourPos = this.getSpatial().getWorldBound().getCenter();
-			Vector3f theirPos = other.getSpatial().getWorldBound().getCenter();
+			Vector3f ourPos = this.getBoundingBox().getCenter();
+			Vector3f theirPos = other.getBoundingBox().getCenter();
 			diff = ourPos.subtract(theirPos).normalizeLocal();
 		} else {
 			diff = this.prevMoveDir.mult(-0.1f);
@@ -231,7 +235,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		} else {
 			SimpleRigidBody<T> tmpWasCollision = null;
 			//do {
-			this.getSpatial().move(diff); // Move away
+			this.simpleEntity.moveEntity(diff); // Move away
 			if (Globals.DEBUG_AUTOMOVING) {
 				p("Automoved  " + this + " by " + diff);
 			}
@@ -254,15 +258,16 @@ public class SimpleRigidBody<T> implements Collidable {
 			return false;
 		}
 
-		BoundingBox bba = (BoundingBox)this.getSpatial().getWorldBound();
+		BoundingBox bba = (BoundingBox)this.getBoundingBox();
 		float aBottom = bba.getCenter().y - (bba.getYExtent());
-		BoundingBox bbb = (BoundingBox)other.getSpatial().getWorldBound();
+		BoundingBox bbb = (BoundingBox)other.getBoundingBox();
 		float bTop = bbb.getCenter().y + (bbb.getYExtent());
 		float heightDiff = bTop - aBottom;
 
 		if (heightDiff >= 0 && heightDiff <= MAX_STEP_HEIGHT) {
 			//p("Going up step: " + heightDiff);
-			this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
+			this.oneOffForce.y += (heightDiff*15);// / -this.gravInc);
+			//this.oneOffForce.y += (heightDiff / tpf_secs) / 4; 
 			return true;
 		}
 
@@ -279,10 +284,10 @@ public class SimpleRigidBody<T> implements Collidable {
 			if (offset.length() > SimplePhysicsController.MAX_MOVE_DIST) {
 				offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
 			}
-			this.getSpatial().move(offset);
+			this.simpleEntity.moveEntity(offset);
 			SimpleRigidBody<T> wasCollision = checkForCollisions();
 			if (wasCollision != null) {
-				this.getSpatial().move(offset.negateLocal()); // Move back
+				this.simpleEntity.moveEntity(offset.negateLocal()); // Move back
 			} else {
 				this.simpleEntity.hasMoved();
 			}
@@ -345,15 +350,15 @@ public class SimpleRigidBody<T> implements Collidable {
 				// Check which object is the most complex, and collide that against the bounding box of the other
 				int res = 0;
 				if (this.modelComplexity >= e.modelComplexity) {
-					if (e.getSpatial().getWorldBound() == null) {
+					if (e.getBoundingBox() == null) {
 						throw new RuntimeException(e.userObject + " has no bounds");
 					}
-					res = this.collideWith(e.getSpatial().getWorldBound(), collisionResults);
+					res = this.collideWith(e.getBoundingBox(), collisionResults);
 				} else {
-					if (this.getSpatial().getWorldBound() == null) {
+					if (this.getBoundingBox() == null) {
 						throw new RuntimeException(this.userObject + " has no bounds");
 					}
-					res = e.collideWith(this.getSpatial().getWorldBound(), collisionResults);
+					res = e.collideWith(this.getBoundingBox(), collisionResults);
 				}
 				if (res > 0) {
 					this.physicsController.getCollisionListener().collisionOccurred(this, e, collisionResults.getClosestCollision().getContactPoint());
@@ -367,7 +372,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
-		return this.getSpatial().collideWith(other, results);
+		return this.getBoundingBox().collideWith(other, results);
 	}
 
 

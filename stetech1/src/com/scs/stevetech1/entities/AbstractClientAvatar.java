@@ -142,7 +142,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				this.setWorldTranslation(serverPositionData.getMostRecent().position); 
 			} else {
 				//pe.adjustWorldTranslation(offset);
-				adjustWorldTranslation(offset.mult(.5f));
+				//adjustWorldTranslation(offset.mult(.5f));
+				adjustWorldTranslation(offset.mult(.8f));
 
 			}
 		}

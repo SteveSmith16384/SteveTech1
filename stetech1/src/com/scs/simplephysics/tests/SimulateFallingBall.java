@@ -33,19 +33,7 @@ public class SimulateFallingBall implements ICollisionListener<String> {
 		Sphere sphere = new Sphere(8, 8, .5f);
 		final Geometry ballGeometry = new Geometry("Sphere", sphere);
 		ballGeometry.setLocalTranslation(0, 10f, 0);
-		ISimpleEntity<String> entity = new ISimpleEntity<String>() {
-			
-			@Override
-			public Spatial getSpatial() {
-				return ballGeometry;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-			
-		};
+		ISimpleEntity<String> entity = new SimpleEntity<String>(ballGeometry);
 
 		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, true, "ballGeometry");
 		this.physicsController.addSimpleRigidBody(srb);

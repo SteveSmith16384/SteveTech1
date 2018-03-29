@@ -1,5 +1,6 @@
 package com.scs.simplephysics.tests;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
@@ -50,8 +51,14 @@ public class BouncingSimulation implements ICollisionListener<String> {
 		ISimpleEntity<String> entity = new ISimpleEntity<String>() {
 
 			@Override
-			public Spatial getSpatial() {
-				return ballGeometry;
+			public void moveEntity(Vector3f pos) {
+				ballGeometry.move(pos);
+				
+			}
+
+			@Override
+			public BoundingBox getBoundingBox() {
+				return (BoundingBox)ballGeometry.getWorldBound();
 			}
 
 			@Override
@@ -73,8 +80,14 @@ public class BouncingSimulation implements ICollisionListener<String> {
 		ISimpleEntity<String> entity = new ISimpleEntity<String>() {
 
 			@Override
-			public Spatial getSpatial() {
-				return floorGeometry;
+			public void moveEntity(Vector3f pos) {
+				ballGeometry.move(pos);
+				
+			}
+
+			@Override
+			public BoundingBox getBoundingBox() {
+				return (BoundingBox)ballGeometry.getWorldBound();
 			}
 
 			@Override

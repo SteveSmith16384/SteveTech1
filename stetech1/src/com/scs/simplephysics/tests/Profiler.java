@@ -2,7 +2,6 @@ package com.scs.simplephysics.tests;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
 import com.scs.simplephysics.ICollisionListener;
@@ -52,7 +51,7 @@ public class Profiler implements ICollisionListener<String> {
 		if (SimplePhysicsController.DEBUG) {
 			for (SimpleRigidBody<String> e : this.physicsController.getEntities()) {
 				if (e.movedByForces()) {
-					p(e.toString() + " is at " + e.getSpatial().getWorldTranslation());
+					p(e.toString() + " is at " + e.getBoundingBox().getCenter());
 				}
 			}
 		}
@@ -69,11 +68,17 @@ public class Profiler implements ICollisionListener<String> {
 				Sphere sphere = new Sphere(8, 8, .1f);
 				final Geometry ballGeometry = new Geometry("Sphere_" + x + "_" + y, sphere);
 				ballGeometry.setLocalTranslation(x+.5f, 10f, y+.5f); // origin is the middle
-				ISimpleEntity<String> entity = new ISimpleEntity<String>() {
+				ISimpleEntity<String> entity = new SimpleEntity<String>(ballGeometry);/* new ISimpleEntity<String>() {
 
 					@Override
-					public Spatial getSpatial() {
-						return ballGeometry;
+					public void move(Vector3f pos) {
+						ballGeometry.move(pos);
+						
+					}
+
+					@Override
+					public BoundingBox getBoundingBox() {
+						return (BoundingBox)ballGeometry.getWorldBound();
 					}
 
 					@Override
@@ -81,7 +86,8 @@ public class Profiler implements ICollisionListener<String> {
 						// Do nothing
 					}
 
-				};
+
+				};*/
 				SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, true, "ballGeometry_" + x + "_" + y);
 				this.physicsController.addSimpleRigidBody(srb);
 
@@ -98,19 +104,7 @@ public class Profiler implements ICollisionListener<String> {
 				Box box = new Box(.5f, .5f, .5f);
 				final Geometry boxGeometry = new Geometry("Box_" + x + "_" + y, box);
 				boxGeometry.setLocalTranslation(x+.5f, -.5f, y+.5f); // origin is the middle
-				ISimpleEntity<String> entity = new ISimpleEntity<String>() {
-
-					@Override
-					public Spatial getSpatial() {
-						return boxGeometry;
-					}
-
-					@Override
-					public void hasMoved() {
-						// Do nothing
-					}
-
-				};
+				ISimpleEntity<String> entity = new SimpleEntity<String>(boxGeometry);
 				SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, false, "boxGeometry_" + x + "_" + y);
 				this.physicsController.addSimpleRigidBody(srb);
 
@@ -124,19 +118,7 @@ public class Profiler implements ICollisionListener<String> {
 		Box floor = new Box(SIZE, 1, SIZE);
 		final Geometry floorGeometry = new Geometry("floor", floor);
 		floorGeometry.setLocalTranslation(SIZE/2, -2, SIZE/2); 
-		ISimpleEntity<String> entity = new ISimpleEntity<String>() {
-
-			@Override
-			public Spatial getSpatial() {
-				return floorGeometry;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-
-		};
+		ISimpleEntity<String> entity = new SimpleEntity<String>(floorGeometry);
 		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, false, "floorGeometry");
 		this.physicsController.addSimpleRigidBody(srb);
 

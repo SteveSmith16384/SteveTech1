@@ -6,6 +6,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -85,17 +86,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		playerModel.setCullHint(CullHint.Always);
 		rootNode.attachChild(playerModel);
 		
-		ISimpleEntity<Spatial> iePlayer = new ISimpleEntity<Spatial>() {
-			@Override
-			public Spatial getSpatial() {
-				return playerModel;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-		};
+		ISimpleEntity<Spatial> iePlayer = new SimpleEntity<Spatial>(playerModel);
 
 		// Setup the scene
 		setUpLight();
@@ -137,17 +128,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(model);
 
-		ISimpleEntity<Spatial> hillEntity = new ISimpleEntity<Spatial>() {
-			@Override
-			public Spatial getSpatial() {
-				return model;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-		};
+		ISimpleEntity<Spatial> hillEntity = new SimpleEntity<Spatial>(model);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(hillEntity, physicsController, false, model);		
 		this.physicsController.addSimpleRigidBody(srb);
@@ -173,17 +154,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		floorGeometry.setShadowMode(ShadowMode.Receive);
 		this.rootNode.attachChild(floorGeometry);
 
-		ISimpleEntity<Spatial> floorEntity = new ISimpleEntity<Spatial>() {
-			@Override
-			public Spatial getSpatial() {
-				return floorGeometry;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-		};
+		ISimpleEntity<Spatial> floorEntity = new SimpleEntity<Spatial>(floorGeometry);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floorEntity, physicsController, false, floorGeometry);
 		this.physicsController.addSimpleRigidBody(srb);
@@ -206,18 +177,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		wallGeometry.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(wallGeometry);
 
-		ISimpleEntity<Spatial> wallEntity = new ISimpleEntity<Spatial>() {
-			@Override
-			public Spatial getSpatial() {
-				return wallGeometry;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-		};
-
+		ISimpleEntity<Spatial> wallEntity = new SimpleEntity<Spatial>(wallGeometry);
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(wallEntity, physicsController, false, wallGeometry);
 		this.physicsController.addSimpleRigidBody(srb);
 	}
@@ -241,17 +201,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		boxGeometry.lookAt(new Vector3f(0, y, 0), Vector3f.UNIT_Y); // Rotate them to different angles
 		this.rootNode.attachChild(boxGeometry);
 
-		ISimpleEntity<Spatial> boxEntity = new ISimpleEntity<Spatial>() {
-			@Override
-			public Spatial getSpatial() {
-				return boxGeometry;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-		};
+		ISimpleEntity<Spatial> boxEntity = new SimpleEntity<Spatial>(boxGeometry);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(boxEntity, physicsController, true, boxGeometry);
 		this.physicsController.addSimpleRigidBody(srb);
@@ -275,17 +225,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		ballGeometry.setShadowMode(ShadowMode.Cast);
 		this.rootNode.attachChild(ballGeometry);
 
-		ISimpleEntity<Spatial> ballEntity = new ISimpleEntity<Spatial>() {
-			@Override
-			public Spatial getSpatial() {
-				return ballGeometry;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-		};
+		ISimpleEntity<Spatial> ballEntity = new SimpleEntity<Spatial>(ballGeometry);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(ballEntity, physicsController, true, ballGeometry);
 		srb.setLinearVelocity(dir);
@@ -356,14 +296,14 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 				// todo - don't do this is input thread
 				Vector3f startPos = new Vector3f(cam.getLocation());
 				startPos.addLocal(cam.getDirection().mult(2));
-				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(25f), physicsController.getGravity(), physicsController.getAerodynamicness(), 0.4f); // Bouncing ball
+				this.addBall(startPos.x, startPos.y, startPos.z, .1f, this.cam.getDirection().mult(25f), physicsController.getGravity(), physicsController.getAerodynamicness(), 0.4f); // Bouncing ball
 			}
 		} else if (binding.equals("Shoot1")) {
 			if (isPressed) {
 				// todo - don't do this is input thread
 				Vector3f startPos = new Vector3f(cam.getLocation());
 				startPos.addLocal(cam.getDirection().mult(4));
-				this.addBall(startPos.x, startPos.y, startPos.z, .2f, this.cam.getDirection().mult(35f), 0, 1, 0.2f); // "Laser" ball
+				this.addBall(startPos.x, startPos.y, startPos.z, .3f, this.cam.getDirection().mult(35f), 0, 1, 0.2f); // "Laser" ball
 			}
 		} else if (binding.equals("TogglePhysics")) {
 			if (isPressed) { 

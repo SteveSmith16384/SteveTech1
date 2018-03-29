@@ -3,6 +3,7 @@ package com.scs.stevetech1.entities;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Quaternion;
@@ -316,10 +317,15 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	@Override
-	public Spatial getSpatial() {
-		return this.mainNode;
+	public BoundingBox getBoundingBox() {
+		return (BoundingBox)this.mainNode.getWorldBound();
 	}
 
+
+	@Override
+	public void moveEntity(Vector3f pos) {
+		this.getMainNode().move(pos);
+	}
 
 	@Override
 	public void hasMoved() {

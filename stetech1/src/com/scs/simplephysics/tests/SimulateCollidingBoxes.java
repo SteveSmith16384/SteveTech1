@@ -1,5 +1,6 @@
 package com.scs.simplephysics.tests;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
@@ -40,8 +41,8 @@ public class SimulateCollidingBoxes implements ICollisionListener<String> {
 			this.physicsController.update(LOOP_INTERVAL_SECS);
 
 			p("Iteration: " + i);
-			p("Box 1:" + box1.getSpatial().getWorldTranslation());
-			p("Box 2:" + box2.getSpatial().getWorldTranslation());
+			p("Box 1:" + box1.getBoundingBox().getCenter());
+			p("Box 2:" + box2.getBoundingBox().getCenter());
 
 		}
 	}
@@ -51,19 +52,8 @@ public class SimulateCollidingBoxes implements ICollisionListener<String> {
 		Box box = new Box(.5f, .5f, .5f);
 		final Geometry boxGeometry = new Geometry("Box", box);
 		boxGeometry.setLocalTranslation(1f, 2f, pos); // origin is the middle
-		ISimpleEntity<String> entity = new ISimpleEntity<String>() {
-
-			@Override
-			public Spatial getSpatial() {
-				return boxGeometry;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-
-		};
+		ISimpleEntity<String> entity = new SimpleEntity<String>(boxGeometry);
+		
 		SimpleCharacterControl<String> srb = new SimpleCharacterControl<String>(entity, physicsController, "boxGeometry");
 		this.physicsController.addSimpleRigidBody(srb);
 
@@ -75,19 +65,7 @@ public class SimulateCollidingBoxes implements ICollisionListener<String> {
 		Box floor = new Box(SIZE, 1, SIZE);
 		final Geometry floorGeometry = new Geometry("floor", floor);
 		floorGeometry.setLocalTranslation(SIZE/2, 0, SIZE/2); // origin is TL.
-		ISimpleEntity<String> entity = new ISimpleEntity<String>() {
-
-			@Override
-			public Spatial getSpatial() {
-				return floorGeometry;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-
-		};
+		ISimpleEntity<String> entity = new SimpleEntity<String>(floorGeometry);
 		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, false, "floorGeometry");
 		this.physicsController.addSimpleRigidBody(srb);
 
