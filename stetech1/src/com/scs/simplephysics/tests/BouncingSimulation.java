@@ -1,6 +1,6 @@
 package com.scs.simplephysics.tests;
 
-import com.jme3.bounding.BoundingBox;
+import com.jme3.collision.Collidable;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
@@ -57,8 +57,8 @@ public class BouncingSimulation implements ICollisionListener<String> {
 			}
 
 			@Override
-			public BoundingBox getBoundingBox() {
-				return (BoundingBox)ballGeometry.getWorldBound();
+			public Collidable getCollidable() {
+				return ballGeometry.getWorldBound();
 			}
 
 			@Override
@@ -81,13 +81,13 @@ public class BouncingSimulation implements ICollisionListener<String> {
 
 			@Override
 			public void moveEntity(Vector3f pos) {
-				ballGeometry.move(pos);
+				floorGeometry.move(pos);
 				
 			}
 
 			@Override
-			public BoundingBox getBoundingBox() {
-				return (BoundingBox)ballGeometry.getWorldBound();
+			public Spatial getCollidable() {
+				return floorGeometry;
 			}
 
 			@Override

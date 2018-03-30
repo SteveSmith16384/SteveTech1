@@ -4,6 +4,8 @@ import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.LoopMode;
 import com.jme3.asset.AssetManager;
+import com.jme3.bounding.BoundingBox;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -122,4 +124,9 @@ public class SoldierModel implements IAvatarModel {
 		return this.currAnimCode;
 	}
 
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		return new BoundingBox(new Vector3f(), MODEL_WIDTH, MODEL_HEIGHT, MODEL_DEPTH);
+	}
 }

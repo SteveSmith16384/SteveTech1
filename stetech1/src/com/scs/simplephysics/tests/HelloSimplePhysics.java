@@ -86,7 +86,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		playerModel.setCullHint(CullHint.Always);
 		rootNode.attachChild(playerModel);
 		
-		ISimpleEntity<Spatial> iePlayer = new SimpleEntity<Spatial>(playerModel);
+		ISimpleEntity<Spatial> iePlayer = new SimpleEntityHelper<Spatial>(playerModel);
 
 		// Setup the scene
 		setUpLight();
@@ -128,7 +128,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(model);
 
-		ISimpleEntity<Spatial> hillEntity = new SimpleEntity<Spatial>(model);
+		ISimpleEntity<Spatial> hillEntity = new SimpleEntityHelper<Spatial>(model);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(hillEntity, physicsController, false, model);		
 		this.physicsController.addSimpleRigidBody(srb);
@@ -154,7 +154,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		floorGeometry.setShadowMode(ShadowMode.Receive);
 		this.rootNode.attachChild(floorGeometry);
 
-		ISimpleEntity<Spatial> floorEntity = new SimpleEntity<Spatial>(floorGeometry);
+		ISimpleEntity<Spatial> floorEntity = new SimpleEntityHelper<Spatial>(floorGeometry);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floorEntity, physicsController, false, floorGeometry);
 		this.physicsController.addSimpleRigidBody(srb);
@@ -177,7 +177,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		wallGeometry.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(wallGeometry);
 
-		ISimpleEntity<Spatial> wallEntity = new SimpleEntity<Spatial>(wallGeometry);
+		ISimpleEntity<Spatial> wallEntity = new SimpleEntityHelper<Spatial>(wallGeometry);
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(wallEntity, physicsController, false, wallGeometry);
 		this.physicsController.addSimpleRigidBody(srb);
 	}
@@ -201,7 +201,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		boxGeometry.lookAt(new Vector3f(0, y, 0), Vector3f.UNIT_Y); // Rotate them to different angles
 		this.rootNode.attachChild(boxGeometry);
 
-		ISimpleEntity<Spatial> boxEntity = new SimpleEntity<Spatial>(boxGeometry);
+		ISimpleEntity<Spatial> boxEntity = new SimpleEntityHelper<Spatial>(boxGeometry);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(boxEntity, physicsController, true, boxGeometry);
 		this.physicsController.addSimpleRigidBody(srb);
@@ -225,7 +225,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		ballGeometry.setShadowMode(ShadowMode.Cast);
 		this.rootNode.attachChild(ballGeometry);
 
-		ISimpleEntity<Spatial> ballEntity = new SimpleEntity<Spatial>(ballGeometry);
+		ISimpleEntity<Spatial> ballEntity = new SimpleEntityHelper<Spatial>(ballGeometry);
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(ballEntity, physicsController, true, ballGeometry);
 		srb.setLinearVelocity(dir);

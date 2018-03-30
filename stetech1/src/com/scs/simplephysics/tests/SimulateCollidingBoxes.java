@@ -52,7 +52,7 @@ public class SimulateCollidingBoxes implements ICollisionListener<String> {
 		Box box = new Box(.5f, .5f, .5f);
 		final Geometry boxGeometry = new Geometry("Box", box);
 		boxGeometry.setLocalTranslation(1f, 2f, pos); // origin is the middle
-		ISimpleEntity<String> entity = new SimpleEntity<String>(boxGeometry);
+		ISimpleEntity<String> entity = new SimpleEntityHelper<String>(boxGeometry);
 		
 		SimpleCharacterControl<String> srb = new SimpleCharacterControl<String>(entity, physicsController, "boxGeometry");
 		this.physicsController.addSimpleRigidBody(srb);
@@ -65,7 +65,7 @@ public class SimulateCollidingBoxes implements ICollisionListener<String> {
 		Box floor = new Box(SIZE, 1, SIZE);
 		final Geometry floorGeometry = new Geometry("floor", floor);
 		floorGeometry.setLocalTranslation(SIZE/2, 0, SIZE/2); // origin is TL.
-		ISimpleEntity<String> entity = new SimpleEntity<String>(floorGeometry);
+		ISimpleEntity<String> entity = new SimpleEntityHelper<String>(floorGeometry);
 		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, false, "floorGeometry");
 		this.physicsController.addSimpleRigidBody(srb);
 

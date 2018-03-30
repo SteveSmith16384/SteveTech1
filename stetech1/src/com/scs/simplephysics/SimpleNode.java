@@ -37,7 +37,6 @@ public class SimpleNode<T> { //extends ArrayList<SimpleRigidBody<T>> {
 		resetMinMax();
 		synchronized (this.entities) {
 			for (SimpleRigidBody<T> srb : this.entities) {
-				//Spatial s = srb.getSpatial();
 				BoundingBox bb = srb.getBoundingBox();
 				if (bb.getCenter().x - bb.getXExtent() < min.x) {
 					min.x = bb.getCenter().x - bb.getXExtent();
@@ -91,15 +90,14 @@ public class SimpleNode<T> { //extends ArrayList<SimpleRigidBody<T>> {
 	}
 	
 
-	public int getCollisions(SimpleRigidBody<T> srb, CollisionResults crs) {
+	public int getCollisions(SimpleRigidBody<T> srb, List<SimpleRigidBody<T>> crs) {
 		int count = 0;
 		BoundingBox bb = srb.getBoundingBox();
 		if (this.intersects(bb)) {
 			synchronized (this.entities) {
 				for (SimpleRigidBody<T> other : this.entities) {
-					CollisionResult cr = srb.checkSRBvSRB(other); 
-					if (cr != null) {
-						crs.addCollision(cr);
+					if (srb.checkSRBvSRB(other)) {
+						crs.add(other);
 						count++;
 					}
 				}

@@ -13,6 +13,6 @@ public interface ICollisionListener<T> {
 	/**
 	 * Notify that a collision has occurred.
 	 */
-	void collisionOccurred(SimpleRigidBody<T> a, SimpleRigidBody<T> b, Vector3f point);
+	void collisionOccurred(SimpleRigidBody<T> a, SimpleRigidBody<T> b, Vector3f point); // todo - remove point
 	
 }

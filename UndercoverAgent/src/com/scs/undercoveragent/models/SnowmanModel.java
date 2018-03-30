@@ -1,6 +1,7 @@
 package com.scs.undercoveragent.models;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
@@ -13,8 +14,8 @@ import com.scs.stevetech1.jme.JMEModelFunctions;
  */
 public class SnowmanModel implements IAvatarModel {
 
-	//private static final float MODEL_WIDTH = 0.4f;
-	//private static final float MODEL_DEPTH = 0.3f;
+	private static final float MODEL_WIDTH = 0.4f;
+	private static final float MODEL_DEPTH = 0.3f;
 	private static final float MODEL_HEIGHT = 0.7f;
 
 	private AssetManager assetManager;
@@ -94,5 +95,11 @@ public class SnowmanModel implements IAvatarModel {
 		this.model.updateGeometricState();
 		showingDied = false;
 
+	}
+
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		return new BoundingBox(new Vector3f(), MODEL_WIDTH, MODEL_HEIGHT, MODEL_DEPTH);
 	}
 }

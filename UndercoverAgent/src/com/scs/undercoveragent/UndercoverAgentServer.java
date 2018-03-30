@@ -193,12 +193,10 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		float x = NumberFunctions.rndFloat(2, mapSize-3);
 		float z = NumberFunctions.rndFloat(2, mapSize-3);
 		this.actuallyAddEntity(entity);
-		CollisionResults crs = entity.simpleRigidBody.checkForCollisions();
-		while (crs.size() > 0) {
+		while (entity.simpleRigidBody.checkForCollisions().size() > 0) {
 			x = NumberFunctions.rndFloat(2, mapSize-3);
 			z = NumberFunctions.rndFloat(2, mapSize-3);
 			entity.setWorldTranslation(x, z);
-			crs = entity.simpleRigidBody.checkForCollisions();
 		}
 		// randomly rotate
 		JMEAngleFunctions.rotateToDirection(entity.getMainNode(), NumberFunctions.rnd(0,  359));

@@ -48,13 +48,13 @@ public class Profiler implements ICollisionListener<String> {
 		long totalDuration = System.currentTimeMillis() - start;
 
 		// List entities
-		if (SimplePhysicsController.DEBUG) {
+		/*todo if (SimplePhysicsController.DEBUG) {
 			for (SimpleRigidBody<String> e : this.physicsController.getEntities()) {
 				if (e.movedByForces()) {
 					p(e.toString() + " is at " + e.getBoundingBox().getCenter());
 				}
 			}
-		}
+		}*/
 
 		p("Finished.  Took " + totalDuration);
 	}
@@ -68,7 +68,7 @@ public class Profiler implements ICollisionListener<String> {
 				Sphere sphere = new Sphere(8, 8, .1f);
 				final Geometry ballGeometry = new Geometry("Sphere_" + x + "_" + y, sphere);
 				ballGeometry.setLocalTranslation(x+.5f, 10f, y+.5f); // origin is the middle
-				ISimpleEntity<String> entity = new SimpleEntity<String>(ballGeometry);/* new ISimpleEntity<String>() {
+				ISimpleEntity<String> entity = new SimpleEntityHelper<String>(ballGeometry);/* new ISimpleEntity<String>() {
 
 					@Override
 					public void move(Vector3f pos) {
@@ -104,7 +104,7 @@ public class Profiler implements ICollisionListener<String> {
 				Box box = new Box(.5f, .5f, .5f);
 				final Geometry boxGeometry = new Geometry("Box_" + x + "_" + y, box);
 				boxGeometry.setLocalTranslation(x+.5f, -.5f, y+.5f); // origin is the middle
-				ISimpleEntity<String> entity = new SimpleEntity<String>(boxGeometry);
+				ISimpleEntity<String> entity = new SimpleEntityHelper<String>(boxGeometry);
 				SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, false, "boxGeometry_" + x + "_" + y);
 				this.physicsController.addSimpleRigidBody(srb);
 
@@ -118,7 +118,7 @@ public class Profiler implements ICollisionListener<String> {
 		Box floor = new Box(SIZE, 1, SIZE);
 		final Geometry floorGeometry = new Geometry("floor", floor);
 		floorGeometry.setLocalTranslation(SIZE/2, -2, SIZE/2); 
-		ISimpleEntity<String> entity = new SimpleEntity<String>(floorGeometry);
+		ISimpleEntity<String> entity = new SimpleEntityHelper<String>(floorGeometry);
 		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, false, "floorGeometry");
 		this.physicsController.addSimpleRigidBody(srb);
 

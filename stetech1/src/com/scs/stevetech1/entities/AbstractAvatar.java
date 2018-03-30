@@ -3,6 +3,7 @@ package com.scs.stevetech1.entities;
 import java.util.HashMap;
 
 import com.jme3.bounding.BoundingBox;
+import com.jme3.collision.Collidable;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
@@ -38,6 +39,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	public final int playerID;
 	public Spatial playerGeometry;
+	protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
 	public IAbility[] ability = new IAbility[2];
 	public int side = -1;
 	protected IAvatarModel avatarModel;
@@ -66,7 +68,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		input = _input;
 		side =_side;
 		avatarModel = _avatarModel;
-
+		boundingBox = avatarModel.getBoundingBox();
+		
 		playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);
 		
 		if (Globals.TEST_BOUNDING_BOX) {
@@ -312,4 +315,21 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		return super.canCollideWith(other);
 	}
 	 */
+	
+	
+	@Override
+	public Collidable getCollidable() {
+		return this.boundingBox;
+	}
+
+
+	@Override
+	public void hasMoved() {
+		this.sendPositionUpdate = true;
+		this.boundingBox.setCenter(this.getMainNode().getWorldBound().getCenter());
+
+	}
+
+
+
 }
