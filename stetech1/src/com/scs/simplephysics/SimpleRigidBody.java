@@ -14,6 +14,7 @@ import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
+	private static final boolean USE_CCD = true;;
 	private static final float MAX_STEP_HEIGHT = 0.25f;
 	private static final float GRAVITY_WARNING = -15f;
 
@@ -37,10 +38,9 @@ public class SimpleRigidBody<T> implements Collidable {
 	private int modelComplexity = 0; // For determining which way round to check
 	public boolean canWalkUpSteps = false;
 
-	//private CollisionResults collisionResults_ = new CollisionResults();
+	private BoundingBox bb; // For testing if BB changes
 	private SimpleNode<T> parent;
 
-	//private BoundingBox bb;
 	private Vector3f prevMoveDir = new Vector3f(); // todo - remove this
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
@@ -79,7 +79,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		}
 	}
 
-	
+
 	/*
 	public Spatial getSpatial() {
 		return this.simpleEntity.getSpatial();
@@ -111,7 +111,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			tpf_secs = 0.1f; // Prevent stepping too far
 		}
 
-		/*todo if (Globals.WARN_IF_BB_CHANGES) {
+		if (Globals.WARN_IF_BB_CHANGES) {
 			if (bb == null) {
 				bb = (BoundingBox)this.getBoundingBox().clone();
 			} else {
@@ -121,14 +121,14 @@ public class SimpleRigidBody<T> implements Collidable {
 					bb = (BoundingBox)newbb.clone();
 				}
 			}
-		}*/
+		}
 
 		if (this.movedByForces) {
-			
+
 			// Check we're not already colliding *before* we've even moved
 			List<SimpleRigidBody<T>> crs = checkForCollisions();
 			if (crs.size() != 0) {
-				//todo System.err.println("Warning: " + this + " has collided prior to move, with " + tmpWasCollision.userObject);
+				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				this.moveAwayFrom(crs);
 				return; // Don't bother moving any more!
 			} else {
@@ -240,15 +240,16 @@ public class SimpleRigidBody<T> implements Collidable {
 			Vector3f diff = null;
 			if (ADJUST_USING_BOUNDING_BOX_POSITION) {
 				Vector3f theirPos = cr.getBoundingBox().getCenter();
-				diff = ourPos.subtract(theirPos).normalizeLocal();
+				diff = ourPos.subtract(theirPos);
 			} else {
-				diff = this.prevMoveDir.mult(-0.1f);
+				diff = this.prevMoveDir.mult(-1f);
 			}
 			diff.y = 0; // Only move horizontally?
 
 			if (diff.length() == 0) {
 				//System.err.println("No direction!"); // Can't do anything
 			} else {
+				diff.normalizeLocal().multLocal(0.1f);
 				//SimpleRigidBody<T> tmpWasCollision = null;
 				//do {
 				this.simpleEntity.moveEntity(diff); // Move away
@@ -301,17 +302,17 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * Moves and entity and returns object they collided with.
 	 */
 	private List<SimpleRigidBody<T>> move(Vector3f offset) {
-			if (offset.length() > SimplePhysicsController.MAX_MOVE_DIST) {
-				offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
-			}
-			this.simpleEntity.moveEntity(offset);
-			List<SimpleRigidBody<T>> crs = checkForCollisions();
-			if (crs.size() > 0) {
-				this.simpleEntity.moveEntity(offset.negateLocal()); // Move back
-			} else {
-				this.simpleEntity.hasMoved();
-			}
-			return crs;
+		/*if (offset.length() > SimplePhysicsController.MAX_MOVE_DIST) {
+			offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
+		}*/
+		this.simpleEntity.moveEntity(offset);
+		List<SimpleRigidBody<T>> crs = checkForCollisions();
+		if (crs.size() > 0) {
+			this.simpleEntity.moveEntity(offset.negateLocal()); // Move back
+		} else {
+			this.simpleEntity.hasMoved();
+		}
+		return crs;
 	}
 
 
@@ -329,10 +330,6 @@ public class SimpleRigidBody<T> implements Collidable {
 				for (int i=0 ; i<entities.size() ; i++) {
 					SimpleRigidBody<T> e = entities.get(i);
 					if (this.checkSRBvSRB(e)) {
-						//cr = this.checkSRBvSRB(e); // todo - remove
-						/*if (cr.getGeometry() == null) {
-							cr.setGeometry(e.simpleEntity.);
-						}*/
 						crs.add(e);
 					}
 				}
@@ -472,9 +469,9 @@ public class SimpleRigidBody<T> implements Collidable {
 	public boolean getNeverMoves() {
 		return this.neverMoves;
 	}
-	
-	
+
+
 	// Helpers
-	
+
 }
 

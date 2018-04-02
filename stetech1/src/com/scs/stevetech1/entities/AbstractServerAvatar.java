@@ -27,7 +27,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	private AbstractGameServer server;
 	public ClientData client;
-	private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation.  We don't actually rotate!  Todo - remove this once we've sorted out rotating bounding boxes
+	//private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation.  We don't actually rotate!  Todo - remove this once we've sorted out rotating bounding boxes
 
 	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, IAvatarModel anim) {
 		super(_module, _playerID, _input, eid, _client.side, anim);
@@ -35,7 +35,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		server = (AbstractGameServer)_module;
 		client = _client;
 
-		this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
+		//this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}
 
 
@@ -81,9 +81,9 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			// Point us in the right direction
 			Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
 			lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
-			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
-			this.dummyNode.setLocalTranslation(this.getMainNode().getWorldTranslation());
-			this.dummyNode.lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
+			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
+			//this.dummyNode.setLocalTranslation(this.getMainNode().getWorldTranslation());
+			//this.dummyNode.lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 
 			if (getWorldTranslation().y < -1) {
 				// Dropped off the edge?
@@ -97,7 +97,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		}
 	}
 
-
+/*
 	@Override
 	public Quaternion getWorldRotation() {
 		//return this.getMainNode().getLocalRotation();
@@ -110,7 +110,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		//getMainNode().setLocalRotation(newRot2);
 		this.dummyNode.setLocalRotation(newRot2.clone()); // Don't rotate the model!  This causes the boundingbox to expand.
 	}
-
+*/
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {

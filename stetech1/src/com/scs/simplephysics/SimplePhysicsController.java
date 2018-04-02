@@ -11,11 +11,11 @@ import jdk.nashorn.internal.objects.Global;
 
 public class SimplePhysicsController<T> {
 
-	public static final boolean USE_NEW_COLLISION_METHOD = true;
+	public static final boolean USE_NEW_COLLISION_METHOD = true; // todo - remove
 	public static final boolean DEBUG = false;
 
 	public static final float MIN_MOVE_DIST = 0.001f;
-	public static final float MAX_MOVE_DIST = 999f; // todo - remove this, use bounding size 
+	//public static final float MAX_MOVE_DIST = 999f; // todo - remove this, use bounding size 
 	public static final float DEFAULT_AERODYNAMICNESS = 0.99f; // Prevent things moving forever
 	public static final float DEFAULT_GRAVITY = -5f;
 
@@ -95,7 +95,7 @@ public class SimplePhysicsController<T> {
 
 		if (USE_NEW_COLLISION_METHOD) {
 			BoundingBox bb = srb.getBoundingBox();
-			boolean tooBig = bb.getVolume() > (nodeSizeXZ * nodeSizeXZ * nodeSizeY);
+			boolean tooBig = bb.getVolume() > (nodeSizeXZ * nodeSizeXZ * nodeSizeY); // todo -check each extent
 			if (srb.getNeverMoves() && this.nodeSizeXZ > 0 && this.nodeSizeY > 0 && !tooBig) {
 				int x = (int)bb.getCenter().x / this.nodeSizeXZ;
 				int y = (int)bb.getCenter().y / this.nodeSizeY;
