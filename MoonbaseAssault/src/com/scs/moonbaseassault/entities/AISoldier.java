@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.bounding.BoundingBox;
+import com.jme3.collision.Collidable;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
@@ -54,6 +55,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	private int side;
 	private IArtificialIntelligence ai;
+	//protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
 
 	// HUD
 	private BitmapText hudNode;
@@ -108,6 +110,8 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		hudNode = new BitmapText(font_small);
 		hudNode.setText("Cpl. Jonlan");
 
+		//boundingBox = soldierModel.getBoundingBox();
+
 	}
 
 
@@ -149,7 +153,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 				if (soldierModel != null) {
 					this.soldierModel.setAnim(AbstractAvatar.ANIM_DIED);
 				}
-				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
+				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding - todo - only remove once there are no collisions, or change size?  Maybe this isn't even needed?
 				this.hudNode.removeFromParent();
 			}
 		}
@@ -230,6 +234,19 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		return this.hudNode;
 	}
 
+
+	@Override
+	public Collidable getCollidable() {
+		return this.getMainNode().getWorldBound();
+	}
+
+
+	@Override
+	public void hasMoved() {
+		this.sendPositionUpdate = true;
+		//this.boundingBox.setCenter(this.getMainNode().getWorldBound().getCenter());
+
+	}
 
 
 }

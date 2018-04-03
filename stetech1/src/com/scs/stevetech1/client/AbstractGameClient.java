@@ -192,7 +192,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		}
 		settings.setUseJoysticks(true);
 		//settings.setAudioRenderer(null); // Avoid error with no soundcard
-		settings.setTitle(appTitle);// + " (v" + Settings.VERSION + ")");
+		settings.setTitle(Globals.HIDE_BELLS_WHISTLES ? "Client" : appTitle);// + " (v" + Settings.VERSION + ")");
 		settings.setSettingsDialogImage(logoImage);
 
 		setSettings(settings);
@@ -896,7 +896,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
+	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
 

@@ -7,9 +7,9 @@ public interface ISimpleEntity<T> {
 
 	Collidable getCollidable(); // For collision detection
 	
-	void moveEntity(Vector3f pos);
+	void moveEntity(Vector3f pos); // To move entities
 	
-	void hasMoved();
+	void hasMoved(); // Todo - remove this?
 	
 	//todo - add this T getUserObject();
 }

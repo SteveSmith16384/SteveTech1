@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
-import com.jme3.collision.CollisionResult;
-import com.jme3.collision.CollisionResults;
+import com.jme3.collision.Collidable;
 import com.jme3.math.Vector3f;
 
-public class SimpleNode<T> { //extends ArrayList<SimpleRigidBody<T>> {
+public class SimpleNode<T> {
 
 	private List<SimpleRigidBody<T>> entities = new ArrayList<>();
 	private Vector3f min = new Vector3f();
@@ -93,7 +92,7 @@ public class SimpleNode<T> { //extends ArrayList<SimpleRigidBody<T>> {
 	public int getCollisions(SimpleRigidBody<T> srb, List<SimpleRigidBody<T>> crs) {
 		int count = 0;
 		BoundingBox bb = srb.getBoundingBox();
-		if (this.intersects(bb)) {
+		if (this.intersects(bb)) { // Check we're inside the Node
 			synchronized (this.entities) {
 				for (SimpleRigidBody<T> other : this.entities) {
 					if (srb.checkSRBvSRB(other)) {

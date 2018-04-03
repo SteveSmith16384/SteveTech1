@@ -39,7 +39,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	public final int playerID;
 	public Spatial playerGeometry;
-	protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
+	//protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
 	public IAbility[] ability = new IAbility[2];
 	public int side = -1;
 	protected IAvatarModel avatarModel;
@@ -68,7 +68,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		input = _input;
 		side =_side;
 		avatarModel = _avatarModel;
-		boundingBox = avatarModel.getBoundingBox();
+		//boundingBox = avatarModel.getBoundingBox();
 		
 		playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);
 		
@@ -303,33 +303,20 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		creationData.put("jumpForce", this.jumpForce);
 		return super.getCreationData();
 	}
-
-	/*
-	public boolean canCollideWith(PhysicalEntity other) {
-		if (other instanceof AbstractAvatar) {
-			AbstractAvatar otherA = (AbstractAvatar)other;
-			if (otherA.side == this.side) {
-				return false;
-			}
-		}
-		return super.canCollideWith(other);
-	}
-	 */
 	
 	
 	@Override
 	public Collidable getCollidable() {
-		return this.boundingBox;
+		return this.playerGeometry;
 	}
 
 
 	@Override
 	public void hasMoved() {
 		this.sendPositionUpdate = true;
-		this.boundingBox.setCenter(this.getMainNode().getWorldBound().getCenter());
+		//this.boundingBox.setCenter(this.getMainNode().getWorldBound().getCenter());
 
 	}
-
 
 
 }

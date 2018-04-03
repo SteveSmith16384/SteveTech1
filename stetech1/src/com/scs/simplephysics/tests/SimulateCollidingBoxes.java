@@ -84,7 +84,7 @@ public class SimulateCollidingBoxes implements ICollisionListener<String> {
 
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody<String> a, SimpleRigidBody<String> b, Vector3f point) {
+	public void collisionOccurred(SimpleRigidBody<String> a, SimpleRigidBody<String> b) {
 		if (a == box1 || b == box2) {
 			if (a == box2 || b == box2) {
 				p("Collision between " + a.userObject + " and " + b.userObject);

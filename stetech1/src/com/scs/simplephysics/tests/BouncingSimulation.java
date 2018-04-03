@@ -114,7 +114,7 @@ public class BouncingSimulation implements ICollisionListener<String> {
 
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody<String> a, SimpleRigidBody<String> b, Vector3f point) {
+	public void collisionOccurred(SimpleRigidBody<String> a, SimpleRigidBody<String> b) {
 		// Do nothing
 	}
 

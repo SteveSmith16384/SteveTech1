@@ -5,20 +5,17 @@ import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.Collidable;
-import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	private static final boolean USE_CCD = true;;
-	private static final float MAX_STEP_HEIGHT = 0.25f;
+	private static final float MAX_STEP_HEIGHT = 0.25f; // todo - make config
 	private static final float GRAVITY_WARNING = -15f;
 
-	private static final boolean ADJUST_USING_BOUNDING_BOX_POSITION = true;
+	private static final boolean DEBUG_AUTOMOVING = true;
 
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f(); // Gets reduced by air resistance each frame
@@ -35,13 +32,11 @@ public class SimpleRigidBody<T> implements Collidable {
 	private boolean movedByForces = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
 	protected Vector3f additionalForce = new Vector3f(); // Additional force to apply, e.g. walking force or explosion force.  Does not get changed by this code.
-	private int modelComplexity = 0; // For determining which way round to check
+	private int modelComplexity = 0; // For determining which way round to check.  Todo - remove this
 	public boolean canWalkUpSteps = false;
 
-	private BoundingBox bb; // For testing if BB changes
 	private SimpleNode<T> parent;
 
-	private Vector3f prevMoveDir = new Vector3f(); // todo - remove this
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
 
@@ -66,7 +61,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	/**
-	 * Helper
+	 * Helper.  Need this to get overall dimensions and position of entity.
 	 * @return
 	 */
 	public BoundingBox getBoundingBox() {
@@ -79,12 +74,6 @@ public class SimpleRigidBody<T> implements Collidable {
 		}
 	}
 
-
-	/*
-	public Spatial getSpatial() {
-		return this.simpleEntity.getSpatial();
-	}
-	 */
 
 	public Vector3f getLinearVelocity() {
 		return this.oneOffForce;
@@ -111,7 +100,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			tpf_secs = 0.1f; // Prevent stepping too far
 		}
 
-		if (Globals.WARN_IF_BB_CHANGES) {
+		/*if (Globals.WARN_IF_BB_CHANGES) {
 			if (bb == null) {
 				bb = (BoundingBox)this.getBoundingBox().clone();
 			} else {
@@ -121,7 +110,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					bb = (BoundingBox)newbb.clone();
 				}
 			}
-		}
+		}*/
 
 		if (this.movedByForces) {
 
@@ -131,12 +120,6 @@ public class SimpleRigidBody<T> implements Collidable {
 				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				this.moveAwayFrom(crs);
 				return; // Don't bother moving any more!
-			} else {
-				// Only set prevMoveDir if we're in the clear
-				if (this.oneOffForce.length() > 0 || this.additionalForce.length() != 0) {
-					prevMoveDir.set(oneOffForce.add(additionalForce));
-					//Globals.p("Prev dir:" + prevMoveDir);
-				}
 			}
 
 			// Move along X
@@ -144,12 +127,12 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.x + additionalForce.x;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
-					if (Globals.STRICT) {
+					/*if (Globals.STRICT) {
 						BoundingBox bb = this.getBoundingBox();
 						if (this.tmpMoveDir.x > bb.getXExtent()*2) {
 							p("Warning - moving too far!");
 						}
-					}
+					}*/
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2 == null || crs2.size() > 0) {
 						if (!checkForStep(crs2)) {
@@ -166,12 +149,12 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.z + additionalForce.z;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
-					if (Globals.STRICT) {
+					/*if (Globals.STRICT) {
 						BoundingBox bb = this.getBoundingBox();
 						if (this.tmpMoveDir.z > bb.getZExtent()*2) {
 							p("Warning - moving too far!");
 						}
-					}
+					}*/
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2 == null || crs2.size() > 0) {
 						if (!checkForStep(crs2)) {
@@ -191,12 +174,12 @@ public class SimpleRigidBody<T> implements Collidable {
 				boolean collided = false; 
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
-					if (Globals.STRICT) {
+					/*if (Globals.STRICT) {
 						BoundingBox bb = this.getBoundingBox();
 						if (this.tmpMoveDir.y > bb.getXExtent()*2) {
 							p("Warning - moving too far!");
 						}
-					}
+					}*/
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2 == null || crs2.size() > 0) {
 						collided = true;
@@ -238,12 +221,8 @@ public class SimpleRigidBody<T> implements Collidable {
 		Vector3f ourPos = bb.getCenter();
 		for (SimpleRigidBody<T> cr : crs) {
 			Vector3f diff = null;
-			if (ADJUST_USING_BOUNDING_BOX_POSITION) {
-				Vector3f theirPos = cr.getBoundingBox().getCenter();
-				diff = ourPos.subtract(theirPos);
-			} else {
-				diff = this.prevMoveDir.mult(-1f);
-			}
+			Vector3f theirPos = cr.getBoundingBox().getCenter();
+			diff = ourPos.subtract(theirPos);
 			diff.y = 0; // Only move horizontally?
 
 			if (diff.length() == 0) {
@@ -253,7 +232,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				//SimpleRigidBody<T> tmpWasCollision = null;
 				//do {
 				this.simpleEntity.moveEntity(diff); // Move away
-				if (Globals.DEBUG_AUTOMOVING) {
+				if (DEBUG_AUTOMOVING) {
 					p("Automoved  " + this + " by " + diff);
 				}
 				//tmpWasCollision = checkForCollisions();
@@ -267,15 +246,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	/**
 	 * Move the player up slightly, so they can walk up a step (if it is low enough).
 	 * 
-	 * @param other
-	 * @param tpf_secs
 	 * @return
 	 */
-	private boolean checkForStep(List<SimpleRigidBody<T>> crs) {//, float tpf_secs) {
+	private boolean checkForStep(List<SimpleRigidBody<T>> crs) {
 		if (crs.isEmpty()) {
 			return false;
 		}
-		SimpleRigidBody<T> cr = crs.get(0); // todo - don't just check first?
+		SimpleRigidBody<T> cr = crs.get(0);
 		if (!this.canWalkUpSteps) {
 			return false;
 		}
@@ -374,7 +351,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					res = e.collideWith(this.simpleEntity.getCollidable(), localCollisionResults);
 				}
 				if (res > 0) {
-					this.physicsController.getCollisionListener().collisionOccurred(this, e, null);
+					this.physicsController.getCollisionListener().collisionOccurred(this, e);
 					return true;
 				}
 			}
@@ -383,9 +360,18 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
+	/**
+	 * If you get UnsupportedCollisionException, it means you're trying to collide a mesh with a mesh.
+	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
-		return this.simpleEntity.getCollidable().collideWith(other, results);
+		try {
+			return this.simpleEntity.getCollidable().collideWith(other, results);
+		} catch (UnsupportedCollisionException ex) { // todo - remove this
+			ex.printStackTrace();
+			this.simpleEntity.getCollidable().collideWith(other, results);
+		}
+		return 0;
 	}
 
 

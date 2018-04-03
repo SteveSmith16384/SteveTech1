@@ -216,7 +216,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
+	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
 
@@ -224,7 +224,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			//Globals.p("Collision between " + pea + " and " + peb);
 		}
 
-		super.collisionOccurred(a, b, point);
+		super.collisionOccurred(a, b);
 
 	}
 

@@ -118,7 +118,7 @@ public class SimplePhysicsController<T> {
 		
 		if (srb.movedByForces()) {
 			// Check to see if they're not already colliding
-			/*todo SimpleRigidBody<T> tmpWasCollision = srb.checkForCollisions();
+			/*SimpleRigidBody<T> tmpWasCollision = srb.checkForCollisions();
 			if (tmpWasCollision != null) {
 				System.err.println("Warning: " + this + " has collided immediately with " + tmpWasCollision.userObject);
 			}*/

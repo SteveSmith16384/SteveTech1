@@ -580,7 +580,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b, Vector3f point) {
+	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
 		

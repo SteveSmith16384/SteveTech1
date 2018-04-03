@@ -48,13 +48,13 @@ public class Profiler implements ICollisionListener<String> {
 		long totalDuration = System.currentTimeMillis() - start;
 
 		// List entities
-		/*todo if (SimplePhysicsController.DEBUG) {
+		if (SimplePhysicsController.DEBUG) {
 			for (SimpleRigidBody<String> e : this.physicsController.getEntities()) {
 				if (e.movedByForces()) {
 					p(e.toString() + " is at " + e.getBoundingBox().getCenter());
 				}
 			}
-		}*/
+		}
 
 		p("Finished.  Took " + totalDuration);
 	}
@@ -137,7 +137,7 @@ public class Profiler implements ICollisionListener<String> {
 
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody<String> a, SimpleRigidBody<String> b, Vector3f point) {
+	public void collisionOccurred(SimpleRigidBody<String> a, SimpleRigidBody<String> b) {
 		//p("Collision between " + a.userObject + " and " + b.userObject);
 	}
 

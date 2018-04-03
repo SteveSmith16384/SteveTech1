@@ -3,14 +3,18 @@ package com.scs.simplephysics.tests;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Sphere;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 
-public class TestAutomove implements ICollisionListener<String> {
+/**
+ * Test what happens when a box rotates, since this will increase the size of the bounding box.
+ * @author StephenCS
+ *
+ */
+public class TestRotatingBox implements ICollisionListener<String> {
 
 	private static final float LOOP_INTERVAL_SECS = .001f;
 	private static final int REPORT_INTERVAL_SECS = 1;
@@ -19,35 +23,32 @@ public class TestAutomove implements ICollisionListener<String> {
 	private SimplePhysicsController<String> physicsController;
 
 	public static void main(String args[]) {
-		new TestAutomove();
+		new TestRotatingBox();
 	}
 
 
-	private TestAutomove() {
+	private TestRotatingBox() {
 		physicsController = new SimplePhysicsController<String>(this, -1, -1, 0, 0.99f);
 
-		SimpleRigidBody<String> box1 = this.createBox("box1", new Vector3f(0, 0, 0));
-		SimpleRigidBody<String> box2 = this.createBox("box2", new Vector3f(.5f, 0, 0));
-		SimpleRigidBody<String> box3 = this.createBox("box3", new Vector3f(1f, 0, 0));
+		Geometry box1 = this.createBox("box1", new Vector3f(0, 0, 0));
+		Geometry box3 = this.createBox("box3", new Vector3f(1.01f, 0, 0));
 		
-		float time = 1;
-		int prevReport = 0;
-		while (time <= TOTAL_DURATION_SECS) {
-			this.physicsController.update(LOOP_INTERVAL_SECS);
-			if (time > prevReport) {
-				//p("Time: " + time + "  Pos: " + box1.simpleEntity.getBoundingBox().ce.getWorldTranslation() + "  Gravity offset:" + srb.currentGravInc);
-				prevReport += REPORT_INTERVAL_SECS;
-			}
-			time += LOOP_INTERVAL_SECS;
-		}
+		p("First run...");
+		this.physicsController.update(LOOP_INTERVAL_SECS);
 		
-		p("Box 1: " + box1.getBoundingBox().getCenter());
-		p("Box 2: " + box2.getBoundingBox().getCenter());
-		p("Box 3: " + box3.getBoundingBox().getCenter());
+		p("Rotating box...");
+		box1.lookAt(box1.getLocalTranslation().add(new Vector3f(1, 0, 1)), Vector3f.UNIT_Y); // Look 45 degrees
+		
+		p("Second run...");
+		this.physicsController.update(LOOP_INTERVAL_SECS);
+
+		p("Final positions...");
+		p("Box 1: " + box1.getWorldTranslation());
+		p("Box 3: " + box3.getWorldTranslation());
 	}
 
 
-	private SimpleRigidBody<String> createBox(String name, Vector3f pos) {
+	private Geometry createBox(String name, Vector3f pos) {
 		Box box = new Box(.5f, .5f, .5f);
 		final Geometry boxGeometry = new Geometry(name, box);
 		boxGeometry.setLocalTranslation(pos); // origin is the middle
@@ -56,7 +57,7 @@ public class TestAutomove implements ICollisionListener<String> {
 		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, true, "Geometry_" + name);
 		this.physicsController.addSimpleRigidBody(srb);
 
-		return srb;
+		return boxGeometry;
 	}
 
 
@@ -73,7 +74,8 @@ public class TestAutomove implements ICollisionListener<String> {
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<String> a, SimpleRigidBody<String> b) {
-		// Do nothing
+		p("Collision between " + a.userObject + " and " + b.userObject);
+		//a.checkSRBvSRB(b); // todo - remove this
 	}
 
 

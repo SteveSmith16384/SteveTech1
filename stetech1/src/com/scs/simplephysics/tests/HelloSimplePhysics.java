@@ -7,6 +7,7 @@ import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bounding.BoundingBox;
+import com.jme3.collision.Collidable;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -55,6 +56,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 	private Vector3f camDir = new Vector3f();
 	private Vector3f camLeft = new Vector3f();
+	
+	private SimpleRigidBody<Spatial> mountain;
 
 	public static void main(String[] args) {
 		AppSettings settings = new AppSettings(true);
@@ -83,7 +86,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		mat.setColor("Color", ColorRGBA.Blue);
 		playerModel.setMaterial(mat);
 		playerModel.setLocalTranslation(new Vector3f(0,6,0));
-		playerModel.setCullHint(CullHint.Always);
+		playerModel.setCullHint(CullHint.Always); // Don't draw ourselves
 		rootNode.attachChild(playerModel);
 		
 		ISimpleEntity<Spatial> iePlayer = new SimpleEntityHelper<Spatial>(playerModel);
@@ -128,11 +131,31 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(model);
 
-		ISimpleEntity<Spatial> hillEntity = new SimpleEntityHelper<Spatial>(model);
+		//ISimpleEntity<Spatial> hillEntity = new SimpleEntityHelper<Spatial>(model);
+		ISimpleEntity<Spatial> entity = new ISimpleEntity<Spatial>() {
 
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(hillEntity, physicsController, false, model);		
-		this.physicsController.addSimpleRigidBody(srb);
-		srb.setModelComplexity(1);
+			@Override
+			public void moveEntity(Vector3f pos) {
+				// Do nothing
+				
+			}
+
+			@Override
+			public Collidable getCollidable() {
+				return model; // Don't just return a bounding box!
+			}
+
+			@Override
+			public void hasMoved() {
+				// Do nothing
+			}
+
+		};
+
+
+		mountain = new SimpleRigidBody<Spatial>(entity, physicsController, false, model);		
+		this.physicsController.addSimpleRigidBody(mountain);
+		mountain.setModelComplexity(3);
 	}
 	
 	
@@ -357,6 +380,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		
 		// Position the camera
 		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
+		
+		// todo - remove balls that fall off edge
 
 		//--------------------------------------------
 
@@ -370,9 +395,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 
 	@Override
-	public void collisionOccurred(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b, Vector3f point) {
+	public void collisionOccurred(SimpleRigidBody<Spatial> a, SimpleRigidBody<Spatial> b) {
 		//p("Collision between " + a.userObject + " and " + b.userObject);
-
 	}
 
 

@@ -1,8 +1,5 @@
 package com.scs.simplephysics;
 
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
-
 public interface ICollisionListener<T> {
 
 	/**
@@ -11,8 +8,8 @@ public interface ICollisionListener<T> {
 	boolean canCollide(SimpleRigidBody<T> a, SimpleRigidBody<T> b);
 	
 	/**
-	 * Notify that a collision has occurred.
+	 * Notify that a collision has occurred between two SimpleRigidBodies.
 	 */
-	void collisionOccurred(SimpleRigidBody<T> a, SimpleRigidBody<T> b, Vector3f point); // todo - remove point
+	void collisionOccurred(SimpleRigidBody<T> a, SimpleRigidBody<T> b);
 	
 }

@@ -71,7 +71,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 				server.gameNetworkServer.sendMessageToAll(eum);
 			}
 		} else {
-
 			if (invulnerableTimeSecs >= 0) {
 				invulnerableTimeSecs -= tpf;
 			}
