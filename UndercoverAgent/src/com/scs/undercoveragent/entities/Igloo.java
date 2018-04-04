@@ -3,6 +3,7 @@ package com.scs.undercoveragent.entities;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
+import com.jme3.collision.Collidable;
 import com.jme3.math.Quaternion;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
@@ -39,16 +40,12 @@ public class Igloo extends PhysicalEntity {
 		mainNode.setUserData(Globals.ENTITY, this);
 
 	}
-	
-/*	
-	private void loadInThread() {
-		game.enqueue(new Callable<Spatial>() {
-			public Spatial call() throws Exception {
-				return node;
-			}
-		});
 
+	
+	@Override
+	public Collidable getCollidable() {
+		return this.mainNode;
 	}
-*/
+
 
 }

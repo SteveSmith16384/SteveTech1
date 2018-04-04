@@ -316,8 +316,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	@Override
 	public Collidable getCollidable() {
-		//return this.mainNode;
 		return this.mainNode.getWorldBound(); // Return simple boundingbox by default, to avoid mesh v mesh collisions
+		//return this.mainNode;
 	}
 
 

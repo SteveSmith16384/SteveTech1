@@ -2,6 +2,7 @@ package com.scs.undercoveragent.entities;
 
 import java.util.HashMap;
 
+import com.jme3.collision.Collidable;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -50,5 +51,12 @@ public class StaticSnowman extends PhysicalEntity {
 	public void processByServer(AbstractEntityServer server, float tpf) {
 		super.processByServer(server, tpf);
 	}
+
+
+	@Override
+	public Collidable getCollidable() {
+		return this.mainNode;
+	}
+
 
 }

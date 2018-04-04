@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.scs.stevetech1.server.Globals;
 
@@ -58,9 +60,6 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	public void setLinearVelocity(Vector3f dir) {
 		this.oneOffForce = dir;
-		if (dir.y > 0) {
-			Globals.p("todo Remove this");
-		}
 	}
 
 
@@ -283,9 +282,11 @@ public class SimpleRigidBody<T> implements Collidable {
 	public List<SimpleRigidBody<T>> checkForCollisions() {
 		List<SimpleRigidBody<T>> crs = new ArrayList<SimpleRigidBody<T>>();
 
+		CollisionResults tempCollisionResults = new CollisionResults(); // Avoid creating a new one each time
+
 		if (SimplePhysicsController.USE_NEW_COLLISION_METHOD) {
 			for(SimpleNode<T> node : this.physicsController.nodes.values()) {
-				node.getCollisions(this, crs);
+				node.getCollisions(this, crs, tempCollisionResults);
 			}
 			// Check against moving entities
 			List<SimpleRigidBody<T>> entities = physicsController.movingEntities;
@@ -293,7 +294,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				// Loop through the entities
 				for (int i=0 ; i<entities.size() ; i++) {
 					SimpleRigidBody<T> e = entities.get(i);
-					if (this.checkSRBvSRB(e)) {
+					if (this.checkSRBvSRB(e, tempCollisionResults)) {
 						crs.add(e);
 					}
 				}
@@ -305,7 +306,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				// Loop through the entities
 				for (int i=0 ; i<entities.size() ; i++) {
 					SimpleRigidBody<T> e = entities.get(i);
-					if (this.checkSRBvSRB(e)) {
+					if (this.checkSRBvSRB(e, tempCollisionResults)) {
 						crs.add(e);
 					}
 				}
@@ -320,23 +321,48 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * @param e
 	 * @return
 	 */
-	public boolean checkSRBvSRB(SimpleRigidBody<T> e) {
+	public boolean checkSRBvSRB(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) {
+		tempCollisionResults.clear();
 		if (e != this) { // Don't check ourselves
 			if (this.physicsController.getCollisionListener().canCollide(this, e)) {
-				CollisionResults localCollisionResults = new CollisionResults();
+				//CollisionResults localCollisionResults = new CollisionResults();
 				// Check which object is the most complex, and collide that against the bounding box of the other
 				int res = 0;
-				if (this.modelComplexity >= e.modelComplexity) {
+				if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
+					// Both are complex meshes!  Convert one into a simple boundingvolume
+					if (Globals.DEBUG_MESH_COLLISION_CONV) {
+						Globals.p("Converting " + this + " into bb");
+					}
+
+					if (this.modelComplexity >= e.modelComplexity) {
+						// We are the most complex
+						Node s = (Node)e.simpleEntity.getCollidable();
+						BoundingVolume bv = (BoundingVolume)s.getWorldBound();
+						res = this.collideWith(bv, tempCollisionResults);
+					} else {
+						// They are the most complex
+						Node s = (Node)this.simpleEntity.getCollidable();
+						BoundingVolume bv = (BoundingVolume)s.getWorldBound();
+						res = bv.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
+						//res = e.collideWith(this.simpleEntity.getCollidable(), tempCollisionResults);
+					}
+
+
+				} else {
+					res = this.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
+
+				}
+				/*if (this.modelComplexity >= e.modelComplexity) {
 					if (e.getBoundingBox() == null) {
 						throw new RuntimeException(e.userObject + " has no bounds");
 					}
-					res = this.collideWith(e.simpleEntity.getCollidable(), localCollisionResults);
+					res = this.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
 				} else {
 					if (this.getBoundingBox() == null) {
 						throw new RuntimeException(this.userObject + " has no bounds");
 					}
-					res = e.collideWith(this.simpleEntity.getCollidable(), localCollisionResults);
-				}
+					res = e.collideWith(this.simpleEntity.getCollidable(), tempCollisionResults);
+				}*/
 				if (res > 0) {
 					this.physicsController.getCollisionListener().collisionOccurred(this, e);
 					return true;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
-import com.jme3.collision.Collidable;
+import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
 
 public class SimpleNode<T> {
@@ -89,13 +89,13 @@ public class SimpleNode<T> {
 	}
 	
 
-	public int getCollisions(SimpleRigidBody<T> srb, List<SimpleRigidBody<T>> crs) {
+	public int getCollisions(SimpleRigidBody<T> srb, List<SimpleRigidBody<T>> crs, CollisionResults tempCollisionResults) {
 		int count = 0;
 		BoundingBox bb = srb.getBoundingBox();
 		if (this.intersects(bb)) { // Check we're inside the Node
 			synchronized (this.entities) {
 				for (SimpleRigidBody<T> other : this.entities) {
-					if (srb.checkSRBvSRB(other)) {
+					if (srb.checkSRBvSRB(other, tempCollisionResults)) {
 						crs.add(other);
 						count++;
 					}

@@ -19,6 +19,7 @@ public class Globals {
 	public static final boolean DEBUG_DIE_ANIM = true;
 	public static final boolean SHOW_AVATAR_POS = false;
 	
+	public static final boolean DEBUG_MESH_COLLISION_CONV = false;
 	public static final boolean SHOW_AVATAR_BOUNDS = false;
 	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
