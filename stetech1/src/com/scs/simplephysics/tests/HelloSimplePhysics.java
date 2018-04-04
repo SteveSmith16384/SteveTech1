@@ -145,11 +145,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 				return model; // Don't just return a bounding box!
 			}
 
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-
 		};
 
 

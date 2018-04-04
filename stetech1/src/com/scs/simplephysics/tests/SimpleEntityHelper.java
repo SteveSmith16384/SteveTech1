@@ -30,10 +30,4 @@ public class SimpleEntityHelper<T> implements ISimpleEntity<T> {
 		
 	}
 
-	@Override
-	public void hasMoved() {
-		// Do nothing
-		
-	}
-
 }

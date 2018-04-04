@@ -241,12 +241,4 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	}
 
 
-	@Override
-	public void hasMoved() {
-		this.sendPositionUpdate = true;
-		//this.boundingBox.setCenter(this.getMainNode().getWorldBound().getCenter());
-
-	}
-
-
 }

@@ -155,7 +155,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 					simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
 				}
-				if (Globals.SHOW_AVATAR_WALK_DIR) {
+				if (Globals.SHOW_AVATAR_POS) {
 					Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());
 				}
 			}
@@ -307,15 +307,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	
 	@Override
 	public Collidable getCollidable() {
-		return this.playerGeometry;
-	}
-
-
-	@Override
-	public void hasMoved() {
-		this.sendPositionUpdate = true;
-		//this.boundingBox.setCenter(this.getMainNode().getWorldBound().getCenter());
-
+		return this.playerGeometry.getWorldBound();
 	}
 
 

@@ -9,7 +9,7 @@ public interface ISimpleEntity<T> {
 	
 	void moveEntity(Vector3f pos); // To move entities
 	
-	void hasMoved(); // Todo - remove this?
+	//void hasMoved(); // Todo - remove this?
 	
 	//todo - add this T getUserObject();
 }

@@ -20,25 +20,35 @@ public class TestBoxInCorner implements ICollisionListener<String> {
 	private static final float TOTAL_DURATION_SECS = 10;
 	
 	private SimplePhysicsController<String> physicsController;
-
+	
 	public static void main(String args[]) {
 		new TestBoxInCorner();
 	}
 
 
 	private TestBoxInCorner() {
-		physicsController = new SimplePhysicsController<String>(this, -1, -1, 0, 0.99f);
+		physicsController = new SimplePhysicsController<String>(this, -1, -1, 0, 0.99f); // Note no gravity
 
-		Geometry wallLR = this.createBox("wallLR", new Vector3f(10f, 10f, .5f), new Vector3f(0, 0, 0), false);
-		Geometry wallFB = this.createBox("wallFB", new Vector3f(.5f, 10f, 10f), new Vector3f(0, 0, 0), false);
-		Geometry box = this.createBox("box", new Vector3f(.5f, .5f, .5f), new Vector3f(.5f, 0, .5f), true);
+		this.createBox("wallLR", new Vector3f(10f, 10f, .5f), new Vector3f(0, 0, 0), false);
+		this.createBox("wallFB", new Vector3f(.5f, 10f, 10f), new Vector3f(0, 0, 0), false);
+		
+		// Create box to move
+		//Geometry box = this.createBox("box", new Vector3f(.5f, .5f, .5f), new Vector3f(2f, 0, 2f), true);
+		Box box = new Box(.5f, .5f, .5f);
+		final Geometry boxGeometry = new Geometry("Box", box);
+		boxGeometry.setLocalTranslation(2f, 0, 2f); // origin is the middle
+		ISimpleEntity<String> entity = new SimpleEntityHelper<String>(boxGeometry);
+		SimpleRigidBody<String> boxSRB = new SimpleRigidBody<String>(entity, physicsController, true, "Geometry_box");
+		this.physicsController.addSimpleRigidBody(boxSRB);
+
 		
 		float time = 1;
 		int prevReport = 0;
 		while (time <= TOTAL_DURATION_SECS) {
+			boxSRB.setLinearVelocity(new Vector3f(-1, 0, -1));
 			this.physicsController.update(LOOP_INTERVAL_SECS);
 			if (time > prevReport) {
-				p("Box position: " + box.getWorldTranslation());
+				p("Box position: " + boxGeometry.getWorldTranslation());
 				prevReport += REPORT_INTERVAL_SECS;
 			}
 			time += LOOP_INTERVAL_SECS;
@@ -72,8 +82,7 @@ public class TestBoxInCorner implements ICollisionListener<String> {
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<String> a, SimpleRigidBody<String> b) {
-		p("Collision between " + a.userObject + " and " + b.userObject);
-		//a.checkSRBvSRB(b); // todo - remove this
+		//p("Collision between " + a.userObject + " and " + b.userObject);
 	}
 
 

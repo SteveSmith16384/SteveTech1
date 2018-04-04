@@ -326,13 +326,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	@Override
 	public void moveEntity(Vector3f pos) {
 		this.getMainNode().move(pos);
-	}
-
-	@Override
-	public void hasMoved() {
 		this.sendPositionUpdate = true;
-
 	}
 
-
+	
 }

@@ -61,11 +61,6 @@ public class BouncingSimulation implements ICollisionListener<String> {
 				return ballGeometry.getWorldBound();
 			}
 
-			@Override
-			public void hasMoved() {
-				// Do nothing
-			}
-
 		};
 		SimpleRigidBody<String> srb = new SimpleRigidBody<String>(entity, physicsController, true, "ballGeometry");
 		this.physicsController.addSimpleRigidBody(srb);
@@ -88,11 +83,6 @@ public class BouncingSimulation implements ICollisionListener<String> {
 			@Override
 			public Spatial getCollidable() {
 				return floorGeometry;
-			}
-
-			@Override
-			public void hasMoved() {
-				// Do nothing
 			}
 
 		};

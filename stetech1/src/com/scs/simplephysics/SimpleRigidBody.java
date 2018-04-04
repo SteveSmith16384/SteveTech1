@@ -237,7 +237,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				//tmpWasCollision = checkForCollisions();
 				//} while (tmpWasCollision != null && this.removed == false); Only adjust once, we'll do it again on the next iteration
-				this.simpleEntity.hasMoved();
+				//this.simpleEntity.hasMoved();
 			}
 		}
 	}
@@ -287,7 +287,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		if (crs.size() > 0) {
 			this.simpleEntity.moveEntity(offset.negateLocal()); // Move back
 		} else {
-			this.simpleEntity.hasMoved();
+			//this.simpleEntity.hasMoved();
 		}
 		return crs;
 	}
