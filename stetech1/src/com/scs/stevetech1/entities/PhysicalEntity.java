@@ -214,7 +214,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	@Override
 	public void adjustWorldTranslation(Vector3f offset) {
 		this.setWorldTranslation(this.getWorldTranslation().add(offset));
-
+		//this.sendPositionUpdate = true;
 	}
 
 
@@ -325,8 +325,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	@Override
 	public void moveEntity(Vector3f pos) {
-		this.getMainNode().move(pos);
-		this.sendPositionUpdate = true;
+		//this.getMainNode().move(pos);
+		this.adjustWorldTranslation(pos);
 	}
 
 	

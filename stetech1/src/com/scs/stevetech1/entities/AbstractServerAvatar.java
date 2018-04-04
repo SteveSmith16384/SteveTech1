@@ -1,9 +1,6 @@
 package com.scs.stevetech1.entities;
 
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICanScorePoints;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -185,7 +182,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	@Override
 	public void setHealth(float h) {
 		super.setHealth(h);
-		//this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
 		this.sendStatusUpdateMessage(false);
 	}
 
@@ -193,7 +189,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	@Override
 	public void decHealth(float h) {
 		super.decHealth(h);
-		//this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client));
 		this.sendStatusUpdateMessage(true);
 	}
 

@@ -127,6 +127,6 @@ public class SoldierModel implements IAvatarModel {
 
 	@Override
 	public BoundingBox getBoundingBox() {
-		return new BoundingBox(new Vector3f(), MODEL_WIDTH, MODEL_HEIGHT, MODEL_DEPTH);
+		return new BoundingBox(new Vector3f(), MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
 	}
 }

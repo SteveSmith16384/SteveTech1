@@ -39,7 +39,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	public final int playerID;
 	public Spatial playerGeometry;
-	//protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
+	protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
 	public IAbility[] ability = new IAbility[2];
 	public int side = -1;
 	protected IAvatarModel avatarModel;
@@ -50,7 +50,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected boolean playerWalked; // Has the player tried to move us?
 
 	private float health;
-	public float moveSpeed = 0f;// = Globals.PLAYER_MOVE_SPEED;
+	public float moveSpeed = 0f;
 	private float jumpForce = 0;
 	protected int currentAnimCode = -1;
 
@@ -68,11 +68,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		input = _input;
 		side =_side;
 		avatarModel = _avatarModel;
-		//boundingBox = avatarModel.getBoundingBox();
+		boundingBox = avatarModel.getBoundingBox();
 		
 		playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);
 		
-		if (Globals.TEST_BOUNDING_BOX) {
+		/*if (Globals.TEST_BOUNDING_BOX) {
 			BoundingBox bb1 = (BoundingBox)playerGeometry.getWorldBound();
 			Globals.p("bb1:" + bb1);
 
@@ -84,7 +84,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 			BoundingBox bb3 = (BoundingBox)playerGeometry.getWorldBound();
 			Globals.p("bb3:" + bb3);
 
-		}
+		}*/
 		
 		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
 
@@ -162,12 +162,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 			playerWalked = true;
 		}
 
+		updateBB();
+
 		simpleRigidBody.process(tpf_secs);
 
 		this.currentAnimCode = newAnimCode;
 		
 		if (Globals.SHOW_AVATAR_BOUNDS) {
-			BoundingBox bb = (BoundingBox)this.getMainNode().getWorldBound();
+			BoundingBox bb = (BoundingBox)this.getCollidable();
 			Globals.p("Avatar bounds: " + bb.getXExtent() + ", " + bb.getYExtent() + ", " + bb.getZExtent());
 		}
 	}
@@ -307,7 +309,28 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	
 	@Override
 	public Collidable getCollidable() {
-		return this.playerGeometry.getWorldBound();
+		return this.boundingBox; // this.playerGeometry.getWorldBound();
+	}
+
+
+/*	@Override
+	public void moveEntity(Vector3f pos) {
+		super.moveEntity(pos);
+		this.updateBB();
+	}
+*/
+	
+	private void updateBB() {
+		Vector3f c = this.getMainNode().getWorldBound().getCenter();
+		this.boundingBox.setCenter(c.x, c.y, c.z);
+
+	}
+	
+
+	@Override
+	public void setWorldTranslation(float x, float y, float z) {
+		super.setWorldTranslation(x, y, z);
+		this.updateBB();
 	}
 
 

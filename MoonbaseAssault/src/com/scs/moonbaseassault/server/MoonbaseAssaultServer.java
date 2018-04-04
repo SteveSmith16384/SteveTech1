@@ -229,7 +229,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
 
 		if (pa.type != MoonbaseAssaultClientEntityCreator.FLOOR && pb.type != MoonbaseAssaultClientEntityCreator.FLOOR) {
-			Globals.p("Collision between " + pa + " and " + pb);
+			//Globals.p("Collision between " + pa + " and " + pb);
 		}
 
 		super.collisionOccurred(a, b);
