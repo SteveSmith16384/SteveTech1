@@ -153,21 +153,21 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			scannerData = map.scannerData;
 			this.deploySquares = map.deploySquares;
 
-			int maxSoldiers = 0;
+			//int maxSoldiers = 1;
 
 			this.computerSquares = new ArrayList<Point>();
 			for (int y=0 ; y<scannerData.length ; y++) {
 				for (int x=0 ; x<scannerData.length ; x++) {
 					if (this.scannerData[x][y] == MapLoader.COMPUTER) {
 						computerSquares.add(new Point(x, y));
-					} else if (this.scannerData[x][y] == MapLoader.DOOR_LR) { // || this.scannerData[x][y] == MapLoader.DOOR_UD) {
+					} /*else if (this.scannerData[x][y] == MapLoader.DOOR_LR) { // || this.scannerData[x][y] == MapLoader.DOOR_UD) {
 						if (maxSoldiers > 0) {
 							AISoldier s = new AISoldier(this, this.getNextEntityID(), x + 0.5f, .3f, y + 1.5f, 2);
 							this.actuallyAddEntity(s);
 							Globals.p("Adding soldier to " + x + ", " + y);
 							maxSoldiers--;
 						}
-					}
+					}*/
 				}
 			}
 
@@ -209,15 +209,39 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		//Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
 		//this.actuallyAddEntity(floor);
 
+		// Add AI soldiers
+		/*todo for (int i=0 ; i<1 ; i++) {
+			AISoldier s = new AISoldier(this, this.getNextEntityID(), 0,0,0, 2);
+			this.actuallyAddEntity(s);
+			moveAISoldierToStartPosition(s);
+			
+		}*/
+
 	}
 
 
+	public void moveAISoldierToStartPosition(AISoldier soldier) {
+		float startHeight = .1f;
+		List<Point> deploySquares = this.deploySquares[soldier.side-1];
+		boolean found = false;
+		for (Point p : deploySquares) {
+			soldier.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
+			if (soldier.simpleRigidBody.checkForCollisions().size() == 0) {
+				found = true;
+				break;
+			}
+		}
+		if (found) {
+			Globals.p("AISoldier starting at " + soldier.getWorldTranslation());
+		} else {
+			throw new RuntimeException("No space to start!");
+		}
+	}
+
+	
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		SoldierServerAvatar avatar = new SoldierServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
-
-		//IAbility abilityGun = new LaserRifle(this, getNextEntityID(), avatar, 0, client);
-		//this.actuallyAddEntity(abilityGun);
 
 		return avatar;
 	}

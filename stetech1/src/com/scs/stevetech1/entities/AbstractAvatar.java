@@ -5,8 +5,9 @@ import java.util.HashMap;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.Collidable;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial.CullHint;
+import com.jme3.scene.shape.Box;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
@@ -38,8 +39,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	private final Vector3f camLeft = new Vector3f();
 
 	public final int playerID;
-	public Spatial playerGeometry;
-	protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
+	//public Spatial playerGeometry;
+	//protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
+	protected Geometry bbGeom; // Non-rotating box for collisions
 	public IAbility[] ability = new IAbility[2];
 	public int side = -1;
 	protected IAvatarModel avatarModel;
@@ -68,31 +70,24 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		input = _input;
 		side =_side;
 		avatarModel = _avatarModel;
-		boundingBox = avatarModel.getBoundingBox();
 		
-		playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);
+		//boundingBox = avatarModel.getBoundingBox();
+		Box box = new Box(avatarModel.getBoundingBox().getXExtent(), avatarModel.getBoundingBox().getYExtent(), avatarModel.getBoundingBox().getZExtent());
+		bbGeom = new Geometry("bbGeom_" + name, box);
+		bbGeom.setCullHint(CullHint.Always); // Don't draw ourselves
+		//bbGeom.updateModelBound();
+		//bbGeom.setModelBound(new BoundingBox());
 		
-		/*if (Globals.TEST_BOUNDING_BOX) {
-			BoundingBox bb1 = (BoundingBox)playerGeometry.getWorldBound();
-			Globals.p("bb1:" + bb1);
-
-			playerGeometry.lookAt(Vector3f.UNIT_X, Vector3f.UNIT_Y);
-			BoundingBox bb2 = (BoundingBox)playerGeometry.getWorldBound();
-			Globals.p("bb2:" + bb2);
-
-			playerGeometry.lookAt(Vector3f.UNIT_Z, Vector3f.UNIT_Y);
-			BoundingBox bb3 = (BoundingBox)playerGeometry.getWorldBound();
-			Globals.p("bb3:" + bb3);
-
-		}*/
-		
-		playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
-
+		/*Spatial playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);		
+		//playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
 		this.getMainNode().attachChild(playerGeometry);
-
+		//playerGeometry.setUserData(Globals.ENTITY, this);
+*/
+		this.getMainNode().attachChild(bbGeom);
+		//this.getMainNode().updateModelBound();
+		
 		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this, game.getPhysicsController(), this);
 
-		playerGeometry.setUserData(Globals.ENTITY, this);
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
 	}
@@ -155,14 +150,13 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
 					simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
 				}
-				if (Globals.SHOW_AVATAR_POS) {
-					Globals.p("time=" + serverTime + ",   pos=" + this.getWorldTranslation());
-				}
 			}
 			playerWalked = true;
 		}
 
-		updateBB();
+		if (Globals.SHOW_AVATAR_POS) {
+			Globals.p("time=" + serverTime + ", pos=" + this.bbGeom.getWorldTranslation());
+		}
 
 		simpleRigidBody.process(tpf_secs);
 
@@ -203,11 +197,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	 * Also, we're adjusting their position based on the past, so we want to offset them, rather than move them to
 	 * a specific point
 	 */
-	@Override
+	/*@Override
 	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
 		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
 		simplePlayerControl.getAdditionalForce().addLocal(offset);
-	}
+	}*/
 
 
 	public int getSide() {
@@ -309,29 +303,23 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	
 	@Override
 	public Collidable getCollidable() {
-		return this.boundingBox; // this.playerGeometry.getWorldBound();
+		return this.getMainNode().getWorldBound();
+		//return this.bbGeom.getModelBound();//.boundingBox; // this.playerGeometry.getWorldBound();
 	}
 
-
-/*	@Override
-	public void moveEntity(Vector3f pos) {
-		super.moveEntity(pos);
-		this.updateBB();
-	}
-*/
-	
+/*
 	private void updateBB() {
 		Vector3f c = this.getMainNode().getWorldBound().getCenter();
 		this.boundingBox.setCenter(c.x, c.y, c.z);
 
 	}
-	
-
+	*/
+/*
 	@Override
 	public void setWorldTranslation(float x, float y, float z) {
 		super.setWorldTranslation(x, y, z);
 		this.updateBB();
 	}
-
+*/
 
 }

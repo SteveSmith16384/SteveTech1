@@ -8,6 +8,6 @@ public interface IPhysicalEntity extends IEntity { // Mainly used for unit tests
 	
 	void setWorldTranslation(Vector3f newPos);
 	
-	void adjustWorldTranslation(Vector3f offset);
+	//void adjustWorldTranslation(Vector3f offset);
 
 }

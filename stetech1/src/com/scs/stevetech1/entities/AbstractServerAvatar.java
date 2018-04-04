@@ -1,6 +1,8 @@
 package com.scs.stevetech1.entities;
 
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICanScorePoints;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -24,7 +26,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	private AbstractGameServer server;
 	public ClientData client;
-	//private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation.  We don't actually rotate!  Todo - remove this once we've sorted out rotating bounding boxes
+	private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation.  We don't actually rotate!
 
 	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, IAvatarModel anim) {
 		super(_module, _playerID, _input, eid, _client.side, anim);
@@ -32,7 +34,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		server = (AbstractGameServer)_module;
 		client = _client;
 
-		//this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
+		this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}
 
 
@@ -75,10 +77,11 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			super.serverAndClientProcess(server, null, tpf, System.currentTimeMillis());
 
 			// Point us in the right direction
-			Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
-			lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
-			this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
-			//this.dummyNode.setLocalTranslation(this.getMainNode().getWorldTranslation());
+			//Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
+			//lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
+			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
+			
+			this.dummyNode.setLocalTranslation(this.getMainNode().getWorldTranslation());
 			//this.dummyNode.lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 
 			if (getWorldTranslation().y < -1) {

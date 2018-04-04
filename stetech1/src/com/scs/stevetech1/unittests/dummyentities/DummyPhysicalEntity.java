@@ -25,12 +25,6 @@ public class DummyPhysicalEntity implements IPhysicalEntity {
 	}
 
 	@Override
-	public void adjustWorldTranslation(Vector3f offset) {
-		pos.addLocal(offset);
-		
-	}
-
-	@Override
 	public String getName() {
 		return null;
 	}

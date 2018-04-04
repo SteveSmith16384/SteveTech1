@@ -13,16 +13,15 @@ public class Globals {
 	public static final boolean STRICT = false; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean SHOW_AVATAR_POS = false;
 	public static final boolean DEBUG_NO_BULLET = true;
 	public static final boolean TRANSPARENT_WALLS = true;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
+	public static final boolean DEBUG_DIE_ANIM = true;
+	public static final boolean SHOW_AVATAR_POS = false;
+	
 	public static final boolean SHOW_AVATAR_BOUNDS = false;
-
-	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
-	public static final boolean TEST_BOUNDING_BOX = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;
 	public static final boolean DEBUG_SLOW_CLIENT_AVATAR = false;
 	public static final boolean TURN_OFF_CLIENT_POS_ADJ = false;

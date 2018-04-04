@@ -7,9 +7,11 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.components.IAvatarModel;
@@ -27,6 +29,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public Camera cam;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	private Spatial debugNode;
+	//public Spatial playerGeometry;
 
 	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
 			float x, float y, float z, int side, IAvatarModel avatarModel, float _moveSpeed, float _jumpSpeed) {
@@ -36,6 +39,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		hud = _hud;
 		moveSpeed = _moveSpeed;
 		this.setJumpForce(_jumpSpeed);
+
+		//playerGeometry = avatarModel.createAndGetModel(!game.isServer(), side);
+		//game.getGameNode().attachChild(playerGeometry);
+		//this.getMainNode().attachChild(playerGeometry);
+		//playerGeometry.setUserData(Globals.ENTITY, this);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
@@ -92,6 +100,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 
 			storeAvatarPosition(serverTime);
+			
+			// Set position of avatar model (direction doesn't matter)
+			//this.playerGeometry.setLocalTranslation(this.bbGeom.getWorldTranslation());
+			//Vector3f lookAtPoint = this.cam.getDirection());
+			//lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
+			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 
 			// Position camera at node
 			Vector3f vec = this.getWorldTranslation();
@@ -143,7 +157,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			} else {
 				//pe.adjustWorldTranslation(offset);
 				//adjustWorldTranslation(offset.mult(.5f));
-				adjustWorldTranslation(offset.mult(.8f));
+				//adjustWorldTranslation(offset.mult(.8f));
+				
+				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
+				simplePlayerControl.getAdditionalForce().addLocal(offset.mult(.8f));
+
 
 			}
 		}
@@ -173,4 +191,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		return true;
 	}
 
+/*
+	@Override
+	public void remove() {
+		super.remove();
+		
+		this.playerGeometry.removeFromParent();
+	}
+*/
 }

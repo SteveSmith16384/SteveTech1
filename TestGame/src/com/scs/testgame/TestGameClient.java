@@ -12,8 +12,8 @@ import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 public class TestGameClient extends AbstractGameClient {
 
-	private TestGameClientEntityCreator creator = new TestGameClientEntityCreator();
-	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
+	private TestGameClientEntityCreator creator;
+	private AbstractCollisionValidator collisionValidator;
 
 	public static void main(String[] args) {
 		try {
@@ -69,9 +69,19 @@ public class TestGameClient extends AbstractGameClient {
 	public TestGameClient() {
 		super(TestGameServer.GAME_ID, "test Game", null, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, null, -1, 
 				25, 200, 10000, -5f, 0.99f, 1f);
+		
 	}
 
 
+	@Override
+	public void simpleInitApp() {
+		super.simpleInitApp();
+
+		creator = new TestGameClientEntityCreator();
+		collisionValidator = new AbstractCollisionValidator();
+	}
+	
+	
 	@Override
 	protected IHUD createHUD() {
 		return null;

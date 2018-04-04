@@ -9,6 +9,7 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
+import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
@@ -57,6 +58,9 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	public void setLinearVelocity(Vector3f dir) {
 		this.oneOffForce = dir;
+		if (dir.y > 0) {
+			Globals.p("todo Remove this");
+		}
 	}
 
 
@@ -115,7 +119,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		if (this.movedByForces) {
 
 			// Check we're not already colliding *before* we've even moved
-			List<SimpleRigidBody<T>> crs = checkForCollisions();
+			List<SimpleRigidBody<T>> crs = this.checkForCollisions();
 			if (crs.size() != 0) {
 				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				this.moveAwayFrom(crs);
@@ -127,12 +131,6 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.x + additionalForce.x;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
-					/*if (Globals.STRICT) {
-						BoundingBox bb = this.getBoundingBox();
-						if (this.tmpMoveDir.x > bb.getXExtent()*2) {
-							p("Warning - moving too far!");
-						}
-					}*/
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2 == null || crs2.size() > 0) {
 						if (!checkForStep(crs2)) {
@@ -149,12 +147,6 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.z + additionalForce.z;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
-					/*if (Globals.STRICT) {
-						BoundingBox bb = this.getBoundingBox();
-						if (this.tmpMoveDir.z > bb.getZExtent()*2) {
-							p("Warning - moving too far!");
-						}
-					}*/
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2 == null || crs2.size() > 0) {
 						if (!checkForStep(crs2)) {
@@ -174,14 +166,8 @@ public class SimpleRigidBody<T> implements Collidable {
 				boolean collided = false; 
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
-					/*if (Globals.STRICT) {
-						BoundingBox bb = this.getBoundingBox();
-						if (this.tmpMoveDir.y > bb.getXExtent()*2) {
-							p("Warning - moving too far!");
-						}
-					}*/
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
-					if (crs2 == null || crs2.size() > 0) {
+					if (crs2.size() > 0) {
 						collided = true;
 						// Bounce
 						float bounce = this.bounciness;
@@ -201,7 +187,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					// Not hit anything
 					currentGravInc = currentGravInc + (gravInc * tpf_secs); // Fall faster
 					if (totalOffset != 0) { 
-						this.isOnGround = true;
+						this.isOnGround = true; // todo - this doesn't look right
 					} else {
 						this.isOnGround = false;
 					}
@@ -211,6 +197,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 			if (this.currentGravInc < GRAVITY_WARNING) {
 				p("Warning - high gravity offset: " + this.currentGravInc);
+				this.getBoundingBox();
 			}
 		}
 	}
@@ -264,7 +251,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		float heightDiff = bTop - aBottom;
 
 		if (heightDiff >= 0 && heightDiff <= MAX_STEP_HEIGHT) {
-			//p("Going up step: " + heightDiff);
+			p("Going up step: " + heightDiff);
 			//this.oneOffForce.y += (heightDiff / tpf_secs) / 4; 
 			this.oneOffForce.y += (heightDiff*15);// / -this.gravInc);
 			return true;
