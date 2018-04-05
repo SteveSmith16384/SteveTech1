@@ -29,26 +29,25 @@ public class TestBoxInCorner implements ICollisionListener<String> {
 	private TestBoxInCorner() {
 		physicsController = new SimplePhysicsController<String>(this, -1, -1, 0, 0.99f); // Note no gravity
 
-		this.createBox("wallLR", new Vector3f(10f, 10f, .5f), new Vector3f(0, 0, 0), false);
-		this.createBox("wallFB", new Vector3f(.5f, 10f, 10f), new Vector3f(0, 0, 0), false);
+		this.createBox("wallX", new Vector3f(10f, 10f, .5f), new Vector3f(2f, 0, 0), false);
+		this.createBox("wallZ", new Vector3f(.5f, 10f, 10f), new Vector3f(0, 0, 2f), false);
 		
 		// Create box to move
-		//Geometry box = this.createBox("box", new Vector3f(.5f, .5f, .5f), new Vector3f(2f, 0, 2f), true);
-		Box box = new Box(.5f, .5f, .5f);
+		Geometry box = this.createBox("box", new Vector3f(.5f, .5f, .5f), new Vector3f(.2f, 0, .2f), true);
+		/*Box box = new Box(.5f, .5f, .5f);
 		final Geometry boxGeometry = new Geometry("Box", box);
 		boxGeometry.setLocalTranslation(2f, 0, 2f); // origin is the middle
 		ISimpleEntity<String> entity = new SimpleEntityHelper<String>(boxGeometry);
 		SimpleRigidBody<String> boxSRB = new SimpleRigidBody<String>(entity, physicsController, true, "Geometry_box");
 		this.physicsController.addSimpleRigidBody(boxSRB);
-
+*/
 		
 		float time = 1;
 		int prevReport = 0;
 		while (time <= TOTAL_DURATION_SECS) {
-			boxSRB.setLinearVelocity(new Vector3f(-1, 0, -1));
 			this.physicsController.update(LOOP_INTERVAL_SECS);
 			if (time > prevReport) {
-				p("Box position: " + boxGeometry.getWorldTranslation());
+				p("Box position: " + box.getWorldTranslation());
 				prevReport += REPORT_INTERVAL_SECS;
 			}
 			time += LOOP_INTERVAL_SECS;

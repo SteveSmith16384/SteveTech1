@@ -202,7 +202,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	private void moveAwayFrom(List<SimpleRigidBody<T>> crs) {
+	private void moveAwayFrom_SIMPLE(List<SimpleRigidBody<T>> crs) {
 		BoundingBox bb = this.getBoundingBox();
 		Vector3f ourPos = bb.getCenter();
 		for (SimpleRigidBody<T> cr : crs) {
@@ -226,6 +226,63 @@ public class SimpleRigidBody<T> implements Collidable {
 				//this.simpleEntity.hasMoved();
 			}
 		}
+	}
+
+
+	private void moveAwayFrom(List<SimpleRigidBody<T>> crs) {
+		BoundingBox ourBB = this.getBoundingBox();
+		//Vector3f ourPos = bb.getCenter();
+		for (SimpleRigidBody<T> cr : crs) {
+			BoundingBox theirBB = cr.getBoundingBox();
+			
+			// X axis
+			boolean doX = true;
+			if (ourBB.getCenter().x - ourBB.getXExtent() > theirBB.getCenter().x - theirBB.getXExtent()) {
+				if (ourBB.getCenter().x + ourBB.getXExtent() < theirBB.getCenter().x + theirBB.getXExtent()) {
+					doX = false;
+				}
+			}
+			if (doX) {
+				float len = ourBB.getCenter().x - theirBB.getCenter().x;
+				Vector3f diff = new Vector3f(len, 0, 0);
+				if (DEBUG_AUTOMOVING) {
+					p("Automoved  " + this + " by " + diff);
+				}
+				this.simpleEntity.moveEntity(diff); // Move away
+			}
+			
+			// Z axis
+			boolean doZ = true;
+			if (ourBB.getCenter().z - ourBB.getZExtent() > theirBB.getCenter().z - theirBB.getZExtent()) {
+				if (ourBB.getCenter().z + ourBB.getZExtent() < theirBB.getCenter().z + theirBB.getZExtent()) {
+					doZ = false;
+				}
+			}
+			if (doZ) {
+				float len = ourBB.getCenter().z - theirBB.getCenter().z;
+				Vector3f diff = new Vector3f(0, 0, len);
+				if (DEBUG_AUTOMOVING) {
+					p("Automoved  " + this + " by " + diff);
+				}
+				this.simpleEntity.moveEntity(diff); // Move away
+			}
+
+			// Z axis
+			boolean doY = true;
+			if (ourBB.getCenter().y - ourBB.getYExtent() > theirBB.getCenter().y - theirBB.getYExtent()) {
+				if (ourBB.getCenter().y + ourBB.getYExtent() < theirBB.getCenter().y + theirBB.getYExtent()) {
+					doY = false;
+				}
+			}
+			if (doY) {
+				float len = ourBB.getCenter().y - theirBB.getCenter().y;
+				Vector3f diff = new Vector3f(0, len, 0);
+				if (DEBUG_AUTOMOVING) {
+					p("Automoved  " + this + " by " + diff);
+				}
+				this.simpleEntity.moveEntity(diff); // Move away
+			}
+}
 	}
 
 
