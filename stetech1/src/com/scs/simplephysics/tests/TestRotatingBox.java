@@ -75,7 +75,6 @@ public class TestRotatingBox implements ICollisionListener<String> {
 	@Override
 	public void collisionOccurred(SimpleRigidBody<String> a, SimpleRigidBody<String> b) {
 		p("Collision between " + a.userObject + " and " + b.userObject);
-		//a.checkSRBvSRB(b); // todo - remove this
 	}
 
 

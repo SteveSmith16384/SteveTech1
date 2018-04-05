@@ -13,7 +13,7 @@ public class EntityUpdateData implements ITimeStamped {
 	public boolean force; // Force new position on client, e.g. avatar restarting.
 	public long timestamp;
 	//public Quaternion dir;
-	//public int animationCode; todo
+	//public int animationCode;
 
 	public EntityUpdateData() {
 

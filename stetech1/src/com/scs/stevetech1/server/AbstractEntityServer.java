@@ -63,7 +63,7 @@ ICollisionListener<PhysicalEntity> {
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 
 	protected HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities
-	public HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100); // Entites that we need to iterate over in game loop
+	protected HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100); // Entites that we need to iterate over in game loop
 	protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
 	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
@@ -127,7 +127,7 @@ ICollisionListener<PhysicalEntity> {
 	 */
 	protected abstract Class[] getListofMessageClasses();
 
-	
+
 	@Override
 	public void simpleUpdate(float tpf_secs) {
 		// Add/remove queued clients
@@ -231,36 +231,35 @@ ICollisionListener<PhysicalEntity> {
 			}
 
 			int numSent = 0;
-			synchronized (entitiesForProcessing) {
-				// Loop through the entities
-				for (IEntity e : entitiesForProcessing.values()) {
-					if (e instanceof IPlayerControlled) {
-						IPlayerControlled p = (IPlayerControlled)e;
-						p.resetPlayerInput();
-					}
+			// Loop through the entities
+			for (IEntity e : entitiesForProcessing.values()) {
+				if (e instanceof IPlayerControlled) {
+					IPlayerControlled p = (IPlayerControlled)e;
+					p.resetPlayerInput();
+				}
 
-					if (e instanceof IProcessByServer) {
-						IProcessByServer p = (IProcessByServer)e;
-						p.processByServer(this, tpf_secs);
-					}
+				if (e instanceof IProcessByServer) {
+					IProcessByServer p = (IProcessByServer)e;
+					p.processByServer(this, tpf_secs);
+				}
 
-					if (e instanceof PhysicalEntity) {
-						PhysicalEntity physicalEntity = (PhysicalEntity)e;
-						//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
-						if (sendUpdates) {
-							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
-								eum.addEntityData(physicalEntity, false, physicalEntity.getUpdateData());
-								numSent++;
-								physicalEntity.sendPositionUpdate = false;
-								if (eum.isFull()) {
-									gameNetworkServer.sendMessageToAll(eum);	
-									eum = new EntityUpdateMessage();
-								}
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity physicalEntity = (PhysicalEntity)e;
+					//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
+					if (sendUpdates) {
+						if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
+							eum.addEntityData(physicalEntity, false, physicalEntity.getUpdateData());
+							numSent++;
+							physicalEntity.sendPositionUpdate = false;
+							if (eum.isFull()) {
+								gameNetworkServer.sendMessageToAll(eum);	
+								eum = new EntityUpdateMessage();
 							}
 						}
 					}
 				}
 			}
+
 			if (sendUpdates) {
 				gameNetworkServer.sendMessageToAll(eum);	
 			}
@@ -296,7 +295,7 @@ ICollisionListener<PhysicalEntity> {
 
 	public abstract boolean doWeHaveSpaces();
 
-	
+
 	protected void removeOldGame() {
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Removing all entities");
@@ -527,6 +526,9 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
+	/*
+	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
+	 */
 	private void actuallyRemoveEntity(int id) {
 		synchronized (entities) {
 			IEntity e = this.entities.get(id); // this.entitiesToAdd
@@ -538,9 +540,7 @@ ICollisionListener<PhysicalEntity> {
 				if (e.requiresProcessing()) {
 					this.entitiesForProcessing.remove(id);
 				}
-
 			}
-
 			if (e instanceof IClientControlled) {
 				IClientControlled cc = (IClientControlled)e;
 				if (cc.isClientControlled()) {
@@ -583,7 +583,7 @@ ICollisionListener<PhysicalEntity> {
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
-		
+
 		if (pea instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
 			ic.collided(peb);

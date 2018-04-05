@@ -118,7 +118,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		List<Point> deploySquares = this.deploySquares[avatar.side-1];
 		boolean found = false;
 		for (Point p : deploySquares) {
-			avatar.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f); //avatar.getMainNode().getWorldBound(); // todo - remove
+			avatar.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
 			if (avatar.simpleRigidBody.checkForCollisions().size() == 0) {
 				found = true;
 				break;
@@ -309,6 +309,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	public int getSide(ClientData client) {
+		// Players always on side 1?
+		return 1;
+		/*
 		// todo - Check maxPlayersPerside, maxSides
 		HashMap<Integer, Integer> map = getPlayersPerSide();
 		// Get lowest amount
@@ -331,7 +334,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 				return i;
 			}
 		}
-		throw new RuntimeException("Should not get here");	
+		throw new RuntimeException("Should not get here");
+		*/
 	}
 
 

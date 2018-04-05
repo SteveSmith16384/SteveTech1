@@ -85,7 +85,6 @@ import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.KryonetGameClient;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.AnimationSystem;
@@ -115,6 +114,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
+	protected HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100); // Entites that we need to iterate over in game loop
 	protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
 	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
@@ -334,14 +334,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
-							long timeDiff = this.currentAvatar.serverPositionData.getMostRecent().serverTimestamp - renderTime;
+							long timeDiff = this.currentAvatar.historicalPositionData.getMostRecent().serverTimestamp - renderTime;
 							this.hud.setDebugText("Latest Data is " + timeDiff + " newer than we need");
 						} catch (Exception ex) {
 							// do nothing, no data yet
 						}
 					}
-
-					//StringBuffer strListEnts = new StringBuffer(); // Log entities
 
 					// Add entities
 					Iterator<IEntity> it = this.entitiesToAdd.iterator();
@@ -382,16 +380,15 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					this.launchSystem.process(renderTime);
 
 					// Loop through each entity and process them
-					for (IEntity e : this.entities.values()) {
+					//for (IEntity e : this.entities.values()) {
+					for (IEntity e : entitiesForProcessing.values()) {
 						if (e instanceof IPlayerControlled) {
 							IPlayerControlled p = (IPlayerControlled)e;
 							p.resetPlayerInput();
 						}
 						if (e instanceof PhysicalEntity) {
-							PhysicalEntity pe = (PhysicalEntity)e;  //pe.getWorldRotation();
-							//if (pe.moves) { // Only bother with things that can move  todo - re-add, use NeverMoves
+							PhysicalEntity pe = (PhysicalEntity)e;
 							pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
-							//}
 							pe.processChronoData(this, renderTime, tpf_secs);
 
 							if (Globals.STRICT) {
@@ -515,8 +512,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				for(EntityUpdateData eud : mainmsg.data) {
 					IEntity e = this.entities.get(eud.entityID);
 					if (e != null) {
-						//Settings.p("Received EntityUpdateMessage for " + e);
-						//EntityPositionData epd = new EntityPositionData(eum.pos, eum.dir, mainmsg.timestamp);
+						if (Globals.DEBUG_NO_UPDATE_MSGS) {
+							Globals.p("Received EntityUpdateMessage for " + e);
+						}
 						PhysicalEntity pe = (PhysicalEntity)e;
 						pe.storeUpdateData(eud, mainmsg.timestamp);
 						pe.chronoUpdateData.addData(eud);
@@ -531,7 +529,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 		} else if (message instanceof RemoveEntityMessage) {
 			RemoveEntityMessage rem = (RemoveEntityMessage)message;
-			this.removeEntity(rem.entityID);
+			IEntity e = this.entities.get(rem.entityID);
+			e.remove();
+			//this.removeEntity(rem.entityID);
 
 		} else if (message instanceof GeneralCommandMessage) {
 			GeneralCommandMessage msg = (GeneralCommandMessage)message;
@@ -759,9 +759,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			}
 			if (this.entities.containsKey(e.getID())) {
 				//throw new RuntimeException("Entity " + e.getID() + " already exists");
-				this.actuallyRemoveEntity(e.getID()); // Replace it, since it might be a static entity but its position has changed
+				e.remove();
+				this.actuallyRemoveEntity(e.getID()); // Replace it, since it might be an existing entity but its position has changed
 			}
 			this.entities.put(e.getID(), e);
+			if (e.requiresProcessing()) {
+				this.entitiesForProcessing.put(e.getID(), e);
+			}
 
 			if (e instanceof PhysicalEntity) {
 				if (e instanceof ILaunchable == false) { // Don't add bullets until they are fired! 
@@ -795,6 +799,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 	}
 
 
+	/*
+	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
+	 */
 	private void actuallyRemoveEntity(int id) {
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
@@ -802,18 +809,21 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Actually removing entity " + id + ":" + e.getName());
 				}
-				if (e instanceof PhysicalEntity) {
+				/*if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe =(PhysicalEntity)e;
 					if (pe.simpleRigidBody != null) {
 						this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
 					}
 					pe.getMainNode().removeFromParent();
-				}
-				if (e instanceof IDrawOnHUD) {
+				}*/
+				/*if (e instanceof IDrawOnHUD) {
 					IDrawOnHUD doh = (IDrawOnHUD)e;
 					doh.getHUDItem().removeFromParent();
-				}
+				}*/
 				this.entities.remove(id);
+				if (e.requiresProcessing()) {
+					this.entitiesForProcessing.remove(id);
+				}
 			} else {
 				Globals.pe("Entity id " + id + " not found for removal");
 			}

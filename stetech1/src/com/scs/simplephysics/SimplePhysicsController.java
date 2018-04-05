@@ -15,7 +15,6 @@ public class SimplePhysicsController<T> {
 	public static final boolean DEBUG = false;
 
 	public static final float MIN_MOVE_DIST = 0.001f;
-	//public static final float MAX_MOVE_DIST = 999f; // todo - remove this, use bounding size 
 	public static final float DEFAULT_AERODYNAMICNESS = 0.99f; // Prevent things moving forever
 	public static final float DEFAULT_GRAVITY = -5f;
 

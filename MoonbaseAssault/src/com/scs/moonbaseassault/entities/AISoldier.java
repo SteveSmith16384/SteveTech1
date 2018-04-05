@@ -38,8 +38,6 @@ import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 
-import ssmith.lang.NumberFunctions;
-
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
 IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
@@ -160,6 +158,14 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 	}
 
 
+	@Override
+	public void remove() {
+		super.remove();
+		
+		this.hudNode.removeFromParent();
+	}
+	
+	
 	@Override
 	public int getSide() {
 		return side;

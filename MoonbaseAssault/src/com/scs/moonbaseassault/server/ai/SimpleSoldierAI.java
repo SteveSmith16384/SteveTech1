@@ -13,7 +13,7 @@ import com.scs.stevetech1.server.Globals;
 import ssmith.lang.NumberFunctions;
 
 public class SimpleSoldierAI implements IArtificialIntelligence {
-	
+
 	private static final float WAIT_FOR_DOOR_DURATION = 3;
 
 	private PhysicalEntity physicalEntity;
@@ -25,7 +25,7 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 		currDir = this.getRandomDirection();
 		changeDirection(currDir); // Start us pointing in the right direction
 	}
-	
+
 
 	@Override
 	public void process(float tpf_secs) {
@@ -44,7 +44,7 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 			}*/
 		}
 
-		
+
 	}
 
 
@@ -54,24 +54,10 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 			// Change direction to away from blockage
 			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof InvisibleMapBorder) {
 				Globals.p("AISoldier has collided with " + pe);
-				
-				// Move in the opposite direction
-				// This causes entity to move in strange directions
-				/*BoundingBox ourBB = (BoundingBox)physicalEntity.getMainNode().getWorldBound();
-				BoundingBox theirBB = (BoundingBox)pe.getMainNode().getWorldBound();
-				Vector3f diff = theirBB.getCenter().subtract(ourBB.getCenter());
-				diff.y = 0;
-				if (diff.length() == 0) {
-					throw new RuntimeException("todo");
-				}
-				diff.normalizeLocal().multLocal(-1);
-				Globals.p("Moving back " + diff);
-				changeDirection(diff);*/
-				
 				changeDirection(currDir.mult(-1));
 			}
 		}
-		
+
 	}
 
 

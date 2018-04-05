@@ -28,7 +28,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 	private AbstractGameServer server;
 	public ClientData client;
-	private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation.  We don't actually rotate!
+	//private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation.  We don't actually rotate!
 
 	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, IAvatarModel anim) {
 		super(_module, _playerID, _input, eid, _client.side, anim);
@@ -36,7 +36,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		server = (AbstractGameServer)_module;
 		client = _client;
 
-		this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
+		//this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}
 
 
@@ -83,7 +83,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			//lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
 			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 			
-			this.dummyNode.setLocalTranslation(this.getMainNode().getWorldTranslation());
+			//this.dummyNode.setLocalTranslation(this.getMainNode().getWorldTranslation());
 			//this.dummyNode.lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 
 			if (getWorldTranslation().y < -1) {
@@ -195,12 +195,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 	public void decHealth(float h) {
 		super.decHealth(h);
 		this.sendStatusUpdateMessage(true);
-	}
-
-
-	@Override
-	protected boolean acceptInput() {
-		return true;
 	}
 
 

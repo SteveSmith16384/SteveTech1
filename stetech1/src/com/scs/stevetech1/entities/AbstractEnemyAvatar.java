@@ -11,17 +11,17 @@ import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.entities.updatedata.AvatarUpdateData;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 /*
- * This is only used client-side
+ * This is only used client-side.
  */
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IClientSideAnimated, IProcessByClient {
 	
 	protected IAvatarModel anim;
-	//protected Geometry bbGeom; // Non-rotating box for collisions
 	private Spatial avatarModel;
 	
 	public AbstractEnemyAvatar(IEntityController game, int type, int pid, int eid, float x, float y, float z, IAvatarModel _anim, int side) {
@@ -53,14 +53,10 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
-		// Set position and direction of avatar model
+		// Set position and direction of avatar model, which doesn't get moved automatically
 		this.avatarModel.setLocalTranslation(this.getWorldTranslation());
-		this.avatarModel.setLocalRotation(this.getWorldRotation());
-		//Vector3f lookAtPoint = this.getw
-		//lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
-
-
 	}
+	
 	
 	@Override
 	public void remove() {
@@ -70,11 +66,19 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 	}
 	
 	
-	/*
 	@Override
-	public boolean sendUpdates() {
-		return true; // Always send for avatars
+	public void processChronoData(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+		super.processChronoData(mainApp, serverTimeToUse, tpf_secs);
+		
+		AvatarUpdateData epd = (AvatarUpdateData)this.chronoUpdateData.get(serverTimeToUse, true);
+		if (epd != null) {
+			Vector3f dir = new Vector3f(epd.aimDir.x, 0,  epd.aimDir.z); 
+			JMEAngleFunctions.rotateToDirection(avatarModel, dir);
+			
+			this.setAnimCode(epd.animationCode);
+		}
+
 	}
-*/
-	
+
+
 }

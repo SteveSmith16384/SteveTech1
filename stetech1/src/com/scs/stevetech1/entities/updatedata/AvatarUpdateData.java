@@ -9,6 +9,7 @@ import com.scs.stevetech1.netmessages.EntityUpdateData;
 public class AvatarUpdateData extends EntityUpdateData {
 
 	public Vector3f aimDir;
+	public int animationCode;
 	
 	public AvatarUpdateData() {
 		super();
@@ -18,7 +19,7 @@ public class AvatarUpdateData extends EntityUpdateData {
 		super(avatar, timestamp);
 		
 		aimDir = avatar.getShootDir();
-		//faceDir = avatar.getShootDir();
+		this.animationCode = avatar.currentAnimCode;
 	}
 
 }

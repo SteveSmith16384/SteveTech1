@@ -137,11 +137,11 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		debugText.setLocalTranslation(10, yPos, 0);
 		this.attachChild(debugText);
 */
-	/*todo -re-add 	log_ta = new TextArea("log", font_small, 6, "");
+		log_ta = new TextArea("log", font_small, 6, "");
 		log_ta.setColor(defaultColour);
 		log_ta.setLocalTranslation(0, hud_height/2, 0);
 		this.attachChild(log_ta);
-*/
+
 		// Damage box
 		{
 			Material mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");

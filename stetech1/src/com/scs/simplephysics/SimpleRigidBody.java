@@ -435,13 +435,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
-		try {
+		//try {
 			return this.simpleEntity.getCollidable().collideWith(other, results);
-		} catch (UnsupportedCollisionException ex) { // todo - remove this
+		/*} catch (UnsupportedCollisionException ex) {
 			ex.printStackTrace();
 			this.simpleEntity.getCollidable().collideWith(other, results);
 		}
-		return 0;
+		return 0;*/
 	}
 
 

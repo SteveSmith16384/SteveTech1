@@ -39,8 +39,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	private final Vector3f camLeft = new Vector3f();
 
 	public final int playerID;
-	//public Spatial playerGeometry;
-	//protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
 	protected Geometry bbGeom; // Non-rotating box for collisions
 	public IAbility[] ability = new IAbility[2];
 	public int side = -1;
@@ -54,7 +52,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	private float health;
 	public float moveSpeed = 0f;
 	private float jumpForce = 0;
-	protected int currentAnimCode = -1;
+	public int currentAnimCode = -1;
 
 	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _avatarModel) {
 		super(_game, eid, 1, "Player", true);
@@ -71,19 +69,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		side =_side;
 		avatarModel = _avatarModel;
 		
-		//boundingBox = avatarModel.getBoundingBox();
 		Box box = new Box(avatarModel.getBoundingBox().getXExtent(), avatarModel.getBoundingBox().getYExtent(), avatarModel.getBoundingBox().getZExtent());
 		bbGeom = new Geometry("bbGeom_" + name, box);
 		bbGeom.setLocalTranslation(0, avatarModel.getBoundingBox().getYExtent(), 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw ourselves
-		
-		/*Spatial playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);		
-		//playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves
-		this.getMainNode().attachChild(playerGeometry);
-		//playerGeometry.setUserData(Globals.ENTITY, this);
-*/
+
 		this.getMainNode().attachChild(bbGeom);
-		//this.getMainNode().updateModelBound();
 		
 		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this, game.getPhysicsController(), this);
 
@@ -145,10 +136,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		playerWalked = false;
 		if (this.walkDirection.length() != 0) {
 			if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
-				if (acceptInput()) {
-					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-					simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
-				}
+				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+				simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
 			}
 			playerWalked = true;
 		}
@@ -167,8 +156,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 	}
 
-
-	protected abstract boolean acceptInput();
 
 	protected void resetWalkDir() {
 		this.walkDirection.set(0, 0, 0);
