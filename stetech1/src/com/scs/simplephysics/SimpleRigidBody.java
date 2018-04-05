@@ -35,7 +35,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	private boolean movedByForces = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
 	protected Vector3f additionalForce = new Vector3f(); // Additional force to apply, e.g. walking force or explosion force.  Does not get changed by this code.
-	private int modelComplexity = 0; // For determining which way round to check.  Todo - remove this
+	private int modelComplexity = 0; // For determining which way round to check.
 	public boolean canWalkUpSteps = false;
 
 	private SimpleNode<T> parent;
@@ -186,7 +186,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					// Not hit anything
 					currentGravInc = currentGravInc + (gravInc * tpf_secs); // Fall faster
 					if (totalOffset != 0) { 
-						this.isOnGround = true; // todo - this doesn't look right
+						this.isOnGround = true;
 					} else {
 						this.isOnGround = false;
 					}

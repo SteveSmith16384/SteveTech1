@@ -62,8 +62,8 @@ ICollisionListener<PhysicalEntity> {
 
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 
-	protected HashMap<Integer, IEntity> entities = new HashMap<>(100);
-	public HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100);
+	protected HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities
+	public HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100); // Entites that we need to iterate over in game loop
 	protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
 	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
@@ -249,7 +249,7 @@ ICollisionListener<PhysicalEntity> {
 						//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 						if (sendUpdates) {
 							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
-								eum.addEntityData(physicalEntity, false);
+								eum.addEntityData(physicalEntity, false, physicalEntity.getUpdateData());
 								numSent++;
 								physicalEntity.sendPositionUpdate = false;
 								if (eum.isFull()) {
@@ -538,7 +538,7 @@ ICollisionListener<PhysicalEntity> {
 				if (e.requiresProcessing()) {
 					this.entitiesForProcessing.remove(id);
 				}
-				//this.console.appendText("Removed " + e);
+
 			}
 
 			if (e instanceof IClientControlled) {

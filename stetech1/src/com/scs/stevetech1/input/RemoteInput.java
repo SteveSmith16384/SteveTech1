@@ -9,7 +9,7 @@ public class RemoteInput implements IInputDevice {
 	private PlayerInputMessage pim = new PlayerInputMessage(); // create default so we don't get an NPE
 
 	public RemoteInput() {
-
+		super();
 	}
 
 

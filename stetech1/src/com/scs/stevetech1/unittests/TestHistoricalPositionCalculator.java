@@ -20,9 +20,9 @@ public class TestHistoricalPositionCalculator {
 		PositionCalculator serverPositions = new PositionCalculator(false, 1000);
 		PositionCalculator clientPositions = new PositionCalculator(false, 1000);
 		for (int i=0 ; i<10 ; i++) {
-			serverPositions.addPositionData(new Vector3f(i, 0, 0), null, i*100);
+			serverPositions.addPositionData(new Vector3f(i, 0, 0), i*100);
 			// Client is 1f ahead
-			clientPositions.addPositionData(new Vector3f(i+1, 0, 0), null, i*100);
+			clientPositions.addPositionData(new Vector3f(i+1, 0, 0), i*100);
 		}
 
 		//Vector3f currentClientPos = new Vector3f(11, 0, 0);

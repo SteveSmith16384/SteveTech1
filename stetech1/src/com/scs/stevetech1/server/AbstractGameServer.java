@@ -287,7 +287,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	protected void playerLeft(ClientData client) {
 		super.playerLeft(client);
 
-		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
+		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player left!", true));
 		this.sendGameStatusMessage();
 		gameStatusSystem.checkGameStatus(true);
 	}

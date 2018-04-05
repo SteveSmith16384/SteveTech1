@@ -11,10 +11,12 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.entities.updatedata.AvatarUpdateData;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
+import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -66,7 +68,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 				// Send position update
 				EntityUpdateMessage eum = new EntityUpdateMessage();
-				eum.addEntityData(this, true);
+				eum.addEntityData(this, true, this.getUpdateData());
 				server.gameNetworkServer.sendMessageToAll(eum);
 			}
 		} else {
@@ -201,4 +203,12 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		return true;
 	}
 
+
+	@Override
+	public EntityUpdateData getUpdateData() {
+		EntityUpdateData updateData = new AvatarUpdateData(this, System.currentTimeMillis());
+		return updateData;
+	}
+	
+	
 }

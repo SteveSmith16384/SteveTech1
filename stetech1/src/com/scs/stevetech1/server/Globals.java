@@ -17,8 +17,9 @@ public class Globals {
 	public static final boolean TRANSPARENT_WALLS = true;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
 	public static final boolean DEBUG_DIE_ANIM = true;
-	public static final boolean SHOW_AVATAR_POS = false;
 	
+	public static final boolean DEBUG_SLIDING_DOORS = false;
+	public static final boolean SHOW_AVATAR_POS = false;
 	public static final boolean DEBUG_MESH_COLLISION_CONV = false;
 	public static final boolean SHOW_AVATAR_BOUNDS = false;
 	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
@@ -30,7 +31,6 @@ public class Globals {
 	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;
 	public static final boolean SHOW_NUM_ENT_UPDATES_SENT = false;
 	public static final boolean DEBUG_CAN_SEE = false;
-	public static final boolean DEBUG_SLIDING_DOORS = false;
 	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean EMPTY_MAP = false;

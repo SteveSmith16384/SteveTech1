@@ -118,7 +118,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		List<Point> deploySquares = this.deploySquares[avatar.side-1];
 		boolean found = false;
 		for (Point p : deploySquares) {
-			avatar.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
+			avatar.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f); //avatar.getMainNode().getWorldBound(); // todo - remove
 			if (avatar.simpleRigidBody.checkForCollisions().size() == 0) {
 				found = true;
 				break;

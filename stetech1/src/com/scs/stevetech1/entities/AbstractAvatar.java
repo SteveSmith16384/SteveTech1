@@ -74,9 +74,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		//boundingBox = avatarModel.getBoundingBox();
 		Box box = new Box(avatarModel.getBoundingBox().getXExtent(), avatarModel.getBoundingBox().getYExtent(), avatarModel.getBoundingBox().getZExtent());
 		bbGeom = new Geometry("bbGeom_" + name, box);
+		bbGeom.setLocalTranslation(0, avatarModel.getBoundingBox().getYExtent(), 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw ourselves
-		//bbGeom.updateModelBound();
-		//bbGeom.setModelBound(new BoundingBox());
 		
 		/*Spatial playerGeometry = avatarModel.createAndGetModel(!game.isServer(), _side);		
 		//playerGeometry.setCullHint(CullHint.Always); // Don't draw ourselves

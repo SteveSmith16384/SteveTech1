@@ -33,15 +33,15 @@ public class SnowmanModel implements IAvatarModel {
 	@Override
 	public Spatial createAndGetModel(boolean forClient, int side) {
 		//if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
-			model = assetManager.loadModel("Models/Holiday/Snowman.obj");
-			model.setShadowMode(ShadowMode.CastAndReceive);
-			JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
-			JMEModelFunctions.moveYOriginTo(model, 0f);
-			JMEAngleFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
-			
-			origPos = model.getLocalTranslation().clone();
-			
-			return model;
+		model = assetManager.loadModel("Models/Holiday/Snowman.obj");
+		model.setShadowMode(ShadowMode.CastAndReceive);
+		JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
+		JMEModelFunctions.moveYOriginTo(model, 0f);
+		JMEAngleFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
+
+		origPos = model.getLocalTranslation().clone();
+
+		return model;
 		/*} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
 			model = new Geometry("Snowman", box1);
@@ -74,7 +74,7 @@ public class SnowmanModel implements IAvatarModel {
 			Globals.p("Snowman sinking...");
 		}*/
 		try {
-			if (model != null) { this.model.getLocalTranslation();
+			if (model != null) { //this.model.getLocalTranslation();
 				this.model.move(0, -tpf_secs/7, 0);
 			}
 		} catch (NullPointerException ex) {

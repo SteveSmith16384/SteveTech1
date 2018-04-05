@@ -32,7 +32,7 @@ public final class PositionCalculator {
 	}
 
 
-	public void addPositionData(Vector3f pos, Quaternion q, long time) {
+	public void addPositionData(Vector3f pos, long time) {
 		//long diff = System.currentTimeMillis() - time;
 
 		EntityPositionData newData = null;
@@ -42,9 +42,9 @@ public final class PositionCalculator {
 			newData = new EntityPositionData();
 		}
 		newData.position.set(pos);
-		if (q != null) {
+		/*if (q != null) {
 			newData.rotation.set(q);
-		}
+		}*/
 		newData.serverTimestamp = time;
 
 		synchronized (positionData) {

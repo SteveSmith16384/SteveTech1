@@ -40,12 +40,6 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 		this.currentAnimCode = s;
 	}
 
-	/*
-	@Override
-	public int getCurrentAnimCode() {
-		return this.currentAnimCode;
-	}
-*/
 
 	@Override
 	public void processManualAnimation(float tpf_secs) {

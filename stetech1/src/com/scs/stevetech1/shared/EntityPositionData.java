@@ -7,7 +7,7 @@ public class EntityPositionData {
 
 	public long serverTimestamp;	
 	public Vector3f position = new Vector3f();	
-	public Quaternion rotation = new Quaternion();
+	//public Quaternion rotation = new Quaternion();
 
 	public EntityPositionData() {
 		super();
@@ -31,14 +31,14 @@ public class EntityPositionData {
 		posToSet.interpolateLocal(this.position, other.position, frac);
 
 		Quaternion newRot = new Quaternion();
-		Quaternion newRot2 = newRot;
+		/*Quaternion newRot2 = newRot;
 		if (this.rotation != null) { // client-side EPD doesn't have any rot
 			newRot2 = newRot.slerp(this.rotation, other.rotation, frac);
-		}
+		}*/
 
 		EntityPositionData epd = new EntityPositionData();
 		epd.position = posToSet;
-		epd.rotation = newRot2;
+		//epd.rotation = newRot2;
 		epd.serverTimestamp = time;
 		return epd;
 	}

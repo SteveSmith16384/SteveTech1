@@ -1,13 +1,11 @@
 package com.scs.stevetech1.entities;
 
 import com.jme3.asset.TextureKey;
-import com.jme3.bounding.BoundingBox;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
@@ -17,6 +15,7 @@ import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
+import com.scs.stevetech1.entities.updatedata.AvatarUpdateData;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.server.Globals;
@@ -39,11 +38,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		hud = _hud;
 		moveSpeed = _moveSpeed;
 		this.setJumpForce(_jumpSpeed);
-
-		//playerGeometry = avatarModel.createAndGetModel(!game.isServer(), side);
-		//game.getGameNode().attachChild(playerGeometry);
-		//this.getMainNode().attachChild(playerGeometry);
-		//playerGeometry.setUserData(Globals.ENTITY, this);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
@@ -131,7 +125,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	public void storeAvatarPosition(long serverTime) {
 		Vector3f pos = getWorldTranslation();
-		this.clientAvatarPositionData.addPositionData(pos, null, serverTime);
+		this.clientAvatarPositionData.addPositionData(pos, serverTime);
 	}
 
 
@@ -191,12 +185,15 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		return true;
 	}
 
-/*
+
 	@Override
-	public void remove() {
-		super.remove();
-		
-		this.playerGeometry.removeFromParent();
+	public void processChronoData(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+		AvatarUpdateData epd = (AvatarUpdateData)this.chronoUpdateData.get(serverTimeToUse, true);
+		if (epd != null) {
+			// todo
+		}
+
 	}
-*/
+
+
 }

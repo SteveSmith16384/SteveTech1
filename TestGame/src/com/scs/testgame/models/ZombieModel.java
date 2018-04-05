@@ -73,12 +73,6 @@ public class ZombieModel implements IAvatarModel {
 		}
 	}
 
-/*
-	@Override
-	public void setAnimationForCode(String code) {
-		// return animCodes.get(code);
-	}
-*/
 
 	@Override
 	public float getCameraHeight() {
@@ -91,21 +85,7 @@ public class ZombieModel implements IAvatarModel {
 		return ZOMBIE_MODEL_HEIGHT - 0.1f;
 	}
 
-/*
-	@Override
-	public void showCurrentAnimation() {
-		//  Auto-generated method stub
-		
-	}
 
-
-	@Override
-	public void process(float tpf_secs) {
-		// Auto-generated method stub
-		
-	}
-*/
-	
 	@Override
 	public BoundingBox getBoundingBox() {
 		return new BoundingBox(new Vector3f(), ZOMBIE_MODEL_WIDTH/2, ZOMBIE_MODEL_HEIGHT/2, ZOMBIE_MODEL_DEPTH/2);

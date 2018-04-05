@@ -62,6 +62,7 @@ import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
+import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -388,10 +389,10 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						}
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;  //pe.getWorldRotation();
-							//if (pe.moves) { // Only bother with things that can move  scs new - removed
+							//if (pe.moves) { // Only bother with things that can move  todo - re-add, use NeverMoves
 							pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
 							//}
-							//strListEnts.append(pe.name + ": " + pe.getWorldTranslation() + "\n");
+							pe.processChronoData(this, renderTime, tpf_secs);
 
 							if (Globals.STRICT) {
 								if (e instanceof AbstractClientAvatar == false && e instanceof IClientControlled == false) {
@@ -511,30 +512,14 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		} else if (message instanceof EntityUpdateMessage) {
 			if (clientStatus >= STATUS_JOINED_GAME) {
 				EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
-				for(EntityUpdateMessage.UpdateData eum : mainmsg.data) {
-					IEntity e = this.entities.get(eum.entityID);
+				for(EntityUpdateData eud : mainmsg.data) {
+					IEntity e = this.entities.get(eud.entityID);
 					if (e != null) {
 						//Settings.p("Received EntityUpdateMessage for " + e);
 						//EntityPositionData epd = new EntityPositionData(eum.pos, eum.dir, mainmsg.timestamp);
 						PhysicalEntity pe = (PhysicalEntity)e;
-						if (eum.force) {
-							// Set it now!
-							pe.setWorldTranslation(eum.pos);
-							pe.setWorldRotation(eum.dir);
-							pe.clearPositiondata();
-							if (pe == this.currentAvatar) {
-								currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
-								currentAvatar.storeAvatarPosition(serverTime);
-							}
-						}
-						pe.addPositionData(eum.pos, eum.dir, mainmsg.timestamp); // Store the position for use later
-						if (pe instanceof IClientSideAnimated) {// && eum.animationCode != null) {
-							IClientSideAnimated ia = (IClientSideAnimated)pe;
-							ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animationCode));
-							/*if (eum.animationCode != null && eum.animationCode.equals(AbstractAvatar.ANIM_DIED)) {
-								int dfgdfg = 456456;
-							}*/
-						}
+						pe.storeUpdateData(eud, mainmsg.timestamp);
+						pe.chronoUpdateData.addData(eud);
 					} else {
 						// Globals.p("Unknown entity ID for update: " + eum.entityID);
 						// Ask the server for entity details since we don't know about it.

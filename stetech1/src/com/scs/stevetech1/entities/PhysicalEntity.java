@@ -17,9 +17,11 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
+import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
+import com.scs.stevetech1.shared.ChronologicalLookup;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.shared.PositionCalculator;
@@ -28,12 +30,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	protected Node mainNode;
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
-	public PositionCalculator serverPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
+	public PositionCalculator serverPositionData; //Todo - split into two, one server onr for client.    Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
+	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
 	public boolean collideable = true;
 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
-	private Quaternion originalRot = new Quaternion();
+	//private Quaternion originalRot = new Quaternion();
 
 	public boolean sendPositionUpdate = true; // Send first time
 	private boolean requiresProcessing;
@@ -46,6 +49,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		serverPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode_" + id);
+		
+		if (!game.isServer()) {
+			chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(true, 100);
+		}
 	}
 
 
@@ -79,15 +86,15 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	protected void addPositionData() {
 		// Store the position for use when rewinding.
 		//EntityPositionData epd = new EntityPositionData(this.getWorldTranslation().clone(), this.getWorldRotation(), System.currentTimeMillis());
-		this.serverPositionData.addPositionData(this.getWorldTranslation(), this.getWorldRotation(), System.currentTimeMillis());
+		this.serverPositionData.addPositionData(this.getWorldTranslation(), System.currentTimeMillis());
 	}
 
 
 	/*
 	 * Called by the client 
 	 */
-	public void addPositionData(Vector3f pos, Quaternion q, long time) {
-		this.serverPositionData.addPositionData(pos, q, time);	
+	public void addPositionData(Vector3f pos, long time) {
+		this.serverPositionData.addPositionData(pos, time);	
 	}
 
 
@@ -96,7 +103,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		EntityPositionData epd = serverPositionData.calcPosition(serverTimeToUse, false);
 		if (epd != null) {
 			this.setWorldTranslation(epd.position);
-			this.setWorldRotation(epd.rotation);
+			//this.setWorldRotation(epd.rotation);
 		} else {
 			//Settings.p("No position data for " + this);
 		}
@@ -191,13 +198,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public void rewindPositionTo(long serverTimeToUse) { //this.getWorldTranslation()
+	public void rewindPositionTo(long serverTimeToUse) {
 		EntityPositionData shooterEPD = this.serverPositionData.calcPosition(serverTimeToUse, true);
 		if (shooterEPD != null) {
 			this.originalPos.set(this.getWorldTranslation());
-			this.originalRot.set(this.getWorldRotation());
+			//this.originalRot.set(this.getWorldRotation());
 			this.setWorldTranslation(shooterEPD.position);
-			this.setWorldRotation(shooterEPD.rotation);
+			//this.setWorldRotation(shooterEPD.rotation);
 		} else {
 			Globals.p("Unable to rewind position: no data");
 		}
@@ -206,7 +213,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public void restorePosition() {
 		this.setWorldTranslation(this.originalPos);
-		this.setWorldRotation(this.originalRot);
+		//this.setWorldRotation(this.originalRot);
 		this.mainNode.updateGeometricState();
 	}
 
@@ -323,9 +330,46 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	@Override
 	public void moveEntity(Vector3f pos) {
-		this.getMainNode().move(pos);
-		//this.adjustWorldTranslation(pos);
+		//this.getMainNode().move(pos); // Doesn't set sendUpdate flag!
+		this.adjustWorldTranslation(pos);
 	}
 
 	
+	public void storeUpdateData(EntityUpdateData eum, long time) {
+		if (eum.force) {
+			// Set it now!
+			this.setWorldTranslation(eum.pos);
+			//pe.setWorldRotation(eum.dir);
+			this.clearPositiondata();
+			/*todo if (pe == this.currentAvatar) {
+				currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
+				currentAvatar.storeAvatarPosition(serverTime);
+			}*/
+		}
+		this.addPositionData(eum.pos, time); // Store the position for use later
+		/*todo if (pe instanceof IClientSideAnimated) {// && eum.animationCode != null) {
+			IClientSideAnimated ia = (IClientSideAnimated)pe;
+			ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animationCode));
+		}*/
+
+	}
+	
+	
+	/**
+	 * Called server-side to get a copy of the current data for updating the clients
+	 * Override if the entity has custom data
+	 */
+	public EntityUpdateData getUpdateData() {
+		EntityUpdateData updateData = new EntityUpdateData(this, System.currentTimeMillis());
+		return updateData;
+	}
+	
+
+	/**
+	 * Override if entity has any special chrono update data.
+	 */
+	public void processChronoData(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+	}
+
+
 }

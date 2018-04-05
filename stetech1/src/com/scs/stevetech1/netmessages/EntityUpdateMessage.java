@@ -13,24 +13,24 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 	
 	private static final int MAX_ITEMS = 10;
 	
-	public LinkedList<UpdateData> data = new LinkedList<UpdateData>();
+	public LinkedList<EntityUpdateData> data = new LinkedList<EntityUpdateData>();
 	
 	public EntityUpdateMessage() {
 		super(false, false);
 	}
 
 	
-	public void addEntityData(PhysicalEntity sc, boolean force) {
-		UpdateData updateData = new UpdateData();
-		updateData.entityID = sc.getID();
+	public void addEntityData(PhysicalEntity sc, boolean force, EntityUpdateData updateData) {
+		//EntityUpdateData updateData = new UpdateData();
+		/*updateData.entityID = sc.getID();
 		updateData.pos = sc.getWorldTranslation();
-		updateData.dir = sc.getWorldRotation();
+		//updateData.dir = sc.getWorldRotation();
 		updateData.force = force;
 		if (sc instanceof IClientSideAnimated) {
-			IClientSideAnimated csa =(IClientSideAnimated)sc;
+			IClientSideAnimated csa = (IClientSideAnimated)sc;
 			updateData.animationCode = csa.getCurrentAnimCode();
 		}
-		
+		*/
 		this.data.add(updateData);
 
 	}
@@ -40,16 +40,16 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		return this.data.size() >= MAX_ITEMS;
 	}
 	
-	
+/*	
 	@Serializable
 	public static class UpdateData {
 		
 		public int entityID;
 		public Vector3f pos;
-		public Quaternion dir;
 		public boolean force; // Force new position on client, e.g. avatar restarting.
+		//public Quaternion dir;
 		public int animationCode;
 		
 	}
-	
+	*/
 }
