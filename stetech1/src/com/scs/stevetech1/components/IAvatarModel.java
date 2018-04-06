@@ -5,7 +5,9 @@ import com.jme3.scene.Spatial;
 
 public interface IAvatarModel {
 
-	Spatial createAndGetModel(boolean forClient, int side);
+	Spatial createAndGetModel(int side); // Only called client-side, since only the client uses full models.
+	
+	Spatial getModel();
 	
 	BoundingBox getBoundingBox(); // todo - change to Vector3f getSize();
 	

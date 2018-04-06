@@ -9,7 +9,7 @@ import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.ExplosionEffectEntity;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.Grenade;
-import com.scs.moonbaseassault.entities.InvisibleMapBorder;
+import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.LaserBullet;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
@@ -38,7 +38,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 	public static final int LASER_RIFLE = 8;
 	public static final int SPACESHIP1 = 9;
 	public static final int AI_SOLDIER = 10;
-	public static final int INVISIBLE_MAP_BORDER = 11;
+	public static final int MAP_BORDER = 11;
 	public static final int DESTROYED_COMPUTER = 12;
 	public static final int GRENADE = 13;
 	public static final int GRENADE_LAUNCHER = 14;
@@ -60,7 +60,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		case LASER_BULLET: return "LASER_BULLET";
 		case LASER_RIFLE: return "LASER_RIFLE";
 		case SPACESHIP1: return "SPACESHIP1";
-		case INVISIBLE_MAP_BORDER: return "INVISIBLE_MAP_BORDER";
+		case MAP_BORDER: return "INVISIBLE_MAP_BORDER";
 		default: return "Unknown (" + type + ")";
 		}
 	}
@@ -180,12 +180,12 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			return z;
 		}
 
-		case INVISIBLE_MAP_BORDER:
+		case MAP_BORDER:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f dir = (Vector3f)msg.data.get("dir");
 			float size = (float)msg.data.get("size");
-			InvisibleMapBorder hill = new InvisibleMapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
+			MapBorder hill = new MapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
 			return hill;
 		}
 

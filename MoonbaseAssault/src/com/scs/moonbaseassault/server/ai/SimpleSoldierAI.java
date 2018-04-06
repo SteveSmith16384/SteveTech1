@@ -5,7 +5,7 @@ import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
-import com.scs.moonbaseassault.entities.InvisibleMapBorder;
+import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
@@ -52,7 +52,7 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 	public void collided(PhysicalEntity pe) {
 		if (pe instanceof Floor == false) {
 			// Change direction to away from blockage
-			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof InvisibleMapBorder) {
+			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof MapBorder) {
 				Globals.p("AISoldier has collided with " + pe);
 				changeDirection(currDir.mult(-1));
 			}
@@ -77,6 +77,12 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 		case 3: return new Vector3f(0f, 0, -1f);
 		}
 		throw new RuntimeException("Invalid direction: " + i);
+	}
+
+
+	@Override
+	public Vector3f getDirection() {
+		return currDir;
 	}
 
 

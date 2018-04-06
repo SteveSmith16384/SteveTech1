@@ -65,8 +65,10 @@ public class KryonetGameServer implements IGameMessageServer {
 		
 		setListener(_listener);
 		server.bind(tcpport, udpport);
-		server.start();
-
+		Thread t = new Thread(server);
+		t.setDaemon(true);
+		t.start();
+		// server.start(); Not daemon!
 	}
 
 

@@ -15,7 +15,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
-import com.scs.moonbaseassault.entities.InvisibleMapBorder;
+import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -194,13 +194,13 @@ public class MapLoader {
 		moonrock.owner = moonbaseAssaultServer.floorNode;
 		moonbaseAssaultServer.actuallyAddEntity(moonrock);
 
-		InvisibleMapBorder borderL = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, Vector3f.UNIT_Z);
+		MapBorder borderL = new MapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, Vector3f.UNIT_Z);
 		moonbaseAssaultServer.actuallyAddEntity(borderL);
-		InvisibleMapBorder borderR = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), mapsize+InvisibleMapBorder.BORDER_WIDTH, 0, 0, mapsize, Vector3f.UNIT_Z);
+		MapBorder borderR = new MapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), mapsize+MapBorder.BORDER_WIDTH, 0, 0, mapsize, Vector3f.UNIT_Z);
 		moonbaseAssaultServer.actuallyAddEntity(borderR);
-		InvisibleMapBorder borderBack = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, mapsize, mapsize, Vector3f.UNIT_X);
+		MapBorder borderBack = new MapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, mapsize, mapsize, Vector3f.UNIT_X);
 		moonbaseAssaultServer.actuallyAddEntity(borderBack);
-		InvisibleMapBorder borderFront = new InvisibleMapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, mapsize, Vector3f.UNIT_X);
+		MapBorder borderFront = new MapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, -MapBorder.BORDER_WIDTH, mapsize, Vector3f.UNIT_X);
 		moonbaseAssaultServer.actuallyAddEntity(borderFront);
 
 		// Add space crates

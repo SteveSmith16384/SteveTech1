@@ -36,7 +36,7 @@ public class SoldierModel implements IAvatarModel {
 
 
 	@Override
-	public Spatial createAndGetModel(boolean forClient, int side) {
+	public Spatial createAndGetModel(int side) {
 		if (!Globals.USE_BOXES_FOR_AVATARS_SOLDIER) {
 			model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
 			if (side == 1) {
@@ -129,4 +129,11 @@ public class SoldierModel implements IAvatarModel {
 	public BoundingBox getBoundingBox() {
 		return new BoundingBox(new Vector3f(), MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
 	}
+
+
+	@Override
+	public Spatial getModel() {
+		return model;
+	}
+
 }

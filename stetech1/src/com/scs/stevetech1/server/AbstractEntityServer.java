@@ -130,6 +130,12 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
+		if (Globals.STRICT) {
+			if (this.physicsController.getEntities().size() > this.entities.size()) {
+				Globals.pe("Warning: more simple rigid bodies than entities!");
+			}
+		}
+		
 		// Add/remove queued clients
 		synchronized (clientsToAdd) {
 			while (this.clientsToAdd.size() > 0) {
@@ -541,12 +547,12 @@ ICollisionListener<PhysicalEntity> {
 					this.entitiesForProcessing.remove(id);
 				}
 			}
-			if (e instanceof IClientControlled) {
+			/*if (e instanceof IClientControlled) {  No! Still tell client when to remove it
 				IClientControlled cc = (IClientControlled)e;
 				if (cc.isClientControlled()) {
 					return;
 				}
-			}
+			}*/
 			this.gameNetworkServer.sendMessageToAll(new RemoveEntityMessage(id));
 		}
 

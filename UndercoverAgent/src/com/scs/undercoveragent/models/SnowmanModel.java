@@ -31,8 +31,7 @@ public class SnowmanModel implements IAvatarModel {
 
 
 	@Override
-	public Spatial createAndGetModel(boolean forClient, int side) {
-		//if (forClient && Globals.USE_SERVER_MODELS_ON_CLIENT == false) {
+	public Spatial createAndGetModel(int side) {
 		model = assetManager.loadModel("Models/Holiday/Snowman.obj");
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
@@ -42,18 +41,6 @@ public class SnowmanModel implements IAvatarModel {
 		origPos = model.getLocalTranslation().clone();
 
 		return model;
-		/*} else {
-			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
-			model = new Geometry("Snowman", box1);
-			model.setLocalTranslation(0, MODEL_HEIGHT/2, 0); // Move origin to floor
-
-			if (Globals.USE_SERVER_MODELS_ON_CLIENT) {
-				// Need to give it a tex
-				JMEFunctions.setTextureOnSpatial(assetManager, model, "Textures/greensun.jpg");
-			}
-
-			return model;
-		}*/
 	}
 
 
@@ -102,4 +89,11 @@ public class SnowmanModel implements IAvatarModel {
 	public BoundingBox getBoundingBox() {
 		return new BoundingBox(new Vector3f(), MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
 	}
+
+
+	@Override
+	public Spatial getModel() {
+		return model;
+	}
+
 }

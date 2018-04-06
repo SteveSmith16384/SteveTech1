@@ -297,6 +297,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
+		if (Globals.STRICT) {
+			if (this.physicsController.getEntities().size() > this.entities.size()) {
+				Globals.pe("Warning: more simple rigid bodies than entities!");
+			}
+		}
+		
 		if (tpf_secs > 1) { 
 			tpf_secs = 1;
 		}

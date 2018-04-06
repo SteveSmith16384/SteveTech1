@@ -40,7 +40,7 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 		mainNode.setUserData(Globals.ENTITY, this);
 
 		// Create model to look good
-		avatarModel = anim.createAndGetModel(true, side);
+		avatarModel = anim.createAndGetModel(side);
 		game.getGameNode().attachChild(avatarModel);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
@@ -68,8 +68,8 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 
 	@Override
 	public void setRotation(Vector3f dir) {
-		JMEAngleFunctions.rotateToDirection(avatarModel, dir);
-		
+		Vector3f dir2 = new Vector3f(dir.x, 0, dir.z); 
+		JMEAngleFunctions.rotateToDirection(avatarModel, dir2);
 	}
 
 

@@ -210,12 +210,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		//this.actuallyAddEntity(floor);
 
 		// Add AI soldiers
-		/*todo for (int i=0 ; i<1 ; i++) {
+		 for (int i=0 ; i<1 ; i++) {
 			AISoldier s = new AISoldier(this, this.getNextEntityID(), 0,0,0, 2);
 			this.actuallyAddEntity(s);
 			moveAISoldierToStartPosition(s);
 			
-		}*/
+		}
 
 	}
 

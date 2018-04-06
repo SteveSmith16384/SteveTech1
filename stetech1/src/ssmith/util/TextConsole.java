@@ -12,6 +12,7 @@ public class TextConsole extends Thread {
 		super(TextConsole.class.getSimpleName());
 		
 		listener = _listener;
+		this.setDaemon(true);
 		start();
 	}
 

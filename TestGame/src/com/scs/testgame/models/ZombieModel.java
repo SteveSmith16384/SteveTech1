@@ -33,7 +33,9 @@ public class ZombieModel implements IAvatarModel {
 	public AnimChannel channel;
 	private HashMap<String, String> animCodes = new HashMap<String, String>();
 	private AssetManager assetManager;
+	private Spatial model;
 	
+
 	public ZombieModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
 		
@@ -43,9 +45,8 @@ public class ZombieModel implements IAvatarModel {
 
 
 	@Override
-	public Spatial createAndGetModel(boolean forClient, int side) {
-		if (forClient) {
-			Spatial model = assetManager.loadModel("Models/zombie/Zombie.blend");
+	public Spatial createAndGetModel(int side) {
+			model = assetManager.loadModel("Models/zombie/Zombie.blend");
 			model.scale(.125f); // Make 1 high
 			model.setModelBound(new BoundingBox());
 			//model.updateModelBound();
@@ -65,12 +66,6 @@ public class ZombieModel implements IAvatarModel {
 			model.setLocalRotation(target_q);
 	*/
 			return model;
-		} else {
-			Box box1 = new Box(ZOMBIE_MODEL_WIDTH/2, ZOMBIE_MODEL_HEIGHT/2, ZOMBIE_MODEL_DEPTH/2);
-			Geometry geometry = new Geometry("ZombieBox", box1);
-			geometry.setLocalTranslation(0, ZOMBIE_MODEL_HEIGHT/2, 0); // Move origin to floor
-			return geometry;
-		}
 	}
 
 
@@ -89,6 +84,12 @@ public class ZombieModel implements IAvatarModel {
 	@Override
 	public BoundingBox getBoundingBox() {
 		return new BoundingBox(new Vector3f(), ZOMBIE_MODEL_WIDTH/2, ZOMBIE_MODEL_HEIGHT/2, ZOMBIE_MODEL_DEPTH/2);
+	}
+
+
+	@Override
+	public Spatial getModel() {
+		return model;
 	}
 
 }

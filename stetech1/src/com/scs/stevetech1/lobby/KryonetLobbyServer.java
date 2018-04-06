@@ -31,7 +31,11 @@ public class KryonetLobbyServer {
 		registerMessages(server.getKryo());
 		setListener(_listener);
 		server.bind(tcpport, udpport);
-		server.start();
+		
+		Thread t = new Thread(server);
+		t.setDaemon(true);
+		t.start();
+		// server.start(); Not daemon!
 
 	}
 

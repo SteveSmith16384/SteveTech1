@@ -55,7 +55,11 @@ public class KryonetGameClient implements IGameMessageClient {
 			}
 		});
 
-		client.start();
+		//client.start();  Not daemon
+		Thread t = new Thread(client);
+		t.setDaemon(true);
+		t.start();
+
 		client.connect(timeout, ip, tcpPort, udpPort);
 	}
 

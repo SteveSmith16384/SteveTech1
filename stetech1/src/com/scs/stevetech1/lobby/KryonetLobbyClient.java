@@ -52,7 +52,11 @@ public class KryonetLobbyClient {
 			}
 		});
 
-		client.start();
+		//client.start();  Not daemon
+		Thread t = new Thread(client);
+		t.setDaemon(true);
+		t.start();
+
 		client.connect(1000, ip, tcpPort, udpPort);
 	}
 
