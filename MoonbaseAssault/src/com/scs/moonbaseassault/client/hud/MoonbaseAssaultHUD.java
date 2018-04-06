@@ -16,6 +16,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import com.jme3.ui.Picture;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.gui.TextArea;
 import com.scs.stevetech1.hud.IHUD;

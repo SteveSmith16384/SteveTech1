@@ -6,5 +6,7 @@ public interface IClientApp {
 
 	long getRenderTime();
 	
+	long getServerTime();
+	
 	IEntity getEntity(int id);
 }

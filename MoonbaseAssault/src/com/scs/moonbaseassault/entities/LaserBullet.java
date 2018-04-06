@@ -6,7 +6,7 @@ import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractBullet;
@@ -67,7 +67,7 @@ public class LaserBullet extends AbstractBullet implements INotifiedOfCollision 
 
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
+	public void processByClient(IClientApp client, float tpf_secs) {
 		if (launched) {
 			if (Globals.DEBUG_NO_BULLET) {
 				Globals.p("Shooter at " + ((PhysicalEntity)this.shooter).getWorldTranslation());

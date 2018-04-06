@@ -11,7 +11,7 @@ import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -71,7 +71,7 @@ public class Grenade extends AbstractBullet {
 
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
+	public void processByClient(IClientApp client, float tpf_secs) {
 		if (launched) {
 			simpleRigidBody.process(tpf_secs);
 			

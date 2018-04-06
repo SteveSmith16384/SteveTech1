@@ -13,7 +13,7 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractEntityServer;
@@ -82,7 +82,7 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf) {
+	public void processByClient(IClientApp client, float tpf) {
 		/*if (texScroll != null) {
 			float diff = tpf*1f;
 			thisScroll.addLocal(diff, diff, diff);

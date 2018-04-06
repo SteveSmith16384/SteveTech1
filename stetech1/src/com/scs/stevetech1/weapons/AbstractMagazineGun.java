@@ -1,6 +1,6 @@
 package com.scs.stevetech1.weapons;
 
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -76,7 +76,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
+	public void processByClient(IClientApp client, float tpf_secs) {
 		timeUntilShoot_secs -= tpf_secs;
 	}
 

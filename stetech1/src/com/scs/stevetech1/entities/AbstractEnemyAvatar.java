@@ -6,10 +6,10 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
-import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IAnimatedClientSide;
+import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
@@ -52,7 +52,7 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
+	public void processByClient(IClientApp client, float tpf_secs) {
 		// Set position and direction of avatar model, which doesn't get moved automatically
 		this.avatarModel.setLocalTranslation(this.getWorldTranslation());
 	}

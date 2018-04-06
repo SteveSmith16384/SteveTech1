@@ -3,7 +3,7 @@ package com.scs.stevetech1.entities;
 import java.util.HashMap;
 
 import com.jme3.math.Vector3f;
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
@@ -111,7 +111,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
+	public void processByClient(IClientApp client, float tpf_secs) {
 		if (launched) {
 			//Globals.p("Moving snowball:" + this.simpleRigidBody.getLinearVelocity());
 			simpleRigidBody.process(tpf_secs); //this.mainNode;

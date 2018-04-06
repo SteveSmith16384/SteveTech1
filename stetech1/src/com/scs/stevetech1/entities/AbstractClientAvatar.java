@@ -12,6 +12,7 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IKillable;
 import com.scs.stevetech1.components.IProcessByClient;
@@ -85,9 +86,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
-		final long serverTime = client.getServerTime();// System.currentTimeMillis() + client.clientToServerDiffTime;
-
+	public void processByClient(IClientApp client, float tpf_secs) {
 		if (!this.alive) {
 			// Position cam above avatar when they're dead
 			Vector3f vec = this.getWorldTranslation();
@@ -99,6 +98,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			cam.update();
 
 		} else {
+			final long serverTime = client.getServerTime();// System.currentTimeMillis() + client.clientToServerDiffTime;
+
 			super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 
 			storeAvatarPosition(serverTime);
@@ -118,7 +119,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		}
 
 		if (hud != null) {
-			hud.processByClient(client, tpf_secs);
+			hud.processByClient((AbstractGameClient)client, tpf_secs);
 		}
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {

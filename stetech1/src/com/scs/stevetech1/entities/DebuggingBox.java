@@ -9,7 +9,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -63,7 +63,7 @@ public class DebuggingBox extends PhysicalEntity implements IProcessByClient {
 */
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
+	public void processByClient(IClientApp client, float tpf_secs) {
 		if (this.getID() <= 0) { // Client-controlled
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft <= 0) {

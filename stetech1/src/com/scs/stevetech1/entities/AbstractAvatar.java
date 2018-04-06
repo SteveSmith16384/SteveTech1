@@ -9,7 +9,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.scs.simplephysics.SimpleCharacterControl;
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICalcHitInPast;
@@ -83,7 +83,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	protected void serverAndClientProcess(AbstractEntityServer server, AbstractGameClient client, float tpf_secs, long serverTime) {
+	protected void serverAndClientProcess(AbstractEntityServer server, IClientApp client, float tpf_secs, long serverTime) {
 		this.resetWalkDir();
 
 		int newAnimCode = ANIM_IDLE; // Default

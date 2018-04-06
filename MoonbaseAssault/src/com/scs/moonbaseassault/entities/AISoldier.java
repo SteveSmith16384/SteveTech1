@@ -16,7 +16,7 @@ import com.scs.moonbaseassault.models.SoldierModel;
 import com.scs.moonbaseassault.server.ai.IArtificialIntelligence;
 import com.scs.moonbaseassault.server.ai.SimpleSoldierAI;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IAnimatedServerSide;
@@ -122,7 +122,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
+	public void processByClient(IClientApp client, float tpf_secs) {
 		// Set position and direction of avatar model, which doesn't get moved automatically
 		this.soldierModel.getModel().setLocalTranslation(this.getWorldTranslation());
 	}

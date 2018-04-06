@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.models.SmallExplosionModel;
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.shared.IEntityController;
@@ -31,7 +31,7 @@ public class ExplosionEffectEntity extends PhysicalEntity implements IProcessByC
 	}
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
+	public void processByClient(IClientApp client, float tpf_secs) {
 		expl.process();
 		timeLeft -= tpf_secs;
 		if (timeLeft <= 0) {

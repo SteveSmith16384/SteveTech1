@@ -5,9 +5,9 @@ import java.util.HashMap;
 import com.jme3.scene.Node;
 import com.jme3.ui.Picture;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.shared.IEntityController;
 
 public class AbstractHUDImage extends Picture implements IEntity, IProcessByClient {
 
@@ -34,7 +34,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 
 
 	@Override
-	public void processByClient(AbstractGameClient client, float tpf) {
+	public void processByClient(IClientApp client, float tpf) {
 		if (timeLeftSecs > 0) {
 			this.timeLeftSecs -= tpf;
 			if (this.timeLeftSecs <= 0) {
