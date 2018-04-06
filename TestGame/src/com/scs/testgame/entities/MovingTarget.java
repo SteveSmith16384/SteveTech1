@@ -108,7 +108,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		this.setWorldTranslation(new Vector3f(10, 10, 10));
 
 		EntityUpdateMessage eum = new EntityUpdateMessage();
-		eum.addEntityData(this, true, this.getUpdateData());
+		eum.addEntityData(this, true, this.createEntityUpdateDataRecord());
 		AbstractGameServer server = (AbstractGameServer)this.game;
 		server.gameNetworkServer.sendMessageToAll(eum);
 

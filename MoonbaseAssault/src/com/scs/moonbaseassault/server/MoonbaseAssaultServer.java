@@ -312,7 +312,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		// Players always on side 1?
 		return 1;
 		/*
-		// todo - Check maxPlayersPerside, maxSides
+		// This DOESN'T Check maxPlayersPerside, maxSides
 		HashMap<Integer, Integer> map = getPlayersPerSide();
 		// Get lowest amount
 		int lowest = 999;

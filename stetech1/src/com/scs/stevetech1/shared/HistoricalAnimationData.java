@@ -1,6 +1,6 @@
 package com.scs.stevetech1.shared;
-
-public class HistoricalAnimationData implements ITimeStamped {
+/*
+public class HistoricalAnimationData implements ITimeStamped { todo - delete this
 
 	public long timeStamp;
 	public int animationCode;
@@ -17,3 +17,4 @@ public class HistoricalAnimationData implements ITimeStamped {
 	}
 
 }
+*/

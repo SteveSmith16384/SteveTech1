@@ -23,8 +23,9 @@ import com.scs.moonbaseassault.server.ai.IArtificialIntelligence;
 import com.scs.moonbaseassault.server.ai.SimpleSoldierAI;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
+import com.scs.stevetech1.components.IAnimatedClientSide;
+import com.scs.stevetech1.components.IAnimatedServerSide;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
-import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.INotifiedOfCollision;
@@ -34,12 +35,10 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.ChronologicalLookup;
-import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
-IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD {//, IUnit {
 
 	public static final float SPEED = .5f;//.47f;
 
@@ -50,7 +49,7 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 
 	private SoldierModel soldierModel;
 	private float health = 1f;
-	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
+	//private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	public int side;
 	private IArtificialIntelligence ai;
 	protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
@@ -181,12 +180,12 @@ IRewindable, IClientSideAnimated, IDrawOnHUD {//, IUnit {
 		}
 	}
 
-
+/*
 	@Override
 	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
 		return animList;
 	}
-
+*/
 
 	@Override
 	public void setAnimCode(int animCode) {

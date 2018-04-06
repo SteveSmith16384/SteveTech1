@@ -14,7 +14,7 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.components.IClientSideAnimated;
+import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
@@ -336,29 +336,29 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 	
+	/**
+	 * Called client-side to store new position data sent by the server
+	 * @param eum
+	 * @param time
+	 */
 	public void storePositionData(EntityUpdateData eum, long time) {
-		if (eum.force) {
+		/*if (eum.force) {
 			// Set it now!
 			this.setWorldTranslation(eum.pos);
 			this.clearPositiondata();
-			/*todo if (pe == this.currentAvatar) {
+			/*if (pe == this.currentAvatar) {
 				currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
 				currentAvatar.storeAvatarPosition(serverTime);
-			}*/
-		}
-		this.addPositionData(eum.pos, time); // Store the position for use later
-		/*todo if (pe instanceof IClientSideAnimated) {// && eum.animationCode != null) {
-			IClientSideAnimated ia = (IClientSideAnimated)pe;
-			ia.getAnimList().addData(new HistoricalAnimationData(mainmsg.timestamp, eum.animationCode));
+			}
 		}*/
-
+		this.addPositionData(eum.pos, time); // Store the position for use later
 	}
 	
 	
 	/**
 	 * Called server-side to get a copy of the current data for updating the clients.
 	 */
-	public EntityUpdateData getUpdateData() {
+	public EntityUpdateData createEntityUpdateDataRecord() {
 		EntityUpdateData updateData = new EntityUpdateData(this, System.currentTimeMillis());
 		return updateData;
 	}
@@ -372,8 +372,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				isr.setRotation(epd.aimDir);
 				
 			}
-			if (this instanceof IClientSideAnimated) {
-				IClientSideAnimated csa = (IClientSideAnimated)this;
+			if (this instanceof IAnimatedClientSide) {
+				IAnimatedClientSide csa = (IAnimatedClientSide)this;
 				csa.setAnimCode(epd.animationCode);
 			}
 			

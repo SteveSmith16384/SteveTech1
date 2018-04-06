@@ -13,12 +13,12 @@ public class Globals {
 	public static final boolean STRICT = false; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean DEBUG_NO_UPDATE_MSGS = true;
 	public static final boolean DEBUG_NO_BULLET = true;
 	public static final boolean TRANSPARENT_WALLS = true;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
 	public static final boolean DEBUG_DIE_ANIM = true;
 	
+	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
 	public static final boolean DEBUG_SLIDING_DOORS = false;
 	public static final boolean SHOW_AVATAR_POS = false;
 	public static final boolean DEBUG_MESH_COLLISION_CONV = false;

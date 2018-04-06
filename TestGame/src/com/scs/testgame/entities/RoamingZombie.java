@@ -17,8 +17,6 @@ import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.ChronologicalLookup;
-import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 import com.scs.testgame.models.ZombieModel;
@@ -35,7 +33,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 	private ZombieModel zm;
 	
 	private Vector3f currDir = new Vector3f(1f, 0, 0);
-	private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
+	//private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 
 	public RoamingZombie(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, TestGameClientEntityCreator.ZOMBIE, "Zombie", true);
@@ -93,7 +91,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		this.setWorldTranslation(new Vector3f(10, 10, 10));
 
 		EntityUpdateMessage eum = new EntityUpdateMessage();
-		eum.addEntityData(this, true, this.getUpdateData());
+		eum.addEntityData(this, true, this.createEntityUpdateDataRecord());
 		AbstractGameServer server = (AbstractGameServer)this.game;
 		server.gameNetworkServer.sendMessageToAll(eum);
 

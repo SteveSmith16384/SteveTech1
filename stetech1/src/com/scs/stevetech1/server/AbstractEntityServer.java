@@ -248,7 +248,7 @@ ICollisionListener<PhysicalEntity> {
 					//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 					if (sendUpdates) {
 						if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
-							eum.addEntityData(physicalEntity, false, physicalEntity.getUpdateData());
+							eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
 							numSent++;
 							physicalEntity.sendPositionUpdate = false;
 							if (eum.isFull()) {

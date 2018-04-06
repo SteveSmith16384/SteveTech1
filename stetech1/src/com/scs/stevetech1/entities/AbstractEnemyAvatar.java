@@ -9,7 +9,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAvatarModel;
-import com.scs.stevetech1.components.IClientSideAnimated;
+import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
@@ -19,7 +19,7 @@ import com.scs.stevetech1.shared.IEntityController;
 /*
  * This is only used client-side.
  */
-public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IClientSideAnimated, IProcessByClient, ISetRotation { 
+public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimatedClientSide, IProcessByClient, ISetRotation { 
 	
 	protected IAvatarModel anim;
 	private Spatial avatarModel;

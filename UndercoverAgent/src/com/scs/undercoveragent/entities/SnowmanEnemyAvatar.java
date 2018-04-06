@@ -2,15 +2,12 @@ package com.scs.undercoveragent.entities;
 
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
-import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.ChronologicalLookup;
-import com.scs.stevetech1.shared.HistoricalAnimationData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.models.SnowmanModel;
 
 public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 	
-	private ChronologicalLookup<HistoricalAnimationData> animData = new ChronologicalLookup<HistoricalAnimationData>(true, 500);
+	//private ChronologicalLookup<HistoricalAnimationData> animData = new ChronologicalLookup<HistoricalAnimationData>(true, 500);
 	private SnowmanModel snowman;
 	private int currentAnimCode = -1;
 
@@ -23,12 +20,12 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 		this.snowman = (SnowmanModel)anim;
 	}
 	
-
+/*
 	@Override
 	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
 		return animData;
 	}
-	
+	*/
 
 	@Override
 	public void setAnimCode(int s) {
@@ -51,11 +48,11 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 		
 	}
 
-
+/*
 	@Override
 	public int getCurrentAnimCode() {
 		return currentAnimCode;
 	}
-
+*/
 
 }

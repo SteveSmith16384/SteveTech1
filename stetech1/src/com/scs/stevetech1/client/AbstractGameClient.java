@@ -40,7 +40,7 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IClientControlled;
-import com.scs.stevetech1.components.IClientSideAnimated;
+import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
@@ -407,8 +407,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
 						}
 
-						if (e instanceof IClientSideAnimated) {
-							IClientSideAnimated pbc = (IClientSideAnimated)e;
+						if (e instanceof IAnimatedClientSide) {
+							IAnimatedClientSide pbc = (IAnimatedClientSide)e;
 							this.animSystem.process(pbc, tpf_secs);
 						}
 
@@ -529,7 +529,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		} else if (message instanceof RemoveEntityMessage) {
 			RemoveEntityMessage rem = (RemoveEntityMessage)message;
 			IEntity e = this.entities.get(rem.entityID);
-			e.remove();
+			if (e != null) {
+				e.remove();
+			}
 			//this.removeEntity(rem.entityID);
 
 		} else if (message instanceof GeneralCommandMessage) {
@@ -715,6 +717,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 		if (e != null) {
 			if (e instanceof AbstractAvatar || e instanceof IAbility || e instanceof AbstractEnemyAvatar) {
 				this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to, or a grenade launcher to add a bullet to
+				// todo -point camera here
 			} else {
 				this.addEntity(e); // Schedule it for addition at the right time
 			}

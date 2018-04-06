@@ -1,14 +1,15 @@
 package com.scs.stevetech1.entities;
 
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.components.IAnimatedServerSide;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICanScorePoints;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
-import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.IGetRotation;
+import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
@@ -21,7 +22,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame, ICanScorePoints, IGetRotation {
+public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame, ICanScorePoints, IGetRotation, IAnimatedServerSide {
 
 	private AbstractGameServer server;
 	public ClientData client;
@@ -62,7 +63,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 
 				// Send position update
 				EntityUpdateMessage eum = new EntityUpdateMessage();
-				eum.addEntityData(this, true, this.getUpdateData());
+				eum.addEntityData(this, true, this.createEntityUpdateDataRecord());
 				server.gameNetworkServer.sendMessageToAll(eum);
 			}
 		} else {
@@ -174,17 +175,16 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		this.sendStatusUpdateMessage(true);
 	}
 
-/*
-	@Override
-	public EntityUpdateData getUpdateData() {
-		EntityUpdateData updateData = new AvatarUpdateData(this, System.currentTimeMillis());
-		return updateData;
-	}
-	*/
 
 	@Override
 	public Vector3f getRotation() {
 		return input.getDirection();
+	}
+
+
+	@Override
+	public int getCurrentAnimCode() {
+		return this.currentAnimCode;
 	}
 
 
