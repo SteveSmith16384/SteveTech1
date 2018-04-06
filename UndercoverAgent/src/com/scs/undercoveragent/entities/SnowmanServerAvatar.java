@@ -1,5 +1,6 @@
 package com.scs.undercoveragent.entities;
 
+import com.jme3.math.Vector3f;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.server.AbstractEntityServer;

@@ -14,9 +14,11 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
+import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
@@ -334,7 +336,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 	
-	public void storeUpdateData(EntityUpdateData eum, long time) {
+	public void storePositionData(EntityUpdateData eum, long time) {
 		if (eum.force) {
 			// Set it now!
 			this.setWorldTranslation(eum.pos);
@@ -354,8 +356,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	
 	
 	/**
-	 * Called server-side to get a copy of the current data for updating the clients
-	 * Override if the entity has custom data
+	 * Called server-side to get a copy of the current data for updating the clients.
 	 */
 	public EntityUpdateData getUpdateData() {
 		EntityUpdateData updateData = new EntityUpdateData(this, System.currentTimeMillis());
@@ -363,10 +364,21 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 	
 
-	/**
-	 * Override if entity has any special chrono update data.
-	 */
 	public void processChronoData(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+		EntityUpdateData epd = this.chronoUpdateData.get(serverTimeToUse, true);
+		if (epd != null) {
+			if (this instanceof ISetRotation) {
+				ISetRotation isr = (ISetRotation)this;
+				isr.setRotation(epd.aimDir);
+				
+			}
+			if (this instanceof IClientSideAnimated) {
+				IClientSideAnimated csa = (IClientSideAnimated)this;
+				csa.setAnimCode(epd.animationCode);
+			}
+			
+		}
+
 	}
 
 

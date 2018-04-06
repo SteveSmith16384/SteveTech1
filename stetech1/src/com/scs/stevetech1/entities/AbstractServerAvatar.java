@@ -1,8 +1,6 @@
 package com.scs.stevetech1.entities;
 
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICanScorePoints;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -10,13 +8,12 @@ import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.IRewindable;
+import com.scs.stevetech1.components.IGetRotation;
 import com.scs.stevetech1.data.SimpleGameData;
-import com.scs.stevetech1.entities.updatedata.AvatarUpdateData;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
-import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -24,19 +21,16 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame, ICanScorePoints {
+public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame, ICanScorePoints, IGetRotation {
 
 	private AbstractGameServer server;
 	public ClientData client;
-	//private Spatial dummyNode = new Node("Dummy"); // Only for storing rotation.  We don't actually rotate!
 
 	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, IAvatarModel anim) {
 		super(_module, _playerID, _input, eid, _client.side, anim);
 
 		server = (AbstractGameServer)_module;
 		client = _client;
-
-		//this.dummyNode.setLocalRotation(this.mainNode.getLocalRotation());
 	}
 
 
@@ -83,9 +77,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 			//lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
 			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 			
-			//this.dummyNode.setLocalTranslation(this.getMainNode().getWorldTranslation());
-			//this.dummyNode.lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
-
 			if (getWorldTranslation().y < -1) {
 				// Dropped off the edge?
 				//server.console.appendText(getName() + " has fallen off the edge");
@@ -98,20 +89,6 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		}
 	}
 
-/*
-	@Override
-	public Quaternion getWorldRotation() {
-		//return this.getMainNode().getLocalRotation();
-		return this.dummyNode.getLocalRotation();//.rotation;
-	}
-
-
-	@Override
-	public void setWorldRotation(final Quaternion newRot2) {
-		//getMainNode().setLocalRotation(newRot2);
-		this.dummyNode.setLocalRotation(newRot2.clone()); // Don't rotate the model!  This causes the boundingbox to expand.
-	}
-*/
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
@@ -197,12 +174,19 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		this.sendStatusUpdateMessage(true);
 	}
 
-
+/*
 	@Override
 	public EntityUpdateData getUpdateData() {
 		EntityUpdateData updateData = new AvatarUpdateData(this, System.currentTimeMillis());
 		return updateData;
 	}
-	
-	
+	*/
+
+	@Override
+	public Vector3f getRotation() {
+		return input.getDirection();
+	}
+
+
+
 }

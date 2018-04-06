@@ -11,7 +11,7 @@ import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IClientSideAnimated;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.entities.updatedata.AvatarUpdateData;
+import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -19,7 +19,7 @@ import com.scs.stevetech1.shared.IEntityController;
 /*
  * This is only used client-side.
  */
-public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IClientSideAnimated, IProcessByClient {
+public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IClientSideAnimated, IProcessByClient, ISetRotation { 
 	
 	protected IAvatarModel anim;
 	private Spatial avatarModel;
@@ -65,7 +65,16 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 		this.avatarModel.removeFromParent();
 	}
 	
-	
+
+	@Override
+	public void setRotation(Vector3f dir) {
+		JMEAngleFunctions.rotateToDirection(avatarModel, dir);
+		
+	}
+
+
+
+	/*
 	@Override
 	public void processChronoData(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
 		super.processChronoData(mainApp, serverTimeToUse, tpf_secs);
@@ -79,6 +88,6 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 		}
 
 	}
-
+*/
 
 }

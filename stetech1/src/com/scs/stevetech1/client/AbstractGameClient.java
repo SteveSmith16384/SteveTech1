@@ -380,7 +380,6 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 					this.launchSystem.process(renderTime);
 
 					// Loop through each entity and process them
-					//for (IEntity e : this.entities.values()) {
 					for (IEntity e : entitiesForProcessing.values()) {
 						if (e instanceof IPlayerControlled) {
 							IPlayerControlled p = (IPlayerControlled)e;
@@ -516,7 +515,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 							Globals.p("Received EntityUpdateMessage for " + e);
 						}
 						PhysicalEntity pe = (PhysicalEntity)e;
-						pe.storeUpdateData(eud, mainmsg.timestamp);
+						pe.storePositionData(eud, mainmsg.timestamp);
 						pe.chronoUpdateData.addData(eud);
 					} else {
 						// Globals.p("Unknown entity ID for update: " + eum.entityID);
