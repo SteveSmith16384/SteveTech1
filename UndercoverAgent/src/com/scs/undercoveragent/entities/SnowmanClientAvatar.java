@@ -2,9 +2,12 @@ package com.scs.undercoveragent.entities;
 
 import com.jme3.renderer.Camera;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
+import com.scs.stevetech1.server.Globals;
 import com.scs.undercoveragent.models.SnowmanModel;
 
 public class SnowmanClientAvatar extends AbstractClientAvatar {

@@ -53,6 +53,10 @@ public class LaserBullet extends AbstractBullet implements INotifiedOfCollision 
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (launched) {
+			if (Globals.DEBUG_NO_BULLET) {
+				Globals.p("Shooter at " + ((PhysicalEntity)this.shooter).getWorldTranslation());
+				Globals.p("Bullet at " + this.getWorldTranslation());
+			}
 			super.processByServer(server, tpf_secs);
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft < 0) {
@@ -65,11 +69,18 @@ public class LaserBullet extends AbstractBullet implements INotifiedOfCollision 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
 		if (launched) {
+			if (Globals.DEBUG_NO_BULLET) {
+				Globals.p("Shooter at " + ((PhysicalEntity)this.shooter).getWorldTranslation());
+				Globals.p("Bullet at " + this.getWorldTranslation());
+			}
 			simpleRigidBody.process(tpf_secs);
 
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft < 0) {
 				this.remove();
+				if (Globals.DEBUG_NO_BULLET) {
+					Globals.p("Removed bullet");
+				}
 			}
 		}
 	}
@@ -82,18 +93,9 @@ public class LaserBullet extends AbstractBullet implements INotifiedOfCollision 
 			game.addEntity(expl);
 		}
 		this.remove();
-	}
-
-/*
-	@Override
-	public void removeOnContact() {
-		if (game.isServer()) {
-			ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-			game.addEntity(expl);
+		if (Globals.DEBUG_NO_BULLET) {
+			Globals.p("Removed bullet -----------------------------------------");
 		}
-		this.remove();
-
 	}
-*/
 
 }

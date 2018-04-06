@@ -24,6 +24,7 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IGetRotation;
+import com.scs.stevetech1.components.IKillable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRewindable;
@@ -37,7 +38,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
-IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation {//, IUnit {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable {//, IUnit {
 
 	public static final float SPEED = .5f;//.47f;
 /*
@@ -75,32 +76,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			this.soldierModel.createAndGetModel(_side);
 			game.getGameNode().attachChild(this.soldierModel.getModel());
 		}
-/*
-		Spatial spatial = null;
-		if (!Globals.USE_BOXES_FOR_AI_SOLDIER) {
-			soldierModel = new SoldierModel(game.getAssetManager());
-			spatial = soldierModel.createAndGetModel(true, side);
-		} else {
-			Box box1 = new Box(w/2, h/2, d/2);
-			spatial = new Geometry("AISoldier", box1);
-			spatial.setLocalTranslation(0, h/2, 0); // Box origin is the centre
-
-			TextureKey key3 = new TextureKey("Textures/fence.png");
-			key3.setGenerateMips(true);
-			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			tex3.setWrap(WrapMode.Repeat);
-
-			Material floor_mat = null;
-			if (Globals.LIGHTING) {
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-				floor_mat.setTexture("DiffuseMap", tex3);
-			} else {
-				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-				floor_mat.setTexture("ColorMap", tex3);
-			}
-			spatial.setMaterial(floor_mat);
-		}
-		this.mainNode.attachChild(spatial);*/
 		
 		// Create box for collisions
 		Box box = new Box(soldierModel.getBoundingBox().getXExtent(), soldierModel.getBoundingBox().getYExtent(), soldierModel.getBoundingBox().getZExtent());
@@ -166,12 +141,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			if (health <= 0) {
 				AbstractEntityServer server = (AbstractEntityServer)game;
 				server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, collider.getActualShooter()));
-				/*if (soldierModel != null) {
-					this.soldierModel.setAnim(AbstractAvatar.ANIM_DIED);
-				}*/
 				this.serverSideCurrentAnimCode = AbstractAvatar.ANIM_DIED;
 				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding - todo - only remove once there are no collisions, or change size?  Maybe this isn't even needed?
-				this.hudNode.removeFromParent(); // Todo - This is server-side!!!
 			}
 		}
 	}
@@ -275,6 +246,12 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	@Override
 	public Vector3f getRotation() {
 		return ai.getDirection();
+	}
+
+
+	@Override
+	public void handleKilledOnClientSide(PhysicalEntity killer) {
+		this.hudNode.removeFromParent();
 	}
 
 

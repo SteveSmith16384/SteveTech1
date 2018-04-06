@@ -120,7 +120,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 
 	@Override
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+	public void calcPosition(long serverTimeToUse, float tpf_secs) {
 		// Do nothing!
 	}
 

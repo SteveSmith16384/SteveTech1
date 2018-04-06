@@ -13,6 +13,7 @@ import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.components.IAvatarModel;
+import com.scs.stevetech1.components.IKillable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
 import com.scs.stevetech1.hud.IHUD;
@@ -21,7 +22,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
-public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient {
+public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient, IKillable {
 
 	public IHUD hud;
 	public Camera cam;
@@ -138,7 +139,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	// Client Avatars have their own special position calculator
 	@Override
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+	public void calcPosition(long serverTimeToUse, float tpf_secs) {
 		if (Globals.ONLY_ADJUST_CLIENT_ON_MOVE && !super.playerWalked) { // Only adjust us if the player tried to move?
 			return;
 		}
@@ -179,5 +180,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		return this.cam;
 	}
 
+
+	@Override
+	public void handleKilledOnClientSide(PhysicalEntity killer) {
+		Globals.p("You have been killed by " + killer);
+		this.setAlive(false);
+	
+	}
 
 }

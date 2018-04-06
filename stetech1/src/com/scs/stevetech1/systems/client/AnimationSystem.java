@@ -1,6 +1,6 @@
 package com.scs.stevetech1.systems.client;
 
-import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
@@ -13,9 +13,9 @@ import com.scs.stevetech1.systems.AbstractSystem;
  */
 public class AnimationSystem extends AbstractSystem {
 
-	private AbstractGameClient client;
+	private IClientApp client;
 
-	public AnimationSystem(AbstractGameClient _client) {
+	public AnimationSystem(IClientApp _client) {
 		client = _client;
 	}
 
@@ -23,7 +23,7 @@ public class AnimationSystem extends AbstractSystem {
 	public void process(IAnimatedClientSide anim, float tpf_secs) {
 		//HistoricalAnimationData had = anim.getAnimList().get(client.renderTime, true);
 		PhysicalEntity pe = (PhysicalEntity)anim;
-		EntityUpdateData had = pe.chronoUpdateData.get(client.renderTime, true);
+		EntityUpdateData had = pe.chronoUpdateData.get(client.getRenderTime(), true);
 		if (had != null) {
 			//if (had.animationCode != .equals(anim.getCurrentAnimCode())) { // Has the animation changed?
 				try {

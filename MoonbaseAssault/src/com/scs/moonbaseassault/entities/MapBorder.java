@@ -7,9 +7,11 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.jme3.util.BufferUtils;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -37,7 +39,18 @@ public class MapBorder extends PhysicalEntity {
 		}
 
 		Box box1 = new Box(BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
-		box1.scaleTextureCoordinates(new Vector2f(BORDER_WIDTH, BORDER_HEIGHT));
+		float w = BORDER_WIDTH;
+		float h = BORDER_HEIGHT;
+		float d = size;
+		//box1.scaleTextureCoordinates(new Vector2f(BORDER_WIDTH, BORDER_HEIGHT));
+		box1.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(new float[]{
+				0, h, w, h, w, 0, 0, 0, // back
+				0, h, d, h, d, 0, 0, 0, // right
+				0, h, w, h, w, 0, 0, 0, // front
+				0, h, d, h, d, 0, 0, 0, // left
+				w, 0, w, d, 0, d, 0, 0, // top
+				w, 0, w, d, 0, d, 0, 0  // bottom
+		}));
 		Geometry geometry = new Geometry("MapBorderBox", box1);
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey("Textures/spacewall.png");

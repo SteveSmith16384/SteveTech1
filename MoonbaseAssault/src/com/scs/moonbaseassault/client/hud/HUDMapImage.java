@@ -10,13 +10,13 @@ public class HUDMapImage extends Picture {
 
 	public MapImageTexture mapImageTex;
 	
-	public HUDMapImage(AssetManager assetManager, int pxlw, int pxlh, int mapSize) {
+	public HUDMapImage(AssetManager assetManager, int sizeInPixels, int mapSize) {
 		super("HUDMapImage");
 		
 		int w = mapSize;
 		int h = mapSize;
 		
-		mapImageTex = new MapImageTexture(pxlw, pxlh, pxlw/mapSize);
+		mapImageTex = new MapImageTexture(sizeInPixels, sizeInPixels/mapSize);
 		
 		// Give this picture the texture of the map image
 		Texture2D texture = new Texture2D(w, h, Format.ABGR8);

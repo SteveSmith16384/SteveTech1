@@ -39,10 +39,11 @@ import com.jme3.texture.Texture;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IAnimatedClientSide;
+import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IKillable;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
@@ -94,7 +95,7 @@ import ssmith.util.AverageNumberCalculator;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractGameClient extends SimpleApplication implements IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
+public abstract class AbstractGameClient extends SimpleApplication implements IClientApp, IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
 
 	// Statuses
 	public static final int STATUS_NOT_CONNECTED = 0;
@@ -393,8 +394,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 						}
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
-							pe.calcPosition(this, renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
-							pe.processChronoData(this, renderTime, tpf_secs);
+							pe.calcPosition(renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
+							pe.processChronoData(renderTime, tpf_secs);
 
 							if (Globals.STRICT) {
 								if (e instanceof AbstractClientAvatar == false && e instanceof IClientControlled == false) {
@@ -565,12 +566,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 			if (killed.simpleRigidBody != null) {
 				this.physicsController.removeSimpleRigidBody(killed.simpleRigidBody);
 			}
-			if (killed == this.currentAvatar) {
-				Globals.p("You have been killed by " + killer);
-				AbstractAvatar avatar = (AbstractAvatar)killed;
-				avatar.setAlive(false);
-			} else if (killer == this.currentAvatar) {
+			if (killer == this.currentAvatar) {
 				Globals.p("You have killed " + killed);
+			}
+			if (killed instanceof IKillable) {
+				IKillable ik = (IKillable)killed;
+				ik.handleKilledOnClientSide(killer);
 			}
 
 		} else if (message instanceof EntityLaunchedMessage) {
@@ -968,5 +969,19 @@ public abstract class AbstractGameClient extends SimpleApplication implements IE
 
 
 	protected abstract Spatial getPlayersWeaponModel();
+
+	
+	@Override
+	public long getRenderTime() {
+		return this.renderTime;
+	}
+
+
+	@Override
+	public IEntity getEntity(int id) {
+		return this.entities.get(id);
+	}
+
+
 
 }

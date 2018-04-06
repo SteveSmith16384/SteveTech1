@@ -50,7 +50,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		historicalPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode_" + id);
-		
+
 		if (!game.isServer()) {
 			chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(true, 100);
 		}
@@ -66,13 +66,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		if (simpleRigidBody != null) {
 			simpleRigidBody.process(tpf_secs);
 
-		if (this.simpleRigidBody.movedByForces()) {
-			if (getWorldTranslation().y < -1) {
-				// Dropped away?
-				Globals.p(getName() + " has fallen off the edge");
-				fallenOffEdge();
+			if (this.simpleRigidBody.movedByForces()) {
+				if (getWorldTranslation().y < -1) {
+					// Dropped away?
+					Globals.p(getName() + " has fallen off the edge");
+					fallenOffEdge();
+				}
 			}
-		}
 		}
 
 		if (this instanceof IRewindable) {
@@ -100,7 +100,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	// This is overridden by client avatars to take into account local position
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+	public void calcPosition(long serverTimeToUse, float tpf_secs) {
 		EntityPositionData epd = historicalPositionData.calcPosition(serverTimeToUse, false);
 		if (epd != null) {
 			this.setWorldTranslation(epd.position);
@@ -119,15 +119,17 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	@Override
 	public void remove() {
+		if (!removed) {
+			if (simpleRigidBody != null) {
+				this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
+				// simpleRigidBody = null;  Don't set it to null as it might be removed in mid-function
+			}
+
+			if (this.mainNode.getParent() != null) { // Unlaunched bullets have no parent
+				this.mainNode.removeFromParent();
+			}
+		}
 		super.remove();
-
-		if (simpleRigidBody != null) {
-			this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
-		}
-
-		if (this.mainNode.getParent() != null) { // Unlaunched bullets have no parent
-			this.mainNode.removeFromParent();
-		}
 	}
 
 
@@ -335,7 +337,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		this.adjustWorldTranslation(pos);
 	}
 
-	
+
 	/**
 	 * Called client-side to store new position data sent by the server
 	 * @param eum
@@ -353,8 +355,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		}*/
 		this.addPositionData(eum.pos, time); // Store the position for use later
 	}
-	
-	
+
+
 	/**
 	 * Called server-side to get a copy of the current data for updating the clients.
 	 */
@@ -362,21 +364,21 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		EntityUpdateData updateData = new EntityUpdateData(this, System.currentTimeMillis());
 		return updateData;
 	}
-	
 
-	public void processChronoData(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
+
+	public void processChronoData(long serverTimeToUse, float tpf_secs) {
 		EntityUpdateData epd = this.chronoUpdateData.get(serverTimeToUse, true);
 		if (epd != null) {
 			if (this instanceof ISetRotation) {
 				ISetRotation isr = (ISetRotation)this;
 				isr.setRotation(epd.aimDir);
-				
+
 			}
 			if (this instanceof IAnimatedClientSide) {
 				IAnimatedClientSide csa = (IAnimatedClientSide)this;
 				csa.setAnimCode(epd.animationCode);
 			}
-			
+
 		}
 
 	}

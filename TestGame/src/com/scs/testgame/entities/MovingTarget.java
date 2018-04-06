@@ -128,8 +128,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 
 	@Override
-	public void calcPosition(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
-		super.calcPosition(mainApp, serverTimeToUse, tpf_secs);
+	public void calcPosition(long serverTimeToUse, float tpf_secs) {
+		super.calcPosition(serverTimeToUse, tpf_secs);
 		
 		if (Globals.LOG_MOVING_TARGET_POS) {
 			IOFunctions.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + serverTimeToUse + "," + this.getWorldTranslation());

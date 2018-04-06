@@ -9,16 +9,16 @@ import com.scs.moonbaseassault.server.MapLoader;
 
 public class MapImageTexture extends PaintableImage {
 
-	private static final float ALPHA = 0.3f;
+	private static final float ALPHA = 0.9f;
 	
 	private int[][] data;
 	private Point player;
 	private List<Point> units;
 	private List<Point> computers;
-	private int pixelSize;
+	private int pixelSize; // How big each map square is on the scanner
 
-	public MapImageTexture(int pxlw, int pxlh, int _pixelSize) {
-		super(pxlw, pxlh);
+	public MapImageTexture(int sizeInPixels, int _pixelSize) {
+		super(sizeInPixels, sizeInPixels);
 		
 		pixelSize = _pixelSize;
 		

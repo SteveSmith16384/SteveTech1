@@ -53,7 +53,7 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 		if (pe instanceof Floor == false) {
 			// Change direction to away from blockage
 			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof MapBorder) {
-				Globals.p("AISoldier has collided with " + pe);
+				//Globals.p("AISoldier has collided with " + pe);
 				changeDirection(currDir.mult(-1));
 			}
 		}
@@ -62,7 +62,7 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 
 
 	private void changeDirection(Vector3f dir) {
-		Globals.p("Changing direction to " + dir);
+		//Globals.p("Changing direction to " + dir);
 		this.currDir.set(dir);
 		physicalEntity.getMainNode().lookAt(physicalEntity.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 	}
