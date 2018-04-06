@@ -510,8 +510,6 @@ public abstract class AbstractDummyClient implements IClientApp, IEntityControll
 			playSound(psm);
 
 		} else if (message instanceof ModelBoundsMessage) {
-			ModelBoundsMessage psm = (ModelBoundsMessage)message;
-			addDebugBox(psm);
 
 		} else if (message instanceof JoinGameFailedMessage) {
 			JoinGameFailedMessage jgfm = (JoinGameFailedMessage)message;
@@ -520,35 +518,6 @@ public abstract class AbstractDummyClient implements IClientApp, IEntityControll
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
-		}
-	}
-
-
-	private void addDebugBox(ModelBoundsMessage msg) {
-		if (msg.bounds instanceof BoundingBox) {
-			BoundingBox bb = (BoundingBox)msg.bounds;
-			Mesh box = new Box(bb.getXExtent(), bb.getYExtent(), bb.getZExtent());
-			box.scaleTextureCoordinates(new Vector2f(bb.getXExtent(), bb.getYExtent()));
-			Geometry debuggingBox = new Geometry("DebuggingBox", box);
-
-			TextureKey key3 = new TextureKey( "Textures/fence.png");
-			Texture tex3 = getAssetManager().loadTexture(key3);
-			Material floor_mat = null;
-			if (Globals.LIGHTING) {
-				floor_mat = new Material(getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-				floor_mat.setTexture("DiffuseMap", tex3);
-			} else {
-				floor_mat = new Material(getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-				floor_mat.setTexture("ColorMap", tex3);
-			}
-			debuggingBox.setMaterial(floor_mat);
-			debuggingBox.setLocalTranslation(msg.bounds.getCenter().x, msg.bounds.getCenter().y, msg.bounds.getCenter().z);
-			debugNode.attachChild(debuggingBox);
-
-			floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-			debuggingBox.setQueueBucket(Bucket.Transparent);
-
-			Globals.p("Created bounding box");
 		}
 	}
 
@@ -777,6 +746,18 @@ public abstract class AbstractDummyClient implements IClientApp, IEntityControll
 	@Override
 	public Node getGameNode() {
 		return gameNode;
+	}
+
+
+	@Override
+	public long getRenderTime() {
+		return this.renderTime;
+	}
+
+
+	@Override
+	public IEntity getEntity(int id) {
+		return this.entities.get(id);
 	}
 
 
