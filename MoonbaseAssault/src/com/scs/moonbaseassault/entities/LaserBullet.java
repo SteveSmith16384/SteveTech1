@@ -43,7 +43,7 @@ public class LaserBullet extends AbstractBullet implements INotifiedOfCollision 
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;
-			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(1)), ColorRGBA.Pink, !game.isServer());
+			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer());
 		} else {
 			Mesh sphere = null;
 			sphere = new Sphere(8, 8, 0.02f, true, false);

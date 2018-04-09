@@ -14,7 +14,7 @@ import com.jme3.scene.shape.Box;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.models.SoldierModel;
 import com.scs.moonbaseassault.server.ai.IArtificialIntelligence;
-import com.scs.moonbaseassault.server.ai.SimpleSoldierAI;
+import com.scs.moonbaseassault.server.ai.WanderingSoldierAI2;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
@@ -40,7 +40,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable {//, IUnit {
 
-	public static final float SPEED = .5f;//.47f;
+	public static final float SPEED = .53f;//.47f;
 /*
 	private static final float w = 0.3f;
 	private static final float d = 0.3f;
@@ -48,7 +48,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 */
 
 	private SoldierModel soldierModel; // Need this to animate the model
-	//private Spatial avatarSpatial; // Need this to move the model
 	private float health = 1f;
 	public int side;
 	private IArtificialIntelligence ai;
@@ -69,7 +68,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
 
-			ai = new SimpleSoldierAI(this);
+			ai = new WanderingSoldierAI2(this);
 		} else {
 			this.soldierModel.createAndGetModel(_side);
 			game.getGameNode().attachChild(this.soldierModel.getModel());
@@ -107,7 +106,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 			ai.process(tpf_secs);
 
-			this.serverSideCurrentAnimCode = AbstractAvatar.ANIM_WALKING;
+			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
 			/*if (soldierModel != null) {
 				this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
 			}*/

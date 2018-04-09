@@ -27,7 +27,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision, IProcessByServer {
 
 	private static final Vector3f MOVE_UP = new Vector3f(0, 1f, 0);
-	private static final float STAY_OPEN_DURATION = 5f;
+	private static final float STAY_OPEN_DURATION = 3f;
 
 	private Vector3f origPosition;
 	private boolean isOpening = false;

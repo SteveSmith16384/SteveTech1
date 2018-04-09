@@ -16,6 +16,9 @@ import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultGameData;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IPlayerControlled;
+import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -131,16 +134,16 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		}
 	}
 
-	
+
 	public MoonbaseAssaultGameData getMAGameData() {
 		return (MoonbaseAssaultGameData)super.gameData;
 	}
-	
+
 
 	@Override
 	protected void createGame() {
 		super.gameData = new MoonbaseAssaultGameData();
-		
+
 		this.getGameNode().attachChild(subNodeX0Y0);
 		this.getGameNode().attachChild(subNodeX1Y0);
 		this.getGameNode().attachChild(subNodeX0Y1);
@@ -152,8 +155,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			map.loadMap("/serverdata/moonbaseassault_small.csv");
 			scannerData = map.scannerData;
 			this.deploySquares = map.deploySquares;
-
-			//int maxSoldiers = 1;
 
 			this.computerSquares = new ArrayList<Point>();
 			for (int y=0 ; y<scannerData.length ; y++) {
@@ -210,17 +211,17 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		//this.actuallyAddEntity(floor);
 
 		// Add AI soldiers
-		 for (int i=0 ; i<1 ; i++) {
+		for (int i=0 ; i<1 ; i++) {
 			AISoldier s = new AISoldier(this, this.getNextEntityID(), 0,0,0, 2);
 			this.actuallyAddEntity(s);
 			moveAISoldierToStartPosition(s);
-			
+
 		}
 
 	}
 
 
-	public void moveAISoldierToStartPosition(AISoldier soldier) {
+	private void moveAISoldierToStartPosition(AISoldier soldier) {
 		float startHeight = .1f;
 		List<Point> deploySquares = this.deploySquares[soldier.side-1];
 		boolean found = false;
@@ -238,7 +239,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		}
 	}
 
-	
+
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		SoldierServerAvatar avatar = new SoldierServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
@@ -270,7 +271,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	@Override
 	protected int getWinningSide() {
 		return 2;
-	/*	int highestScore = -1;
+		/*	int highestScore = -1;
 		int winningSide = -1;
 		boolean draw = false;
 		for(ClientData c : super.clients.values()) {
@@ -288,7 +289,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		return winningSide;*/
 	}
 
-	
+
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		return this.collisionValidator.canCollide(a, b);
@@ -335,7 +336,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			}
 		}
 		throw new RuntimeException("Should not get here");
-		*/
+		 */
 	}
 
 
@@ -378,7 +379,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		return this.computerSquares;
 	}
 
-	
+
 	public void computerDestroyed() {
 		this.getMAGameData().pointsForSide[1] += 10;
 		checkForWinner();
@@ -388,19 +389,27 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	@Override
 	public void playerKilled(AbstractServerAvatar avatar) {
 		super.playerKilled(avatar);
-		
+
 		if (avatar.side == 1) {
 			this.getMAGameData().pointsForSide[2] += 10;
 			checkForWinner();
 		}
 	}
-	
-	
+
+
 	private void checkForWinner() {
 		// todo
 	}
-	
-	
+
+
+	public PhysicalEntity getEnemy(int ourSide) {
+		for (IEntity e : entitiesForProcessing.values()) {
+			if (e instanceof PhysicalEntity) {
+				PhysicalEntity physicalEntity = (PhysicalEntity)e;
+			}
+		}
+		return null; // todo 
+	}
 
 	// AStar --------------------------------
 

@@ -6,20 +6,18 @@ import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 
 import ssmith.lang.NumberFunctions;
 
-public class SimpleSoldierAI implements IArtificialIntelligence {
-
-	private static final float WAIT_FOR_DOOR_DURATION = 3;
-	private static final boolean SHOOT_AT_ENEMY = false;
+public class WanderingSoldierAI implements IArtificialIntelligence {
 
 	private PhysicalEntity physicalEntity;
 	private Vector3f currDir;
 
-	public SimpleSoldierAI(PhysicalEntity _pe) {
+	public WanderingSoldierAI(PhysicalEntity _pe) {
 		physicalEntity = _pe;
 
 		currDir = this.getRandomDirection();
@@ -32,18 +30,8 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 		if (this.currDir.length() == 0) {
 			this.currDir = this.getRandomDirection();
 		}
-		if (!Globals.DEBUG_CAN_SEE) {
-			//Globals.p("Currdir: " + this.currDir);
-			physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
-		} else {
-			/*if (MoonbaseAssaultServer.player != null) {
-				boolean cansee = this.canSee(MoonbaseAssaultServer.player, 100f);
-				if (cansee) {
-					//Globals.p("Soldier can see player");
-				}
-			}*/
-		}
-
+		//Globals.p("Currdir: " + this.currDir);
+		physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
 
 	}
 
@@ -83,6 +71,12 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 	@Override
 	public Vector3f getDirection() {
 		return currDir;
+	}
+
+
+	@Override
+	public int getAnimCode() {
+		return AbstractAvatar.ANIM_WALKING;
 	}
 
 

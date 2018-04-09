@@ -9,5 +9,7 @@ public interface IArtificialIntelligence {
 	
 	Vector3f getDirection(); // Current dir to point entity the right way
 	
+	int getAnimCode();
+	
 	void collided(PhysicalEntity pe);
 }

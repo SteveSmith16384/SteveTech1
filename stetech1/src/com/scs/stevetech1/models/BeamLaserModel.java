@@ -34,7 +34,7 @@ public class BeamLaserModel extends Node {
 	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat) {
 		super("Laser");
 
-		cyl = new Cylinder(5, 10, 0.03f, start.distance(end), true);
+		cyl = new Cylinder(5, 10, 0.02f, start.distance(end), true);
 		cyl.setBound(new BoundingBox());
 		cyl.updateBound();
 		g = new Geometry();

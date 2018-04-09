@@ -158,7 +158,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		// Add and remove entities
-		synchronized (entities) {
+		//synchronized (entities) {
 			for(IEntity e : this.entitiesToAdd) {
 				this.actuallyAddEntity(e, true);
 			}
@@ -168,7 +168,7 @@ ICollisionListener<PhysicalEntity> {
 				this.actuallyRemoveEntity(i);
 			}
 			this.entitiesToRemove.clear();
-		}
+		//}
 
 		if (gameNetworkServer.getNumClients() > 0) {
 			// Process all messages
