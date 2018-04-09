@@ -24,6 +24,7 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
+import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 
 public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntityCreator {
@@ -43,6 +44,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 	public static final int GRENADE = 13;
 	public static final int GRENADE_LAUNCHER = 14;
 	public static final int EXPLOSION_EFFECT = 15;
+	public static final int DEBUGGING_SPHERE = 16;
 
 
 	public MoonbaseAssaultClientEntityCreator() {
@@ -226,6 +228,13 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			ExplosionEffectEntity expl = new ExplosionEffectEntity(game, id, pos);
 			return expl;
+		}
+
+		case DEBUGGING_SPHERE:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			DebuggingSphere hill = new DebuggingSphere(game, DEBUGGING_SPHERE, id, pos.x, pos.y, pos.z, true);
+			return hill;
 		}
 
 		default:

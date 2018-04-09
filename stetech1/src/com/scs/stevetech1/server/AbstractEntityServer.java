@@ -550,7 +550,10 @@ ICollisionListener<PhysicalEntity> {
 			/*if (e instanceof IClientControlled) {  No! Still tell client when to remove it
 				IClientControlled cc = (IClientControlled)e;
 				if (cc.isClientControlled()) {
-					return;
+					if (Globals.DEBUG_NO_BULLET) {
+						Globals.p("NOT sending bullet remove");
+					}
+					return; // todo - remove?
 				}
 			}*/
 			this.gameNetworkServer.sendMessageToAll(new RemoveEntityMessage(id));

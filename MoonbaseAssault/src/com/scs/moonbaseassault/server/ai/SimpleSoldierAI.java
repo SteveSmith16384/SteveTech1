@@ -1,6 +1,5 @@
 package com.scs.moonbaseassault.server.ai;
 
-import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
@@ -15,6 +14,7 @@ import ssmith.lang.NumberFunctions;
 public class SimpleSoldierAI implements IArtificialIntelligence {
 
 	private static final float WAIT_FOR_DOOR_DURATION = 3;
+	private static final boolean SHOOT_AT_ENEMY = false;
 
 	private PhysicalEntity physicalEntity;
 	private Vector3f currDir;
@@ -51,7 +51,7 @@ public class SimpleSoldierAI implements IArtificialIntelligence {
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (pe instanceof Floor == false) {
-			// Change direction to away from blockage
+			// Change direction to away from blockage, unless it's a doior
 			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof MapBorder) {
 				//Globals.p("AISoldier has collided with " + pe);
 				changeDirection(currDir.mult(-1));

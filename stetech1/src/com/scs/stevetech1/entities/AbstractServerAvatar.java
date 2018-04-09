@@ -40,7 +40,7 @@ public abstract class AbstractServerAvatar extends AbstractAvatar implements IDa
 		this.moveSpeed = server.getAvatarMoveSpeed(this); // todo - send to client if it changes
 		this.setJumpForce(server.getAvatarJumpForce(this)); // todo - send to client if it changes
 		this.setHealth(server.getAvatarStartHealth(this));
-		this.simpleRigidBody.currentGravInc = 0; // In case they fell off the edge
+		this.simpleRigidBody.resetForces();//.currentGravInc = 0; // In case they fell off the edge
 		this.invulnerableTimeSecs = 5;
 		server.moveAvatarToStartPosition(this); // this also sends the update message to tell the client about the new move speed values etc...
 

@@ -30,9 +30,9 @@ public class LaserRifle extends AbstractMagazineGun<LaserBullet> implements IAbi
 	@Override
 	public boolean launchBullet() {
 		if (!ammoCache.isEmpty()) {
-			LaserBullet g = ammoCache.remove();
+			LaserBullet bullet = ammoCache.remove();
 			ICanShoot ic = (ICanShoot)owner;
-			g.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
+			bullet.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			return true;
 		}
 		return false;

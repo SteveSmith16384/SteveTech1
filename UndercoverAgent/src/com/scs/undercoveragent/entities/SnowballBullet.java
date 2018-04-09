@@ -108,7 +108,7 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 	@Override
 	public void collided(PhysicalEntity pe) {
 		//Globals.p("Snowball hit something at " + System.currentTimeMillis());
-		if (Globals.SHOW_SNOWBALL_COLLISION_POS) {
+		if (Globals.SHOW_BULLET_COLLISION_POS) {
 			if (game.isServer()) {
 				// Create debugging sphere
 				Vector3f pos = this.getWorldTranslation();

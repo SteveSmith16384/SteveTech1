@@ -64,7 +64,7 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 
 		//this.addTargetter();
 
-		if (Globals.DEBUG_HUD) {
+		/*if (Globals.DEBUG_HUD) {
 			for (int i=0; i<100 ; i+=10) {
 				BitmapText deleteme = new BitmapText(font_small, false);
 				deleteme.setColor(ColorRGBA.White);
@@ -72,7 +72,7 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 				this.attachChild(deleteme);
 				deleteme.setText("x" + i);
 			}
-		}
+		}*/
 
 		float yPos = hud_height - LINE_SPACING;
 

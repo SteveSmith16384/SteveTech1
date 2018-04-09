@@ -522,6 +522,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 							Globals.p("Received EntityUpdateMessage for " + e);
 						}
 						PhysicalEntity pe = (PhysicalEntity)e;
+						if (Globals.DEBUG_NO_BULLET && pe.type == 7) { // Laser bullet
+							Globals.p("Received EntityUpdateMessage for " + e);
+						}
 						pe.storePositionData(eud, mainmsg.timestamp);
 						pe.chronoUpdateData.addData(eud);
 					} else {
@@ -913,22 +916,6 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			ic.collided(pea);
 		}
 
-		/*
-		if (pea instanceof IClientControlled) {
-			IClientControlled cc = (IClientControlled)pea;
-			if (pea instanceof IRemoveOnContact) {
-				IRemoveOnContact roc = (IRemoveOnContact)pea;
-				roc.removeOnContact();
-			}
-		}
-		if (peb instanceof IClientControlled) {
-			IClientControlled cc = (IClientControlled)peb;
-			if (peb instanceof IRemoveOnContact) {
-				IRemoveOnContact roc = (IRemoveOnContact)peb;
-				roc.removeOnContact();
-			}
-		}
-		 */
 	}
 
 

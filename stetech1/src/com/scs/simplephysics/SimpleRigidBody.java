@@ -527,7 +527,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	// Helpers
+	public void resetForces() {
+		this.currentGravInc = 0;
+		this.additionalForce.set(0, 0, 0);
+		this.oneOffForce.set(0, 0, 0);
+		this.isOnGround = false;
+	}
+
 
 }
 

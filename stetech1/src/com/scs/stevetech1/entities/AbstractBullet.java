@@ -14,6 +14,7 @@ import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.LaunchData;
 
@@ -76,6 +77,9 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		this.collideable = true;
 
 		if (game.isServer()) {
+			if (Globals.DEBUG_NO_BULLET) {
+				Globals.p("Start of ffwding -------------------------");
+			}
 			AbstractGameServer server = (AbstractGameServer)game;
 
 			// fast forward it!
@@ -87,6 +91,10 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 				if (this.removed) {
 					break;
 				}
+			}
+
+			if (Globals.DEBUG_NO_BULLET) {
+				Globals.p("End of ffwding -------------------------");
 			}
 
 			// If server, send messages to clients to tell them it has been launched
@@ -127,7 +135,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 	@Override
 	public boolean sendUpdates() {
-		return false; 
+		return false; // No, client controls the position
 	}
 
 
@@ -140,7 +148,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 	@Override
 	public int getSide() {
-		return side;//shooter.getSide();
+		return side;
 	}
 
 

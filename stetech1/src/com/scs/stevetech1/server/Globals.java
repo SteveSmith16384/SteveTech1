@@ -9,14 +9,17 @@ import ssmith.lang.Functions;
 public class Globals {
 	
 	public static final boolean HIDE_BELLS_WHISTLES = true;
+	public static final boolean HIDE_EXPLOSION = true;
 	public static final boolean RECORD_VID = false;
 	public static final boolean STRICT = false; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
+	public static final boolean SHOW_BULLET_COLLISION_POS = true;
+	public static final boolean DEBUG_HUD = true;
 	public static final boolean DEBUG_NO_BULLET = true;
 	public static final boolean TRANSPARENT_WALLS = true;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
-	
+
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
 	public static final boolean DEBUG_SLIDING_DOORS = false;
@@ -40,12 +43,10 @@ public class Globals {
 	public static final boolean DEBUG_CLIENT_ROTATION = false;
 	public static final boolean DEBUG_PLAYER_RESTART = false;
 	public static final boolean DEBUG_MOUNTAIN_BORDER = false;
-	public static final boolean SHOW_SNOWBALL_COLLISION_POS = false;
 	public static final boolean STOP_SERVER_AVATAR_MOVING = false;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
 	public static final boolean SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP = false;
 	public static final boolean DEBUG_REWIND_POS1 = false;
-	public static final boolean DEBUG_HUD = false;
 	public static final boolean LOG_MOVING_TARGET_POS = false;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;

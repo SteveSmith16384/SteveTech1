@@ -50,10 +50,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	private SoldierModel soldierModel; // Need this to animate the model
 	//private Spatial avatarSpatial; // Need this to move the model
 	private float health = 1f;
-	//private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	public int side;
 	private IArtificialIntelligence ai;
-	//protected BoundingBox boundingBox = new BoundingBox(); // Non-rotating boundingbox for collisions
 	private int serverSideCurrentAnimCode; // Server-side
 
 	// HUD
@@ -142,7 +140,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 				AbstractEntityServer server = (AbstractEntityServer)game;
 				server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, collider.getActualShooter()));
 				this.serverSideCurrentAnimCode = AbstractAvatar.ANIM_DIED;
-				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding - todo - only remove once there are no collisions, or change size?  Maybe this isn't even needed?
+				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
 			}
 		}
 	}
