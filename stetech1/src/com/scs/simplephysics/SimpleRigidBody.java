@@ -83,7 +83,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	public void setMovable(boolean b) {
+	public void setMovedByForces(boolean b) {
 		this.movedByForces = b;
 	}
 

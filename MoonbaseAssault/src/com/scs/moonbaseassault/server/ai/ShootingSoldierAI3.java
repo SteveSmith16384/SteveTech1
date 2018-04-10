@@ -29,6 +29,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	public ShootingSoldierAI3(PhysicalEntity _pe) {
 		physicalEntity = _pe;
 
+		currDir = new Vector3f();
 		changeDirection(getRandomDirection()); // Start us pointing in the right direction
 	}
 
@@ -52,6 +53,8 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			// todo - shoot!
 		} else if (waitForSecs < 0) {
 			physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
+		} else {
+			physicalEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 		}
 
 	}

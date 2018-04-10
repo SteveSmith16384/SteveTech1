@@ -38,13 +38,8 @@ public class Grenade extends AbstractBullet {
 			TextureKey key3 = new TextureKey( "Textures/grenade.png");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			Material floor_mat = null;
-			if (Globals.LIGHTING) {
 				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
 				floor_mat.setTexture("DiffuseMap", tex3);
-			} else {
-				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-				floor_mat.setTexture("ColorMap", tex3);
-			}
 			ball_geo.setMaterial(floor_mat);
 		}
 

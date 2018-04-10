@@ -50,6 +50,8 @@ public class WanderingSoldierAI2 implements IArtificialIntelligence {
 				Globals.p("AISoldier has collided with " + pe);
 				//changeDirection(currDir.mult(-1));
 				changeDirection(getRandomDirection()); // Start us pointing in the right direction
+			} else if (pe instanceof AbstractAvatar) {
+				this.waitForSecs = 3;
 			} else if (pe instanceof AISoldier) {
 				if (NumberFunctions.rnd(1, 3) == 1) {
 					this.waitForSecs = 3;

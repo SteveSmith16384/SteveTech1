@@ -65,14 +65,8 @@ public class MoonbaseWall extends PhysicalEntity {
 			tex3.setWrap(WrapMode.Repeat);
 
 			Material floor_mat = null;
-			if (Globals.LIGHTING) {
 				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 				floor_mat.setTexture("DiffuseMap", tex3);
-			} else {
-				floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-				floor_mat.setTexture("ColorMap", tex3);
-			}
-
 			geometry.setMaterial(floor_mat);
 			
 			if (Globals.TRANSPARENT_WALLS) {

@@ -60,13 +60,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		tex3.setWrap(WrapMode.Repeat);
 
 		Material floor_mat = null;
-		if (Globals.LIGHTING) {
 			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 			floor_mat.setTexture("DiffuseMap", tex3);
-		} else {
-			floor_mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-			floor_mat.setTexture("ColorMap", tex3);
-		}
 		debugNode.setMaterial(floor_mat);
 
 		debugNode.setLocalTranslation(0, box1.yExtent/2, 0); // Origin is at the bottom

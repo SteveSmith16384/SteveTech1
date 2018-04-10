@@ -10,7 +10,7 @@ import com.scs.stevetech1.server.Globals;
 
 public class MapImageTexture extends PaintableImage {
 
-	private static final float ALPHA = 0.9f;
+	private static final float ALPHA = 0.5f;
 
 	private int[][] data;
 	private Point player;
@@ -67,28 +67,29 @@ public class MapImageTexture extends PaintableImage {
 			}
 
 			if (Globals.DEBUG_HUD) {
-				g.setColor(new Color(0f, 0f, 1f, .5f));
-				g.fillRect(78, 84, pixelSize, pixelSize);
-			}  else {
-				// Computers
-				if (computers != null) {
-					g.setColor(new Color(0f, 1f, 1f, ALPHA));
+				g.setColor(new Color(1f, 0f, 1f, .5f));
+				g.fillRect(0, 0, pixelSize, pixelSize);
+				g.fillRect(pixelSize, pixelSize, pixelSize, pixelSize);
+			} 
 
-					for (int i=0 ; i<computers.size() ; i++) {
-						Point p = computers.get(i);
-						g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
-					}			
-				}
+			// Computers
+			if (computers != null) {
+				g.setColor(new Color(0f, 1f, 1f, ALPHA));
 
-				// Player
-				if (player != null) {
-					g.setColor(new Color(0f, 1f, 0f, ALPHA));
-					g.fillRect((data.length-player.y)*pixelSize, (data.length-player.x)*pixelSize, pixelSize, pixelSize);
-				}				
-
+				for (int i=0 ; i<computers.size() ; i++) {
+					Point p = computers.get(i);
+					g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
+				}			
 			}
 
+			// Player
+			if (player != null) {
+				g.setColor(new Color(0f, 1f, 0f, ALPHA));
+				g.fillRect((data.length-player.y)*pixelSize, (data.length-player.x)*pixelSize, pixelSize, pixelSize);
+			}				
+
 		}
+
 	}
 
 }
