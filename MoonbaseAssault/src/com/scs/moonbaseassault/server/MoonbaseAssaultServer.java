@@ -402,15 +402,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	}
 
 
-	public PhysicalEntity getEnemy(int ourSide) {
-		for (IEntity e : entitiesForProcessing.values()) {
-			if (e instanceof PhysicalEntity) {
-				PhysicalEntity physicalEntity = (PhysicalEntity)e;
-			}
-		}
-		return null; // todo 
-	}
-
 	// AStar --------------------------------
 
 	@Override

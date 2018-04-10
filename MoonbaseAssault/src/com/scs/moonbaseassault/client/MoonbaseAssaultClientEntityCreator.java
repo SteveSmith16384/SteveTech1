@@ -10,8 +10,8 @@ import com.scs.moonbaseassault.entities.ExplosionEffectEntity;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.Grenade;
 import com.scs.moonbaseassault.entities.MapBorder;
-import com.scs.moonbaseassault.entities.LaserBullet;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
+import com.scs.moonbaseassault.entities.PlayerLaserBullet;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
@@ -24,10 +24,11 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
+import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 
-public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntityCreator {
+public class MoonbaseAssaultClientEntityCreator {
 
 	public static final int SOLDIER_AVATAR = 1;
 	public static final int COMPUTER = 2;
@@ -35,7 +36,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 	public static final int DOOR = 4;
 	public static final int CRATE = 5;
 	public static final int WALL = 6;
-	public static final int LASER_BULLET = 7;
+	public static final int PLAYER_LASER_BULLET = 7;
 	public static final int LASER_RIFLE = 8;
 	public static final int SPACESHIP1 = 9;
 	public static final int AI_SOLDIER = 10;
@@ -45,6 +46,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 	public static final int GRENADE_LAUNCHER = 14;
 	public static final int EXPLOSION_EFFECT = 15;
 	public static final int DEBUGGING_SPHERE = 16;
+	public static final int AI_LASER_BULLET = 17;
 
 
 	public MoonbaseAssaultClientEntityCreator() {
@@ -59,10 +61,11 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		case DOOR: return "DOOR";
 		case CRATE: return "CRATE";
 		case WALL: return "WALL";
-		case LASER_BULLET: return "LASER_BULLET";
+		case PLAYER_LASER_BULLET: return "PLAYER_LASER_BULLET";
 		case LASER_RIFLE: return "LASER_RIFLE";
 		case SPACESHIP1: return "SPACESHIP1";
 		case MAP_BORDER: return "INVISIBLE_MAP_BORDER";
+		case AI_LASER_BULLET: return "AI_LASER_BULLET";
 		default: return "Unknown (" + type + ")";
 		}
 	}
@@ -132,12 +135,12 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 
 		}
 
-		case LASER_BULLET:
+		case PLAYER_LASER_BULLET:
 		{
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
-			IEntityContainer<LaserBullet> irac = (IEntityContainer<LaserBullet>)game.entities.get(containerID);
-			LaserBullet bullet = new LaserBullet(game, id, irac, side, null);
+			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
+			PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, irac, side, null);
 			return bullet;
 		}
 
@@ -209,7 +212,7 @@ public class MoonbaseAssaultClientEntityCreator { //extends AbstractClientEntity
 		{
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
-			IEntityContainer<Grenade> irac = (IEntityContainer<Grenade>)game.entities.get(containerID);
+			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
 			Grenade snowball = new Grenade(game, id, irac, side, null);
 			return snowball;
 		}

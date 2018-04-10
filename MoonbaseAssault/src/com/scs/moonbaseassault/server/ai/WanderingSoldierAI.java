@@ -8,6 +8,7 @@ import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
 
 import ssmith.lang.NumberFunctions;
@@ -26,7 +27,7 @@ public class WanderingSoldierAI implements IArtificialIntelligence {
 
 
 	@Override
-	public void process(float tpf_secs) {
+	public void process(AbstractEntityServer server, float tpf_secs) {
 		if (this.currDir.length() == 0) {
 			this.currDir = this.getRandomDirection();
 		}
@@ -79,5 +80,10 @@ public class WanderingSoldierAI implements IArtificialIntelligence {
 		return AbstractAvatar.ANIM_WALKING;
 	}
 
+
+	@Override
+	public PhysicalEntity getCurrentTarget() {
+		return null;
+	}
 
 }

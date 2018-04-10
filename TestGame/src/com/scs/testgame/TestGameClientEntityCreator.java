@@ -122,14 +122,6 @@ public class TestGameClientEntityCreator {
 			return wall;
 		}
 
-		/*case EntityTypes.LASER_BULLET:
-		{
-			String tex = (String)msg.data.get("tex");
-			float rot = (Float)msg.data.get("rot");
-			LaserBullet laser = new LaserBullet(game, id, pos.x, pos.y, pos.z, w, h, tex, rot);
-			return laser;
-		}*/
-
 		case FLAT_FLOOR:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");

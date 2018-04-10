@@ -18,14 +18,19 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.LaunchData;
 
-public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, ICausesHarmOnContact, IClientControlled {
+/**
+ * These bullets are processed separately on the client and the server, but includes code to ensure they are ready to be fired immediatey, and
+ * launch at the same time on the client and the server. 
+ *
+ */
+public abstract class AbstractPlayersBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, ICausesHarmOnContact, IClientControlled {
 
 	protected boolean launched = false;
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
 	private ClientData client; // Only used server-side
 
-	public AbstractBullet(IEntityController _game, int id, int type, String name, IEntityContainer owner, int _side, ClientData _client) {
+	public AbstractPlayersBullet(IEntityController _game, int id, int type, String name, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
 		super(_game, id, type, name, true);
 
 		client = _client;

@@ -1,6 +1,6 @@
 # Undercover Agent
 
-A simple multiplayer FPS to demonstrate the use of SteveTech1.
+A simple multiplayer FPS to demonstrate the use of SteveTech1 for creating games.
 
 
 ## Overview
@@ -12,7 +12,7 @@ https://www.youtube.com/watch?v=aJQVCu6DgQg
 
 
 ## Configuring
-The game is configured using a simple Properties file.  if a config isn't found, a default is used.  The config file is specified as the first parameter after the class name when running from the command line.
+The game is configured using a simple Properties file.  If a config isn't found, a default is used.  The config file is specified as the first parameter after the class name when running from the command line.
 
 
 ## Credits

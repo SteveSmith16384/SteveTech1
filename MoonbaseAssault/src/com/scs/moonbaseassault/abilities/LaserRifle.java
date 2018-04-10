@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
-import com.scs.moonbaseassault.entities.LaserBullet;
+import com.scs.moonbaseassault.entities.PlayerLaserBullet;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -17,9 +17,9 @@ import com.scs.stevetech1.weapons.AbstractMagazineGun;
 /*
  * This gun shoots physical laser bolts
  */
-public class LaserRifle extends AbstractMagazineGun<LaserBullet> implements IAbility, IEntityContainer<LaserBullet> {
+public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implements IAbility, IEntityContainer<PlayerLaserBullet> {
 
-	private LinkedList<LaserBullet> ammoCache = new LinkedList<LaserBullet>(); 
+	private LinkedList<PlayerLaserBullet> ammoCache = new LinkedList<PlayerLaserBullet>(); 
 
 	public LaserRifle(IEntityController game, int id, AbstractAvatar owner, int abilityNum, ClientData client) {
 		super(game, id, MoonbaseAssaultClientEntityCreator.LASER_RIFLE, owner, abilityNum, "Laser Rifle", .2f, 2, 10, client);
@@ -30,7 +30,7 @@ public class LaserRifle extends AbstractMagazineGun<LaserBullet> implements IAbi
 	@Override
 	public boolean launchBullet() {
 		if (!ammoCache.isEmpty()) {
-			LaserBullet bullet = ammoCache.remove();
+			PlayerLaserBullet bullet = ammoCache.remove();
 			ICanShoot ic = (ICanShoot)owner;
 			bullet.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			return true;
@@ -46,7 +46,7 @@ public class LaserRifle extends AbstractMagazineGun<LaserBullet> implements IAbi
 
 
 	@Override
-	public void addToCache(LaserBullet o) {
+	public void addToCache(PlayerLaserBullet o) {
 		this.ammoCache.add(o);
 	}
 
@@ -59,7 +59,7 @@ public class LaserRifle extends AbstractMagazineGun<LaserBullet> implements IAbi
 
 	public void remove() {
 		while (!ammoCache.isEmpty()) {
-			LaserBullet g = ammoCache.remove();
+			PlayerLaserBullet g = ammoCache.remove();
 			g.remove();
 		}
 		super.remove();
@@ -68,7 +68,7 @@ public class LaserRifle extends AbstractMagazineGun<LaserBullet> implements IAbi
 
 	@Override
 	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer irac, int side) {
-		LaserBullet l = new LaserBullet(game, entityid, irac, side, client);
+		PlayerLaserBullet l = new PlayerLaserBullet(game, entityid, irac, side, client);
 		server.addEntity(l);
 
 	}

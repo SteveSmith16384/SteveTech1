@@ -11,6 +11,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
+import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.models.SoldierModel;
 import com.scs.moonbaseassault.server.ai.IArtificialIntelligence;
@@ -20,6 +21,7 @@ import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IAnimatedServerSide;
+import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IDrawOnHUD;
@@ -29,23 +31,20 @@ import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ISetRotation;
+import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
-IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable {//, IUnit {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable, ICanShoot {//, IUnit {
 
 	public static final float SPEED = .53f;//.47f;
-/*
-	private static final float w = 0.3f;
-	private static final float d = 0.3f;
-	private static final float h = SoldierModel.MODEL_HEIGHT;
-*/
 
 	private SoldierModel soldierModel; // Need this to animate the model
 	private float health = 1f;
@@ -69,6 +68,10 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			creationData.put("side", side);
 
 			ai = new WanderingSoldierAI2(this);
+
+			//todo IAbility abilityGun = new LaserRifle(_game, _module.getNextEntityID(), this, 0, client);
+			//_module.actuallyAddEntity(abilityGun);
+			
 		} else {
 			this.soldierModel.createAndGetModel(_side);
 			game.getGameNode().attachChild(this.soldierModel.getModel());
@@ -104,7 +107,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 				this.changeDirection(newdir);
 			}*/
 
-			ai.process(tpf_secs);
+			ai.process(server, tpf_secs);
 
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
 			/*if (soldierModel != null) {
@@ -251,6 +254,24 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	@Override
 	public void handleKilledOnClientSide(PhysicalEntity killer) {
 		this.hudNode.removeFromParent();
+	}
+
+
+	@Override
+	public boolean isValidTargetForSide(int shootersSide) {
+		return shootersSide != this.side;
+	}
+
+
+	@Override
+	public Vector3f getShootDir() {
+		return this.ai.getCurrentTarget().getWorldTranslation().subtract(this.getWorldTranslation()).normalizeLocal();
+	}
+
+
+	@Override
+	public Vector3f getBulletStartPos() {
+		return this.getWorldTranslation();
 	}
 
 

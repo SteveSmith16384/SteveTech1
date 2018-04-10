@@ -8,10 +8,10 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
+import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.DebuggingBox;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
-import com.scs.stevetech1.server.Globals;
 import com.scs.undercoveragent.entities.BigTreeWithLeaves;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.InvisibleMapBorder;
@@ -201,7 +201,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		{
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
-			IEntityContainer<SnowballBullet> irac = (IEntityContainer<SnowballBullet>)game.entities.get(containerID);
+			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
 			SnowballBullet snowball = new SnowballBullet(game, id, irac, side, null);
 			return snowball;
 		}

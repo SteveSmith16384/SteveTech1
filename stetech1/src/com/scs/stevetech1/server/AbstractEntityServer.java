@@ -17,12 +17,12 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICalcHitInPast;
-import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
+import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -135,7 +135,7 @@ ICollisionListener<PhysicalEntity> {
 				Globals.pe("Warning: more simple rigid bodies than entities!");
 			}
 		}
-		
+
 		// Add/remove queued clients
 		synchronized (clientsToAdd) {
 			while (this.clientsToAdd.size() > 0) {
@@ -159,15 +159,15 @@ ICollisionListener<PhysicalEntity> {
 
 		// Add and remove entities
 		//synchronized (entities) {
-			for(IEntity e : this.entitiesToAdd) {
-				this.actuallyAddEntity(e, true);
-			}
-			this.entitiesToAdd.clear();
+		for(IEntity e : this.entitiesToAdd) {
+			this.actuallyAddEntity(e, true);
+		}
+		this.entitiesToAdd.clear();
 
-			for(Integer i : this.entitiesToRemove) {
-				this.actuallyRemoveEntity(i);
-			}
-			this.entitiesToRemove.clear();
+		for(Integer i : this.entitiesToRemove) {
+			this.actuallyRemoveEntity(i);
+		}
+		this.entitiesToRemove.clear();
 		//}
 
 		if (gameNetworkServer.getNumClients() > 0) {
@@ -635,5 +635,20 @@ ICollisionListener<PhysicalEntity> {
 		}
 	}
 
+
+	public PhysicalEntity getTarget(PhysicalEntity shooter, int ourSide) {
+		for (IEntity e : entitiesForProcessing.values()) {
+			if (e instanceof ITargetable) {
+				ITargetable t = (ITargetable)e;
+				if (t.isValidTargetForSide(ourSide)) {
+					PhysicalEntity pe = (PhysicalEntity)e;
+					if (shooter.canSee(pe, 100)) {
+						return pe;
+					}
+				}
+			}
+		}
+		return null; 
+	}
 
 }

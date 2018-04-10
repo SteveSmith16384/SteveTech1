@@ -9,7 +9,8 @@ import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 
 import ssmith.lang.NumberFunctions;
 import ssmith.util.RealtimeInterval;
@@ -19,15 +20,15 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	private static final float WAIT_FOR_DOOR_DURATION = 3;
 	private static final boolean SHOOT_AT_ENEMY = true;
 
-	private PhysicalEntity physicalEntity;
+	private AISoldier soldierEntity;
 	private Vector3f currDir;
 	private RealtimeInterval checkForEnemyInt = new RealtimeInterval(1000);
-	private PhysicalEntity currentEnemy;
+	private PhysicalEntity currentTarget;
 
 	private float waitForSecs = 0; // e.g. wait for door to open
 
-	public ShootingSoldierAI3(PhysicalEntity _pe) {
-		physicalEntity = _pe;
+	public ShootingSoldierAI3(AISoldier _pe) {
+		soldierEntity = _pe;
 
 		currDir = new Vector3f();
 		changeDirection(getRandomDirection()); // Start us pointing in the right direction
@@ -35,26 +36,29 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 
 	@Override
-	public void process(float tpf_secs) {
+	public void process(AbstractEntityServer server, float tpf_secs) {
 		if (this.waitForSecs > 0) {
 			this.waitForSecs -= tpf_secs;
 		} 
 
-		if (currentEnemy != null) {
-			boolean cansee = physicalEntity.canSee(this.currentEnemy, 100f);
+		if (currentTarget != null) {
+			boolean cansee = soldierEntity.canSee(this.currentTarget, 100f);
 			if (!cansee) {
-				this.currentEnemy = null;
+				this.currentTarget = null;
 			}
 		}
 		if (this.checkForEnemyInt.hitInterval()) {
+			currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side);
 			// todo - find enemy
 		}
-		if (currentEnemy != null) {
-			// todo - shoot!
+		if (currentTarget != null) {
+			if (SHOOT_AT_ENEMY) {
+				// todo
+			}
 		} else if (waitForSecs < 0) {
-			physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
+			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
 		} else {
-			physicalEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
+			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 		}
 
 	}
@@ -79,7 +83,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	private void changeDirection(Vector3f dir) {
 		//Globals.p("Changing direction to " + dir);
 		this.currDir.set(dir);
-		physicalEntity.getMainNode().lookAt(physicalEntity.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
+		soldierEntity.getMainNode().lookAt(soldierEntity.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 	}
 
 
@@ -108,6 +112,12 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		} else {
 			return AbstractAvatar.ANIM_WALKING;
 		}
+	}
+
+
+	@Override
+	public PhysicalEntity getCurrentTarget() {
+		return this.currentTarget;
 	}
 
 }

@@ -16,7 +16,6 @@ public class SoldierServerAvatar extends AbstractServerAvatar { //implements IUn
 		
 		IAbility abilityGun = new LaserRifle(_module, _module.getNextEntityID(), this, 0, client);
 		_module.actuallyAddEntity(abilityGun);
-
 		
 		IAbility abilityGrenades = new GrenadeLauncher(_module, _module.getNextEntityID(), this, 1, client);
 		_module.actuallyAddEntity(abilityGrenades);

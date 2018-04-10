@@ -12,7 +12,7 @@ import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.INotifiedOfCollision;
-import com.scs.stevetech1.entities.AbstractBullet;
+import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.ClientData;
@@ -20,9 +20,9 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
-public class SnowballBullet extends AbstractBullet implements INotifiedOfCollision {//, IRemoveOnContact {
+public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOfCollision {//, IRemoveOnContact {
 
-	public SnowballBullet(IEntityController _game, int id, IEntityContainer<SnowballBullet> owner, int _side, ClientData _client) {
+	public SnowballBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
 		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", owner, _side, _client);
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);

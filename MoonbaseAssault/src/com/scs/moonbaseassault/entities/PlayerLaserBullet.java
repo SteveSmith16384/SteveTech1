@@ -15,7 +15,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.INotifiedOfCollision;
-import com.scs.stevetech1.entities.AbstractBullet;
+import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
@@ -24,14 +24,14 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class LaserBullet extends AbstractBullet implements INotifiedOfCollision {
+public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
 
 	private static final boolean USE_CYLINDER = true;
 
 	private float timeLeft = 3f;
 
-	public LaserBullet(IEntityController _game, int id, IEntityContainer<LaserBullet> owner, int _side, ClientData _client) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.LASER_BULLET, "LaserBullet", owner, _side, _client);
+	public PlayerLaserBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
+		super(_game, id, MoonbaseAssaultClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", owner, _side, _client);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
