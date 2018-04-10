@@ -132,7 +132,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 	private String gameID;
 	private String playerName = "[Player's Name]";
-	private KryonetLobbyClient lobbyClient;
+	//private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
 	public IHUD hud;
 	public IInputDevice input;
@@ -155,16 +155,16 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public long serverTime, renderTime;
-	private String gameServerIP, lobbyIP;
-	private int gamePort, lobbyPort;
+	private String gameServerIP;//, lobbyIP;
+	private int gamePort;//, lobbyPort;
 	private float mouseSens;
 
 	// Entity systems
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
 
-	protected AbstractGameClient(String _gameID, String appTitle, String logoImage, String _gameServerIP, int _gamePort, String _lobbyIP, int _lobbyPort, 
-			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness, float _mouseSens) {
+	protected AbstractGameClient(String _gameID, String appTitle, String logoImage, String _gameServerIP, int _gamePort, //String _lobbyIP, int _lobbyPort, 
+			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { // float gravity, float aerodynamicness, 
 		super();
 
 		gameID = _gameID;
@@ -177,10 +177,10 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 		gameServerIP = _gameServerIP;
 		gamePort = _gamePort;
-		lobbyIP = _lobbyIP;
-		lobbyPort = _lobbyPort;
+		//lobbyIP = _lobbyIP;
+		//lobbyPort = _lobbyPort;
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1, gravity, aerodynamicness); // todo - get 15,1 params from server?
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1);//, gravity, aerodynamicness); // todo - get 15,1 params from server?
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
 

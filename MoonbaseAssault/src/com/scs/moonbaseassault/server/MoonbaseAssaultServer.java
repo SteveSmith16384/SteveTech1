@@ -50,24 +50,24 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 				props = new MyProperties(args[0]);
 			} else {
 				props = new MyProperties();
-				Globals.p("Warning: No config file specified");
+				Globals.p("No config file specified.  Using defaults.");
 			}
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
 			int gamePort = props.getPropertyAsInt("gamePort", 6145);
-			String lobbyIpAddress = null;//props.getPropertyAsString("lobbyIpAddress", "localhost");
-			int lobbyPort = props.getPropertyAsInt("lobbyPort", 6146);
+			//String lobbyIpAddress = null;//props.getPropertyAsString("lobbyIpAddress", "localhost");
+			//int lobbyPort = props.getPropertyAsInt("lobbyPort", 6146);
 
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
-			float gravity = props.getPropertyAsFloat("gravity", -5);
-			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
+			//float gravity = props.getPropertyAsFloat("gravity", -5);
+			//float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 
 			//startLobbyServer(lobbyPort, timeoutMillis); // Start the lobby in the same process, why not?  Feel from to comment this line out and run it seperately (If you want a lobby).
 
-			new MoonbaseAssaultServer(gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
-					tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
+			new MoonbaseAssaultServer(gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
+					tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -92,12 +92,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	}
 	 */
 
-	public MoonbaseAssaultServer(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
-			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness) throws IOException {
+	public MoonbaseAssaultServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
+			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
 		super(GAME_ID, new GameOptions("Moonbase Assault",  
 				10*1000, 60*1000, 10*1000, 
-				gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
-				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness);
+				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
+				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
 
 	}
 

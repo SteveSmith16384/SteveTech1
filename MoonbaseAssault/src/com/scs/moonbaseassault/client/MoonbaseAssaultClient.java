@@ -59,13 +59,13 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 
-			float gravity = props.getPropertyAsFloat("gravity", -5f);
-			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
+			//float gravity = props.getPropertyAsFloat("gravity", -5f);
+			//float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 
 			float mouseSensitivity = props.getPropertyAsFloat("mouseSensitivity", 1f);
 
 			new MoonbaseAssaultClient(gameIpAddress, gamePort, lobbyIpAddress, lobbyPort,
-					tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness,
+					tickrateMillis, clientRenderDelayMillis, timeoutMillis, //gravity, aerodynamicness,
 					mouseSensitivity);
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
@@ -75,10 +75,10 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 
 	public MoonbaseAssaultClient(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
-			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness,
+			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,// float gravity, float aerodynamicness,
 			float mouseSensitivity) {
-		super(MoonbaseAssaultServer.GAME_ID, "Moonbase Assault", null, gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
-				tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness, mouseSensitivity);
+		super(MoonbaseAssaultServer.GAME_ID, "Moonbase Assault", null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
+				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity); // gravity, aerodynamicness, 
 
 	}
 

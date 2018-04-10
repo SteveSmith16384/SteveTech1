@@ -49,13 +49,13 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 			
-			float gravity = props.getPropertyAsFloat("gravity", -5f);
-			float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
+			//float gravity = props.getPropertyAsFloat("gravity", -5f);
+			//float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 
 			float mouseSensitivity = props.getPropertyAsFloat("mouseSensitivity", 1f);
 
-			new UndercoverAgentClient(gameIpAddress, gamePort, null, -1,
-					tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness,
+			new UndercoverAgentClient(gameIpAddress, gamePort, //null, -1,
+					tickrateMillis, clientRenderDelayMillis, timeoutMillis, //gravity, aerodynamicness,
 					mouseSensitivity);
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
@@ -64,11 +64,11 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 
 
-	public UndercoverAgentClient(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
-			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, float gravity, float aerodynamicness,
+	public UndercoverAgentClient(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
+			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, //float gravity, float aerodynamicness,
 			float mouseSensitivity) {
-		super(UndercoverAgentServer.GAME_ID, UndercoverAgentServer.NAME, null, gameIpAddress, gamePort, lobbyIpAddress, lobbyPort, 
-				tickrateMillis, clientRenderDelayMillis, timeoutMillis, gravity, aerodynamicness, mouseSensitivity);
+		super(UndercoverAgentServer.GAME_ID, UndercoverAgentServer.NAME, null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
+				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity);
 	}
 
 

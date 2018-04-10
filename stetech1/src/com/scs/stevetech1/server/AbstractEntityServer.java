@@ -83,7 +83,8 @@ ICollisionListener<PhysicalEntity> {
 	public GameOptions gameOptions;
 	private String gameID; // To prevent the wrong type of client connecting to the wrong type of server
 
-	public AbstractEntityServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) {
+	public AbstractEntityServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
+			//float gravity, float aerodynamicness) {
 		super();
 
 		gameID = _gameID;
@@ -94,7 +95,7 @@ ICollisionListener<PhysicalEntity> {
 
 		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1, gravity, aerodynamicness); // todo - get 15,1 params from parent
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1); // todo - get 15,1 params from parent
 
 		loopTimer = new FixedLoopTime(tickrateMillis);
 

@@ -38,7 +38,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	protected static AtomicInteger nextGameID = new AtomicInteger(1);
 
-	private KryonetLobbyClient clientToLobbyServer;
+	//private KryonetLobbyClient clientToLobbyServer;
 
 	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
 	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
@@ -48,8 +48,8 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	private ServerGameStatusSystem gameStatusSystem;
 	private ServerPingSystem pingSystem;
 
-	public AbstractGameServer(String gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, float gravity, float aerodynamicness) throws IOException {
-		super(gameID, _gameOptions, _tickrateMillis, sendUpdateIntervalMillis, _clientRenderDelayMillis, _timeoutMillis, gravity, aerodynamicness);
+	public AbstractGameServer(String gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) throws IOException { // , float gravity, float aerodynamicness
+		super(gameID, _gameOptions, _tickrateMillis, sendUpdateIntervalMillis, _clientRenderDelayMillis, _timeoutMillis);//, gravity, aerodynamicness);
 
 	}
 
@@ -68,7 +68,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		startNewGame();
 	}
 
-
+/*
 	private void connectToLobby() {
 		try {
 			clientToLobbyServer = new KryonetLobbyClient(gameOptions.lobbyip, gameOptions.lobbyport, gameOptions.lobbyport, this, timeoutMillis);
@@ -77,7 +77,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 			Globals.p("Unable to connect to lobby server");
 		}	
 	}
-
+*/
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
@@ -85,7 +85,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 		super.simpleUpdate(tpf_secs);
 
-		if (gameOptions.lobbyip != null) {
+		/*if (gameOptions.lobbyip != null) {
 			if (updateLobbyInterval.hitInterval()) {
 				if (clientToLobbyServer == null) {
 					connectToLobby();
@@ -95,7 +95,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 					this.clientToLobbyServer.sendMessageToServer(new UpdateLobbyMessage(gameOptions.displayName, gameOptions.ourExternalIP, gameOptions.ourExternalPort, this.clients.size(), spaces));
 				}
 			}
-		}
+		}*/
 
 		if (checkGameStatusInterval.hitInterval()) {
 			gameStatusSystem.checkGameStatus(false);
