@@ -94,8 +94,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	public MoonbaseAssaultServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
-		super(GAME_ID, new GameOptions("Moonbase Assault",  
-				10*1000, 60*1000, 10*1000, 
+		super(GAME_ID, new GameOptions(10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
 

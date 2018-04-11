@@ -1,6 +1,9 @@
 package boxwars.server;
 
+import java.io.IOException;
+
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -9,9 +12,15 @@ import com.scs.stevetech1.server.ClientData;
 
 public class BoxWarsGameServer extends AbstractGameServer {
 	
-	public BoxWarsGameServer() {
+	public static final int PORT = 16384;
+	
+	public BoxWarsGameServer() throws IOException {
+			super("BoxWars", 
+					new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
+					25, 50, 200, 10000);
 		
 	}
+	
 
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {

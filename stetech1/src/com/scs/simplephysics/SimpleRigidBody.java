@@ -8,6 +8,7 @@ import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -131,7 +132,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
-					if (crs2 == null || crs2.size() > 0) {
+					if (crs2.size() > 0) {
 						if (!checkForStep(crs2)) {
 							float bounce = this.bounciness;// * body.bounciness; // Combine bounciness?
 							oneOffForce.x = oneOffForce.x * bounce * -1;
@@ -147,7 +148,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
-					if (crs2 == null || crs2.size() > 0) {
+					if (crs2.size() > 0) {
 						if (!checkForStep(crs2)) {
 							float bounce = this.bounciness;// * body.bounciness;
 							oneOffForce.z = oneOffForce.z * bounce * -1; // Reverse direction
@@ -200,7 +201,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		}
 	}
 
-/*
+	/*
 	private void moveAwayFrom_SIMPLE(List<SimpleRigidBody<T>> crs) {
 		BoundingBox bb = this.getBoundingBox();
 		Vector3f ourPos = bb.getCenter();
@@ -226,14 +227,14 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 		}
 	}
-*/
+	 */
 
 	private void moveAwayFrom(List<SimpleRigidBody<T>> crs) {
 		BoundingBox ourBB = this.getBoundingBox();
 		//Vector3f ourPos = bb.getCenter();
 		for (SimpleRigidBody<T> cr : crs) {
 			BoundingBox theirBB = cr.getBoundingBox();
-			
+
 			// X axis
 			boolean doX = true;
 			if (ourBB.getCenter().x - ourBB.getXExtent() > theirBB.getCenter().x - theirBB.getXExtent()) {
@@ -249,7 +250,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				this.simpleEntity.moveEntity(diff); // Move away
 			}
-			
+
 			// Z axis
 			boolean doZ = true;
 			if (ourBB.getCenter().z - ourBB.getZExtent() > theirBB.getCenter().z - theirBB.getZExtent()) {
@@ -281,7 +282,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				this.simpleEntity.moveEntity(diff); // Move away
 			}
-}
+		}
 	}
 
 
@@ -294,23 +295,24 @@ public class SimpleRigidBody<T> implements Collidable {
 		if (!this.canWalkUpSteps) {
 			return false;
 		}
-		if (crs.isEmpty()) {
-			return false;
-		}
 		SimpleRigidBody<T> cr = crs.get(0);
 
 		BoundingBox bba = (BoundingBox)this.getBoundingBox();
 		float aBottom = bba.getCenter().y - (bba.getYExtent());
-		//if (cr.get)
-		BoundingBox bbb = (BoundingBox)cr.getBoundingBox();
-		float bTop = bbb.getCenter().y + (bbb.getYExtent());
-		float heightDiff = bTop - aBottom;
+		if (cr.simpleEntity.getCollidable() instanceof BoundingBox) {
+			BoundingBox bbb = (BoundingBox)cr.getBoundingBox();
+			float bTop = bbb.getCenter().y + (bbb.getYExtent());
+			float heightDiff = bTop - aBottom;
 
-		if (heightDiff >= 0 && heightDiff <= MAX_STEP_HEIGHT) {
-			p("Going up step: " + heightDiff);
-			//this.oneOffForce.y += (heightDiff / tpf_secs) / 4; 
-			this.oneOffForce.y += (heightDiff*15);// / -this.gravInc);
-			return true;
+			if (heightDiff >= 0 && heightDiff <= MAX_STEP_HEIGHT) {
+				p("Going up step: " + heightDiff);
+				//this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
+				this.oneOffForce.y += (heightDiff*15);// / -this.gravInc);
+				return true;
+			}
+		} else {
+			// Move up if it's a mesh?
+			this.oneOffForce.y += (.1f);
 		}
 
 
@@ -436,7 +438,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
 		//try {
-			return this.simpleEntity.getCollidable().collideWith(other, results);
+		return this.simpleEntity.getCollidable().collideWith(other, results);
 		/*} catch (UnsupportedCollisionException ex) {
 			ex.printStackTrace();
 			this.simpleEntity.getCollidable().collideWith(other, results);

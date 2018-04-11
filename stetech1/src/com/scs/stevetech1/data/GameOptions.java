@@ -2,7 +2,7 @@ package com.scs.stevetech1.data;
 
 public class GameOptions {
 
-	public String displayName;
+	public String displayName_;
 	public long deployDurationMillis = 10 * 1000;
 	public long gameDurationMillis = 60 * 1000;
 	public long finishedDurationMillis = 5 * 1000;
@@ -10,12 +10,11 @@ public class GameOptions {
 	public int ourExternalPort;//, lobbyport;
 	public float avatarRestartTimeSecs, avatarInvulnDurationSecs;
 
-	public GameOptions(String _displayName,  
-			long _deployDuration, long _gameDuration, long _finishedDuration,
+	public GameOptions(long _deployDuration, long _gameDuration, long _finishedDuration,
 			String _ourExternalIP, int _ourExternalPort, //String _lobbyip, int _lobbyport,
 			float _restartTime, float _invulnDuration) {
 		
-		displayName =_displayName;
+		//displayName =_displayName;
 		
 		deployDurationMillis = _deployDuration;
 		gameDurationMillis = _gameDuration;
