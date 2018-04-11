@@ -11,9 +11,11 @@ import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.House;
+import com.scs.testgame.entities.Terrain1;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
 
@@ -44,7 +46,7 @@ public class TestGameServer extends AbstractGameServer {
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		avatar.setWorldTranslation(new Vector3f(3f, 0.6f, 3f + (avatar.playerID*2)));
+		avatar.setWorldTranslation(new Vector3f(3f, 26f, 3f + (avatar.playerID*2)));
 	}
 
 
@@ -54,6 +56,10 @@ public class TestGameServer extends AbstractGameServer {
 		
 		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		this.actuallyAddEntity(floor);
+		
+		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
+		this.actuallyAddEntity(terrain);
+		
 		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
 		//new Crate(this, getNextEntityID(), 8, 5, 8, 1, 1, 1f, "Textures/crate.png", 65);
 		Wall w1 = new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
@@ -115,6 +121,20 @@ public class TestGameServer extends AbstractGameServer {
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		return collisionValidator.canCollide(a, b);
+	}
+
+
+	@Override
+	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
+		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
+
+		if (pa.type == TestGameClientEntityCreator.TERRAIN1 || pb.type == TestGameClientEntityCreator.TERRAIN1) {
+			//Globals.p("Collision between " + pa + " and " + pb);
+		}
+
+		super.collisionOccurred(a, b);
+
 	}
 
 

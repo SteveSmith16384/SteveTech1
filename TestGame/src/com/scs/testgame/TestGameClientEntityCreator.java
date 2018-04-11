@@ -16,6 +16,7 @@ import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.House;
 import com.scs.testgame.entities.MovingTarget;
 import com.scs.testgame.entities.RoamingZombie;
+import com.scs.testgame.entities.Terrain1;
 import com.scs.testgame.entities.TestGameClientAvatar;
 import com.scs.testgame.entities.TestGameEnemyAvatar;
 import com.scs.testgame.entities.Wall;
@@ -32,8 +33,6 @@ public class TestGameClientEntityCreator {
 	public static final int LASER_BULLET = 4;
 	public static final int HITSCAN_RIFLE = 7;
 	public static final int LASER_RIFLE = 8;
-
-
 	public static final int CRATE = 100;
 	public static final int FLOOR = 101;
 	public static final int FENCE = 102;
@@ -41,7 +40,7 @@ public class TestGameClientEntityCreator {
 	public static final int FLAT_FLOOR = 104;
 	public static final int ZOMBIE = 105;
 	public static final int HOUSE = 106;
-
+	public static final int TERRAIN1 = 107;
 
 	public TestGameClientEntityCreator() {
 		super();
@@ -99,6 +98,13 @@ public class TestGameClientEntityCreator {
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
 			Floor floor = new Floor(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, null);
+			return floor;
+		}
+
+		case TERRAIN1:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Terrain1 floor = new Terrain1(game, id, pos.x, pos.y, pos.z);
 			return floor;
 		}
 

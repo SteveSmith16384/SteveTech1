@@ -195,13 +195,12 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 
 			if (this.currentGravInc < GRAVITY_WARNING) {
-				p("Warning - high gravity offset: " + this.currentGravInc);
-				this.getBoundingBox();
+				//todo - re-add p("Warning - high gravity offset: " + this.currentGravInc);
 			}
 		}
 	}
 
-
+/*
 	private void moveAwayFrom_SIMPLE(List<SimpleRigidBody<T>> crs) {
 		BoundingBox bb = this.getBoundingBox();
 		Vector3f ourPos = bb.getCenter();
@@ -227,7 +226,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 		}
 	}
-
+*/
 
 	private void moveAwayFrom(List<SimpleRigidBody<T>> crs) {
 		BoundingBox ourBB = this.getBoundingBox();
@@ -378,7 +377,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * @param e
 	 * @return
 	 */
-	public boolean checkSRBvSRB(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) {
+	public boolean checkSRBvSRB(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) { // todo - rename
 		tempCollisionResults.clear();
 		if (e != this) { // Don't check ourselves
 			if (this.physicsController.getCollisionListener().canCollide(this, e)) {

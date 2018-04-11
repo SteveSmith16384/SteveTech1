@@ -2,6 +2,7 @@ package com.scs.undercoveragent.entities;
 
 import java.util.HashMap;
 
+import com.jme3.collision.Collidable;
 import com.jme3.math.Quaternion;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
@@ -44,5 +45,12 @@ public class SnowHill3 extends PhysicalEntity {
 		//game.addEntity(this);
 
 	}
+
+
+	@Override
+	public Collidable getCollidable() {
+		return this.mainNode;
+	}
+
 
 }

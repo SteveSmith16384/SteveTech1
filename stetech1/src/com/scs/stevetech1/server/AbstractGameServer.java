@@ -39,8 +39,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	protected static AtomicInteger nextGameID = new AtomicInteger(1);
 
 	//private KryonetLobbyClient clientToLobbyServer;
-
-	private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
+	//private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
 	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
 	public SimpleGameData gameData;
 
@@ -153,31 +152,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		}
 	}
 
-
-	/*
-	public ArrayList<RayCollisionData> checkForEntityCollisions_UNUSED(Ray r) { // todo - is this use?
-		CollisionResults res = new CollisionResults();
-		ArrayList<RayCollisionData> myList = new ArrayList<RayCollisionData>(); 
-		synchronized (entities) {
-			// Loop through the entities
-			for (IEntity e : entities.values()) {
-				if (e instanceof PhysicalEntity) {
-					PhysicalEntity ic = (PhysicalEntity)e;
-					//r.collideWith(ic.getMainNode().getWorldBound(), res);
-					res.clear();
-					int c = ((PhysicalEntity) e).getMainNode().getWorldBound().collideWith(r, res);
-					if (c > 0) {
-						CollisionResult cr = res.getClosestCollision();
-						RayCollisionData rcd = new RayCollisionData(ic, cr.getContactPoint(), cr.getDistance());
-						myList.add(rcd);
-					}
-				}
-			}
-		}
-		Collections.sort(myList);
-		return myList;
-	}
-	 */
 
 	public void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();

@@ -71,7 +71,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		}
 	}
 
-
+/*
 	private static void startLobbyServer(int lobbyPort, int timeout) {
 		Thread r = new Thread("LobbyServer") {
 
@@ -85,10 +85,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			}
 		};
 		r.start();
-
-
 	}
-
+*/
 
 	public UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 

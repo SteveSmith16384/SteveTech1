@@ -8,6 +8,10 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 
 public class BoxWarsGameServer extends AbstractGameServer {
+	
+	public BoxWarsGameServer() {
+		
+	}
 
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
