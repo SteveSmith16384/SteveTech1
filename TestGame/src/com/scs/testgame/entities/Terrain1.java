@@ -78,9 +78,10 @@ public class Terrain1 extends PhysicalEntity {
 
 	    /** 4. We give the terrain its material, position & scale it, and attach it. */
 	    terrain.setMaterial(mat_terrain);
-	    //terrain.setLocalTranslation(0, -100, 0);
 	    //terrain.setLocalScale(2f, 1f, 2f);
-	    terrain.setLocalScale(.5f, .1f, .5f);
+	    //terrain.setLocalScale(.5f, .1f, .5f);
+	    terrain.setLocalScale(1f, .05f, 1f);
+	    //terrain.setLocalScale(.05f, .01f, .05f);
 
 	    /** 5. The LOD (level of detail) depends on were the camera is: */
 	    // todo TerrainLodControl control = new TerrainLodControl(terrain, getCamera());

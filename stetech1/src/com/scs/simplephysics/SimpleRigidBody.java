@@ -291,16 +291,17 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * @return
 	 */
 	private boolean checkForStep(List<SimpleRigidBody<T>> crs) {
+		if (!this.canWalkUpSteps) {
+			return false;
+		}
 		if (crs.isEmpty()) {
 			return false;
 		}
 		SimpleRigidBody<T> cr = crs.get(0);
-		if (!this.canWalkUpSteps) {
-			return false;
-		}
 
 		BoundingBox bba = (BoundingBox)this.getBoundingBox();
 		float aBottom = bba.getCenter().y - (bba.getYExtent());
+		//if (cr.get)
 		BoundingBox bbb = (BoundingBox)cr.getBoundingBox();
 		float bTop = bbb.getCenter().y + (bbb.getYExtent());
 		float heightDiff = bTop - aBottom;
