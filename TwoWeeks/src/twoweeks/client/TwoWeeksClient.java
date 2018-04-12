@@ -21,6 +21,7 @@ import com.scs.stevetech1.server.Globals;
 import ssmith.util.MyProperties;
 import twoweeks.TwoWeeksCollisionValidator;
 import twoweeks.TwoWeeksGameData;
+import twoweeks.client.hud.TwoWeeksHUD;
 import twoweeks.server.TwoWeeksServer;
 
 public class TwoWeeksClient extends AbstractGameClient {
@@ -28,7 +29,8 @@ public class TwoWeeksClient extends AbstractGameClient {
 	private TwoWeeksClientEntityCreator entityCreator;
 	private DirectionalLight sun;
 	private TwoWeeksCollisionValidator collisionValidator;
-
+	private TwoWeeksHUD hud;
+	
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -47,13 +49,10 @@ public class TwoWeeksClient extends AbstractGameClient {
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 
-			//float gravity = props.getPropertyAsFloat("gravity", -5f);
-			//float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
-
 			float mouseSensitivity = props.getPropertyAsFloat("mouseSensitivity", 1f);
 
 			new TwoWeeksClient(gameIpAddress, gamePort, lobbyIpAddress, lobbyPort,
-					tickrateMillis, clientRenderDelayMillis, timeoutMillis, //gravity, aerodynamicness,
+					tickrateMillis, clientRenderDelayMillis, timeoutMillis,
 					mouseSensitivity);
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
@@ -63,16 +62,18 @@ public class TwoWeeksClient extends AbstractGameClient {
 
 
 	public TwoWeeksClient(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
-			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,// float gravity, float aerodynamicness,
+			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,
 			float mouseSensitivity) {
 		super(TwoWeeksServer.GAME_ID, "Two Weeks", null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
-				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity); // gravity, aerodynamicness, 
+				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity); 
 
 	}
 
 
 	@Override
 	public void simpleInitApp() {
+		hud = new TwoWeeksHUD(this, this.cam);
+
 		super.simpleInitApp();
 
 		collisionValidator = new TwoWeeksCollisionValidator();
@@ -87,7 +88,7 @@ public class TwoWeeksClient extends AbstractGameClient {
 		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
-
+		
 	}
 
 
@@ -162,8 +163,8 @@ public class TwoWeeksClient extends AbstractGameClient {
 
 
 	@Override
-	protected IHUD createHUD() {
-		return null;
+	protected IHUD getHUD() {
+		return hud;
 	}
 
 

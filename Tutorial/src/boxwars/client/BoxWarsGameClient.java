@@ -30,7 +30,7 @@ public class BoxWarsGameClient extends AbstractGameClient {
 	}
 
 	@Override
-	protected IHUD createHUD() {
+	protected IHUD getHUD() {
 		// TODO Auto-generated method stub
 		return null;
 	}

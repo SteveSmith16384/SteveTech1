@@ -38,13 +38,13 @@ public class SoldierModel implements IAvatarModel {
 	public Spatial createAndGetModel(int side) {
 		if (!Globals.USE_BOXES_FOR_AVATARS_SOLDIER) {
 			model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
-			if (side == 1) {
+			//if (side == 1) { todo
 				JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side1.png");
-			} else if (side == 2) {
+			/*} else if (side == 2) {
 				JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side2.png");
 			} else {
 				throw new RuntimeException("Unknown side: " + side);
-			}
+			}*/
 			JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEModelFunctions.moveYOriginTo(model, 0f);
 

@@ -232,7 +232,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 		setUpLight();
 
-		hud = this.createHUD();
+		hud = this.getHUD();
 		if (hud != null) {
 			getGuiNode().attachChild(hud.getRootNode());
 		}
@@ -274,7 +274,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 	protected abstract Class[] getListofMessageClasses();
 
-	protected abstract IHUD createHUD();
+	protected abstract IHUD getHUD();
 
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;

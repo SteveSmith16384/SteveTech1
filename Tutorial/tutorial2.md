@@ -13,5 +13,5 @@ Okay, the first thing to do is create our main client and server classes:-
 
 Once you've done this, your IDE will probably be creaking under the weight of compile errors, as there will be parameters required for the superconstructors, and lots of abstract methods that require implementing.
 
-(Don't forget that all the source code for this game is included with SteveTech1, so feel free to copy and paste that, although you will probably have to change some values depending on your setup.)
+(Don't forget that all the source code for this game is included with SteveTech1, so feel free to copy and paste that.)
 

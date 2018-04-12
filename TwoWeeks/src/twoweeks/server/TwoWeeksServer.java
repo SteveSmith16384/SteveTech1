@@ -11,10 +11,10 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 
-import ssmith.lang.NumberFunctions;
 import ssmith.util.MyProperties;
 import twoweeks.TwoWeeksCollisionValidator;
 import twoweeks.TwoWeeksGameData;
+import twoweeks.entities.AISoldier;
 import twoweeks.entities.MercServerAvatar;
 import twoweeks.entities.Terrain1;
 
@@ -22,7 +22,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	public static final String GAME_ID = "Two Weeks";
 
-	public static final float MAP_SIZE = 100f;
+	public static final float MAP_SIZE = 100f; // todo - wrong!
 	public static final float CEILING_HEIGHT = 1.4f;
 
 	private TwoWeeksCollisionValidator collisionValidator = new TwoWeeksCollisionValidator();
@@ -93,9 +93,15 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 
 	@Override
+	public void simpleUpdate(float tpf_secs) {
+		super.simpleUpdate(tpf_secs);
+	}
+	
+	
+	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		float x = 10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
-		float z = 10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
+		float x = 100;//10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
+		float z = 100;//10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
 		avatar.setWorldTranslation(x, 60, z);
 	}
 
@@ -115,6 +121,10 @@ public class TwoWeeksServer extends AbstractGameServer {
 		
 		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
 		this.actuallyAddEntity(terrain);
+		
+		AISoldier s = new AISoldier(this, this.getNextEntityID(), 90, 60, 90, 0);
+		this.actuallyAddEntity(s);
+
 		/*
 		Crate c = new Crate(this, getNextEntityID(), 1, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);
 		this.actuallyAddEntity(c);

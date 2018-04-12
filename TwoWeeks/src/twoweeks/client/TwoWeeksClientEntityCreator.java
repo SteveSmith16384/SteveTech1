@@ -12,6 +12,7 @@ import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 
 import twoweeks.abilities.LaserRifle;
+import twoweeks.entities.AISoldier;
 import twoweeks.entities.Floor;
 import twoweeks.entities.MercClientAvatar;
 import twoweeks.entities.MercEnemyAvatar;
@@ -120,10 +121,10 @@ public class TwoWeeksClientEntityCreator {
 
 		case AI_SOLDIER:
 		{
-			/*Vector3f pos = (Vector3f)msg.data.get("pos");
+			Vector3f pos = (Vector3f)msg.data.get("pos");
 			int side = (int)msg.data.get("side");
 			AISoldier z = new AISoldier(game, id, pos.x, pos.y, pos.z, side);
-			return z;*/
+			return z;
 		}
 
 		case MAP_BORDER:

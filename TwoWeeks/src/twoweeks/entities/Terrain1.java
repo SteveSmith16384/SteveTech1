@@ -77,8 +77,8 @@ public class Terrain1 extends PhysicalEntity {
 		terrain.setMaterial(mat_terrain);
 		//terrain.setLocalScale(2f, 1f, 2f);
 		//terrain.setLocalScale(.5f, .1f, .5f);
-		terrain.setLocalScale(1f, .05f, 1f);
-		//terrain.setLocalScale(.05f, .01f, .05f);
+		//terrain.setLocalScale(1f, .05f, 1f);
+		terrain.setLocalScale(2f, .2f, 2f);
 
 		if (!game.isServer()) {
 			AbstractGameClient client = (AbstractGameClient)game;
