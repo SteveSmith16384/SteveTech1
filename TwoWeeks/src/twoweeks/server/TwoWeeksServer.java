@@ -1,9 +1,6 @@
 package twoweeks.server;
 
-import java.awt.Point;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
@@ -18,8 +15,8 @@ import ssmith.lang.NumberFunctions;
 import ssmith.util.MyProperties;
 import twoweeks.TwoWeeksCollisionValidator;
 import twoweeks.TwoWeeksGameData;
-import twoweeks.entities.Floor;
 import twoweeks.entities.MercServerAvatar;
+import twoweeks.entities.Terrain1;
 
 public class TwoWeeksServer extends AbstractGameServer {
 
@@ -112,21 +109,23 @@ public class TwoWeeksServer extends AbstractGameServer {
 	protected void createGame() {
 		super.gameData = new TwoWeeksGameData();
 
-		/*
-
-		//MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 0, 0, 0, 1, CEILING_HEIGHT, 1, "Textures/spacewall2.png");//, 270);
-		//this.actuallyAddEntity(wall);
-
-		//MoonbaseWall wall2 = new MoonbaseWall(this, getNextEntityID(), 4, 0, 4, 3, CEILING_HEIGHT, 1, "Textures/spacewall2.png");//, 0);
-		//this.actuallyAddEntity(wall2);
-
-		MoonbaseWall wall3 = new MoonbaseWall(this, getNextEntityID(), 6, 0, 4, 1, CEILING_HEIGHT, 3, "Textures/spacewall2.png");//, 0);
-		this.actuallyAddEntity(wall3);
-		 */
-		
 		// Place floor & ceiling last
-		Floor floor = new Floor(this, getNextEntityID(), "Floor", 0, 0, 0, MAP_SIZE, .5f, MAP_SIZE, "Textures/mud.png");
-		this.actuallyAddEntity(floor);
+		//Floor floor = new Floor(this, getNextEntityID(), "Floor", 0, 0, 0, MAP_SIZE, .5f, MAP_SIZE, "Textures/mud.png");
+		//this.actuallyAddEntity(floor);
+		
+		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
+		this.actuallyAddEntity(terrain);
+		/*
+		Crate c = new Crate(this, getNextEntityID(), 1, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);
+		this.actuallyAddEntity(c);
+		c = new Crate(this, getNextEntityID(), 1, 30, 6, 1, 1, 1f, "Textures/crate.png", 65);
+		this.actuallyAddEntity(c);
+		c = new Crate(this, getNextEntityID(), 6, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);
+		this.actuallyAddEntity(c);
+		c = new Crate(this, getNextEntityID(), 6, 30, 6, 1, 1, 1f, "Textures/crate.png", 65);
+		this.actuallyAddEntity(c);
+		*/
+
 
 	}
 

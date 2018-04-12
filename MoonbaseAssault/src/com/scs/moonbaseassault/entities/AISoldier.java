@@ -11,7 +11,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
-import com.scs.moonbaseassault.abilities.LaserRifle;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.models.SoldierModel;
 import com.scs.moonbaseassault.server.ai.IArtificialIntelligence;
@@ -38,11 +37,12 @@ import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 
+import ssmith.util.RealtimeInterval;
+
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
-IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable, ICanShoot {//, IUnit {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable{ //, ICanShoot {//, IUnit {
 
 	public static final float SPEED = .53f;//.47f;
 
@@ -51,6 +51,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public int side;
 	private IArtificialIntelligence ai;
 	private int serverSideCurrentAnimCode; // Server-side
+	private RealtimeInterval shootInt = new RealtimeInterval(3000);
 
 	// HUD
 	private BitmapText hudNode;
@@ -68,10 +69,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			creationData.put("side", side);
 
 			ai = new WanderingSoldierAI2(this);
-
-			//todo IAbility abilityGun = new LaserRifle(_game, _module.getNextEntityID(), this, 0, client);
-			//_module.actuallyAddEntity(abilityGun);
-			
 		} else {
 			this.soldierModel.createAndGetModel(_side);
 			game.getGameNode().attachChild(this.soldierModel.getModel());
@@ -262,7 +259,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		return shootersSide != this.side;
 	}
 
-
+/*
 	@Override
 	public Vector3f getShootDir() {
 		return this.ai.getCurrentTarget().getWorldTranslation().subtract(this.getWorldTranslation()).normalizeLocal();
@@ -273,6 +270,15 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public Vector3f getBulletStartPos() {
 		return this.getWorldTranslation();
 	}
-
+*/
+	
+	public void shoot(PhysicalEntity target) {
+		if (this.shootInt.hitInterval()) {
+			Vector3f pos = this.getWorldTranslation();
+			Vector3f dir = target.getWorldTranslation().subtract(this.getWorldTranslation()).normalizeLocal();
+			AILaserBullet bullet = new AILaserBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
+			this.game.addEntity(bullet);
+		}
+	}
 
 }

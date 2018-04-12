@@ -71,7 +71,6 @@ public class MoonbaseAssaultClientEntityCreator {
 	}
 
 
-	//@Override
 	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
 		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Creating " + TypeToString(msg.type));

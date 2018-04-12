@@ -123,6 +123,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		super.simpleUpdate(tpf_secs);
 
 		if (this.updateHUDInterval.hitInterval()) {
+			// Get data for HUD
 			List<Point> units = new LinkedList<Point>();
 			List<Point> computers = new LinkedList<Point>();
 			for (IEntity e : this.entities.values()) {

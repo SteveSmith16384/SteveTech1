@@ -82,7 +82,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	public void simpleUpdate(float tpf_secs) {
 		long startTime = System.currentTimeMillis();
 
-		super.simpleUpdate(tpf_secs);
+		super.simpleUpdate(tpf_secs); //this.entities
 
 		/*if (gameOptions.lobbyip != null) {
 			if (updateLobbyInterval.hitInterval()) {

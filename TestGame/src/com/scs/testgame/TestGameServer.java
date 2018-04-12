@@ -11,8 +11,8 @@ import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
-import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
+import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.House;
 import com.scs.testgame.entities.Terrain1;
@@ -54,14 +54,21 @@ public class TestGameServer extends AbstractGameServer {
 	protected void createGame() {
 		super.gameData = new SimpleGameData();
 		
-		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
-		this.actuallyAddEntity(floor);
+		//Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
+		//this.actuallyAddEntity(floor);
 		
 		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
 		this.actuallyAddEntity(terrain);
 		
-		//new Crate(this, getNextEntityID(), 8, 2, 8, 1, 1, 1f, "Textures/crate.png", 45);
-		//new Crate(this, getNextEntityID(), 8, 5, 8, 1, 1, 1f, "Textures/crate.png", 65);
+		Crate c = new Crate(this, getNextEntityID(), 1, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);
+		this.actuallyAddEntity(c);
+		c = new Crate(this, getNextEntityID(), 1, 30, 6, 1, 1, 1f, "Textures/crate.png", 65);
+		this.actuallyAddEntity(c);
+		c = new Crate(this, getNextEntityID(), 6, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);
+		this.actuallyAddEntity(c);
+		c = new Crate(this, getNextEntityID(), 6, 30, 6, 1, 1, 1f, "Textures/crate.png", 65);
+		this.actuallyAddEntity(c);
+		
 		Wall w1 = new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 		this.actuallyAddEntity(w1);
 		Wall w2 = new Wall(this, getNextEntityID(), 10, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
@@ -72,9 +79,6 @@ public class TestGameServer extends AbstractGameServer {
 		this.actuallyAddEntity(w4);
 
 		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
-		
-		//new FlatFloor(this, getNextEntityID(), 5, .1f, 5, 3, 3, "Textures/crate.png");
-		
 		//new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
 		
 		House house = new House(this, getNextEntityID(), 20, 0, 20, 0);

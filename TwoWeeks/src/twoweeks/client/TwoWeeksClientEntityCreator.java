@@ -16,10 +16,12 @@ import twoweeks.entities.Floor;
 import twoweeks.entities.MercClientAvatar;
 import twoweeks.entities.MercEnemyAvatar;
 import twoweeks.entities.PlayerLaserBullet;
+import twoweeks.entities.Terrain1;
 
 public class TwoWeeksClientEntityCreator {
 
 	public static final int SOLDIER_AVATAR = 1;
+	public static final int TERRAIN1 = 2;
 	public static final int FLOOR = 3;
 	public static final int CRATE = 5;
 	public static final int PLAYER_LASER_BULLET = 7;
@@ -84,6 +86,13 @@ public class TwoWeeksClientEntityCreator {
 			String name = (String)msg.data.get("name");
 			String tex = (String)msg.data.get("tex");
 			Floor floor = new Floor(game, id, name, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex);
+			return floor;
+		}
+
+		case TERRAIN1:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			Terrain1 floor = new Terrain1(game, id, pos.x, pos.y, pos.z);
 			return floor;
 		}
 

@@ -7,10 +7,10 @@ import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
+import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractEntityServer;
-import com.scs.stevetech1.server.AbstractGameServer;
 
 import ssmith.lang.NumberFunctions;
 import ssmith.util.RealtimeInterval;
@@ -53,7 +53,9 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		}
 		if (currentTarget != null) {
 			if (SHOOT_AT_ENEMY) {
+				//ICanShoot shooter = (ICanShoot)this.soldierEntity;
 				// todo
+				this.soldierEntity.shoot(currentTarget);
 			}
 		} else if (waitForSecs < 0) {
 			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards

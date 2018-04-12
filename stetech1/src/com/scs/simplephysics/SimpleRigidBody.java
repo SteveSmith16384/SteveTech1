@@ -29,7 +29,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	// Gravity
 	private float gravInc; // How powerful is gravity for this entity
-	public float currentGravInc = 0; // The y-axis change this frame caused by gravity
+	private float currentGravInc = 0; // The y-axis change this frame caused by gravity
 
 	public T userObject; // Attach any object - todo - remove and use ISimpleEntity
 	public ISimpleEntity<T> simpleEntity;
@@ -312,7 +312,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 		} else {
 			// Move up if it's a mesh?
-			this.oneOffForce.y += (.1f);
+			this.oneOffForce.y += (.5f);
 		}
 
 
@@ -537,5 +537,8 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
+	public float GetCurrentGravOffset() {
+		return this.currentGravInc;
+	}
 }
 

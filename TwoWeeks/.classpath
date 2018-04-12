@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/stetech1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-terrain"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

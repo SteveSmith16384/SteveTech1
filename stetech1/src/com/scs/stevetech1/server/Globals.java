@@ -16,8 +16,8 @@ public class Globals {
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_HUD = true;
 	public static final boolean TRANSPARENT_WALLS = true;
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true;
-
+	
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean DEBUG_NO_BULLET = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
@@ -66,8 +66,7 @@ public class Globals {
 	public static final float SMALLEST_MOVE_DIST = 0.001f;// 0.02f;
 	public static final float MAX_MOVE_DIST = 1f;
 
-	public static final float CAM_DIST = 50f;
-	//public static final boolean LIGHTING = true;
+	public static final float CAM_DIST = 150f;
 
 	// User Data
 	public static final String ENTITY = "Entity";
