@@ -16,9 +16,9 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 public class DebuggingSphere extends PhysicalEntity implements IProcessByClient {
-	
+
 	private static final float DURATION = 5;
-	
+
 	private float timeLeft = DURATION;
 	private boolean remove;
 
@@ -28,10 +28,10 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 		}
-		
+
 		remove = _remove;
 		this.collideable = false;
-		
+
 		Mesh sphere = null;
 		if (server) {
 			sphere = new Sphere(8, 8, 0.2f, true, false);
@@ -48,48 +48,41 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 			key3 = new TextureKey( "Textures/greensun.jpg");
 		}
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
-		Material floor_mat = null;
-			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-			floor_mat.setTexture("DiffuseMap", tex3);
+		Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+		floor_mat.setTexture("DiffuseMap", tex3);
 		ball_geo.setMaterial(floor_mat);
 
 		this.mainNode.attachChild(ball_geo);
 		this.mainNode.setLocalTranslation(x, y, z);
-		//ball_geo.setLocalTranslation(shooter.getWorldTranslation().add(shooter.getShootDir().multLocal(AbstractPlayersAvatar.PLAYER_RAD*2)));
-		
-		//this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), this);
-		//this.simpleRigidBody.setMovable(false);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
-
 	}
 
 
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (remove) {
-		if (game.isServer()) {
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft <= 0) {
-				this.remove();
+			if (game.isServer()) {
+				this.timeLeft -= tpf_secs;
+				if (this.timeLeft <= 0) {
+					this.remove();
+				}
 			}
-		}
 		}
 	}
 
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
-		if (this.getID() <= 0) { // Client-controlled
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft <= 0) {
-				this.remove();
+		if (remove) {
+			if (this.getID() <= 0) { // Client-controlled
+				this.timeLeft -= tpf_secs;
+				if (this.timeLeft <= 0) {
+					this.remove();
+				}
 			}
-
 		}
-		
+
 	}
 
 

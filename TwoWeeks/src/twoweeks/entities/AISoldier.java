@@ -87,7 +87,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this); // was false
 		simpleRigidBody.canWalkUpSteps = true;
-
+		simpleRigidBody.setBounciness(0); // todo - copy to MA
+		
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
 		hudNode.setText("Cpl. Jonlan");
@@ -267,6 +268,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 				Globals.p("AI shooting!");
 			}
 			Vector3f pos = this.getWorldTranslation();
+			pos.y += 1f;
 			Vector3f dir = target.getWorldTranslation().subtract(pos).normalizeLocal();
 			AIBullet bullet = new AIBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
 			this.game.addEntity(bullet);

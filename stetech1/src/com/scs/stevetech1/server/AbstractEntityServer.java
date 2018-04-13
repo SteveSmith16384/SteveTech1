@@ -520,11 +520,7 @@ ICollisionListener<PhysicalEntity> {
 		synchronized (clients) {
 			for (ClientData client : this.clients.values()) {
 				if (client.clientStatus == ClientStatus.Accepted) {
-					try { // todo - remove
 					gameNetworkServer.sendMessageToClient(client, nem);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
 				}
 			}
 		}

@@ -32,7 +32,7 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 	private float timeLeft = 3f;
 
 	public PlayersBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
-		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_BULLET, "LaserBullet", owner, _side, _client);
+		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_BULLET, "PlayersBullet", owner, _side, _client);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 

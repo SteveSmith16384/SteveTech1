@@ -62,7 +62,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			animCode = AbstractAvatar.ANIM_IDLE;
 			this.soldierEntity.shoot(currentTarget);
 		} else if (waitForSecs <= 0) {
-			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards - todo - walk towards enemy
+			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
 			animCode = AbstractAvatar.ANIM_WALKING;
 		} else {
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
@@ -87,7 +87,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 
 	private void changeDirection(Vector3f dir) {
-		Globals.p("Changing direction to " + dir);
+		//Globals.p("Changing direction to " + dir);
 		this.currDir.set(dir);
 		soldierEntity.getMainNode().lookAt(soldierEntity.getWorldTranslation().add(currDir), Vector3f.UNIT_Y); // Point us in the right direction
 	}

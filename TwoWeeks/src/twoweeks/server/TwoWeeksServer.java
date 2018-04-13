@@ -132,16 +132,19 @@ public class TwoWeeksServer extends AbstractGameServer {
 		AISoldier s = new AISoldier(this, this.getNextEntityID(), 90, 60, 90, 0);
 		this.actuallyAddEntity(s);
 		
+		// Drop debug balls
+		for (int z=80; z<=120 ; z+= 10) {
+			for (int x=80; x<=120 ; x+= 10) {
+				this.dropDebugSphere(terrain, x, z);
+			}
+		}
+		
 		Ray r = new Ray(new Vector3f(95, 60, 95), new Vector3f(0, -1, 0));
 		CollisionResults crs = new CollisionResults();
 		terrain.getMainNode().collideWith(r, crs);
 		if (crs.size() > 0) {
 			Vector3f pos = crs.getClosestCollision().getContactPoint();
-			
-			DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, false, false);
-			this.actuallyAddEntity(ds);
-			
-			pos.y -= 1f;
+			//pos.y -= 1f;
 			//GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
 			//this.actuallyAddEntity(tree); //tree.getMainNode().getWorldBound();
 		}
@@ -161,6 +164,20 @@ public class TwoWeeksServer extends AbstractGameServer {
 	}
 
 
+	private void dropDebugSphere(Terrain1 terrain, float x, float z) {
+		Ray r = new Ray(new Vector3f(x, 60, z), new Vector3f(0, -1, 0));
+		CollisionResults crs = new CollisionResults();
+		terrain.getMainNode().collideWith(r, crs);
+		if (crs.size() > 0) {
+			Vector3f pos = crs.getClosestCollision().getContactPoint();			
+			DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+			this.actuallyAddEntity(ds);
+		}
+
+
+	}
+	
+	
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		MercServerAvatar avatar = new MercServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
@@ -174,9 +191,9 @@ public class TwoWeeksServer extends AbstractGameServer {
 		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
 		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
 
-		/*if (pa.type != TwoWeeksClientEntityCreator.FLOOR && pb.type != TwoWeeksClientEntityCreator.FLOOR) {
-			//Globals.p("Collision between " + pa + " and " + pb);
-		}*/
+		if (pa.type != TwoWeeksClientEntityCreator.TERRAIN1 && pb.type != TwoWeeksClientEntityCreator.TERRAIN1) {
+			Globals.p("Collision between " + pa + " and " + pb);
+		}
 
 		super.collisionOccurred(a, b);
 

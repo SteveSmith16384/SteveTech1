@@ -169,8 +169,8 @@ public class TwoWeeksClientEntityCreator {
 */
 		case DEBUGGING_SPHERE:
 		{
-			DebuggingSphere hill = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
-			return hill;
+			DebuggingSphere sphere = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+			return sphere;
 		}
 
 		default:

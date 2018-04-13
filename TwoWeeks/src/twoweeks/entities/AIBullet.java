@@ -26,7 +26,7 @@ import twoweeks.client.TwoWeeksClientEntityCreator;
 
 public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 
-	private static final boolean USE_CYLINDER = true;
+	private static final boolean USE_CYLINDER = false;
 
 	private float timeLeft = 3f;
 
@@ -52,15 +52,12 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 			Vector3f origin = Vector3f.ZERO;
 			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer());
 		} else {
-			Mesh sphere = null;
-			sphere = new Sphere(8, 8, 0.02f, true, false);
+			Mesh sphere = new Sphere(8, 8, .02f, true, false);
 			laserNode = new Geometry("DebuggingSphere", sphere);
-
 			TextureKey key3 = null;
 			key3 = new TextureKey( "Textures/sun.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = null;
-			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
 			floor_mat.setTexture("DiffuseMap", tex3);
 			laserNode.setMaterial(floor_mat);
 		}
@@ -68,17 +65,19 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 		laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
-		simpleRigidBody.setAerodynamicness(1);
-		simpleRigidBody.setGravity(0);
-		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10)); // 20));
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);
+		this.simpleRigidBody.setAerodynamicness(1);
+		this.simpleRigidBody.setGravity(0);
+		if (game.isServer()) {
+			this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10)); // 20));  // Only the server moves the bullet
+		}
 
 	}
 
 
 	@Override
 	public float getDamageCaused() {
-		return 10;
+		return 1;
 	}
 
 

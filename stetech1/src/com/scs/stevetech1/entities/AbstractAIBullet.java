@@ -23,9 +23,6 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 		this.createSimpleRigidBody(dir);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
-		
-		//game.getGameNode().attachChild(this.mainNode);
-		//this.mainNode.updateGeometricState();
 	}
 
 	
@@ -35,6 +32,11 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
+		
+		if (Globals.DEBUG_AI_SHOOTING) {
+			Globals.p("AI Bullet at " + this.getWorldTranslation());
+		}
+
 	}
 
 
@@ -75,7 +77,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 
 	@Override
 	public boolean hasBeenLaunched() {
-		return true;
+		return true; // Always launched immed
 	}
 
 }

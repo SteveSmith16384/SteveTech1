@@ -600,7 +600,6 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 		} else if (message instanceof ListOfGameServersMessage) {
 			ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
-			// todo - do something with message
 
 		} else if (message instanceof AvatarStatusMessage) {
 			AvatarStatusMessage asm = (AvatarStatusMessage)message;
@@ -775,7 +774,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			}
 
 			if (e instanceof PhysicalEntity) {
-				if (e instanceof ILaunchable == false) { // Don't add bullets until they are fired! 
+				boolean add = true;
+				if (e instanceof ILaunchable) { // Don't add bullets until they are fired!
+					ILaunchable il = (ILaunchable)e;
+					add = il.hasBeenLaunched();
+				}
+				if (add) {
 					PhysicalEntity pe = (PhysicalEntity)e;
 					this.getGameNode().attachChild(pe.getMainNode());
 					if (pe.simpleRigidBody != null) {

@@ -109,7 +109,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			// Check we're not already colliding *before* we've even moved
 			List<SimpleRigidBody<T>> crs = this.checkForCollisions();
 			if (crs.size() != 0) {
-				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
+				//todo - re-add System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				this.moveAwayFrom(crs);
 				return; // Don't bother moving any more!
 			}
@@ -154,6 +154,9 @@ public class SimpleRigidBody<T> implements Collidable {
 				boolean collided = false; 
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
+					if (this.tmpMoveDir.y > 0) { // todo - remove
+						int f = 65;
+					}
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
 						collided = true;

@@ -113,7 +113,7 @@ public class SimplePhysicsController<T> {
 		}
 
 		srb.removed = false;
-		srb.resetForces();//.currentGravInc = 0;
+		//srb.setCurrentGravInc = 0;
 		
 		if (srb.movedByForces()) {
 			// Check to see if they're not already colliding

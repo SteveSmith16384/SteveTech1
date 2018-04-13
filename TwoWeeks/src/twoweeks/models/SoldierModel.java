@@ -25,7 +25,6 @@ public class SoldierModel implements IAvatarModel {
 	private AssetManager assetManager;
 	private Spatial model;
 	private AnimChannel channel;
-	//private AnimEventListener l; // todo - is this used?
 	public boolean isJumping = false;
 	private int currAnimCode = -1;
 

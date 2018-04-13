@@ -149,7 +149,7 @@ public abstract class AbstractDummyClient implements IClientApp, IEntityControll
 		launchSystem = new ClientEntityLauncherSystem(this);
 
 		try {
-			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis, getListofMessageClasses()); // todo - connect to lobby first!
+			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis, getListofMessageClasses());
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -450,7 +450,6 @@ public abstract class AbstractDummyClient implements IClientApp, IEntityControll
 
 		} else if (message instanceof ListOfGameServersMessage) {
 			ListOfGameServersMessage logs = (ListOfGameServersMessage)message;
-			// todo - do something with message
 
 		} else if (message instanceof AvatarStatusMessage) {
 			AvatarStatusMessage asm = (AvatarStatusMessage)message;
