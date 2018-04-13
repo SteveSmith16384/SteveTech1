@@ -76,13 +76,13 @@ public class MoonbaseAssaultClientEntityCreator {
 			Globals.p("Creating " + TypeToString(msg.type));
 		}*/
 		int id = msg.entityID;
+		Vector3f pos = (Vector3f)msg.data.get("pos");
 
 		switch (msg.type) {
 		case SOLDIER_AVATAR:
 		{
 			int playerID = (int)msg.data.get("playerID");
 			int side = (int)msg.data.get("side");
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			float moveSpeed = (float)msg.data.get("moveSpeed");
 			float jumpForce = (float)msg.data.get("jumpForce");
 
@@ -101,7 +101,6 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case FLOOR:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String name = (String)msg.data.get("name");
 			String tex = (String)msg.data.get("tex");
@@ -111,7 +110,6 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case WALL:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			float w = (float)msg.data.get("w");
 			float h = (float)msg.data.get("h");
 			float d = (float)msg.data.get("d");
@@ -145,7 +143,6 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case DOOR:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			float w = (float)msg.data.get("w");
 			float h = (float)msg.data.get("h");
 			String tex = (String)msg.data.get("tex");
@@ -156,21 +153,18 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case COMPUTER:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Computer computer = new Computer(game, id, pos.x, pos.y, pos.z);
 			return computer;
 		}
 
 		case DESTROYED_COMPUTER:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			DestroyedComputer dcomputer = new DestroyedComputer(game, id, pos.x, pos.y, pos.z);
 			return dcomputer;
 		}
 
 		case SPACESHIP1:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			Spaceship1 spaceship1 = new Spaceship1(game, id, pos.x, pos.y, pos.z, q);
 			return spaceship1;
@@ -178,7 +172,6 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case AI_SOLDIER:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			int side = (int)msg.data.get("side");
 			AISoldier z = new AISoldier(game, id, pos.x, pos.y, pos.z, side);
 			return z;
@@ -186,7 +179,6 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case MAP_BORDER:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f dir = (Vector3f)msg.data.get("dir");
 			float size = (float)msg.data.get("size");
 			MapBorder hill = new MapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
@@ -218,7 +210,6 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case CRATE:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
 			SpaceCrate crate = new SpaceCrate(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, 0); // Give def rotation of 0, since it will get rotated anyway
@@ -227,15 +218,13 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case EXPLOSION_EFFECT:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			ExplosionEffectEntity expl = new ExplosionEffectEntity(game, id, pos);
 			return expl;
 		}
 
 		case DEBUGGING_SPHERE:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
-			DebuggingSphere hill = new DebuggingSphere(game, DEBUGGING_SPHERE, id, pos.x, pos.y, pos.z, true);
+			DebuggingSphere hill = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
 			return hill;
 		}
 

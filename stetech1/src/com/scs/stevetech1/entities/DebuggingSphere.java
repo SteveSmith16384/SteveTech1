@@ -20,14 +20,16 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 	private static final float DURATION = 5;
 	
 	private float timeLeft = DURATION;
+	private boolean remove;
 
-	public DebuggingSphere(IEntityController _game, int type, int id, float x, float y, float z, boolean server) {
+	public DebuggingSphere(IEntityController _game, int id, int type, float x, float y, float z, boolean server, boolean _remove) {
 		super(_game, id, type, "DebuggingSphere", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 		}
 		
+		remove = _remove;
 		this.collideable = false;
 		
 		Mesh sphere = null;
@@ -67,11 +69,13 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+		if (remove) {
 		if (game.isServer()) {
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft <= 0) {
 				this.remove();
 			}
+		}
 		}
 	}
 

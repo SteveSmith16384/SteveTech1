@@ -14,6 +14,7 @@ public class Globals {
 	public static final boolean STRICT = false; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_AI_SHOOTING = true;
 	public static final boolean DEBUG_HUD = true;
 	public static final boolean TRANSPARENT_WALLS = true;
 	
@@ -34,7 +35,6 @@ public class Globals {
 	public static final boolean PROFILE_SERVER = false;
 	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;
 	public static final boolean SHOW_NUM_ENT_UPDATES_SENT = false;
-	//public static final boolean DEBUG_CAN_SEE = false;
 	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean EMPTY_MAP = false;

@@ -47,17 +47,14 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 				this.currentTarget = null;
 			}
 		}
-		if (this.checkForEnemyInt.hitInterval()) {
-			currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side);
-			// todo - find enemy
-		}
-		if (currentTarget != null) {
-			if (SHOOT_AT_ENEMY) {
-				//ICanShoot shooter = (ICanShoot)this.soldierEntity;
-				// todo
-				this.soldierEntity.shoot(currentTarget);
+		if (currentTarget == null) {
+			if (this.checkForEnemyInt.hitInterval()) {
+				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side);
 			}
-		} else if (waitForSecs < 0) {
+		}
+		if (currentTarget != null && SHOOT_AT_ENEMY) {
+			this.soldierEntity.shoot(currentTarget);
+		} else if (waitForSecs <= 0) {
 			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
 		} else {
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking

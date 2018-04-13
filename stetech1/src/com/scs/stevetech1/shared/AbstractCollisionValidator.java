@@ -46,7 +46,26 @@ public class AbstractCollisionValidator {
 			// Bullets don't collide with each other
 			return false;
 		}
+/*
+		// Prevent bullets getting hit by the shooter
+		if (pa instanceof ILaunchable) {
+			ILaunchable aa = (ILaunchable)pa;
+			if (aa.getLauncher() == pb) {
+				return false;
+			}
+		}
+		if (pb instanceof ILaunchable) {
+			ILaunchable ab = (ILaunchable)pb;
+			if (ab.getLauncher() == pa) {
+				return false;
+			}
+		}
 
+		if (pa instanceof ILaunchable && pb instanceof ILaunchable) {
+			// Bullets don't collide with each other
+			return false;
+		}
+*/
 		return true;
 	}
 

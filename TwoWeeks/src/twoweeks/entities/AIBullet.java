@@ -1,5 +1,7 @@
 package twoweeks.entities;
 
+import java.util.HashMap;
+
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -11,28 +13,32 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.IClientApp;
-import com.scs.stevetech1.components.IEntityContainer;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
-import com.scs.stevetech1.entities.AbstractPlayersBullet;
-import com.scs.stevetech1.entities.DebuggingSphere;
+import com.scs.stevetech1.entities.AbstractAIBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
 import com.scs.stevetech1.server.AbstractEntityServer;
-import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 import twoweeks.client.TwoWeeksClientEntityCreator;
 
-public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
+public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 
 	private static final boolean USE_CYLINDER = true;
 
 	private float timeLeft = 3f;
 
-	public PlayerLaserBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
-		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", owner, _side, _client);
+	public AIBullet(IEntityController _game, int id, int side, float x, float y, float z, IEntity shooter, Vector3f dir) {
+		super(_game, id, TwoWeeksClientEntityCreator.AI_BULLET, x, y, z, "AIBullet", side, shooter, dir);
+
+		if (_game.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("side", side);
+			creationData.put("shooterID", shooter.getID());
+			creationData.put("dir", dir);
+		}
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -54,8 +60,8 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 			key3 = new TextureKey( "Textures/sun.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-				floor_mat.setTexture("DiffuseMap", tex3);
+			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			floor_mat.setTexture("DiffuseMap", tex3);
 			laserNode.setMaterial(floor_mat);
 		}
 
@@ -78,36 +84,11 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
-		if (launched) {
-			if (Globals.DEBUG_NO_BULLET) {
-				//Globals.p("Shooter at " + ((PhysicalEntity)this.shooter).getWorldTranslation());
-				Globals.p("Bullet at " + this.getWorldTranslation());
-			}
-			super.processByServer(server, tpf_secs);
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
-				this.remove();
-			}
-		}
-	}
-
-
-	@Override
-	public void processByClient(IClientApp client, float tpf_secs) {
-		if (launched) {
-			if (Globals.DEBUG_NO_BULLET) {
-				//Globals.p("Shooter at " + ((PhysicalEntity)this.shooter).getWorldTranslation());
-				Globals.p("Bullet at " + this.getWorldTranslation());
-			}
-			simpleRigidBody.process(tpf_secs);
-
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
-				this.remove();
-				if (Globals.DEBUG_NO_BULLET) {
-					Globals.p("Removed bullet");
-				}
-			}
+		super.processByServer(server, tpf_secs);
+		
+		this.timeLeft -= tpf_secs;
+		if (this.timeLeft < 0) {
+			this.remove();
 		}
 	}
 
@@ -115,24 +96,14 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
-			/*if (!Globals.HIDE_EXPLOSION) {
-				ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-				game.addEntity(expl);
-			}*/
-
-			if (Globals.SHOW_BULLET_COLLISION_POS) {
-				if (game.isServer()) {
-					// Create debugging sphere
-					Vector3f pos = this.getWorldTranslation();
-					DebuggingSphere ds = new DebuggingSphere(game, TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, game.getNextEntityID(), pos.x, pos.y, pos.z, true);
-					game.addEntity(ds);
-				}
+			if (!Globals.HIDE_EXPLOSION) {
+				//todo ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
+				//game.addEntity(expl);
 			}
+
 		}
 		this.remove();
-		if (Globals.DEBUG_NO_BULLET) {
-			Globals.p("Removed bullet -----------------------------------------");
-		}
 	}
+
 
 }

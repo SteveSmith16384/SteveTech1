@@ -41,12 +41,13 @@ import twoweeks.server.ai.IArtificialIntelligence;
 import twoweeks.server.ai.ShootingSoldierAI3;
 
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
-IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable{ //, ICanShoot {//, IUnit {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable { //, ICanShoot {//, IUnit {
 
+	public static final float START_HEALTH = 10f;
 	public static final float SPEED = .53f;//.47f;
 
 	private SoldierModel soldierModel; // Need this to animate the model
-	private float health = 1f;
+	private float health = START_HEALTH;
 	public int side;
 	private IArtificialIntelligence ai;
 	private int serverSideCurrentAnimCode; // Server-side
@@ -170,12 +171,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		}
 	}
 
-	/*
-	@Override
-	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
-		return animList;
-	}
-	 */
 
 	@Override
 	public void setAnimCode(int animCode) {
@@ -206,11 +201,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 				Globals.p("getCurrentAnimCode=" + this.soldierModel.getCurrentAnimCode());
 			}
 		}
-		/*if (soldierModel != null) {
-			return this.soldierModel.getCurrentAnimCode();
-		} else {
-			return -1;
-		}*/
 		return this.serverSideCurrentAnimCode;
 	}
 
@@ -273,11 +263,20 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	
 	public void shoot(PhysicalEntity target) {
 		if (this.shootInt.hitInterval()) {
+			if (Globals.DEBUG_AI_SHOOTING) {
+				Globals.p("AI shooting!");
+			}
 			Vector3f pos = this.getWorldTranslation();
-			Vector3f dir = target.getWorldTranslation().subtract(this.getWorldTranslation()).normalizeLocal();
-			AILaserBullet bullet = new AILaserBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
+			Vector3f dir = target.getWorldTranslation().subtract(pos).normalizeLocal();
+			AIBullet bullet = new AIBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
 			this.game.addEntity(bullet);
 		}
+	}
+
+
+	@Override
+	public boolean isAlive() {
+		return this.health > 0;
 	}
 
 }

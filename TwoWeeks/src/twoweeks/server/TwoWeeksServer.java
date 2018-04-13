@@ -2,10 +2,15 @@ package twoweeks.server;
 
 import java.io.IOException;
 
+import com.jme3.collision.CollisionResults;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Ray;
+import com.jme3.math.Vector3f;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
+import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
@@ -14,7 +19,9 @@ import com.scs.stevetech1.server.Globals;
 import ssmith.util.MyProperties;
 import twoweeks.TwoWeeksCollisionValidator;
 import twoweeks.TwoWeeksGameData;
+import twoweeks.client.TwoWeeksClientEntityCreator;
 import twoweeks.entities.AISoldier;
+import twoweeks.entities.GenericStaticModel;
 import twoweeks.entities.MercServerAvatar;
 import twoweeks.entities.Terrain1;
 
@@ -22,8 +29,8 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	public static final String GAME_ID = "Two Weeks";
 
-	public static final float MAP_SIZE = 100f; // todo - wrong!
-	public static final float CEILING_HEIGHT = 1.4f;
+	//public static final float MAP_SIZE = 100f;
+	//public static final float CEILING_HEIGHT = 1.4f;
 
 	private TwoWeeksCollisionValidator collisionValidator = new TwoWeeksCollisionValidator();
 
@@ -100,7 +107,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 	
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		float x = 100;//10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
+		float x = 100;//todo 10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
 		float z = 100;//10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
 		avatar.setWorldTranslation(x, 60, z);
 	}
@@ -124,6 +131,20 @@ public class TwoWeeksServer extends AbstractGameServer {
 		
 		AISoldier s = new AISoldier(this, this.getNextEntityID(), 90, 60, 90, 0);
 		this.actuallyAddEntity(s);
+		
+		Ray r = new Ray(new Vector3f(95, 60, 95), new Vector3f(0, -1, 0));
+		CollisionResults crs = new CollisionResults();
+		terrain.getMainNode().collideWith(r, crs);
+		if (crs.size() > 0) {
+			Vector3f pos = crs.getClosestCollision().getContactPoint();
+			
+			DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, false, false);
+			this.actuallyAddEntity(ds);
+			
+			pos.y -= 1f;
+			//GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
+			//this.actuallyAddEntity(tree); //tree.getMainNode().getWorldBound();
+		}
 
 		/*
 		Crate c = new Crate(this, getNextEntityID(), 1, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);

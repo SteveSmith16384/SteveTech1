@@ -123,7 +123,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 				if (game.isServer()) {
 					// Create debugging sphere
 					Vector3f pos = this.getWorldTranslation();
-					DebuggingSphere ds = new DebuggingSphere(game, MoonbaseAssaultClientEntityCreator.DEBUGGING_SPHERE, game.getNextEntityID(), pos.x, pos.y, pos.z, true);
+					DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), MoonbaseAssaultClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
 					game.addEntity(ds);
 				}
 			}

@@ -281,4 +281,10 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		}
 	}
 
+
+	@Override
+	public boolean isAlive() {
+		return this.health > 0;
+	}
+
 }

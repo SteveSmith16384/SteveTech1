@@ -104,18 +104,6 @@ public class SimpleRigidBody<T> implements Collidable {
 			tpf_secs = 0.1f; // Prevent stepping too far
 		}
 
-		/*if (Globals.WARN_IF_BB_CHANGES) {
-			if (bb == null) {
-				bb = (BoundingBox)this.getBoundingBox().clone();
-			} else {
-				BoundingBox newbb = this.getBoundingBox();
-				if (bb.getXExtent() != newbb.getXExtent() || bb.getYExtent() != newbb.getYExtent() || bb.getZExtent() != newbb.getZExtent()) {
-					p("Warning - boundingbox changed size!");
-					bb = (BoundingBox)newbb.clone();
-				}
-			}
-		}*/
-
 		if (this.movedByForces) {
 
 			// Check we're not already colliding *before* we've even moved
@@ -267,14 +255,14 @@ public class SimpleRigidBody<T> implements Collidable {
 				this.simpleEntity.moveEntity(diff); // Move away
 			}
 
-			// Z axis
+			// Y axis
 			boolean doY = true;
 			if (ourBB.getCenter().y - ourBB.getYExtent() > theirBB.getCenter().y - theirBB.getYExtent()) {
 				if (ourBB.getCenter().y + ourBB.getYExtent() < theirBB.getCenter().y + theirBB.getYExtent()) {
 					doY = false;
 				}
 			}
-			if (doY) {
+			if (doY) {// || (doX == false && doZ == false)) {
 				float len = ourBB.getCenter().y - theirBB.getCenter().y;
 				Vector3f diff = new Vector3f(0, len, 0);
 				if (DEBUG_AUTOMOVING) {
@@ -312,7 +300,8 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 		} else {
 			// Move up if it's a mesh?
-			this.oneOffForce.y += (.5f);
+			//this.oneOffForce.y += (.5f);
+			this.oneOffForce.y += (.3f);
 		}
 
 

@@ -6,7 +6,7 @@ public interface ILaunchable {
 
 	IEntity getLauncher(); // So we know who not to collide with
 	
-	void launch(IEntity _shooter, Vector3f startPos, Vector3f dir);
+	void launch(IEntity _shooter, Vector3f startPos, Vector3f dir);  // todo - why is this used?
 	
 	boolean hasBeenLaunched();
 	

@@ -3,10 +3,12 @@ package com.scs.stevetech1.entities;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact { // ILaunchable
+public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, ILaunchable { // ILaunchable
 
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
@@ -20,9 +22,10 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 
 		this.createSimpleRigidBody(dir);
 
-		game.getGameNode().attachChild(this.mainNode);
 		this.setWorldTranslation(new Vector3f(x, y, z));
-		this.mainNode.updateGeometricState();
+		
+		//game.getGameNode().attachChild(this.mainNode);
+		//this.mainNode.updateGeometricState();
 	}
 
 	
@@ -34,12 +37,6 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 		super.processByServer(server, tpf_secs);
 	}
 
-/*
-	@Override
-	public IEntity getLauncher() {
-		return shooter;
-	}
-*/
 
 	@Override
 	public int getSide() {
@@ -50,6 +47,35 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 	@Override
 	public IEntity getActualShooter() {
 		return shooter;
+	}
+
+
+	@Override
+	public void remove() {
+		if (Globals.DEBUG_AI_SHOOTING) {
+			Globals.p("Removing bullet");
+		}
+
+		super.remove();
+	}
+	
+	
+	@Override
+	public IEntity getLauncher() {
+		return shooter;
+	}
+
+
+	@Override
+	public void launch(IEntity _shooter, Vector3f startPos, Vector3f dir) {
+		// Do nothing, already launched 
+		
+	}
+
+
+	@Override
+	public boolean hasBeenLaunched() {
+		return true;
 	}
 
 }

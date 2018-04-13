@@ -522,7 +522,6 @@ public abstract class AbstractDummyClient implements IClientApp, IEntityControll
 		if (e != null) {
 			if (e instanceof AbstractAvatar || e instanceof IAbility || e instanceof AbstractEnemyAvatar) {
 				this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to, or a grenade launcher to add a bullet to
-				// todo -point camera here
 			} else {
 				this.addEntity(e); // Schedule it for addition at the right time
 			}

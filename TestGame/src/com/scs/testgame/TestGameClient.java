@@ -87,7 +87,7 @@ public class TestGameClient extends AbstractGameClient {
 	
 	
 	@Override
-	protected IHUD createHUD() {
+	protected IHUD getHUD() {
 		return null;
 	}
 

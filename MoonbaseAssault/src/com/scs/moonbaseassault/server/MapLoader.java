@@ -203,11 +203,6 @@ public class MapLoader {
 		MapBorder borderFront = new MapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, -MapBorder.BORDER_WIDTH, mapsize, Vector3f.UNIT_X);
 		moonbaseAssaultServer.actuallyAddEntity(borderFront);
 
-		// Add space crates
-		for (int i=0 ; i<10 ; i++) {
-			// todo
-		}
-
 		Globals.p("Finished.  Created " + this.totalWalls + " walls, " + this.totalFloors + " floors, " + this.totalCeilings + " ceilings, " + numCrates + " spacecrates.");
 	}
 
@@ -399,7 +394,7 @@ public class MapLoader {
 
 
 	private boolean moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
-		CollisionResults cr = new CollisionResults(); //todo - re-add
+		CollisionResults cr = new CollisionResults();
 		if (pe.simpleRigidBody.checkForCollisions().size() > 0) {
 			//throw new RuntimeException("Stuck in wall!");
 			pe.remove();

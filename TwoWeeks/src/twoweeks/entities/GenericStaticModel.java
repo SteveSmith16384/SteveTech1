@@ -1,30 +1,39 @@
-package com.scs.undercoveragent.entities;
+package twoweeks.entities;
 
 import java.util.HashMap;
 
 import com.jme3.collision.Collidable;
 import com.jme3.math.Quaternion;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
-import com.scs.undercoveragent.models.SnowmanModel;
 
-public class StaticSnowman extends PhysicalEntity {
+public class GenericStaticModel extends PhysicalEntity {
 
-	public StaticSnowman(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
-		super(_game, id, UndercoverAgentClientEntityCreator.STATIC_SNOWMAN, "Snowman", false);
+	public GenericStaticModel(IEntityController _game, int id, int type, String name, String modelFile, float height, String tex, float x, float y, float z, Quaternion q) {
+		super(_game, id, type, name, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("q", q);
+			creationData.put("name", name);
+			creationData.put("modelFile", modelFile);
+			creationData.put("height", height);
+			creationData.put("tex", tex);
+			creationData.put("q", q);
 		}
 
-		SnowmanModel m = new SnowmanModel(game.getAssetManager());
-		Spatial model = m.createAndGetModel(0);
+		Spatial model = game.getAssetManager().loadModel(modelFile);
+		if (tex != null) {
+			JMEModelFunctions.setTextureOnSpatial( game.getAssetManager(), model, tex);
+		}
+		model.setShadowMode(ShadowMode.CastAndReceive);
+		JMEModelFunctions.scaleModelToHeight(model, height);
+		JMEModelFunctions.moveYOriginTo(model, 0f);
+		//JMEAngleFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 
 		this.mainNode.attachChild(model);
 		
@@ -44,12 +53,12 @@ public class StaticSnowman extends PhysicalEntity {
 
 	}
 
-
+/*
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf) {
 		super.processByServer(server, tpf);
 	}
-
+*/
 
 	@Override
 	public Collidable getCollidable() {

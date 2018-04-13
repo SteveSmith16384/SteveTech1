@@ -180,7 +180,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 		//lobbyIP = _lobbyIP;
 		//lobbyPort = _lobbyPort;
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1);//, gravity, aerodynamicness); // todo - get 15,1 params from server?
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1); // todo - get 15,1 params from server?
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
 
@@ -258,7 +258,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 		}*/
 
 		try {
-			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis, getListofMessageClasses()); // todo - connect to lobby first!
+			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis, getListofMessageClasses());
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());

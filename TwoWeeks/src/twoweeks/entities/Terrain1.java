@@ -41,12 +41,14 @@ public class Terrain1 extends PhysicalEntity {
 
 		/** 1.2) Add GRASS texture into the red layer (Tex1). */
 		Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass.jpg");
+		//Texture grass = game.getAssetManager().loadTexture("Models/Desert/Textures/Ground.png");
 		grass.setWrap(WrapMode.Repeat);
 		mat_terrain.setTexture("Tex1", grass);
 		mat_terrain.setFloat("Tex1Scale", 64f);
 
 		/** 1.3) Add DIRT texture into the green layer (Tex2) */
 		Texture dirt = game.getAssetManager().loadTexture("Textures/Terrain/splat/dirt.jpg");
+		//Texture dirt = game.getAssetManager().loadTexture("Models/Desert/Textures/Ground.png");
 		dirt.setWrap(WrapMode.Repeat);
 		mat_terrain.setTexture("Tex2", dirt);
 		mat_terrain.setFloat("Tex2Scale", 32f);

@@ -520,7 +520,11 @@ ICollisionListener<PhysicalEntity> {
 		synchronized (clients) {
 			for (ClientData client : this.clients.values()) {
 				if (client.clientStatus == ClientStatus.Accepted) {
-					gameNetworkServer.sendMessageToClient(client, nem);	
+					try { // todo - remove
+					gameNetworkServer.sendMessageToClient(client, nem);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
 			}
 		}
@@ -639,14 +643,16 @@ ICollisionListener<PhysicalEntity> {
 
 	public PhysicalEntity getTarget(PhysicalEntity shooter, int ourSide) {
 		for (IEntity e : entitiesForProcessing.values()) {
+			if (e != shooter) {
 			if (e instanceof ITargetable) {
 				ITargetable t = (ITargetable)e;
-				if (t.isValidTargetForSide(ourSide)) {
+				if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
 					PhysicalEntity pe = (PhysicalEntity)e;
 					if (shooter.canSee(pe, 100)) {
 						return pe;
 					}
 				}
+			}
 			}
 		}
 		return null; 

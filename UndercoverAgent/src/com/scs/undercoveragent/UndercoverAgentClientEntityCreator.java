@@ -227,7 +227,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		case DEBUGGING_SPHERE:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			DebuggingSphere hill = new DebuggingSphere(game, DEBUGGING_SPHERE, id, pos.x, pos.y, pos.z, true);
+			DebuggingSphere hill = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
 			return hill;
 		}
 
