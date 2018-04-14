@@ -8,7 +8,7 @@ import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.ExplosionEffectEntity;
 import com.scs.moonbaseassault.entities.Floor;
-import com.scs.moonbaseassault.entities.Grenade;
+import com.scs.moonbaseassault.entities.PlayersGrenade;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.PlayerLaserBullet;
@@ -204,7 +204,7 @@ public class MoonbaseAssaultClientEntityCreator {
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
 			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			Grenade snowball = new Grenade(game, id, irac, side, null);
+			PlayersGrenade snowball = new PlayersGrenade(game, id, irac, side, null);
 			return snowball;
 		}
 

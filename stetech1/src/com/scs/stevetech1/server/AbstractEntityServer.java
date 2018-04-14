@@ -101,7 +101,7 @@ ICollisionListener<PhysicalEntity> {
 
 		setShowSettings(false); // Don't show settings dialog
 		setPauseOnLostFocus(false);
-		start(JmeContext.Type.Headless);
+		start(JmeContext.Type.Headless); // todo - don't start immed!
 	}
 
 

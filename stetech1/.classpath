@@ -14,5 +14,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl3"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jbullet"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-terrain"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

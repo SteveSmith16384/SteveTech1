@@ -21,7 +21,6 @@ import twoweeks.client.TwoWeeksClientEntityCreator;
 
 public class Terrain1 extends PhysicalEntity {
 
-	//private float w, h, d;
 	private TerrainQuad terrain;
 
 	public Terrain1(IEntityController _game, int id, float x, float yTop, float z) {
@@ -40,8 +39,8 @@ public class Terrain1 extends PhysicalEntity {
 		mat_terrain.setTexture("Alpha", game.getAssetManager().loadTexture("Textures/Terrain/splat/alphamap.png"));
 
 		/** 1.2) Add GRASS texture into the red layer (Tex1). */
-		Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass.jpg");
-		//Texture grass = game.getAssetManager().loadTexture("Models/Desert/Textures/Ground.png");
+		//Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass.jpg");
+		Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass16x16.png");
 		grass.setWrap(WrapMode.Repeat);
 		mat_terrain.setTexture("Tex1", grass);
 		mat_terrain.setFloat("Tex1Scale", 64f);
@@ -104,7 +103,7 @@ public class Terrain1 extends PhysicalEntity {
 
 	@Override
 	public Collidable getCollidable() {
-		return this.mainNode;
+		return this.terrain;
 	}
 
 

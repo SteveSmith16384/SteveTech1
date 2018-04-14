@@ -29,11 +29,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	public static final String GAME_ID = "Two Weeks";
 
-	//public static final float MAP_SIZE = 100f;
-	//public static final float CEILING_HEIGHT = 1.4f;
-
 	private TwoWeeksCollisionValidator collisionValidator = new TwoWeeksCollisionValidator();
-
 
 	public static void main(String[] args) {
 		try {
@@ -145,8 +141,8 @@ public class TwoWeeksServer extends AbstractGameServer {
 		if (crs.size() > 0) {
 			Vector3f pos = crs.getClosestCollision().getContactPoint();
 			//pos.y -= 1f;
-			//GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
-			//this.actuallyAddEntity(tree); //tree.getMainNode().getWorldBound();
+			GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
+			this.actuallyAddEntity(tree); //tree.getMainNode().getWorldBound();
 		}
 
 		/*

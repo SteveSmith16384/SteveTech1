@@ -12,6 +12,7 @@ import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
@@ -379,7 +380,21 @@ public class SimpleRigidBody<T> implements Collidable {
 				//CollisionResults localCollisionResults = new CollisionResults();
 				// Check which object is the most complex, and collide that against the bounding box of the other
 				int res = 0;
-				if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
+				if (this.simpleEntity.getCollidable() instanceof TerrainQuad || e.simpleEntity.getCollidable() instanceof TerrainQuad) {
+					TerrainQuad tq = null;
+					BoundingBox bv = null;
+					if (this.simpleEntity.getCollidable() instanceof TerrainQuad) {
+						tq = (TerrainQuad)this.simpleEntity.getCollidable();
+						bv = e.getBoundingBox();
+					} else {
+						tq = (TerrainQuad)e.simpleEntity.getCollidable();
+						bv = this.getBoundingBox();
+					}
+					Ray ray = new Ray(bv.getCenter(), new Vector3f(0, -1, 0));
+					ray.setLimit(bv.getYExtent());
+					res = tq.collideWith(ray, tempCollisionResults);
+					
+				} else if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
 					// Both are complex meshes!  Convert one into a simple boundingvolume
 					if (Globals.DEBUG_MESH_COLLISION_CONV) {
 						Globals.p("Converting " + this + " into bb");

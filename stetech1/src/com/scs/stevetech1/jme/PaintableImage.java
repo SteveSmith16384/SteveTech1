@@ -1,4 +1,4 @@
-package com.scs.moonbaseassault.client.hud;
+package com.scs.stevetech1.jme;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -9,8 +9,7 @@ public abstract class PaintableImage extends Image {
 
 	private BufferedImage backImg;
 	private ByteBuffer scratch;
-
-
+	
 	public PaintableImage(int width, int height) {
 		super();
 		try {

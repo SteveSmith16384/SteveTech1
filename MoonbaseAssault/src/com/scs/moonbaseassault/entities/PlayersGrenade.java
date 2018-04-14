@@ -20,13 +20,13 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class Grenade extends AbstractPlayersBullet {
+public class PlayersGrenade extends AbstractPlayersBullet {
 
 	private static final float DURATION = 3f;
 
 	private float timeLeft = DURATION;
 
-	public Grenade(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
+	public PlayersGrenade(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.GRENADE, "Grenade", owner, _side, _client);
 
 		Sphere sphere = new Sphere(8, 8, 0.07f, true, false);

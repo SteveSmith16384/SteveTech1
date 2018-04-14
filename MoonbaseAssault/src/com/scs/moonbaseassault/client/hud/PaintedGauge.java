@@ -4,9 +4,11 @@ import java.awt.Color;
 
 import java.awt.Graphics2D;
 
+import com.scs.stevetech1.jme.PaintableImage;
 
 
-public class PaintedGauge extends PaintableImage {
+
+public class PaintedGauge extends PaintableImage { // todo - delete this?
 
 	private static final int MAXIMUM = 100;
 	private int value = 0;
