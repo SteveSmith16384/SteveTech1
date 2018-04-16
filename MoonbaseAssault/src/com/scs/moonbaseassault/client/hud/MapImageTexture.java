@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.util.List;
 
 import com.scs.moonbaseassault.server.MapLoader;
+import com.scs.stevetech1.jme.PaintableImage;
 import com.scs.stevetech1.server.Globals;
 
 public class MapImageTexture extends PaintableImage {
@@ -41,6 +42,7 @@ public class MapImageTexture extends PaintableImage {
 	}
 
 
+	@Override
 	public void paint(Graphics2D g) {
 		g.setBackground(new Color(0f, 0f, 0f, .0f));
 		g.clearRect(0, 0, getWidth(), getHeight());

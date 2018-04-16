@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
-import com.scs.moonbaseassault.entities.Grenade;
+import com.scs.moonbaseassault.entities.PlayersGrenade;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.server.AbstractEntityServer;
@@ -13,11 +13,11 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
 
-public class GrenadeLauncher extends AbstractMagazineGun<Grenade> implements IAbility, IEntityContainer<Grenade> {
+public class GrenadeLauncher extends AbstractMagazineGun<PlayersGrenade> implements IAbility, IEntityContainer<PlayersGrenade> {
 
 	private static final int MAG_SIZE = 6;
 
-	private LinkedList<Grenade> ammoCache = new LinkedList<Grenade>();
+	private LinkedList<PlayersGrenade> ammoCache = new LinkedList<PlayersGrenade>();
 
 	public GrenadeLauncher(IEntityController game, int id, ICanShoot owner, int num, ClientData _client) {
 		super(game, id, MoonbaseAssaultClientEntityCreator.GRENADE_LAUNCHER, owner, num, "GrenadeLauncher", 1, 3, MAG_SIZE, _client);
@@ -31,7 +31,7 @@ public class GrenadeLauncher extends AbstractMagazineGun<Grenade> implements IAb
 	@Override
 	public boolean launchBullet() {
 		if (!ammoCache.isEmpty()) {
-			Grenade g = ammoCache.remove();
+			PlayersGrenade g = ammoCache.remove();
 			ICanShoot ic = (ICanShoot)owner;
 			g.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			return true;
@@ -56,7 +56,7 @@ public class GrenadeLauncher extends AbstractMagazineGun<Grenade> implements IAb
 	public void remove() {
 		// Remove all owned bullets
 		while (!ammoCache.isEmpty()) {
-			Grenade g = ammoCache.remove();
+			PlayersGrenade g = ammoCache.remove();
 			g.remove();
 		}
 		super.remove();
@@ -65,7 +65,7 @@ public class GrenadeLauncher extends AbstractMagazineGun<Grenade> implements IAb
 
 	@Override
 	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer irac, int side) {
-		Grenade pe = new Grenade(game, entityid, irac, side, client);
+		PlayersGrenade pe = new PlayersGrenade(game, entityid, irac, side, client);
 		server.addEntity(pe);
 
 
@@ -79,7 +79,7 @@ public class GrenadeLauncher extends AbstractMagazineGun<Grenade> implements IAb
 
 
 	@Override
-	public void addToCache(Grenade o) {
+	public void addToCache(PlayersGrenade o) {
 		this.ammoCache.add(o);
 	}
 

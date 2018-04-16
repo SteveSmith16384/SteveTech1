@@ -95,9 +95,16 @@ public class JMEModelFunctions {
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
 
-		Material material = null;
-			material = new Material(assetManager,"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			material.setTexture("DiffuseMap", tex3);
+		Material material = new Material(assetManager,"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+		material.setTexture("DiffuseMap", tex3);
+		setMaterialOnSpatial(spatial, material);
+	}
+
+
+	public static void setTextureOnSpatial(AssetManager assetManager, Spatial spatial, Texture tex3) {
+		tex3.setWrap(WrapMode.Repeat);
+		Material material = new Material(assetManager,"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+		material.setTexture("DiffuseMap", tex3);
 		setMaterialOnSpatial(spatial, material);
 	}
 

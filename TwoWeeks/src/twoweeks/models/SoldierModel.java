@@ -16,6 +16,8 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.server.Globals;
 
+import twoweeks.client.SoldierTexture;
+
 public class SoldierModel implements IAvatarModel {
 
 	public static final float MODEL_HEIGHT = 0.7f;
@@ -38,12 +40,14 @@ public class SoldierModel implements IAvatarModel {
 		if (!Globals.USE_BOXES_FOR_AVATARS_SOLDIER) {
 			model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
 			//if (side == 1) { todo - random tex
-				JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side1.png");
+				//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side1.png");
 			/*} else if (side == 2) {
 				JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side2.png");
 			} else {
 				throw new RuntimeException("Unknown side: " + side);
 			}*/
+			JMEModelFunctions.setTextureOnSpatial(assetManager, model, SoldierTexture.getTexture());
+
 			JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEModelFunctions.moveYOriginTo(model, 0f);
 
