@@ -9,7 +9,7 @@ import twoweeks.abilities.PlayersMachineGun;
 import twoweeks.models.SoldierModel;
 import twoweeks.server.TwoWeeksServer;
 
-public class MercServerAvatar extends AbstractServerAvatar { //implements IUnit {
+public class MercServerAvatar extends AbstractServerAvatar {
 	
 	public MercServerAvatar(TwoWeeksServer _module, ClientData client, int _playerID, IInputDevice _input, int eid) {
 		super(_module, client, _playerID, _input, eid, new SoldierModel(_module.getAssetManager()));

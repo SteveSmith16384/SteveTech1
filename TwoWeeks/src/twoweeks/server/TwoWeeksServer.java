@@ -247,33 +247,8 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	@Override
 	public int getSide(ClientData client) {
-		// Players always on side 1?
-		return 1;
-		/*
-		// This DOESN'T Check maxPlayersPerside, maxSides
-		HashMap<Integer, Integer> map = getPlayersPerSide();
-		// Get lowest amount
-		int lowest = 999;
-		int highest = -1;
-		for (int i : map.values()) {
-			if (i < lowest) {
-				lowest = i;
-			}
-			if (i > highest) {
-				highest = i;
-			}
-		}
-		// Get the side
-		Iterator<Integer> it = map.keySet().iterator();
-		while (it.hasNext()) {
-			int i = it.next();
-			int val = map.get(i);
-			if (val <= lowest) {
-				return i;
-			}
-		}
-		throw new RuntimeException("Should not get here");
-		 */
+		return 1; // todo - return unique side
+
 	}
 
 
