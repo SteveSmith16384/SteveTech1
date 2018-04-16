@@ -2,10 +2,12 @@ package twoweeks.server;
 
 import java.io.IOException;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -154,6 +156,34 @@ public class TwoWeeksServer extends AbstractGameServer {
 		CollisionResults crs = new CollisionResults();
 		this.getGameNode().collideWith(r, crs);
 		Vector3f pos = crs.getClosestCollision().getContactPoint();
+		return pos;
+	}
+
+
+	private float getHeightAtPoint(Spatial s) {
+		CollisionResults crs = new CollisionResults();
+		BoundingBox bb = (BoundingBox)s.getWorldBound();
+		
+		Ray r1 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), new Vector3f(0, -1, 0));
+		crs.clear();
+		this.getGameNode().collideWith(r1, crs);
+		Vector3f pos1 = crs.getClosestCollision().getContactPoint();
+		
+		Ray r2 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), new Vector3f(0, -1, 0));
+		crs.clear();
+		this.getGameNode().collideWith(r2, crs);
+		Vector3f pos2 = crs.getClosestCollision().getContactPoint();
+		
+		Ray r3 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), new Vector3f(0, -1, 0));
+		crs.clear();
+		this.getGameNode().collideWith(r3, crs);
+		Vector3f pos3 = crs.getClosestCollision().getContactPoint();
+		
+		Ray r4 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), new Vector3f(0, -1, 0));
+		crs.clear();
+		this.getGameNode().collideWith(r4, crs);
+		Vector3f pos4 = crs.getClosestCollision().getContactPoint();
+		
 		return pos;
 	}
 
