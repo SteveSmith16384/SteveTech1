@@ -39,18 +39,21 @@ public class Terrain1 extends PhysicalEntity {
 		mat_terrain.setTexture("Alpha", game.getAssetManager().loadTexture("Textures/Terrain/splat/alphamap.png"));
 
 		/** 1.2) Add GRASS texture into the red layer (Tex1). */
-		//Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass.jpg");
-		Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass16x16.png");
+		Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass.jpg");
+		//Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass16x16.png");
 		grass.setWrap(WrapMode.Repeat);
 		mat_terrain.setTexture("Tex1", grass);
 		mat_terrain.setFloat("Tex1Scale", 64f);
+		//mat_terrain.setFloat("Tex1Scale", 2f);
 
 		/** 1.3) Add DIRT texture into the green layer (Tex2) */
 		Texture dirt = game.getAssetManager().loadTexture("Textures/Terrain/splat/dirt.jpg");
-		//Texture dirt = game.getAssetManager().loadTexture("Models/Desert/Textures/Ground.png");
+		//Texture dirt = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass16x16.png");
 		dirt.setWrap(WrapMode.Repeat);
 		mat_terrain.setTexture("Tex2", dirt);
-		mat_terrain.setFloat("Tex2Scale", 32f);
+		//mat_terrain.setFloat("Tex2Scale", 32f);
+		//mat_terrain.setFloat("Tex2Scale", 2f);
+		mat_terrain.setFloat("Tex2Scale", 256f);
 
 		/** 1.4) Add ROAD texture into the blue layer (Tex3) */
 		Texture rock = game.getAssetManager().loadTexture("Textures/Terrain/splat/road.jpg");
@@ -79,7 +82,9 @@ public class Terrain1 extends PhysicalEntity {
 		//terrain.setLocalScale(2f, 1f, 2f);
 		//terrain.setLocalScale(.5f, .1f, .5f);
 		//terrain.setLocalScale(1f, .05f, 1f);
-		terrain.setLocalScale(2f, .2f, 2f);
+		//terrain.setLocalScale(2f, .2f, 2f);
+		//terrain.setLocalScale(5f, .2f, 5f);
+		terrain.setLocalScale(5f, .5f, 5f);
 
 		if (!game.isServer()) {
 			AbstractGameClient client = (AbstractGameClient)game;

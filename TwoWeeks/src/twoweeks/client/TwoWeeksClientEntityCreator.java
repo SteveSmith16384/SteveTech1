@@ -100,7 +100,8 @@ public class TwoWeeksClientEntityCreator {
 			String tex = (String)msg.data.get("tex");
 			float height = (float)msg.data.get("height");
 			Quaternion q = (Quaternion) msg.data.get("q");
-			GenericStaticModel generic = new GenericStaticModel(game, id, TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, name, modelFile, height, tex, pos.x, pos.y, pos.z, q);
+			Vector3f offset = (Vector3f)msg.data.get("offset");
+			GenericStaticModel generic = new GenericStaticModel(game, id, TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, name, modelFile, height, tex, pos.x, pos.y, pos.z, q, offset);
 			return generic;
 		}
 

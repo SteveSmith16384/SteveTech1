@@ -50,19 +50,18 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;
-			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer());
+			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/bullet1.jpg");
 		} else {
 			Mesh sphere = new Sphere(8, 8, .02f, true, false);
 			laserNode = new Geometry("DebuggingSphere", sphere);
-			TextureKey key3 = null;
-			key3 = new TextureKey( "Textures/sun.jpg");
+			TextureKey key3 = new TextureKey("Textures/bullet1.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-			floor_mat.setTexture("DiffuseMap", tex3);
-			laserNode.setMaterial(floor_mat);
+			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			mat.setTexture("DiffuseMap", tex3);
+			laserNode.setMaterial(mat);
 		}
 
-		laserNode.setShadowMode(ShadowMode.Cast);
+		//laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);

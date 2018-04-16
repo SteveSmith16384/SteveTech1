@@ -279,7 +279,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public boolean canSee(PhysicalEntity target, float range) {
 		// Test the ray from the middle of the entity
-		Ray r = new Ray(this.getMainNode().getWorldBound().getCenter(), target.getMainNode().getWorldBound().getCenter().subtract(this.getMainNode().getWorldBound().getCenter()).normalizeLocal());
+		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter();
+		Vector3f theirPos = target.getMainNode().getWorldBound().getCenter();
+		Ray r = new Ray(ourPos, theirPos.subtract(ourPos).normalizeLocal());
 		r.setLimit(range);
 		CollisionResults res = new CollisionResults();
 		int c = game.getGameNode().collideWith(r, res);

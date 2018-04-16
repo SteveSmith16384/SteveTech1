@@ -38,18 +38,18 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			this.waitForSecs -= tpf_secs;
 		} 
 
-		if (currentTarget != null) {
+		if (currentTarget != null) { // Find enemy
 			boolean cansee = soldierEntity.canSee(this.currentTarget, 100f);
 			if (!cansee) {
+				//soldierEntity.canSee(this.currentTarget, 100f); // todo - remove
 				this.currentTarget = null;
 			}
 		}
-		if (currentTarget == null) {
+		if (currentTarget == null) { // Check we can still see enemy
 			if (this.checkForEnemyInt.hitInterval()) {
 				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side);
 			}
-		} else {
-			// Look at our target
+		} else { // Face enemy
 			Vector3f dir = this.currentTarget.getWorldTranslation().subtract(this.soldierEntity.getWorldTranslation()); // todo - don't create each time
 			//this.currDir.subtractLocal();
 			dir.y = 0;

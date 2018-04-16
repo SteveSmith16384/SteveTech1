@@ -49,6 +49,10 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		Spatial model = assetManager.loadModel("Models/Desert/BigPalmTree.blend");
 		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
 
+		JMEModelFunctions.scaleModelToHeight(model, 2f);
+		JMEModelFunctions.moveYOriginTo(model, 0f);
+		model.move(1, 0, .5f);
+
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);
 			if (control != null) {
@@ -61,7 +65,6 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 			}
 		}
 
-		model.setModelBound(new BoundingBox());
 		rootNode.attachChild(model);
 
 		this.rootNode.attachChild(JMEModelFunctions.getGrid(assetManager, 10));

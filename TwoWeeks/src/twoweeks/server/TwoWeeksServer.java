@@ -99,13 +99,19 @@ public class TwoWeeksServer extends AbstractGameServer {
 	public void simpleUpdate(float tpf_secs) {
 		super.simpleUpdate(tpf_secs);
 	}
-	
-	
+
+
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		float x = 100;//todo 10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
 		float z = 100;//10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
-		avatar.setWorldTranslation(x, 60, z);
+
+		Ray r = new Ray(new Vector3f(x, 255, z), new Vector3f(0, -1, 0));
+		CollisionResults crs = new CollisionResults();
+		this.getGameNode().collideWith(r, crs);
+		Vector3f pos = crs.getClosestCollision().getContactPoint();
+
+		avatar.setWorldTranslation(x, pos.y + 10f, z);
 	}
 
 
@@ -118,62 +124,47 @@ public class TwoWeeksServer extends AbstractGameServer {
 	protected void createGame() {
 		super.gameData = new TwoWeeksGameData();
 
-		// Place floor & ceiling last
-		//Floor floor = new Floor(this, getNextEntityID(), "Floor", 0, 0, 0, MAP_SIZE, .5f, MAP_SIZE, "Textures/mud.png");
-		//this.actuallyAddEntity(floor);
-		
 		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
 		this.actuallyAddEntity(terrain);
-		
-		AISoldier s = new AISoldier(this, this.getNextEntityID(), 90, 60, 90, 0);
+
+		Vector3f pos = this.getHeightAtPoint(90, 90);
+		AISoldier s = new AISoldier(this, this.getNextEntityID(), pos.x, pos.y + 5, pos.z, 0);
 		this.actuallyAddEntity(s);
-		
+
 		// Drop debug balls
-		for (int z=80; z<=120 ; z+= 10) {
+		/*for (int z=80; z<=120 ; z+= 10) {
 			for (int x=80; x<=120 ; x+= 10) {
 				this.dropDebugSphere(terrain, x, z);
 			}
-		}
-		
-		Ray r = new Ray(new Vector3f(95, 60, 95), new Vector3f(0, -1, 0));
+		}*/
+
+		// Place tree
+		pos = this.getHeightAtPoint(95, 85);
+		GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion(), new Vector3f(1, -.1f, .5f));
+		this.actuallyAddEntity(tree); //tree.getMainNode().getWorldBound();
+
+		DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+		this.actuallyAddEntity(ds);
+
+	}
+
+
+	private Vector3f getHeightAtPoint(float x, float z) {
+		Ray r = new Ray(new Vector3f(x, 255, z), new Vector3f(0, -1, 0));
 		CollisionResults crs = new CollisionResults();
-		terrain.getMainNode().collideWith(r, crs);
-		if (crs.size() > 0) {
-			Vector3f pos = crs.getClosestCollision().getContactPoint();
-			//pos.y -= 1f;
-			GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
-			this.actuallyAddEntity(tree); //tree.getMainNode().getWorldBound();
-		}
-
-		/*
-		Crate c = new Crate(this, getNextEntityID(), 1, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);
-		this.actuallyAddEntity(c);
-		c = new Crate(this, getNextEntityID(), 1, 30, 6, 1, 1, 1f, "Textures/crate.png", 65);
-		this.actuallyAddEntity(c);
-		c = new Crate(this, getNextEntityID(), 6, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);
-		this.actuallyAddEntity(c);
-		c = new Crate(this, getNextEntityID(), 6, 30, 6, 1, 1, 1f, "Textures/crate.png", 65);
-		this.actuallyAddEntity(c);
-		*/
-
-
+		this.getGameNode().collideWith(r, crs);
+		Vector3f pos = crs.getClosestCollision().getContactPoint();
+		return pos;
 	}
 
 
 	private void dropDebugSphere(Terrain1 terrain, float x, float z) {
-		Ray r = new Ray(new Vector3f(x, 60, z), new Vector3f(0, -1, 0));
-		CollisionResults crs = new CollisionResults();
-		terrain.getMainNode().collideWith(r, crs);
-		if (crs.size() > 0) {
-			Vector3f pos = crs.getClosestCollision().getContactPoint();			
-			DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
-			this.actuallyAddEntity(ds);
-		}
-
-
+		Vector3f pos = this.getHeightAtPoint(x, z);// crs.getClosestCollision().getContactPoint();			
+		DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+		this.actuallyAddEntity(ds);
 	}
-	
-	
+
+
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		MercServerAvatar avatar = new MercServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
@@ -204,23 +195,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	@Override
 	protected int getWinningSide() {
-		return 2;
-		/*	int highestScore = -1;
-		int winningSide = -1;
-		boolean draw = false;
-		for(ClientData c : super.clients.values()) {
-			if (c.getScore() > highestScore) {
-				winningSide = c.side;
-				highestScore = c.getScore();
-				draw = false;
-			} else if (c.getScore() == highestScore) {
-				draw = true;
-			}
-		}
-		if (draw) {
-			return -1;
-		}
-		return winningSide;*/
+		return 2; // todo
 	}
 
 

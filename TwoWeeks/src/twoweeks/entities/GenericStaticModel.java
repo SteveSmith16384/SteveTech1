@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.jme3.collision.Collidable;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -14,7 +15,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class GenericStaticModel extends PhysicalEntity {
 
-	public GenericStaticModel(IEntityController _game, int id, int type, String name, String modelFile, float height, String tex, float x, float y, float z, Quaternion q) {
+	public GenericStaticModel(IEntityController _game, int id, int type, String name, String modelFile, float height, String tex, float x, float y, float z, Quaternion q, Vector3f offset) {
 		super(_game, id, type, name, false);
 
 		if (_game.isServer()) {
@@ -24,6 +25,7 @@ public class GenericStaticModel extends PhysicalEntity {
 			creationData.put("height", height);
 			creationData.put("tex", tex);
 			creationData.put("q", q);
+			creationData.put("offset", offset);
 		}
 
 		Spatial model = game.getAssetManager().loadModel(modelFile);
@@ -33,6 +35,7 @@ public class GenericStaticModel extends PhysicalEntity {
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		JMEModelFunctions.scaleModelToHeight(model, height);
 		JMEModelFunctions.moveYOriginTo(model, 0f);
+		model.move(offset);
 		//JMEAngleFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 
 		this.mainNode.attachChild(model);

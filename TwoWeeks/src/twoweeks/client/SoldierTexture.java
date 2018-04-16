@@ -40,6 +40,7 @@ public class SoldierTexture {
 			}
 		};
 		
+		pi.refreshImage();
 		return new Texture2D(pi);
 	}
 }

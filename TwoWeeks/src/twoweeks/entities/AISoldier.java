@@ -73,7 +73,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			this.soldierModel.createAndGetModel(_side);
 			game.getGameNode().attachChild(this.soldierModel.getModel());
 		}
-		
+
 		// Create box for collisions
 		Box box = new Box(soldierModel.getBoundingBox().getXExtent(), soldierModel.getBoundingBox().getYExtent(), soldierModel.getBoundingBox().getZExtent());
 		Geometry bbGeom = new Geometry("bbGeom_" + name, box);
@@ -88,7 +88,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this); // was false
 		simpleRigidBody.canWalkUpSteps = true;
 		simpleRigidBody.setBounciness(0); // todo - copy to MA
-		
+
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
 		hudNode.setText("Cpl. Jonlan");
@@ -106,11 +106,11 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			}*/
 
 			ai.process(server, tpf_secs);
-
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
-			/*if (soldierModel != null) {
-				this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
-			}*/
+
+			if (Globals.DEBUG_JUMPING_SHOOTER) {
+				Globals.p("Soldier: " + this.getWorldTranslation().y);
+			}
 		} else {
 			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
 		}
@@ -124,8 +124,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		// Set position and direction of avatar model, which doesn't get moved automatically
 		this.soldierModel.getModel().setLocalTranslation(this.getWorldTranslation());
 	}
-	
-	
+
+
 	@Override
 	public void fallenOffEdge() {
 		this.remove();
@@ -140,7 +140,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 				AbstractEntityServer server = (AbstractEntityServer)game;
 				server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, collider.getActualShooter()));
 				this.serverSideCurrentAnimCode = AbstractAvatar.ANIM_DIED;
-				
+
 				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
 				this.simpleRigidBody.setMovedByForces(false);
 			}
@@ -249,7 +249,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		return shootersSide != this.side;
 	}
 
-/*
+	/*
 	@Override
 	public Vector3f getShootDir() {
 		return this.ai.getCurrentTarget().getWorldTranslation().subtract(this.getWorldTranslation()).normalizeLocal();
@@ -260,16 +260,16 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public Vector3f getBulletStartPos() {
 		return this.getWorldTranslation();
 	}
-*/
-	
+	 */
+
 	public void shoot(PhysicalEntity target) {
 		if (this.shootInt.hitInterval()) {
 			if (Globals.DEBUG_AI_SHOOTING) {
-				Globals.p("AI shooting!");
+				Globals.p("AI shooting!" + this.getWorldTranslation().y);
 			}
-			Vector3f pos = this.getWorldTranslation();
-			pos.y += 1f;
-			Vector3f dir = target.getWorldTranslation().subtract(pos).normalizeLocal();
+			Vector3f pos = this.getWorldTranslation().clone();
+			pos.y += this.soldierModel.getBulletStartHeight();
+			Vector3f dir = target.getMainNode().getWorldBound().getCenter().subtract(pos).normalizeLocal();
 			AIBullet bullet = new AIBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
 			this.game.addEntity(bullet);
 		}

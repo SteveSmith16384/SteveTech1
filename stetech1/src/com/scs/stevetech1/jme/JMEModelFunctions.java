@@ -66,7 +66,7 @@ public class JMEModelFunctions {
 		g.setMaterial(mat);
 
 		// Move to middle
-		g.move(-size/2, 0, -size/2);
+		//g.move(-size/2, 0, -size/2);
 		return g;
 	}
 

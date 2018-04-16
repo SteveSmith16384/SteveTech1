@@ -110,7 +110,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			// Check we're not already colliding *before* we've even moved
 			List<SimpleRigidBody<T>> crs = this.checkForCollisions();
 			if (crs.size() != 0) {
-				//todo - re-add System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
+				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				this.moveAwayFrom(crs);
 				return; // Don't bother moving any more!
 			}
@@ -317,15 +317,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * Moves and entity and returns object they collided with.
 	 */
 	private List<SimpleRigidBody<T>> move(Vector3f offset) {
-		/*if (offset.length() > SimplePhysicsController.MAX_MOVE_DIST) {
-			offset.normalizeLocal().multLocal(SimplePhysicsController.MAX_MOVE_DIST);
-		}*/
 		this.simpleEntity.moveEntity(offset);
 		List<SimpleRigidBody<T>> crs = checkForCollisions();
 		if (crs.size() > 0) {
 			this.simpleEntity.moveEntity(offset.negateLocal()); // Move back
-		} else {
-			//this.simpleEntity.hasMoved();
 		}
 		return crs;
 	}
@@ -390,7 +385,7 @@ public class SimpleRigidBody<T> implements Collidable {
 						tq = (TerrainQuad)e.simpleEntity.getCollidable();
 						bv = this.getBoundingBox();
 					}
-					Ray ray = new Ray(bv.getCenter(), new Vector3f(0, -1, 0));
+					Ray ray = new Ray(bv.getCenter(), new Vector3f(0, -1, 0)); // todo - don't create each time
 					ray.setLimit(bv.getYExtent());
 					res = tq.collideWith(ray, tempCollisionResults);
 					

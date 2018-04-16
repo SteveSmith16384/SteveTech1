@@ -16,22 +16,22 @@ import com.jme3.texture.Texture;
 
 public class BeamLaserModel extends Node {
 
-	private static ArrayList<BeamLaserModel> spare = new ArrayList<BeamLaserModel>();
+	private static ArrayList<BeamLaserModel> spare = new ArrayList<BeamLaserModel>(); // Cache old models
 
 	private Geometry g;
 	private Cylinder cyl;
 
-	public static BeamLaserModel Factory(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat) {
+	public static BeamLaserModel Factory(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex) {
 		if (spare.size() > 0) {
 			BeamLaserModel m = spare.remove(0);
 			m.setPoints(start, end, true);
 			return  m;
 		} else {
-			return new BeamLaserModel(assetManager, start, end, col, generateMat);
+			return new BeamLaserModel(assetManager, start, end, col, generateMat, tex);
 		}
 	}
 
-	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat) {
+	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex) {
 		super("Laser");
 
 		cyl = new Cylinder(5, 10, 0.02f, start.distance(end), true);
@@ -41,9 +41,9 @@ public class BeamLaserModel extends Node {
 		g.setMesh(cyl);
 		this.attachChild(g);
 
-		if (generateMat) {
+		if (generateMat) { // Only needed if client-side
 			Material mat = new Material(assetManager,"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			Texture t = assetManager.loadTexture("Textures/cells3.png");
+			Texture t = assetManager.loadTexture(tex);//"Textures/cells3.png");
 			mat.setTexture("DiffuseMap", t);
 			mat.setColor("GlowColor", col);//ColorRGBA.Pink);
 			mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
