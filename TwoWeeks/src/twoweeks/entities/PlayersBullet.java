@@ -29,8 +29,6 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 
 	private static final boolean USE_CYLINDER = true;
 
-	private float timeLeft = 3f; // todo - use distance instead
-
 	public PlayersBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
 		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_BULLET, "PlayersBullet", owner, _side, _client);
 
@@ -84,8 +82,9 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 				Globals.p("Bullet at " + this.getWorldTranslation());
 			}
 			super.processByServer(server, tpf_secs);
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
+			
+			float dist = this.origin.distance(this.getWorldTranslation());
+			if (dist > 30) {
 				this.remove();
 			}
 		}
@@ -101,12 +100,9 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 			}
 			simpleRigidBody.process(tpf_secs);
 
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
+			float dist = this.origin.distance(this.getWorldTranslation());
+			if (dist > 30) {
 				this.remove();
-				if (Globals.DEBUG_NO_BULLET) {
-					Globals.p("Removed bullet");
-				}
 			}
 		}
 	}

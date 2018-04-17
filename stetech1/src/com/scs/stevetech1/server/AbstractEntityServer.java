@@ -594,7 +594,12 @@ ICollisionListener<PhysicalEntity> {
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
+		
+		this.collisionOccurred(pea, peb);
+	}
 
+
+	public void collisionOccurred(PhysicalEntity pea, PhysicalEntity peb) {
 		if (pea instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
 			ic.collided(peb);

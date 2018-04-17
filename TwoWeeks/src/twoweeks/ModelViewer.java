@@ -46,8 +46,8 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		JMEFunctions.scaleModelToHeight(model, 10f);
 		JMEFunctions.moveYOriginTo(model, 0f);
 */
-		Spatial model = assetManager.loadModel("Models/MoreNature/Blends/TreeNoLeavesSmall.blend");
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/MoreNature/Blends/TreeTexture.png");
+		Spatial model = assetManager.loadModel("Models/Suburban pack Vol.2 by Quaternius/Blends/BurgerShop.blend");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/Suburban pack Vol.2 by Quaternius/Blends/Textures/BurgerShopTexture.png");
 
 		//JMEModelFunctions.scaleModelToHeight(model, 2f);
 		//JMEModelFunctions.moveYOriginTo(model, 0f);

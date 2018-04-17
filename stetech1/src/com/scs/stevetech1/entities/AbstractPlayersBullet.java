@@ -29,6 +29,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
 	private ClientData client; // Only used server-side
+	protected Vector3f origin;
 
 	public AbstractPlayersBullet(IEntityController _game, int id, int type, String name, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
 		super(_game, id, type, name, true);
@@ -72,7 +73,8 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 		launched = true;
 		shooter = _shooter;
-
+		origin = startPos.clone();
+		
 		this.createSimpleRigidBody(dir);
 
 		game.getGameNode().attachChild(this.mainNode);

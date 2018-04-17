@@ -46,12 +46,12 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 			ray.setLimit(speed * tpf_secs);
 			RayCollisionData rcd = this.checkForCollisions(ray);
 			if (rcd != null) {
-				Globals.p("Bullet hit " + rcd.entity);
+				/*Globals.p("Bullet hit " + rcd.entity);
 				DebuggingSphere ds = new DebuggingSphere(server, server.getNextEntityID(), 16, rcd.point.x, rcd.point.y, rcd.point.z, true, false);
-				server.addEntity(ds);
+				server.addEntity(ds);*/
 				this.remove();
-				//server.co
-				// todo
+				
+				server.collisionOccurred(this, rcd.entity);
 			} else {
 				// Move spatial
 				Vector3f offset = this.dir.mult(speed * tpf_secs);
