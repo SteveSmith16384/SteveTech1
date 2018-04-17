@@ -141,8 +141,12 @@ public class TwoWeeksServer extends AbstractGameServer {
 		}*/
 
 		// Place tree
-		pos = this.getHeightAtPoint(95, 85);
-		GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion(), new Vector3f(1, -.1f, .5f));
+		//pos = this.getHeightAtPoint(95, 85);
+		//GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion(), new Vector3f(1, -.1f, .5f));
+		pos = new Vector3f(95, 0, 85);
+		GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
+		pos.y = this.getLowestHeightAtPoint(tree.getMainNode());
+		tree.setWorldTranslation(pos);
 		this.actuallyAddEntity(tree); //tree.getMainNode().getWorldBound();
 
 		DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
@@ -160,31 +164,37 @@ public class TwoWeeksServer extends AbstractGameServer {
 	}
 
 
-	private float getHeightAtPoint(Spatial s) {
+	private float getLowestHeightAtPoint(Spatial s) {
 		CollisionResults crs = new CollisionResults();
 		BoundingBox bb = (BoundingBox)s.getWorldBound();
+		
+		float res = 9999f;
 		
 		Ray r1 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), new Vector3f(0, -1, 0));
 		crs.clear();
 		this.getGameNode().collideWith(r1, crs);
 		Vector3f pos1 = crs.getClosestCollision().getContactPoint();
+		res = Math.min(res, pos1.y);
 		
 		Ray r2 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), new Vector3f(0, -1, 0));
 		crs.clear();
 		this.getGameNode().collideWith(r2, crs);
 		Vector3f pos2 = crs.getClosestCollision().getContactPoint();
+		res = Math.min(res, pos2.y);
 		
 		Ray r3 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), new Vector3f(0, -1, 0));
 		crs.clear();
 		this.getGameNode().collideWith(r3, crs);
 		Vector3f pos3 = crs.getClosestCollision().getContactPoint();
-		
+		res = Math.min(res, pos3.y);
+
 		Ray r4 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), new Vector3f(0, -1, 0));
 		crs.clear();
 		this.getGameNode().collideWith(r4, crs);
 		Vector3f pos4 = crs.getClosestCollision().getContactPoint();
-		
-		return pos;
+		res = Math.min(res, pos4.y);
+
+		return res;
 	}
 
 

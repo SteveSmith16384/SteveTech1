@@ -51,7 +51,12 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		JMEModelFunctions.scaleModelToHeight(model, 2f);
 		JMEModelFunctions.moveYOriginTo(model, 0f);
-		model.move(1, 0, .5f);
+
+		model.updateModelBound();
+		BoundingBox bv = (BoundingBox)model.getWorldBound();
+		model.move(bv.getXExtent(), 0, bv.getZExtent());
+
+		//model.move(1, 0, .5f);
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.jme3.collision.Collidable;
 import com.jme3.material.Material;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
@@ -91,6 +92,8 @@ public class Terrain1 extends PhysicalEntity {
 			/** 5. The LOD (level of detail) depends on were the camera is: */
 			TerrainLodControl control = new TerrainLodControl(terrain, client.getCamera());
 			terrain.addControl(control);
+			terrain.setShadowMode(ShadowMode.Receive);
+
 		}
 
 		this.mainNode.attachChild(terrain);

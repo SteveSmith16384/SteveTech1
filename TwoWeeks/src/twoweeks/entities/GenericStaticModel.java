@@ -2,6 +2,7 @@ package twoweeks.entities;
 
 import java.util.HashMap;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.Collidable;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -15,7 +16,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class GenericStaticModel extends PhysicalEntity {
 
-	public GenericStaticModel(IEntityController _game, int id, int type, String name, String modelFile, float height, String tex, float x, float y, float z, Quaternion q, Vector3f offset) {
+	public GenericStaticModel(IEntityController _game, int id, int type, String name, String modelFile, float height, String tex, float x, float y, float z, Quaternion q) {
 		super(_game, id, type, name, false);
 
 		if (_game.isServer()) {
@@ -25,7 +26,6 @@ public class GenericStaticModel extends PhysicalEntity {
 			creationData.put("height", height);
 			creationData.put("tex", tex);
 			creationData.put("q", q);
-			creationData.put("offset", offset);
 		}
 
 		Spatial model = game.getAssetManager().loadModel(modelFile);
@@ -35,7 +35,12 @@ public class GenericStaticModel extends PhysicalEntity {
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		JMEModelFunctions.scaleModelToHeight(model, height);
 		JMEModelFunctions.moveYOriginTo(model, 0f);
-		model.move(offset);
+		// Autocentre
+		/*model.updateModelBound();
+		BoundingBox bv = (BoundingBox)model.getWorldBound();		
+		model.move(bv.getXExtent(), 0, bv.getZExtent());*/
+		
+		//model.move(offset.x, 0, offset.z);
 		//JMEAngleFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 
 		this.mainNode.attachChild(model);
