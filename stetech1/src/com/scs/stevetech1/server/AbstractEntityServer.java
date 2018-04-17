@@ -220,7 +220,8 @@ ICollisionListener<PhysicalEntity> {
 								Globals.p("Server shooting from " + from);
 							}
 							Ray ray = new Ray(from, avatar.getShootDir());
-							RayCollisionData rcd = avatar.checkForCollisions(ray, chip.getRange());
+							ray.setLimit(chip.getRange());
+							RayCollisionData rcd = avatar.checkForCollisions(ray);//, chip.getRange());
 							if (rcd != null) {
 								rcd.timestamp = timeTo; // For debugging
 							}

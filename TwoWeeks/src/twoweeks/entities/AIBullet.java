@@ -28,10 +28,8 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 
 	private static final boolean USE_CYLINDER = false;
 
-	private float timeLeft = 3f;
-
 	public AIBullet(IEntityController _game, int id, int side, float x, float y, float z, IEntity shooter, Vector3f dir) {
-		super(_game, id, TwoWeeksClientEntityCreator.AI_BULLET, x, y, z, "AIBullet", side, shooter, dir);
+		super(_game, id, TwoWeeksClientEntityCreator.AI_BULLET, x, y, z, "AIBullet", side, shooter, dir, true, 20);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -64,12 +62,13 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 		//laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);
+		/*No, since we use a Ray
+		 * this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);
 		this.simpleRigidBody.setAerodynamicness(1);
 		this.simpleRigidBody.setGravity(0);
 		if (game.isServer()) {
 			this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10)); // 20));  // Only the server moves the bullet
-		}
+		}*/
 
 	}
 
@@ -79,17 +78,13 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 		return 1;
 	}
 
-
+/*
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 		
-		this.timeLeft -= tpf_secs;
-		if (this.timeLeft < 0) {
-			this.remove();
-		}
 	}
-
+*/
 
 	@Override
 	public void collided(PhysicalEntity pe) {

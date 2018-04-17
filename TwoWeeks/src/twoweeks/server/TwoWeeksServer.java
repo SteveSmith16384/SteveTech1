@@ -199,7 +199,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 
 	private void dropDebugSphere(Terrain1 terrain, float x, float z) {
-		Vector3f pos = this.getHeightAtPoint(x, z);// crs.getClosestCollision().getContactPoint();			
+		Vector3f pos = this.getHeightAtPoint(x, z);// crs.getClosestCollision().getContactPoint();
 		DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
 		this.actuallyAddEntity(ds);
 	}

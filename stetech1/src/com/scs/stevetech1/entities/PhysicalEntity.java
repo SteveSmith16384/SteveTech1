@@ -13,8 +13,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAnimatedClientSide;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
@@ -232,17 +232,17 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public RayCollisionData checkForCollisions(Ray r, float range) {
+	public RayCollisionData checkForCollisions(Ray r) {//, float range) {
 		CollisionResults res = new CollisionResults();
 		int c = game.getGameNode().collideWith(r, res);
 		if (c == 0) {
-			Globals.p("No Ray collisions");
+			//Globals.p("No Ray collisions");
 			return null;
 		}
 		Iterator<CollisionResult> it = res.iterator();
 		while (it.hasNext()) {
 			CollisionResult col = it.next();
-			if (col.getDistance() > range) {
+			if (col.getDistance() > r.getLimit()) { // Keep this in! collideWith() seems to ignore it  
 				break;
 			}
 			Spatial s = col.getGeometry();
@@ -255,6 +255,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			if (s != null && s.getUserData(Globals.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
 				if (pe != this && pe.collideable) {
+					if (this instanceof ILaunchable) {
+						ILaunchable bullet = (ILaunchable)this; // todo - not every time
+						if (bullet.getLauncher() == pe) {
+							continue;
+						}
+					}
 					//Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
 					return new RayCollisionData(pe, col.getContactPoint(), col.getDistance());
 				}
@@ -385,5 +391,5 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	}
 
-	
+
 }
