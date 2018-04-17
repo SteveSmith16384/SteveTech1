@@ -39,7 +39,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
 
-	public boolean sendPositionUpdate = true; // Send first time
+	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
 	private boolean requiresProcessing;
 	public Node owner;
 
@@ -170,7 +170,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public void setWorldTranslation(float x, float y, float z) {
 		this.getMainNode().setLocalTranslation(x, y, z);
-		sendPositionUpdate = true;
+		sendUpdate = true;
 	}
 
 
@@ -186,12 +186,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public void setWorldRotation(final Quaternion newRot2) {
 		getMainNode().setLocalRotation(newRot2);
-		this.sendPositionUpdate = true;
+		this.sendUpdate = true;
 	}
 
 
 	public boolean sendUpdates() {
-		return this.sendPositionUpdate;
+		return this.sendUpdate;
 	}
 
 

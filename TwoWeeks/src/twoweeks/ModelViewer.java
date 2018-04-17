@@ -46,17 +46,15 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		JMEFunctions.scaleModelToHeight(model, 10f);
 		JMEFunctions.moveYOriginTo(model, 0f);
 */
-		Spatial model = assetManager.loadModel("Models/Desert/BigPalmTree.blend");
-		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
+		Spatial model = assetManager.loadModel("Models/MoreNature/Blends/TreeNoLeavesSmall.blend");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/MoreNature/Blends/TreeTexture.png");
 
-		JMEModelFunctions.scaleModelToHeight(model, 2f);
-		JMEModelFunctions.moveYOriginTo(model, 0f);
+		//JMEModelFunctions.scaleModelToHeight(model, 2f);
+		//JMEModelFunctions.moveYOriginTo(model, 0f);
 
 		model.updateModelBound();
 		BoundingBox bv = (BoundingBox)model.getWorldBound();
 		model.move(bv.getXExtent(), 0, bv.getZExtent());
-
-		//model.move(1, 0, .5f);
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);

@@ -140,6 +140,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 				AbstractEntityServer server = (AbstractEntityServer)game;
 				server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, collider.getActualShooter()));
 				this.serverSideCurrentAnimCode = AbstractAvatar.ANIM_DIED;
+				this.sendUpdate = true; // Send new anim code
 
 				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
 				this.simpleRigidBody.setMovedByForces(false);

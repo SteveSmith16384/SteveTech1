@@ -258,7 +258,7 @@ ICollisionListener<PhysicalEntity> {
 						if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
 							eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
 							numSent++;
-							physicalEntity.sendPositionUpdate = false;
+							physicalEntity.sendUpdate = false;
 							if (eum.isFull()) {
 								gameNetworkServer.sendMessageToAll(eum);	
 								eum = new EntityUpdateMessage();

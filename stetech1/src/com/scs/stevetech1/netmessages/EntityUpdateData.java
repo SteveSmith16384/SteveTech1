@@ -12,7 +12,6 @@ public class EntityUpdateData implements ITimeStamped {
 
 	public int entityID;
 	public Vector3f pos;
-	//public boolean force; // Force new position on client, e.g. avatar restarting.
 	public long timestamp;
 	public Vector3f aimDir;
 	public int animationCode;
