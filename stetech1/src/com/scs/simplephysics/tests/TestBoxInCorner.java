@@ -27,7 +27,7 @@ public class TestBoxInCorner implements ICollisionListener<String> {
 
 
 	private TestBoxInCorner() {
-		physicsController = new SimplePhysicsController<String>(this, -1, -1, 0, 0.99f); // Note no gravity
+		physicsController = new SimplePhysicsController<String>(this, -1, 0, 0.99f); // Note no gravity
 
 		this.createBox("wallX", new Vector3f(10f, 10f, .5f), new Vector3f(2f, 0, 0), false);
 		this.createBox("wallZ", new Vector3f(.5f, 10f, 10f), new Vector3f(0, 0, 2f), false);

@@ -27,7 +27,7 @@ public class SimulateCollidingBoxes implements ICollisionListener<String> {
 
 
 	private SimulateCollidingBoxes() {
-		physicsController = new SimplePhysicsController<String>(this, SIZE/2, 1);
+		physicsController = new SimplePhysicsController<String>(this, SIZE/2);
 
 		box1 = this.createBox(1f);
 		box2 = this.createBox(SIZE-1f);

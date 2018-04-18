@@ -24,7 +24,7 @@ public class TestAutomove implements ICollisionListener<String> {
 
 
 	private TestAutomove() {
-		physicsController = new SimplePhysicsController<String>(this, -1, -1, 0, 0.99f);
+		physicsController = new SimplePhysicsController<String>(this, -1, 0, 0.99f);
 
 		SimpleRigidBody<String> box1 = this.createBox("box1", new Vector3f(0, 0, 0));
 		SimpleRigidBody<String> box2 = this.createBox("box2", new Vector3f(.5f, 0, 0));

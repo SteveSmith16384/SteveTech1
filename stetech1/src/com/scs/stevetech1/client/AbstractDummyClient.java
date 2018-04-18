@@ -144,7 +144,7 @@ public abstract class AbstractDummyClient implements IClientApp, IEntityControll
 		gameServerIP = _gameServerIP;
 		gamePort = _gamePort;
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1, gravity, aerodynamicness); // todo - get 15,1 params from server?
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, gravity, aerodynamicness); // todo - get 15,1 params from server?
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
 

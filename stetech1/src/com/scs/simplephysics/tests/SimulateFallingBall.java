@@ -28,7 +28,7 @@ public class SimulateFallingBall implements ICollisionListener<String> {
 
 
 	private SimulateFallingBall() {
-		physicsController = new SimplePhysicsController<String>(this, -1, -1);
+		physicsController = new SimplePhysicsController<String>(this, -1);
 
 		Sphere sphere = new Sphere(8, 8, .5f);
 		final Geometry ballGeometry = new Geometry("Sphere", sphere);

@@ -28,7 +28,7 @@ public class TestRotatingBox implements ICollisionListener<String> {
 
 
 	private TestRotatingBox() {
-		physicsController = new SimplePhysicsController<String>(this, -1, -1, 0, 0.99f);
+		physicsController = new SimplePhysicsController<String>(this, -1, 0, 0.99f);
 
 		Geometry box1 = this.createBox("box1", new Vector3f(0, 0, 0));
 		Geometry box3 = this.createBox("box3", new Vector3f(1.01f, 0, 0));

@@ -2,6 +2,7 @@ package twoweeks.entities;
 
 import java.util.HashMap;
 
+import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.Collidable;
 import com.jme3.material.Material;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
@@ -40,7 +41,8 @@ public class Terrain1 extends PhysicalEntity {
 		mat_terrain.setTexture("Alpha", game.getAssetManager().loadTexture("Textures/Terrain/splat/alphamap.png"));
 
 		/** 1.2) Add GRASS texture into the red layer (Tex1). */
-		Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass.jpg");
+		//Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass.jpg");
+		Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/dirt.jpg");
 		//Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass16x16.png");
 		grass.setWrap(WrapMode.Repeat);
 		mat_terrain.setTexture("Tex1", grass);
@@ -48,8 +50,8 @@ public class Terrain1 extends PhysicalEntity {
 		//mat_terrain.setFloat("Tex1Scale", 2f);
 
 		/** 1.3) Add DIRT texture into the green layer (Tex2) */
-		Texture dirt = game.getAssetManager().loadTexture("Textures/Terrain/splat/dirt.jpg");
-		//Texture dirt = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass16x16.png");
+		//Texture dirt = game.getAssetManager().loadTexture("Textures/Terrain/splat/dirt.jpg");
+		Texture dirt = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass_new.png");
 		dirt.setWrap(WrapMode.Repeat);
 		mat_terrain.setTexture("Tex2", dirt);
 		//mat_terrain.setFloat("Tex2Scale", 32f);
@@ -95,6 +97,9 @@ public class Terrain1 extends PhysicalEntity {
 			terrain.setShadowMode(ShadowMode.Receive);
 
 		}
+		
+		BoundingBox bb = (BoundingBox)terrain.getWorldBound();
+		terrain.move(bb.getXExtent(), bb.getYExtent(), bb.getZExtent()); // Move so 0,0,0 is corner
 
 		this.mainNode.attachChild(terrain);
 		//terrain.setLocalTranslation((w/2), 0, (d/2)); // Move it into position

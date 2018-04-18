@@ -27,12 +27,12 @@ public class SimplePhysicsController<T> {
 	private float aerodynamicness;
 
 	// Efficiency
-	private int nodeSizeXZ, nodeSizeY; // The size of the node collections
+	private int nodeSize; // The size of the node collections
 	public HashMap<String, SimpleNode<T>> nodes;
 	public ArrayList<SimpleRigidBody<T>> movingEntities;
 
-	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSizeXZ, int _nodeSizeY) {
-		this(_collListener, _nodeSizeXZ, _nodeSizeY, DEFAULT_GRAVITY, DEFAULT_AERODYNAMICNESS);
+	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSize) {
+		this(_collListener, _nodeSize, DEFAULT_GRAVITY, DEFAULT_AERODYNAMICNESS);
 	}
 
 
@@ -44,12 +44,11 @@ public class SimplePhysicsController<T> {
 	 * @param _gravity
 	 * @param _aerodynamicness
 	 */
-	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSizeXZ, int _nodeSizeY, float _gravity, float _aerodynamicness) {
+	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSize, float _gravity, float _aerodynamicness) {
 		super();
 
 		collListener = _collListener;
-		nodeSizeXZ = _nodeSizeXZ;
-		nodeSizeY = _nodeSizeY;
+		nodeSize = _nodeSize;
 		gravity = _gravity;
 		aerodynamicness = _aerodynamicness;
 
@@ -94,11 +93,11 @@ public class SimplePhysicsController<T> {
 
 		if (USE_NEW_COLLISION_METHOD) {
 			BoundingBox bb = srb.getBoundingBox();
-			boolean tooBig = bb.getVolume() > (nodeSizeXZ * nodeSizeXZ * nodeSizeY); // todo -check each extent
-			if (srb.getNeverMoves() && this.nodeSizeXZ > 0 && this.nodeSizeY > 0 && !tooBig) {
-				int x = (int)bb.getCenter().x / this.nodeSizeXZ;
-				int y = (int)bb.getCenter().y / this.nodeSizeY;
-				int z = (int)bb.getCenter().z / this.nodeSizeXZ;
+			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
+			if (srb.getNeverMoves() && this.nodeSize > 0 && !tooBig) {
+				int x = (int)bb.getCenter().x / this.nodeSize;
+				int y = (int)bb.getCenter().y / this.nodeSize;
+				int z = (int)bb.getCenter().z / this.nodeSize;
 
 				String id = x + "_" + y + "_" + z;
 				if (!this.nodes.containsKey(id)) {

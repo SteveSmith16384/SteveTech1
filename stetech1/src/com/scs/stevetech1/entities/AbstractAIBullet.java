@@ -17,8 +17,8 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 	protected boolean useRay;
 	private Vector3f dir;
 	protected float speed;
-	
-	private float distLeft = 30f;
+
+	private float distLeft = 30f; // todo - use origin
 
 	public AbstractAIBullet(IEntityController _game, int id, int type, float x, float y, float z, String name, int _side, IEntity _shooter, Vector3f _dir, boolean _useRay, float _speed) {
 		super(_game, id, type, name, true);
@@ -46,11 +46,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 			ray.setLimit(speed * tpf_secs);
 			RayCollisionData rcd = this.checkForCollisions(ray);
 			if (rcd != null) {
-				/*Globals.p("Bullet hit " + rcd.entity);
-				DebuggingSphere ds = new DebuggingSphere(server, server.getNextEntityID(), 16, rcd.point.x, rcd.point.y, rcd.point.z, true, false);
-				server.addEntity(ds);*/
 				this.remove();
-				
 				server.collisionOccurred(this, rcd.entity);
 			} else {
 				// Move spatial
@@ -85,11 +81,13 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 
 	@Override
 	public void remove() {
-		if (Globals.DEBUG_AI_SHOOTING) {
-			Globals.p("Removing bullet");
-		}
+		if (!removed) {
+			if (Globals.DEBUG_AI_SHOOTING) {
+				Globals.p("Removing bullet");
+			}
 
-		super.remove();
+			super.remove();
+		}
 	}
 
 

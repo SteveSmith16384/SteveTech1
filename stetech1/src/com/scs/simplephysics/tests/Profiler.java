@@ -29,7 +29,7 @@ public class Profiler implements ICollisionListener<String> {
 
 
 	private Profiler() {
-		physicsController = new SimplePhysicsController<String>(this, SIZE/2, 1);
+		physicsController = new SimplePhysicsController<String>(this, SIZE/2);
 
 		this.createBalls();
 		this.createBoxes();

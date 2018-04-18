@@ -95,7 +95,7 @@ ICollisionListener<PhysicalEntity> {
 
 		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15, 1); // todo - get 15,1 params from parent
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15); // todo - get 15,1 params from parent
 
 		loopTimer = new FixedLoopTime(tickrateMillis);
 

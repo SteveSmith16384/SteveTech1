@@ -29,8 +29,8 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 
 	private static final boolean USE_CYLINDER = true;
 
-	public PlayersBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
-		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_BULLET, "PlayersBullet", owner, _side, _client);
+	public PlayersBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
+		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_BULLET, "PlayersBullet", owner, _side, _client, dir, true, 10f, 30f);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -51,20 +51,20 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 			TextureKey key3 = null;
 			key3 = new TextureKey("Textures/bullet1.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-				floor_mat.setTexture("DiffuseMap", tex3);
+			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			floor_mat.setTexture("DiffuseMap", tex3);
 			laserNode.setMaterial(floor_mat);
 		}
 
 		laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
+		/*
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		simpleRigidBody.setAerodynamicness(1);
 		simpleRigidBody.setGravity(0);
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10)); // 20));
-
+*/
 	}
 
 
@@ -73,7 +73,7 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 		return 10;
 	}
 
-
+/*
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (launched) {
@@ -82,15 +82,11 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 				Globals.p("Bullet at " + this.getWorldTranslation());
 			}
 			super.processByServer(server, tpf_secs);
-			
-			float dist = this.origin.distance(this.getWorldTranslation());
-			if (dist > 30) {
-				this.remove();
-			}
+
 		}
 	}
 
-
+/*
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
 		if (launched) {
@@ -98,7 +94,7 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 				//Globals.p("Shooter at " + ((PhysicalEntity)this.shooter).getWorldTranslation());
 				Globals.p("Bullet at " + this.getWorldTranslation());
 			}
-			simpleRigidBody.process(tpf_secs);
+			//simpleRigidBody.process(tpf_secs);
 
 			float dist = this.origin.distance(this.getWorldTranslation());
 			if (dist > 30) {
@@ -106,7 +102,7 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 			}
 		}
 	}
-
+*/
 
 	@Override
 	public void collided(PhysicalEntity pe) {
@@ -126,9 +122,6 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 			}
 		}
 		this.remove();
-		if (Globals.DEBUG_NO_BULLET) {
-			Globals.p("Removed bullet -----------------------------------------");
-		}
 	}
 
 }

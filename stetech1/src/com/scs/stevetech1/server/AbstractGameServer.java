@@ -40,6 +40,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 
 	//private KryonetLobbyClient clientToLobbyServer;
 	//private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
+	
 	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
 	public SimpleGameData gameData;
 
@@ -57,7 +58,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	public void simpleInitApp() {
 		super.simpleInitApp();
 
-		//gameData = new SimpleGameData();
 		this.gameStatusSystem = new ServerGameStatusSystem(this);
 		this.pingSystem = new ServerPingSystem(this);
 

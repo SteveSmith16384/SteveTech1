@@ -127,8 +127,9 @@ public class TwoWeeksClientEntityCreator {
 		{
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
+			Vector3f dir = (Vector3f) msg.data.get("dir");
 			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			PlayersBullet bullet = new PlayersBullet(game, id, irac, side, null);
+			PlayersBullet bullet = new PlayersBullet(game, id, irac, side, null, dir);
 			return bullet;
 		}
 

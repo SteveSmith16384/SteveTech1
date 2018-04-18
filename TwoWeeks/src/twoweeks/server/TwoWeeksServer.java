@@ -86,7 +86,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
 		super(GAME_ID, new GameOptions(10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
-				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
+				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);
 
 	}
 
@@ -108,12 +108,12 @@ public class TwoWeeksServer extends AbstractGameServer {
 		float x = 100;//todo 10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
 		float z = 100;//10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
 
-		Ray r = new Ray(new Vector3f(x, 255, z), new Vector3f(0, -1, 0));
+		/*Ray r = new Ray(new Vector3f(x, 255, z), new Vector3f(0, -1, 0));
 		CollisionResults crs = new CollisionResults();
 		this.getGameNode().collideWith(r, crs);
-		Vector3f pos = crs.getClosestCollision().getContactPoint();
-
-		avatar.setWorldTranslation(x, pos.y + 10f, z);
+		Vector3f pos = crs.getClosestCollision().getContactPoint();*/
+		Vector3f pos = this.getHeightAtPoint(x, z);// crs.getClosestCollision().getContactPoint();
+		avatar.setWorldTranslation(x, pos.y + 50f, z);
 	}
 
 
@@ -127,7 +127,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 		super.gameData = new TwoWeeksGameData();
 
 		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
-		this.actuallyAddEntity(terrain);
+		this.actuallyAddEntity(terrain); // terrain.getMainNode().getWorldBound();
 
 		Vector3f pos = this.getHeightAtPoint(90, 90);
 		AISoldier s = new AISoldier(this, this.getNextEntityID(), pos.x, pos.y + 5, pos.z, 0);
@@ -140,17 +140,84 @@ public class TwoWeeksServer extends AbstractGameServer {
 			}
 		}*/
 
-		// Place tree
-		//pos = this.getHeightAtPoint(95, 85);
-		//GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion(), new Vector3f(1, -.1f, .5f));
+		// Place BigPalmTree
 		pos = new Vector3f(95, 0, 85);
 		GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
 		pos.y = this.getLowestHeightAtPoint(tree.getMainNode());
 		tree.setWorldTranslation(pos);
 		this.actuallyAddEntity(tree); //tree.getMainNode().getWorldBound();
+		tree = null;
 
-		DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
-		this.actuallyAddEntity(ds);
+		// Place BigTreeWithLeaves
+		pos = new Vector3f(90, 0, 85);
+		GenericStaticModel tree2 = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/MoreNature/Blends/BigTreeWithLeaves.blend", 3f, "Models/MoreNature/Blends/TreeTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+		pos.y = this.getLowestHeightAtPoint(tree2.getMainNode());
+		tree2.setWorldTranslation(pos);
+		this.actuallyAddEntity(tree2); //tree.getMainNode().getWorldBound();
+		tree2 = null;
+
+		// SmallBush
+		pos = new Vector3f(85, 0, 85);
+		GenericStaticModel smallbush = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/MoreNature/Blends/SmallBush.blend", .5f, "Models/MoreNature/Blends/BushTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+		pos.y = this.getLowestHeightAtPoint(smallbush.getMainNode());
+		smallbush.setWorldTranslation(pos);
+		this.actuallyAddEntity(smallbush); //tree.getMainNode().getWorldBound();
+		smallbush = null;
+
+		// Place SmallTreeWithLeave
+		pos = new Vector3f(80, 0, 85);
+		GenericStaticModel tree3 = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/MoreNature/Blends/SmallTreeWithLeave.blend", 3f, "Models/MoreNature/Blends/TreeTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+		pos.y = this.getLowestHeightAtPoint(tree3.getMainNode());
+		tree3.setWorldTranslation(pos);
+		this.actuallyAddEntity(tree3); //tree.getMainNode().getWorldBound();
+		tree3 = null;
+
+		// Place TreeNoLeavesBig
+		pos = new Vector3f(75, 0, 85);
+		GenericStaticModel tree4 = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/MoreNature/Blends/TreeNoLeavesBig.blend", 3f, "Models/MoreNature/Blends/TreeTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+		pos.y = this.getLowestHeightAtPoint(tree4.getMainNode());
+		tree4.setWorldTranslation(pos);
+		this.actuallyAddEntity(tree4); //tree.getMainNode().getWorldBound();
+		tree4 = null;
+
+		// Place TreeNoLeavesSmall
+		pos = new Vector3f(70, 0, 85);
+		GenericStaticModel tree5 = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/MoreNature/Blends/TreeNoLeavesSmall.blend", 3f, "Models/MoreNature/Blends/TreeTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+		pos.y = this.getLowestHeightAtPoint(tree5.getMainNode());
+		tree5.setWorldTranslation(pos);
+		this.actuallyAddEntity(tree5); //tree.getMainNode().getWorldBound();
+		tree5 = null;
+
+		// todo
+		// Place trees
+		/*for (int z=80; z<=120 ; z+= 10) {
+		for (int x=80; x<=120 ; x+= 10) {
+			this.placeGenericModel(terrain, x, z);
+		}
+	}*/
+
+		// todo
+		// Place AI
+		/*for (int z=80; z<=120 ; z+= 10) {
+		for (int x=80; x<=120 ; x+= 10) {
+		Vector3f pos = this.getHeightAtPoint(x, z);
+		AISoldier s = new AISoldier(this, this.getNextEntityID(), pos.x, pos.y + 5, pos.z, 0);
+		this.actuallyAddEntity(s);
+		}
+	}*/
+
+
+		//DebuggingSphere ds = new DebuggingSphere(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+		//this.actuallyAddEntity(ds);
+
+	}
+	
+	
+	private void placeGenericModel(GenericStaticModel tree5, float x, float z) {
+		Vector3f pos = new Vector3f(x, 0, z);
+		pos.y = this.getLowestHeightAtPoint(tree5.getMainNode());
+		tree5.setWorldTranslation(pos);
+		this.actuallyAddEntity(tree5); //tree.getMainNode().getWorldBound();
 
 	}
 

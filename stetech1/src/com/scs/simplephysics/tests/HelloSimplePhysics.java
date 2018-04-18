@@ -76,7 +76,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		cam.lookAt(new Vector3f(3, 1f, 20f), Vector3f.UNIT_Y);
 		viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
-		physicsController = new SimplePhysicsController<Spatial>(this, 5, 2);
+		physicsController = new SimplePhysicsController<Spatial>(this, 5);
 		setUpKeys();
 
 

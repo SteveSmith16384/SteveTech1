@@ -67,7 +67,7 @@ public class Globals {
 	public static final float SMALLEST_MOVE_DIST = 0.001f;// 0.02f;
 	public static final float MAX_MOVE_DIST = 1f;
 
-	public static final float CAM_DIST = 150f;
+	public static final float CAM_DIST = 1500f;
 
 	// User Data
 	public static final String ENTITY = "Entity";

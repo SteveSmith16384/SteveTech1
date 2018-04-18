@@ -2,6 +2,7 @@ package com.scs.stevetech1.entities;
 
 import java.util.HashMap;
 
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -15,6 +16,7 @@ import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.LaunchData;
 
@@ -31,11 +33,20 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	private ClientData client; // Only used server-side
 	protected Vector3f origin;
 
-	public AbstractPlayersBullet(IEntityController _game, int id, int type, String name, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
+	protected boolean useRay;
+	private Vector3f dir;
+	protected float speed;
+	private float range;
+
+	public AbstractPlayersBullet(IEntityController _game, int id, int type, String name, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f _dir, boolean _useRay, float _speed, float _range) {
 		super(_game, id, type, name, true);
 
 		client = _client;
-		
+		dir = _dir;
+		useRay = _useRay;
+		speed = _speed;
+		range = _range;
+
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
@@ -57,7 +68,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 
 	@Override
-	public void launch(IEntity _shooter, Vector3f startPos, Vector3f dir) {
+	public void launch(IEntity _shooter, Vector3f startPos, Vector3f _dir) {
 		if (launched) { // We might be the client that fired the bullet, which we've already launched
 			//Globals.p("Snowball already launched.  This may be a good sign.");
 			return;
@@ -72,9 +83,10 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		}*/
 
 		launched = true;
+		dir = _dir;
 		shooter = _shooter;
 		origin = startPos.clone();
-		
+
 		this.createSimpleRigidBody(dir);
 
 		game.getGameNode().attachChild(this.mainNode);
@@ -113,14 +125,35 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 	}
 
-	
+
 	protected abstract void createSimpleRigidBody(Vector3f dir); // todo - rename to createModel or something
-	
+
 
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (launched) {
-			super.processByServer(server, tpf_secs);
+			if (!useRay) {
+				super.processByServer(server, tpf_secs);
+			} else {
+				Ray ray = new Ray(this.getWorldTranslation(), dir);
+				ray.setLimit(speed * tpf_secs);
+				RayCollisionData rcd = this.checkForCollisions(ray);
+				if (rcd != null) {
+					this.remove();
+					server.collisionOccurred(this, rcd.entity);
+				} else {
+					// Move spatial
+					Vector3f offset = this.dir.mult(speed * tpf_secs);
+					this.adjustWorldTranslation(offset);
+				}
+			}
+
+			if (range > 0) {
+				float dist = this.origin.distance(this.getWorldTranslation());
+				if (dist > range) {
+					this.remove();
+				}
+			}
 		}
 	}
 
@@ -128,8 +161,37 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
 		if (launched) {
-			//Globals.p("Moving snowball:" + this.simpleRigidBody.getLinearVelocity());
-			simpleRigidBody.process(tpf_secs); //this.mainNode;
+			if (!useRay) {
+				simpleRigidBody.process(tpf_secs); //this.mainNode;
+			} else {
+				Ray ray = new Ray(this.getWorldTranslation(), dir);
+				ray.setLimit(speed * tpf_secs);
+				RayCollisionData rcd = this.checkForCollisions(ray);
+				if (rcd != null) {
+					this.remove();
+				} else {
+					// Move spatial
+					Vector3f offset = this.dir.mult(speed * tpf_secs);
+					this.adjustWorldTranslation(offset);
+				}
+			}
+
+			/*todo this.distLeft -= (speed * tpf_secs);
+			if (this.distLeft < 0) {
+				this.remove();
+			}*/
+		}
+	}
+
+
+	@Override
+	public void remove() {
+		if (!removed) {
+			//if (Globals.DEBUG_AI_SHOOTING) {
+				Globals.p("Removing bullet");
+			//}
+
+			super.remove();
 		}
 	}
 
@@ -142,7 +204,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 	@Override
 	public boolean sendUpdates() {
-		return false; // No, client controls the position
+		return false; // No, each client controls the position
 	}
 
 
@@ -161,7 +223,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 	@Override
 	public boolean isClientControlled() {
-		return launched; // All launched snowballs are under client control
+		return launched; // All launched bullets are under client control
 	}
 
 

@@ -26,7 +26,7 @@ public class BouncingSimulation implements ICollisionListener<String> {
 
 
 	private BouncingSimulation() {
-		physicsController = new SimplePhysicsController<String>(this, -1, -1);
+		physicsController = new SimplePhysicsController<String>(this, -1);
 
 		this.createBall();
 		this.createFloor();
