@@ -19,7 +19,8 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	private static final float MAX_STEP_HEIGHT = 0.25f; // todo - make config
 	private static final float GRAVITY_WARNING = -15f;
-
+	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
+	
 	private static final boolean DEBUG_AUTOMOVING = true;
 
 	private SimplePhysicsController<T> physicsController;
@@ -385,7 +386,7 @@ public class SimpleRigidBody<T> implements Collidable {
 						tq = (TerrainQuad)e.simpleEntity.getCollidable();
 						bv = this.getBoundingBox();
 					}
-					Ray ray = new Ray(bv.getCenter(), new Vector3f(0, -1, 0)); // todo - don't create each time
+					Ray ray = new Ray(bv.getCenter(), DOWN_VEC);
 					ray.setLimit(bv.getYExtent());
 					res = tq.collideWith(ray, tempCollisionResults);
 					

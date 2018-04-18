@@ -11,7 +11,7 @@ Players Bullets
 * Fired by a client, that client (and every other client and the server) has control over its own position, movement and removal, although only the server calculates damaged.  No updates are sent by the server for it.
 * When the server receives the "fired" command, it fast-forwards the projectiles position to where it should be in order for the server to be ahead of the shooting client as per all other entities.  It then tells all the other clients about it.
 * The other clients then launch their own projectiles, and are again responsible for its position, movement and removal.  No updates are sent by the server for it.
-
+* [This has the advantage of speeding everything thing up and reducing update messages]
 
 AI Bullets
 * Treated like normal entities

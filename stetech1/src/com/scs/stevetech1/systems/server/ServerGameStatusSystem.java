@@ -68,7 +68,7 @@ public class ServerGameStatusSystem {
 				}
 			}
 		}
-		return map.size() >= 2;
+		return map.size() >= server.getMinPlayersRequiredForGame();
 	}
 
 

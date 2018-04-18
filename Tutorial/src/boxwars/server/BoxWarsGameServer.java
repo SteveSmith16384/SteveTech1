@@ -76,4 +76,11 @@ public class BoxWarsGameServer extends AbstractGameServer {
 		return null;
 	}
 
+
+	@Override
+	public int getMinPlayersRequiredForGame() {
+		return 2;
+	}
+
+
 }

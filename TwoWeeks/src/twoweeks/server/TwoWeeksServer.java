@@ -30,6 +30,7 @@ import twoweeks.entities.Terrain1;
 public class TwoWeeksServer extends AbstractGameServer {
 
 	public static final String GAME_ID = "Two Weeks";
+	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
 
 	private TwoWeeksCollisionValidator collisionValidator = new TwoWeeksCollisionValidator();
 
@@ -108,10 +109,6 @@ public class TwoWeeksServer extends AbstractGameServer {
 		float x = 100;//todo 10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
 		float z = 100;//10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
 
-		/*Ray r = new Ray(new Vector3f(x, 255, z), new Vector3f(0, -1, 0));
-		CollisionResults crs = new CollisionResults();
-		this.getGameNode().collideWith(r, crs);
-		Vector3f pos = crs.getClosestCollision().getContactPoint();*/
 		Vector3f pos = this.getHeightAtPoint(x, z);// crs.getClosestCollision().getContactPoint();
 		avatar.setWorldTranslation(x, pos.y + 50f, z);
 	}
@@ -223,7 +220,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 
 	private Vector3f getHeightAtPoint(float x, float z) {
-		Ray r = new Ray(new Vector3f(x, 255, z), new Vector3f(0, -1, 0));
+		Ray r = new Ray(new Vector3f(x, 255, z), DOWN_VEC);
 		CollisionResults crs = new CollisionResults();
 		this.getGameNode().collideWith(r, crs);
 		Vector3f pos = crs.getClosestCollision().getContactPoint();
@@ -237,25 +234,25 @@ public class TwoWeeksServer extends AbstractGameServer {
 		
 		float res = 9999f;
 		
-		Ray r1 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), new Vector3f(0, -1, 0));
+		Ray r1 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), DOWN_VEC);
 		crs.clear();
 		this.getGameNode().collideWith(r1, crs);
 		Vector3f pos1 = crs.getClosestCollision().getContactPoint();
 		res = Math.min(res, pos1.y);
 		
-		Ray r2 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), new Vector3f(0, -1, 0));
+		Ray r2 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), DOWN_VEC);
 		crs.clear();
 		this.getGameNode().collideWith(r2, crs);
 		Vector3f pos2 = crs.getClosestCollision().getContactPoint();
 		res = Math.min(res, pos2.y);
 		
-		Ray r3 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), new Vector3f(0, -1, 0));
+		Ray r3 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), DOWN_VEC);
 		crs.clear();
 		this.getGameNode().collideWith(r3, crs);
 		Vector3f pos3 = crs.getClosestCollision().getContactPoint();
 		res = Math.min(res, pos3.y);
 
-		Ray r4 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), new Vector3f(0, -1, 0));
+		Ray r4 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), DOWN_VEC);
 		crs.clear();
 		this.getGameNode().collideWith(r4, crs);
 		Vector3f pos4 = crs.getClosestCollision().getContactPoint();
@@ -346,6 +343,12 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	private void checkForWinner() {
 		// todo
+	}
+
+
+	@Override
+	public int getMinPlayersRequiredForGame() {
+		return 1;
 	}
 
 

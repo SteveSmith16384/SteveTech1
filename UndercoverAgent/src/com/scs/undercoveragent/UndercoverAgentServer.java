@@ -277,5 +277,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		return collisionValidator.canCollide(a, b);
 	}
 
+
+	@Override
+	public int getMinPlayersRequiredForGame() {
+		return 2;
+	}
+
+
 }
 

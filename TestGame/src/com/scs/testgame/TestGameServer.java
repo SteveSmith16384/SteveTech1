@@ -142,4 +142,10 @@ public class TestGameServer extends AbstractGameServer {
 	}
 
 
+	@Override
+	public int getMinPlayersRequiredForGame() {
+		return 1;
+	}
+
+
 }

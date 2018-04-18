@@ -285,5 +285,8 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	public void playerKilled(AbstractServerAvatar avatar) {
 		// Override if req
 	}
+	
+	
+	public abstract int getMinPlayersRequiredForGame();
 }
 

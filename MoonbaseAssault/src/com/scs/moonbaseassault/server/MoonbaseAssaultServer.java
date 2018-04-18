@@ -427,4 +427,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	}
 
 	//--------------------------------
+
+
+	@Override
+	public int getMinPlayersRequiredForGame() {
+		return 1;
+	}
+
+
 }
