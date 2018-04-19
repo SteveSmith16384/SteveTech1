@@ -51,7 +51,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
-			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
+			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 1000000);
 			//float gravity = props.getPropertyAsFloat("gravity", -5);
 			//float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 

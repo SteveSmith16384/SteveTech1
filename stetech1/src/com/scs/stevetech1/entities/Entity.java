@@ -24,11 +24,12 @@ public abstract class Entity implements IEntity, Savable {
 	public Entity(IEntityController _module, int _id, int _type, String _name) {
 		super();
 		
-		gameId = game.getGameID();
 		id = _id;
 		type = _type;
 		game = _module;
 		name = _name;
+
+		gameId = game.getGameID();
 	}
 
 

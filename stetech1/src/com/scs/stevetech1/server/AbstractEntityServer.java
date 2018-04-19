@@ -264,7 +264,7 @@ ICollisionListener<PhysicalEntity> {
 
 			int numSent = 0;
 			// Loop through the entities
-			for (IEntity e : entitiesForProcessing.values()) {
+			for (IEntity e : entitiesForProcessing.values()) { // this.entities
 				if (e instanceof IPlayerControlled) {
 					IPlayerControlled p = (IPlayerControlled)e;
 					p.resetPlayerInput();
@@ -344,7 +344,7 @@ ICollisionListener<PhysicalEntity> {
 				players.add(client.playerData);
 			}
 		}
-		Globals.p("Sending SimpleGameDataMessage with Game ID of " + gameData.gameID);
+		//Globals.p("Sending SimpleGameDataMessage with Game ID of " + gameData.gameID);
 		this.gameNetworkServer.sendMessageToAll(new SimpleGameDataMessage(this.gameData, players));
 
 

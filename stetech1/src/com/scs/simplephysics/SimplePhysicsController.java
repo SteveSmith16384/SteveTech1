@@ -86,6 +86,10 @@ public class SimplePhysicsController<T> {
 		if (srb == null) {
 			throw new RuntimeException("SimpleRigidBody is null");
 		}
+		
+		if (this.entities.contains(srb)) {
+			throw new RuntimeException("SRB already added");
+		}
 
 		synchronized (entities) {
 			this.entities.add(srb);
