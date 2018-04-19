@@ -156,9 +156,6 @@ public class SimpleRigidBody<T> implements Collidable {
 				boolean collided = false; 
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
-					if (this.tmpMoveDir.y > 0) { // todo - remove
-						int f = 65;
-					}
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
 						collided = true;
@@ -392,10 +389,6 @@ public class SimpleRigidBody<T> implements Collidable {
 					
 				} else if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
 					// Both are complex meshes!  Convert one into a simple boundingvolume
-					if (Globals.DEBUG_MESH_COLLISION_CONV) {
-						Globals.p("Converting " + this + " into bb");
-					}
-
 					if (this.modelComplexity >= e.modelComplexity) {
 						// We are the most complex
 						Node s = (Node)e.simpleEntity.getCollidable();

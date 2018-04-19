@@ -11,6 +11,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class Entity implements IEntity, Savable {
 
+	protected int gameId;
 	public final int id;
 	public final int type;
 	protected transient IEntityController game;
@@ -21,6 +22,9 @@ public abstract class Entity implements IEntity, Savable {
 	protected HashMap<String, Object> creationData;
 
 	public Entity(IEntityController _module, int _id, int _type, String _name) {
+		super();
+		
+		gameId = game.getGameID();
 		id = _id;
 		type = _type;
 		game = _module;
@@ -74,6 +78,12 @@ public abstract class Entity implements IEntity, Savable {
 
 	public HashMap<String, Object> getCreationData() {
 		return creationData;
+	}
+
+
+	@Override
+	public int getGameID() {
+		return gameId;
 	}
 
 

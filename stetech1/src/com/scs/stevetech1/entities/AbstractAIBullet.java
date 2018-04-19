@@ -4,13 +4,13 @@ import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, ILaunchable {
+public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, IPlayerLaunchable {
 
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
@@ -83,7 +83,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 	public void remove() {
 		if (!removed) {
 			if (Globals.DEBUG_AI_SHOOTING) {
-				Globals.p("Removing bullet");
+				Globals.p("Removing AI bullet");
 			}
 
 			super.remove();

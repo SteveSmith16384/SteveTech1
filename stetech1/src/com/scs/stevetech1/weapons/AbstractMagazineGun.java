@@ -20,8 +20,8 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	protected float shotInterval_secs, reloadInterval_secs;
 	protected ClientData client; // Only used server-side
 
-	public AbstractMagazineGun(IEntityController _game, int id, int type, ICanShoot owner, int abilityNum, String _name, float shotInt, float reloadInt, int magSize, ClientData _client) { 
-		super(_game, id, type, (AbstractAvatar)owner, abilityNum, _name);
+	public AbstractMagazineGun(IEntityController _game, int id, int type, int playerID, ICanShoot owner, int abilityNum, String _name, float shotInt, float reloadInt, int magSize, ClientData _client) { 
+		super(_game, id, type, playerID, (AbstractAvatar)owner, abilityNum, _name);
 
 		this.shotInterval_secs = shotInt;
 		this.reloadInterval_secs = reloadInt;
@@ -32,7 +32,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	public abstract boolean launchBullet();
 
-	protected abstract void createBullet(AbstractEntityServer server, int entityid, IEntityContainer<AbstractPlayersBullet> owner, int side);
+	protected abstract void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> owner, int side);
 
 	public abstract int getBulletsInMag();
 
@@ -56,7 +56,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	private void reload(AbstractEntityServer server) {
 		IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
 		while (this.getBulletsInMag() < this.magazineSize) {
-			createBullet(server, server.getNextEntityID(), irac, -1);
+			createBullet(server, server.getNextEntityID(), playerID, irac, -1);
 		}
 	}
 

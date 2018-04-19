@@ -8,6 +8,7 @@ import com.scs.moonbaseassault.entities.PlayerLaserBullet;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
@@ -22,7 +23,7 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 	private LinkedList<PlayerLaserBullet> ammoCache = new LinkedList<PlayerLaserBullet>(); 
 
 	public LaserRifle(IEntityController game, int id, AbstractAvatar owner, int abilityNum, ClientData client) {
-		super(game, id, MoonbaseAssaultClientEntityCreator.LASER_RIFLE, owner, abilityNum, "Laser Rifle", .2f, 2, 10, client);
+		super(game, id, MoonbaseAssaultClientEntityCreator.LASER_RIFLE, client.getPlayerID(), owner, abilityNum, "Laser Rifle", .2f, 2, 10, client);
 
 	}
 
@@ -67,8 +68,8 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 
 
 	@Override
-	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer irac, int side) {
-		PlayerLaserBullet l = new PlayerLaserBullet(game, entityid, irac, side, client);
+	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> owner, int side) {
+		PlayerLaserBullet l = new PlayerLaserBullet(game, entityid, playerID, owner, side, client, null);
 		server.addEntity(l);
 
 	}

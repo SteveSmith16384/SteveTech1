@@ -27,14 +27,14 @@ public class AILaserBullet extends AbstractAIBullet implements INotifiedOfCollis
 
 	private static final boolean USE_CYLINDER = true;
 
-	private float timeLeft = 3f;
-
 	public AILaserBullet(IEntityController _game, int id, int side, float x, float y, float z, IEntity _shooter, Vector3f dir) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_LASER_BULLET, x, y, z, "LaserBullet", side, _shooter, dir);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_LASER_BULLET, x, y, z, "LaserBullet", side, _shooter, dir, true, 20);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
+			creationData.put("shooterID", shooter.getID());
+			creationData.put("dir", dir);
 		}
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
@@ -62,39 +62,39 @@ public class AILaserBullet extends AbstractAIBullet implements INotifiedOfCollis
 			laserNode.setMaterial(floor_mat);
 		}
 
-		laserNode.setShadowMode(ShadowMode.Cast);
+		//laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
-		simpleRigidBody.setAerodynamicness(1);
-		simpleRigidBody.setGravity(0);
-		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10)); // 20));
+		/*No, since we use a Ray
+		 * this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);
+		this.simpleRigidBody.setAerodynamicness(1);
+		this.simpleRigidBody.setGravity(0);
+		if (game.isServer()) {
+			this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10)); // 20));  // Only the server moves the bullet
+		}*/
 
 	}
 
 
 	@Override
 	public float getDamageCaused() {
-		return 10;
+		return 1;
 	}
 
-
+/*
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
-		this.timeLeft -= tpf_secs;
-		if (this.timeLeft < 0) {
-			this.remove();
-		}
+		
 	}
-
+*/
 
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
 			if (!Globals.HIDE_EXPLOSION) {
-				ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-				game.addEntity(expl);
+				//todo ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
+				//game.addEntity(expl);
 			}
 
 		}

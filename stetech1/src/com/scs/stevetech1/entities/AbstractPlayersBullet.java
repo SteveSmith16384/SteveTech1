@@ -4,12 +4,13 @@ import java.util.HashMap;
 
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
@@ -25,9 +26,10 @@ import com.scs.stevetech1.systems.client.LaunchData;
  * launch at the same time on the client and the server. 
  *
  */
-public abstract class AbstractPlayersBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, ICausesHarmOnContact, IClientControlled {
+public abstract class AbstractPlayersBullet extends PhysicalEntity implements IProcessByClient, IPlayerLaunchable, ICausesHarmOnContact, IClientControlled {
 
 	protected boolean launched = false;
+	public int playerID;
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
 	private ClientData client; // Only used server-side
@@ -38,9 +40,10 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	protected float speed;
 	private float range;
 
-	public AbstractPlayersBullet(IEntityController _game, int id, int type, String name, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f _dir, boolean _useRay, float _speed, float _range) {
-		super(_game, id, type, name, true);
+	public AbstractPlayersBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntityContainer<AbstractPlayersBullet> container, int _side, ClientData _client, Vector3f _dir, boolean _useRay, float _speed, float _range) {
+		super(_game, entityId, type, name, true);
 
+		playerID = _playerOwnerId;
 		client = _client;
 		dir = _dir;
 		useRay = _useRay;
@@ -50,14 +53,15 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
-			creationData.put("containerID", owner.getID());
+			creationData.put("playerID", playerID);
+			creationData.put("containerID", container.getID());
 		}
 
-		if (owner != null) { // Only snowball fired by us have an owner
+		if (container != null) { // Only snowball fired by us have a container
 			/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Adding snowball entity " + id + " to owner " + owner.getID());
 			}*/
-			owner.addToCache(this);
+			container.addToCache(this);
 		}
 
 		side = _side;
@@ -69,9 +73,16 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 	@Override
 	public void launch(IEntity _shooter, Vector3f startPos, Vector3f _dir) {
+		/*if (!game.isServer()) {
+			AbstractGameClient client = (AbstractGameClient)this.game;
+			if (this.playerID == client.playerID) {
+				return;
+			}
+		}*/
 		if (launched) { // We might be the client that fired the bullet, which we've already launched
 			//Globals.p("Snowball already launched.  This may be a good sign.");
-			return;
+			//return;
+			throw new RuntimeException("Trying to relaunch launched bullet");
 		}
 
 		if (_shooter == null) {
@@ -118,7 +129,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 			// If server, send messages to clients to tell them it has been launched
 			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
-			server.gameNetworkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), ld));
+			server.gameNetworkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
 		} else {
 			// todo - client confirms that bullet launched
 		}
@@ -176,10 +187,12 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 				}
 			}
 
-			/*todo this.distLeft -= (speed * tpf_secs);
-			if (this.distLeft < 0) {
-				this.remove();
-			}*/
+			if (range > 0) {
+				float dist = this.origin.distance(this.getWorldTranslation());
+				if (dist > range) {
+					this.remove();
+				}
+			}
 		}
 	}
 

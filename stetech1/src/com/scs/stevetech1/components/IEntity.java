@@ -10,6 +10,8 @@ public interface IEntity {
 	
 	int getID();
 	
+	int getGameID();
+	
 	int getType();
 	
 	HashMap<String, Object> getCreationData();

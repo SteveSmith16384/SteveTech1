@@ -22,6 +22,8 @@ public class LaunchData { // POJO
 		dir = _dir;
 		shooterId = _shooterId;
 		launchTime = _launchTime;
+		
+		//if ()
 	}
 	
 }

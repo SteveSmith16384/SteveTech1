@@ -13,24 +13,27 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 	private static final float SEND_INT_SECS = 5;
 
+	public int playerID;
 	protected AbstractAvatar owner;
 	public int abilityNum;
 	private float timeUntilNextSend_secs = SEND_INT_SECS;
 	private long lastUpdateMsgTime;
 
-	public AbstractAbility(IEntityController _game, int _id, int type, AbstractAvatar _owner, int _abilityNum, String _name) {
+	public AbstractAbility(IEntityController _game, int _id, int type, int _playerID, AbstractAvatar _owner, int _abilityNum, String _name) {
 		super(_game, _id, type, _name);
 
 		if (_owner == null) {
 			throw new RuntimeException("No owner for ability");
 		}
 
+		playerID = _playerID;
 		owner = _owner;
 		abilityNum = _abilityNum;
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("ownerid", owner.getID());
+			creationData.put("playerID", playerID);
 			creationData.put("num", abilityNum);
 		}
 		

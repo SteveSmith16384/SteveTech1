@@ -113,10 +113,12 @@ public class TwoWeeksClientEntityCreator {
 		case MACHINE_GUN:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
+			int playerID = (int) msg.data.get("playerID");
 			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+			//if (playerID == game.playerID) { // Don't care about other's abilities?
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
-				PlayersMachineGun gl = new PlayersMachineGun(game, id, owner, num, null);
+				PlayersMachineGun gl = new PlayersMachineGun(game, id, playerID, owner, num, null);
 				return gl;
 			}
 			return null;
@@ -127,9 +129,10 @@ public class TwoWeeksClientEntityCreator {
 		{
 			int containerID = (int) msg.data.get("containerID");
 			int side = (int) msg.data.get("side");
+			int playerID = (int) msg.data.get("playerID");
 			Vector3f dir = (Vector3f) msg.data.get("dir");
 			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			PlayersBullet bullet = new PlayersBullet(game, id, irac, side, null, dir);
+			PlayersBullet bullet = new PlayersBullet(game, id, playerID, irac, side, null, dir);
 			return bullet;
 		}
 
@@ -167,7 +170,7 @@ public class TwoWeeksClientEntityCreator {
 			SpaceCrate crate = new SpaceCrate(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, 0); // Give def rotation of 0, since it will get rotated anyway
 			return crate;
 		}
-*/
+		 */
 		case DEBUGGING_SPHERE:
 		{
 			DebuggingSphere sphere = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);

@@ -119,7 +119,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	protected void createGame() {
-		super.gameData = new SimpleGameData();
+		super.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
 		
 		if (Globals.EMPTY_MAP) {
 			// Do nothing

@@ -135,9 +135,11 @@ public class MoonbaseAssaultClientEntityCreator {
 		case PLAYER_LASER_BULLET:
 		{
 			int containerID = (int) msg.data.get("containerID");
+			int playerID = (int) msg.data.get("playerID");
 			int side = (int) msg.data.get("side");
+			Vector3f dir = (Vector3f) msg.data.get("dir");
 			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, irac, side, null);
+			PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, playerID, irac, side, null, dir);
 			return bullet;
 		}
 
@@ -202,9 +204,10 @@ public class MoonbaseAssaultClientEntityCreator {
 		case GRENADE:
 		{
 			int containerID = (int) msg.data.get("containerID");
+			int playerID = (int) msg.data.get("playerID");
 			int side = (int) msg.data.get("side");
 			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			PlayersGrenade snowball = new PlayersGrenade(game, id, irac, side, null);
+			PlayersGrenade snowball = new PlayersGrenade(game, id, playerID, irac, side, null);
 			return snowball;
 		}
 

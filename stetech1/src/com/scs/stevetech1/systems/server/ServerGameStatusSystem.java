@@ -4,14 +4,15 @@ import java.util.ArrayList;
 
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 
 public class ServerGameStatusSystem {
 	
-	private AbstractGameServer server;
+	private AbstractEntityServer server;
 	
-	public ServerGameStatusSystem(AbstractGameServer _server) {
+	public ServerGameStatusSystem(AbstractEntityServer _server) {
 		super();
 		
 		server = _server;

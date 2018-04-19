@@ -1,7 +1,7 @@
 package com.scs.stevetech1.shared;
 
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
@@ -29,20 +29,20 @@ public class AbstractCollisionValidator {
 		}
 		
 		// Prevent bullets getting hit by the shooter
-		if (pa instanceof ILaunchable) {
-			ILaunchable aa = (ILaunchable)pa;
+		if (pa instanceof IPlayerLaunchable) {
+			IPlayerLaunchable aa = (IPlayerLaunchable)pa;
 			if (aa.getLauncher() == pb) {
 				return false;
 			}
 		}
-		if (pb instanceof ILaunchable) {
-			ILaunchable ab = (ILaunchable)pb;
+		if (pb instanceof IPlayerLaunchable) {
+			IPlayerLaunchable ab = (IPlayerLaunchable)pb;
 			if (ab.getLauncher() == pa) {
 				return false;
 			}
 		}
 
-		if (pa instanceof ILaunchable && pb instanceof ILaunchable) {
+		if (pa instanceof IPlayerLaunchable && pb instanceof IPlayerLaunchable) {
 			// Bullets don't collide with each other
 			return false;
 		}

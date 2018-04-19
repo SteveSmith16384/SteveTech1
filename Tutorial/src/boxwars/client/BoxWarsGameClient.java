@@ -71,4 +71,5 @@ public class BoxWarsGameClient extends AbstractGameClient {
 		return null;
 	}
 
+
 }

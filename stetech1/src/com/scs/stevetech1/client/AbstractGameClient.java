@@ -44,9 +44,9 @@ import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IKillable;
-import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
+import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
@@ -57,7 +57,6 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
-import com.scs.stevetech1.lobby.KryonetLobbyClient;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
@@ -130,7 +129,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 	private List<IEntity> clientOnlyEntitiesToAdd = new LinkedList<IEntity>();
 	private List<Integer> clientOnlyEntitiesToRemove = new LinkedList<Integer>();
 
-	private String gameID;
+	private String gameCode; // To check the right type of client is connecting
 	private String playerName = "[Player's Name]";
 	//private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
@@ -167,7 +166,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { // float gravity, float aerodynamicness, 
 		super();
 
-		gameID = _gameID;
+		gameCode = _gameID;
 
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
@@ -302,8 +301,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			if (this.physicsController.getEntities().size() > this.entities.size()) {
 				Globals.pe("Warning: more simple rigid bodies than entities!");
 			}
+			if (this.currentAvatar == null) {
+				Globals.p("Warning: No current avatar");
+			}
 		}
-		
+
 		if (tpf_secs > 1) { 
 			tpf_secs = 1;
 		}
@@ -394,7 +396,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 						}
 						if (e instanceof PhysicalEntity) {
 							PhysicalEntity pe = (PhysicalEntity)e;
-							
+
 							pe.calcPosition(renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
 							pe.processChronoData(renderTime, tpf_secs);
 
@@ -488,7 +490,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
 			if (clientStatus < STATUS_RCVD_WELCOME) {
 				clientStatus = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
-				networkClient.sendMessageToServer(new NewPlayerRequestMessage(gameID, playerName));
+				networkClient.sendMessageToServer(new NewPlayerRequestMessage(gameCode, playerName));
 				clientStatus = STATUS_SENT_JOIN_REQUEST;
 			} else {
 				throw new RuntimeException("Received second welcome message");
@@ -498,6 +500,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			SimpleGameData oldGameData = this.gameData;
 			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 			this.gameData = gsm.gameData;
+			Globals.p("Game id is " + gameData.gameID);
 			this.playersList = gsm.players;
 			if (oldGameData == null) {
 				this.gameStatusChanged(-1, this.gameData.getGameStatus());
@@ -583,7 +586,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 				Globals.p("Received EntityLaunchedMessage");
 			}
 			EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
-			this.launchSystem.scheduleLaunch(elm); //this.entities
+			if (elm.playerID != this.playerID) {
+				this.launchSystem.scheduleLaunch(elm); //this.entities
+			} else {
+				// It was us that launched it in the first place!
+				Globals.p("Ignoring entity launched message");
+			}
 
 		} else if (message instanceof AvatarStartedMessage) {
 			if (Globals.DEBUG_PLAYER_RESTART) {
@@ -656,8 +664,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			TextureKey key3 = new TextureKey( "Textures/fence.png");
 			Texture tex3 = getAssetManager().loadTexture(key3);
 			Material floor_mat = null;
-				floor_mat = new Material(getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-				floor_mat.setTexture("DiffuseMap", tex3);
+			floor_mat = new Material(getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			floor_mat.setTexture("DiffuseMap", tex3);
 			debuggingBox.setMaterial(floor_mat);
 			debuggingBox.setLocalTranslation(msg.bounds.getCenter().x, msg.bounds.getCenter().y, msg.bounds.getCenter().z);
 			debugNode.attachChild(debuggingBox);
@@ -718,14 +726,19 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 
 	protected final void createEntity(NewEntityMessage msg, long timeToCreate) {
-		IEntity e = actuallyCreateEntity(this, msg);
-		if (e != null) {
-			if (e instanceof AbstractAvatar || e instanceof IAbility || e instanceof AbstractEnemyAvatar) {
-				this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to, or a grenade launcher to add a bullet to
-				// todo -point camera here
-			} else {
-				this.addEntity(e); // Schedule it for addition at the right time
+		if (msg.gameId == this.gameData.gameID) {
+			IEntity e = actuallyCreateEntity(this, msg);
+			if (e != null) {
+				if (e instanceof AbstractAvatar || e instanceof IAbility || e instanceof AbstractEnemyAvatar) {
+					this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to, or a grenade launcher to add a bullet to
+					// todo -point camera here
+				} else {
+					this.addEntity(e); // Schedule it for addition at the right time
+				}
 			}
+		} else {
+			Globals.p("Ignoring entity for game " + msg.gameId);
+			// It's not for this game, so ignore it
 		}
 
 	}
@@ -776,8 +789,8 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 			if (e instanceof PhysicalEntity) {
 				boolean add = true;
-				if (e instanceof ILaunchable) { // Don't add bullets until they are fired!
-					ILaunchable il = (ILaunchable)e;
+				if (e instanceof IPlayerLaunchable) { // Don't add bullets until they are fired!
+					IPlayerLaunchable il = (IPlayerLaunchable)e;
 					add = il.hasBeenLaunched();
 				}
 				if (add) {
@@ -835,6 +848,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 				this.entities.remove(id);
 				if (e.requiresProcessing()) {
 					this.entitiesForProcessing.remove(id);
+				}
+				if (e == this.currentAvatar) {
+					this.currentAvatar = null;
 				}
 			} else {
 				Globals.pe("Entity id " + id + " not found for removal");
@@ -957,7 +973,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 	protected abstract Spatial getPlayersWeaponModel();
 
-	
+
 	@Override
 	public long getRenderTime() {
 		return this.renderTime;
@@ -969,6 +985,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 		return this.entities.get(id);
 	}
 
+
+	@Override
+	public int getGameID() {
+		return this.gameData.gameID;
+	}
 
 
 }

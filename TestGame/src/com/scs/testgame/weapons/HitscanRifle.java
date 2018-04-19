@@ -29,7 +29,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	private int bulletsInMag = MAG_SIZE;
 
 	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num, ClientData client) {
-		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, owner, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
+		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, client.getPlayerID(), owner, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
 
 	}
 
@@ -111,7 +111,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer irac, int side) {
+	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer irac, int side) {
 		this.bulletsInMag++; // No physical projectiles required!
 		
 	}

@@ -22,8 +22,8 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOfCollision {//, IRemoveOnContact {
 
-	public SnowballBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
-		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", owner, _side, _client);
+	public SnowballBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
+		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", playerOwnerId, owner, _side, _client, null, false, 0f, 0f);
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
@@ -114,6 +114,7 @@ public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOf
 		this.remove();
 	}
 
+	
 	@Override
 	protected void createSimpleRigidBody(Vector3f dir) {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);

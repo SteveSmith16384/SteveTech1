@@ -1,5 +1,5 @@
 package com.scs.moonbaseassault.client.hud;
-
+/*
 import java.awt.Color;
 
 import java.awt.Graphics2D;
@@ -37,3 +37,4 @@ public class PaintedGauge extends PaintableImage { // todo - delete this?
 	}
 
 }
+*/

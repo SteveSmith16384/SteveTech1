@@ -29,8 +29,8 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 
 	private static final boolean USE_CYLINDER = true;
 
-	public PlayersBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
-		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_BULLET, "PlayersBullet", owner, _side, _client, dir, true, 10f, 30f);
+	public PlayersBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
+		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_BULLET, "PlayersBullet", playerOwnerId, owner, _side, _client, dir, true, 10f, 30f);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -56,7 +56,7 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 			laserNode.setMaterial(floor_mat);
 		}
 
-		laserNode.setShadowMode(ShadowMode.Cast);
+		//laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
 		/*

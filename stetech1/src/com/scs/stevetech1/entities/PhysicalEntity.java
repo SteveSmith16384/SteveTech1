@@ -14,7 +14,7 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimatedClientSide;
-import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
@@ -35,12 +35,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public PositionCalculator historicalPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
 	public boolean collideable = true;
-
+	
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
 
 	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
-	private boolean requiresProcessing;
+	private boolean requiresProcessing; // todo - move to Entity.class
 	public Node owner;
 
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing) {
@@ -255,9 +255,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			if (s != null && s.getUserData(Globals.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
 				if (pe != this && pe.collideable) {
-					if (this instanceof ILaunchable) {
-						ILaunchable bullet = (ILaunchable)this; // todo - not every time
-						if (bullet.getLauncher() == pe) {
+					if (this instanceof IPlayerLaunchable) {
+						IPlayerLaunchable bullet = (IPlayerLaunchable)this; // todo - not every time
+						if (bullet.getLauncher() == pe) { // Don't collide with shooter
 							continue;
 						}
 					}

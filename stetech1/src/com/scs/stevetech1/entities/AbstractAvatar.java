@@ -143,7 +143,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 
 		if (Globals.SHOW_AVATAR_POS) {
-			Globals.p("time=" + serverTime + ", pos=" + this.bbGeom.getWorldTranslation());
+			Globals.p("pos=" + this.bbGeom.getWorldTranslation() + "  time=" + serverTime);
 		}
 
 		simpleRigidBody.process(tpf_secs);

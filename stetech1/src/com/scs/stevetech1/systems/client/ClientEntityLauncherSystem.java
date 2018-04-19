@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 
 /*
@@ -13,7 +13,7 @@ import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
  */
 public class ClientEntityLauncherSystem {
 
-	private HashMap<ILaunchable, LaunchData> toLaunch = new HashMap<ILaunchable, LaunchData>();  // Entity::LaunchData
+	private HashMap<IPlayerLaunchable, LaunchData> toLaunch = new HashMap<IPlayerLaunchable, LaunchData>();  // Entity::LaunchData
 	private IClientApp client;
 
 	public ClientEntityLauncherSystem(IClientApp _client) {
@@ -24,7 +24,7 @@ public class ClientEntityLauncherSystem {
 
 
 	public void scheduleLaunch(EntityLaunchedMessage elm) {
-		ILaunchable l = (ILaunchable)client.getEntity(elm.entityID);
+		IPlayerLaunchable l = (IPlayerLaunchable)client.getEntity(elm.entityID);
 		if (l == null || l.hasBeenLaunched()) {
 			/*
 			 * It's probably our own entity that we've already manually launched.
@@ -41,9 +41,9 @@ public class ClientEntityLauncherSystem {
 
 	public void process(long renderTime) {
 		// Launch any launchables
-		Iterator<ILaunchable> it3 = this.toLaunch.keySet().iterator();
+		Iterator<IPlayerLaunchable> it3 = this.toLaunch.keySet().iterator();
 		while (it3.hasNext()) {
-			ILaunchable e = it3.next();
+			IPlayerLaunchable e = it3.next();
 			LaunchData ld = this.toLaunch.get(e);
 			it3.remove();
 			IEntity shooter = client.getEntity(ld.shooterId);

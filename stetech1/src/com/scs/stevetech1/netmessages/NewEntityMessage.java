@@ -8,6 +8,7 @@ import com.scs.stevetech1.components.IEntity;
 @Serializable
 public class NewEntityMessage extends MyAbstractMessage {
 	
+	public int gameId;
 	public int entityID;
 	public int type;
 	public HashMap<String, Object> data = new HashMap<>(); 
@@ -20,6 +21,7 @@ public class NewEntityMessage extends MyAbstractMessage {
 	public NewEntityMessage(IEntity e) {
 		super(true, true);
 		
+		gameId = e.getGameID();
 		type = e.getType();
 		entityID = e.getID();
 		data = e.getCreationData();

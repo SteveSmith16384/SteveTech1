@@ -17,7 +17,7 @@ import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IKillable;
-import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
@@ -573,7 +573,7 @@ public abstract class AbstractDummyClient implements IClientApp, IEntityControll
 			}
 
 			if (e instanceof PhysicalEntity) {
-				if (e instanceof ILaunchable == false) { // Don't add bullets until they are fired! 
+				if (e instanceof IPlayerLaunchable == false) { // Don't add bullets until they are fired! 
 					PhysicalEntity pe = (PhysicalEntity)e;
 					this.getGameNode().attachChild(pe.getMainNode());
 					if (pe.simpleRigidBody != null) {

@@ -200,9 +200,10 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		case SNOWBALL_BULLET:
 		{
 			int containerID = (int) msg.data.get("containerID");
+			int playerID = (int) msg.data.get("playerID");
 			int side = (int) msg.data.get("side");
 			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			SnowballBullet snowball = new SnowballBullet(game, id, irac, side, null);
+			SnowballBullet snowball = new SnowballBullet(game, id, playerID, irac, side, null);
 			return snowball;
 		}
 

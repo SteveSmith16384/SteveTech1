@@ -7,6 +7,7 @@ import com.scs.stevetech1.systems.client.LaunchData;
 public class EntityLaunchedMessage extends MyAbstractMessage {
 
 	public int entityID;
+	public int playerID;
 	public LaunchData launchData;
 
 	public EntityLaunchedMessage() {
@@ -14,12 +15,13 @@ public class EntityLaunchedMessage extends MyAbstractMessage {
 	}
 
 
-	public EntityLaunchedMessage(int eid, LaunchData _launchData) {
+	public EntityLaunchedMessage(int eid, int _playerID, LaunchData _launchData) {
 		super(true, true);
 		
 		this.timestamp = _launchData.launchTime; // This will be earlier than most other messages
 		
 		entityID = eid;
+		playerID = _playerID;
 		launchData = _launchData;
 	}
 	

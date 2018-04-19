@@ -34,19 +34,7 @@ import ssmith.util.TextConsole;
  * This extends the AbstractEntityServer to give it the concept of a game.
  *
  */
-public abstract class AbstractGameServer extends AbstractEntityServer implements ConsoleInputListener {
-
-	protected static AtomicInteger nextGameID = new AtomicInteger(1);
-
-	//private KryonetLobbyClient clientToLobbyServer;
-	//private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
-	
-	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
-	public SimpleGameData gameData;
-
-	// Systems
-	private ServerGameStatusSystem gameStatusSystem;
-	private ServerPingSystem pingSystem;
+public abstract class AbstractGameServer extends AbstractEntityServer implements ConsoleInputListener { // todo - move code to AbstractEntityServer
 
 	public AbstractGameServer(String gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) throws IOException { // , float gravity, float aerodynamicness
 		super(gameID, _gameOptions, _tickrateMillis, sendUpdateIntervalMillis, _clientRenderDelayMillis, _timeoutMillis);//, gravity, aerodynamicness);
@@ -57,9 +45,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	@Override
 	public void simpleInitApp() {
 		super.simpleInitApp();
-
-		this.gameStatusSystem = new ServerGameStatusSystem(this);
-		this.pingSystem = new ServerPingSystem(this);
 
 		// Start console
 		new TextConsole(this);
@@ -96,12 +81,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 			}
 		}*/
 
-		if (checkGameStatusInterval.hitInterval()) {
-			gameStatusSystem.checkGameStatus(false);
-		}
-
-		this.pingSystem.process();
-
 		if (Globals.PROFILE_SERVER) {
 			long endTime = System.currentTimeMillis();
 			long diff = endTime - startTime;
@@ -113,28 +92,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 		loopTimer.start();
 	}
 
-
-	@Override
-	public void messageReceived(int clientid, MyAbstractMessage message) {
-		if (message instanceof PingMessage) {
-			PingMessage pingMessage = (PingMessage) message;
-
-			ClientData client = null;
-			synchronized (clients) {
-				client = clients.get(clientid);
-			}
-
-			if (client == null) {
-				return;
-			}
-
-			this.pingSystem.handleMessage(pingMessage, client);
-
-		} else {
-			super.messageReceived(clientid, message);
-		}
-
-	}
 
 
 	public void handleCommand(String cmd) {
@@ -150,18 +107,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 			this.gameNetworkServer.close();
 			this.stop();
 		}
-	}
-
-
-	public void sendGameStatusMessage() {
-		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
-		for(ClientData client : this.clients.values()) {
-			if (client.clientStatus == ClientStatus.Accepted) {
-				players.add(client.playerData);
-			}
-		}
-		this.gameNetworkServer.sendMessageToAll(new SimpleGameDataMessage(this.gameData, players));
-
 	}
 
 
@@ -183,30 +128,6 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	public Node getGameNode() {
 		return rootNode;
 	}
-
-
-	public void gameStatusChanged(int newStatus)  {
-		if (newStatus == SimpleGameData.ST_DEPLOYING) {
-			gameData.gameID++;
-			removeOldGame();
-			startNewGame();
-		} else if (newStatus == SimpleGameData.ST_STARTED) {
-			synchronized (entities) {
-				for (IEntity e : entities.values()) {
-					if (e instanceof IGetReadyForGame) {
-						IGetReadyForGame grfg = (IGetReadyForGame)e;
-						grfg.getReadyForGame();
-					}
-				}
-			}
-		} else if (newStatus == SimpleGameData.ST_FINISHED) {
-			int winningSide = this.getWinningSide();
-			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
-		}
-	}
-
-
-	protected abstract int getWinningSide();
 
 
 	@Override
@@ -258,35 +179,10 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 	}
 
 
-	protected void playerLeft(ClientData client) {
-		super.playerLeft(client);
-
-		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player left!", true));
-		this.sendGameStatusMessage();
-		gameStatusSystem.checkGameStatus(true);
-	}
-
-
-	protected synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
-		super.playerConnected(client, message);
-
-		this.sendGameStatusMessage();
-
-		this.pingSystem.sendPingToClient(client);
-		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
-
-		playerJoinedGame(client);
-
-		gameStatusSystem.checkGameStatus(true);
-
-	}
-
-
 	public void playerKilled(AbstractServerAvatar avatar) {
 		// Override if req
 	}
 	
 	
-	public abstract int getMinPlayersRequiredForGame();
 }
 

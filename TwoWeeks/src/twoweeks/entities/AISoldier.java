@@ -87,7 +87,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this); // was false
 		simpleRigidBody.canWalkUpSteps = true;
-		simpleRigidBody.setBounciness(0); // todo - copy to MA
+		simpleRigidBody.setBounciness(0);
 
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
@@ -107,10 +107,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 			ai.process(server, tpf_secs);
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
-
-			if (Globals.DEBUG_JUMPING_SHOOTER) {
-				Globals.p("Soldier: " + this.getWorldTranslation().y);
-			}
 		} else {
 			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
 		}
@@ -153,7 +149,9 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public void remove() {
 		super.remove();
 
+		if (soldierModel.getModel() != null) {
 		this.soldierModel.getModel().removeFromParent();
+		}
 		this.hudNode.removeFromParent();
 	}
 

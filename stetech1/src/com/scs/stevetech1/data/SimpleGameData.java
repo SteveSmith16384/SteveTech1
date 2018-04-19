@@ -6,7 +6,7 @@ import com.jme3.network.serializing.Serializable;
  * This should only contain stuff that is completely replaced when a new game starts.
  */
 @Serializable
-public class SimpleGameData { // pojo
+public class SimpleGameData { // POJO
 
 	// Game statuses
 	public static final int ST_WAITING_FOR_PLAYERS = 0;
@@ -14,14 +14,23 @@ public class SimpleGameData { // pojo
 	public static final int ST_STARTED = 3; // Players released!
 	public static final int ST_FINISHED = 4;
 
-	public int gameID = 1;
+	public int gameID = 1; // Static since this gets recreated each time
 	private int gameStatus = ST_WAITING_FOR_PLAYERS;
 	private long statusStartTimeMS;
 	private long statusDurationMS;
 
-	public SimpleGameData() {
+	public SimpleGameData() { // For Kryo
 		super();
 		
+		statusStartTimeMS = System.currentTimeMillis();
+
+	}
+
+
+	public SimpleGameData(int _gameID) {
+		super();
+		
+		gameID = _gameID;
 		statusStartTimeMS = System.currentTimeMillis();
 
 	}

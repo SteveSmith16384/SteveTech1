@@ -55,4 +55,9 @@ public class DummyPhysicalEntity implements IPhysicalEntity {
 		return false;
 	}
 
+	@Override
+	public int getGameID() {
+		return 0;
+	}
+
 }

@@ -4,22 +4,17 @@ import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
-import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
-import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
-import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -28,10 +23,8 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 
 	private static final boolean USE_CYLINDER = true;
 
-	private float timeLeft = 3f;
-
-	public PlayerLaserBullet(IEntityController _game, int id, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", owner, _side, _client);
+	public PlayerLaserBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
+		super(_game, id, MoonbaseAssaultClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerOwnerId, owner, _side, _client, dir, true, 10f, 30f);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -58,14 +51,15 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 			laserNode.setMaterial(floor_mat);
 		}
 
-		laserNode.setShadowMode(ShadowMode.Cast);
+		//laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
+		/*
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		simpleRigidBody.setAerodynamicness(1);
 		simpleRigidBody.setGravity(0);
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10)); // 20));
-
+*/
 	}
 
 
@@ -74,7 +68,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 		return 10;
 	}
 
-
+/*
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (launched) {
@@ -83,14 +77,11 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 				Globals.p("Bullet at " + this.getWorldTranslation());
 			}
 			super.processByServer(server, tpf_secs);
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
-				this.remove();
-			}
+
 		}
 	}
 
-
+/*
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
 		if (launched) {
@@ -98,40 +89,26 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 				//Globals.p("Shooter at " + ((PhysicalEntity)this.shooter).getWorldTranslation());
 				Globals.p("Bullet at " + this.getWorldTranslation());
 			}
-			simpleRigidBody.process(tpf_secs);
+			//simpleRigidBody.process(tpf_secs);
 
-			this.timeLeft -= tpf_secs;
-			if (this.timeLeft < 0) {
+			float dist = this.origin.distance(this.getWorldTranslation());
+			if (dist > 30) {
 				this.remove();
-				if (Globals.DEBUG_NO_BULLET) {
-					Globals.p("Removed bullet");
-				}
 			}
 		}
 	}
-
+*/
 
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
-			if (!Globals.HIDE_EXPLOSION) {
+			/*if (!Globals.HIDE_EXPLOSION) {
 				ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
 				game.addEntity(expl);
-			}
+			}*/
 
-			if (Globals.SHOW_BULLET_COLLISION_POS) {
-				if (game.isServer()) {
-					// Create debugging sphere
-					Vector3f pos = this.getWorldTranslation();
-					DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), MoonbaseAssaultClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
-					game.addEntity(ds);
-				}
-			}
 		}
 		this.remove();
-		if (Globals.DEBUG_NO_BULLET) {
-			Globals.p("Removed bullet -----------------------------------------");
-		}
 	}
 
 }

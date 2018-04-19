@@ -20,7 +20,7 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 	private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>();
 
 	public SnowballLauncher(IEntityController game, int id, ICanShoot owner, int num, ClientData _client) {
-		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, owner, num, "SnowballLauncher", 1, 3, MAG_SIZE, _client);
+		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, _client.getPlayerID(), owner, num, "SnowballLauncher", 1, 3, MAG_SIZE, _client);
 		
 	}
 
@@ -67,8 +67,8 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 
 
 	@Override
-	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer irac, int side) {
-		SnowballBullet pe = new SnowballBullet(game, entityid, irac, side, client);
+	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer irac, int side) {
+		SnowballBullet pe = new SnowballBullet(game, entityid, playerID, irac, side, client);
 		server.addEntity(pe);
 
 

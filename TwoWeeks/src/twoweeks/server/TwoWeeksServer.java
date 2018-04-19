@@ -121,15 +121,17 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	@Override
 	protected void createGame() {
-		super.gameData = new TwoWeeksGameData();
+		super.gameData = new TwoWeeksGameData(nextGameID.getAndAdd(1));
 
 		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
 		this.actuallyAddEntity(terrain); // terrain.getMainNode().getWorldBound();
-
+		
+		Vector3f pos = null;
+/*
 		Vector3f pos = this.getHeightAtPoint(90, 90);
 		AISoldier s = new AISoldier(this, this.getNextEntityID(), pos.x, pos.y + 5, pos.z, 0);
 		this.actuallyAddEntity(s);
-
+*/
 		// Drop debug balls
 		/*for (int z=80; z<=120 ; z+= 10) {
 			for (int x=80; x<=120 ; x+= 10) {
@@ -185,11 +187,11 @@ public class TwoWeeksServer extends AbstractGameServer {
 		this.actuallyAddEntity(tree5); //tree.getMainNode().getWorldBound();
 		tree5 = null;
 
-		// todo
 		// Place trees
-		/*for (int z=80; z<=120 ; z+= 10) {
+		/*todofor (int z=80; z<=120 ; z+= 10) {
 		for (int x=80; x<=120 ; x+= 10) {
-			this.placeGenericModel(terrain, x, z);
+			GenericStaticModel tree6 = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/MoreNature/Blends/BigTreeWithLeaves.blend", 3f, "Models/MoreNature/Blends/TreeTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+			this.placeGenericModel(tree6, x, z);
 		}
 	}*/
 

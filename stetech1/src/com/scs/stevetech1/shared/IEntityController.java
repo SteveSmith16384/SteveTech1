@@ -15,6 +15,8 @@ import com.scs.stevetech1.entities.PhysicalEntity;
  */
 public interface IEntityController {
 
+	int getGameID();
+	
 	boolean isServer();
 
 	void addEntity(IEntity e);

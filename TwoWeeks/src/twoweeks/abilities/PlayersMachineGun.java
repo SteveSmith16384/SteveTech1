@@ -20,8 +20,8 @@ public class PlayersMachineGun extends AbstractMagazineGun<PlayersBullet> implem
 
 	private LinkedList<PlayersBullet> ammoCache = new LinkedList<PlayersBullet>(); 
 
-	public PlayersMachineGun(IEntityController game, int id, AbstractAvatar owner, int abilityNum, ClientData client) {
-		super(game, id, TwoWeeksClientEntityCreator.MACHINE_GUN, owner, abilityNum, "Laser Rifle", .2f, 2, 10, client);
+	public PlayersMachineGun(IEntityController game, int id, int playerID, AbstractAvatar owner, int abilityNum, ClientData client) {
+		super(game, id, TwoWeeksClientEntityCreator.MACHINE_GUN, playerID, owner, abilityNum, "Laser Rifle", .2f, 2, 2, client);
 
 	}
 
@@ -66,8 +66,8 @@ public class PlayersMachineGun extends AbstractMagazineGun<PlayersBullet> implem
 
 
 	@Override
-	protected void createBullet(AbstractEntityServer server, int entityid, IEntityContainer<AbstractPlayersBullet> irac, int side) {
-		PlayersBullet l = new PlayersBullet(game, entityid, irac, side, client, null);
+	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> irac, int side) {
+		PlayersBullet l = new PlayersBullet(game, entityid, playerID, irac, side, client, null);
 		server.addEntity(l);
 
 	}

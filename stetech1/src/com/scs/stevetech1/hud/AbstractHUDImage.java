@@ -75,4 +75,10 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 		return true;
 	}
 
+
+	@Override
+	public int getGameID() {
+		return 0;
+	}
+
 }

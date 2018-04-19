@@ -1,6 +1,7 @@
 package com.scs.stevetech1.server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,26 +19,32 @@ import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.data.GameOptions;
+import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
+import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
+import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
+import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
+import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
 import com.scs.stevetech1.networking.IMessageClientListener;
@@ -45,6 +52,8 @@ import com.scs.stevetech1.networking.IMessageServerListener;
 import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
+import com.scs.stevetech1.systems.server.ServerPingSystem;
 
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
@@ -61,6 +70,16 @@ IMessageClientListener, // For sending messages to the lobby server
 ICollisionListener<PhysicalEntity> {
 
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
+	protected static AtomicInteger nextGameID = new AtomicInteger(1);
+
+	//private KryonetLobbyClient clientToLobbyServer;
+	//private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
+	
+	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
+
+	// Systems
+	private ServerGameStatusSystem gameStatusSystem;
+	private ServerPingSystem pingSystem;
 
 	protected HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities
 	protected HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100); // Entites that we need to iterate over in game loop
@@ -81,13 +100,15 @@ ICollisionListener<PhysicalEntity> {
 	private RealtimeInterval sendEntityUpdatesInterval;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
-	private String gameID; // To prevent the wrong type of client connecting to the wrong type of server
+	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
+
+	public SimpleGameData gameData;
 
 	public AbstractEntityServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
 			//float gravity, float aerodynamicness) {
 		super();
 
-		gameID = _gameID;
+		gameCode = _gameID;
 		gameOptions = _gameOptions;
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
@@ -117,6 +138,9 @@ ICollisionListener<PhysicalEntity> {
 
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
+
+		this.gameStatusSystem = new ServerGameStatusSystem(this);
+		this.pingSystem = new ServerPingSystem(this);
 
 		loopTimer.start();
 	}
@@ -278,12 +302,18 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 
+		if (checkGameStatusInterval.hitInterval()) {
+			gameStatusSystem.checkGameStatus(false);
+		}
+
+		this.pingSystem.process();
+
 	}
 
 
 	protected synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-		if (!newPlayerMessage.gameID.equalsIgnoreCase(gameID)) {
+		if (!newPlayerMessage.gameID.equalsIgnoreCase(gameCode)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game ID"));
 			return;
 		}
@@ -296,8 +326,28 @@ ICollisionListener<PhysicalEntity> {
 		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.playerName, client.side);
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
 		client.avatar = createPlayersAvatar(client);
+		sendGameStatusMessage();
 		sendAllEntitiesToClient(client);
 		client.clientStatus = ClientData.ClientStatus.Accepted;
+		this.pingSystem.sendPingToClient(client);
+		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
+		playerJoinedGame(client);
+		gameStatusSystem.checkGameStatus(true);
+
+	}
+
+
+	public void sendGameStatusMessage() {
+		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
+		for(ClientData client : this.clients.values()) {
+			if (client.clientStatus == ClientStatus.Accepted) {
+				players.add(client.playerData);
+			}
+		}
+		Globals.p("Sending SimpleGameDataMessage with Game ID of " + gameData.gameID);
+		this.gameNetworkServer.sendMessageToAll(new SimpleGameDataMessage(this.gameData, players));
+
+
 	}
 
 
@@ -397,11 +447,17 @@ ICollisionListener<PhysicalEntity> {
 		MyAbstractMessage msg = (MyAbstractMessage)message;
 
 		msg.client = client;
-		// Add it to list for processing in main thread
+
+		if (message instanceof PingMessage) {
+			PingMessage pingMessage = (PingMessage) message;
+
+			this.pingSystem.handleMessage(pingMessage, client);
+		} else {
+// Add it to list for processing in main thread
 		synchronized (this.unprocessedMessages) {
 			this.unprocessedMessages.add(msg);
 		}
-
+		}
 	}
 
 
@@ -470,6 +526,9 @@ ICollisionListener<PhysicalEntity> {
 			client.avatar.remove();
 		}
 
+		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player left!", true));
+		this.sendGameStatusMessage();
+		gameStatusSystem.checkGameStatus(true);
 	}
 
 
@@ -660,4 +719,38 @@ ICollisionListener<PhysicalEntity> {
 		return null; 
 	}
 
+
+	@Override
+	public int getGameID() {
+		return this.gameData.gameID;
+	}
+
+
+	public void gameStatusChanged(int newStatus)  {
+		if (newStatus == SimpleGameData.ST_DEPLOYING) {
+			gameData.gameID++;
+			Globals.p("Game ID is " + gameData.gameID);
+			sendGameStatusMessage(); // To send the new game ID
+			removeOldGame();
+			startNewGame();
+		} else if (newStatus == SimpleGameData.ST_STARTED) {
+			synchronized (entities) {
+				for (IEntity e : entities.values()) {
+					if (e instanceof IGetReadyForGame) {
+						IGetReadyForGame grfg = (IGetReadyForGame)e;
+						grfg.getReadyForGame();
+					}
+				}
+			}
+		} else if (newStatus == SimpleGameData.ST_FINISHED) {
+			int winningSide = this.getWinningSide();
+			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
+		}
+	}
+
+
+	protected abstract int getWinningSide();
+
+
+	public abstract int getMinPlayersRequiredForGame();
 }

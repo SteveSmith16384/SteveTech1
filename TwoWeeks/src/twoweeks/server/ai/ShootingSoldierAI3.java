@@ -41,13 +41,18 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		if (currentTarget != null) { // Find enemy
 			boolean cansee = soldierEntity.canSee(this.currentTarget, 100f);
 			if (!cansee) {
-				//soldierEntity.canSee(this.currentTarget, 100f); // todo - remove
 				this.currentTarget = null;
+				if (Globals.DEBUG_AI_SEE_PLAYER) {
+					Globals.p("AI no longer see player");
+				}
 			}
 		}
 		if (currentTarget == null) { // Check we can still see enemy
 			if (this.checkForEnemyInt.hitInterval()) {
 				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side);
+				if (Globals.DEBUG_AI_SEE_PLAYER) {
+					Globals.p("AI can now see " + currentTarget);
+				}
 			}
 		} else { // Face enemy
 			Vector3f dir = this.currentTarget.getWorldTranslation().subtract(this.soldierEntity.getWorldTranslation()); // todo - don't create each time
@@ -56,7 +61,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			dir.normalizeLocal();
 			this.changeDirection(dir);
 		}
-		
+
 		if (currentTarget != null && SHOOT_AT_ENEMY) {
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 			animCode = AbstractAvatar.ANIM_IDLE;
