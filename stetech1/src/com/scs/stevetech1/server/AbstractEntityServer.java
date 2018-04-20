@@ -75,7 +75,7 @@ ICollisionListener<PhysicalEntity> {
 
 	//private KryonetLobbyClient clientToLobbyServer;
 	//private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
-	
+
 	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
 
 	// Systems
@@ -106,7 +106,7 @@ ICollisionListener<PhysicalEntity> {
 	public SimpleGameData gameData;
 
 	public AbstractEntityServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
-			//float gravity, float aerodynamicness) {
+		//float gravity, float aerodynamicness) {
 		super();
 
 		gameCode = _gameID;
@@ -456,10 +456,10 @@ ICollisionListener<PhysicalEntity> {
 
 			this.pingSystem.handleMessage(pingMessage, client);
 		} else {
-// Add it to list for processing in main thread
-		synchronized (this.unprocessedMessages) {
-			this.unprocessedMessages.add(msg);
-		}
+			// Add it to list for processing in main thread
+			synchronized (this.unprocessedMessages) {
+				this.unprocessedMessages.add(msg);
+			}
 		}
 	}
 
@@ -656,7 +656,7 @@ ICollisionListener<PhysicalEntity> {
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
-		
+
 		this.collisionOccurred(pea, peb);
 	}
 
@@ -708,15 +708,15 @@ ICollisionListener<PhysicalEntity> {
 	public PhysicalEntity getTarget(PhysicalEntity shooter, int ourSide) {
 		for (IEntity e : entitiesForProcessing.values()) {
 			if (e != shooter) {
-			if (e instanceof ITargetable) {
-				ITargetable t = (ITargetable)e;
-				if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
-					PhysicalEntity pe = (PhysicalEntity)e;
-					if (shooter.canSee(pe, 100)) {
-						return pe;
+				if (e instanceof ITargetable) {
+					ITargetable t = (ITargetable)e;
+					if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
+						PhysicalEntity pe = (PhysicalEntity)e;
+						if (shooter.canSee(pe, 100)) {
+							return pe;
+						}
 					}
 				}
-			}
 			}
 		}
 		return null; 

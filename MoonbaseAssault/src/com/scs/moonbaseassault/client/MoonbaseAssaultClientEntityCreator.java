@@ -125,7 +125,8 @@ public class MoonbaseAssaultClientEntityCreator {
 			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
-				LaserRifle gl = new LaserRifle(game, id, owner, num, null);
+				int playerID = (int)msg.data.get("playerID");
+				LaserRifle gl = new LaserRifle(game, id, playerID, owner, num, null);
 				return gl;
 			}
 			return null;
@@ -194,7 +195,8 @@ public class MoonbaseAssaultClientEntityCreator {
 			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
-				GrenadeLauncher gl = new GrenadeLauncher(game, id, owner, num, null);
+				int playerID = (int)msg.data.get("playerID");
+				GrenadeLauncher gl = new GrenadeLauncher(game, id, playerID, owner, num, null);
 				return gl;
 			}
 			}

@@ -14,10 +14,10 @@ public class SoldierServerAvatar extends AbstractServerAvatar { //implements IUn
 	public SoldierServerAvatar(MoonbaseAssaultServer _module, ClientData client, int _playerID, IInputDevice _input, int eid) {
 		super(_module, client, _playerID, _input, eid, new SoldierModel(_module.getAssetManager()));
 		
-		IAbility abilityGun = new LaserRifle(_module, _module.getNextEntityID(), this, 0, client);
+		IAbility abilityGun = new LaserRifle(_module, _module.getNextEntityID(), client.getPlayerID(), this, 0, client);
 		_module.actuallyAddEntity(abilityGun);
 		
-		IAbility abilityGrenades = new GrenadeLauncher(_module, _module.getNextEntityID(), this, 1, client);
+		IAbility abilityGrenades = new GrenadeLauncher(_module, _module.getNextEntityID(), client.getPlayerID(), this, 1, client);
 		_module.actuallyAddEntity(abilityGrenades);
 
 	}

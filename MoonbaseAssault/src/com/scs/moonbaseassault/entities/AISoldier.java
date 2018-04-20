@@ -152,7 +152,9 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public void remove() {
 		super.remove();
 
-		this.soldierModel.getModel().removeFromParent();
+		if (this.soldierModel.getModel() != null) {
+			this.soldierModel.getModel().removeFromParent();
+		}
 		this.hudNode.removeFromParent();
 	}
 

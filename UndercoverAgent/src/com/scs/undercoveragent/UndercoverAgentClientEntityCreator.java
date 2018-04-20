@@ -190,7 +190,8 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 				if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 					AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 					int num = (int)msg.data.get("num");
-					SnowballLauncher gl = new SnowballLauncher(game, id, owner, num, null);
+					int playerID = (int)msg.data.get("playerID");
+					SnowballLauncher gl = new SnowballLauncher(game, id, playerID, owner, num, null);
 					return gl;
 				}
 			}

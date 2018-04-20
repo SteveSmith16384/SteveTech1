@@ -19,8 +19,8 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 
 	private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>();
 
-	public SnowballLauncher(IEntityController game, int id, ICanShoot owner, int num, ClientData _client) {
-		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, _client.getPlayerID(), owner, num, "SnowballLauncher", 1, 3, MAG_SIZE, _client);
+	public SnowballLauncher(IEntityController game, int id, int playerID, ICanShoot owner, int num, ClientData _client) { // ClientData is null on client!
+		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, playerID, owner, num, "SnowballLauncher", 1, 3, MAG_SIZE, _client);
 		
 	}
 

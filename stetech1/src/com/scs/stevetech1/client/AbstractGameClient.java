@@ -419,7 +419,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 								if (e instanceof AbstractClientAvatar == false && e instanceof IClientControlled == false) {
 									if (pe.simpleRigidBody != null) {
 										if (pe.simpleRigidBody.movedByForces()) {
-											Globals.p("Warning: client-side entity not kinematic!");
+											Globals.p("Warning: client-side entity " + pe + " not kinematic!");
 										}
 									}
 								}
