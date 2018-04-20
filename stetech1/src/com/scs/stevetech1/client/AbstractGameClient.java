@@ -139,6 +139,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 	private Node playersWeaponNode;
 
 	public AbstractClientAvatar currentAvatar;
+	public int currentAvatarID = -1; // In case the avatar physical entity gets replaced, we can re-assign it
 	public int playerID = -1;
 	public int side = -1;
 	public int score;
@@ -307,7 +308,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			}
 		}
 
-		if (tpf_secs > 1) { 
+		if (tpf_secs > 1) {
 			tpf_secs = 1;
 		}
 
@@ -352,23 +353,36 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 					}
 
 					// Add entities
-					Iterator<IEntity> it = this.entitiesToAdd.iterator();
+					/*Iterator<IEntity> it = this.entitiesToAdd.iterator();
 					while (it.hasNext()) {
 						IEntity e = it.next();
 						this.actuallyAddEntity(e);
 					}
 					it = null;
-					this.entitiesToAdd.clear();
+					this.entitiesToAdd.clear();*/
+					while (this.entitiesToAdd.size() > 0) {
+						IEntity e = this.entitiesToAdd.getFirst();
+						this.actuallyAddEntity(e);
+					}
+
 
 					// Remove entities
-					Iterator<Integer> it2 = this.entitiesToRemove.iterator();
+					/*Iterator<Integer> it2 = this.entitiesToRemove.iterator();
 					while (it2.hasNext()) {
 						int i = it2.next();
 						this.actuallyRemoveEntity(i);
 					}
 					it2 = null;
 					this.entitiesToRemove.clear();
-
+*/
+					
+					// Do it this way so other places can call actuallyRemoveEntity
+					while (this.entitiesToRemove.size() > 0) {
+						int i = this.entitiesToRemove.getFirst();
+						this.actuallyRemoveEntity(i);
+					}
+					
+					
 					// Add client-only entities
 					Iterator<IEntity> coit = this.clientOnlyEntitiesToAdd.iterator();
 					while (coit.hasNext()) {
@@ -651,19 +665,25 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 		} else if (message instanceof SetAvatarMessage) {
 			SetAvatarMessage sam = (SetAvatarMessage)message;
-			//int playerID = sam.playerID;
-			int avatarId = sam.avatarEntityID;
-			this.currentAvatar = (AbstractClientAvatar)this.entities.get(avatarId);
-			// todo - set cam here
-			if (Globals.DEBUG_AVATAR_SET) {
-				Globals.p("Avatar for player is now " + currentAvatar);
-			}
+			this.currentAvatarID = sam.avatarEntityID;
+			this.setAvatar(this.entities.get(currentAvatarID));
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 	}
 
+	
+	private void setAvatar(IEntity e) {
+		this.currentAvatar = (AbstractClientAvatar)e;//this.entities.get(currentAvatarID);
+		if (Globals.DEBUG_AVATAR_SET) {
+			Globals.p("Avatar for player is now " + currentAvatar);
+		}
+
+		Vector3f look = new Vector3f(15f, 1f, 15f);
+		getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
+
+	}
 
 	private void addDebugBox(ModelBoundsMessage msg) {
 		if (msg.bounds instanceof BoundingBox) {
@@ -784,6 +804,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 
 	private void actuallyAddEntity(IEntity e) {
+		this.entitiesToAdd.remove(e);
 		synchronized (entities) {
 			if (e.getID() <= 0) {
 				throw new RuntimeException("No entity id!");
@@ -825,7 +846,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 				IDrawOnHUD doh = (IDrawOnHUD)e;
 				this.hud.addItem(doh.getHUDItem());
 			}
-
+			
+			if (e.getID() == currentAvatarID && e != this.currentAvatar) {
+				// Avatar has been replaced
+				this.setAvatar(e);
+			}
 		}
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			if (e instanceof PhysicalEntity) {
@@ -842,7 +867,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 	public void removeEntity(int id) {
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			IEntity e = this.entities.get(id);
-			Globals.p("Going to remove entity " + id + ":" + e.getName());
+			if (e != null) {
+				Globals.p("Going to remove entity " + id + ":" + e.getName());
+			}
 		}
 		this.entitiesToRemove.add(id);
 	}
@@ -852,6 +879,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
 	 */
 	private void actuallyRemoveEntity(int id) {
+		this.entitiesToRemove.removeFirstOccurrence(id);
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
 			if (e != null) {

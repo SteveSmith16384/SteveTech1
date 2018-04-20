@@ -74,8 +74,8 @@ public class TwoWeeksClientEntityCreator {
 			if (playerID == game.playerID) {
 				AbstractClientAvatar avatar = new MercClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side, moveSpeed, jumpForce);
 				//game.getCamera().lookAt(pos.add(Vector3f.UNIT_X), Vector3f.UNIT_Y); // Look somewhere
-				Vector3f look = new Vector3f(15f, 1f, 15f);
-				game.getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
+				//Vector3f look = new Vector3f(15f, 1f, 15f);
+				//game.getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these

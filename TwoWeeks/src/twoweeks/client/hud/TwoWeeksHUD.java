@@ -245,7 +245,9 @@ public class TwoWeeksHUD extends Node implements IHUD {
 		str.append(this.pingText + "\n");
 		str.append(this.scoreText + "\n");
 		str.append(this.numPlayers + "\n");
-		str.append("Pos: " + client.currentAvatar.getWorldTranslation() + "\n");
+		if (client.currentAvatar != null) {
+			str.append("Pos: " + client.currentAvatar.getWorldTranslation() + "\n");
+		}
 		this.textArea.setText(str.toString());
 		
 	}
