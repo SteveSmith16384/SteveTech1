@@ -20,7 +20,6 @@ import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IAnimatedServerSide;
-import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IDrawOnHUD;
@@ -42,12 +41,13 @@ import com.scs.stevetech1.shared.IEntityController;
 import ssmith.util.RealtimeInterval;
 
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
-IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable{ //, ICanShoot {//, IUnit {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable { //, ICanShoot {//, IUnit {
 
+	public static final float START_HEALTH = 10f;
 	public static final float SPEED = .53f;//.47f;
 
 	private SoldierModel soldierModel; // Need this to animate the model
-	private float health = 1f;
+	private float health = START_HEALTH;
 	public int side;
 	private IArtificialIntelligence ai;
 	private int serverSideCurrentAnimCode; // Server-side
@@ -73,7 +73,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			this.soldierModel.createAndGetModel(_side);
 			game.getGameNode().attachChild(this.soldierModel.getModel());
 		}
-		
+
 		// Create box for collisions
 		Box box = new Box(soldierModel.getBoundingBox().getXExtent(), soldierModel.getBoundingBox().getYExtent(), soldierModel.getBoundingBox().getZExtent());
 		Geometry bbGeom = new Geometry("bbGeom_" + name, box);
@@ -106,11 +106,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			}*/
 
 			ai.process(server, tpf_secs);
-
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
-			/*if (soldierModel != null) {
-				this.soldierModel.setAnim(AbstractAvatar.ANIM_WALKING);
-			}*/
 		} else {
 			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
 		}
@@ -124,8 +120,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		// Set position and direction of avatar model, which doesn't get moved automatically
 		this.soldierModel.getModel().setLocalTranslation(this.getWorldTranslation());
 	}
-	
-	
+
+
 	@Override
 	public void fallenOffEdge() {
 		this.remove();
@@ -140,7 +136,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 				AbstractEntityServer server = (AbstractEntityServer)game;
 				server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, collider.getActualShooter()));
 				this.serverSideCurrentAnimCode = AbstractAvatar.ANIM_DIED;
-				
+				this.sendUpdate = true; // Send new anim code
+
 				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
 				this.simpleRigidBody.setMovedByForces(false);
 			}
@@ -152,8 +149,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public void remove() {
 		super.remove();
 
-		if (this.soldierModel.getModel() != null) {
-			this.soldierModel.getModel().removeFromParent();
+		if (soldierModel.getModel() != null) {
+		this.soldierModel.getModel().removeFromParent();
 		}
 		this.hudNode.removeFromParent();
 	}
@@ -174,12 +171,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		}
 	}
 
-	/*
-	@Override
-	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
-		return animList;
-	}
-	 */
 
 	@Override
 	public void setAnimCode(int animCode) {
@@ -210,11 +201,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 				Globals.p("getCurrentAnimCode=" + this.soldierModel.getCurrentAnimCode());
 			}
 		}
-		/*if (soldierModel != null) {
-			return this.soldierModel.getCurrentAnimCode();
-		} else {
-			return -1;
-		}*/
 		return this.serverSideCurrentAnimCode;
 	}
 
@@ -262,7 +248,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		return shootersSide != this.side;
 	}
 
-/*
+	/*
 	@Override
 	public Vector3f getShootDir() {
 		return this.ai.getCurrentTarget().getWorldTranslation().subtract(this.getWorldTranslation()).normalizeLocal();
@@ -273,12 +259,16 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public Vector3f getBulletStartPos() {
 		return this.getWorldTranslation();
 	}
-*/
-	
+	 */
+
 	public void shoot(PhysicalEntity target) {
 		if (this.shootInt.hitInterval()) {
-			Vector3f pos = this.getWorldTranslation();
-			Vector3f dir = target.getWorldTranslation().subtract(this.getWorldTranslation()).normalizeLocal();
+			if (Globals.DEBUG_AI_SHOOTING) {
+				Globals.p("AI shooting!" + this.getWorldTranslation().y);
+			}
+			Vector3f pos = this.getWorldTranslation().clone();
+			pos.y += this.soldierModel.getBulletStartHeight();
+			Vector3f dir = target.getMainNode().getWorldBound().getCenter().subtract(pos).normalizeLocal();
 			AILaserBullet bullet = new AILaserBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
 			this.game.addEntity(bullet);
 		}
