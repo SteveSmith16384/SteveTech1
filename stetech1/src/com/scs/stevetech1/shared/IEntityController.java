@@ -35,4 +35,6 @@ public interface IEntityController {
 	
 	public <V> Future<V> enqueue(Callable<V> callable);
 	
+	int getNumEntities();
+	
 }

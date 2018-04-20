@@ -140,7 +140,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 		}*/
 
 		// Place BigPalmTree
-		pos = new Vector3f(95, 0, 85);
+		/*pos = new Vector3f(95, 0, 85);
 		GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
 		pos.y = this.getLowestHeightAtPoint(tree.getMainNode());
 		tree.setWorldTranslation(pos);
@@ -186,7 +186,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 		tree5.setWorldTranslation(pos);
 		this.actuallyAddEntity(tree5); //tree.getMainNode().getWorldBound();
 		tree5 = null;
-
+*/
 		// Place trees
 		/*todofor (int z=80; z<=120 ; z+= 10) {
 		for (int x=80; x<=120 ; x+= 10) {

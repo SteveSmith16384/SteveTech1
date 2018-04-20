@@ -34,6 +34,7 @@ import com.scs.stevetech1.netmessages.PlaySoundMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
+import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.TestMessage;
 import com.scs.stevetech1.netmessages.UnknownEntityMessage;
@@ -147,6 +148,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(ModelBoundsMessage.class);
 		kryo.register(GenericStringMessage.class);
 		kryo.register(JoinGameFailedMessage.class);
+		kryo.register(SetAvatarMessage.class);
 	}
 
 

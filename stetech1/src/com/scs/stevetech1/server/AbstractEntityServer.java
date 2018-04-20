@@ -44,6 +44,7 @@ import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
+import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
@@ -167,7 +168,7 @@ ICollisionListener<PhysicalEntity> {
 				ClientData client = this.clientsToAdd.remove();
 				this.clients.put(client.id, client);
 				this.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
-				Globals.p("Actually added client " + client.id);
+				//Globals.p("Actually added client " + client.id);
 			}
 		}
 
@@ -329,6 +330,7 @@ ICollisionListener<PhysicalEntity> {
 		sendGameStatusMessage();
 		sendAllEntitiesToClient(client);
 		client.clientStatus = ClientData.ClientStatus.Accepted;
+		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 		this.pingSystem.sendPingToClient(client);
 		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 		playerJoinedGame(client);
@@ -360,7 +362,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		// remove All Entities
-		synchronized (this.clients) {
+		/*synchronized (this.clients) {
 			for (ClientData c : this.clients.values()) {
 				AbstractServerAvatar avatar = c.avatar;
 				if (avatar != null) {
@@ -368,7 +370,7 @@ ICollisionListener<PhysicalEntity> {
 					c.avatar = null;
 				}
 			}
-		}
+		}*/
 
 		for (IEntity e : this.entities.values()) {
 			e.remove();
@@ -409,6 +411,7 @@ ICollisionListener<PhysicalEntity> {
 				client.playerData.side = side;
 				client.avatar = createPlayersAvatar(client);
 				sendAllEntitiesToClient(client);
+				this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 			}
 		}
 
@@ -753,4 +756,12 @@ ICollisionListener<PhysicalEntity> {
 
 
 	public abstract int getMinPlayersRequiredForGame();
+
+
+	@Override
+	public int getNumEntities() {
+		return this.entities.size();
+	}
+
+
 }

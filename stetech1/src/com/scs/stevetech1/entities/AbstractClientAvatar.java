@@ -41,7 +41,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
-		_client.currentAvatar = this;
+		/*if (Globals.DEBUG_AVATAR_SET) {
+			Globals.p("Avatar for player " + _playerID + " is now " + this);
+		}*/
+		//_client.currentAvatar = this;
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			createDebugBox();

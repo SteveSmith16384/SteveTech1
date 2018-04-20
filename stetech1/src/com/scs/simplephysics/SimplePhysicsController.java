@@ -177,4 +177,7 @@ public class SimplePhysicsController<T> {
 	}
 
 
+	public boolean containsSRB(SimpleRigidBody<T> srb) {
+		return this.entities.contains(srb);
+	}
 }

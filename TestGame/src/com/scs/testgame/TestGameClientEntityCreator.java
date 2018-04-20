@@ -48,9 +48,9 @@ public class TestGameClientEntityCreator {
 
 
 	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
-		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Creating " + getName(msg.type));
-		}
+		}*/
 		int id = msg.entityID;
 
 		switch (msg.type) {

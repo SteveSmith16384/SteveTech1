@@ -53,14 +53,6 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	}
 
 
-	private void reload(AbstractEntityServer server) {
-		IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
-		while (this.getBulletsInMag() < this.magazineSize) {
-			createBullet(server, server.getNextEntityID(), playerID, irac, -1);
-		}
-	}
-
-
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
@@ -73,6 +65,14 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 		}
 		timeUntilShoot_secs -= tpf_secs;
+	}
+
+
+	private void reload(AbstractEntityServer server) {
+		IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
+		while (this.getBulletsInMag() < this.magazineSize) {
+			createBullet(server, server.getNextEntityID(), playerID, irac, -1);
+		}
 	}
 
 

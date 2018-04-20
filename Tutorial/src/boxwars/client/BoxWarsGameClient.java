@@ -72,4 +72,11 @@ public class BoxWarsGameClient extends AbstractGameClient {
 	}
 
 
+	@Override
+	public int getNumEntities() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
 }

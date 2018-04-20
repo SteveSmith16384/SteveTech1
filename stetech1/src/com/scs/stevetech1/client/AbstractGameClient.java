@@ -78,6 +78,7 @@ import com.scs.stevetech1.netmessages.PlaySoundMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
+import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
@@ -500,7 +501,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			SimpleGameData oldGameData = this.gameData;
 			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 			this.gameData = gsm.gameData;
-			Globals.p("Game id is " + gameData.gameID);
+			//Globals.p("Game id is " + gameData.gameID);
 			this.playersList = gsm.players;
 			if (oldGameData == null) {
 				this.gameStatusChanged(-1, this.gameData.getGameStatus());
@@ -648,6 +649,16 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 			Globals.p("Join game failed: " + jgfm.reason);
 			this.quit(jgfm.reason);
 
+		} else if (message instanceof SetAvatarMessage) {
+			SetAvatarMessage sam = (SetAvatarMessage)message;
+			//int playerID = sam.playerID;
+			int avatarId = sam.avatarEntityID;
+			this.currentAvatar = (AbstractClientAvatar)this.entities.get(avatarId);
+			// todo - set cam here
+			if (Globals.DEBUG_AVATAR_SET) {
+				Globals.p("Avatar for player is now " + currentAvatar);
+			}
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
@@ -778,9 +789,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 				throw new RuntimeException("No entity id!");
 			}
 			if (this.entities.containsKey(e.getID())) {
-				//throw new RuntimeException("Entity " + e.getID() + " already exists");
-				e.remove();
-				this.actuallyRemoveEntity(e.getID()); // Replace it, since it might be an existing entity but its position has changed
+				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+					Globals.p("Remove entity " + e + " since it already exists");
+				}
+				// Replace it, since it might be an existing entity but its position has changed
+				IEntity e2 = this.entities.get(e.getID());
+				e2.remove();
+				this.actuallyRemoveEntity(e2.getID());
 			}
 			this.entities.put(e.getID(), e);
 			if (e.requiresProcessing()) {
@@ -798,6 +813,11 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 					this.getGameNode().attachChild(pe.getMainNode());
 					if (pe.simpleRigidBody != null) {
 						this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
+						if (Globals.DEBUG_TOO_MANY_SRBS) {
+							if (this.physicsController.getEntities().size() > this.entities.size()) {
+								Globals.pe("Warning: more simple rigid bodies than entities!");
+							}
+						}
 					}
 				}
 			}
@@ -820,6 +840,10 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 	@Override
 	public void removeEntity(int id) {
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			IEntity e = this.entities.get(id);
+			Globals.p("Going to remove entity " + id + ":" + e.getName());
+		}
 		this.entitiesToRemove.add(id);
 	}
 
@@ -834,22 +858,14 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Actually removing entity " + id + ":" + e.getName());
 				}
-				/*if (e instanceof PhysicalEntity) {
-					PhysicalEntity pe =(PhysicalEntity)e;
-					if (pe.simpleRigidBody != null) {
-						this.physicsController.removeSimpleRigidBody(pe.simpleRigidBody);
-					}
-					pe.getMainNode().removeFromParent();
-				}*/
-				/*if (e instanceof IDrawOnHUD) {
-					IDrawOnHUD doh = (IDrawOnHUD)e;
-					doh.getHUDItem().removeFromParent();
-				}*/
 				this.entities.remove(id);
 				if (e.requiresProcessing()) {
 					this.entitiesForProcessing.remove(id);
 				}
 				if (e == this.currentAvatar) {
+					if (Globals.DEBUG_AVATAR_SET) {
+						Globals.p("Avatar for player removed");
+					}
 					this.currentAvatar = null;
 				}
 			} else {
@@ -989,6 +1005,12 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 	@Override
 	public int getGameID() {
 		return this.gameData.gameID;
+	}
+
+
+	@Override
+	public int getNumEntities() {
+		return this.entities.size();
 	}
 
 
