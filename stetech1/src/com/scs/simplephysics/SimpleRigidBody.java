@@ -121,9 +121,10 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.x + additionalForce.x;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
+					Vector3f prevPos = this.getBoundingBox().getCenter().clone(); // todo - don't create each time
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
-						if (!checkForStep(crs2)) {
+						if (!checkForStep(crs2, prevPos, tmpMoveDir.length())) {
 							float bounce = this.bounciness;// * body.bounciness; // Combine bounciness?
 							oneOffForce.x = oneOffForce.x * bounce * -1;
 						}
@@ -137,9 +138,10 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.z + additionalForce.z;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
+					Vector3f prevPos = this.getBoundingBox().getCenter().clone(); // todo - don't create each time
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
-						if (!checkForStep(crs2)) {
+						if (!checkForStep(crs2, prevPos, this.tmpMoveDir.length())) {
 							float bounce = this.bounciness;// * body.bounciness;
 							oneOffForce.z = oneOffForce.z * bounce * -1; // Reverse direction
 						}
@@ -281,7 +283,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * 
 	 * @return
 	 */
-	private boolean checkForStep(List<SimpleRigidBody<T>> crs) {
+	private boolean checkForStep(List<SimpleRigidBody<T>> crs, Vector3f prevPos, float lengthMoved) {
 		if (!this.canWalkUpSteps) {
 			return false;
 		}
@@ -301,9 +303,26 @@ public class SimpleRigidBody<T> implements Collidable {
 				return true;
 			}
 		} else {
+			CollisionResults rayCRs = new CollisionResults();
+			Ray prevRay = new Ray(prevPos, DOWN_VEC);
+			rayCRs.clear();
+			cr.simpleEntity.getCollidable().collideWith(prevRay, rayCRs);
+			float prevHeight = rayCRs.getClosestCollision().getContactPoint().y;
+
+			Ray nextRay = new Ray(this.getBoundingBox().getCenter(), DOWN_VEC);
+			rayCRs.clear();
+			cr.simpleEntity.getCollidable().collideWith(nextRay, rayCRs);
+			float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
+			
+			if (nextHeight > prevHeight) {
+				float diff = nextHeight - prevHeight;
+				if (diff < lengthMoved) { // 45 degrees?
+					this.oneOffForce.y += diff;
+				}
+			}
 			// Move up if it's a mesh/terrain?
 			//this.oneOffForce.y += (.5f);
-			this.oneOffForce.y += (.3f); // todo - make config
+			//this.oneOffForce.y += (.3f); // todo - make config
 		}
 
 
