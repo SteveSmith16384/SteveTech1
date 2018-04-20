@@ -22,7 +22,6 @@ import ssmith.util.MyProperties;
 import twoweeks.TwoWeeksCollisionValidator;
 import twoweeks.TwoWeeksGameData;
 import twoweeks.client.TwoWeeksClientEntityCreator;
-import twoweeks.entities.AISoldier;
 import twoweeks.entities.GenericStaticModel;
 import twoweeks.entities.MercServerAvatar;
 import twoweeks.entities.Terrain1;

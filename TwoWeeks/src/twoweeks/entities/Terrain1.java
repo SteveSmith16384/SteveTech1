@@ -69,6 +69,15 @@ public class Terrain1 extends PhysicalEntity {
 		AbstractHeightMap heightmap = new ImageBasedHeightMap(heightMapImage.getImage());
 		heightmap.load();
 
+		int initialSize = 513;
+		// raise edges
+		for (int i=0 ; i<initialSize ; i++) {
+			heightmap.setHeightAtPoint(255, 0,  i);
+			heightmap.setHeightAtPoint(255, i,  0);
+			heightmap.setHeightAtPoint(255, initialSize-1,  i);
+			heightmap.setHeightAtPoint(255, i, initialSize-1);
+		}
+		
 		/** 3. We have prepared material and heightmap.
 		 * Now we create the actual terrain:
 		 * 3.1) Create a TerrainQuad and name it "my terrain".
@@ -78,7 +87,7 @@ public class Terrain1 extends PhysicalEntity {
 		 * 3.5) We supply the prepared heightmap itself.
 		 */
 		int patchSize = 65;
-		terrain = new TerrainQuad("my terrain", patchSize, 513, heightmap.getHeightMap());
+		terrain = new TerrainQuad("my terrain", patchSize, initialSize, heightmap.getHeightMap());
 
 		/** 4. We give the terrain its material, position & scale it, and attach it. */
 		terrain.setMaterial(mat_terrain);
