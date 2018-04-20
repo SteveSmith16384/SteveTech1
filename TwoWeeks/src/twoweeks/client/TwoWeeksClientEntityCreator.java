@@ -114,8 +114,8 @@ public class TwoWeeksClientEntityCreator {
 		{
 			int ownerid = (int)msg.data.get("ownerid");
 			int playerID = (int) msg.data.get("playerID");
-			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-			//if (playerID == game.playerID) { // Don't care about other's abilities?
+			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities
+			//if (playerID == game.playerID) { // Don't care about other's abilities
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				PlayersMachineGun gl = new PlayersMachineGun(game, id, playerID, owner, num, null);

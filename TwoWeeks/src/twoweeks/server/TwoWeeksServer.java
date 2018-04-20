@@ -125,13 +125,13 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
 		this.actuallyAddEntity(terrain); // terrain.getMainNode().getWorldBound();
-		
+
 		Vector3f pos = null;
-/*
+		/*
 		Vector3f pos = this.getHeightAtPoint(90, 90);
 		AISoldier s = new AISoldier(this, this.getNextEntityID(), pos.x, pos.y + 5, pos.z, 0);
 		this.actuallyAddEntity(s);
-*/
+		 */
 		// Drop debug balls
 		/*for (int z=80; z<=120 ; z+= 10) {
 			for (int x=80; x<=120 ; x+= 10) {
@@ -140,7 +140,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 		}*/
 
 		// Place BigPalmTree
-		/*pos = new Vector3f(95, 0, 85);
+		pos = new Vector3f(95, 0, 85);
 		GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
 		pos.y = this.getLowestHeightAtPoint(tree.getMainNode());
 		tree.setWorldTranslation(pos);
@@ -186,14 +186,14 @@ public class TwoWeeksServer extends AbstractGameServer {
 		tree5.setWorldTranslation(pos);
 		this.actuallyAddEntity(tree5); //tree.getMainNode().getWorldBound();
 		tree5 = null;
-*/
+
 		// Place trees
-		/*todofor (int z=80; z<=120 ; z+= 10) {
-		for (int x=80; x<=120 ; x+= 10) {
-			GenericStaticModel tree6 = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/MoreNature/Blends/BigTreeWithLeaves.blend", 3f, "Models/MoreNature/Blends/TreeTexture.png", pos.x, pos.y, pos.z, new Quaternion());
-			this.placeGenericModel(tree6, x, z);
+		for (int z=80; z<=120 ; z+= 10) {
+			for (int x=80; x<=120 ; x+= 10) {
+				GenericStaticModel tree6 = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/MoreNature/Blends/BigTreeWithLeaves.blend", 3f, "Models/MoreNature/Blends/TreeTexture.png", x, 0, z, new Quaternion());
+				this.placeGenericModel(tree6, x, z);
+			}
 		}
-	}*/
 
 		// todo
 		// Place AI
@@ -210,8 +210,8 @@ public class TwoWeeksServer extends AbstractGameServer {
 		//this.actuallyAddEntity(ds);
 
 	}
-	
-	
+
+
 	private void placeGenericModel(GenericStaticModel tree5, float x, float z) {
 		Vector3f pos = new Vector3f(x, 0, z);
 		pos.y = this.getLowestHeightAtPoint(tree5.getMainNode());
@@ -233,21 +233,21 @@ public class TwoWeeksServer extends AbstractGameServer {
 	private float getLowestHeightAtPoint(Spatial s) {
 		CollisionResults crs = new CollisionResults();
 		BoundingBox bb = (BoundingBox)s.getWorldBound();
-		
+
 		float res = 9999f;
-		
+
 		Ray r1 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), DOWN_VEC);
 		crs.clear();
 		this.getGameNode().collideWith(r1, crs);
 		Vector3f pos1 = crs.getClosestCollision().getContactPoint();
 		res = Math.min(res, pos1.y);
-		
+
 		Ray r2 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), DOWN_VEC);
 		crs.clear();
 		this.getGameNode().collideWith(r2, crs);
 		Vector3f pos2 = crs.getClosestCollision().getContactPoint();
 		res = Math.min(res, pos2.y);
-		
+
 		Ray r3 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), DOWN_VEC);
 		crs.clear();
 		this.getGameNode().collideWith(r3, crs);

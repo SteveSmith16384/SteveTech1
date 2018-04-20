@@ -1,4 +1,4 @@
-package com.scs.moonbaseassault.entities;
+package com.scs.stevetech1.entities;
 
 import java.util.HashMap;
 
@@ -11,14 +11,12 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
-import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
-import com.scs.moonbaseassault.models.SoldierModel;
-import com.scs.moonbaseassault.server.ai.WanderingSoldierAI2;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IAnimatedServerSide;
+import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IDrawOnHUD;
@@ -29,8 +27,6 @@ import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.components.ITargetable;
-import com.scs.stevetech1.entities.AbstractAvatar;
-import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
@@ -40,13 +36,13 @@ import com.scs.stevetech1.shared.IEntityController;
 
 import ssmith.util.RealtimeInterval;
 
-public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
+public abstract class AbstractAISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, // todo - use this
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable { //, ICanShoot {//, IUnit {
 
 	public static final float START_HEALTH = 10f;
 	public static final float SPEED = .53f;//.47f;
 
-	private SoldierModel soldierModel; // Need this to animate the model
+	private IAvatarModel soldierModel; // Need this to animate the model
 	private float health = START_HEALTH;
 	public int side;
 	private IArtificialIntelligence ai;
@@ -57,18 +53,18 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	private BitmapText hudNode;
 	private static BitmapFont font_small;
 
-	public AISoldier(IEntityController _game, int id, float x, float y, float z, int _side) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, "AISoldier", true);
+	public AbstractAISoldier(IEntityController _game, int id, int type, float x, float y, float z, int _side, IAvatarModel _model) {
+		super(_game, id, type, "AISoldier", true);
 
 		side = _side;
-		soldierModel = new SoldierModel(game.getAssetManager()); // Need it for dimensions for bb
+		soldierModel = _model;//new SoldierModel(game.getAssetManager()); // Need it for dimensions for bb
 
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
 
-			ai = new WanderingSoldierAI2(this);
+			//ai = new ShootingSoldierAI3(this);
 		} else {
 			this.soldierModel.createAndGetModel(_side);
 			game.getGameNode().attachChild(this.soldierModel.getModel());
@@ -99,12 +95,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (health > 0) {
-			// Randomly change direction
-			/*if (NumberFunctions.rnd(1, 200) == 1) {
-				Vector3f newdir = this.getRandomDirection();
-				this.changeDirection(newdir);
-			}*/
-
 			ai.process(server, tpf_secs);
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
 		} else {
@@ -175,7 +165,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	@Override
 	public void setAnimCode(int animCode) {
 		if (soldierModel != null) {
-			this.soldierModel.setAnim(animCode);
+			//todo this.soldierModel.setAnim(animCode);
 			if (Globals.DEBUG_DIE_ANIM) {
 				if (animCode == AbstractAvatar.ANIM_DIED) {
 					Globals.p("setAnimCode=" + animCode);
@@ -196,11 +186,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	 */
 	@Override
 	public int getCurrentAnimCode() {
-		if (Globals.DEBUG_DIE_ANIM) {
-			if (soldierModel.getCurrentAnimCode() == AbstractAvatar.ANIM_DIED) {
-				Globals.p("getCurrentAnimCode=" + this.soldierModel.getCurrentAnimCode());
-			}
-		}
 		return this.serverSideCurrentAnimCode;
 	}
 
@@ -210,7 +195,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		if (health > 0) {
 			FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 			if (insideoutside != FrustumIntersect.Outside) {
-				Vector3f pos = this.getWorldTranslation().add(0, SoldierModel.MODEL_HEIGHT, 0);
+				Vector3f pos = this.getWorldTranslation().add(0, soldierModel.getBoundingBox().getYExtent()*2, 0); // todo - not this every time
 				Vector3f screen_pos = cam.getScreenCoordinates(pos);
 				this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 			}
@@ -269,10 +254,13 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			Vector3f pos = this.getWorldTranslation().clone();
 			pos.y += this.soldierModel.getBulletStartHeight();
 			Vector3f dir = target.getMainNode().getWorldBound().getCenter().subtract(pos).normalizeLocal();
-			AILaserBullet bullet = new AILaserBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
+			AbstractAIBullet bullet = this.createBullet();// new AIBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
 			this.game.addEntity(bullet);
 		}
 	}
+	
+	
+	protected abstract AbstractAIBullet createBullet();
 
 
 	@Override

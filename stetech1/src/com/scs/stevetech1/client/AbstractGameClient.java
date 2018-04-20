@@ -525,11 +525,13 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-			//if (!this.entities.containsKey(newEntityMessage.entityID)) {
-			createEntity(newEntityMessage, newEntityMessage.timestamp);
-			/*} else {
-				// We already know about it. -  NO! Replace the entity!
-			}*/
+			IEntity e = this.entities.get(newEntityMessage.entityID);
+			if (e == null) {
+				createEntity(newEntityMessage, newEntityMessage.timestamp);
+			} else {
+				// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
+				Globals.p("Ignoring new entity " + e);
+			}
 
 		} else if (message instanceof EntityUpdateMessage) {
 			if (clientStatus >= STATUS_JOINED_GAME) {
@@ -810,13 +812,14 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 				throw new RuntimeException("No entity id!");
 			}
 			if (this.entities.containsKey(e.getID())) {
-				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+				/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Remove entity " + e + " since it already exists");
 				}
 				// Replace it, since it might be an existing entity but its position has changed
 				IEntity e2 = this.entities.get(e.getID());
 				e2.remove();
-				this.actuallyRemoveEntity(e2.getID());
+				this.actuallyRemoveEntity(e2.getID());*/
+				throw new RuntimeException("Entity already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
 			}
 			this.entities.put(e.getID(), e);
 			if (e.requiresProcessing()) {

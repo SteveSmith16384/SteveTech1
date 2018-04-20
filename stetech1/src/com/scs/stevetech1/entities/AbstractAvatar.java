@@ -87,6 +87,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		this.resetWalkDir();
 
 		int newAnimCode = ANIM_IDLE; // Default
+		
+		if (Globals.STRICT) {
+			if (ability[0] == null) {
+				Globals.p("Warning - no ability0!");
+			}
+		}
 
 		// Check for any abilities/guns being fired
 		for (int i=0 ; i< this.ability.length ; i++) {

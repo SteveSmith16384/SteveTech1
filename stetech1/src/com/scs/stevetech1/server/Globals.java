@@ -17,7 +17,9 @@ public class Globals {
 	public static final boolean DEBUG_TOO_MANY_SRBS = true;
 	public static final boolean DEBUG_AVATAR_SET = true;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
+	public static final boolean DEBUG_SERVER_SHOOTING = true;
 	public static final boolean DEBUG_AI_SEE_PLAYER = true;
+	public static final boolean DEBUG_SLIDING_DOORS = true;
 
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean SHOW_AVATAR_POS = false;
@@ -28,7 +30,6 @@ public class Globals {
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
-	public static final boolean DEBUG_SLIDING_DOORS = false;
 	public static final boolean SHOW_AVATAR_BOUNDS = false;
 	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
@@ -40,7 +41,6 @@ public class Globals {
 	public static final boolean SHOW_NUM_ENT_UPDATES_SENT = false;
 	public static final boolean FEW_MODELS = false;
 	public static final boolean EMPTY_MAP = false;
-	public static final boolean DEBUG_SERVER_SHOOTING = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_CLIENT_ROTATION = false;
 	public static final boolean DEBUG_PLAYER_RESTART = false;

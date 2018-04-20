@@ -11,6 +11,7 @@ import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.IArtificialIntelligence;
 
 import ssmith.lang.NumberFunctions;
 import ssmith.util.RealtimeInterval;
