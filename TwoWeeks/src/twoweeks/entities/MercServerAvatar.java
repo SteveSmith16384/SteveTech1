@@ -14,7 +14,7 @@ public class MercServerAvatar extends AbstractServerAvatar {
 	public MercServerAvatar(TwoWeeksServer _module, ClientData client, int _playerID, IInputDevice _input, int eid) {
 		super(_module, client, _playerID, _input, eid, new SoldierModel(_module.getAssetManager()));
 		
-		IAbility abilityGun = new PlayersMachineGun(_module, _module.getNextEntityID(), playerID, this, 0, client);
+		IAbility abilityGun = new PlayersMachineGun(_module, _module.getNextEntityID(), playerID, this, eid, 0, client);
 		_module.actuallyAddEntity(abilityGun);
 		
 		//IAbility abilityGrenades = new GrenadeLauncher(_module, _module.getNextEntityID(), this, 1, client);

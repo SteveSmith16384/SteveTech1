@@ -1,15 +1,14 @@
 package com.scs.moonbaseassault.server.ai;
 
 import com.jme3.math.Vector3f;
-import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
+import com.scs.stevetech1.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractEntityServer;
-import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.IArtificialIntelligence;
 
 import ssmith.lang.NumberFunctions;
@@ -33,7 +32,7 @@ public class WanderingSoldierAI implements IArtificialIntelligence {
 			this.currDir = this.getRandomDirection();
 		}
 		//Globals.p("Currdir: " + this.currDir);
-		physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
+		physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
 
 	}
 

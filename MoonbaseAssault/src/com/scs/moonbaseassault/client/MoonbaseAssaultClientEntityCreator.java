@@ -3,15 +3,15 @@ package com.scs.moonbaseassault.client;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.abilities.LaserRifle;
-import com.scs.moonbaseassault.entities.AISoldier;
+import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.ExplosionEffectEntity;
 import com.scs.moonbaseassault.entities.Floor;
-import com.scs.moonbaseassault.entities.PlayersGrenade;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.PlayerLaserBullet;
+import com.scs.moonbaseassault.entities.PlayersGrenade;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
@@ -21,7 +21,6 @@ import com.scs.moonbaseassault.weapons.GrenadeLauncher;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
@@ -122,14 +121,14 @@ public class MoonbaseAssaultClientEntityCreator {
 		case LASER_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+			//if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+				//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				int playerID = (int)msg.data.get("playerID");
-				LaserRifle gl = new LaserRifle(game, id, playerID, owner, num, null);
+				LaserRifle gl = new LaserRifle(game, id, playerID, null, ownerid, num, null);
 				return gl;
-			}
-			return null;
+			//}
+			//return null;
 
 		}
 
@@ -176,7 +175,7 @@ public class MoonbaseAssaultClientEntityCreator {
 		case AI_SOLDIER:
 		{
 			int side = (int)msg.data.get("side");
-			AISoldier z = new AISoldier(game, id, pos.x, pos.y, pos.z, side);
+			MA_AISoldier z = new MA_AISoldier(game, id, pos.x, pos.y, pos.z, side);
 			return z;
 		}
 
@@ -191,16 +190,16 @@ public class MoonbaseAssaultClientEntityCreator {
 		case GRENADE_LAUNCHER: 
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			if (game.currentAvatar != null) { // We might not have an avatar yet
-			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
-				int num = (int)msg.data.get("num");
-				int playerID = (int)msg.data.get("playerID");
-				GrenadeLauncher gl = new GrenadeLauncher(game, id, playerID, owner, num, null);
-				return gl;
-			}
-			}
-			return null;
+			//if (game.currentAvatar != null) { // We might not have an avatar yet
+			//	if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+					//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+					int num = (int)msg.data.get("num");
+					int playerID = (int)msg.data.get("playerID");
+					GrenadeLauncher gl = new GrenadeLauncher(game, id, playerID, null, ownerid, num, null);
+					return gl;
+			//	}
+			//}
+			//return null;
 		}
 
 		case GRENADE:

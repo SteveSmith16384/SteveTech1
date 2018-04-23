@@ -45,7 +45,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	private IAvatarModel soldierModel; // Need this to animate the model
 	private float health = START_HEALTH;
 	public int side;
-	private IArtificialIntelligence ai;
+	protected IArtificialIntelligence ai;
 	private int serverSideCurrentAnimCode; // Server-side
 	private RealtimeInterval shootInt = new RealtimeInterval(3000);
 
@@ -57,7 +57,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		super(_game, id, type, "AISoldier", true);
 
 		side = _side;
-		soldierModel = _model;//new SoldierModel(game.getAssetManager()); // Need it for dimensions for bb
+		soldierModel = _model; // Need it for dimensions for bb
 
 
 		if (_game.isServer()) {
@@ -233,18 +233,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		return shootersSide != this.side;
 	}
 
-	/*
-	@Override
-	public Vector3f getShootDir() {
-		return this.ai.getCurrentTarget().getWorldTranslation().subtract(this.getWorldTranslation()).normalizeLocal();
-	}
-
-
-	@Override
-	public Vector3f getBulletStartPos() {
-		return this.getWorldTranslation();
-	}
-	 */
 
 	public void shoot(PhysicalEntity target) {
 		if (this.shootInt.hitInterval()) {
@@ -254,13 +242,13 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			Vector3f pos = this.getWorldTranslation().clone();
 			pos.y += this.soldierModel.getBulletStartHeight();
 			Vector3f dir = target.getMainNode().getWorldBound().getCenter().subtract(pos).normalizeLocal();
-			AbstractAIBullet bullet = this.createBullet();// new AIBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
+			AbstractAIBullet bullet = this.createBullet(pos, dir);// new AIBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
 			this.game.addEntity(bullet);
 		}
 	}
 	
 	
-	protected abstract AbstractAIBullet createBullet();
+	protected abstract AbstractAIBullet createBullet(Vector3f pos, Vector3f dir);
 
 
 	@Override

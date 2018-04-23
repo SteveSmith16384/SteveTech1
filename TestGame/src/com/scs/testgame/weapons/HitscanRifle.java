@@ -28,8 +28,8 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	public RayCollisionData hitThisMoment = null; // Only used server-side
 	private int bulletsInMag = MAG_SIZE;
 
-	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int num, ClientData client) {
-		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, client.getPlayerID(), owner, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
+	public HitscanRifle(IEntityController game, int id, AbstractAvatar owner, int avatarID, int num, ClientData client) {
+		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, client.getPlayerID(), owner, avatarID, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
 
 	}
 

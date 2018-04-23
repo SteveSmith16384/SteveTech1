@@ -1,14 +1,15 @@
 package twoweeks.server.ai;
 
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.server.IArtificialIntelligence;
 
 import ssmith.lang.NumberFunctions;
 import ssmith.util.RealtimeInterval;
-import twoweeks.entities.AISoldier;
 import twoweeks.entities.Floor;
 import twoweeks.entities.Terrain1;
 
@@ -16,7 +17,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 	private static final boolean SHOOT_AT_ENEMY = true;
 
-	private AISoldier soldierEntity;
+	private AbstractAISoldier soldierEntity;
 	private Vector3f currDir;
 	private RealtimeInterval checkForEnemyInt = new RealtimeInterval(1000);
 	private PhysicalEntity currentTarget;
@@ -24,7 +25,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 	private float waitForSecs = 0; // e.g. wait for door to open
 
-	public ShootingSoldierAI3(AISoldier _pe) {
+	public ShootingSoldierAI3(AbstractAISoldier _pe) {
 		soldierEntity = _pe;
 
 		currDir = new Vector3f();
@@ -67,7 +68,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			animCode = AbstractAvatar.ANIM_IDLE;
 			this.soldierEntity.shoot(currentTarget);
 		} else if (waitForSecs <= 0) {
-			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
+			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
 			animCode = AbstractAvatar.ANIM_WALKING;
 		} else {
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking

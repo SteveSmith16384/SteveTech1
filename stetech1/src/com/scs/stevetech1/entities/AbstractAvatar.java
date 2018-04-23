@@ -200,11 +200,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		return side;
 	}
 
-
+/*
 	public void addAbility(IAbility a, int num) {
 		this.ability[num] = a;
 	}
-
+*/
 
 	@Override
 	public void resetPlayerInput() {

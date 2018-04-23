@@ -5,7 +5,6 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
@@ -14,12 +13,12 @@ import com.scs.stevetech1.netmessages.NewEntityMessage;
 
 import twoweeks.abilities.PlayersMachineGun;
 import twoweeks.entities.AIBullet;
-import twoweeks.entities.AISoldier;
 import twoweeks.entities.Floor;
 import twoweeks.entities.GenericStaticModel;
 import twoweeks.entities.MercClientAvatar;
 import twoweeks.entities.MercEnemyAvatar;
 import twoweeks.entities.PlayersBullet;
+import twoweeks.entities.TWIB_AISoldier;
 import twoweeks.entities.Terrain1;
 
 public class TwoWeeksClientEntityCreator {
@@ -114,14 +113,14 @@ public class TwoWeeksClientEntityCreator {
 		{
 			int ownerid = (int)msg.data.get("ownerid");
 			int playerID = (int) msg.data.get("playerID");
-			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities
+			//if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities
 			//if (playerID == game.playerID) { // Don't care about other's abilities
-				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+				//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
-				PlayersMachineGun gl = new PlayersMachineGun(game, id, playerID, owner, num, null);
+				PlayersMachineGun gl = new PlayersMachineGun(game, id, playerID, null, ownerid, num, null);
 				return gl;
-			}
-			return null;
+			//}
+			//return null;
 
 		}
 
@@ -149,7 +148,7 @@ public class TwoWeeksClientEntityCreator {
 		case AI_SOLDIER:
 		{
 			int side = (int)msg.data.get("side");
-			AISoldier z = new AISoldier(game, id, pos.x, pos.y, pos.z, side);
+			TWIB_AISoldier z = new TWIB_AISoldier(game, id, pos.x, pos.y, pos.z, side);
 			return z;
 		}
 

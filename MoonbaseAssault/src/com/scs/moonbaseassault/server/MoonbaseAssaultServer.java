@@ -4,21 +4,16 @@ import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
-import com.scs.moonbaseassault.entities.AISoldier;
+import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultGameData;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IPlayerControlled;
-import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -211,18 +206,18 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		// Add AI soldiers
 		for (int i=0 ; i<3 ; i++) {
-			AISoldier s = new AISoldier(this, this.getNextEntityID(), 0,0,0, 2);
+			MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, 2);
 			this.actuallyAddEntity(s);
-			moveAISoldierToStartPosition(s);
+			moveAISoldierToStartPosition(s, s.side);
 
 		}
 
 	}
 
 
-	private void moveAISoldierToStartPosition(AISoldier soldier) {
+	private void moveAISoldierToStartPosition(PhysicalEntity soldier, int side) {
 		float startHeight = .1f;
-		List<Point> deploySquares = this.deploySquares[soldier.side-1];
+		List<Point> deploySquares = this.deploySquares[side-1];
 		boolean found = false;
 		for (Point p : deploySquares) {
 			soldier.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);

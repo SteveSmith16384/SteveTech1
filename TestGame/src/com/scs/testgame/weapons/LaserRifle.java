@@ -19,8 +19,8 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 
 	private LinkedList<PlayerLaserBullet> ammoCache = new LinkedList<PlayerLaserBullet>(); 
 
-	public LaserRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int abilityNum, ClientData client) {
-		super(game, id, TestGameClientEntityCreator.LASER_RIFLE, playerID, owner, abilityNum, "Laser Rifle", .2f, 2, 2, client);
+	public LaserRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, int abilityNum, ClientData client) {
+		super(game, id, TestGameClientEntityCreator.LASER_RIFLE, playerID, owner, avatarID, abilityNum, "Laser Rifle", .2f, 2, 2, client);
 
 	}
 

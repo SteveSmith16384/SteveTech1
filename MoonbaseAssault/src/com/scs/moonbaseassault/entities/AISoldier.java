@@ -1,5 +1,5 @@
 package com.scs.moonbaseassault.entities;
-
+/*
 import java.util.HashMap;
 
 import com.jme3.font.BitmapFont;
@@ -40,6 +40,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 import ssmith.util.RealtimeInterval;
 
+// todo - remove this once AISoldier2 finished
 public class AISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, 
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable { //, ICanShoot {//, IUnit {
 
@@ -57,7 +58,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	private BitmapText hudNode;
 	private static BitmapFont font_small;
 
-	public AISoldier(IEntityController _game, int id, float x, float y, float z, int _side) {
+	public AISoldier(int DONOTUSE, IEntityController _game, int id, float x, float y, float z, int _side) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, "AISoldier", true);
 
 		side = _side;
@@ -99,12 +100,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (health > 0) {
-			// Randomly change direction
-			/*if (NumberFunctions.rnd(1, 200) == 1) {
-				Vector3f newdir = this.getRandomDirection();
-				this.changeDirection(newdir);
-			}*/
-
 			ai.process(server, tpf_secs);
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
 		} else {
@@ -191,9 +186,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	}
 
 
-	/**
-	 * Called server-side only,
-	 */
+	// Called server-side only,
 	@Override
 	public int getCurrentAnimCode() {
 		if (Globals.DEBUG_DIE_ANIM) {
@@ -248,18 +241,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		return shootersSide != this.side;
 	}
 
-	/*
-	@Override
-	public Vector3f getShootDir() {
-		return this.ai.getCurrentTarget().getWorldTranslation().subtract(this.getWorldTranslation()).normalizeLocal();
-	}
-
-
-	@Override
-	public Vector3f getBulletStartPos() {
-		return this.getWorldTranslation();
-	}
-	 */
 
 	public void shoot(PhysicalEntity target) {
 		if (this.shootInt.hitInterval()) {
@@ -281,3 +262,4 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	}
 
 }
+*/

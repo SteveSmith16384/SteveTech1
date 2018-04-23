@@ -11,8 +11,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
-import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
+import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
@@ -132,7 +132,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 					if (pe instanceof Computer) {
 						Vector3f pos = pe.getWorldTranslation();
 						computers.add(new Point((int)pos.x, (int)pos.z));
-					} else if (pe instanceof AISoldier) {
+					} else if (pe instanceof MA_AISoldier) {
 						Vector3f pos = pe.getWorldTranslation();
 						units.add(new Point((int)pos.x, (int)pos.z));
 					}

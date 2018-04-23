@@ -1,12 +1,13 @@
 package com.scs.moonbaseassault.server.ai;
 
 import com.jme3.math.Vector3f;
-import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
+import com.scs.stevetech1.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractEntityServer;
@@ -39,7 +40,7 @@ public class WanderingSoldierAI2 implements IArtificialIntelligence {
 			this.waitForSecs -= tpf_secs;
 			physicalEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 		} else {
-			physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
+			physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
 		}
 	}
 
@@ -54,7 +55,7 @@ public class WanderingSoldierAI2 implements IArtificialIntelligence {
 				changeDirection(getRandomDirection()); // Start us pointing in the right direction
 			} else if (pe instanceof AbstractAvatar) {
 				this.waitForSecs = 3;
-			} else if (pe instanceof AISoldier) {
+			} else if (pe instanceof MA_AISoldier) {
 				if (NumberFunctions.rnd(1, 3) == 1) {
 					this.waitForSecs = 3;
 				} else {

@@ -19,8 +19,8 @@ public class GrenadeLauncher extends AbstractMagazineGun<PlayersGrenade> impleme
 
 	private LinkedList<PlayersGrenade> ammoCache = new LinkedList<PlayersGrenade>();
 
-	public GrenadeLauncher(IEntityController game, int id, int playerID, ICanShoot owner, int num, ClientData _client) {
-		super(game, id, MoonbaseAssaultClientEntityCreator.GRENADE_LAUNCHER, playerID, owner, num, "GrenadeLauncher", 1, 3, MAG_SIZE, _client);
+	public GrenadeLauncher(IEntityController game, int id, int playerID, ICanShoot owner, int avatarID, int num, ClientData _client) {
+		super(game, id, MoonbaseAssaultClientEntityCreator.GRENADE_LAUNCHER, playerID, owner, avatarID, num, "GrenadeLauncher", 1, 3, MAG_SIZE, _client);
 		
 	}
 

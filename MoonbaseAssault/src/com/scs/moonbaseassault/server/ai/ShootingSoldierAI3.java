@@ -1,13 +1,13 @@
 package com.scs.moonbaseassault.server.ai;
 
 import com.jme3.math.Vector3f;
-import com.scs.moonbaseassault.entities.AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
-import com.scs.stevetech1.components.ICanShoot;
+import com.scs.stevetech1.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractEntityServer;
@@ -21,14 +21,14 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	private static final float WAIT_FOR_DOOR_DURATION = 3;
 	private static final boolean SHOOT_AT_ENEMY = true;
 
-	private AISoldier soldierEntity;
+	private MA_AISoldier soldierEntity;
 	private Vector3f currDir;
 	private RealtimeInterval checkForEnemyInt = new RealtimeInterval(1000);
 	private PhysicalEntity currentTarget;
 
 	private float waitForSecs = 0; // e.g. wait for door to open
 
-	public ShootingSoldierAI3(AISoldier _pe) {
+	public ShootingSoldierAI3(MA_AISoldier _pe) {
 		soldierEntity = _pe;
 
 		currDir = new Vector3f();
@@ -56,7 +56,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		if (currentTarget != null && SHOOT_AT_ENEMY) {
 			this.soldierEntity.shoot(currentTarget);
 		} else if (waitForSecs <= 0) {
-			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AISoldier.SPEED)); // Walk forwards
+			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
 		} else {
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 		}

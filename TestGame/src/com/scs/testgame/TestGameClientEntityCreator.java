@@ -87,14 +87,14 @@ public class TestGameClientEntityCreator {
 		case HITSCAN_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities
-				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+			//if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities
+				//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
-				HitscanRifle gl = new HitscanRifle(game, id, owner, num, null);
-				owner.addAbility(gl, num);
+				HitscanRifle gl = new HitscanRifle(game, id, null, ownerid, num, null);
+				//owner.addAbility(gl, num);
 				return gl;
-			}
-			return null;
+			//}
+			//return null;
 		}
 
 		case FLOOR:
@@ -169,21 +169,21 @@ public class TestGameClientEntityCreator {
 		case LASER_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+			//if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+				//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				int playerID = (int)msg.data.get("playerID");
-				LaserRifle gl = new LaserRifle(game, id, playerID, owner, num, null);
+				LaserRifle gl = new LaserRifle(game, id, playerID, null, ownerid, num, null);
 				if (Globals.DEBUG_NO_ABILITY0) {
 					Globals.p("Got new laser rifle for avatar " + ownerid);
 				}
 				return gl;
-			} else {
+			/*} else {
 				if (Globals.DEBUG_NO_ABILITY0) {
 					Globals.p("Ignoring new laser rifle " + id);
 				}
 				return null;
-			}
+			}*/
 
 		}
 
