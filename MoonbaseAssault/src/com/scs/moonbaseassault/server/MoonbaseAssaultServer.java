@@ -242,7 +242,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		SoldierServerAvatar avatar = new SoldierServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
-
 		return avatar;
 	}
 

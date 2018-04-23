@@ -1,10 +1,8 @@
-package com.scs.moonbaseassault.abilities;
+package com.scs.testgame.weapons;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
-import com.scs.moonbaseassault.entities.PlayerLaserBullet;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -14,16 +12,15 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
+import com.scs.testgame.TestGameClientEntityCreator;
+import com.scs.testgame.entities.PlayerLaserBullet;
 
-/*
- * This gun shoots physical laser bolts
- */
 public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implements IAbility, IEntityContainer<PlayerLaserBullet> {
 
 	private LinkedList<PlayerLaserBullet> ammoCache = new LinkedList<PlayerLaserBullet>(); 
 
 	public LaserRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int abilityNum, ClientData client) {
-		super(game, id, MoonbaseAssaultClientEntityCreator.LASER_RIFLE, playerID, owner, abilityNum, "Laser Rifle", .2f, 2, 10, client);
+		super(game, id, TestGameClientEntityCreator.LASER_RIFLE, playerID, owner, abilityNum, "Laser Rifle", .2f, 2, 2, client);
 
 	}
 
@@ -73,5 +70,7 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 	public int getBulletsInMag() {
 		return this.ammoCache.size();
 	}
+
+
 
 }

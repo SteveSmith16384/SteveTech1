@@ -14,6 +14,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	private static final float SEND_INT_SECS = 5;
 
 	public int playerID;
+	public int avatarID;
 	protected AbstractAvatar owner;
 	public int abilityNum;
 	private float timeUntilNextSend_secs = SEND_INT_SECS;

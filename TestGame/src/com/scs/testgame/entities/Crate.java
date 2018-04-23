@@ -39,13 +39,10 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
 
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-				floor_mat.setTexture("DiffuseMap", tex3);
+			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			floor_mat.setTexture("DiffuseMap", tex3);
 
 			geometry.setMaterial(floor_mat);
-			//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-			//geometry.setQueueBucket(Bucket.Transparent);
 		}
 		geometry.setLocalTranslation(0, h/2, 0);
 		this.mainNode.attachChild(geometry); //This creates the model bounds!  mainNode.getWorldBound();
@@ -53,7 +50,7 @@ public class Crate extends PhysicalEntity implements IAffectedByPhysics {
 		mainNode.rotate(0, rads, 0);
 		mainNode.setLocalTranslation(x, y, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), !game.isServer(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

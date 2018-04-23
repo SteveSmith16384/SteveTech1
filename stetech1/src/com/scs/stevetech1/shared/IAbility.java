@@ -9,6 +9,7 @@ import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 public interface IAbility extends IEntity {
 
 	String getName();
+	
 	/**
 	 * Called when activated/used.  Returns whether it was successfully used.
 	 */
@@ -16,7 +17,7 @@ public interface IAbility extends IEntity {
 	
 	String getHudText();
 	
-	String getAvatarAnimationCode();
+	//String getAvatarAnimationCode();
 	
 	void encode(AbilityUpdateMessage aum);
 

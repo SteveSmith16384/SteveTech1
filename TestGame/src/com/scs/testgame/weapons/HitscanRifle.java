@@ -105,12 +105,6 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	public String getAvatarAnimationCode() {
-		return "Shoot";
-	}
-
-
-	@Override
 	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer irac, int side) {
 		this.bulletsInMag++; // No physical projectiles required!
 		

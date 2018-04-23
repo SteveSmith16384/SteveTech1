@@ -196,18 +196,18 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		}
 	}
 
-
+/*
 	@Override
 	public void remove() {
 		if (!removed) {
 			//if (Globals.DEBUG_AI_SHOOTING) {
-				Globals.p("Removing bullet");
+				//Globals.p("Removing bullet");
 			//}
 
 			super.remove();
 		}
 	}
-
+*/
 
 	@Override
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
@@ -215,6 +215,12 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	}
 
 
+	@Override
+	public void processChronoData(long serverTimeToUse, float tpf_secs) {
+		// Do nothing, each client controls the position
+	}
+	
+	
 	@Override
 	public boolean sendUpdates() {
 		return false; // No, each client controls the position

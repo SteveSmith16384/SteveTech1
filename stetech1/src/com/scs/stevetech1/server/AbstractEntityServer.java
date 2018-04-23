@@ -263,6 +263,17 @@ ICollisionListener<PhysicalEntity> {
 				eum = new EntityUpdateMessage();
 			}
 
+			if (Globals.STRICT) {
+				for(IEntity e : this.entities.values()) {
+					if (e.requiresProcessing()) {
+						if (!this.entitiesForProcessing.containsValue(e)) {
+							Globals.p("Warning: Processed entity " + e + " not in process list!");
+						}
+					}
+				}
+			}
+
+
 			int numSent = 0;
 			// Loop through the entities
 			for (IEntity e : entitiesForProcessing.values()) { // this.entities
@@ -604,7 +615,7 @@ ICollisionListener<PhysicalEntity> {
 			IEntity e = this.entities.get(id); // this.entitiesToAdd
 			if (e != null) {
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-					Globals.p("Actually removing entity " + e.getName() + " / ID:" + id);
+					Globals.p("Actually removing entity " + e + " ..and sending message to clients");
 				}
 				this.entities.remove(id);
 				if (e.requiresProcessing()) {

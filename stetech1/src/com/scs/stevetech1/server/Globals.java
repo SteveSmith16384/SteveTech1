@@ -14,6 +14,7 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_NO_ABILITY0 = true;
 	public static final boolean DEBUG_TOO_MANY_SRBS = true;
 	public static final boolean DEBUG_AVATAR_SET = true;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;

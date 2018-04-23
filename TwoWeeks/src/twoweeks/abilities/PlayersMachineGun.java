@@ -50,12 +50,6 @@ public class PlayersMachineGun extends AbstractMagazineGun<PlayersBullet> implem
 	}
 
 
-	@Override
-	public String getAvatarAnimationCode() {
-		return "Shoot";
-	}
-
-
 	public void remove() {
 		while (!ammoCache.isEmpty()) {
 			PlayersBullet g = ammoCache.remove();

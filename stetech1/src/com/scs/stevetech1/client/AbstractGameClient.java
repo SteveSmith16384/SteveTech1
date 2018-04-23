@@ -92,10 +92,13 @@ import com.scs.stevetech1.systems.client.AnimationSystem;
 import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
 
 import ssmith.util.AverageNumberCalculator;
+import ssmith.util.ConsoleInputListener;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
+import ssmith.util.TextConsole;
 
-public abstract class AbstractGameClient extends SimpleApplication implements IClientApp, IEntityController, ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity> { 
+public abstract class AbstractGameClient extends SimpleApplication implements IClientApp, IEntityController, 
+ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, ConsoleInputListener { 
 
 	// Statuses
 	public static final int STATUS_NOT_CONNECTED = 0;
@@ -269,6 +272,9 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 		setDisplayFps(false);
 		setDisplayStatView(false);
 
+		// Start console
+		new TextConsole(this);
+
 		loopTimer.start();
 
 	}
@@ -402,9 +408,20 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 					this.clientOnlyEntitiesToRemove.clear();
 
 					this.launchSystem.process(renderTime);
+					
+					if (Globals.STRICT) {
+						for(IEntity e : this.entities.values()) {
+							if (e.requiresProcessing()) {
+								if (!this.entitiesForProcessing.containsValue(e)) {
+									Globals.p("Warning: Processed entity " + e + " not in process list!");
+								}
+							}
+						}
+					}
+
 
 					// Loop through each entity and process them
-					for (IEntity e : entitiesForProcessing.values()) {
+					for (IEntity e : entitiesForProcessing.values()) { //entitiesForProcessing.size();
 						if (e instanceof IPlayerControlled) {
 							IPlayerControlled p = (IPlayerControlled)e;
 							p.resetPlayerInput();
@@ -559,11 +576,23 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 
 		} else if (message instanceof RemoveEntityMessage) {
 			RemoveEntityMessage rem = (RemoveEntityMessage)message;
+			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+				Globals.p("Rcvd msg to remove entity " + rem.entityID);
+			}
 			IEntity e = this.entities.get(rem.entityID);
 			if (e != null) {
 				e.remove();
+			} else {
+				// See if it's in our list of entities waiting to be added
+				Iterator<IEntity> it = this.entitiesToAdd.iterator();
+				while (it.hasNext()) {
+					IEntity e2a = it.next();
+					if (e2a.getID() == rem.entityID) {
+						it.remove();
+						break;
+					}
+				}
 			}
-			//this.removeEntity(rem.entityID);
 
 		} else if (message instanceof GeneralCommandMessage) {
 			GeneralCommandMessage msg = (GeneralCommandMessage)message;
@@ -1054,6 +1083,38 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 	@Override
 	public int getNumEntities() {
 		return this.entities.size();
+	}
+
+
+	@Override
+	public void processConsoleInput(String s) {
+		//Globals.p("Received input: " + s);
+		if (s.equalsIgnoreCase("help") || s.equalsIgnoreCase("?")) {
+			Globals.p("stats, entities");
+		} else if (s.equalsIgnoreCase("stats")) {
+			showStats();
+		} else if (s.equalsIgnoreCase("entities")) {
+			listEntities();
+		} else {
+			Globals.p("Unknown command: " + s);
+		}
+
+	}
+
+
+	private void showStats() {
+		Globals.p("Num Entities: " + this.entities.size());
+		Globals.p("Num Entities for proc: " + this.entitiesForProcessing.size());
+	}
+
+
+	private void listEntities() {
+		synchronized (entities) {
+			// Loop through the entities
+			for (IEntity e : entities.values()) {
+				Globals.p("Entity " + e.getID() + ": " + e.getName() + " (" + e + ")");
+			}
+		}
 	}
 
 

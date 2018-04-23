@@ -1,4 +1,4 @@
-package com.scs.moonbaseassault.entities;
+package com.scs.testgame.entities;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
@@ -9,7 +9,6 @@ import com.jme3.scene.Mesh;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
-import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
@@ -18,13 +17,14 @@ import com.scs.stevetech1.models.BeamLaserModel;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
 
 	private static final boolean USE_CYLINDER = true;
 
 	public PlayerLaserBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerOwnerId, owner, _side, _client, dir, true, 10f, 30f);
+		super(_game, id, TestGameClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerOwnerId, owner, _side, _client, dir, true, 10f, 30f);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -45,9 +45,8 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 			TextureKey key3 = null;
 			key3 = new TextureKey( "Textures/sun.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-				floor_mat.setTexture("DiffuseMap", tex3);
+			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			floor_mat.setTexture("DiffuseMap", tex3);
 			laserNode.setMaterial(floor_mat);
 		}
 

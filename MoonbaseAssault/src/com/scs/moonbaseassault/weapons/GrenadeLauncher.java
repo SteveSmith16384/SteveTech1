@@ -47,12 +47,6 @@ public class GrenadeLauncher extends AbstractMagazineGun<PlayersGrenade> impleme
 
 
 	@Override
-	public String getAvatarAnimationCode() {
-		return null;
-	}
-
-
-	@Override
 	public void remove() {
 		// Remove all owned bullets
 		while (!ammoCache.isEmpty()) {

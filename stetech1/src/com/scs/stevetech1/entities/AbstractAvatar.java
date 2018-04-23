@@ -90,7 +90,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		
 		if (Globals.STRICT) {
 			if (ability[0] == null) {
-				Globals.p("Warning - no ability0!");
+				//todo - re-add Globals.p("Warning - no ability0!");
 			}
 		}
 

@@ -4,9 +4,11 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
+import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.testgame.entities.Crate;
@@ -15,12 +17,14 @@ import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.House;
 import com.scs.testgame.entities.MovingTarget;
+import com.scs.testgame.entities.PlayerLaserBullet;
 import com.scs.testgame.entities.RoamingZombie;
 import com.scs.testgame.entities.Terrain1;
 import com.scs.testgame.entities.TestGameClientAvatar;
 import com.scs.testgame.entities.TestGameEnemyAvatar;
 import com.scs.testgame.entities.Wall;
 import com.scs.testgame.weapons.HitscanRifle;
+import com.scs.testgame.weapons.LaserRifle;
 
 /*
  * This is only used client-side.
@@ -30,7 +34,7 @@ public class TestGameClientEntityCreator {
 	public static final int AVATAR = 1;
 	public static final int DEBUGGING_SPHERE = 2;
 	public static final int MOVING_TARGET = 3;
-	public static final int LASER_BULLET = 4;
+	public static final int PLAYER_LASER_BULLET = 4;
 	public static final int HITSCAN_RIFLE = 7;
 	public static final int LASER_RIFLE = 8;
 	public static final int CRATE = 100;
@@ -41,6 +45,7 @@ public class TestGameClientEntityCreator {
 	public static final int ZOMBIE = 105;
 	public static final int HOUSE = 106;
 	public static final int TERRAIN1 = 107;
+
 
 	public TestGameClientEntityCreator() {
 		super();
@@ -82,7 +87,7 @@ public class TestGameClientEntityCreator {
 		case HITSCAN_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+			if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities
 				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
 				HitscanRifle gl = new HitscanRifle(game, id, owner, num, null);
@@ -161,6 +166,38 @@ public class TestGameClientEntityCreator {
 			return house;
 		}
 
+		case LASER_RIFLE:
+		{
+			int ownerid = (int)msg.data.get("ownerid");
+			if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
+				AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+				int num = (int)msg.data.get("num");
+				int playerID = (int)msg.data.get("playerID");
+				LaserRifle gl = new LaserRifle(game, id, playerID, owner, num, null);
+				if (Globals.DEBUG_NO_ABILITY0) {
+					Globals.p("Got new laser rifle for avatar " + ownerid);
+				}
+				return gl;
+			} else {
+				if (Globals.DEBUG_NO_ABILITY0) {
+					Globals.p("Ignoring new laser rifle " + id);
+				}
+				return null;
+			}
+
+		}
+
+		case PLAYER_LASER_BULLET:
+		{
+			int containerID = (int) msg.data.get("containerID");
+			int playerID = (int) msg.data.get("playerID");
+			int side = (int) msg.data.get("side");
+			Vector3f dir = (Vector3f) msg.data.get("dir");
+			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
+			PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, playerID, irac, side, null, dir);
+			return bullet;
+		}
+
 		default:
 			throw new RuntimeException("Unknown entity type: " + msg.type);
 		}
@@ -176,7 +213,7 @@ public class TestGameClientEntityCreator {
 		case WALL: return "WALL";
 		case DEBUGGING_SPHERE: return "DEBUGGING_SPHERE";
 		case MOVING_TARGET: return "MOVING_TARGET";
-		case LASER_BULLET: return "LASER_BULLET";
+		case PLAYER_LASER_BULLET: return "PLAYER_LASER_BULLET";
 		//case GRENADE: return "GRENADE";
 		//case GRENADE_LAUNCHER: return "GRENADE_LAUNCHER";
 		case LASER_RIFLE: return "LASER_RIFLE";

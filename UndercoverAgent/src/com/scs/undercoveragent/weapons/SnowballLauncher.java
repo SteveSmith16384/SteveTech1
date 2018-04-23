@@ -50,12 +50,6 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 
 
 	@Override
-	public String getAvatarAnimationCode() {
-		return null;
-	}
-
-
-	@Override
 	public void remove() {
 		// Remove all owned bullets
 		while (!ammoCache.isEmpty()) {

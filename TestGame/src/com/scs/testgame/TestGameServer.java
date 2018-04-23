@@ -54,12 +54,12 @@ public class TestGameServer extends AbstractGameServer {
 	protected void createGame() {
 		super.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
 		
-		//Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
-		//this.actuallyAddEntity(floor);
+		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
+		this.actuallyAddEntity(floor);
 		
-		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
-		this.actuallyAddEntity(terrain);
-		
+		//Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
+		//this.actuallyAddEntity(terrain);
+		/*
 		Crate c = new Crate(this, getNextEntityID(), 1, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);
 		this.actuallyAddEntity(c);
 		c = new Crate(this, getNextEntityID(), 1, 30, 6, 1, 1, 1f, "Textures/crate.png", 65);
@@ -77,12 +77,12 @@ public class TestGameServer extends AbstractGameServer {
 		this.actuallyAddEntity(w3);
 		Wall w4 = new Wall(this, getNextEntityID(), 30, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 270);
 		this.actuallyAddEntity(w4);
-
+*/
 		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 		//new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
 		
-		House house = new House(this, getNextEntityID(), 20, 0, 20, 0);
-		this.actuallyAddEntity(house);
+		//House house = new House(this, getNextEntityID(), 20, 0, 20, 0);
+		//this.actuallyAddEntity(house);
 	}
 
 
