@@ -20,7 +20,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	private long lastUpdateMsgTime;
 
 	public AbstractAbility(IEntityController _game, int _id, int type, int _playerID, AbstractAvatar _owner, int _abilityNum, String _name) {
-		super(_game, _id, type, _name);
+		super(_game, _id, type, _name, true);
 
 		if (_owner == null) {
 			throw new RuntimeException("No owner for ability");
@@ -63,8 +63,4 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	}
 
 
-	@Override
-	public final boolean requiresProcessing() {
-		return true;
-	}
 }

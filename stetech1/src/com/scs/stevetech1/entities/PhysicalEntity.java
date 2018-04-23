@@ -40,13 +40,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f originalPos = new Vector3f();
 
 	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
-	private boolean requiresProcessing; // todo - move to Entity.class
 	public Node owner;
 
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing) {
-		super(_game, id, type, _name);
-
-		requiresProcessing = _requiresProcessing;
+		super(_game, id, type, _name, _requiresProcessing);
 
 		historicalPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode_" + id);
@@ -328,12 +325,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		}
 
 		return false;
-	}
-
-
-	@Override
-	public final boolean requiresProcessing() {
-		return requiresProcessing;
 	}
 
 

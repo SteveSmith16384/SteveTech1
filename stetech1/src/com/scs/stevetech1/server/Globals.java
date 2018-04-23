@@ -11,7 +11,7 @@ public class Globals {
 	public static final boolean HIDE_BELLS_WHISTLES = true;
 	public static final boolean HIDE_EXPLOSION = true;
 	public static final boolean RECORD_VID = false;
-	public static final boolean STRICT = true; // Extra checks (which might slow stuff down) todo - set to true
+	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_TOO_MANY_SRBS = true;

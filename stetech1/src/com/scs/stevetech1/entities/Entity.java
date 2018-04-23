@@ -17,17 +17,20 @@ public abstract class Entity implements IEntity, Savable {
 	protected transient IEntityController game;
 	public final String name;
 	public boolean removed = false;
+	private boolean requiresProcessing; // todo - move to Entity.class
 
 	// Server-only vars
 	protected HashMap<String, Object> creationData;
 
-	public Entity(IEntityController _module, int _id, int _type, String _name) {
+	public Entity(IEntityController _module, int _id, int _type, String _name, boolean _requiresProcessing) {
 		super();
 		
 		id = _id;
 		type = _type;
 		game = _module;
 		name = _name;
+		requiresProcessing = _requiresProcessing;
+
 
 		gameId = game.getGameID();
 	}
@@ -85,6 +88,12 @@ public abstract class Entity implements IEntity, Savable {
 	@Override
 	public int getGameID() {
 		return gameId;
+	}
+
+
+	@Override
+	public boolean requiresProcessing() {
+		return requiresProcessing;
 	}
 
 

@@ -6,6 +6,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
+import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -168,10 +169,22 @@ public class HelloTerrain extends SimpleApplication implements ActionListener, I
 		 */
 		int patchSize = 65;
 		TerrainQuad terrain = new TerrainQuad("my terrain", patchSize, initialSize, heightmap.getHeightMap());
+		terrain.scale(3f, .5f, 3f);
 
 		/** 4. We give the terrain its material, position & scale it, and attach it. */
 		terrain.setMaterial(mat_terrain);
-		ISimpleEntity<Spatial> floorEntity = new SimpleEntityHelper<Spatial>(terrain);
+		ISimpleEntity<Spatial> floorEntity = new ISimpleEntity<Spatial>() {
+			
+			@Override
+			public Collidable getCollidable() {
+				return terrain;
+			}
+
+			@Override
+			public void moveEntity(Vector3f pos) {
+			}
+
+		};
 
 		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(floorEntity, physicsController, false, terrain);
 		this.physicsController.addSimpleRigidBody(srb);

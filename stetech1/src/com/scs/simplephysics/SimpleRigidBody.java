@@ -124,7 +124,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					Vector3f prevPos = this.getBoundingBox().getCenter().clone(); // todo - don't create each time
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
-						if (!checkForStep(crs2, prevPos, tmpMoveDir.length())) {
+						if (!checkForStep(crs2, prevPos, tmpMoveDir)) {
 							float bounce = this.bounciness;// * body.bounciness; // Combine bounciness?
 							oneOffForce.x = oneOffForce.x * bounce * -1;
 						}
@@ -141,7 +141,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					Vector3f prevPos = this.getBoundingBox().getCenter().clone(); // todo - don't create each time
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
-						if (!checkForStep(crs2, prevPos, this.tmpMoveDir.length())) {
+						if (!checkForStep(crs2, prevPos, this.tmpMoveDir)) {
 							float bounce = this.bounciness;// * body.bounciness;
 							oneOffForce.z = oneOffForce.z * bounce * -1; // Reverse direction
 						}
@@ -283,7 +283,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * 
 	 * @return
 	 */
-	private boolean checkForStep(List<SimpleRigidBody<T>> crs, Vector3f prevPos, float lengthMoved) {
+	private boolean checkForStep(List<SimpleRigidBody<T>> crs, Vector3f prevPos, Vector3f moveOffset) {
 		if (!this.canWalkUpSteps) {
 			return false;
 		}
@@ -309,15 +309,18 @@ public class SimpleRigidBody<T> implements Collidable {
 			cr.simpleEntity.getCollidable().collideWith(prevRay, rayCRs);
 			float prevHeight = rayCRs.getClosestCollision().getContactPoint().y;
 
-			Ray nextRay = new Ray(this.getBoundingBox().getCenter(), DOWN_VEC);
+			Vector3f newPos = prevPos.add(moveOffset);
+			Ray nextRay = new Ray(newPos, DOWN_VEC);
 			rayCRs.clear();
 			cr.simpleEntity.getCollidable().collideWith(nextRay, rayCRs);
 			float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
 			
-			if (nextHeight > prevHeight) {
-				float diff = nextHeight - prevHeight;
-				if (diff < lengthMoved) { // 45 degrees?
-					this.oneOffForce.y += diff;
+			float diff = prevHeight - nextHeight; // todo - wrong?
+			Globals.p("Diff=" + diff);
+			if (nextHeight < prevHeight) {
+				if (diff < moveOffset.length()) { // 45 degrees?
+					Globals.p("Walking up!");
+					this.oneOffForce.y += diff*100;
 				}
 			}
 			// Move up if it's a mesh/terrain?
@@ -352,7 +355,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			for(SimpleNode<T> node : this.physicsController.nodes.values()) {
 				node.getCollisions(this, crs, tempCollisionResults);
 			}
-			// Check against moving entities
+			// Check against moving/big entities
 			List<SimpleRigidBody<T>> entities = physicsController.movingEntities;
 			synchronized (entities) {
 				// Loop through the entities
@@ -385,7 +388,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * @param e
 	 * @return
 	 */
-	public boolean checkSRBvSRB(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) { // todo - rename
+	public boolean checkSRBvSRB(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) {
 		tempCollisionResults.clear();
 		if (e != this) { // Don't check ourselves
 			if (this.physicsController.getCollisionListener().canCollide(this, e)) {

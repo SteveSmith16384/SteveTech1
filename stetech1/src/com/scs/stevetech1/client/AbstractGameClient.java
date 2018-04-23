@@ -526,7 +526,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
 			IEntity e = this.entities.get(newEntityMessage.entityID);
-			if (e == null) {
+			if (e == null && this.isEntityGoingToBedAdded(newEntityMessage.entityID) == false) {
 				createEntity(newEntityMessage, newEntityMessage.timestamp);
 			} else {
 				// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
@@ -675,6 +675,18 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 		}
 	}
 
+
+	private boolean isEntityGoingToBedAdded(int id) {
+		Iterator<IEntity> it = this.entitiesToAdd.iterator();
+		while (it.hasNext()) {
+			IEntity e = it.next();
+			if (e.getID() == id) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 	private void setAvatar(IEntity e) {
 		this.currentAvatar = (AbstractClientAvatar)e;//this.entities.get(currentAvatarID);
@@ -819,7 +831,7 @@ public abstract class AbstractGameClient extends SimpleApplication implements IC
 				IEntity e2 = this.entities.get(e.getID());
 				e2.remove();
 				this.actuallyRemoveEntity(e2.getID());*/
-				throw new RuntimeException("Entity already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
+				throw new RuntimeException("Entity " + e + " already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
 			}
 			this.entities.put(e.getID(), e);
 			if (e.requiresProcessing()) {
