@@ -256,4 +256,9 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		return this.health > 0;
 	}
 
+	
+	@Override
+	public float getHealth() {
+		return health;
+	}
 }

@@ -26,5 +26,7 @@ public class TWIB_AISoldier extends AbstractAISoldier {
 		AIBullet bullet = new AIBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
 		return bullet;
 	}
+
+
 }
 

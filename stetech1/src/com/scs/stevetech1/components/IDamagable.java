@@ -6,4 +6,6 @@ public interface IDamagable {
 	
 	int getSide(); // Prevent friendly-fire
 	
+	float getHealth();
+	
 }

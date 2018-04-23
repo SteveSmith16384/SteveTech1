@@ -22,7 +22,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public class Computer extends PhysicalEntity implements IDamagable {
 
 	private static final float SIZE = 0.9f;
-	private float health = 1;
+	private float health = 100;
 	private MoonbaseAssaultServer server;
 	
 	public Computer(IEntityController _game, int id, float x, float y, float z) {
@@ -89,5 +89,10 @@ public class Computer extends PhysicalEntity implements IDamagable {
 		return 2;
 	}
 
+
+	@Override
+	public float getHealth() {
+		return health;
+	}
 
 }

@@ -156,4 +156,10 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		
 	}
 */
+	
+	@Override
+	public float getHealth() {
+		return 0;
+	}
+
 }

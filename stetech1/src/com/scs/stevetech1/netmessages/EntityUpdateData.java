@@ -3,6 +3,7 @@ package com.scs.stevetech1.netmessages;
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;
 import com.scs.stevetech1.components.IAnimatedServerSide;
+import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IGetRotation;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.shared.ITimeStamped;
@@ -15,6 +16,7 @@ public class EntityUpdateData implements ITimeStamped {
 	public long timestamp;
 	public Vector3f aimDir;
 	public int animationCode;
+	public int health;
 
 	public EntityUpdateData() {
 
@@ -35,6 +37,14 @@ public class EntityUpdateData implements ITimeStamped {
 		if (pe instanceof IGetRotation) {
 			IGetRotation ir = (IGetRotation)pe;
 			this.aimDir = ir.getRotation();
+		}
+		if (pe instanceof IGetRotation) {
+			IGetRotation ir = (IGetRotation)pe;
+			this.aimDir = ir.getRotation();
+		}
+		if (pe instanceof IDamagable) {
+			IDamagable ir = (IDamagable)pe;
+			this.health = (int)ir.getHealth();
 		}
 	}
 
