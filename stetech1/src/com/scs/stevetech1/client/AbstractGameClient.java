@@ -655,6 +655,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			HitscanBulletTrailMessage elm = (HitscanBulletTrailMessage)message;
 			if (elm.playerID != this.playerID) {
+				ICanShoot shooter = (ICanShoot)
 				// todo
 			} else {
 				// It was us that launched it in the first place!
