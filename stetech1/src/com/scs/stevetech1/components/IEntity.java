@@ -18,4 +18,6 @@ public interface IEntity {
 	
 	void remove();
 	
+	boolean hasNotBeenRemoved();
+	
 }

@@ -20,7 +20,8 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	protected float shotInterval_secs, reloadInterval_secs;
 	protected ClientData client; // Only used server-side
 
-	public AbstractMagazineGun(IEntityController _game, int id, int type, int playerID, ICanShoot owner, int avatarID, int abilityNum, String _name, float shotInt, float reloadInt, int magSize, ClientData _client) { 
+	public AbstractMagazineGun(IEntityController _game, int id, int type, int playerID, ICanShoot owner, int avatarID, int abilityNum, String _name, 
+			float shotInt, float reloadInt, int magSize, ClientData _client) { 
 		super(_game, id, type, playerID, (AbstractAvatar)owner, avatarID, abilityNum, _name);
 
 		this.shotInterval_secs = shotInt;
@@ -78,6 +79,8 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
+		super.processByClient(client, tpf_secs);
+		
 		timeUntilShoot_secs -= tpf_secs;
 	}
 

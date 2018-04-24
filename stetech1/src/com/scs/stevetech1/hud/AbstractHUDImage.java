@@ -81,4 +81,10 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 		return 0;
 	}
 
+
+	@Override
+	public boolean hasNotBeenRemoved() {
+		return true;
+	}
+
 }

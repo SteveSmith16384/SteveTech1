@@ -422,6 +422,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 					// Loop through each entity and process them
 					for (IEntity e : entitiesForProcessing.values()) { //entitiesForProcessing.size();
+						if (e.hasNotBeenRemoved()) {
 						if (e instanceof IPlayerControlled) {
 							IPlayerControlled p = (IPlayerControlled)e;
 							p.resetPlayerInput();
@@ -458,13 +459,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							IDrawOnHUD doh = (IDrawOnHUD)e;
 							doh.drawOnHud(cam);
 						}
+						}
 					}
 
 					// Now do client-only entities
 					for (IEntity e : this.clientOnlyEntities.values()) {
+						if (e.hasNotBeenRemoved()) {
 						if (e instanceof IProcessByClient) {
 							IProcessByClient pbc = (IProcessByClient)e;
 							pbc.processByClient(this, tpf_secs);
+						}
 						}
 					}
 
@@ -584,13 +588,18 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				e.remove();
 			} else {
 				// See if it's in our list of entities waiting to be added
+				boolean found = false;
 				Iterator<IEntity> it = this.entitiesToAdd.iterator();
 				while (it.hasNext()) {
 					IEntity e2a = it.next();
 					if (e2a.getID() == rem.entityID) {
 						it.remove();
+						found = true;
 						break;
 					}
+				}
+				if (!found) {
+					Globals.p("Ignoring msg to remove entity " + rem.entityID + " as we have no record of it");
 				}
 			}
 
@@ -628,7 +637,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 
 		} else if (message instanceof EntityLaunchedMessage) {
-			if (Globals.DEBUG_SERVER_SHOOTING) {
+			if (Globals.DEBUG_SHOOTING) {
 				Globals.p("Received EntityLaunchedMessage");
 			}
 			EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
@@ -878,7 +887,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					this.getGameNode().attachChild(pe.getMainNode());
 					if (pe.simpleRigidBody != null) {
 						this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
-						if (Globals.DEBUG_TOO_MANY_SRBS) {
+						if (Globals.STRICT) {
 							if (this.physicsController.getEntities().size() > this.entities.size()) {
 								Globals.pe("Warning: more simple rigid bodies than entities!");
 							}

@@ -97,4 +97,9 @@ public abstract class Entity implements IEntity, Savable {
 	}
 
 
+	@Override
+	public boolean hasNotBeenRemoved() {
+		return !this.removed;
+	}
+
 }

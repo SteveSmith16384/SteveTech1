@@ -15,19 +15,18 @@ public class Globals {
 
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_NO_ABILITY0 = true;
-	public static final boolean DEBUG_TOO_MANY_SRBS = true;
 	public static final boolean DEBUG_AVATAR_SET = true;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
-	public static final boolean DEBUG_SERVER_SHOOTING = true;
-	public static final boolean DEBUG_AI_SEE_PLAYER = true;
+	public static final boolean DEBUG_SHOOTING = true;
 	public static final boolean DEBUG_SLIDING_DOORS = true;
 
+	public static final boolean DEBUG_NO_BULLET = false;
+	public static final boolean DEBUG_AI_SEE_PLAYER = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean SHOW_AVATAR_POS = false;
 	public static final boolean TRANSPARENT_WALLS = false;
 	public static final boolean DEBUG_HUD = false;
 	public static final boolean DEBUG_AI_SHOOTING = false;
-	public static final boolean DEBUG_NO_BULLET = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean DEBUG_NO_UPDATE_MSGS = false;

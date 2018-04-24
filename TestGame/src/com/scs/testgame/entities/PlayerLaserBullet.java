@@ -23,8 +23,8 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 
 	private static final boolean USE_CYLINDER = true;
 
-	public PlayerLaserBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
-		super(_game, id, TestGameClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerOwnerId, owner, _side, _client, dir, true, 10f, 30f);
+	public PlayerLaserBullet(IEntityController _game, int id, int playerId, IEntityContainer<AbstractPlayersBullet> gun, int _side, ClientData _client, Vector3f dir) {
+		super(_game, id, TestGameClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerId, gun, _side, _client, dir, true, 10f, 30f);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 

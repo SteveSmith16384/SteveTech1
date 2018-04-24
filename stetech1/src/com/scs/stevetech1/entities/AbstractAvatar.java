@@ -90,7 +90,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		
 		if (Globals.STRICT) {
 			if (ability[0] == null) {
-				//todo - re-add Globals.p("Warning - no ability0!");
+				Globals.p("Warning - no ability0!");
 			}
 		}
 
@@ -98,7 +98,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
-					if (Globals.DEBUG_SERVER_SHOOTING) {
+					if (Globals.DEBUG_SHOOTING) {
 						Globals.p("Using " + this.ability[i].getName());
 					}
 					newAnimCode = ANIM_SHOOTING;

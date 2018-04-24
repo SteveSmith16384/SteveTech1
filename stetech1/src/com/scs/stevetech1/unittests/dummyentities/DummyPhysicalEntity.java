@@ -60,4 +60,9 @@ public class DummyPhysicalEntity implements IPhysicalEntity {
 		return 0;
 	}
 
+	@Override
+	public boolean hasNotBeenRemoved() {
+		return true;
+	}
+
 }

@@ -183,19 +183,6 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 
-		// Add and remove entities
-		//synchronized (entities) {
-		for(IEntity e : this.entitiesToAdd) {
-			this.actuallyAddEntity(e, true);
-		}
-		this.entitiesToAdd.clear();
-
-		for(Integer i : this.entitiesToRemove) {
-			this.actuallyRemoveEntity(i);
-		}
-		this.entitiesToRemove.clear();
-		//}
-
 		if (gameNetworkServer.getNumClients() > 0) {
 			// Process all messages
 			synchronized (unprocessedMessages) {
@@ -221,6 +208,19 @@ ICollisionListener<PhysicalEntity> {
 					}
 				}
 			}
+
+			// Add and remove entities - do this as close to the list iteration as possible!
+			//synchronized (entities) {
+			for(IEntity e : this.entitiesToAdd) {
+				this.actuallyAddEntity(e, true);
+			}
+			this.entitiesToAdd.clear();
+
+			for(Integer i : this.entitiesToRemove) {
+				this.actuallyRemoveEntity(i);
+			}
+			this.entitiesToRemove.clear();
+			//}
 
 			synchronized (this.clients) {
 				// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
@@ -277,27 +277,29 @@ ICollisionListener<PhysicalEntity> {
 			int numSent = 0;
 			// Loop through the entities
 			for (IEntity e : entitiesForProcessing.values()) { // this.entities
-				if (e instanceof IPlayerControlled) {
-					IPlayerControlled p = (IPlayerControlled)e;
-					p.resetPlayerInput();
-				}
+				if (e.hasNotBeenRemoved()) {
+					if (e instanceof IPlayerControlled) {
+						IPlayerControlled p = (IPlayerControlled)e;
+						p.resetPlayerInput();
+					}
 
-				if (e instanceof IProcessByServer) {
-					IProcessByServer p = (IProcessByServer)e;
-					p.processByServer(this, tpf_secs);
-				}
+					if (e instanceof IProcessByServer) {
+						IProcessByServer p = (IProcessByServer)e;
+						p.processByServer(this, tpf_secs);
+					}
 
-				if (e instanceof PhysicalEntity) {
-					PhysicalEntity physicalEntity = (PhysicalEntity)e;
-					//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
-					if (sendUpdates) {
-						if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
-							eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
-							numSent++;
-							physicalEntity.sendUpdate = false;
-							if (eum.isFull()) {
-								gameNetworkServer.sendMessageToAll(eum);	
-								eum = new EntityUpdateMessage();
+					if (e instanceof PhysicalEntity) {
+						PhysicalEntity physicalEntity = (PhysicalEntity)e;
+						//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
+						if (sendUpdates) {
+							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
+								eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
+								numSent++;
+								physicalEntity.sendUpdate = false;
+								if (eum.isFull()) {
+									gameNetworkServer.sendMessageToAll(eum);	
+									eum = new EntityUpdateMessage();
+								}
 							}
 						}
 					}
