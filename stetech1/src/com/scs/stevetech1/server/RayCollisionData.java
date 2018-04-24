@@ -5,7 +5,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 
 public class RayCollisionData implements Comparable<RayCollisionData> {
 
-	public PhysicalEntity entity;
+	public PhysicalEntity entity; // todo - rename
 	public float distance;
 	public Vector3f point;
 	public long timestamp; // for debugging

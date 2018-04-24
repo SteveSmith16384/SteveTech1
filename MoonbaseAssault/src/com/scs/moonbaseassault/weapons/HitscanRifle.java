@@ -1,9 +1,10 @@
-package com.scs.testgame.weapons;
+package com.scs.moonbaseassault.weapons;
 
 import java.util.HashMap;
 
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -19,7 +20,6 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
-import com.scs.testgame.TestGameClientEntityCreator;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
@@ -30,7 +30,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	private int bulletsInMag = MAG_SIZE;
 
 	public HitscanRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, int num, ClientData client) {
-		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, playerID, owner, avatarID, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
+		super(game, id, MoonbaseAssaultClientEntityCreator.HITSCAN_RIFLE, playerID, owner, avatarID, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
 
 	}
 
@@ -43,7 +43,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				//Settings.p(hitThisMoment.entity + " has been shot!");
 				Vector3f pos = this.hitThisMoment.point;
 
-				new DebuggingSphere(game, game.getNextEntityID(), TestGameClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, true); // Show where it hit
+				new DebuggingSphere(game, game.getNextEntityID(), MoonbaseAssaultClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, true); // Show where it hit
 				/*if (hitThisMoment.entity instanceof MovingTarget && Globals.DEBUG_REWIND_POS1) {
 					//Settings.p(hitThisMoment.entity.name + " is at " + hitThisMoment.entity.getWorldTranslation() + " at " + hitThisMoment.timestamp);
 					Globals.appendToFile("ServerMovingtarget.csv", "ServerMovingtarget," + hitThisMoment.timestamp + "," + hitThisMoment.entity.getWorldTranslation());
@@ -68,7 +68,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
 				Globals.p("Hit " + rcd.entity.getName() + " at " + pos);
-				new DebuggingSphere(game, game.getNextEntityID(), TestGameClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, false, true);
+				new DebuggingSphere(game, game.getNextEntityID(), MoonbaseAssaultClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, false, true);
 			} else {
 				Globals.p("Not hit anything");
 			}

@@ -5,14 +5,13 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
+import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.testgame.entities.Crate;
-import com.scs.testgame.entities.DebuggingSphere;
 import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.House;
@@ -80,7 +79,7 @@ public class TestGameClientEntityCreator {
 		case DEBUGGING_SPHERE:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			DebuggingSphere laser = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true);
+			DebuggingSphere laser = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, false, true);
 			return laser;
 		}
 
@@ -89,8 +88,9 @@ public class TestGameClientEntityCreator {
 			int ownerid = (int)msg.data.get("ownerid");
 			//if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities
 				//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+			int playerID = (int)msg.data.get("playerID");
 				int num = (int)msg.data.get("num");
-				HitscanRifle gl = new HitscanRifle(game, id, null, ownerid, num, null);
+				HitscanRifle gl = new HitscanRifle(game, id, playerID, null, ownerid, num, null);
 				//owner.addAbility(gl, num);
 				return gl;
 			//}

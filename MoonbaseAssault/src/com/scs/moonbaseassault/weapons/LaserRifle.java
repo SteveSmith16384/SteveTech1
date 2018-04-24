@@ -1,4 +1,4 @@
-package com.scs.moonbaseassault.abilities;
+package com.scs.moonbaseassault.weapons;
 
 import java.util.HashMap;
 import java.util.LinkedList;

@@ -209,10 +209,10 @@ ICollisionListener<PhysicalEntity> {
 						AbilityActivatedMessage elm = (AbilityActivatedMessage)message;
 						AbstractServerAvatar shooter = (AbstractServerAvatar)this.entities.get(elm.avatarID);
 						IAbility ability = shooter.getAbility(elm.abilityID);
-						ability.activate(); // todo - if false, tell client!  This will also send the message
-												
-						//this.gameNetworkServer.sendMessageToAllExcept(client, elm);
-
+						if (ability.activate() == false) { // This will also send the message
+							// todo - if false, tell client!
+						}
+						
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
 					}

@@ -141,10 +141,4 @@ public class TestGameClient extends AbstractGameClient {
 	}
 
 
-	@Override
-	public void sendMessage(MyAbstractMessage msg) {
-		this.networkClient.sendMessageToServer(msg);
-		
-	}
-
 }

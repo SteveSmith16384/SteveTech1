@@ -43,7 +43,7 @@ public class BeamLaserModel extends Node {
 
 		if (generateMat) { // Only needed if client-side
 			Material mat = new Material(assetManager,"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			Texture t = assetManager.loadTexture(tex);//"Textures/cells3.png");
+			Texture t = assetManager.loadTexture(tex);
 			mat.setTexture("DiffuseMap", t);
 			mat.setColor("GlowColor", col);//ColorRGBA.Pink);
 			mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);

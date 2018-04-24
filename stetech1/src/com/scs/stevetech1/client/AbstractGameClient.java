@@ -68,6 +68,7 @@ import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GenericStringMessage;
+import com.scs.stevetech1.netmessages.HitscanBulletTrailMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -646,9 +647,22 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			} else {
 				// It was us that launched it in the first place!
 				Globals.p("Ignoring entity launched message");
-				//throw new RuntimeException("Rcvd launch msg for our own bullet");
 			}
 
+		} else if (message instanceof HitscanBulletTrailMessage) {
+			if (Globals.DEBUG_SHOOTING) {
+				Globals.p("Received HitscanBulletTrailMessage");
+			}
+			HitscanBulletTrailMessage elm = (HitscanBulletTrailMessage)message;
+			if (elm.playerID != this.playerID) {
+				// todo
+			} else {
+				// It was us that launched it in the first place!
+				Globals.p("Ignoring HitscanBulletTrailMessage");
+			}
+
+			
+			
 		} else if (message instanceof AvatarStartedMessage) {
 			if (Globals.DEBUG_PLAYER_RESTART) {
 				Globals.p("Rcvd AvatarStartedMessage");
@@ -1127,5 +1141,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}
 
+
+	@Override
+	public void sendMessage(MyAbstractMessage msg) {
+		this.networkClient.sendMessageToServer(msg);
+		
+	}
 
 }

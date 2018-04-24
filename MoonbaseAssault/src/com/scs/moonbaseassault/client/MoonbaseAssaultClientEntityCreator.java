@@ -2,12 +2,11 @@ package com.scs.moonbaseassault.client;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.scs.moonbaseassault.abilities.LaserRifle;
-import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.ExplosionEffectEntity;
 import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.PlayerLaserBullet;
@@ -18,6 +17,8 @@ import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
 import com.scs.moonbaseassault.entities.SpaceCrate;
 import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.moonbaseassault.weapons.GrenadeLauncher;
+import com.scs.moonbaseassault.weapons.HitscanRifle;
+import com.scs.moonbaseassault.weapons.LaserRifle;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
@@ -46,6 +47,7 @@ public class MoonbaseAssaultClientEntityCreator {
 	public static final int EXPLOSION_EFFECT = 15;
 	public static final int DEBUGGING_SPHERE = 16;
 	public static final int AI_LASER_BULLET = 17;
+	public static final int HITSCAN_RIFLE = 18;
 
 
 	public MoonbaseAssaultClientEntityCreator() {
@@ -230,6 +232,20 @@ public class MoonbaseAssaultClientEntityCreator {
 		{
 			DebuggingSphere hill = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
 			return hill;
+		}
+
+		case HITSCAN_RIFLE:
+		{
+			int playerID = (int) msg.data.get("playerID");
+			int ownerid = (int)msg.data.get("ownerid");
+			//if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities
+				//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+				int num = (int)msg.data.get("num");
+				HitscanRifle gl = new HitscanRifle(game, id, playerID, null, ownerid, num, null);
+				//owner.addAbility(gl, num);
+				return gl;
+			//}
+			//return null;
 		}
 
 		default:
