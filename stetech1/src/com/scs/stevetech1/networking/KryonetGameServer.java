@@ -12,6 +12,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
+import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
@@ -149,6 +150,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(GenericStringMessage.class);
 		kryo.register(JoinGameFailedMessage.class);
 		kryo.register(SetAvatarMessage.class);
+		kryo.register(AbilityActivatedMessage.class);
 	}
 
 

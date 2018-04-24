@@ -7,6 +7,7 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
+import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
@@ -69,7 +70,7 @@ public class TestGameClient extends AbstractGameClient {
 
 	public TestGameClient() {
 		super(TestGameServer.GAME_ID, "test Game", null, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //null, -1, 
-				25, 200, 10000, 1f);
+				25, 200, Integer.MAX_VALUE, 1f);
 		
 	}
 
@@ -137,6 +138,13 @@ public class TestGameClient extends AbstractGameClient {
 	@Override
 	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
 		return collisionValidator.canCollide(a, b);
+	}
+
+
+	@Override
+	public void sendMessage(MyAbstractMessage msg) {
+		this.networkClient.sendMessageToServer(msg);
+		
 	}
 
 }

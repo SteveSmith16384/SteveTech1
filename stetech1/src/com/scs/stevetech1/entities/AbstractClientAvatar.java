@@ -19,6 +19,7 @@ import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
+import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
@@ -98,6 +99,20 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		} else {
 			final long serverTime = client.getServerTime();// System.currentTimeMillis() + client.clientToServerDiffTime;
 
+			// Check for any abilities/guns being fired
+			for (int i=0 ; i< this.ability.length ; i++) {
+				if (this.ability[i] != null) {
+					if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
+						//newAnimCode = ANIM_SHOOTING;
+						if (this.ability[i].activate()) {
+							client.sendMessage(new AbilityActivatedMessage(this.getID(), this.ability[i].getID()));
+							//LaunchData ld = new LaunchData(this.getWorldTranslation(), this.getShootDir(), this.getID(), serverTime);
+							//client.sendMessage(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
+						}
+					}
+				}
+			}
+
 			super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 
 			storeAvatarPosition(serverTime);
@@ -152,7 +167,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				Globals.p("Server and client avatars dist: " + diff);
 			}
 			if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
+				if (Globals.DEBUG_CLIENT_SERVER_FAR_APART) {
 				Globals.p("Server and client avatars very far apart, forcing move: " + diff);
+				}
 				// They're so far out, just move them
 				this.setWorldTranslation(historicalPositionData.getMostRecent().position); 
 			} else {

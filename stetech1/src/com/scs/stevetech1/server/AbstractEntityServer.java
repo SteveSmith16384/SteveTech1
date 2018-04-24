@@ -31,6 +31,7 @@ import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -52,6 +53,7 @@ import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.IMessageServerListener;
 import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
+import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
 import com.scs.stevetech1.systems.server.ServerPingSystem;
@@ -202,6 +204,14 @@ ICollisionListener<PhysicalEntity> {
 							client.remoteInput.decodeMessage(pim);
 							client.latestInputTimestamp = pim.timestamp;
 						}
+
+					} else if (message instanceof AbilityActivatedMessage) {
+						AbilityActivatedMessage elm = (AbilityActivatedMessage)message;
+						AbstractServerAvatar shooter = (AbstractServerAvatar)this.entities.get(elm.avatarID);
+						IAbility ability = shooter.getAbility(elm.abilityID);
+						ability.activate(); // todo - if false, tell client!  This will also send the message
+												
+						//this.gameNetworkServer.sendMessageToAllExcept(client, elm);
 
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);

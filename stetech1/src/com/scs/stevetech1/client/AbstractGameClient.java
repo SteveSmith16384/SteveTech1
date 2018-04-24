@@ -646,6 +646,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			} else {
 				// It was us that launched it in the first place!
 				Globals.p("Ignoring entity launched message");
+				//throw new RuntimeException("Rcvd launch msg for our own bullet");
 			}
 
 		} else if (message instanceof AvatarStartedMessage) {
@@ -1102,7 +1103,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			Globals.p("stats, entities");
 		} else if (s.equalsIgnoreCase("stats")) {
 			showStats();
-		} else if (s.equalsIgnoreCase("entities")) {
+		} else if (s.equalsIgnoreCase("entities") || s.equalsIgnoreCase("e")) {
 			listEntities();
 		} else {
 			Globals.p("Unknown command: " + s);

@@ -93,19 +93,16 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 				Globals.p("Warning - no ability0!");
 			}
 		}
-
+/*
 		// Check for any abilities/guns being fired
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
-					if (Globals.DEBUG_SHOOTING) {
-						Globals.p("Using " + this.ability[i].getName());
-					}
 					newAnimCode = ANIM_SHOOTING;
 					this.ability[i].activate();
 				}
 			}
-		}
+		}*/
 
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed); // Y=0, so speed is constant regardless of direction
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
@@ -299,6 +296,15 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		//return this.bbGeom.getModelBound();//.boundingBox; // this.playerGeometry.getWorldBound();
 	}
 
+	
+	public IAbility getAbility(int eid) {
+		for (int i=0 ; i< this.ability.length ; i++) {
+			if (this.ability[i] != null && this.ability[i].getID() == eid) {
+				return this.ability[i];
+			}
+		}
+		return null;
+	}
 /*
 	private void updateBB() {
 		Vector3f c = this.getMainNode().getWorldBound().getCenter();

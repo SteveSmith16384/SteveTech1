@@ -89,9 +89,9 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			throw new RuntimeException("Null launcher");
 		}
 
-		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-			Globals.p("Launching entity " + this.getID());
-		}*/
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			Globals.p("Launching entity " + this);
+		}
 
 		launched = true;
 		dir = _dir;
@@ -131,7 +131,12 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
 			server.gameNetworkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
 		} else {
-			// todo - client confirms that bullet launched
+			/*if (tellServer) {
+				// client tells server that bullet launched
+				LaunchData ld = new LaunchData(this.getWorldTranslation(), dir, this.getID(), 0);
+				AbstractGameClient client = (AbstractGameClient)game; 
+				client.networkClient.sendMessageToServer(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
+			}*/
 		}
 
 	}
@@ -171,7 +176,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
-		if (launched) {
+		if (this.launched) {
 			if (!useRay) {
 				simpleRigidBody.process(tpf_secs); //this.mainNode;
 			} else {
@@ -207,8 +212,8 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	public void processChronoData(long serverTimeToUse, float tpf_secs) {
 		// Do nothing, each client controls the position
 	}
-	
-	
+
+
 	@Override
 	public boolean sendUpdates() {
 		return false; // No, each client controls the position

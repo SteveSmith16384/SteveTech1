@@ -6,7 +6,7 @@ public interface IPlayerLaunchable { // todo - create a new IDontCollideWithOwne
 
 	IEntity getLauncher(); // So we know who not to collide with
 	
-	void launch(IEntity _shooter, Vector3f startPos, Vector3f dir);
+	void launch(IEntity _shooter, Vector3f startPos, Vector3f dir); // todo - combine shooter and their start pos?
 	
 	boolean hasBeenLaunched();
 	

@@ -31,9 +31,9 @@ public class ClientEntityLauncherSystem {
 			 */
 			return;
 		}
-		if (l == null) {
+		/*if (l == null) {
 			throw new RuntimeException("Launchable id " + elm.entityID + " not found");
-		}
+		}*/
 		this.toLaunch.put(l, elm.launchData);
 
 	}

@@ -20,6 +20,7 @@ public class Globals {
 	public static final boolean DEBUG_SHOOTING = true;
 	public static final boolean DEBUG_SLIDING_DOORS = true;
 
+	public static final boolean DEBUG_CLIENT_SERVER_FAR_APART = false;
 	public static final boolean DEBUG_NO_BULLET = false;
 	public static final boolean DEBUG_AI_SEE_PLAYER = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;

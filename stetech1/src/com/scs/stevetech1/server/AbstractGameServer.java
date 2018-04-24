@@ -139,7 +139,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 			sendDebuggingBoxes();
 		} else if (s.equalsIgnoreCase("stats")) {
 			showStats();
-		} else if (s.equalsIgnoreCase("entities")) {
+		} else if (s.equalsIgnoreCase("entities") || s.equalsIgnoreCase("e")) {
 			listEntities();
 		} else {
 			Globals.p("Unknown command: " + s);

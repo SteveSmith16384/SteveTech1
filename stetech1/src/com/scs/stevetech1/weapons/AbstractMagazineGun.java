@@ -6,12 +6,14 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
+import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractAbility;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.stevetech1.systems.client.LaunchData;
 
 public abstract class AbstractMagazineGun<T> extends AbstractAbility implements IAbility {
 
@@ -45,7 +47,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			return true;
 		} else {
 			if (getBulletsInMag() <= 0) {
-				Globals.p("No bullets"); // Should never happen
+				Globals.p("No bullets in mag!"); // Should rarely happen?
 			} else if (timeUntilShoot_secs > 0) {
 				//Globals.p("Shooting too soon - wait for " + timeUntilShoot_secs + " secs");
 			}
