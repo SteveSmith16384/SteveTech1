@@ -11,8 +11,8 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
-import com.scs.stevetech1.netmessages.HitscanBulletTrailMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
@@ -20,6 +20,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.weapons.AbstractMagazineGun;
+import com.scs.testgame.TestGameClientEntityCreator;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
@@ -51,10 +52,10 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 				AbstractGameServer server = (AbstractGameServer)game;
 				server.collisionLogic.collision(hitThisMoment.entity, this);
-				this.hitThisMoment = null; // Clear it ready for next loop
 
-				// If server, send messages to clients to tell them it has been launched
-				server.gameNetworkServer.sendMessageToAll(new HitscanBulletTrailMessage(this.playerID, this.avatarID, hitThisMoment.entity.getID(), this.hitThisMoment.point));
+				new BulletTrail(game, game.getNextEntityID(), TestGameClientEntityCreator.BULLET_TRAIL, this.owner, hitThisMoment.entity, hitThisMoment.point);
+
+				this.hitThisMoment = null; // Clear it ready for next loop
 			}
 		} else {
 			ICanShoot shooter = (ICanShoot)owner; 

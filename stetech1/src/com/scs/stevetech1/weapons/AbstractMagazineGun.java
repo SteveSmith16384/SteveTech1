@@ -33,6 +33,10 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	}
 
 
+	/**
+	 * 
+	 * @return whether the gun had a bullet to actually launch
+	 */
 	public abstract boolean launchBullet();
 
 	protected abstract void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> owner, int side);

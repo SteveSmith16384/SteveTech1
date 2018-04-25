@@ -68,7 +68,6 @@ import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GenericStringMessage;
-import com.scs.stevetech1.netmessages.HitscanBulletTrailMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -131,8 +130,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
 	private HashMap<Integer, IEntity> clientOnlyEntities = new HashMap<>(100);
-	private List<IEntity> clientOnlyEntitiesToAdd = new LinkedList<IEntity>();
-	private List<Integer> clientOnlyEntitiesToRemove = new LinkedList<Integer>();
+	private LinkedList<IEntity> clientOnlyEntitiesToAdd = new LinkedList<IEntity>();
+	private LinkedList<Integer> clientOnlyEntitiesToRemove = new LinkedList<Integer>();
 
 	private String gameCode; // To check the right type of client is connecting
 	private String playerName = "[Player's Name]";
@@ -381,35 +380,29 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 					it2 = null;
 					this.entitiesToRemove.clear();
-*/
-					
+					 */
+
 					// Do it this way so other places can call actuallyRemoveEntity
 					while (this.entitiesToRemove.size() > 0) {
 						int i = this.entitiesToRemove.getFirst();
 						this.actuallyRemoveEntity(i);
 					}
-					
-					
+
+
 					// Add client-only entities
-					Iterator<IEntity> coit = this.clientOnlyEntitiesToAdd.iterator();
-					while (coit.hasNext()) {
-						IEntity e = coit.next();
-						this.clientOnlyEntities.put(e.getID(), e);
+					while (this.clientOnlyEntitiesToAdd.size() > 0) {
+						IEntity e = this.clientOnlyEntitiesToAdd.getFirst();
+						this.actuallyAddClientOnlyEntity(e);
 					}
-					coit = null;
-					this.clientOnlyEntitiesToAdd.clear();
 
 					// Remove entities
-					Iterator<Integer> coit2 = this.clientOnlyEntitiesToRemove.iterator();
-					while (coit2.hasNext()) {
-						int i = coit2.next();
-						this.clientOnlyEntities.remove(i);
+					while (this.clientOnlyEntitiesToRemove.size() > 0) {
+						int i = this.clientOnlyEntitiesToRemove.getFirst();
+						this.actuallyRemoveClientOnlyEntity(i);
 					}
-					coit2 = null;
-					this.clientOnlyEntitiesToRemove.clear();
 
 					this.launchSystem.process(renderTime);
-					
+
 					if (Globals.STRICT) {
 						for(IEntity e : this.entities.values()) {
 							if (e.requiresProcessing()) {
@@ -424,52 +417,52 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					// Loop through each entity and process them
 					for (IEntity e : entitiesForProcessing.values()) { //entitiesForProcessing.size();
 						if (e.hasNotBeenRemoved()) {
-						if (e instanceof IPlayerControlled) {
-							IPlayerControlled p = (IPlayerControlled)e;
-							p.resetPlayerInput();
-						}
-						if (e instanceof PhysicalEntity) {
-							PhysicalEntity pe = (PhysicalEntity)e;
+							if (e instanceof IPlayerControlled) {
+								IPlayerControlled p = (IPlayerControlled)e;
+								p.resetPlayerInput();
+							}
+							if (e instanceof PhysicalEntity) {
+								PhysicalEntity pe = (PhysicalEntity)e;
 
-							pe.calcPosition(renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
-							pe.processChronoData(renderTime, tpf_secs);
+								pe.calcPosition(renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
+								pe.processChronoData(renderTime, tpf_secs);
 
-							if (Globals.STRICT) {
-								if (e instanceof AbstractClientAvatar == false && e instanceof IClientControlled == false) {
-									if (pe.simpleRigidBody != null) {
-										if (pe.simpleRigidBody.movedByForces()) {
-											Globals.p("Warning: client-side entity " + pe + " not kinematic!");
+								if (Globals.STRICT) {
+									if (e instanceof AbstractClientAvatar == false && e instanceof IClientControlled == false) {
+										if (pe.simpleRigidBody != null) {
+											if (pe.simpleRigidBody.movedByForces()) {
+												Globals.p("Warning: client-side entity " + pe + " not kinematic!");
+											}
 										}
 									}
 								}
+
 							}
 
-						}
+							if (e instanceof IProcessByClient) {
+								IProcessByClient pbc = (IProcessByClient)e;
+								pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
+							}
 
-						if (e instanceof IProcessByClient) {
-							IProcessByClient pbc = (IProcessByClient)e;
-							pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
-						}
+							if (e instanceof IAnimatedClientSide) {
+								IAnimatedClientSide pbc = (IAnimatedClientSide)e;
+								this.animSystem.process(pbc, tpf_secs);
+							}
 
-						if (e instanceof IAnimatedClientSide) {
-							IAnimatedClientSide pbc = (IAnimatedClientSide)e;
-							this.animSystem.process(pbc, tpf_secs);
-						}
-
-						if (e instanceof IDrawOnHUD) {
-							IDrawOnHUD doh = (IDrawOnHUD)e;
-							doh.drawOnHud(cam);
-						}
+							if (e instanceof IDrawOnHUD) {
+								IDrawOnHUD doh = (IDrawOnHUD)e;
+								doh.drawOnHud(cam);
+							}
 						}
 					}
 
 					// Now do client-only entities
 					for (IEntity e : this.clientOnlyEntities.values()) {
 						if (e.hasNotBeenRemoved()) {
-						if (e instanceof IProcessByClient) {
-							IProcessByClient pbc = (IProcessByClient)e;
-							pbc.processByClient(this, tpf_secs);
-						}
+							if (e instanceof IProcessByClient) {
+								IProcessByClient pbc = (IProcessByClient)e;
+								pbc.processByClient(this, tpf_secs);
+							}
 						}
 					}
 
@@ -649,21 +642,29 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				Globals.p("Ignoring entity launched message");
 			}
 
-		} else if (message instanceof HitscanBulletTrailMessage) {
+			/*} else if (message instanceof HitscanBulletTrailMessage) {
 			if (Globals.DEBUG_SHOOTING) {
 				Globals.p("Received HitscanBulletTrailMessage");
 			}
 			HitscanBulletTrailMessage elm = (HitscanBulletTrailMessage)message;
 			if (elm.playerID != this.playerID) {
-				ICanShoot shooter = (ICanShoot)
-				// todo
+				ICanShoot shooter = (ICanShoot)this.entities.get(elm.shooterID);
+				Vector3f end = null;
+				if (elm.entityHitID > 0) {
+					PhysicalEntity pe = (PhysicalEntity)this.entities.get(elm.entityHitID);
+					end = pe.getWorldTranslation();
+				} else {
+					end = elm.end;
+				}
+				//BulletTrail trail = new BulletTrail(this, );
+				todo
 			} else {
 				// It was us that launched it in the first place!
 				Globals.p("Ignoring HitscanBulletTrailMessage");
 			}
+			 */
 
-			
-			
+
 		} else if (message instanceof AvatarStartedMessage) {
 			if (Globals.DEBUG_PLAYER_RESTART) {
 				Globals.p("Rcvd AvatarStartedMessage");
@@ -740,8 +741,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 		return false;
 	}
-	
-	
+
+
 	private void setAvatar(IEntity e) {
 		this.currentAvatar = (AbstractClientAvatar)e;//this.entities.get(currentAvatarID);
 		if (Globals.DEBUG_AVATAR_SET) {
@@ -915,7 +916,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				IDrawOnHUD doh = (IDrawOnHUD)e;
 				this.hud.addItem(doh.getHUDItem());
 			}
-			
+
 			if (e.getID() == currentAvatarID && e != this.currentAvatar) {
 				// Avatar has been replaced
 				this.setAvatar(e);
@@ -1146,7 +1147,72 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	@Override
 	public void sendMessage(MyAbstractMessage msg) {
 		this.networkClient.sendMessageToServer(msg);
-		
+
 	}
+
+
+	private void actuallyAddClientOnlyEntity(IEntity e) {
+		this.clientOnlyEntitiesToAdd.remove(e);
+		synchronized (entities) {
+			if (e.getID() <= 0) {
+				throw new RuntimeException("No entity id!");
+			}
+			if (this.clientOnlyEntities.containsKey(e.getID())) {
+				throw new RuntimeException("Entity " + e + " already exists (client-only)"); // Don't replace it, as entity has linked to other stuff, like Abilities
+			}
+			this.clientOnlyEntities.put(e.getID(), e);
+			/*if (e.requiresProcessing()) {
+				this.entitiesForProcessing.put(e.getID(), e);
+			}*/
+
+			if (e instanceof PhysicalEntity) {
+					PhysicalEntity pe = (PhysicalEntity)e;
+					this.getGameNode().attachChild(pe.getMainNode());
+					if (pe.simpleRigidBody != null) {
+						this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
+						if (Globals.STRICT) {
+							if (this.physicsController.getEntities().size() > this.entities.size()) {
+								Globals.pe("Warning: more simple rigid bodies than entities!");
+							}
+						}
+					}
+			}
+			if (e instanceof IDrawOnHUD) {
+				IDrawOnHUD doh = (IDrawOnHUD)e;
+				this.hud.addItem(doh.getHUDItem());
+			}
+		}
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			if (e instanceof PhysicalEntity) {
+				PhysicalEntity pe = (PhysicalEntity)e;
+				Globals.p("Created CO " + pe + " at " + pe.getWorldTranslation());
+			} else {
+				Globals.p("Created CO " + e);
+			}
+		}
+	}
+
+
+	/*
+	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
+	 */
+	private void actuallyRemoveClientOnlyEntity(int id) {
+		this.clientOnlyEntitiesToRemove.removeFirstOccurrence(id);
+		synchronized (entities) {
+			IEntity e = this.clientOnlyEntities.get(id);
+			if (e != null) {
+				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+					Globals.p("Actually removing entity " + id + ":" + e.getName());
+				}
+				this.clientOnlyEntities.remove(id);
+				/*if (e.requiresProcessing()) {
+					this.entitiesForProcessing.remove(id);
+				}*/
+			} else {
+				Globals.pe("Entity id " + id + " not found for removal");
+			}
+		}
+	}
+
 
 }

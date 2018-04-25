@@ -2,7 +2,8 @@ package com.scs.stevetech1.netmessages;
 
 import com.jme3.math.Vector3f;
 import com.jme3.network.serializing.Serializable;
-
+import com.scs.stevetech1.components.ICanShoot;
+/*
 @Serializable
 public class HitscanBulletTrailMessage extends MyAbstractMessage {
 
@@ -16,10 +17,11 @@ public class HitscanBulletTrailMessage extends MyAbstractMessage {
 	}
 	
 	
-	public HitscanBulletTrailMessage(int _playerID, int _shooterID, int _entityHitID, Vector3f _end) {
+	public HitscanBulletTrailMessage(int _playerID, ICanShoot _shooter, int _entityHitID, Vector3f _end) {
 		playerID =_playerID;
-		shooterID = _shooterID;
+		shooterID = _shooter.getID();
 		entityHitID = _entityHitID;
 		end = _end;
 	}
 }
+*/

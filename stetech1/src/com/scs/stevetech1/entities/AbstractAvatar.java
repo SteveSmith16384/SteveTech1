@@ -231,7 +231,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				if (this.ability[i] instanceof ICalcHitInPast) {
-					return (ICalcHitInPast)this.ability[i];
+					if (this.ability[i].isGoingToBeActivated()) {
+						return (ICalcHitInPast)this.ability[i]; // todo - only return if they are actually shooting!
+					}
 				}
 			}
 		}

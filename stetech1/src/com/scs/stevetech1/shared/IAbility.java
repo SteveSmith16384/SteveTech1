@@ -8,6 +8,11 @@ import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
  */
 public interface IAbility extends IEntity {
 
+	void setToBeActivated(boolean b);
+	
+	boolean isGoingToBeActivated();
+	
+	
 	String getName();
 	
 	/**

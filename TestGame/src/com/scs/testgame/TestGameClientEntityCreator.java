@@ -3,12 +3,15 @@ package com.scs.testgame;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
+import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.testgame.entities.Crate;
@@ -36,14 +39,15 @@ public class TestGameClientEntityCreator {
 	public static final int PLAYER_LASER_BULLET = 4;
 	public static final int HITSCAN_RIFLE = 7;
 	public static final int LASER_RIFLE = 8;
-	public static final int CRATE = 100;
-	public static final int FLOOR = 101;
-	public static final int FENCE = 102;
-	public static final int WALL = 103;
-	public static final int FLAT_FLOOR = 104;
-	public static final int ZOMBIE = 105;
-	public static final int HOUSE = 106;
-	public static final int TERRAIN1 = 107;
+	public static final int CRATE = 9;
+	public static final int FLOOR = 10;
+	public static final int FENCE = 11;
+	public static final int WALL = 12;
+	public static final int FLAT_FLOOR = 13;
+	public static final int ZOMBIE = 14;
+	public static final int HOUSE = 15;
+	public static final int TERRAIN1 = 16;
+	public static final int BULLET_TRAIL = 17;
 
 
 	public TestGameClientEntityCreator() {
@@ -87,12 +91,12 @@ public class TestGameClientEntityCreator {
 		{
 			int ownerid = (int)msg.data.get("ownerid");
 			//if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities
-				//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+			//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 			int playerID = (int)msg.data.get("playerID");
-				int num = (int)msg.data.get("num");
-				HitscanRifle gl = new HitscanRifle(game, id, playerID, null, ownerid, num, null);
-				//owner.addAbility(gl, num);
-				return gl;
+			int num = (int)msg.data.get("num");
+			HitscanRifle gl = new HitscanRifle(game, id, playerID, null, ownerid, num, null);
+			//owner.addAbility(gl, num);
+			return gl;
 			//}
 			//return null;
 		}
@@ -170,14 +174,14 @@ public class TestGameClientEntityCreator {
 		{
 			int ownerid = (int)msg.data.get("ownerid");
 			//if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-				//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
-				int num = (int)msg.data.get("num");
-				int playerID = (int)msg.data.get("playerID");
-				LaserRifle gl = new LaserRifle(game, id, playerID, null, ownerid, num, null);
-				if (Globals.DEBUG_NO_ABILITY0) {
-					Globals.p("Got new laser rifle for avatar " + ownerid);
-				}
-				return gl;
+			//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+			int num = (int)msg.data.get("num");
+			int playerID = (int)msg.data.get("playerID");
+			LaserRifle gl = new LaserRifle(game, id, playerID, null, ownerid, num, null);
+			if (Globals.DEBUG_NO_ABILITY0) {
+				Globals.p("Got new laser rifle for avatar " + ownerid);
+			}
+			return gl;
 			/*} else {
 				if (Globals.DEBUG_NO_ABILITY0) {
 					Globals.p("Ignoring new laser rifle " + id);
@@ -196,6 +200,20 @@ public class TestGameClientEntityCreator {
 			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
 			PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, playerID, irac, side, null, dir);
 			return bullet;
+		}
+
+		case BULLET_TRAIL:
+		{
+			int shooterID = (int) msg.data.get("shooterID");
+			if (shooterID != game.currentAvatarID) {
+				int targetID = (int) msg.data.get("targetID");
+				Vector3f end = (Vector3f) msg.data.get("end");
+				BulletTrail bullet = new BulletTrail(game, id, BULLET_TRAIL, (ICanShoot)game.getEntity(shooterID), (PhysicalEntity)game.getEntity(targetID), end);
+				return bullet;
+			} else {
+				return null; // We create our own bullet trails
+			}
+
 		}
 
 		default:

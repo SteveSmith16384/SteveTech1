@@ -21,6 +21,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	public int abilityNum;
 	private float timeUntilNextSend_secs = SEND_INT_SECS;
 	private long lastUpdateMsgTime;
+	private boolean active = false; // todo - rename
 
 	/**
 	 * _owner is null on the client side.
@@ -60,6 +61,9 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+		if (this.active) {
+			this.activate();
+		}
 		timeUntilNextSend_secs -= tpf_secs;
 		if (timeUntilNextSend_secs <= 0) {
 			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(false, this));
@@ -89,6 +93,18 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	@Override
 	public void setLastUpdateTime(long l) {
 		this.lastUpdateMsgTime = l;
+	}
+
+
+	@Override
+	public void setToBeActivated(boolean b) {
+		this.active = b;
+	}
+
+
+	@Override
+	public boolean isGoingToBeActivated() {
+		return active;
 	}
 
 

@@ -209,9 +209,11 @@ ICollisionListener<PhysicalEntity> {
 						AbilityActivatedMessage elm = (AbilityActivatedMessage)message;
 						AbstractServerAvatar shooter = (AbstractServerAvatar)this.entities.get(elm.avatarID);
 						IAbility ability = shooter.getAbility(elm.abilityID);
-						if (ability.activate() == false) { // This will also send the message
+						ability.setToBeActivated(true);
+						/*if (ability.activate() == false) { // This will also send the message
+							Globals.p("Warning - activate ability failed!");
 							// todo - if false, tell client!
-						}
+						}*/
 						
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
@@ -220,7 +222,6 @@ ICollisionListener<PhysicalEntity> {
 			}
 
 			// Add and remove entities - do this as close to the list iteration as possible!
-			//synchronized (entities) {
 			for(IEntity e : this.entitiesToAdd) {
 				this.actuallyAddEntity(e, true);
 			}
@@ -230,7 +231,6 @@ ICollisionListener<PhysicalEntity> {
 				this.actuallyRemoveEntity(i);
 			}
 			this.entitiesToRemove.clear();
-			//}
 
 			synchronized (this.clients) {
 				// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
@@ -239,6 +239,7 @@ ICollisionListener<PhysicalEntity> {
 					AbstractServerAvatar avatar = c.avatar;
 					if (avatar != null && avatar.getAnyAbilitiesShootingInPast() != null) { //.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 						areAnyPlayersShooting = true;
+						//avatar.getAnyAbilitiesShootingInPast(); // todo - remove
 						break;
 					}
 				}

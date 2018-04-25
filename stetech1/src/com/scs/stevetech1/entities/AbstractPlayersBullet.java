@@ -58,9 +58,6 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		}
 
 		if (container != null) { // Only snowball fired by us have a container
-			/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-				Globals.p("Adding snowball entity " + id + " to owner " + owner.getID());
-			}*/
 			container.addToCache(this);
 		}
 
