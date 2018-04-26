@@ -35,7 +35,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	private List<Point> computerSquares;
 	public ArrayList<Point>[] deploySquares;
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
-	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode;
+	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode; // todo - remove all this and do automatically
 
 
 	public static void main(String[] args) {
@@ -200,17 +200,18 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		MoonbaseWall wall3 = new MoonbaseWall(this, getNextEntityID(), 6, 0, 4, 1, CEILING_HEIGHT, 3, "Textures/spacewall2.png");//, 0);
 		this.actuallyAddEntity(wall3);
 		 */
+		
 		// Place floor & ceiling last
 		//Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
 		//this.actuallyAddEntity(floor);
 
 		// Add AI soldiers
-		for (int i=0 ; i<3 ; i++) {
+		/*for (int i=0 ; i<3 ; i++) {
 			MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, 2);
 			this.actuallyAddEntity(s);
 			moveAISoldierToStartPosition(s, s.side);
 
-		}
+		}*/
 
 	}
 

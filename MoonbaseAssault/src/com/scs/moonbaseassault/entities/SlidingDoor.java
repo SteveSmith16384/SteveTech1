@@ -110,7 +110,7 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 						this.getWorldTranslation().y = 0;
 						//this.getMainNode().updateGeometricState();
 					}
-					if (this.simpleRigidBody.checkForCollisions() != null) {
+					if (!this.simpleRigidBody.checkForCollisions().isEmpty()) {
 						// Move back up
 						//this.getMainNode().move(MOVE_UP.mult(tpf_secs));
 						this.adjustWorldTranslation(MOVE_UP.mult(tpf_secs));

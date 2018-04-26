@@ -401,7 +401,7 @@ public class MapLoader {
 			return false;
 		}
 		cr.clear();
-		while (pe.simpleRigidBody.checkForCollisions() != null) {
+		while (pe.simpleRigidBody.checkForCollisions().isEmpty()) {
 			pe.getMainNode().move(dir.mult(0.1f));
 			cr.clear();
 		}
