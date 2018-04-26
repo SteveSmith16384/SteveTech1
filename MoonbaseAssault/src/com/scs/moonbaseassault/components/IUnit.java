@@ -6,7 +6,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
  * Represents a moving soldier in the game, whether a player or AI soldier.
  *
  */
-public interface IUnit {
+public interface IUnit { // todo - rename
 
 	PhysicalEntity getPhysicalEntity();
 	

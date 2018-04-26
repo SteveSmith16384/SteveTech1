@@ -20,5 +20,4 @@ public interface IInputDevice {
 
 	boolean isAbilityPressed(int i);
 	
-	//void reset();
 }
