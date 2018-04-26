@@ -10,6 +10,7 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.Globals;
 
 public abstract class AbstractAbility extends Entity implements IAbility, IProcessByServer, IProcessByClient {
 
@@ -55,14 +56,18 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 			owner.ability[abilityNum] = this;
 		}
-		
+
 	}
 
 
 	@Override
 	public void processByServer(AbstractEntityServer server, float tpf_secs) {
 		if (this.active) {
-			this.activate();
+			if (activate() == false) { // This will also send the message
+				Globals.p("Warning - activate ability failed!");
+				// todo - if false, tell client!
+			}
+			this.active = false;
 		}
 		timeUntilNextSend_secs -= tpf_secs;
 		if (timeUntilNextSend_secs <= 0) {
@@ -82,8 +87,8 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 			}
 		}
 	}
-	
-	
+
+
 	@Override
 	public long getLastUpdateTime() {
 		return this.lastUpdateMsgTime;

@@ -206,12 +206,11 @@ public class TestGameClientEntityCreator {
 		{
 			int shooterID = (int) msg.data.get("shooterID");
 			if (shooterID != game.currentAvatarID) {
-				int targetID = (int) msg.data.get("targetID");
 				Vector3f end = (Vector3f) msg.data.get("end");
-				BulletTrail bullet = new BulletTrail(game, id, BULLET_TRAIL, (ICanShoot)game.getEntity(shooterID), (PhysicalEntity)game.getEntity(targetID), end);
+				BulletTrail bullet = new BulletTrail(game, id, BULLET_TRAIL, (ICanShoot)game.getEntity(shooterID), end);
 				return bullet;
 			} else {
-				return null; // We create our own bullet trails
+				return null; // We create our own bullet trails, so ignore this
 			}
 
 		}

@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 public interface IEntity {
 
+	//boolean isClientSideOnly();
+	
 	boolean requiresProcessing();
 	
 	String getName();

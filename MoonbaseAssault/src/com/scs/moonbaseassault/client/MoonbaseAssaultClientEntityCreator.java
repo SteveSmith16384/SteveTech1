@@ -20,11 +20,13 @@ import com.scs.moonbaseassault.weapons.GrenadeLauncher;
 import com.scs.moonbaseassault.weapons.HitscanRifle;
 import com.scs.moonbaseassault.weapons.LaserRifle;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
+import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 
@@ -48,6 +50,7 @@ public class MoonbaseAssaultClientEntityCreator {
 	public static final int DEBUGGING_SPHERE = 16;
 	public static final int AI_LASER_BULLET = 17;
 	public static final int HITSCAN_RIFLE = 18;
+	public static final int BULLET_TRAIL = 19;
 
 
 	public MoonbaseAssaultClientEntityCreator() {
@@ -246,6 +249,19 @@ public class MoonbaseAssaultClientEntityCreator {
 				return gl;
 			//}
 			//return null;
+		}
+
+		case BULLET_TRAIL:
+		{
+			int shooterID = (int) msg.data.get("shooterID");
+			if (shooterID != game.currentAvatarID) {
+				Vector3f end = (Vector3f) msg.data.get("end");
+				BulletTrail bullet = new BulletTrail(game, id, BULLET_TRAIL, (ICanShoot)game.getEntity(shooterID), end);
+				return bullet;
+			} else {
+				return null; // We create our own bullet trails, so ignore this
+			}
+
 		}
 
 		default:

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.jme3.math.Vector3f;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;

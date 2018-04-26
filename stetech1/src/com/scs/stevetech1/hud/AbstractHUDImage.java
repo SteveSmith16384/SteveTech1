@@ -65,7 +65,8 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 	@Override
 	public void remove() {
 		this.removeFromParent();
-		game.removeClientOnlyEntity(this);
+		//game.removeClientOnlyEntity(this);
+		game.removeEntity(this.getID());
 		
 	}
 

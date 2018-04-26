@@ -18,24 +18,19 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 
 	private float timeLeft = DURATION;
 
-	public BulletTrail(IEntityController _game, int id, int type, ICanShoot shooter, PhysicalEntity target, Vector3f end) {//, ColorRGBA col, String tex) {
+	public BulletTrail(IEntityController _game, int id, int type, ICanShoot shooter, Vector3f end) {//, ColorRGBA col, String tex) {
 		super(_game, id, type, "BulletTrail", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("shooterID", shooter.getID());
-			creationData.put("targetID", target.getID());
 			creationData.put("end", end);
 			//creationData.put("col", col);
 			//creationData.put("tex", tex);
 		}
 
 		Vector3f start = shooter.getBulletStartPos();
-		if (target != null) { // If there's a target, override end
-			end = target.getWorldTranslation(); // todo - shoot at centre!
-		}
-
-		BeamLaserModel laserNode = BeamLaserModel.Factory(game.getAssetManager(), start, end, ColorRGBA.Red, !game.isServer(), "Textures/greensun.png");
+		BeamLaserModel laserNode = BeamLaserModel.Factory(game.getAssetManager(), start, end, ColorRGBA.Red, !game.isServer(), "Textures/greensun.jpg");
 		this.mainNode.attachChild(laserNode);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);

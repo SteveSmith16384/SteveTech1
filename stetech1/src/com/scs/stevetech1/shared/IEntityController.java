@@ -21,6 +21,8 @@ public interface IEntityController {
 
 	void addEntity(IEntity e);
 	
+	void addClientOnlyEntity(IEntity e);
+	
 	void removeEntity(int id);
 	
 	AssetManager getAssetManager();

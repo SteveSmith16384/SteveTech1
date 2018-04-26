@@ -1,10 +1,9 @@
-package com.scs.testgame.weapons;
+package com.scs.stevetech1.weapons;
 
 import java.util.HashMap;
 
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -19,8 +18,6 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.stevetech1.weapons.AbstractMagazineGun;
-import com.scs.testgame.TestGameClientEntityCreator;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
@@ -29,9 +26,14 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 	private RayCollisionData hitThisMoment = null; // Only used server-side.  Null if nothing hit
 	private int bulletsInMag = MAG_SIZE;
+	private int trailType;
+	private int debugSphereType;
 
-	public HitscanRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, int num, ClientData client) {
-		super(game, id, TestGameClientEntityCreator.HITSCAN_RIFLE, playerID, owner, avatarID, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
+	public HitscanRifle(IEntityController game, int id, int type, int playerID, AbstractAvatar owner, int avatarID, int num, ClientData client, int _trailType, int _debugSphereType) {
+		super(game, id, type, playerID, owner, avatarID, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
+		
+		trailType = _trailType;
+		debugSphereType = _debugSphereType;
 
 	}
 
@@ -47,20 +49,20 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				server.collisionLogic.collision(hitThisMoment.entity, this);
 
 				Vector3f pos = this.hitThisMoment.point;
-				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), TestGameClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, true); // Show where it hit
+				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), debugSphereType, pos.x, pos.y, pos.z, true, true); // Show where it hit
 				game.addEntity(ds);
 				/*if (hitThisMoment.entity instanceof MovingTarget && Globals.DEBUG_REWIND_POS1) {
 					//Settings.p(hitThisMoment.entity.name + " is at " + hitThisMoment.entity.getWorldTranslation() + " at " + hitThisMoment.timestamp);
 				}*/
 
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), TestGameClientEntityCreator.BULLET_TRAIL, this.owner, hitThisMoment.point);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner, hitThisMoment.point);
 				game.addEntity(bt);
 
 				this.hitThisMoment = null; // Clear it ready for next loop
 			} else {
 				// Bullet trail into the sky
 				Vector3f endPos = this.owner.getBulletStartPos().add(this.owner.getShootDir().mult(RANGE));
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), TestGameClientEntityCreator.BULLET_TRAIL, this.owner, endPos);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner, endPos);
 				game.addEntity(bt);
 			}
 		} else {
@@ -79,17 +81,17 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				//AbstractGameClient client = (AbstractGameClient)game;
 				
 				// Show where hit
-				//DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), TestGameClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, false, true);
+				//DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), debugSphereType, pos.x, pos.y, pos.z, false, true);
 				//game.addClientOnlyEntity(ds);
 				
 				// Show bullet trails
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), TestGameClientEntityCreator.BULLET_TRAIL, this.owner, pos);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner, pos);
 				game.addClientOnlyEntity(bt);
 			} else {
 				Globals.p("Not hit anything");
 				// Bullet trail into the sky
 				Vector3f endPos = this.owner.getBulletStartPos().add(this.owner.getShootDir().mult(RANGE));
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), TestGameClientEntityCreator.BULLET_TRAIL, this.owner, endPos);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner, endPos);
 				//AbstractGameClient client = (AbstractGameClient)game;
 				game.addClientOnlyEntity(bt);
 			}

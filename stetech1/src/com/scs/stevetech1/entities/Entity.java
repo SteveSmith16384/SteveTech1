@@ -44,7 +44,11 @@ public abstract class Entity implements IEntity, Savable {
 
 	public void remove() {
 		if (!removed) {
-			game.removeEntity(this.id);
+			//if (!this.clientSide) {
+				game.removeEntity(this.id);
+			/*} else {
+				
+			}*/
 			removed = true;
 		}
 	}

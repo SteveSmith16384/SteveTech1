@@ -208,13 +208,12 @@ ICollisionListener<PhysicalEntity> {
 					} else if (message instanceof AbilityActivatedMessage) {
 						AbilityActivatedMessage elm = (AbilityActivatedMessage)message;
 						AbstractServerAvatar shooter = (AbstractServerAvatar)this.entities.get(elm.avatarID);
-						IAbility ability = shooter.getAbility(elm.abilityID);
-						ability.setToBeActivated(true);
-						/*if (ability.activate() == false) { // This will also send the message
-							Globals.p("Warning - activate ability failed!");
-							// todo - if false, tell client!
-						}*/
-						
+						if (shooter != null) {
+							IAbility ability = shooter.getAbility(elm.abilityID);
+							ability.setToBeActivated(true);
+						} else {
+							Globals.p("Null shooter!");
+						}
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
 					}
@@ -785,6 +784,12 @@ ICollisionListener<PhysicalEntity> {
 	@Override
 	public int getNumEntities() {
 		return this.entities.size();
+	}
+
+
+	@Override
+	public void addClientOnlyEntity(IEntity e) {
+		throw new RuntimeException("Todo");
 	}
 
 

@@ -115,7 +115,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private static final String QUIT = "Quit";
 	protected static final String TEST = "Test";
 
-	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
+	protected static AtomicInteger nextEntityID = new AtomicInteger(-1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	protected HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100); // Entites that we need to iterate over in game loop
@@ -866,7 +866,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	@Override
 	public void addEntity(IEntity e) {
 		if (e.getID() <= 0) {
-			throw new RuntimeException("No entity id!");
+			throw new RuntimeException("ID must be positive if not client-side!");
 		}
 		this.entitiesToAdd.add(e);
 	}
@@ -935,13 +935,27 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void removeEntity(int id) {
-		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-			IEntity e = this.entities.get(id);
-			if (e != null) {
-				Globals.p("Going to remove entity " + id + ":" + e.getName());
+		if (id > 0) {
+			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+				IEntity e = this.entities.get(id);
+				if (e != null) {
+					Globals.p("Going to remove entity " + id + ":" + e);
+				} else {
+					Globals.p("Going to remove entity " + id);
+				}
 			}
+			this.entitiesToRemove.add(id);
+		} else {
+			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+				IEntity e = this.clientOnlyEntities.get(id);
+				if (e != null) {
+					Globals.p("Going to remove CO entity " + id + ":" + e);
+				} else {
+					Globals.p("Going to remove CO entity " + id);
+				}
+			}
+			this.clientOnlyEntitiesToRemove.add(id);
 		}
-		this.entitiesToRemove.add(id);
 	}
 
 
@@ -967,7 +981,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					this.currentAvatar = null;
 				}
 			} else {
-				Globals.pe("Entity id " + id + " not found for removal");
+				//Globals.pe("Entity id " + id + " not found for removal");
 			}
 		}
 	}
@@ -1051,18 +1065,21 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	//@Override
 	public void addClientOnlyEntity(IEntity e) {
+		if (e.getID() >= 0) {
+			throw new RuntimeException("Client-only entities must have negative id");
+		}
 		this.clientOnlyEntitiesToAdd.add(e);
 	}
 
-
+/*
 	public void removeClientOnlyEntity(IEntity e) {
 		this.clientOnlyEntitiesToRemove.add(e.getID());
 	}
-
+*/
 
 	@Override
 	public int getNextEntityID() {
-		return nextEntityID.getAndAdd(1);
+		return nextEntityID.decrementAndGet(); // Client-only entities are negative
 	}
 
 
@@ -1154,8 +1171,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private void actuallyAddClientOnlyEntity(IEntity e) {
 		this.clientOnlyEntitiesToAdd.remove(e);
 		synchronized (entities) {
-			if (e.getID() <= 0) {
-				throw new RuntimeException("No entity id!");
+			if (e.getID() > 0) {
+				throw new RuntimeException("Client-only must have negative id");
 			}
 			if (this.clientOnlyEntities.containsKey(e.getID())) {
 				throw new RuntimeException("Entity " + e + " already exists (client-only)"); // Don't replace it, as entity has linked to other stuff, like Abilities
@@ -1166,16 +1183,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}*/
 
 			if (e instanceof PhysicalEntity) {
-					PhysicalEntity pe = (PhysicalEntity)e;
-					this.getGameNode().attachChild(pe.getMainNode());
-					if (pe.simpleRigidBody != null) {
-						this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
-						if (Globals.STRICT) {
-							if (this.physicsController.getEntities().size() > this.entities.size()) {
-								Globals.pe("Warning: more simple rigid bodies than entities!");
-							}
+				PhysicalEntity pe = (PhysicalEntity)e;
+				this.getGameNode().attachChild(pe.getMainNode());
+				if (pe.simpleRigidBody != null) {
+					this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
+					if (Globals.STRICT) {
+						if (this.physicsController.getEntities().size() > this.entities.size()) {
+							Globals.pe("Warning: more simple rigid bodies than entities!");
 						}
 					}
+				}
 			}
 			if (e instanceof IDrawOnHUD) {
 				IDrawOnHUD doh = (IDrawOnHUD)e;
