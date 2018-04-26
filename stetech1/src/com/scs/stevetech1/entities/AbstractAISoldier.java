@@ -165,7 +165,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	@Override
 	public void setAnimCode(int animCode) {
 		if (soldierModel != null) {
-			//todo this.soldierModel.setAnim(animCode);
+			this.soldierModel.setAnim(animCode);
 			if (Globals.DEBUG_DIE_ANIM) {
 				if (animCode == AbstractAvatar.ANIM_DIED) {
 					Globals.p("setAnimCode=" + animCode);

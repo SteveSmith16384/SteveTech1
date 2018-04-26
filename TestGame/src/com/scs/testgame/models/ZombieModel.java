@@ -34,11 +34,11 @@ public class ZombieModel implements IAvatarModel {
 	private HashMap<String, String> animCodes = new HashMap<String, String>();
 	private AssetManager assetManager;
 	private Spatial model;
-	
+
 
 	public ZombieModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
-		
+
 		animCodes.put("Idle", "ZombieIdle");
 		animCodes.put("Walking", "ZombieWalk");
 	}
@@ -46,26 +46,26 @@ public class ZombieModel implements IAvatarModel {
 
 	@Override
 	public Spatial createAndGetModel(int side) {
-			model = assetManager.loadModel("Models/zombie/Zombie.blend");
-			model.scale(.125f); // Make 1 high
-			model.setModelBound(new BoundingBox());
-			//model.updateModelBound();
+		model = assetManager.loadModel("Models/zombie/Zombie.blend");
+		model.scale(.125f); // Make 1 high
+		model.setModelBound(new BoundingBox());
+		//model.updateModelBound();
 
-			JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/zombie/ZombieTexture.png");
 
-			Node s = (Node)model;
-			while (s.getNumControls() == 0) {
-				s = (Node)s.getChild(0);
-			}
-			AnimControl control = s.getControl(AnimControl.class);
-			channel = control.createChannel();
+		Node s = (Node)model;
+		while (s.getNumControls() == 0) {
+			s = (Node)s.getChild(0);
+		}
+		AnimControl control = s.getControl(AnimControl.class);
+		channel = control.createChannel();
 
-			/*
+		/*
 			Quaternion target_q = new Quaternion();
 			target_q.lookAt(new Vector3f(0, 0, 0), Vector3f.UNIT_Y);
 			model.setLocalRotation(target_q);
-	*/
-			return model;
+		 */
+		return model;
 	}
 
 
@@ -90,6 +90,13 @@ public class ZombieModel implements IAvatarModel {
 	@Override
 	public Spatial getModel() {
 		return model;
+	}
+
+
+	@Override
+	public void setAnim(int anim) {
+		// Todo
+		
 	}
 
 }
