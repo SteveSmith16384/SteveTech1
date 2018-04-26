@@ -17,7 +17,6 @@ import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
 import com.scs.moonbaseassault.entities.SpaceCrate;
 import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.moonbaseassault.weapons.GrenadeLauncher;
-import com.scs.moonbaseassault.weapons.HitscanRifle;
 import com.scs.moonbaseassault.weapons.LaserRifle;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.ICanShoot;
@@ -29,6 +28,7 @@ import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.weapons.HitscanRifle;
 
 public class MoonbaseAssaultClientEntityCreator {
 
@@ -244,7 +244,7 @@ public class MoonbaseAssaultClientEntityCreator {
 			//if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities
 				//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 				int num = (int)msg.data.get("num");
-				HitscanRifle gl = new HitscanRifle(game, id, playerID, null, ownerid, num, null);
+				HitscanRifle gl = new HitscanRifle(game, id, HITSCAN_RIFLE, playerID, null, ownerid, num, null, BULLET_TRAIL, DEBUGGING_SPHERE);
 				//owner.addAbility(gl, num);
 				return gl;
 			//}

@@ -11,9 +11,9 @@ import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
-import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
@@ -25,7 +25,6 @@ import com.scs.testgame.entities.Terrain1;
 import com.scs.testgame.entities.TestGameClientAvatar;
 import com.scs.testgame.entities.TestGameEnemyAvatar;
 import com.scs.testgame.entities.Wall;
-import com.scs.testgame.weapons.HitscanRifle;
 import com.scs.testgame.weapons.LaserRifle;
 
 /*
@@ -94,7 +93,7 @@ public class TestGameClientEntityCreator {
 			//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 			int playerID = (int)msg.data.get("playerID");
 			int num = (int)msg.data.get("num");
-			HitscanRifle gl = new HitscanRifle(game, id, playerID, null, ownerid, num, null);
+			HitscanRifle gl = new HitscanRifle(game, id, HITSCAN_RIFLE, playerID, null, ownerid, num, null, BULLET_TRAIL, DEBUGGING_SPHERE);
 			//owner.addAbility(gl, num);
 			return gl;
 			//}
