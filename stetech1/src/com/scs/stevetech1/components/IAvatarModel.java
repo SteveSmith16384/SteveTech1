@@ -15,4 +15,6 @@ public interface IAvatarModel {
 	
 	float getBulletStartHeight();
 	
+	void setAnim(int anim);
+	
 }

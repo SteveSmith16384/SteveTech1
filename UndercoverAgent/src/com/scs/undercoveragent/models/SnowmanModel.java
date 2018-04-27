@@ -96,4 +96,11 @@ public class SnowmanModel implements IAvatarModel {
 		return model;
 	}
 
+
+	@Override
+	public void setAnim(int anim) {
+		// Do nothing
+		
+	}
+
 }

@@ -180,7 +180,8 @@ public class MoonbaseAssaultClientEntityCreator {
 		case AI_SOLDIER:
 		{
 			int side = (int)msg.data.get("side");
-			MA_AISoldier z = new MA_AISoldier(game, id, pos.x, pos.y, pos.z, side);
+			int animcode = (int)msg.data.get("animcode");
+			MA_AISoldier z = new MA_AISoldier(game, id, pos.x, pos.y, pos.z, side, animcode);
 			return z;
 		}
 

@@ -237,7 +237,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
-			DebuggingBox hill = new DebuggingBox(game, DEBUGGING_SPHERE, id, pos.x, pos.y, pos.z, size.x, size.y, size.z);
+			DebuggingBox hill = new DebuggingBox(game, DEBUGGING_SPHERE, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, true);
 			return hill;
 		}
 

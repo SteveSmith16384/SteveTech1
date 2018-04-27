@@ -55,13 +55,7 @@ public class CharacterModel implements IAvatarModel {
 		}*/
 	}
 
-	/*
-	@Override
-	public void setAnimationForCode(String code) {
-		//return animCodes.get(code);
-	}
 
-	 */
 	@Override
 	public float getCameraHeight() {
 		return MODEL_HEIGHT;
@@ -83,6 +77,13 @@ public class CharacterModel implements IAvatarModel {
 	@Override
 	public Spatial getModel() {
 		return model;
+	}
+
+
+	@Override
+	public void setAnim(int anim) {
+		// Todo
+		
 	}
 
 }

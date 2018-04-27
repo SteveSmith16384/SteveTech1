@@ -148,7 +148,8 @@ public class TwoWeeksClientEntityCreator {
 		case AI_SOLDIER:
 		{
 			int side = (int)msg.data.get("side");
-			TWIB_AISoldier z = new TWIB_AISoldier(game, id, pos.x, pos.y, pos.z, side);
+			int animcode = (int)msg.data.get("animcode");
+			TWIB_AISoldier z = new TWIB_AISoldier(game, id, pos.x, pos.y, pos.z, side, animcode);
 			return z;
 		}
 

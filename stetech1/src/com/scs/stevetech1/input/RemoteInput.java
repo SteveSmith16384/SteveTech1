@@ -49,12 +49,17 @@ public class RemoteInput implements IInputDevice {
 	}
 
 
+	/**
+	 * Don't send these to the server; instead, send a specific message that tells the server
+	 * that the client has fired weapon.  We do this to ensure that the client and server always
+	 * get a "shoot" message consistently.
+	 */
 	@Override
 	public boolean isAbilityPressed(int i) {
-		switch (i) {
+		/*switch (i) {
 		case 0: return pim.ability1;
 		case 1: return pim.ability2;
-		}
+		}*/
 		return false;
 	}
 

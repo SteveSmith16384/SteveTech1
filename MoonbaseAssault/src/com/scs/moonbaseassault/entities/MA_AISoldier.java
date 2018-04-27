@@ -10,8 +10,9 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class MA_AISoldier extends AbstractAISoldier {
 	
-	public MA_AISoldier(IEntityController _game, int id, float x, float y, float z, int _side) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, x, y, z, _side, new SoldierModel(_game.getAssetManager()));
+	public MA_AISoldier(IEntityController _game, int id, float x, float y, float z, int _side, int csInitialAnimCode) {
+		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_SOLDIER, x, y, z, _side, 
+				new SoldierModel(_game.getAssetManager()), csInitialAnimCode);
 
 		if (_game.isServer()) {
 			ai = new WanderingSoldierAI2(this);
