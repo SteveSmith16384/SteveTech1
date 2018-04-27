@@ -20,7 +20,7 @@ public class MA_AISoldier extends AbstractAISoldier {
 
 	@Override
 	protected AbstractAIBullet createBullet(Vector3f pos, Vector3f dir) {
-		return null; // nOT REQUIRED AS ai DOESNT SHOOT
+		return null; // AI doesn't shoot (yet)
 	}
 
 }

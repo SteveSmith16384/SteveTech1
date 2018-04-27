@@ -238,7 +238,6 @@ ICollisionListener<PhysicalEntity> {
 					AbstractServerAvatar avatar = c.avatar;
 					if (avatar != null && avatar.getAnyAbilitiesShootingInPast() != null) { //.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 						areAnyPlayersShooting = true;
-						//avatar.getAnyAbilitiesShootingInPast(); // todo - remove
 						break;
 					}
 				}
@@ -789,7 +788,7 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void addClientOnlyEntity(IEntity e) {
-		throw new RuntimeException("Todo");
+		throw new RuntimeException("Trying to add client-only entity to server");
 	}
 
 

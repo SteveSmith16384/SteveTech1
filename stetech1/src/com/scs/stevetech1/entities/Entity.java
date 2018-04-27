@@ -17,7 +17,7 @@ public abstract class Entity implements IEntity, Savable {
 	protected transient IEntityController game;
 	public final String name;
 	public boolean removed = false;
-	private boolean requiresProcessing; // todo - move to Entity.class
+	private boolean requiresProcessing;
 
 	// Server-only vars
 	protected HashMap<String, Object> creationData;

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class ChronologicalLookup<T extends ITimeStamped> {
 
-	private LinkedList<T> positionData = new LinkedList<>(); // Newest entry is at the start
+	private LinkedList<T> positionData = new LinkedList<>(); // Newest entry is at the start - todo - rename
 	private int maxEntries;
 	private boolean cleardown;
 

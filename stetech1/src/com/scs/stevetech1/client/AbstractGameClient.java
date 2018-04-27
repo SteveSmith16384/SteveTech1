@@ -642,29 +642,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				Globals.p("Ignoring entity launched message");
 			}
 
-			/*} else if (message instanceof HitscanBulletTrailMessage) {
-			if (Globals.DEBUG_SHOOTING) {
-				Globals.p("Received HitscanBulletTrailMessage");
-			}
-			HitscanBulletTrailMessage elm = (HitscanBulletTrailMessage)message;
-			if (elm.playerID != this.playerID) {
-				ICanShoot shooter = (ICanShoot)this.entities.get(elm.shooterID);
-				Vector3f end = null;
-				if (elm.entityHitID > 0) {
-					PhysicalEntity pe = (PhysicalEntity)this.entities.get(elm.entityHitID);
-					end = pe.getWorldTranslation();
-				} else {
-					end = elm.end;
-				}
-				//BulletTrail trail = new BulletTrail(this, );
-				todo
-			} else {
-				// It was us that launched it in the first place!
-				Globals.p("Ignoring HitscanBulletTrailMessage");
-			}
-			 */
-
-
 		} else if (message instanceof AvatarStartedMessage) {
 			if (Globals.DEBUG_PLAYER_RESTART) {
 				Globals.p("Rcvd AvatarStartedMessage");

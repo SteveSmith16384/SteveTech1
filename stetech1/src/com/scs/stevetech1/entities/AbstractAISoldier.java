@@ -36,7 +36,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 import ssmith.util.RealtimeInterval;
 
-public abstract class AbstractAISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision, // todo - use this
+public abstract class AbstractAISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable { //, ICanShoot {//, IUnit {
 
 	public static final float START_HEALTH = 10f;
@@ -165,7 +165,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	@Override
 	public void setAnimCode(int animCode) {
 		if (soldierModel != null) {
-			//todo this.soldierModel.setAnim(animCode);
+			this.soldierModel.setAnim(animCode);
 			if (Globals.DEBUG_DIE_ANIM) {
 				if (animCode == AbstractAvatar.ANIM_DIED) {
 					Globals.p("setAnimCode=" + animCode);
