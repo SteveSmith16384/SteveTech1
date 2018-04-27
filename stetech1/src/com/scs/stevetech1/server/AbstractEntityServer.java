@@ -104,7 +104,8 @@ ICollisionListener<PhysicalEntity> {
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
-
+	private boolean removingAllEntities = false; // Don't send "remove" messages
+	
 	public SimpleGameData gameData;
 
 	public AbstractEntityServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
@@ -257,6 +258,9 @@ ICollisionListener<PhysicalEntity> {
 							ray.setLimit(chip.getRange());
 							RayCollisionData rcd = avatar.checkForCollisions(ray);//, chip.getRange());
 							if (rcd != null) {
+								if (Globals.DEBUG_BULLET_HIT) {
+									Globals.p("Ray hit " + rcd.entity);
+								}
 								rcd.timestamp = timeTo; // For debugging
 							}
 							chip.setTarget(rcd); // Damage etc.. is calculated later
@@ -642,7 +646,9 @@ ICollisionListener<PhysicalEntity> {
 					return; // todo - remove?
 				}
 			}*/
-			this.gameNetworkServer.sendMessageToAll(new RemoveEntityMessage(id));
+			if (!this.removingAllEntities) {
+				this.gameNetworkServer.sendMessageToAll(new RemoveEntityMessage(id));
+			}
 		}
 
 	}
@@ -754,10 +760,17 @@ ICollisionListener<PhysicalEntity> {
 	public void gameStatusChanged(int newStatus)  {
 		if (newStatus == SimpleGameData.ST_DEPLOYING) {
 			gameData.gameID++;
-			Globals.p("Game ID is " + gameData.gameID);
+			Globals.p("Starting new game " + gameData.gameID);
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
 			sendGameStatusMessage(); // To send the new game ID
+			
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities));
+			removingAllEntities = true;
 			removeOldGame();
+			removingAllEntities = false;
+			
 			startNewGame();
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {
 				for (IEntity e : entities.values()) {

@@ -14,12 +14,12 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean DEBUG_NO_AI_ANIM = true;
+	public static final boolean DEBUG_BULLET_HIT = true;
 	public static final boolean DEBUG_NO_ABILITY0 = true;
-	public static final boolean DEBUG_AVATAR_SET = true;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
-	public static final boolean DEBUG_SHOOTING = true;
 	
+	public static final boolean DEBUG_AVATAR_SET = false;
+	public static final boolean DEBUG_NO_AI_ANIM = false;
 	public static final boolean DEBUG_SLIDING_DOORS = false;
 	public static final boolean DEBUG_CLIENT_SERVER_FAR_APART = false;
 	public static final boolean DEBUG_NO_BULLET = false;
@@ -64,12 +64,13 @@ public class Globals {
 	public static final boolean ONLY_ADJUST_CLIENT_ON_MOVE = false; // Only adjust the client avatar's position when the player moves them.
 
 	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*6;
-	public static final int KRYO_OBJECT_BUFFER_SIZE = 2048*6;
+	public static final int KRYO_OBJECT_BUFFER_SIZE = 2048*24;//*6;
 	// Our movement speed
 	public static final float SMALLEST_MOVE_DIST = 0.001f;// 0.02f;
 	public static final float MAX_MOVE_DIST = 1f;
 
 	public static final float CAM_DIST = 1500f;
+	public static final float LASER_DIAM= 0.002f;;
 
 	// User Data
 	public static final String ENTITY = "Entity";

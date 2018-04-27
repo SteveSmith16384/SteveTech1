@@ -162,7 +162,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private String gameServerIP;//, lobbyIP;
 	private int gamePort;//, lobbyPort;
 	private float mouseSens;
-
+	private boolean gamePaused = true; // Prevent client doing stuff while setting up
+	
 	// Entity systems
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
@@ -309,8 +310,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (this.physicsController.getEntities().size() > this.entities.size()) {
 				Globals.pe("Warning: more simple rigid bodies than entities!");
 			}
-			if (this.currentAvatar == null) {
-				Globals.p("Warning: No current avatar");
+			if (this.currentAvatar == null ) {
+				//Globals.p("Warning: No current avatar");
 			}
 		}
 
@@ -603,6 +604,15 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				clientStatus = STATUS_STARTED;
 				this.getRootNode().attachChild(this.gameNode);
 				this.showPlayersWeapon();
+				gamePaused = false;
+			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
+				this.removeAllEntities();
+			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) { // We now have enough data to start
+				gamePaused = true;
+			} else if (msg.command == GeneralCommandMessage.Command.GameRestarted) { // We now have enough data to start
+				gamePaused = false;
+			} else {
+				throw new RuntimeException("Unknown command:" + msg.command);
 			}
 
 		} else if (message instanceof AbilityUpdateMessage) {
@@ -631,9 +641,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 
 		} else if (message instanceof EntityLaunchedMessage) {
-			if (Globals.DEBUG_SHOOTING) {
+			/*if (Globals.DEBUG_SHOOTING) {
 				Globals.p("Received EntityLaunchedMessage");
-			}
+			}*/
 			EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 			if (elm.playerID != this.playerID) {
 				this.launchSystem.scheduleLaunch(elm); //this.entities
@@ -910,6 +920,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
+	private void removeAllEntities() {
+		while (this.entities.size() > 0) {
+			int id = this.entities.keySet().iterator().next();
+			this.actuallyRemoveEntity(id);
+		}
+	}
+	
+	
 	@Override
 	public void removeEntity(int id) {
 		if (id > 0) {
@@ -1048,11 +1066,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		this.clientOnlyEntitiesToAdd.add(e);
 	}
 
-/*
+	/*
 	public void removeClientOnlyEntity(IEntity e) {
 		this.clientOnlyEntitiesToRemove.add(e.getID());
 	}
-*/
+	 */
 
 	@Override
 	public int getNextEntityID() {
@@ -1130,10 +1148,25 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private void listEntities() {
 		synchronized (entities) {
-			// Loop through the entities
+			// DO server-side first
+			int count = 0;
 			for (IEntity e : entities.values()) {
-				Globals.p("Entity " + e.getID() + ": " + e.getName() + " (" + e + ")");
+				if (e.getID() > 0) {
+					Globals.p("Entity " + e.getID() + ": " + e.getName() + " (" + e + ")");
+					count++;
+				}
 			}
+			Globals.p("Total server entities:" + count);
+
+			// DO client-side
+			count = 0;
+			for (IEntity e : entities.values()) {
+				if (e.getID() < 0) {
+					Globals.p("CO Entity " + e.getID() + ": " + e.getName() + " (" + e + ")");
+					count++;
+				}
+			}
+			Globals.p("Total CO entities:" + count);
 		}
 	}
 

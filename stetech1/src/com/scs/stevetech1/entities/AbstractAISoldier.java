@@ -39,7 +39,7 @@ import ssmith.util.RealtimeInterval;
 public abstract class AbstractAISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable { //, ICanShoot {//, IUnit {
 
-	public static final float START_HEALTH = 10f;
+	public static final float START_HEALTH = 1f; // todo
 	public static final float SPEED = .53f;//.47f;
 
 	private IAvatarModel soldierModel; // Need this to animate the model
@@ -93,7 +93,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 	}
 
-	
+
 	@Override
 	public HashMap<String, Object> getCreationData() {
 		HashMap<String, Object> creationData = super.getCreationData();
@@ -132,9 +132,15 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
+		if (Globals.DEBUG_BULLET_HIT) {
+			Globals.p(this + " damaged()");
+		}
 		if (health > 0) {
 			this.health -= amt;
 			if (health <= 0) {
+				if (Globals.DEBUG_BULLET_HIT) {
+					Globals.p(this + " killed");
+				}
 				AbstractEntityServer server = (AbstractEntityServer)game;
 				server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, collider.getActualShooter()));
 				this.serverSideCurrentAnimCode = AbstractAvatar.ANIM_DIED;
@@ -152,7 +158,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		super.remove();
 
 		if (soldierModel.getModel() != null) {
-		this.soldierModel.getModel().removeFromParent();
+			this.soldierModel.getModel().removeFromParent();
 		}
 		this.hudNode.removeFromParent();
 	}
@@ -258,8 +264,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			this.game.addEntity(bullet);
 		}
 	}
-	
-	
+
+
 	protected abstract AbstractAIBullet createBullet(Vector3f pos, Vector3f dir);
 
 
@@ -268,7 +274,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		return this.health > 0;
 	}
 
-	
+
 	@Override
 	public float getHealth() {
 		return health;

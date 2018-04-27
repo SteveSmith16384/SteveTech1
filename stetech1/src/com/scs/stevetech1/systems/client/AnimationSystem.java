@@ -33,7 +33,7 @@ public class AnimationSystem extends AbstractSystem {
 				}
 			//}
 		} else {
-			Globals.p("No anim data for " + pe);
+			//Globals.p("No anim data for " + pe);  Might be dead
 		}
 		anim.processManualAnimation(tpf_secs);
 	}

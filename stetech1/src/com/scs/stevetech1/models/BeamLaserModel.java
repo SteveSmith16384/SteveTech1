@@ -9,6 +9,7 @@ import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Cylinder;
@@ -21,20 +22,20 @@ public class BeamLaserModel extends Node {
 	private Geometry g;
 	private Cylinder cyl;
 
-	public static BeamLaserModel Factory(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex) {
+	public static BeamLaserModel Factory(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex, float diam) {
 		if (spare.size() > 0) {
 			BeamLaserModel m = spare.remove(0);
 			m.setPoints(start, end, true);
 			return  m;
 		} else {
-			return new BeamLaserModel(assetManager, start, end, col, generateMat, tex);
+			return new BeamLaserModel(assetManager, start, end, col, generateMat, tex, diam);
 		}
 	}
 
-	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex) {
+	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex, float diam) {
 		super("Laser");
 
-		cyl = new Cylinder(5, 10, 0.02f, start.distance(end), true);
+		cyl = new Cylinder(5, 10, diam, start.distance(end), true);
 		cyl.setBound(new BoundingBox());
 		cyl.updateBound();
 		g = new Geometry();
@@ -47,6 +48,7 @@ public class BeamLaserModel extends Node {
 			mat.setTexture("DiffuseMap", t);
 			mat.setColor("GlowColor", col);//ColorRGBA.Pink);
 			mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+			this.setQueueBucket(Bucket.Transparent);
 			this.setMaterial(mat);
 		}
 

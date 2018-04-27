@@ -6,8 +6,10 @@ import com.jme3.network.serializing.Serializable;
 public class GeneralCommandMessage extends MyAbstractMessage {
 
 	public enum Command {
-		AllEntitiesSent,
-		RequestGameData
+		AllEntitiesSent, // todo - remove this
+		RemoveAllEntities,
+		GameRestarting, // So the client knows that all the entities are about to change
+		GameRestarted,
 	}
 	
 	public Command command;

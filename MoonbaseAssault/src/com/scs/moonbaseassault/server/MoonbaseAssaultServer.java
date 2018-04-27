@@ -146,7 +146,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		MapLoader map = new MapLoader(this);
 		try {
-			map.loadMap("/serverdata/moonbaseassault_small.csv");
+			//map.loadMap("/serverdata/moonbaseassault_small.csv");
+			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
 			this.deploySquares = map.deploySquares;
 
@@ -206,8 +207,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		//this.actuallyAddEntity(floor);
 
 		// Add AI soldiers
-		for (int i=0 ; i<1 ; i++) {
-			MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, 2);
+		for (int i=0 ; i<3 ; i++) {
+			MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, 2, AbstractAvatar.ANIM_IDLE);
 			this.actuallyAddEntity(s);
 			moveAISoldierToStartPosition(s, s.side);
 

@@ -11,7 +11,7 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.BulletTrail;
-import com.scs.stevetech1.entities.DebuggingSphere;
+import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
@@ -21,7 +21,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
-	private static final int MAG_SIZE = 2; // todo
+	private static final int MAG_SIZE = 10; // todo
 	private static final float RANGE = 99f;
 
 	private RayCollisionData hitThisMoment = null; // Only used server-side.  Null if nothing hit
@@ -40,6 +40,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 	@Override
 	public boolean launchBullet() {
+		bulletsInMag--;
 		if (game.isServer()) {
 			// We have already calculated the hit as part of ICalcHitInPast
 			if (hitThisMoment != null) {
@@ -48,12 +49,9 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				AbstractGameServer server = (AbstractGameServer)game;
 				server.collisionLogic.collision(hitThisMoment.entity, this);
 
-				Vector3f pos = this.hitThisMoment.point;
+				/*Vector3f pos = this.hitThisMoment.point;
 				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), debugSphereType, pos.x, pos.y, pos.z, true, true); // Show where it hit
-				game.addEntity(ds);
-				/*if (hitThisMoment.entity instanceof MovingTarget && Globals.DEBUG_REWIND_POS1) {
-					//Settings.p(hitThisMoment.entity.name + " is at " + hitThisMoment.entity.getWorldTranslation() + " at " + hitThisMoment.timestamp);
-				}*/
+				game.addEntity(ds);*/
 
 				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner, hitThisMoment.point);
 				game.addEntity(bt);
@@ -132,8 +130,14 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
+	protected void reload(AbstractEntityServer server) {
+		this.bulletsInMag = this.magazineSize;
+	}
+	
+	
+	@Override
 	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer irac, int side) {
-		this.bulletsInMag++; // No physical projectiles required!
+		// No physical projectiles required!
 		
 	}
 
@@ -147,6 +151,23 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	@Override
 	public IEntity getActualShooter() {
 		return owner;
+	}
+
+
+	@Override
+	public void encode(AbilityUpdateMessage aum) {
+		super.encode(aum);
+		
+		aum.bulletsLeftInMag = this.getBulletsInMag();
+
+	}
+
+
+	@Override
+	public void decode(AbilityUpdateMessage aum) {
+		super.decode(aum);
+		
+		this.bulletsInMag = aum.bulletsLeftInMag;
 	}
 
 

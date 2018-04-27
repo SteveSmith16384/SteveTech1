@@ -2,8 +2,10 @@ package com.scs.stevetech1.entities;
 
 import java.util.HashMap;
 
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IProcessByClient;
@@ -29,10 +31,11 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 			//creationData.put("tex", tex);
 		}
 
-		Vector3f start = shooter.getBulletStartPos();
-		BeamLaserModel laserNode = BeamLaserModel.Factory(game.getAssetManager(), start, end, ColorRGBA.Red, !game.isServer(), "Textures/greensun.jpg");
-		this.mainNode.attachChild(laserNode);
-
+		if (shooter != null) {
+			Vector3f start = shooter.getBulletStartPos();
+			BeamLaserModel laserNode = BeamLaserModel.Factory(game.getAssetManager(), start, end, ColorRGBA.White, !game.isServer(), "Textures/roblox.png", 0.004f);
+			this.mainNode.attachChild(laserNode);
+		}
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
 		this.collideable = false;

@@ -48,7 +48,7 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;
-			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/bullet1.jpg");
+			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/bullet1.jpg", Globals.LASER_DIAM);
 		} else {
 			Mesh sphere = new Sphere(8, 8, .02f, true, false);
 			laserNode = new Geometry("DebuggingSphere", sphere);

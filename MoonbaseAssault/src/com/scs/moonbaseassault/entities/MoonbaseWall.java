@@ -5,12 +5,9 @@ import java.util.HashMap;
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
@@ -72,7 +69,6 @@ public class MoonbaseWall extends PhysicalEntity {
 			if (Globals.TRANSPARENT_WALLS) {
 				floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 				geometry.setQueueBucket(Bucket.Transparent);
-
 			}
 
 		}

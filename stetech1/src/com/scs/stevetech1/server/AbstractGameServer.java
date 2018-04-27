@@ -168,6 +168,7 @@ public abstract class AbstractGameServer extends AbstractEntityServer implements
 			for (IEntity e : entities.values()) {
 				Globals.p("Entity " + e.getID() + ": " + e.getName() + " (" + e + ")");
 			}
+			Globals.p("Total:" + getNumEntities());
 		}
 	}
 

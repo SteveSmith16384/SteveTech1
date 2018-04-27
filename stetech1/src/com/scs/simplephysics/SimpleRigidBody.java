@@ -297,7 +297,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			float heightDiff = bTop - aBottom;
 
 			if (heightDiff >= 0 && heightDiff <= MAX_STEP_HEIGHT) {
-				p("Going up step: " + heightDiff);
+				//p("Going up step: " + heightDiff);
 				//this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
 				this.oneOffForce.y += (heightDiff*15);// / -this.gravInc);
 				return true;
