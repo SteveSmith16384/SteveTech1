@@ -85,8 +85,9 @@ ICollisionListener<PhysicalEntity> {
 	private ServerPingSystem pingSystem;
 
 	protected HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities
-	protected HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100); // Entites that we need to iterate over in game loop
-	protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
+	//protected HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100); // Entites that we need to iterate over in game loop
+	protected ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entites that we need to iterate over in game loop
+	//protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
 	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
@@ -222,10 +223,10 @@ ICollisionListener<PhysicalEntity> {
 			}
 
 			// Add and remove entities - do this as close to the list iteration as possible!
-			for(IEntity e : this.entitiesToAdd) {
+			/*for(IEntity e : this.entitiesToAdd) {
 				this.actuallyAddEntity(e, true);
 			}
-			this.entitiesToAdd.clear();
+			this.entitiesToAdd.clear();*/
 
 			for(Integer i : this.entitiesToRemove) {
 				this.actuallyRemoveEntity(i);
@@ -279,7 +280,7 @@ ICollisionListener<PhysicalEntity> {
 			if (Globals.STRICT) {
 				for(IEntity e : this.entities.values()) {
 					if (e.requiresProcessing()) {
-						if (!this.entitiesForProcessing.containsValue(e)) {
+						if (!this.entitiesForProcessing.contains(e)) {
 							Globals.p("Warning: Processed entity " + e + " not in process list!");
 						}
 					}
@@ -289,7 +290,9 @@ ICollisionListener<PhysicalEntity> {
 
 			int numSent = 0;
 			// Loop through the entities
-			for (IEntity e : entitiesForProcessing.values()) { // this.entities
+			//for (IEntity e : entitiesForProcessing.values()) { // this.entities
+			for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
+				IEntity e = this.entitiesForProcessing.get(i);
 				if (e.hasNotBeenRemoved()) {
 					if (e instanceof IPlayerControlled) {
 						IPlayerControlled p = (IPlayerControlled)e;
@@ -494,7 +497,7 @@ ICollisionListener<PhysicalEntity> {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id);
 		avatar.startAgain(); // Must be before we add it, since that needs a position!
-		this.actuallyAddEntity(avatar, true);
+		this.actuallyAddEntity(avatar);
 		return avatar;
 	}
 
@@ -563,16 +566,17 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void addEntity(IEntity e) {
-		this.entitiesToAdd.add(e);
+		//this.entitiesToAdd.add(e);
+		this.actuallyAddEntity(e);
 	}
 
 
 	public void actuallyAddEntity(IEntity e) {
-		this.actuallyAddEntity(e, false);
+		/*this.actuallyAddEntity(e, false);
 	}
 
 
-	public void actuallyAddEntity(IEntity e, boolean sendToClients) {
+	public void actuallyAddEntity(IEntity e, boolean sendToClients) {*/
 		synchronized (entities) {
 			//Settings.p("Trying to add " + e + " (id " + e.getID() + ")");
 			if (this.entities.containsKey(e.getID())) {
@@ -580,7 +584,7 @@ ICollisionListener<PhysicalEntity> {
 			}
 			this.entities.put(e.getID(), e);
 			if (e.requiresProcessing()) {
-				this.entitiesForProcessing.put(e.getID(), e);
+				this.entitiesForProcessing.add(e);
 			}
 
 		}
@@ -634,7 +638,7 @@ ICollisionListener<PhysicalEntity> {
 				}
 				this.entities.remove(id);
 				if (e.requiresProcessing()) {
-					this.entitiesForProcessing.remove(id);
+					this.entitiesForProcessing.remove(e);
 				}
 			}
 			/*if (e instanceof IClientControlled) {  No! Still tell client when to remove it
@@ -711,7 +715,7 @@ ICollisionListener<PhysicalEntity> {
 
 	private void rewindEntities(long toTime) {
 		synchronized (this.clients) {
-			for (IEntity e : this.entitiesForProcessing.values()) {
+			for (IEntity e : this.entitiesForProcessing) {
 				if (e instanceof IRewindable) {
 					IRewindable r = (IRewindable)e;
 					r.rewindPositionTo(toTime);
@@ -723,7 +727,7 @@ ICollisionListener<PhysicalEntity> {
 
 	private void restoreEntityPositions() {
 		synchronized (this.clients) {
-			for (IEntity e : entitiesForProcessing.values()) {
+			for (IEntity e : entitiesForProcessing) {
 				if (e instanceof IRewindable) {
 					IRewindable r = (IRewindable)e;
 					r.restorePosition();
@@ -734,7 +738,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	public PhysicalEntity getTarget(PhysicalEntity shooter, int ourSide) {
-		for (IEntity e : entitiesForProcessing.values()) {
+		for (IEntity e : entitiesForProcessing) {
 			if (e != shooter) {
 				if (e instanceof ITargetable) {
 					ITargetable t = (ITargetable)e;
