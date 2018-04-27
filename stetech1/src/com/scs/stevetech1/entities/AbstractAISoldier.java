@@ -53,7 +53,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	private BitmapText hudNode;
 	private static BitmapFont font_small;
 
-	public AbstractAISoldier(IEntityController _game, int id, int type, float x, float y, float z, int _side, IAvatarModel _model) {
+	public AbstractAISoldier(IEntityController _game, int id, int type, float x, float y, float z, int _side, 
+			IAvatarModel _model, int _csInitialAnimCode) {
 		super(_game, id, type, "AISoldier", true);
 
 		side = _side;
@@ -68,6 +69,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		} else {
 			this.soldierModel.createAndGetModel(_side);
 			game.getGameNode().attachChild(this.soldierModel.getModel());
+			this.setAnimCode(_csInitialAnimCode);
 		}
 
 		// Create box for collisions
@@ -89,6 +91,16 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		hudNode = new BitmapText(font_small);
 		hudNode.setText("Cpl. Jonlan");
 
+	}
+
+	
+	@Override
+	public HashMap<String, Object> getCreationData() {
+		HashMap<String, Object> creationData = super.getCreationData();
+		// Need this in case the soldier is dead, in which case they won't send any updates, meaning
+		// they won't get sent an animation code.
+		creationData.put("animcode", this.getCurrentAnimCode());
+		return creationData;
 	}
 
 
