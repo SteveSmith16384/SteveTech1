@@ -29,7 +29,7 @@ import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.IArtificialIntelligence;
 import com.scs.stevetech1.shared.IEntityController;
@@ -105,7 +105,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (health > 0) {
 			ai.process(server, tpf_secs);
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
@@ -141,7 +141,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 				if (Globals.DEBUG_BULLET_HIT) {
 					Globals.p(this + " killed");
 				}
-				AbstractEntityServer server = (AbstractEntityServer)game;
+				AbstractGameServer server = (AbstractGameServer)game;
 				server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, collider.getActualShooter()));
 				this.serverSideCurrentAnimCode = AbstractAvatar.ANIM_DIED;
 				this.sendUpdate = true; // Send new anim code

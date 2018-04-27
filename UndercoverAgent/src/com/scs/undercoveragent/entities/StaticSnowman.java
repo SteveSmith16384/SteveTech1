@@ -7,7 +7,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
@@ -46,7 +46,7 @@ public class StaticSnowman extends PhysicalEntity {
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf) {
+	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);
 	}
 

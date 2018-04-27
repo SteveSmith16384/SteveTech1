@@ -14,13 +14,13 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimatedClientSide;
-import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.components.IPhysicalEntity;
+import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.ChronologicalLookup;
@@ -55,7 +55,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (this instanceof AbstractAvatar) {
 			throw new RuntimeException("Do not call this for avatars!");
 		}

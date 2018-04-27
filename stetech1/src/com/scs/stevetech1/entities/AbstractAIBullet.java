@@ -5,7 +5,7 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IPlayerLaunchable;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
@@ -38,7 +38,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (!useRay) {
 			super.processByServer(server, tpf_secs);
 		} else {

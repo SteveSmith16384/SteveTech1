@@ -12,7 +12,6 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
-import com.scs.stevetech1.server.AbstractEntityServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -130,13 +129,13 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	protected void reload(AbstractEntityServer server) {
+	protected void reload(AbstractGameServer server) {
 		this.bulletsInMag = this.magazineSize;
 	}
 	
 	
 	@Override
-	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer irac, int side) {
+	protected void createBullet(AbstractGameServer server, int entityid, int playerID, IEntityContainer irac, int side) {
 		// No physical projectiles required!
 		
 	}

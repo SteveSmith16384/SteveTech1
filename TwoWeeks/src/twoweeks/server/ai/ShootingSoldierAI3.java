@@ -4,7 +4,7 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.IArtificialIntelligence;
 
@@ -34,7 +34,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 
 	@Override
-	public void process(AbstractEntityServer server, float tpf_secs) {
+	public void process(AbstractGameServer server, float tpf_secs) {
 		if (this.waitForSecs > 0) {
 			this.waitForSecs -= tpf_secs;
 		} 

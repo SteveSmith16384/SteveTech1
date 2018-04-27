@@ -17,7 +17,7 @@ import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.input.IInputDevice;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -83,7 +83,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	protected void serverAndClientProcess(AbstractEntityServer server, IClientApp client, float tpf_secs, long serverTime) {
+	protected void serverAndClientProcess(AbstractGameServer server, IClientApp client, float tpf_secs, long serverTime) {
 		this.resetWalkDir();
 
 		int newAnimCode = ANIM_IDLE; // Default

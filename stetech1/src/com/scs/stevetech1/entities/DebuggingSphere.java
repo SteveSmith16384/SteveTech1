@@ -11,7 +11,7 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
@@ -60,7 +60,7 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (remove) {
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft <= 0) {

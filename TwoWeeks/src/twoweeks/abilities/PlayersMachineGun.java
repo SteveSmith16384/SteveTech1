@@ -7,7 +7,7 @@ import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -60,7 +60,7 @@ public class PlayersMachineGun extends AbstractMagazineGun<PlayersBullet> implem
 
 
 	@Override
-	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> irac, int side) {
+	protected void createBullet(AbstractGameServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> irac, int side) {
 		PlayersBullet l = new PlayersBullet(game, entityid, playerID, irac, side, client, null);
 		server.addEntity(l);
 

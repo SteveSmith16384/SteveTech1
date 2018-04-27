@@ -9,7 +9,7 @@ import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -62,7 +62,7 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 
 
 	@Override
-	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> owner, int side) {
+	protected void createBullet(AbstractGameServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> owner, int side) {
 		PlayerLaserBullet l = new PlayerLaserBullet(game, entityid, playerID, owner, side, client, null);
 		server.addEntity(l);
 

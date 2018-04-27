@@ -9,7 +9,7 @@ import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 
 public abstract class AbstractAbility extends Entity implements IAbility, IProcessByServer, IProcessByClient {
@@ -61,7 +61,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (this.active) {
 			if (activate() == false) { // This will also send the message
 				Globals.p("Warning - activate ability failed!");

@@ -7,7 +7,7 @@ import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.PlayersGrenade;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -58,7 +58,7 @@ public class GrenadeLauncher extends AbstractMagazineGun<PlayersGrenade> impleme
 
 
 	@Override
-	protected void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer irac, int side) {
+	protected void createBullet(AbstractGameServer server, int entityid, int playerID, IEntityContainer irac, int side) {
 		PlayersGrenade pe = new PlayersGrenade(game, entityid, playerID, irac, side, client);
 		server.addEntity(pe);
 

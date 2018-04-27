@@ -1,7 +1,7 @@
 package com.scs.stevetech1.systems.server;
 
 import com.scs.stevetech1.netmessages.PingMessage;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 
@@ -12,10 +12,10 @@ public class ServerPingSystem {
 
 	protected RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
-	private AbstractEntityServer server;
+	private AbstractGameServer server;
 	private int randomPingCode = NumberFunctions.rnd(0,  999999);
 
-	public ServerPingSystem(AbstractEntityServer _server) {
+	public ServerPingSystem(AbstractGameServer _server) {
 		server = _server;
 	}
 

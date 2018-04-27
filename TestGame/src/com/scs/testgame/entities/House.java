@@ -8,7 +8,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
@@ -57,7 +57,7 @@ public class House extends PhysicalEntity {
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf) {
+	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);  //mainNode.getChild(0).getWorldTranslation();
 	}
 

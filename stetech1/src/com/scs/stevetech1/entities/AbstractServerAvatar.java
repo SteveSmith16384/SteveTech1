@@ -17,7 +17,7 @@ import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -55,7 +55,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf) {
+	public void processByServer(AbstractGameServer server, float tpf) {
 		if (!this.alive) { //this.getWorldTranslation()
 			restartTimeSecs -= tpf;
 			this.currentAnimCode = ANIM_DIED;

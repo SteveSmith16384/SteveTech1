@@ -13,7 +13,7 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.IPlayerLaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -143,7 +143,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (launched) {
 			if (!useRay) {
 				super.processByServer(server, tpf_secs);

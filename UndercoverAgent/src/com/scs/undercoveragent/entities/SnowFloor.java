@@ -16,7 +16,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
@@ -115,7 +115,7 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		// Do nothing
 
 	}

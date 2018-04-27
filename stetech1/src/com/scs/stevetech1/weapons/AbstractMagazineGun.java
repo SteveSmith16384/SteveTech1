@@ -6,14 +6,12 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
-import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractAbility;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
-import com.scs.stevetech1.systems.client.LaunchData;
 
 public abstract class AbstractMagazineGun<T> extends AbstractAbility implements IAbility {
 
@@ -39,7 +37,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	 */
 	public abstract boolean launchBullet();
 
-	protected abstract void createBullet(AbstractEntityServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> owner, int side);
+	protected abstract void createBullet(AbstractGameServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> owner, int side);
 
 	public abstract int getBulletsInMag();
 
@@ -61,7 +59,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
 		if (this.getBulletsInMag() <= 0) {
@@ -75,7 +73,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	}
 
 
-	protected void reload(AbstractEntityServer server) {
+	protected void reload(AbstractGameServer server) {
 		IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
 		while (this.getBulletsInMag() < this.magazineSize) {
 			createBullet(server, server.getNextEntityID(), playerID, irac, -1);

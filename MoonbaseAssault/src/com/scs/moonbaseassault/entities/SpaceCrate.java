@@ -13,7 +13,7 @@ import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
@@ -58,7 +58,7 @@ public class SpaceCrate extends PhysicalEntity implements IAffectedByPhysics {
 
 
 	@Override
-	public void processByServer(AbstractEntityServer server, float tpf) {
+	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);
 	}
 

@@ -1,9 +1,9 @@
 package com.scs.stevetech1.components;
 
-import com.scs.stevetech1.server.AbstractEntityServer;
+import com.scs.stevetech1.server.AbstractGameServer;
 
 public interface IProcessByServer {
 
-	void processByServer(AbstractEntityServer server, float tpf_secs);
+	void processByServer(AbstractGameServer server, float tpf_secs);
 	
 }

@@ -5,7 +5,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 
 public interface IArtificialIntelligence {
 
-	void process(AbstractEntityServer server, float tpf_secs);
+	void process(AbstractGameServer server, float tpf_secs);
 	
 	Vector3f getDirection(); // Current dir to point entity the right way
 	
