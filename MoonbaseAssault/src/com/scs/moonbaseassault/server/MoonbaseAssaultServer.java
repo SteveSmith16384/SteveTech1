@@ -23,6 +23,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 
 import ssmith.astar.IAStarMapInterface;
+import ssmith.lang.NumberFunctions;
 import ssmith.util.MyProperties;
 
 public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
@@ -221,6 +222,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		float startHeight = .1f;
 		List<Point> deploySquares = this.deploySquares[side-1];
 		boolean found = false;
+		while (true) {
+			Point p = deploySquares.get(NumberFunctions.rnd(0, deploySquares.size()));
+		}
 		for (Point p : deploySquares) {
 			soldier.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
 			if (soldier.simpleRigidBody.checkForCollisions().size() == 0) {
