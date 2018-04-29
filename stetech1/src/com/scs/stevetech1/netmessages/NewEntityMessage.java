@@ -1,6 +1,7 @@
 package com.scs.stevetech1.netmessages;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import com.jme3.network.serializing.Serializable;
 import com.scs.stevetech1.components.IEntity;
@@ -9,22 +10,31 @@ import com.scs.stevetech1.components.IEntity;
 public class NewEntityMessage extends MyAbstractMessage {
 	
 	public int gameId;
-	public int entityID;
-	public int type;
-	public HashMap<String, Object> data = new HashMap<>(); 
+	public LinkedList<NewEntityData> data = new LinkedList<NewEntityData>();
+
 
 	public NewEntityMessage() {
-		super();
+		super(true, true);
 	}
 	
 	
-	public NewEntityMessage(IEntity e) {
-		super(true, true);
+	public NewEntityMessage(int _gameId) {
+		this();
 		
-		gameId = e.getGameID();
-		type = e.getType();
-		entityID = e.getID();
-		data = e.getCreationData();
+		gameId = gameId;
+
+	}
+	
+	
+	public void Add(IEntity e) {
+		//super(true, true);
+		
+		NewEntityData ned = new NewEntityData();
+		ned.type = e.getType();
+		ned.entityID = e.getID();
+		ned.data = e.getCreationData();
+		
+		data.add(ned);
 	}
 
 }

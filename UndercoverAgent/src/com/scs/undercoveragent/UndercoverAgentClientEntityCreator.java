@@ -5,13 +5,12 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.DebuggingBox;
 import com.scs.stevetech1.entities.DebuggingSphere;
-import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.undercoveragent.entities.BigTreeWithLeaves;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.InvisibleMapBorder;
@@ -77,7 +76,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 	
 	//@Override
-	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
+	public IEntity createEntity(AbstractGameClient game, NewEntityData msg) {
 		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Creating " + TypeToString(msg.type));
 		}*/

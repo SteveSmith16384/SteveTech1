@@ -545,11 +545,11 @@ ConsoleInputListener {
 			for (IEntity e : entities.values()) {
 				NewEntityMessage nem = new NewEntityMessage(e);
 				this.gameNetworkServer.sendMessageToClient(client, nem);
-				try {
+				/*try {
 					Thread.sleep(5); // scs new
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
-				}
+				}*/
 			}
 			GeneralCommandMessage aes = new GeneralCommandMessage(GeneralCommandMessage.Command.AllEntitiesSent);
 			this.gameNetworkServer.sendMessageToClient(client, aes);

@@ -27,7 +27,7 @@ import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
-import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.weapons.HitscanRifle;
 
 public class MoonbaseAssaultClientEntityCreator {
@@ -75,7 +75,7 @@ public class MoonbaseAssaultClientEntityCreator {
 	}
 
 
-	public IEntity createEntity(AbstractGameClient game, NewEntityMessage msg) {
+	public IEntity createEntity(AbstractGameClient game, NewEntityData msg) {
 		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Creating " + TypeToString(msg.type));
 		}*/

@@ -4,7 +4,6 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.Camera;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.util.SkyFactory;
@@ -15,7 +14,7 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.AbstractHUDImage;
 import com.scs.stevetech1.hud.IHUD;
-import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
 import com.scs.undercoveragent.entities.SnowFloor;
@@ -132,7 +131,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 
 	@Override
-	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg) {
+	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg) {
 		return entityCreator.createEntity(client, msg);
 	}
 

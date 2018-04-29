@@ -70,6 +70,7 @@ import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
+import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
@@ -530,14 +531,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-			IEntity e = this.entities.get(newEntityMessage.entityID);
+			for (NewEntityData data : newEntityMessage.data) {
+			IEntity e = this.entities.get(data.entityID);
 			if (e == null) {// && this.isEntityGoingToBedAdded(newEntityMessage.entityID) == false) {
 				createEntity(newEntityMessage, newEntityMessage.timestamp);
 			} else {
 				// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
 				Globals.p("Ignoring new entity " + e);
 			}
-
+			}
+			
 		} else if (message instanceof EntityUpdateMessage) {
 			if (clientStatus >= STATUS_JOINED_GAME) {
 				EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
@@ -801,7 +804,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	protected final void createEntity(NewEntityMessage msg, long timeToCreate) {
+	protected final void createEntity(NewEntityData msg, long timeToCreate) {
 		if (msg.gameId == this.gameData.gameID) {
 			IEntity e = actuallyCreateEntity(this, msg);
 			if (e != null) {
@@ -820,7 +823,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	protected abstract IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg);
+	protected abstract IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg);
 
 
 	@Override

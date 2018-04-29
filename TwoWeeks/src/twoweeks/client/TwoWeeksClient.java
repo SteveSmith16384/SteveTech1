@@ -15,7 +15,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
-import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
 
 import ssmith.util.MyProperties;
@@ -136,7 +136,7 @@ public class TwoWeeksClient extends AbstractGameClient {
 
 
 	@Override
-	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg) {
+	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg) {
 		return entityCreator.createEntity(client, msg);
 	}
 
