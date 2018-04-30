@@ -63,8 +63,8 @@ public class Globals {
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
 	public static final boolean ONLY_ADJUST_CLIENT_ON_MOVE = false; // Only adjust the client avatar's position when the player moves them.
 
-	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*6;
-	public static final int KRYO_OBJECT_BUFFER_SIZE = 2048*24;//*6;
+	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*7;
+	public static final int KRYO_OBJECT_BUFFER_SIZE = 4096*3*24;
 	// Our movement speed
 	public static final float SMALLEST_MOVE_DIST = 0.001f;// 0.02f;
 	public static final float MAX_MOVE_DIST = 1f;

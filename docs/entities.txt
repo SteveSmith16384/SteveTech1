@@ -7,7 +7,8 @@ Guns/Abilities
 
 
 Players Bullets
-See other doc
+* See other doc
+
 
 AI Bullets
 * Treated like normal entities
@@ -15,3 +16,4 @@ AI Bullets
 
 Client-only entities
 * These are identified with a negative id
+

@@ -83,7 +83,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		if (pe instanceof Floor == false) {
 			// Change direction to away from blockage, unless it's a doior
 			if (pe instanceof Terrain1 == false) {
-				Globals.p("AISoldier has collided with " + pe);
+				//Globals.p("AISoldier has collided with " + pe);
 				//changeDirection(currDir.mult(-1));
 				changeDirection(getRandomDirection()); // Start us pointing in the right direction
 			}

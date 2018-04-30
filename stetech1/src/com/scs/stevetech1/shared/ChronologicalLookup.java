@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class ChronologicalLookup<T extends ITimeStamped> {
 
-	private LinkedList<T> positionData = new LinkedList<>(); // Newest entry is at the start - todo - rename
+	private LinkedList<T> chronoData = new LinkedList<>(); // Newest entry is at the start
 	private int maxEntries;
 	private boolean cleardown;
 
@@ -17,13 +17,13 @@ public class ChronologicalLookup<T extends ITimeStamped> {
 
 
 	public void addData(T data) {
-		synchronized (positionData) {
+		synchronized (chronoData) {
 			boolean added = false;
-			for(int i=0 ; i<this.positionData.size() ; i++) { // Goes backwards in time, number gets smaller
-				T epd = this.positionData.get(i);
+			for(int i=0 ; i<this.chronoData.size() ; i++) { // Goes backwards in time, number gets smaller
+				T epd = this.chronoData.get(i);
 				if (!added) {
 					if (data.getTimestamp() > epd.getTimestamp()) {
-						positionData.add(i, data);
+						chronoData.add(i, data);
 						added = true;
 						break;
 					}
@@ -31,7 +31,7 @@ public class ChronologicalLookup<T extends ITimeStamped> {
 			}
 			if (!added) {
 				// Add to end
-				positionData.add(data);
+				chronoData.add(data);
 			}
 			this.cleardown(maxEntries);
 		}
@@ -39,28 +39,28 @@ public class ChronologicalLookup<T extends ITimeStamped> {
 
 
 	public T get(long serverTimeToUse, boolean warn) {
-		synchronized (positionData) {
-			if (this.positionData.size() > 0) {
-				if (this.positionData.getFirst().getTimestamp() < serverTimeToUse) {
+		synchronized (chronoData) {
+			if (this.chronoData.size() > 0) {
+				if (this.chronoData.getFirst().getTimestamp() < serverTimeToUse) {
 					// Requested time is too soon
 					if (warn) {
 						//long diff = System.currentTimeMillis() - serverTimeToUse;
-						long startDiff = serverTimeToUse - positionData.getFirst().getTimestamp();
+						long startDiff = serverTimeToUse - chronoData.getFirst().getTimestamp();
 						//Globals.p("Warning: Requested time is " + startDiff + " too soon");
 						//Globals.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));
 					}
-					return this.positionData.getFirst(); // Our selected time is too soon!
-				} else if (this.positionData.getLast().getTimestamp() > serverTimeToUse) {
+					return this.chronoData.getFirst(); // Our selected time is too soon!
+				} else if (this.chronoData.getLast().getTimestamp() > serverTimeToUse) {
 					if (warn) {
 						//Globals.p(this.toString(serverTimeToUse));
 						//Globals.p("Warning: Requested time is too late");
 					}
-					return this.positionData.getLast(); // Our selected time is too late!
+					return this.chronoData.getLast(); // Our selected time is too late!
 				}
 
 				T firstEPD = null;
 				int pos = 0;
-				for(T secondEPD : this.positionData) { // Time gets earlier, number goes down
+				for(T secondEPD : this.chronoData) { // Time gets earlier, number goes down
 					if (firstEPD != null) {
 						if (firstEPD.getTimestamp() >= serverTimeToUse && secondEPD.getTimestamp() <= serverTimeToUse) {
 							if (cleardown) {
@@ -82,16 +82,16 @@ public class ChronologicalLookup<T extends ITimeStamped> {
 
 	private void cleardown(int num) {
 		if (num > 0) {
-			while (this.positionData.size() > num) {
-				this.positionData.removeLast();
+			while (this.chronoData.size() > num) {
+				this.chronoData.removeLast();
 			}
 		}
 	}
 
 
 	public void clear() {
-		synchronized (positionData) {
-			positionData.clear();
+		synchronized (chronoData) {
+			chronoData.clear();
 		}
 	}
 

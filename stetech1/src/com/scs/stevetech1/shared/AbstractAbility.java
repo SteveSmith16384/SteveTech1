@@ -22,7 +22,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	public int abilityNum;
 	private float timeUntilNextSend_secs = SEND_INT_SECS;
 	private long lastUpdateMsgTime;
-	private boolean active = false; // todo - rename
+	private boolean goingToBeActivated = false;
 
 	/**
 	 * _owner is null on the client side.
@@ -62,12 +62,12 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
-		if (this.active) {
+		if (this.goingToBeActivated) {
 			if (activate() == false) { // This will also send the message
 				Globals.p("Warning - activate ability failed!");
 				// todo - if false, tell client!
 			}
-			this.active = false;
+			this.goingToBeActivated = false;
 		}
 		timeUntilNextSend_secs -= tpf_secs;
 		if (timeUntilNextSend_secs <= 0) {
@@ -79,6 +79,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
+		if (this.playerID == client.getPlayerID()) { // Otherwise we only have an EnemyAvatar to add the ability to
 		if (owner == null) {
 			IEntity e = client.getEntity(this.avatarID);
 			if (e != null) {
@@ -89,6 +90,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 					ex.printStackTrace(); // todo - sometimes ai?
 				}
 			}
+		}
 		}
 	}
 
@@ -107,13 +109,13 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 	@Override
 	public void setToBeActivated(boolean b) {
-		this.active = b;
+		this.goingToBeActivated = b;
 	}
 
 
 	@Override
 	public boolean isGoingToBeActivated() {
-		return active;
+		return goingToBeActivated;
 	}
 
 

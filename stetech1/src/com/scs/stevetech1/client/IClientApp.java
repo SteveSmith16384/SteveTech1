@@ -5,6 +5,8 @@ import com.scs.stevetech1.netmessages.MyAbstractMessage;
 
 public interface IClientApp {
 
+	int getPlayerID();
+	
 	long getRenderTime();
 	
 	long getServerTime();

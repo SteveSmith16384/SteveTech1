@@ -73,21 +73,4 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 	}
 
 
-
-	/*
-	@Override
-	public void processChronoData(AbstractGameClient mainApp, long serverTimeToUse, float tpf_secs) {
-		super.processChronoData(mainApp, serverTimeToUse, tpf_secs);
-		
-		AvatarUpdateData epd = (AvatarUpdateData)this.chronoUpdateData.get(serverTimeToUse, true);
-		if (epd != null) {
-			Vector3f dir = new Vector3f(epd.aimDir.x, 0,  epd.aimDir.z); 
-			JMEAngleFunctions.rotateToDirection(avatarModel, dir);
-			
-			this.setAnimCode(epd.animationCode);
-		}
-
-	}
-*/
-
 }

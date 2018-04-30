@@ -18,22 +18,24 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 
 	private float timeLeft = DURATION;
 
-	public BulletTrail(IEntityController _game, int id, int type, ICanShoot shooter, Vector3f end) {//, ColorRGBA col, String tex) {
+	public BulletTrail(IEntityController _game, int id, int type, Vector3f start, Vector3f end) {//, ColorRGBA col, String tex) {
 		super(_game, id, type, "BulletTrail", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			creationData.put("shooterID", shooter.getID());
+			//creationData.put("shooterID", shooter.getID());
+			creationData.put("start", start);
 			creationData.put("end", end);
 			//creationData.put("col", col);
 			//creationData.put("tex", tex);
 		}
 
-		if (shooter != null) {
+		/*if (shooter != null) {
 			Vector3f start = shooter.getBulletStartPos();
 			BeamLaserModel laserNode = BeamLaserModel.Factory(game.getAssetManager(), start, end, ColorRGBA.White, !game.isServer(), "Textures/roblox.png", 0.004f);
 			this.mainNode.attachChild(laserNode);
-		}
+		}*/
+		
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
 		this.collideable = false;

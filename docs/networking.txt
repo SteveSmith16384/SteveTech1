@@ -24,8 +24,7 @@ Player shooting (hitscan)
 PLAYER SHOOTING
 Players gets sent "unshot" bullets/grenades
 If player shoots, client "shoots" the bullets immediately
-	NO!! The client then keeps the bullets in sync in the same way as for their avatar, by adjusting position
 The shooting client keeps it's own track of bullets, they are not syncd.  It also removes them when required
 The other clients also launch the bullets themselves and only remove them themselves
-
+If the server sends a "remove" message though, the client will remvoe them.
 

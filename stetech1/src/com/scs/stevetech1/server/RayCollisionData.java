@@ -5,13 +5,13 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 
 public class RayCollisionData implements Comparable<RayCollisionData> {
 
-	public PhysicalEntity entity; // todo - rename
+	public PhysicalEntity entityHit;
 	public float distance;
 	public Vector3f point;
 	public long timestamp; // for debugging
 	
 	public RayCollisionData(PhysicalEntity _pe, Vector3f _point, float _dist) {
-		entity = _pe;
+		entityHit = _pe;
 		point = _point;
 		distance = _dist;
 	}

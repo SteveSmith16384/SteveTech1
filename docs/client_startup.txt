@@ -1,0 +1,4 @@
+* Client connects
+* Client gets sent current game id
+* Client gets sent all ents
+* Client gets told all ents have been sent

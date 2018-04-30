@@ -46,20 +46,20 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				//Settings.p(hitThisMoment.entity + " has been shot!");
 
 				AbstractGameServer server = (AbstractGameServer)game;
-				server.collisionLogic.collision(hitThisMoment.entity, this);
+				server.collisionLogic.collision(hitThisMoment.entityHit, this);
 
 				/*Vector3f pos = this.hitThisMoment.point;
 				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), debugSphereType, pos.x, pos.y, pos.z, true, true); // Show where it hit
 				game.addEntity(ds);*/
 
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner, hitThisMoment.point);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner.getBulletStartPos(), hitThisMoment.point);
 				game.addEntity(bt);
 
 				this.hitThisMoment = null; // Clear it ready for next loop
 			} else {
 				// Bullet trail into the sky
 				Vector3f endPos = this.owner.getBulletStartPos().add(this.owner.getShootDir().mult(RANGE));
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner, endPos);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner.getBulletStartPos(), endPos);
 				game.addEntity(bt);
 			}
 		} else {
@@ -73,7 +73,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			RayCollisionData rcd = shooter.checkForCollisions(ray);
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
-				Globals.p("Hit " + rcd.entity + " at " + pos);
+				Globals.p("Hit " + rcd.entityHit + " at " + pos);
 				
 				//AbstractGameClient client = (AbstractGameClient)game;
 				
@@ -82,13 +82,13 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				//game.addClientOnlyEntity(ds);
 				
 				// Show bullet trails
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner, pos);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner.getBulletStartPos(), pos);
 				game.addClientOnlyEntity(bt);
 			} else {
 				Globals.p("Not hit anything");
 				// Bullet trail into the sky
 				Vector3f endPos = this.owner.getBulletStartPos().add(this.owner.getShootDir().mult(RANGE));
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner, endPos);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner.getBulletStartPos(), endPos);
 				//AbstractGameClient client = (AbstractGameClient)game;
 				game.addClientOnlyEntity(bt);
 			}

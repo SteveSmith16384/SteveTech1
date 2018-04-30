@@ -50,7 +50,7 @@ public class WanderingSoldierAI2 implements IArtificialIntelligence {
 		if (pe instanceof Floor == false) {
 			// Change direction to away from blockage, unless it's a door
 			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof MapBorder) {
-				Globals.p("AISoldier has collided with " + pe);
+				//Globals.p("AISoldier has collided with " + pe);
 				//changeDirection(currDir.mult(-1));
 				changeDirection(getRandomDirection()); // Start us pointing in the right direction
 			} else if (pe instanceof AbstractAvatar) {

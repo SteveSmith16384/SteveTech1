@@ -112,7 +112,7 @@ ConsoleInputListener {
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
 	private boolean removingAllEntities = false; // Don't send "remove" messages
 
-	public SimpleGameData gameData;
+	protected SimpleGameData gameData;
 
 	public AbstractGameServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
 		//float gravity, float aerodynamicness) {
@@ -155,7 +155,7 @@ ConsoleInputListener {
 		// Start console
 		new TextConsole(this);
 
-		startNewGame();
+		startNewGame(); // Even though there are no players connected, this created the gameData to avoid NPEs.
 
 		loopTimer.start();
 	}
@@ -245,15 +245,7 @@ ConsoleInputListener {
 			}
 
 			// Add and remove entities - do this as close to the list iteration as possible!
-			/*for(IEntity e : this.entitiesToAdd) {
-				this.actuallyAddEntity(e, true);
-			}
-			this.entitiesToAdd.clear();*/
-
-			for(Integer i : this.entitiesToRemove) {
-				this.actuallyRemoveEntity(i);
-			}
-			this.entitiesToRemove.clear();
+			this.actuallyRemoveEntities();
 
 			synchronized (this.clients) {
 				// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
@@ -273,20 +265,22 @@ ConsoleInputListener {
 						AbstractServerAvatar avatar = c.avatar;
 						if (avatar != null) {
 							ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
-							Vector3f from = avatar.getBulletStartPos();
-							if (Globals.DEBUG_SHOOTING_POS) {
-								Globals.p("Server shooting from " + from);
-							}
-							Ray ray = new Ray(from, avatar.getShootDir());
-							ray.setLimit(chip.getRange());
-							RayCollisionData rcd = avatar.checkForCollisions(ray);//, chip.getRange());
-							if (rcd != null) {
-								if (Globals.DEBUG_BULLET_HIT) {
-									Globals.p("Ray hit " + rcd.entity);
+							if (chip != null) {
+								Vector3f from = avatar.getBulletStartPos();
+								if (Globals.DEBUG_SHOOTING_POS) {
+									Globals.p("Server shooting from " + from);
 								}
-								rcd.timestamp = timeTo; // For debugging
+								Ray ray = new Ray(from, avatar.getShootDir());
+								ray.setLimit(chip.getRange());
+								RayCollisionData rcd = avatar.checkForCollisions(ray);//, chip.getRange());
+								if (rcd != null) {
+									if (Globals.DEBUG_BULLET_HIT) {
+										Globals.p("Ray hit " + rcd.entityHit);
+									}
+									rcd.timestamp = timeTo; // For debugging
+								}
+								chip.setTarget(rcd); // Damage etc.. is calculated later
 							}
-							chip.setTarget(rcd); // Damage etc.. is calculated later
 						}
 					}
 					this.restoreEntityPositions();
@@ -367,8 +361,8 @@ ConsoleInputListener {
 
 	protected synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
-		if (!newPlayerMessage.gameID.equalsIgnoreCase(gameCode)) {
-			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game ID"));
+		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
+			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
 			return;
 		}
 		if (!this.doWeHaveSpaces()) {
@@ -378,11 +372,11 @@ ConsoleInputListener {
 
 		client.side = getSide(client);
 		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.playerName, client.side);
-		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side));//, client.avatar.id)); // Must be before we send the avatar so they know it's their avatar
+		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side)); // Must be before we send the avatar so they know it's their avatar
 		client.avatar = createPlayersAvatar(client);
 		sendGameStatusMessage();
-		sendAllEntitiesToClient(client);
 		client.clientStatus = ClientData.ClientStatus.Accepted;
+		sendAllEntitiesToClient(client);
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 		this.pingSystem.sendPingToClient(client);
 		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
@@ -428,9 +422,19 @@ ConsoleInputListener {
 		for (IEntity e : this.entities.values()) {
 			e.remove();
 		}
+		this.actuallyRemoveEntities();
 
 		//this.entitiesToAdd.clear();  Not needed?
 		//this.entitiesToRemove.clear(); Not needed?
+
+	}
+	
+	
+	private void actuallyRemoveEntities() {
+		for(Integer i : this.entitiesToRemove) {
+			this.actuallyRemoveEntity(i);
+		}
+		this.entitiesToRemove.clear();
 
 	}
 
@@ -460,11 +464,13 @@ ConsoleInputListener {
 		// Create avatars and send new entities to players
 		synchronized (this.clients) {
 			for (ClientData client : this.clients.values()) {
-				int side = getSide(client); // New sides
-				client.playerData.side = side;
-				client.avatar = createPlayersAvatar(client);
-				sendAllEntitiesToClient(client);
-				this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
+				if (client.clientStatus == ClientData.ClientStatus.Accepted) {
+					int side = getSide(client); // New sides
+					client.playerData.side = side;
+					client.avatar = createPlayersAvatar(client);
+					sendAllEntitiesToClient(client);
+					this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
+				}
 			}
 		}
 
@@ -545,17 +551,13 @@ ConsoleInputListener {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {
-				nem.data.add(new NewEntityData(e));
-				if (nem.isFull()) {
-					this.gameNetworkServer.sendMessageToClient(client, nem);
-					nem = new NewEntityMessage(this.getGameID());
+				if (e.getGameID() == this.getGameID()) { // Since we might still have old entities that have not actually been removed!
+					nem.data.add(new NewEntityData(e));
+					if (nem.isFull()) {
+						this.gameNetworkServer.sendMessageToClient(client, nem);
+						nem = new NewEntityMessage(this.getGameID());
+					}
 				}
-
-				/*try {
-					Thread.sleep(5); // scs new
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}*/
 			}
 			this.gameNetworkServer.sendMessageToClient(client, nem);
 		}
@@ -787,17 +789,24 @@ ConsoleInputListener {
 	}
 
 
-	public void gameStatusChanged(int newStatus)  {
+	public void gameStatusChanged(int newStatus) {
 		if (newStatus == SimpleGameData.ST_DEPLOYING) {
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities, this.getGameID())); // Before we increment the game id!
 			gameData.gameID++;
+			Globals.p("------------------------------");
 			Globals.p("Starting new game " + gameData.gameID);
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting, this.getGameID()));
 			sendGameStatusMessage(); // To send the new game ID
 
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities, this.getGameID()));
-			removingAllEntities = true;
+			removingAllEntities = true; // Prevent sending "remove entities" messages for all the entities
 			removeOldGame();
 			removingAllEntities = false;
+			/*
+			try {
+				Thread.sleep(2 * 1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}*/
 
 			startNewGame();
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted, this.getGameID()));
@@ -937,4 +946,7 @@ ConsoleInputListener {
 	}
 	 */
 
+	public SimpleGameData getGameData() {
+		return this.gameData;
+	}
 }

@@ -538,7 +538,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						createEntity(data);
 					} else {
 						// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
-						Globals.p("Ignoring new entity " + e);
+						Globals.p("Ignoring new entity " + e + " as we already know about i");
 					}
 				}
 			} else {
@@ -597,7 +597,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof GeneralCommandMessage) {
 			GeneralCommandMessage msg = (GeneralCommandMessage)message;
-			if (msg.gameID == this.getGameID()) {
+			//if (msg.gameID == this.getGameID()) { Might not have game id
 				if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
 					clientStatus = STATUS_STARTED;
 					this.getRootNode().attachChild(this.gameNode);
@@ -612,9 +612,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				} else {
 					throw new RuntimeException("Unknown command:" + msg.command);
 				}
-			} else {
+			/*} else {
 				Globals.p("Ignoring GeneralCommandMessage for gameid " + msg.gameID);
-			}
+			}*/
 
 		} else if (message instanceof AbilityUpdateMessage) {
 			AbilityUpdateMessage aum = (AbilityUpdateMessage) message;
@@ -856,12 +856,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (e.getID() <= 0) {
 			throw new RuntimeException("ID must be positive if not client-side!");
 		}
-		/*this.entitiesToAdd.add(e);
-	}
 
-
-	private void actuallyAddEntity(IEntity e) {
-		this.entitiesToAdd.remove(e);*/
 		synchronized (entities) {
 			if (e.getID() <= 0) {
 				throw new RuntimeException("No entity id!");
@@ -875,6 +870,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				e2.remove();
 				this.actuallyRemoveEntity(e2.getID());*/
 				throw new RuntimeException("Entity " + e + " already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
+			}
+			if (e.getGameID() != this.getGameID()) {
+				throw new RuntimeException("Entity is for game " + e.getGameID() + ", current game is " + this.getGameID());
 			}
 			this.entities.put(e.getID(), e);
 			if (e.requiresProcessing()) {
@@ -922,6 +920,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	private void removeAllEntities() {
+		Globals.p("Removing all entities");
 		while (this.entities.size() > 0) {
 			Iterator<IEntity> it = this.entities.values().iterator();
 			IEntity e = it.next();
@@ -1265,6 +1264,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		}
 		return null;
+	}
+
+
+	@Override
+	public int getPlayerID() {
+		return playerID;
 	}
 
 

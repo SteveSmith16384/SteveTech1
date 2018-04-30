@@ -263,7 +263,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
 				if (pe != this && pe.collideable) {
 					if (this instanceof IPlayerLaunchable) {
-						IPlayerLaunchable bullet = (IPlayerLaunchable)this; // todo - not every time
+						IPlayerLaunchable bullet = (IPlayerLaunchable)this;
 						if (bullet.getLauncher() == pe) { // Don't collide with shooter
 							continue;
 						}

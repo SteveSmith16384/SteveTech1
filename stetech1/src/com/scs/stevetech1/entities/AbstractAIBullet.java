@@ -47,7 +47,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 			RayCollisionData rcd = this.checkForCollisions(ray);
 			if (rcd != null) {
 				this.remove();
-				server.collisionOccurred(this, rcd.entity);
+				server.collisionOccurred(this, rcd.entityHit);
 			} else {
 				// Move spatial
 				Vector3f offset = this.dir.mult(speed * tpf_secs);

@@ -19,7 +19,7 @@ public class ServerGameStatusSystem {
 
 	
 	public void checkGameStatus(boolean playersChanged) {
-		SimpleGameData gameData = server.gameData;
+		SimpleGameData gameData = server.getGameData();
 		GameOptions gameOptions = server.gameOptions;
 		
 		int oldStatus = gameData.getGameStatus();

@@ -45,7 +45,8 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
-
+	private Vector3f tmpPrevPos = new Vector3f();
+	
 	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean _movedByForces, T _tag) {
 		super();
 
@@ -121,10 +122,10 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.x + additionalForce.x;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
-					Vector3f prevPos = this.getBoundingBox().getCenter().clone(); // todo - don't create each time
+					tmpPrevPos.set(this.getBoundingBox().getCenter());
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
-						if (!checkForStep(crs2, prevPos, tmpMoveDir)) {
+						if (!checkForStep(crs2, tmpPrevPos, tmpMoveDir)) {
 							float bounce = this.bounciness;// * body.bounciness; // Combine bounciness?
 							oneOffForce.x = oneOffForce.x * bounce * -1;
 						}
@@ -138,10 +139,10 @@ public class SimpleRigidBody<T> implements Collidable {
 				float totalOffset = oneOffForce.z + additionalForce.z;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
-					Vector3f prevPos = this.getBoundingBox().getCenter().clone(); // todo - don't create each time
+					tmpPrevPos.set(this.getBoundingBox().getCenter());
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
-						if (!checkForStep(crs2, prevPos, this.tmpMoveDir)) {
+						if (!checkForStep(crs2, tmpPrevPos, this.tmpMoveDir)) {
 							float bounce = this.bounciness;// * body.bounciness;
 							oneOffForce.z = oneOffForce.z * bounce * -1; // Reverse direction
 						}

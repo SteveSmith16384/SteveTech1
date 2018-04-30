@@ -246,7 +246,11 @@ public class KryonetGameServer implements IGameMessageServer {
 				t.start();
 			}
 		} catch (KryoNetException ex) {
-			Globals.pe("Error sending to client: " + ex.getMessage());
+			if (Globals.STRICT) {
+				throw ex;
+			} else {
+				Globals.pe("Error sending to client: " + ex.getMessage()); // todo - drop client?
+			}
 		}
 
 	}

@@ -23,7 +23,7 @@ public class GeneralCommandMessage extends MyAbstractMessage {
 
 	
 	public GeneralCommandMessage(Command cmd, int _gameID) {
-		super(true, false);
+		super(true, true); // Must be scheduled, otherwise we'll get the command to delete all entities and process it before we get the command to create the entities themselves.
 		
 		command = cmd;
 		gameID = _gameID;

@@ -5,17 +5,17 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class NewPlayerRequestMessage extends MyAbstractMessage {
 	
-	public String gameID;
+	public String gameCode;
 	public String playerName;
 
 	public NewPlayerRequestMessage() {
 		this(null, null);
 	}
 	
-	public NewPlayerRequestMessage(String _gameID, String _playerName) {
+	public NewPlayerRequestMessage(String _gameCode, String _playerName) {
 		super(true, false);
 		
-		gameID = _gameID;
+		gameCode = _gameCode;
 		playerName = _playerName;
 		//side = (byte)_side;
 	}

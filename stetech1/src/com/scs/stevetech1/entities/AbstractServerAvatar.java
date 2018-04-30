@@ -95,7 +95,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
-		if (server.gameData.getGameStatus() == SimpleGameData.ST_STARTED) {
+		if (server.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
 			if (this.alive && invulnerableTimeSecs < 0) {
 				this.decHealth(amt);
 				if (this.getHealth() <= 0) {
