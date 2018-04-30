@@ -6,7 +6,7 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
-import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.netmessages.NewEntityData;
 
 import boxwars.server.BoxWarsGameServer;
 
@@ -54,7 +54,7 @@ public class BoxWarsGameClient extends AbstractGameClient {
 	}
 
 	@Override
-	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityMessage msg) {
+	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg) {
 		// TODO Auto-generated method stub
 		return null;
 	}

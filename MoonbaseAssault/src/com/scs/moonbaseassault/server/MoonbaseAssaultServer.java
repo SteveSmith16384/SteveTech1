@@ -202,7 +202,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		MoonbaseWall wall3 = new MoonbaseWall(this, getNextEntityID(), 6, 0, 4, 1, CEILING_HEIGHT, 3, "Textures/spacewall2.png");//, 0);
 		this.actuallyAddEntity(wall3);
 		 */
-		
+
 		// Place floor & ceiling last
 		//Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
 		//this.actuallyAddEntity(floor);
@@ -222,10 +222,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		float startHeight = .1f;
 		List<Point> deploySquares = this.deploySquares[side-1];
 		boolean found = false;
-		while (true) {
-			Point p = deploySquares.get(NumberFunctions.rnd(0, deploySquares.size()));
-		}
-		for (Point p : deploySquares) {
+		while (true) { // todo - only try a certain number of times
+			Point p = deploySquares.get(NumberFunctions.rnd(0, deploySquares.size()-1));
+			//for (Point p : deploySquares) {
 			soldier.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
 			if (soldier.simpleRigidBody.checkForCollisions().size() == 0) {
 				found = true;

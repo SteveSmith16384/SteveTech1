@@ -165,7 +165,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private int gamePort;//, lobbyPort;
 	private float mouseSens;
 	private boolean gamePaused = true; // Prevent client doing stuff while setting up
-	
+
 	// Entity systems
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
@@ -531,16 +531,21 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-			for (NewEntityData data : newEntityMessage.data) {
-			IEntity e = this.entities.get(data.entityID);
-			if (e == null) {// && this.isEntityGoingToBedAdded(newEntityMessage.entityID) == false) {
-				createEntity(newEntityMessage, newEntityMessage.timestamp);
+			if (newEntityMessage.gameId == this.gameData.gameID) {
+				for (NewEntityData data : newEntityMessage.data) {
+					IEntity e = this.entities.get(data.entityID);
+					if (e == null) {// && this.isEntityGoingToBedAdded(newEntityMessage.entityID) == false) {
+						createEntity(data);
+					} else {
+						// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
+						Globals.p("Ignoring new entity " + e);
+					}
+				}
 			} else {
-				// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
-				Globals.p("Ignoring new entity " + e);
+				Globals.p("Ignoring NewEntityMessage for game " + newEntityMessage.gameId);
+				// It's not for this game, so ignore it
 			}
-			}
-			
+
 		} else if (message instanceof EntityUpdateMessage) {
 			if (clientStatus >= STATUS_JOINED_GAME) {
 				EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
@@ -586,25 +591,29 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 				}*/
 				//if (!found) {
-					Globals.p("Ignoring msg to remove entity " + rem.entityID + " as we have no record of it");
+				Globals.p("Ignoring msg to remove entity " + rem.entityID + " as we have no record of it");
 				//}
 			}
 
 		} else if (message instanceof GeneralCommandMessage) {
 			GeneralCommandMessage msg = (GeneralCommandMessage)message;
-			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
-				clientStatus = STATUS_STARTED;
-				this.getRootNode().attachChild(this.gameNode);
-				this.showPlayersWeapon();
-				gamePaused = false;
-			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
-				this.removeAllEntities();
-			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) { // We now have enough data to start
-				gamePaused = true;
-			} else if (msg.command == GeneralCommandMessage.Command.GameRestarted) { // We now have enough data to start
-				gamePaused = false;
+			if (msg.gameID == this.getGameID()) {
+				if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
+					clientStatus = STATUS_STARTED;
+					this.getRootNode().attachChild(this.gameNode);
+					this.showPlayersWeapon();
+					gamePaused = false;
+				} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
+					this.removeAllEntities();
+				} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) { // We now have enough data to start
+					gamePaused = true;
+				} else if (msg.command == GeneralCommandMessage.Command.GameRestarted) { // We now have enough data to start
+					gamePaused = false;
+				} else {
+					throw new RuntimeException("Unknown command:" + msg.command);
+				}
 			} else {
-				throw new RuntimeException("Unknown command:" + msg.command);
+				Globals.p("Ignoring GeneralCommandMessage for gameid " + msg.gameID);
 			}
 
 		} else if (message instanceof AbilityUpdateMessage) {
@@ -709,7 +718,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}
 
-/*
+	/*
 	private boolean isEntityGoingToBedAdded(int id) {
 		Iterator<IEntity> it = this.entitiesToAdd.iterator();
 		while (it.hasNext()) {
@@ -720,7 +729,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 		return false;
 	}
-*/
+	 */
 
 	private void setAvatar(IEntity e) {
 		this.currentAvatar = (AbstractClientAvatar)e;//this.entities.get(currentAvatarID);
@@ -804,21 +813,21 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	protected final void createEntity(NewEntityData msg, long timeToCreate) {
-		if (msg.gameId == this.gameData.gameID) {
-			IEntity e = actuallyCreateEntity(this, msg);
-			if (e != null) {
-				/*if (e instanceof AbstractAvatar || e instanceof IAbility || e instanceof AbstractEnemyAvatar) {
+	protected final void createEntity(NewEntityData msg) {
+		//if (msg.gameId == this.gameData.gameID) {
+		IEntity e = actuallyCreateEntity(this, msg);
+		if (e != null) {
+			/*if (e instanceof AbstractAvatar || e instanceof IAbility || e instanceof AbstractEnemyAvatar) {
 					this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to, or a grenade launcher to add a bullet to
 					// todo -point camera here
 				} else {*/
-					this.addEntity(e); // Schedule it for addition at the right time
-				//}
-			}
-		} else {
+			this.addEntity(e); // Schedule it for addition at the right time
+			//}
+		}
+		/*} else {
 			Globals.p("Ignoring entity for game " + msg.gameId);
 			// It's not for this game, so ignore it
-		}
+		}*/
 
 	}
 
@@ -925,8 +934,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		}
 	}
-	
-	
+
+
 	@Override
 	public void removeEntity(int id) {
 		if (id > 0) {
@@ -1247,8 +1256,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		}
 	}
-	
-	
+
+
 	private IEntity getClientOnlyEntityById(int id) {
 		for (IEntity e : this.clientOnlyEntities) {
 			if (e.getID() == id) {

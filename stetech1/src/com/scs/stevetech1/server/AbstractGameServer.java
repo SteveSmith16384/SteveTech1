@@ -40,6 +40,7 @@ import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
+import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
@@ -110,7 +111,7 @@ ConsoleInputListener {
 	public GameOptions gameOptions;
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
 	private boolean removingAllEntities = false; // Don't send "remove" messages
-	
+
 	public SimpleGameData gameData;
 
 	public AbstractGameServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
@@ -541,19 +542,25 @@ ConsoleInputListener {
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid);
 
 	protected void sendAllEntitiesToClient(ClientData client) {
+		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {
-				NewEntityMessage nem = new NewEntityMessage(e);
-				this.gameNetworkServer.sendMessageToClient(client, nem);
+				nem.data.add(new NewEntityData(e));
+				if (nem.isFull()) {
+					this.gameNetworkServer.sendMessageToClient(client, nem);
+					nem = new NewEntityMessage(this.getGameID());
+				}
+
 				/*try {
 					Thread.sleep(5); // scs new
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}*/
 			}
-			GeneralCommandMessage aes = new GeneralCommandMessage(GeneralCommandMessage.Command.AllEntitiesSent);
-			this.gameNetworkServer.sendMessageToClient(client, aes);
+			this.gameNetworkServer.sendMessageToClient(client, nem);
 		}
+		GeneralCommandMessage aes = new GeneralCommandMessage(GeneralCommandMessage.Command.AllEntitiesSent, this.getGameID());
+		this.gameNetworkServer.sendMessageToClient(client, aes);
 	}
 
 
@@ -595,11 +602,6 @@ ConsoleInputListener {
 
 
 	public void actuallyAddEntity(IEntity e) {
-		/*this.actuallyAddEntity(e, false);
-	}
-
-
-	public void actuallyAddEntity(IEntity e, boolean sendToClients) {*/
 		synchronized (entities) {
 			//Settings.p("Trying to add " + e + " (id " + e.getID() + ")");
 			if (this.entities.containsKey(e.getID())) {
@@ -632,7 +634,8 @@ ConsoleInputListener {
 		}
 
 		// Tell clients
-		NewEntityMessage nem = new NewEntityMessage(e);
+		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
+		nem.data.add(new NewEntityData(e));
 		synchronized (clients) {
 			for (ClientData client : this.clients.values()) {
 				if (client.clientStatus == ClientStatus.Accepted) {
@@ -788,16 +791,16 @@ ConsoleInputListener {
 		if (newStatus == SimpleGameData.ST_DEPLOYING) {
 			gameData.gameID++;
 			Globals.p("Starting new game " + gameData.gameID);
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting, this.getGameID()));
 			sendGameStatusMessage(); // To send the new game ID
-			
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities));
+
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities, this.getGameID()));
 			removingAllEntities = true;
 			removeOldGame();
 			removingAllEntities = false;
-			
+
 			startNewGame();
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted, this.getGameID()));
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {
 				for (IEntity e : entities.values()) {
@@ -921,7 +924,7 @@ ConsoleInputListener {
 	public void playerKilled(AbstractServerAvatar avatar) {
 		// Override if req
 	}
-	
+
 
 	/*
 	private void connectToLobby() {
@@ -932,6 +935,6 @@ ConsoleInputListener {
 			Globals.p("Unable to connect to lobby server");
 		}	
 	}
-*/
+	 */
 
 }

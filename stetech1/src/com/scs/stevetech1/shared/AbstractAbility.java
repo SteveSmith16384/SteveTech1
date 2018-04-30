@@ -82,8 +82,12 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 		if (owner == null) {
 			IEntity e = client.getEntity(this.avatarID);
 			if (e != null) {
-				owner = (AbstractAvatar)e; // todo - sometinmes ai?
-				owner.ability[abilityNum] = this;
+				try {
+					owner = (AbstractAvatar)e;
+					owner.ability[abilityNum] = this;
+				} catch (ClassCastException ex) {
+					ex.printStackTrace(); // todo - sometimes ai?
+				}
 			}
 		}
 	}

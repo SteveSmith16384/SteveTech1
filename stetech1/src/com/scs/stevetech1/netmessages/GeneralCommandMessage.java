@@ -5,6 +5,8 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class GeneralCommandMessage extends MyAbstractMessage {
 
+	public int gameID;
+	
 	public enum Command {
 		AllEntitiesSent, // todo - remove this
 		RemoveAllEntities,
@@ -20,10 +22,11 @@ public class GeneralCommandMessage extends MyAbstractMessage {
 	}
 
 	
-	public GeneralCommandMessage(Command cmd) {
+	public GeneralCommandMessage(Command cmd, int _gameID) {
 		super(true, false);
 		
 		command = cmd;
+		gameID = _gameID;
 	}
 
 
