@@ -24,6 +24,10 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
 
+/**
+ * This is the superclass for the client-side players avatar.
+ *
+ */
 public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient, IKillable {
 
 	public IHUD hud;
@@ -31,9 +35,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	private Spatial debugNode;
 
-	public AbstractClientAvatar(AbstractGameClient _client, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
+	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
 			float x, float y, float z, int side, IAvatarModel avatarModel, float _moveSpeed, float _jumpSpeed) {
-		super(_client, _playerID, _input, eid, side, avatarModel);
+		super(_client, avatarType, _playerID, _input, eid, side, avatarModel);
 
 		cam = _cam;
 		hud = _hud;
@@ -41,11 +45,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		this.setJumpForce(_jumpSpeed);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
-
-		/*if (Globals.DEBUG_AVATAR_SET) {
-			Globals.p("Avatar for player " + _playerID + " is now " + this);
-		}*/
-		//_client.currentAvatar = this;
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			createDebugBox();

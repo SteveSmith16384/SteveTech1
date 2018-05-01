@@ -96,7 +96,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				AbstractEnemyAvatar avatar = new SnowmanEnemyAvatar(game, AVATAR, playerID, id, pos.x, pos.y, pos.z, side);
+				AbstractEnemyAvatar avatar = new SnowmanEnemyAvatar(game, id, pos.x, pos.y, pos.z, side);
 				return avatar;
 			}
 		}

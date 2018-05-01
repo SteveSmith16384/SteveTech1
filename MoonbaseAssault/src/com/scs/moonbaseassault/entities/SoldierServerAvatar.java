@@ -12,8 +12,8 @@ import com.scs.stevetech1.weapons.HitscanRifle;
 
 public class SoldierServerAvatar extends AbstractServerAvatar { //implements IUnit {
 	
-	public SoldierServerAvatar(MoonbaseAssaultServer _module, ClientData client, int _playerID, IInputDevice _input, int eid) {
-		super(_module, client, _playerID, _input, eid, new SoldierModel(_module.getAssetManager()));
+	public SoldierServerAvatar(MoonbaseAssaultServer _module, ClientData client, IInputDevice _input, int eid) {
+		super(_module, MoonbaseAssaultClientEntityCreator.SOLDIER_AVATAR, client, _input, eid, new SoldierModel(_module.getAssetManager()));
 		
 		//IAbility abilityGun = new LaserRifle(_module, _module.getNextEntityID(), client.getPlayerID(), this, eid, 0, client);
 		IAbility abilityGun = new HitscanRifle(_module, _module.getNextEntityID(), MoonbaseAssaultClientEntityCreator.HITSCAN_RIFLE, client.getPlayerID(), this, eid, 0, client, MoonbaseAssaultClientEntityCreator.BULLET_TRAIL, MoonbaseAssaultClientEntityCreator.DEBUGGING_SPHERE);

@@ -2,6 +2,7 @@ package com.scs.unittestgame;
 
 import java.io.IOException;
 
+import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
@@ -12,11 +13,15 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.unittestgame.entities.McGuffinEntity;
+import com.scs.unittestgame.entities.ServerAvatarEntity;
 
 public class UnitTestGameServer extends AbstractGameServer {
 
 	public static final int PORT = 16384;
+	
 	public static final int MCGUFFIN_ID = 1;
+	public static final int AVATAR_ID = 2;
+	public static final int ABILITY_ID = 3;
 
 	public static void main(String[] args) {
 		try {
@@ -29,7 +34,10 @@ public class UnitTestGameServer extends AbstractGameServer {
 	private UnitTestGameServer() throws IOException {
 		super("UnitTest", 
 				new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
-				25, 50, 200, 10000);
+				25, 50, 200, Integer.MAX_VALUE);
+		
+		super.physicsController.setGravity(0); // stop things falling
+		
 		start(JmeContext.Type.Headless);
 
 	}
@@ -57,9 +65,9 @@ public class UnitTestGameServer extends AbstractGameServer {
 
 	@Override
 	protected void createGame() {
-		this.gameData = new SimpleGameData();
+		//this.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
 		
-		for (int i=0 ; i<100 ; i++) {
+		for (int i=0 ; i<2 ; i++) {
 			McGuffinEntity e = new McGuffinEntity(this, this.getNextEntityID());
 			this.actuallyAddEntity(e);
 		}
@@ -70,17 +78,19 @@ public class UnitTestGameServer extends AbstractGameServer {
 	public float getAvatarStartHealth(AbstractAvatar avatar) {
 		return 1;
 	}
+	
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		// Do nothing
+		avatar.setWorldTranslation(new Vector3f(0, 10, 0)); // stop them falling off edge
 	}
 
+	
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ServerAvatarEntity(this, client, entityid);
 	}
+	
 
 	@Override
 	protected int getWinningSide() {

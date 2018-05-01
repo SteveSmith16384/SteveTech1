@@ -10,8 +10,8 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 	//private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 	private CharacterModel model;
 
-	public TestGameEnemyAvatar(IEntityController game, int pid, int eid, float x, float y, float z, int side) {
-		super(game, TestGameClientEntityCreator.AVATAR, pid, eid, x, y, z, new CharacterModel(game.getAssetManager()), side);
+	public TestGameEnemyAvatar(IEntityController game, int eid, float x, float y, float z, int side) {
+		super(game, TestGameClientEntityCreator.AVATAR, eid, x, y, z, new CharacterModel(game.getAssetManager()), side);
 		
 		model = (CharacterModel)super.anim;
 	}

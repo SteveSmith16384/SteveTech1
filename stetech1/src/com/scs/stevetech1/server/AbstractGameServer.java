@@ -79,7 +79,7 @@ ICollisionListener<PhysicalEntity>,
 ConsoleInputListener {
 
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
-	protected static AtomicInteger nextGameID = new AtomicInteger(1);
+	private static AtomicInteger nextGameID = new AtomicInteger(1);
 
 	//private KryonetLobbyClient clientToLobbyServer;
 	//private RealtimeInterval updateLobbyInterval = new RealtimeInterval(30 * 1000);
@@ -111,9 +111,9 @@ ConsoleInputListener {
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
-	private boolean removingAllEntities = false; // Don't send "remove" messages
+	private boolean removingAllEntities = false; // Don't send "remove" messages  todo - reame
 
-	protected SimpleGameData gameData;
+	protected SimpleGameData gameData = new SimpleGameData();
 
 	public AbstractGameServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
 		//float gravity, float aerodynamicness) {
@@ -371,12 +371,13 @@ ConsoleInputListener {
 			return;
 		}
 
+		client.clientStatus = ClientData.ClientStatus.Accepted;
 		client.side = getSide(client);
 		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.playerName, client.side);
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side)); // Must be before we send the avatar so they know it's their avatar
+		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
 		sendGameStatusMessage();
-		client.clientStatus = ClientData.ClientStatus.Accepted;
 		sendAllEntitiesToClient(client);
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 		this.pingSystem.sendPingToClient(client);
@@ -425,9 +426,6 @@ ConsoleInputListener {
 		}
 		this.actuallyRemoveEntities();
 
-		//this.entitiesToAdd.clear();  Not needed?
-		//this.entitiesToRemove.clear(); Not needed?
-
 	}
 	
 	
@@ -441,11 +439,8 @@ ConsoleInputListener {
 
 
 	protected void startNewGame() {
-		/*if (this.entities.size() > 0) {
+		if (this.entities.size() > 0) {
 			throw new RuntimeException("Outstanding entities");
-		}
-		if (this.entitiesToAdd.size() > 0) {
-			throw new RuntimeException("Entities waiting to be added");
 		}
 		if (this.entitiesToRemove.size() > 0) {
 			throw new RuntimeException("Entities waiting to be removed");
@@ -459,7 +454,7 @@ ConsoleInputListener {
 			Globals.p("Warning: There are still " + this.getPhysicsController().getEntities().size() + " children in the physics world!  Forcing removal...");
 			this.getPhysicsController().removeAllEntities();
 		}
-		 */
+
 		this.createGame();
 
 		// Create avatars and send new entities to players
@@ -469,7 +464,7 @@ ConsoleInputListener {
 					int side = getSide(client); // New sides
 					client.playerData.side = side;
 					client.avatar = createPlayersAvatar(client);
-					sendAllEntitiesToClient(client);
+					//sendAllEntitiesToClient(client); No need since we did it in createGame()
 					this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 				}
 			}
@@ -563,7 +558,7 @@ ConsoleInputListener {
 			}
 			this.gameNetworkServer.sendMessageToClient(client, nem);
 		}
-		GeneralCommandMessage aes = new GeneralCommandMessage(GeneralCommandMessage.Command.AllEntitiesSent, this.getGameID());
+		GeneralCommandMessage aes = new GeneralCommandMessage(GeneralCommandMessage.Command.AllEntitiesSent);
 		this.gameNetworkServer.sendMessageToClient(client, aes);
 	}
 
@@ -664,7 +659,7 @@ ConsoleInputListener {
 			IEntity e = this.entities.get(id); // this.entitiesToAdd
 			if (e != null) {
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-					Globals.p("Actually removing entity " + e + " ..and sending message to clients");
+					Globals.p("Actually removing entity " + e + (this.removingAllEntities ? "":" ..and sending message to clients"));
 				}
 				this.entities.remove(id);
 				if (e.requiresProcessing()) {
@@ -793,25 +788,20 @@ ConsoleInputListener {
 
 	public void gameStatusChanged(int newStatus) {
 		if (newStatus == SimpleGameData.ST_DEPLOYING) {
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities, this.getGameID())); // Before we increment the game id!
-			gameData.gameID++;
-			Globals.p("------------------------------");
-			Globals.p("Starting new game " + gameData.gameID);
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting, this.getGameID()));
-			sendGameStatusMessage(); // To send the new game ID
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
 
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities)); // Before we increment the game id!
 			removingAllEntities = true; // Prevent sending "remove entities" messages for all the entities
 			removeOldGame();
 			removingAllEntities = false;
-			/*
-			try {
-				Thread.sleep(2 * 1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
 
+			this.gameData.gameID = nextGameID.getAndAdd(1);
+			sendGameStatusMessage(); // To send the new game ID
 			startNewGame();
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted, this.getGameID()));
+			Globals.p("------------------------------");
+			Globals.p("Starting new game " + gameData.gameID);
+			//sendGameStatusMessage(); // To send the new game ID
+			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {
 				for (IEntity e : entities.values()) {
@@ -926,8 +916,9 @@ ConsoleInputListener {
 
 
 	private void showStats() {
+		Globals.p("Game ID: " + this.getGameID());
 		Globals.p("Num Entities: " + this.entities.size());
-		Globals.p("Num Entities for proc: " + this.entitiesForProcessing.size());
+		Globals.p("Num Entities for processing: " + this.entitiesForProcessing.size());
 		Globals.p("Num Clients: " + this.clients.size());
 	}
 

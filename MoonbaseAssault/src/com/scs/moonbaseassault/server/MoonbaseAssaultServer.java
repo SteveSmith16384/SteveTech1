@@ -109,6 +109,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		ceilingNode = new Node("Ceiling");
 		floorNode = new Node("Floor");
 
+		super.gameData = new MoonbaseAssaultGameData(this.getGameID()); // Replace normal data
+
 		super.simpleInitApp();
 	}
 
@@ -140,8 +142,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected void createGame() {
-		super.gameData = new MoonbaseAssaultGameData(nextGameID.getAndAdd(1));
-
 		this.getGameNode().attachChild(subNodeX0Y0);
 		this.getGameNode().attachChild(subNodeX1Y0);
 		this.getGameNode().attachChild(subNodeX0Y1);
@@ -244,7 +244,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
-		SoldierServerAvatar avatar = new SoldierServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
+		SoldierServerAvatar avatar = new SoldierServerAvatar(this, client, client.remoteInput, entityid);
 		return avatar;
 	}
 

@@ -82,8 +82,8 @@ public class ZombieModel implements IAvatarModel {
 
 
 	@Override
-	public BoundingBox getBoundingBox() {
-		return new BoundingBox(new Vector3f(), ZOMBIE_MODEL_WIDTH/2, ZOMBIE_MODEL_HEIGHT/2, ZOMBIE_MODEL_DEPTH/2);
+	public Vector3f getSize() {
+		return new Vector3f(ZOMBIE_MODEL_WIDTH, ZOMBIE_MODEL_HEIGHT, ZOMBIE_MODEL_DEPTH);
 	}
 
 

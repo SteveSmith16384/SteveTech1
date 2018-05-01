@@ -24,15 +24,16 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 	protected IAvatarModel anim;
 	private Spatial avatarModel;
 	
-	public AbstractEnemyAvatar(IEntityController game, int type, int pid, int eid, float x, float y, float z, IAvatarModel _anim, int side) {
+	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int side) {
 		super(game, eid, type, "EnemyAvatar", true);
 
 		anim = _anim;
 		
 		// Create box for collisions
-		Box box = new Box(anim.getBoundingBox().getXExtent(), anim.getBoundingBox().getYExtent(), anim.getBoundingBox().getZExtent());
+		//Box box = new Box(anim.getBoundingBox().getXExtent(), anim.getBoundingBox().getYExtent(), anim.getBoundingBox().getZExtent());
+		Box box = new Box(anim.getSize().x/2, anim.getSize().y/2, anim.getSize().z/2);
 		Geometry bbGeom = new Geometry("bbGeom_" + name, box);
-		bbGeom.setLocalTranslation(0, anim.getBoundingBox().getYExtent(), 0); // origin is centre!
+		bbGeom.setLocalTranslation(0, anim.getSize().y/2, 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw the collision box
 		this.mainNode.attachChild(bbGeom);
 

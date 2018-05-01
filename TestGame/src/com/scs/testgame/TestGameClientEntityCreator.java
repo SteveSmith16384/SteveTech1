@@ -74,7 +74,7 @@ public class TestGameClientEntityCreator {
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				AbstractEnemyAvatar avatar = new TestGameEnemyAvatar(game, playerID, id, pos.x, pos.y, pos.z, side);
+				AbstractEnemyAvatar avatar = new TestGameEnemyAvatar(game, id, pos.x, pos.y, pos.z, side);
 				return avatar;
 			}
 		}

@@ -1,6 +1,6 @@
 package com.scs.stevetech1.components;
 
-import com.jme3.bounding.BoundingBox;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 public interface IAvatarModel {
@@ -9,7 +9,8 @@ public interface IAvatarModel {
 	
 	Spatial getModel();
 	
-	BoundingBox getBoundingBox(); // todo - change to Vector3f getSize();
+	//BoundingBox getBoundingBox(); // todo - change to Vector3f getSize();
+	Vector3f getSize();
 	
 	float getCameraHeight();
 	

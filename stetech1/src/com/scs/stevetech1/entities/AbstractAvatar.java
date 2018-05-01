@@ -54,8 +54,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	private float jumpForce = 0;
 	public int currentAnimCode = -1;
 
-	public AbstractAvatar(IEntityController _game, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _avatarModel) {
-		super(_game, eid, 1, "Player", true);
+	public AbstractAvatar(IEntityController _game, int avatarType, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _avatarModel) {
+		super(_game, eid, avatarType, "Player", true);
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -69,9 +69,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		side =_side;
 		avatarModel = _avatarModel;
 		
-		Box box = new Box(avatarModel.getBoundingBox().getXExtent(), avatarModel.getBoundingBox().getYExtent(), avatarModel.getBoundingBox().getZExtent());
+		//Box box = new Box(avatarModel.getBoundingBox().getXExtent(), avatarModel.getBoundingBox().getYExtent(), avatarModel.getBoundingBox().getZExtent());
+		Box box = new Box(avatarModel.getSize().x/2, avatarModel.getSize().y/2, avatarModel.getSize().z/2);
 		bbGeom = new Geometry("bbGeom_" + name, box);
-		bbGeom.setLocalTranslation(0, avatarModel.getBoundingBox().getYExtent(), 0); // origin is centre!
+		//bbGeom.setLocalTranslation(0, avatarModel.getBoundingBox().getYExtent(), 0); // origin is centre!
+		bbGeom.setLocalTranslation(0, avatarModel.getSize().y/2, 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw ourselves
 
 		this.getMainNode().attachChild(bbGeom);

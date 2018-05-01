@@ -518,7 +518,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			SimpleGameData oldGameData = this.gameData;
 			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 			this.gameData = gsm.gameData;
-			//Globals.p("Game id is " + gameData.gameID);
+			if (oldGameData == null || oldGameData.gameID != gsm.gameData.gameID) {
+				Globals.p("Game id is now " + gameData.gameID);
+			}
 			this.playersList = gsm.players;
 			if (oldGameData == null) {
 				this.gameStatusChanged(-1, this.gameData.getGameStatus());
@@ -820,11 +822,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				} else {*/
 			this.addEntity(e); // Schedule it for addition at the right time
 			//}
-		}
-		/*} else {
-			Globals.p("Ignoring entity for game " + msg.gameId);
+		} else {
+			Globals.p("Not creating entity " + msg.entityID);
 			// It's not for this game, so ignore it
-		}*/
+		}
 
 	}
 
@@ -921,7 +922,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		while (this.entities.size() > 0) {
 			Iterator<IEntity> it = this.entities.values().iterator();
 			IEntity e = it.next();
-			e.remove();
+			e.remove(); // todo - onl;y remove for this game
 			it.remove();
 		}
 		if (Globals.STRICT) {

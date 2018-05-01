@@ -55,7 +55,7 @@ public class TestGameServer extends AbstractGameServer {
 
 	@Override
 	protected void createGame() {
-		super.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
+		//super.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
 		
 		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		this.actuallyAddEntity(floor);
@@ -97,7 +97,7 @@ public class TestGameServer extends AbstractGameServer {
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
-		return new TestGameServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
+		return new TestGameServerAvatar(this, client, client.remoteInput, entityid);
 	}
 
 

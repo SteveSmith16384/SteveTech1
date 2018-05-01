@@ -14,7 +14,7 @@ public class SimpleGameData { // POJO
 	public static final int ST_STARTED = 3; // Players released!
 	public static final int ST_FINISHED = 4;
 
-	public int gameID = 1; // Static since this gets recreated each time
+	public int gameID = 1;
 	private int gameStatus = ST_WAITING_FOR_PLAYERS;
 	private long statusStartTimeMS;
 	private long statusDurationMS;

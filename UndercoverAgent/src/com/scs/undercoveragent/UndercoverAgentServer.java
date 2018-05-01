@@ -122,7 +122,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	protected void createGame() {
-		super.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
+		//super.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
 		
 		if (Globals.EMPTY_MAP) {
 			// Do nothing
@@ -206,7 +206,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
-		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
+		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client, client.remoteInput, entityid);
 		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
 
 		IAbility abilityGun = new SnowballLauncher(this, client.getPlayerID(), getNextEntityID(), avatar, entityid, 0, client);

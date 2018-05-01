@@ -4,14 +4,11 @@ import java.util.HashMap;
 
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
-import com.jme3.animation.AnimEventListener;
 import com.jme3.asset.AssetManager;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import com.scs.stevetech1.components.IAvatarModel;
 
 public class CharacterModel implements IAvatarModel {
@@ -69,8 +66,8 @@ public class CharacterModel implements IAvatarModel {
 
 
 	@Override
-	public BoundingBox getBoundingBox() {
-		return new BoundingBox(new Vector3f(), MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
+	public Vector3f getSize() {
+		return new Vector3f(MODEL_WIDTH, MODEL_HEIGHT, MODEL_DEPTH);
 	}
 
 

@@ -122,7 +122,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	@Override
 	protected void createGame() {
-		super.gameData = new TwoWeeksGameData(nextGameID.getAndAdd(1));
+		//super.gameData = new TwoWeeksGameData(nextGameID.getAndAdd(1));
 
 		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0);
 		this.actuallyAddEntity(terrain); // terrain.getMainNode().getWorldBound();
@@ -274,7 +274,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
-		MercServerAvatar avatar = new MercServerAvatar(this, client, client.getPlayerID(), client.remoteInput, entityid);
+		MercServerAvatar avatar = new MercServerAvatar(this, client, client.remoteInput, entityid);
 
 		return avatar;
 	}

@@ -29,8 +29,8 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	private AbstractGameServer server;
 	public ClientData client;
 
-	public AbstractServerAvatar(IEntityController _module, ClientData _client, int _playerID, IInputDevice _input, int eid, IAvatarModel anim) {
-		super(_module, _playerID, _input, eid, _client.side, anim);
+	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim) {
+		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.side, anim);
 
 		server = (AbstractGameServer)_module;
 		client = _client;

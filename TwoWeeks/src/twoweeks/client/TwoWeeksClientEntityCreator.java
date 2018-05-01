@@ -78,7 +78,7 @@ public class TwoWeeksClientEntityCreator {
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				AbstractEnemyAvatar avatar = new MercEnemyAvatar(game, SOLDIER_AVATAR, playerID, id, pos.x, pos.y, pos.z, side);
+				AbstractEnemyAvatar avatar = new MercEnemyAvatar(game, SOLDIER_AVATAR, id, pos.x, pos.y, pos.z, side);
 				return avatar;
 			}
 		}

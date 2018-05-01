@@ -73,9 +73,10 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		}
 
 		// Create box for collisions
-		Box box = new Box(soldierModel.getBoundingBox().getXExtent(), soldierModel.getBoundingBox().getYExtent(), soldierModel.getBoundingBox().getZExtent());
+		//Box box = new Box(soldierModel.getBoundingBox().getXExtent(), soldierModel.getBoundingBox().getYExtent(), soldierModel.getBoundingBox().getZExtent());
+		Box box = new Box(soldierModel.getSize().x/2, soldierModel.getSize().y/2, soldierModel.getSize().z/2);
 		Geometry bbGeom = new Geometry("bbGeom_" + name, box);
-		bbGeom.setLocalTranslation(0, soldierModel.getBoundingBox().getYExtent(), 0); // origin is centre!
+		bbGeom.setLocalTranslation(0, soldierModel.getSize().y/2, 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw the collision box
 		bbGeom.setUserData(Globals.ENTITY, this);
 
@@ -89,7 +90,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
-		hudNode.setText("Cpl. Jonlan");
+		hudNode.setText("Cpl. Jonlan"); // todo - make param
 
 	}
 
@@ -213,7 +214,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		if (health > 0) {
 			FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 			if (insideoutside != FrustumIntersect.Outside) {
-				Vector3f pos = this.getWorldTranslation().add(0, soldierModel.getBoundingBox().getYExtent()*2, 0); // todo - not this every time
+				Vector3f pos = this.getWorldTranslation().add(0, soldierModel.getSize().y, 0); // todo - not this every time
 				Vector3f screen_pos = cam.getScreenCoordinates(pos);
 				this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 			}

@@ -14,6 +14,8 @@ public class SetAvatarMessage extends MyAbstractMessage {
 	
 	
 	public SetAvatarMessage(int _playerID, int _avatarEntityID) {
+		super(true, true);
+		
 		playerID = _playerID;
 		avatarEntityID = _avatarEntityID;
 	}
