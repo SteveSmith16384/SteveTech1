@@ -30,8 +30,9 @@ public class UnitTestGameServer extends AbstractGameServer {
 			e.printStackTrace();
 		}
 	}
+	
 
-	private UnitTestGameServer() throws IOException {
+	public UnitTestGameServer() throws IOException {
 		super("UnitTest", 
 				new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
 				25, 50, 200, Integer.MAX_VALUE);

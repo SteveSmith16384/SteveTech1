@@ -24,8 +24,9 @@ public class UnitTestGameClient extends AbstractGameClient {
 			e.printStackTrace();
 		}
 	}
+	
 
-	private UnitTestGameClient() {
+	public UnitTestGameClient() {
 		super("UnitTest", "Unit Test", null, "localhost", UnitTestGameServer.PORT, 25, 200, 10000, 1f);
 
 		start(JmeContext.Type.Headless);
@@ -45,7 +46,7 @@ public class UnitTestGameClient extends AbstractGameClient {
 
 	@Override
 	protected IHUD getHUD() {
-		return null;
+		return new DummyHUD();
 	}
 
 	@Override

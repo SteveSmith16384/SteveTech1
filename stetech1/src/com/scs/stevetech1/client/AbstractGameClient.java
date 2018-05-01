@@ -281,7 +281,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	protected abstract Class[] getListofMessageClasses();
 
-	protected abstract IHUD getHUD();
+	protected abstract IHUD getHUD(); // todo - pass in constructor
 
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;
@@ -597,20 +597,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else if (message instanceof GeneralCommandMessage) {
 			GeneralCommandMessage msg = (GeneralCommandMessage)message;
 			//if (msg.gameID == this.getGameID()) { Might not have game id
-				if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
-					clientStatus = STATUS_STARTED;
-					this.getRootNode().attachChild(this.gameNode);
-					this.showPlayersWeapon();
-					gamePaused = false;
-				} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
-					this.removeAllEntities();
-				} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) { // We now have enough data to start
-					gamePaused = true;
-				} else if (msg.command == GeneralCommandMessage.Command.GameRestarted) { // We now have enough data to start
-					gamePaused = false;
-				} else {
-					throw new RuntimeException("Unknown command:" + msg.command);
-				}
+			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
+				clientStatus = STATUS_STARTED;
+				this.getRootNode().attachChild(this.gameNode);
+				this.showPlayersWeapon();
+				gamePaused = false;
+			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
+				this.removeAllEntities();
+			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) { // We now have enough data to start
+				gamePaused = true;
+			} else if (msg.command == GeneralCommandMessage.Command.GameRestarted) { // We now have enough data to start
+				gamePaused = false;
+			} else {
+				throw new RuntimeException("Unknown command:" + msg.command);
+			}
 			/*} else {
 				Globals.p("Ignoring GeneralCommandMessage for gameid " + msg.gameID);
 			}*/
@@ -717,29 +717,21 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}
 
-	/*
-	private boolean isEntityGoingToBedAdded(int id) {
-		Iterator<IEntity> it = this.entitiesToAdd.iterator();
-		while (it.hasNext()) {
-			IEntity e = it.next();
-			if (e.getID() == id) {
-				return true;
-			}
-		}
-		return false;
-	}
-	 */
 
 	private void setAvatar(IEntity e) {
-		this.currentAvatar = (AbstractClientAvatar)e;//this.entities.get(currentAvatarID);
-		if (Globals.DEBUG_AVATAR_SET) {
-			Globals.p("Avatar for player is now " + currentAvatar);
+		if (e instanceof AbstractClientAvatar) {
+			this.currentAvatar = (AbstractClientAvatar)e;//this.entities.get(currentAvatarID);
+			if (Globals.DEBUG_AVATAR_SET) {
+				Globals.p("Avatar for player is now " + currentAvatar);
+			}
+
+			Vector3f look = new Vector3f(15f, 1f, 15f);
+			getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
+		} else {
+			throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName());
 		}
-
-		Vector3f look = new Vector3f(15f, 1f, 15f);
-		getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
-
 	}
+	
 
 	private void addDebugBox(ModelBoundsMessage msg) {
 		if (msg.bounds instanceof BoundingBox) {
