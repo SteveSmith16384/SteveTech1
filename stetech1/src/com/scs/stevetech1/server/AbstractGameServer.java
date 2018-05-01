@@ -132,7 +132,7 @@ ConsoleInputListener {
 
 		setShowSettings(false); // Don't show settings dialog
 		setPauseOnLostFocus(false);
-		start(JmeContext.Type.Headless); // todo - don't start immed!
+		//start(JmeContext.Type.Headless); // todo - don't start immed!
 	}
 
 
@@ -532,7 +532,7 @@ ConsoleInputListener {
 	}
 
 
-	public abstract float getAvatarStartHealth(AbstractAvatar avatar);
+	public abstract float getAvatarStartHealth(AbstractAvatar avatar); // todo - rename to ResetAvatar?
 
 	public float getAvatarMoveSpeed(AbstractAvatar avatar) {
 		return 3f; // Override if required

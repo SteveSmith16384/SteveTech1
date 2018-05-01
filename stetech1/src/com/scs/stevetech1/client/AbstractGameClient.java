@@ -207,16 +207,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		setSettings(settings);
 		setPauseOnLostFocus(false); // Needs to always be in sync with server!
 
-		start();
-
 		try {
 			settings.save(JME_SETTINGS_NAME);
 		} catch (BackingStoreException e) {
 			e.printStackTrace();
 		}
 
-
-
+		//start();
 	}
 
 

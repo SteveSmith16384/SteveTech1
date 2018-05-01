@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
+import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
@@ -96,6 +97,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
 
 		mapSize = _mapSize;
+		start(JmeContext.Type.Headless);
+
 	}
 
 

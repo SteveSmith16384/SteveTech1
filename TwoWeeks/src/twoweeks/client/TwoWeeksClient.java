@@ -66,7 +66,7 @@ public class TwoWeeksClient extends AbstractGameClient {
 			float mouseSensitivity) {
 		super(TwoWeeksServer.GAME_ID, "Two Weeks", null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity); 
-
+		start();
 	}
 
 

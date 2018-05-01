@@ -80,6 +80,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		super(MoonbaseAssaultServer.GAME_ID, "Moonbase Assault", null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity); // gravity, aerodynamicness, 
 
+		start();
 	}
 
 

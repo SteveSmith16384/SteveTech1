@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.jme3.scene.Node;
+import com.jme3.system.JmeContext;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
@@ -93,6 +94,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		super(GAME_ID, new GameOptions(10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
+		start(JmeContext.Type.Headless);
+
 
 	}
 

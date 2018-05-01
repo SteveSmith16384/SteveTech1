@@ -68,6 +68,8 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			float mouseSensitivity) {
 		super(UndercoverAgentServer.GAME_ID, UndercoverAgentServer.NAME, null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity);
+		start();
+		
 	}
 
 

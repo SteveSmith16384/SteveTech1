@@ -3,6 +3,7 @@ package com.scs.testgame;
 import java.io.IOException;
 
 import com.jme3.math.Vector3f;
+import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.data.GameOptions;
@@ -42,6 +43,7 @@ public class TestGameServer extends AbstractGameServer {
 				TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //TestGameStaticData.LOBBY_IP_ADDRESS, TestGameStaticData.LOBBY_PORT, 
 				5, 5),
 				25, 40, 200, Integer.MAX_VALUE);//, -5f, 0.99f);
+		start(JmeContext.Type.Headless);
 	}
 
 
