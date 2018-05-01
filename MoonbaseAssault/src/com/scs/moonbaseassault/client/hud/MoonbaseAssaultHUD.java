@@ -47,7 +47,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	private HUDMapImage hudMapImage;
 
 	private BitmapText abilityGun, abilityOther, healthText; // Update instantly 
-	private String debugText, gameStatus, gameTime, pingText, scoreText, numPlayers;
+	private String debugText, gameStatus, gameTime, pingText, scoreText, numPlayers, gameID;
 	private BitmapText textArea; 
 
 	public MoonbaseAssaultHUD(AbstractGameClient _game, Camera _cam) { 
@@ -183,6 +183,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 			this.attachChild(pic);
 		}*/
 
+		this.setDebugText("");
 
 		this.updateGeometricState();
 
@@ -196,6 +197,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	public void processByClient(AbstractGameClient client, float tpf) {
 		if (updateHudTextInterval.hitInterval()) {
 			if (client.gameData != null) {
+				this.gameID = "Game ID: " + client.gameData.gameID;
 				this.setGameStatus(SimpleGameData.getStatusDesc(client.gameData.getGameStatus()));
 				this.setGameTime(client.gameData.getTime(client.serverTime));
 				if (client.playersList != null) {
@@ -245,6 +247,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	private void updateTextArea() {
 		StringBuilder str = new StringBuilder();
 		str.append(this.debugText + "\n");
+		str.append(this.gameID + "\n");
 		str.append(this.gameStatus + "\n");
 		str.append(this.gameTime + "\n");
 		str.append(this.pingText + "\n");

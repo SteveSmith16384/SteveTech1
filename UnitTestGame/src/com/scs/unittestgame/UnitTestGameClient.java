@@ -8,11 +8,20 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.netmessages.NewEntityData;
+import com.scs.stevetech1.server.Globals;
 
 public class UnitTestGameClient extends AbstractGameClient {
 
-	public UnitTestGameClient() {
-		super("BoxWars", "Box Wars", null, "localhost", UnitTestGameServer.PORT, 25, 200, 10000, 1f);
+	public static void main(String[] args) {
+		try {
+			new UnitTestGameClient();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private UnitTestGameClient() {
+		super("UnitTest", "Unit Test", null, "localhost", UnitTestGameServer.PORT, 25, 200, 10000, 1f);
 
 		start(JmeContext.Type.Headless);
 
@@ -57,7 +66,7 @@ public class UnitTestGameClient extends AbstractGameClient {
 
 	@Override
 	protected void gameStatusChanged(int oldStatus, int newStatus) {
-		// TODO Auto-generated method stub
+		Globals.p("Game status changed to " + newStatus);
 		
 	}
 

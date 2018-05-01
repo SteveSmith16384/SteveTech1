@@ -89,7 +89,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	}
 */
 
-	public UndercoverAgentServer(int _mapSize, 
+	private UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException { // , float gravity, float aerodynamicness
 		super(GAME_ID, new GameOptions(10*1000, 60*1000, 10*1000, 

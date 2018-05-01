@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
+import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -25,8 +26,8 @@ public class UnitTestGameServer extends AbstractGameServer {
 		}
 	}
 
-	public UnitTestGameServer() throws IOException {
-		super("UnitTestGame", 
+	private UnitTestGameServer() throws IOException {
+		super("UnitTest", 
 				new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
 				25, 50, 200, 10000);
 		start(JmeContext.Type.Headless);
@@ -56,6 +57,8 @@ public class UnitTestGameServer extends AbstractGameServer {
 
 	@Override
 	protected void createGame() {
+		this.gameData = new SimpleGameData();
+		
 		for (int i=0 ; i<100 ; i++) {
 			McGuffinEntity e = new McGuffinEntity(this, this.getNextEntityID());
 			this.actuallyAddEntity(e);

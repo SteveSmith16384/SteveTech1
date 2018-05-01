@@ -2,6 +2,16 @@ package ssmith.lang;
 
 public class Functions {
 
+
+	public static void sleep(long t) {
+		try {
+			Thread.sleep(t);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public static String Exception2String(Throwable ex) {
 		StringBuffer str = new StringBuffer();

@@ -89,7 +89,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	}
 	 */
 
-	public MoonbaseAssaultServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
+	private MoonbaseAssaultServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
 		super(GAME_ID, new GameOptions(10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
@@ -150,8 +150,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		MapLoader map = new MapLoader(this);
 		try {
-			map.loadMap("/serverdata/moonbaseassault_small.csv");
-			//map.loadMap("/serverdata/moonbaseassault.csv");
+			//map.loadMap("/serverdata/moonbaseassault_small.csv");
+			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
 			this.deploySquares = map.deploySquares;
 

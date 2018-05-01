@@ -8,7 +8,7 @@ public class GeneralCommandMessage extends MyAbstractMessage {
 	public int gameID;
 	
 	public enum Command {
-		AllEntitiesSent, // todo - remove this
+		AllEntitiesSent, // Tells a client (who has joined halfway through a game) that they now have all the entities
 		RemoveAllEntities,
 		GameRestarting, // So the client knows that all the entities are about to change
 		GameRestarted,

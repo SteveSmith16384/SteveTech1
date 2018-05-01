@@ -74,7 +74,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	}
 
 
-	public MoonbaseAssaultClient(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
+	private MoonbaseAssaultClient(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,// float gravity, float aerodynamicness,
 			float mouseSensitivity) {
 		super(MoonbaseAssaultServer.GAME_ID, "Moonbase Assault", null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 

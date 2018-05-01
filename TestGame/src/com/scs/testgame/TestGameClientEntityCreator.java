@@ -203,11 +203,11 @@ public class TestGameClientEntityCreator {
 
 		case BULLET_TRAIL:
 		{
-			int shooterID = (int) msg.data.get("shooterID");
-			if (shooterID != game.currentAvatarID) {
+			int playerID = (int) msg.data.get("playerID");
+			if (playerID != game.getPlayerID()) {
 				Vector3f start = (Vector3f) msg.data.get("start");
 				Vector3f end = (Vector3f) msg.data.get("end");
-				BulletTrail bullet = new BulletTrail(game, id, BULLET_TRAIL, start, end);
+				BulletTrail bullet = new BulletTrail(game, id, BULLET_TRAIL, playerID, start, end);
 				return bullet;
 			} else {
 				return null; // We create our own bullet trails, so ignore this

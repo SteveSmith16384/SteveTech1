@@ -14,16 +14,17 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 
-	private static final float DURATION = 3;
+	private static final float DURATION = 1f;
 
 	private float timeLeft = DURATION;
+	private int playerID; // So we know which player fired it, since they don't create it from the server
 
-	public BulletTrail(IEntityController _game, int id, int type, Vector3f start, Vector3f end) {//, ColorRGBA col, String tex) {
+	public BulletTrail(IEntityController _game, int id, int type, int _playerID,  Vector3f start, Vector3f end) {//, ColorRGBA col, String tex) {
 		super(_game, id, type, "BulletTrail", true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("shooterID", shooter.getID());
+			creationData.put("playerID", playerID);
 			creationData.put("start", start);
 			creationData.put("end", end);
 			//creationData.put("col", col);

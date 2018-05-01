@@ -63,7 +63,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 
 
-	public UndercoverAgentClient(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
+	private UndercoverAgentClient(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, //float gravity, float aerodynamicness,
 			float mouseSensitivity) {
 		super(UndercoverAgentServer.GAME_ID, UndercoverAgentServer.NAME, null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 

@@ -38,7 +38,7 @@ public class TestGameServer extends AbstractGameServer {
 	}
 
 
-	public TestGameServer() throws IOException {
+	private TestGameServer() throws IOException {
 		super(GAME_ID, new GameOptions(10*1000, 5*60*1000, 10*1000, 
 				TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //TestGameStaticData.LOBBY_IP_ADDRESS, TestGameStaticData.LOBBY_PORT, 
 				5, 5),

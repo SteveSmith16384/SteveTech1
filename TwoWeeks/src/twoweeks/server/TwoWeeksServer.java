@@ -83,7 +83,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 	}
 	 */
 
-	public TwoWeeksServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
+	private TwoWeeksServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
 		super(GAME_ID, new GameOptions(10*1000, 60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 

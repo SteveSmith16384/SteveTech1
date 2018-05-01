@@ -52,14 +52,14 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), debugSphereType, pos.x, pos.y, pos.z, true, true); // Show where it hit
 				game.addEntity(ds);*/
 
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner.getBulletStartPos(), hitThisMoment.point);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.playerID, this.owner.getBulletStartPos(), hitThisMoment.point);
 				game.addEntity(bt);
 
 				this.hitThisMoment = null; // Clear it ready for next loop
 			} else {
 				// Bullet trail into the sky
 				Vector3f endPos = this.owner.getBulletStartPos().add(this.owner.getShootDir().mult(RANGE));
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner.getBulletStartPos(), endPos);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.playerID, this.owner.getBulletStartPos(), endPos);
 				game.addEntity(bt);
 			}
 		} else {
@@ -82,13 +82,13 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				//game.addClientOnlyEntity(ds);
 				
 				// Show bullet trails
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner.getBulletStartPos(), pos);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.playerID, this.owner.getBulletStartPos(), pos);
 				game.addClientOnlyEntity(bt);
 			} else {
 				Globals.p("Not hit anything");
 				// Bullet trail into the sky
 				Vector3f endPos = this.owner.getBulletStartPos().add(this.owner.getShootDir().mult(RANGE));
-				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.owner.getBulletStartPos(), endPos);
+				BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.playerID, this.owner.getBulletStartPos(), endPos);
 				//AbstractGameClient client = (AbstractGameClient)game;
 				game.addClientOnlyEntity(bt);
 			}

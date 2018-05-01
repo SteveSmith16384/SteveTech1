@@ -60,6 +60,7 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
 import com.scs.stevetech1.systems.server.ServerPingSystem;
 
+import ssmith.lang.Functions;
 import ssmith.util.ConsoleInputListener;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
@@ -555,6 +556,7 @@ ConsoleInputListener {
 					nem.data.add(new NewEntityData(e));
 					if (nem.isFull()) {
 						this.gameNetworkServer.sendMessageToClient(client, nem);
+						Functions.sleep(50); // todo - remove?wwwwwww
 						nem = new NewEntityMessage(this.getGameID());
 					}
 				}
