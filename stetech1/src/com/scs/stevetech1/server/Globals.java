@@ -16,19 +16,19 @@ public class Globals {
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_BULLET_HIT = true;
 	public static final boolean DEBUG_NO_ABILITY0 = true;
-	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
-	
+	public static final boolean DEBUG_HUD = true;
+	public static final boolean DEBUG_AI_SHOOTING = true;
+
+	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
+	public static final boolean DEBUG_AI_SEE_PLAYER = false;
 	public static final boolean DEBUG_AVATAR_SET = false;
 	public static final boolean DEBUG_NO_AI_ANIM = false;
 	public static final boolean DEBUG_SLIDING_DOORS = false;
 	public static final boolean DEBUG_CLIENT_SERVER_FAR_APART = false;
 	public static final boolean DEBUG_NO_BULLET = false;
-	public static final boolean DEBUG_AI_SEE_PLAYER = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean SHOW_AVATAR_POS = false;
 	public static final boolean TRANSPARENT_WALLS = false;
-	public static final boolean DEBUG_HUD = false;
-	public static final boolean DEBUG_AI_SHOOTING = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
@@ -70,7 +70,7 @@ public class Globals {
 	public static final float MAX_MOVE_DIST = 1f;
 
 	public static final float CAM_DIST = 1500f;
-	public static final float LASER_DIAM= 0.002f;;
+	public static final float LASER_DIAM= 0.02f;
 
 	// User Data
 	public static final String ENTITY = "Entity";

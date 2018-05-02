@@ -18,16 +18,6 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 
 
 	public void addEntityData(PhysicalEntity sc, boolean force, EntityUpdateData updateData) {
-		//EntityUpdateData updateData = new UpdateData();
-		/*updateData.entityID = sc.getID();
-		updateData.pos = sc.getWorldTranslation();
-		//updateData.dir = sc.getWorldRotation();
-		updateData.force = force;
-		if (sc instanceof IClientSideAnimated) {
-			IClientSideAnimated csa = (IClientSideAnimated)sc;
-			updateData.animationCode = csa.getCurrentAnimCode();
-		}
-		 */
 		this.data.add(updateData);
 
 	}

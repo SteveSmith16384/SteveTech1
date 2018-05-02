@@ -14,7 +14,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 
-	private static final float DURATION = 1f;
+	private static final float DURATION = .5f;
 
 	private float timeLeft = DURATION;
 	//private int playerID; // So we know which player fired it, since they don't create it from the server

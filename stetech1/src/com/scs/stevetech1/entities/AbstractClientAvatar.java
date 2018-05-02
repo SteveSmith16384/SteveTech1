@@ -105,8 +105,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 						//newAnimCode = ANIM_SHOOTING;
 						if (this.ability[i].activate()) {
 							client.sendMessage(new AbilityActivatedMessage(this.getID(), this.ability[i].getID()));
-							//LaunchData ld = new LaunchData(this.getWorldTranslation(), this.getShootDir(), this.getID(), serverTime);
-							//client.sendMessage(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
 						}
 					}
 				}

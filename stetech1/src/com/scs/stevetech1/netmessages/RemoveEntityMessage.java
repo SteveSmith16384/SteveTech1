@@ -11,8 +11,9 @@ public class RemoveEntityMessage extends MyAbstractMessage {
 		super();
 	}
 	
+	
 	public RemoveEntityMessage(int _entityID) {
-		super(false, true);
+		super(true, true);
 		
 		entityID = _entityID;
 	}

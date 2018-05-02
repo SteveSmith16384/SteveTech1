@@ -369,7 +369,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	
 	
 	private HUDMapImage addMapImage(int mapSize) {
-		float sizeInPixels = cam.getWidth()/5;
+		float sizeInPixels = Math.max(cam.getWidth()/5, mapSize);
 		//float pxlh = cam.getHeight()/5;
 		hudMapImage = new HUDMapImage(game.getAssetManager(), (int)sizeInPixels, mapSize);
 		hudMapImage.setWidth(sizeInPixels);

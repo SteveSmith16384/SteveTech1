@@ -256,7 +256,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public void shoot(PhysicalEntity target) {
 		if (this.shootInt.hitInterval()) {
 			if (Globals.DEBUG_AI_SHOOTING) {
-				Globals.p("AI shooting!" + this.getWorldTranslation().y);
+				Globals.p("AI shooting!");
 			}
 			Vector3f pos = this.getWorldTranslation().clone();
 			pos.y += this.soldierModel.getBulletStartHeight();

@@ -2,6 +2,7 @@ package com.scs.moonbaseassault.client;
 
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.scs.moonbaseassault.entities.AILaserBullet;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.ExplosionEffectEntity;
@@ -19,7 +20,6 @@ import com.scs.moonbaseassault.models.Spaceship1;
 import com.scs.moonbaseassault.weapons.GrenadeLauncher;
 import com.scs.moonbaseassault.weapons.LaserRifle;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
@@ -264,6 +264,16 @@ public class MoonbaseAssaultClientEntityCreator {
 				return null; // We create our own bullet trails, so ignore this
 			}
 
+		}
+
+		case AI_LASER_BULLET:
+		{
+			int side = (int) msg.data.get("side");
+			int shooterID = (int) msg.data.get("shooterID");
+			IEntity shooter = game.entities.get(shooterID);
+			Vector3f dir = (Vector3f) msg.data.get("dir");
+			AILaserBullet bullet = new AILaserBullet(game, id, side, pos.x, pos.y, pos.z, shooter, dir);
+			return bullet;
 		}
 
 		default:

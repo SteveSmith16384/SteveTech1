@@ -22,10 +22,11 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class AILaserBullet extends AbstractAIBullet implements INotifiedOfCollision {
 
+	private static final float SPEED = 10f;
 	private static final boolean USE_CYLINDER = true;
 
 	public AILaserBullet(IEntityController _game, int id, int side, float x, float y, float z, IEntity _shooter, Vector3f dir) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_LASER_BULLET, x, y, z, "LaserBullet", side, _shooter, dir, true, 20);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_LASER_BULLET, x, y, z, "LaserBullet", side, _shooter, dir, true, SPEED);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -62,14 +63,6 @@ public class AILaserBullet extends AbstractAIBullet implements INotifiedOfCollis
 		//laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
 
-		/*No, since we use a Ray
-		 * this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);
-		this.simpleRigidBody.setAerodynamicness(1);
-		this.simpleRigidBody.setGravity(0);
-		if (game.isServer()) {
-			this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10)); // 20));  // Only the server moves the bullet
-		}*/
-
 	}
 
 
@@ -78,13 +71,6 @@ public class AILaserBullet extends AbstractAIBullet implements INotifiedOfCollis
 		return 1;
 	}
 
-/*
-	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
-		super.processByServer(server, tpf_secs);
-		
-	}
-*/
 
 	@Override
 	public void collided(PhysicalEntity pe) {

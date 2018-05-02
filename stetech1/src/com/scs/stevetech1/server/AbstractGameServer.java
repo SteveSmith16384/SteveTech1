@@ -600,6 +600,9 @@ ConsoleInputListener {
 
 	@Override
 	public void addEntity(IEntity e) {
+		if (e == null) {
+			throw new RuntimeException("Trying to add null entity");
+		}
 		//this.entitiesToAdd.add(e);
 		this.actuallyAddEntity(e);
 	}

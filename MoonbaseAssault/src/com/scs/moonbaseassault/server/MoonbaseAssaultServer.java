@@ -91,7 +91,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	private MoonbaseAssaultServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
-		super(GAME_ID, new GameOptions(10*1000, 60*1000, 10*1000, 
+		super(GAME_ID, new GameOptions(5*1000, 10*60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
 		start(JmeContext.Type.Headless);
@@ -150,8 +150,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		MapLoader map = new MapLoader(this);
 		try {
-			//map.loadMap("/serverdata/moonbaseassault_small.csv");
-			map.loadMap("/serverdata/moonbaseassault.csv");
+			map.loadMap("/serverdata/moonbaseassault_small.csv");
+			//map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
 			this.deploySquares = map.deploySquares;
 
@@ -160,19 +160,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 				for (int x=0 ; x<scannerData.length ; x++) {
 					if (this.scannerData[x][y] == MapLoader.COMPUTER) {
 						computerSquares.add(new Point(x, y));
-					} /*else if (this.scannerData[x][y] == MapLoader.DOOR_LR) { // || this.scannerData[x][y] == MapLoader.DOOR_UD) {
-						if (maxSoldiers > 0) {
-							AISoldier s = new AISoldier(this, this.getNextEntityID(), x + 0.5f, .3f, y + 1.5f, 2);
-							this.actuallyAddEntity(s);
-							Globals.p("Adding soldier to " + x + ", " + y);
-							maxSoldiers--;
-						}
-					}*/
+					}
 				}
 			}
-
-			//AISoldier s = new AISoldier(this, this.getNextEntityID(), map.firstInteriorFloor.x + 0.5f, .3f, map.firstInteriorFloor.y + 0.5f, 2);
-			//this.actuallyAddEntity(s);
 
 			//Spaceship1 ss = new Spaceship1(this, this.getNextEntityID(), 8, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
 			//todo - re-add this.actuallyAddEntity(ss);
@@ -211,7 +201,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		//this.actuallyAddEntity(floor);
 
 		// Add AI soldiers
-		for (int i=0 ; i<8 ; i++) {
+		for (int i=0 ; i<1 ; i++) {
 			MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, 2, AbstractAvatar.ANIM_IDLE);
 			this.actuallyAddEntity(s);
 			moveAISoldierToStartPosition(s, s.side);
