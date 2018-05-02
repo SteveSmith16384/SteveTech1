@@ -26,9 +26,9 @@ public class SoldierModel implements IAvatarModel {
 	private AssetManager assetManager;
 	private Spatial model;
 	private AnimChannel channel;
-	//private AnimEventListener l; // todo - is this used?
 	public boolean isJumping = false;
 	private int currAnimCode = -1;
+	private float jumpEndTime;
 
 	public SoldierModel(AssetManager _assetManager) {
 		assetManager = _assetManager;
@@ -50,7 +50,6 @@ public class SoldierModel implements IAvatarModel {
 			JMEModelFunctions.moveYOriginTo(model, 0f);
 
 			AnimControl control = JMEModelFunctions.getNodeWithControls((Node)model);
-			//control.addListener(l);
 			channel = control.createChannel();
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
@@ -80,7 +79,7 @@ public class SoldierModel implements IAvatarModel {
 			return;			
 		}
 
-		if (this.isJumping && animCode != AbstractAvatar.ANIM_DIED) {
+		if (this.isJumping && this.jumpEndTime > System.currentTimeMillis() && animCode != AbstractAvatar.ANIM_DIED) {
 			// Do nothing; only dying can stop a jumping anim
 			return;
 		}
@@ -110,6 +109,7 @@ public class SoldierModel implements IAvatarModel {
 			channel.setLoopMode(LoopMode.DontLoop);
 			channel.setAnim("Jump");
 			isJumping = true;
+			jumpEndTime = System.currentTimeMillis() + channel.getAnimMaxTime();
 			break;
 
 		default:

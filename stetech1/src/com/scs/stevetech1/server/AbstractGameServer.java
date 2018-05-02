@@ -111,7 +111,7 @@ ConsoleInputListener {
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
-	private boolean removingAllEntities = false; // Don't send "remove" messages  todo - reame
+	private boolean doNotSendAddRemoveEntityMsgs = false; // Don't send "remove" messages  todo - reame
 
 	protected SimpleGameData gameData = new SimpleGameData();
 
@@ -455,7 +455,12 @@ ConsoleInputListener {
 			this.getPhysicsController().removeAllEntities();
 		}
 
-		this.createGame();
+		try {
+			doNotSendAddRemoveEntityMsgs = true; // Prevent sending new ent messages for all the entities
+			this.createGame();
+		} finally {
+			doNotSendAddRemoveEntityMsgs = false;
+		}
 
 		// Create avatars and send new entities to players
 		synchronized (this.clients) {
@@ -464,7 +469,7 @@ ConsoleInputListener {
 					int side = getSide(client); // New sides
 					client.playerData.side = side;
 					client.avatar = createPlayersAvatar(client);
-					//sendAllEntitiesToClient(client); No need since we did it in createGame()
+					sendAllEntitiesToClient(client);
 					this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 				}
 			}
@@ -528,14 +533,14 @@ ConsoleInputListener {
 	}
 
 
-	public abstract float getAvatarStartHealth(AbstractAvatar avatar); // todo - rename to ResetAvatar?
+	//public abstract float getAvatarStartHealth(AbstractAvatar avatar);
 
-	public float getAvatarMoveSpeed(AbstractAvatar avatar) {
+	public float getAvatarMoveSpeed(AbstractAvatar avatar) { // todo - move to constructor
 		return 3f; // Override if required
 	}
 
 
-	public float getAvatarJumpForce(AbstractAvatar avatar) {
+	public float getAvatarJumpForce(AbstractAvatar avatar) { // todo - move to constructor
 		return 2f; // Override if required
 	}
 
@@ -633,6 +638,7 @@ ConsoleInputListener {
 		}
 
 		// Tell clients
+		if (!doNotSendAddRemoveEntityMsgs) {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 		nem.data.add(new NewEntityData(e));
 		synchronized (clients) {
@@ -641,6 +647,7 @@ ConsoleInputListener {
 					gameNetworkServer.sendMessageToClient(client, nem);
 				}
 			}
+		}
 		}
 	}
 
@@ -659,7 +666,7 @@ ConsoleInputListener {
 			IEntity e = this.entities.get(id); // this.entitiesToAdd
 			if (e != null) {
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-					Globals.p("Actually removing entity " + e + (this.removingAllEntities ? "":" ..and sending message to clients"));
+					Globals.p("Actually removing entity " + e + (this.doNotSendAddRemoveEntityMsgs ? "":" ..and sending message to clients"));
 				}
 				this.entities.remove(id);
 				if (e.requiresProcessing()) {
@@ -675,7 +682,7 @@ ConsoleInputListener {
 					return; // todo - remove?
 				}
 			}*/
-			if (!this.removingAllEntities) {
+			if (!this.doNotSendAddRemoveEntityMsgs) {
 				this.gameNetworkServer.sendMessageToAll(new RemoveEntityMessage(id));
 			}
 		}
@@ -791,17 +798,20 @@ ConsoleInputListener {
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
 
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities)); // Before we increment the game id!
-			removingAllEntities = true; // Prevent sending "remove entities" messages for all the entities
-			removeOldGame();
-			removingAllEntities = false;
+			try {
+				doNotSendAddRemoveEntityMsgs = true; // Prevent sending "remove entities" messages for all the entities
+				removeOldGame();
+			} finally {
+				doNotSendAddRemoveEntityMsgs = false;
+			}
 
 			this.gameData.gameID = nextGameID.getAndAdd(1);
 			sendGameStatusMessage(); // To send the new game ID
-			startNewGame();
 			Globals.p("------------------------------");
 			Globals.p("Starting new game " + gameData.gameID);
-			//sendGameStatusMessage(); // To send the new game ID
+			startNewGame();
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
+			
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {
 				for (IEntity e : entities.values()) {
@@ -811,6 +821,7 @@ ConsoleInputListener {
 					}
 				}
 			}
+			
 		} else if (newStatus == SimpleGameData.ST_FINISHED) {
 			int winningSide = this.getWinningSide();
 			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
@@ -825,7 +836,7 @@ ConsoleInputListener {
 
 
 	@Override
-	public int getNumEntities() {
+	public synchronized int getNumEntities() {
 		return this.entities.size();
 	}
 

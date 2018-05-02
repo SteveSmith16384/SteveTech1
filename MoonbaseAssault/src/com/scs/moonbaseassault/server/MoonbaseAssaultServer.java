@@ -264,12 +264,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 
 	@Override
-	public float getAvatarStartHealth(AbstractAvatar avatar) {
-		return 100;
-	}
-
-
-	@Override
 	protected int getWinningSide() {
 		return 2;
 		/*	int highestScore = -1;

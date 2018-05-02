@@ -11,7 +11,7 @@ import com.scs.undercoveragent.models.SnowmanModel;
 public class SnowmanServerAvatar extends AbstractServerAvatar {
 	
 	public SnowmanServerAvatar(IEntityController _module, ClientData client, IInputDevice _input, int eid) {
-		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()));
+		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), 2f);
 	}
 	
 	

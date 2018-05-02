@@ -537,7 +537,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						createEntity(data);
 					} else {
 						// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
-						Globals.p("Ignoring new entity " + e + " as we already know about i");
+						Globals.p("Ignoring new entity " + e + " as we already know about it");
 					}
 				}
 			} else {
@@ -1001,9 +1001,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	private void quit(String reason) {
+	public void quit(String reason) {
 		Globals.p("quitting: " + reason);
-		if (this.networkClient.isConnected()) {
+		if (networkClient != null && this.networkClient.isConnected()) {
 			if (playerID >= 0) {
 				this.networkClient.sendMessageToServer(new PlayerLeftMessage(this.playerID));
 				/*try {
@@ -1015,7 +1015,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.networkClient.close();
 		}
 		this.stop();
-		System.exit(0);
+		//System.exit(0); No, since we might be running multiple!
 	}
 
 
@@ -1124,7 +1124,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	@Override
-	public int getNumEntities() {
+	public synchronized int getNumEntities() {
 		return this.entities.size();
 	}
 

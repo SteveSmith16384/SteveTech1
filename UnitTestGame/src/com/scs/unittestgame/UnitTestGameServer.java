@@ -18,7 +18,8 @@ import com.scs.unittestgame.entities.ServerAvatarEntity;
 public class UnitTestGameServer extends AbstractGameServer {
 
 	public static final int PORT = 16384;
-	
+
+	// Entioty types
 	public static final int MCGUFFIN_ID = 1;
 	public static final int AVATAR_ID = 2;
 	public static final int ABILITY_ID = 3;
@@ -68,18 +69,13 @@ public class UnitTestGameServer extends AbstractGameServer {
 	protected void createGame() {
 		//this.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
 		
-		for (int i=0 ; i<2 ; i++) {
+		for (int i=0 ; i<RunAll.NUM_ENTITIES ; i++) {
 			McGuffinEntity e = new McGuffinEntity(this, this.getNextEntityID());
 			this.actuallyAddEntity(e);
 		}
 
 	}
 
-	@Override
-	public float getAvatarStartHealth(AbstractAvatar avatar) {
-		return 1;
-	}
-	
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {

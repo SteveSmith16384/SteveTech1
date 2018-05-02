@@ -60,11 +60,6 @@ public class BoxWarsGameServer extends AbstractGameServer {
 		
 	}
 
-	@Override
-	public float getAvatarStartHealth(AbstractAvatar avatar) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {

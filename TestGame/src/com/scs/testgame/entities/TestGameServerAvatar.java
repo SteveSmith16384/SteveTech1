@@ -12,7 +12,7 @@ import com.scs.testgame.models.CharacterModel;
 public class TestGameServerAvatar extends AbstractServerAvatar {
 	
 	public TestGameServerAvatar(TestGameServer _module, ClientData _client, IInputDevice _input, int eid) {
-		super(_module, TestGameClientEntityCreator.AVATAR, _client, _input, eid, new CharacterModel(_module.getAssetManager()));
+		super(_module, TestGameClientEntityCreator.AVATAR, _client, _input, eid, new CharacterModel(_module.getAssetManager()), 1f);
 
 		//IAbility abilityGun = new LaserRifle(_module, _module.getNextEntityID(), client.getPlayerID(), this, eid, 0, client);
 		IAbility abilityGun = new HitscanRifle(_module, _module.getNextEntityID(), TestGameClientEntityCreator.HITSCAN_RIFLE, client.getPlayerID(), this, eid, 0, client, TestGameClientEntityCreator.BULLET_TRAIL, TestGameClientEntityCreator.DEBUGGING_SPHERE);

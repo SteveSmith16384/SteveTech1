@@ -28,12 +28,14 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	private AbstractGameServer server;
 	public ClientData client;
+	private float maxHealth;
 
-	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim) {
+	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, float _maxHealth) {
 		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.side, anim);
 
 		server = (AbstractGameServer)_module;
 		client = _client;
+		maxHealth = _maxHealth;
 	}
 
 
@@ -41,7 +43,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 		alive = true;
 		this.moveSpeed = server.getAvatarMoveSpeed(this); // todo - send to client if it changes
 		this.setJumpForce(server.getAvatarJumpForce(this)); // todo - send to client if it changes
-		this.setHealth(server.getAvatarStartHealth(this)); // todo - set the maxHealth
+		this.setHealth(maxHealth);
 		this.simpleRigidBody.resetForces();//.currentGravInc = 0; // In case they fell off the edge
 		this.invulnerableTimeSecs = 5;
 		server.moveAvatarToStartPosition(this); // this also sends the update message to tell the client about the new move speed values etc...
@@ -142,8 +144,11 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	@Override
 	public void getReadyForGame() {
+		// Don't call startAgain() since that moves the avatar
+		//this.startAgain();
+		
 		alive = true;
-		this.setHealth(server.getAvatarStartHealth(this));
+		this.setHealth(maxHealth);
 		this.client.setScore(0);
 		this.invulnerableTimeSecs = 5;
 

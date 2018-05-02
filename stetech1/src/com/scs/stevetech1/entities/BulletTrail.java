@@ -17,9 +17,9 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 	private static final float DURATION = 1f;
 
 	private float timeLeft = DURATION;
-	private int playerID; // So we know which player fired it, since they don't create it from the server
+	//private int playerID; // So we know which player fired it, since they don't create it from the server
 
-	public BulletTrail(IEntityController _game, int id, int type, int _playerID,  Vector3f start, Vector3f end) {//, ColorRGBA col, String tex) {
+	public BulletTrail(IEntityController _game, int id, int type, int playerID,  Vector3f start, Vector3f end) {//, ColorRGBA col, String tex) {
 		super(_game, id, type, "BulletTrail", true);
 
 		if (_game.isServer()) {
@@ -27,8 +27,6 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 			creationData.put("playerID", playerID);
 			creationData.put("start", start);
 			creationData.put("end", end);
-			//creationData.put("col", col);
-			//creationData.put("tex", tex);
 		}
 
 		/*if (shooter != null) {

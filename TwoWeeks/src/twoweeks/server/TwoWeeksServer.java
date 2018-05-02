@@ -295,12 +295,6 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 
 	@Override
-	public float getAvatarStartHealth(AbstractAvatar avatar) {
-		return 100;
-	}
-
-
-	@Override
 	protected int getWinningSide() {
 		return 2; // todo
 	}

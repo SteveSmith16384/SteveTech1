@@ -231,12 +231,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	public float getAvatarStartHealth(AbstractAvatar avatar) {
-		return 1;
-	}
-
-
-	@Override
 	protected int getWinningSide() {
 		int highestScore = -1;
 		int winningSide = -1;

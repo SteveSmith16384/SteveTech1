@@ -11,7 +11,6 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class SoldierEnemyAvatar extends AbstractEnemyAvatar implements AnimEventListener {
 	
-	//private ChronologicalLookup<HistoricalAnimationData> animData = new ChronologicalLookup<HistoricalAnimationData>(true, 500);
 	private SoldierModel soldier;
 	private int currentAnimCode = -1;
 	
@@ -21,12 +20,6 @@ public class SoldierEnemyAvatar extends AbstractEnemyAvatar implements AnimEvent
 		this.soldier = (SoldierModel)anim;
 	}
 	
-/*
-	@Override
-	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
-		return animData;
-	}
-	*/
 
 	@Override
 	public void setAnimCode(int animCode) {
@@ -37,12 +30,6 @@ public class SoldierEnemyAvatar extends AbstractEnemyAvatar implements AnimEvent
 		this.currentAnimCode = animCode;
 	}
 
-/*
-	@Override
-	public int getCurrentAnimCode() {
-		return this.currentAnimCode;
-	}
-*/
 
 	@Override
 	public void processManualAnimation(float tpf_secs) {

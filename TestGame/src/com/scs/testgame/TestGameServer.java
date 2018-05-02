@@ -90,12 +90,6 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	public float getAvatarStartHealth(AbstractAvatar avatar) {
-		return 1;
-	}
-
-
-	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		return new TestGameServerAvatar(this, client, client.remoteInput, entityid);
 	}
