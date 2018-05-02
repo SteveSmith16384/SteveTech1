@@ -358,13 +358,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						}
 					}
 
-					// Add entities
-					/*while (this.entitiesToAdd.size() > 0) {
-						IEntity e = this.entitiesToAdd.getFirst();
-						this.actuallyAddEntity(e);
-					}*/
-
-
 					// Remove entities
 					while (this.entitiesToRemove.size() > 0) {
 						int i = this.entitiesToRemove.getFirst();
@@ -372,89 +365,77 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 
 
-					// Add client-only entities
-					/*while (this.clientOnlyEntitiesToAdd.size() > 0) {
-						IEntity e = this.clientOnlyEntitiesToAdd.getFirst();
-						this.actuallyAddClientOnlyEntity(e);
-					}
-
-					// Remove entities
-					while (this.clientOnlyEntitiesToRemove.size() > 0) {
-						int i = this.clientOnlyEntitiesToRemove.getFirst();
-						this.actuallyRemoveClientOnlyEntity(i);
-					}*/
-
 					// Systems
-					this.launchSystem.process(renderTime);
+					if (!gamePaused) {
+						this.launchSystem.process(renderTime);
 
-					if (Globals.STRICT) {
-						for(IEntity e : this.entities.values()) {
-							if (e.requiresProcessing()) {
-								if (!this.entitiesForProcessing.contains(e)) {
-									Globals.p("Warning: Processed entity " + e + " not in process list!");
+						if (Globals.STRICT) {
+							for(IEntity e : this.entities.values()) {
+								if (e.requiresProcessing()) {
+									if (!this.entitiesForProcessing.contains(e)) {
+										Globals.p("Warning: Processed entity " + e + " not in process list!");
+									}
 								}
 							}
 						}
-					}
 
 
-					// Loop through each entity and process them
-					//for (IEntity e : entitiesForProcessing.values()) { //entitiesForProcessing.size();
-					for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
-						IEntity e = this.entitiesForProcessing.get(i);
-						if (e.hasNotBeenRemoved()) {
-							if (e instanceof IPlayerControlled) {
-								IPlayerControlled p = (IPlayerControlled)e;
-								p.resetPlayerInput();
-							}
-							if (e instanceof PhysicalEntity) {
-								PhysicalEntity pe = (PhysicalEntity)e;
+						// Loop through each entity and process them
+						//for (IEntity e : entitiesForProcessing.values()) { //entitiesForProcessing.size();
+						for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
+							IEntity e = this.entitiesForProcessing.get(i);
+							if (e.hasNotBeenRemoved()) {
+								if (e instanceof IPlayerControlled) {
+									IPlayerControlled p = (IPlayerControlled)e;
+									p.resetPlayerInput();
+								}
+								if (e instanceof PhysicalEntity) {
+									PhysicalEntity pe = (PhysicalEntity)e;
 
-								pe.calcPosition(renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
-								pe.processChronoData(renderTime, tpf_secs);
+									pe.calcPosition(renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
+									pe.processChronoData(renderTime, tpf_secs);
 
-								if (Globals.STRICT) {
-									if (e instanceof AbstractClientAvatar == false && e instanceof IClientControlled == false) {
-										if (pe.simpleRigidBody != null) {
-											if (pe.simpleRigidBody.movedByForces()) {
-												Globals.p("Warning: client-side entity " + pe + " not kinematic!");
+									if (Globals.STRICT) {
+										if (e instanceof AbstractClientAvatar == false && e instanceof IClientControlled == false) {
+											if (pe.simpleRigidBody != null) {
+												if (pe.simpleRigidBody.movedByForces()) {
+													Globals.p("Warning: client-side entity " + pe + " not kinematic!");
+												}
 											}
 										}
 									}
+
 								}
 
-							}
+								if (e instanceof IProcessByClient) {
+									IProcessByClient pbc = (IProcessByClient)e;
+									pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
+								}
 
-							if (e instanceof IProcessByClient) {
-								IProcessByClient pbc = (IProcessByClient)e;
-								pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
-							}
+								if (e instanceof IAnimatedClientSide) {
+									IAnimatedClientSide pbc = (IAnimatedClientSide)e;
+									this.animSystem.process(pbc, tpf_secs);
+								}
 
-							if (e instanceof IAnimatedClientSide) {
-								IAnimatedClientSide pbc = (IAnimatedClientSide)e;
-								this.animSystem.process(pbc, tpf_secs);
+								if (e instanceof IDrawOnHUD) {
+									IDrawOnHUD doh = (IDrawOnHUD)e;
+									doh.drawOnHud(cam);
+								}
 							}
+						}
 
-							if (e instanceof IDrawOnHUD) {
-								IDrawOnHUD doh = (IDrawOnHUD)e;
-								doh.drawOnHud(cam);
+						// Now do client-only entities
+						//for (IEntity e : this.clientOnlyEntities.values()) {
+						for (int i=0 ; i<this.clientOnlyEntities.size() ; i++) {
+							IEntity e = this.clientOnlyEntities.get(i);
+							if (e.hasNotBeenRemoved()) {
+								if (e instanceof IProcessByClient) {
+									IProcessByClient pbc = (IProcessByClient)e;
+									pbc.processByClient(this, tpf_secs);
+								}
 							}
 						}
 					}
-
-					// Now do client-only entities
-					//for (IEntity e : this.clientOnlyEntities.values()) {
-					for (int i=0 ; i<this.clientOnlyEntities.size() ; i++) {
-						IEntity e = this.clientOnlyEntities.get(i);
-						if (e.hasNotBeenRemoved()) {
-							if (e instanceof IProcessByClient) {
-								IProcessByClient pbc = (IProcessByClient)e;
-								pbc.processByClient(this, tpf_secs);
-							}
-						}
-					}
-
-					//this.hud.log_ta.setText(strListEnts.toString());
 				}
 
 				// Show players gun
@@ -731,7 +712,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName());
 		}
 	}
-	
+
 
 	private void addDebugBox(ModelBoundsMessage msg) {
 		if (msg.bounds instanceof BoundingBox) {
