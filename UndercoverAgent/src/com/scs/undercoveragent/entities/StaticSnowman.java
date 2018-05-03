@@ -16,7 +16,7 @@ import com.scs.undercoveragent.models.SnowmanModel;
 public class StaticSnowman extends PhysicalEntity {
 
 	public StaticSnowman(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
-		super(_game, id, UndercoverAgentClientEntityCreator.STATIC_SNOWMAN, "Snowman", false);
+		super(_game, id, UndercoverAgentClientEntityCreator.STATIC_SNOWMAN, "Snowman", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

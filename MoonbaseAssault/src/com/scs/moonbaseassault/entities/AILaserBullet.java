@@ -62,6 +62,7 @@ public class AILaserBullet extends AbstractAIBullet implements INotifiedOfCollis
 
 		//laserNode.setShadowMode(ShadowMode.Cast);
 		this.mainNode.attachChild(laserNode);
+		mainNode.setUserData(Globals.ENTITY, this);
 
 	}
 

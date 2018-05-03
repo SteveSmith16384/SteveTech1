@@ -26,7 +26,7 @@ public class Terrain1 extends PhysicalEntity {
 	private TerrainQuad terrain;
 
 	public Terrain1(IEntityController _game, int id, float x, float yTop, float z) {
-		super(_game, id, TwoWeeksClientEntityCreator.TERRAIN1, "Terrain1", false);
+		super(_game, id, TwoWeeksClientEntityCreator.TERRAIN1, "Terrain1", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

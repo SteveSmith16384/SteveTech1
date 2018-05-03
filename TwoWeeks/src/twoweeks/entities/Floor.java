@@ -24,7 +24,7 @@ public class Floor extends PhysicalEntity {
 	private Box box1;
 
 	public Floor(IEntityController _game, int id, String name, float x, float yTop, float z, float w, float h, float d, String tex) {
-		super(_game, id, TwoWeeksClientEntityCreator.FLOOR, name, false);
+		super(_game, id, TwoWeeksClientEntityCreator.FLOOR, name, false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

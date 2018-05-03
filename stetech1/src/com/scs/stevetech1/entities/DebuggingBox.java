@@ -23,7 +23,7 @@ public class DebuggingBox extends PhysicalEntity implements IProcessByClient { /
 	private boolean remove;
 
 	public DebuggingBox(IEntityController _game, int type, int id, float x, float y, float z, float w, float h, float d, boolean _remove) {
-		super(_game, id, type, "DebuggingBox", true);
+		super(_game, id, type, "DebuggingBox", true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

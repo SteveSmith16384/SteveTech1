@@ -17,6 +17,8 @@ public class FindComputerThread extends Thread {
 
 	public FindComputerThread(MoonbaseAssaultServer _game, IUnit _unit) {
 		super("FindComputerThread")	;
+		
+		this.setDaemon(true);
 
 		game = _game;
 		unit = _unit;

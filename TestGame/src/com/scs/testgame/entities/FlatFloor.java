@@ -20,7 +20,7 @@ import com.scs.testgame.TestGameClientEntityCreator;
 public class FlatFloor extends PhysicalEntity {
 
 	public FlatFloor(IEntityController _game, int id, float x, float y, float z, float w, float d, String tex) {
-		super(_game, id, TestGameClientEntityCreator.FLAT_FLOOR, "FlatFloor", false);
+		super(_game, id, TestGameClientEntityCreator.FLAT_FLOOR, "FlatFloor", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

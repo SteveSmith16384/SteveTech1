@@ -18,7 +18,7 @@ public class ExplosionEffectEntity extends PhysicalEntity implements IProcessByC
 	private float timeLeft = DURATION;
 	
 	public ExplosionEffectEntity(IEntityController _game, int id, Vector3f pos) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.EXPLOSION_EFFECT, "Explosion", true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.EXPLOSION_EFFECT, "Explosion", true, false);
 
 		this.setWorldTranslation(pos);
 		if (_game.isServer()) {

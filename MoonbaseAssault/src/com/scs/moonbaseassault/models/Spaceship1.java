@@ -16,7 +16,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public class Spaceship1 extends PhysicalEntity {
 
 	public Spaceship1(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.SPACESHIP1, "Spaceship1", false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.SPACESHIP1, "Spaceship1", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

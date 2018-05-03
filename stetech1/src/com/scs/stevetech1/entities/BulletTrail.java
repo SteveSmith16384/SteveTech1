@@ -20,7 +20,7 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 	//private int playerID; // So we know which player fired it, since they don't create it from the server
 
 	public BulletTrail(IEntityController _game, int id, int type, int playerID,  Vector3f start, Vector3f end) {//, ColorRGBA col, String tex) {
-		super(_game, id, type, "BulletTrail", true);
+		super(_game, id, type, "BulletTrail", true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

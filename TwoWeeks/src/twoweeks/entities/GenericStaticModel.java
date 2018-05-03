@@ -17,7 +17,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public class GenericStaticModel extends PhysicalEntity {
 
 	public GenericStaticModel(IEntityController _game, int id, int type, String name, String modelFile, float height, String tex, float x, float y, float z, Quaternion q) {
-		super(_game, id, type, name, false);
+		super(_game, id, type, name, false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

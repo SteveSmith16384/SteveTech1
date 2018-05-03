@@ -26,7 +26,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 	private MoonbaseAssaultServer server;
 	
 	public Computer(IEntityController _game, int id, float x, float y, float z) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

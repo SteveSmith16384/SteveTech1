@@ -34,7 +34,7 @@ public class SlidingDoor extends PhysicalEntity implements INotifiedOfCollision,
 	private float timeUntilClose;
 
 	public SlidingDoor(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.DOOR, "SlidingDoor", true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.DOOR, "SlidingDoor", true, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

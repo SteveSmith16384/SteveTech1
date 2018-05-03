@@ -41,7 +41,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	private float range;
 
 	public AbstractPlayersBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntityContainer<AbstractPlayersBullet> container, int _side, ClientData _client, Vector3f _dir, boolean _useRay, float _speed, float _range) {
-		super(_game, entityId, type, name, true);
+		super(_game, entityId, type, name, true, false);
 
 		playerID = _playerOwnerId;
 		client = _client;

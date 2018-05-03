@@ -93,7 +93,7 @@ public class MapImageTexture extends PaintableImage {
 
 			// Player
 			if (player != null) {
-				g.setColor(new Color(.5f, 1f, .5f, ALPHA));
+				g.setColor(new Color(1f, 1f, .5f, ALPHA));
 				//g.fillRect((data.length-player.y)*pixelSize, (data.length-player.x)*pixelSize, pixelSize, pixelSize);
 				paintSquare(g, player.x, player.y);
 			}				

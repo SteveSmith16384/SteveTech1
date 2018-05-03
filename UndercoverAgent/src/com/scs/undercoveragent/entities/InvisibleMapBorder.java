@@ -28,7 +28,7 @@ public class InvisibleMapBorder extends PhysicalEntity {
 	public static final float BORDER_HEIGHT = 5f;
 
 	public InvisibleMapBorder(IEntityController _game, int id, float x, float y, float z, float size, Vector3f dir) {
-		super(_game, id, UndercoverAgentClientEntityCreator.INVISIBLE_MAP_BORDER, "InvisibleMapBorder", false);
+		super(_game, id, UndercoverAgentClientEntityCreator.INVISIBLE_MAP_BORDER, "InvisibleMapBorder", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

@@ -35,6 +35,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public PositionCalculator historicalPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
 	public boolean collideable = true;
+	public boolean blocksView;
 	
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
@@ -42,9 +43,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
 	public Node owner;
 
-	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing) {
+	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing, boolean _blocksView) {
 		super(_game, id, type, _name, _requiresProcessing);
 
+		blocksView = _blocksView;
+		
 		historicalPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode_" + id);
 
@@ -290,7 +293,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public boolean canSee(PhysicalEntity target, float range) {
+	public boolean canSee(PhysicalEntity target, float range) { int x;
 		// Test the ray from the middle of the entity
 		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter();
 		Vector3f theirPos = target.getMainNode().getWorldBound().getCenter();
@@ -317,8 +320,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			}
 			if (s != null && s.getUserData(Globals.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
-				if (pe != this && pe.collideable) {
-					//Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
+				if (pe != this && pe.collideable && pe.blocksView) {
+					Globals.p("Ray collided with " + pe + " at " + col.getContactPoint());
 					return pe == target;
 				}
 			}

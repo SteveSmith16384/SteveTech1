@@ -35,7 +35,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 	//private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 
 	public RoamingZombie(IEntityController _game, int id, float x, float y, float z) {
-		super(_game, id, TestGameClientEntityCreator.ZOMBIE, "Zombie", true);
+		super(_game, id, TestGameClientEntityCreator.ZOMBIE, "Zombie", true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
