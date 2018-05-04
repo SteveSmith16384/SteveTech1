@@ -43,15 +43,15 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			boolean cansee = soldierEntity.canSee(this.currentTarget, 100f);
 			if (!cansee) {
 				this.currentTarget = null;
-				if (Globals.DEBUG_AI_SEE_PLAYER) {
-					Globals.p("AI no longer see player");
+				if (Globals.DEBUG_AI_TARGETTING) {
+					Globals.p("AI no longer see target");
 				}
 			}
 		}
 		if (currentTarget == null) { // Check we can still see enemy
 			if (this.checkForEnemyInt.hitInterval()) {
 				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side);
-				if (Globals.DEBUG_AI_SEE_PLAYER) {
+				if (Globals.DEBUG_AI_TARGETTING) {
 					Globals.p("AI can now see " + currentTarget);
 				}
 			}

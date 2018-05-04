@@ -20,18 +20,30 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 import twoweeks.client.TwoWeeksClientEntityCreator;
+import twoweeks.server.ITerrainHeightAdjuster;
 
 public class Terrain1 extends PhysicalEntity {
 
 	private TerrainQuad terrain;
-
-	public Terrain1(IEntityController _game, int id, float x, float yTop, float z) {
+	private ITerrainHeightAdjuster adj;
+	
+	/**
+	 * 
+	 * @param _game
+	 * @param id
+	 * @param x
+	 * @param yTop
+	 * @param z
+	 * @param _adj Null if called by client
+	 */
+	public Terrain1(IEntityController _game, int id, float x, float yTop, float z, ITerrainHeightAdjuster _adj) {
 		super(_game, id, TwoWeeksClientEntityCreator.TERRAIN1, "Terrain1", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			//creationData.put("pos", new Vector3f(x, yTop, z));
 			//creationData.put("size", new Vector3f(w, 0, d));
+			adj = _adj;
 		}
 
 		/** 1. Create terrain material and load four textures into it. */
@@ -39,6 +51,7 @@ public class Terrain1 extends PhysicalEntity {
 
 		/** 1.1) Add ALPHA map (for red-blue-green coded splat textures) */
 		mat_terrain.setTexture("Alpha", game.getAssetManager().loadTexture("Textures/Terrain/splat/alphamap.png"));
+		//mat_terrain.setTexture("Alpha", game.getAssetManager().loadTexture("Textures/Terrain/splat/alphamap2.png"));
 
 		/** 1.2) Add GRASS texture into the red layer (Tex1). */
 		//Texture grass = game.getAssetManager().loadTexture("Textures/Terrain/splat/grass.jpg");
@@ -71,11 +84,14 @@ public class Terrain1 extends PhysicalEntity {
 
 		int initialSize = 513;
 		// raise edges
-		for (int i=0 ; i<initialSize ; i++) {
+		for (int i=0 ; i<initialSize-2 ; i++) {
 			heightmap.setHeightAtPoint(255, 0,  i);
 			heightmap.setHeightAtPoint(255, i,  0);
-			heightmap.setHeightAtPoint(255, initialSize-1,  i);
-			heightmap.setHeightAtPoint(255, i, initialSize-1);
+			heightmap.setHeightAtPoint(255, initialSize-2,  i);
+			heightmap.setHeightAtPoint(255, i, initialSize-2);
+		}
+		if (adj != null) {
+			adj.adjustHeight(heightmap);
 		}
 		
 		/** 3. We have prepared material and heightmap.

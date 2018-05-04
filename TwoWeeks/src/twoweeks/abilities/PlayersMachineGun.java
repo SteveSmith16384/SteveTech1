@@ -73,5 +73,14 @@ public class PlayersMachineGun extends AbstractMagazineGun<PlayersBullet> implem
 	}
 
 
+	@Override
+	protected void emptyMagazine() {
+		while (!ammoCache.isEmpty()) {
+			PlayersBullet g = ammoCache.remove();
+			g.remove();
+		}
+		
+	}
+
 
 }

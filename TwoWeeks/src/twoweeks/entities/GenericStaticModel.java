@@ -33,7 +33,9 @@ public class GenericStaticModel extends PhysicalEntity {
 			JMEModelFunctions.setTextureOnSpatial( game.getAssetManager(), model, tex);
 		}
 		model.setShadowMode(ShadowMode.CastAndReceive);
-		JMEModelFunctions.scaleModelToHeight(model, height);
+		if (height > 0) {
+			JMEModelFunctions.scaleModelToHeight(model, height);
+		}
 		JMEModelFunctions.moveYOriginTo(model, 0f);
 		// Autocentre
 		/*model.updateModelBound();

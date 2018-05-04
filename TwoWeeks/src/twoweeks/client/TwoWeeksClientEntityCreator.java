@@ -105,7 +105,7 @@ public class TwoWeeksClientEntityCreator {
 
 		case TERRAIN1:
 		{
-			Terrain1 floor = new Terrain1(game, id, pos.x, pos.y, pos.z);
+			Terrain1 floor = new Terrain1(game, id, pos.x, pos.y, pos.z, null);
 			return floor;
 		}
 
