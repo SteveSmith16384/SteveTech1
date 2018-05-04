@@ -23,7 +23,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	private static final float MAX_STEP_HEIGHT = 0.25f; // todo - make config
 	private static final float GRAVITY_WARNING = -15f;
 	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
-	
+
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f(); // Gets reduced by air resistance each frame
 	private Vector3f tmpMoveDir = new Vector3f();
@@ -47,7 +47,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
 	private Vector3f tmpPrevPos = new Vector3f();
-	
+
 	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean _movedByForces, T _tag) {
 		super();
 
@@ -309,23 +309,23 @@ public class SimpleRigidBody<T> implements Collidable {
 			Ray prevRay = new Ray(prevPos, DOWN_VEC);
 			rayCRs.clear();
 			cr.simpleEntity.getCollidable().collideWith(prevRay, rayCRs);
-			if (rayCRs.getClosestCollision().getContactPoint() != null) {
-			float prevHeight = rayCRs.getClosestCollision().getContactPoint().y;
+			if (rayCRs.getClosestCollision() != null && rayCRs.getClosestCollision().getContactPoint() != null) {
+				float prevHeight = rayCRs.getClosestCollision().getContactPoint().y;
 
-			Vector3f newPos = prevPos.add(moveOffset);
-			Ray nextRay = new Ray(newPos, DOWN_VEC);
-			rayCRs.clear();
-			cr.simpleEntity.getCollidable().collideWith(nextRay, rayCRs);
-			float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
-			
-			float diff = prevHeight - nextHeight; // todo - wrong?
-			//Globals.p("Diff=" + diff);
-			if (nextHeight < prevHeight) {
-				if (diff < moveOffset.length()) { // 45 degrees?
-					//Globals.p("Walking up!");
-					this.oneOffForce.y += diff*100;
+				Vector3f newPos = prevPos.add(moveOffset);
+				Ray nextRay = new Ray(newPos, DOWN_VEC);
+				rayCRs.clear();
+				cr.simpleEntity.getCollidable().collideWith(nextRay, rayCRs);
+				float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
+
+				float diff = prevHeight - nextHeight; // todo - wrong?
+				//Globals.p("Diff=" + diff);
+				if (nextHeight < prevHeight) {
+					if (diff < moveOffset.length()) { // 45 degrees?
+						//Globals.p("Walking up!");
+						this.oneOffForce.y += diff*100;
+					}
 				}
-			}
 			}
 			// Move up if it's a mesh/terrain?
 			//this.oneOffForce.y += (.5f);
@@ -412,7 +412,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					Ray ray = new Ray(bv.getCenter(), DOWN_VEC);
 					ray.setLimit(bv.getYExtent());
 					res = tq.collideWith(ray, tempCollisionResults);
-					
+
 				} else if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
 					// Both are complex meshes!  Convert one into a simple boundingvolume
 					if (this.modelComplexity >= e.modelComplexity) {

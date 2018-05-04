@@ -267,7 +267,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		//if (this.shootInt.hitInterval()) {
 		if (this.timeToNextShot <= 0) {
 			if (Globals.DEBUG_AI_BULLET_POS) {
-				Globals.p("AI shooting!");
+				Globals.p("AI shooting!  AI at " + this.getWorldTranslation());
 			}
 			Vector3f pos = this.getWorldTranslation().clone();
 			pos.y += this.soldierModel.getBulletStartHeight();
