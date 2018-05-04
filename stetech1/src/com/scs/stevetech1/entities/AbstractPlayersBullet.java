@@ -10,7 +10,7 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.components.IPlayerLaunchable;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -26,7 +26,7 @@ import com.scs.stevetech1.systems.client.LaunchData;
  * launch at the same time on the client and the server. 
  *
  */
-public abstract class AbstractPlayersBullet extends PhysicalEntity implements IProcessByClient, IPlayerLaunchable, ICausesHarmOnContact, IClientControlled {
+public abstract class AbstractPlayersBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, ICausesHarmOnContact, IClientControlled {
 
 	protected boolean launched = false;
 	public int playerID;
@@ -49,6 +49,13 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		useRay = _useRay;
 		speed = _speed;
 		range = _range;
+		side = _side;
+		
+		if (Globals.STRICT) {
+			if (side <= 0) {
+				throw new RuntimeException("Invalid side: " + side);
+			}
+		}
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -61,7 +68,6 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			container.addToCache(this);
 		}
 
-		side = _side;
 
 		this.collideable = false;
 
@@ -150,7 +156,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			} else {
 				Ray ray = new Ray(this.getWorldTranslation(), dir);
 				ray.setLimit(speed * tpf_secs);
-				RayCollisionData rcd = this.checkForCollisions(ray);
+				RayCollisionData rcd = this.checkForRayCollisions(ray);
 				if (rcd != null) {
 					this.remove();
 					server.collisionOccurred(this, rcd.entityHit);
@@ -179,7 +185,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			} else {
 				Ray ray = new Ray(this.getWorldTranslation(), dir);
 				ray.setLimit(speed * tpf_secs);
-				RayCollisionData rcd = this.checkForCollisions(ray);
+				RayCollisionData rcd = this.checkForRayCollisions(ray);
 				if (rcd != null) {
 					this.remove();
 				} else {

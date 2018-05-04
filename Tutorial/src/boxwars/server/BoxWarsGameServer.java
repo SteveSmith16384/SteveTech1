@@ -25,7 +25,7 @@ public class BoxWarsGameServer extends AbstractGameServer {
 	
 
 	@Override
-	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
 		// TODO Auto-generated method stub
 		return false;
 	}

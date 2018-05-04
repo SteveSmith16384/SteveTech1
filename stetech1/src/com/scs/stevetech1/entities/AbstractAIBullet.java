@@ -4,13 +4,13 @@ import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IPlayerLaunchable;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, IPlayerLaunchable {
+public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, ILaunchable {
 
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
@@ -29,6 +29,12 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 		useRay = _useRay;
 		speed = _speed;
 
+		if (Globals.STRICT) {
+			if (side <= 0) {
+				throw new RuntimeException("Invalid side: " + side);
+			}
+		}
+
 		this.createSimpleRigidBody(dir);
 		this.setWorldTranslation(new Vector3f(x, y, z));
 	}
@@ -44,7 +50,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 		} else {
 			Ray ray = new Ray(this.getWorldTranslation(), dir);
 			ray.setLimit(speed * tpf_secs);
-			RayCollisionData rcd = this.checkForCollisions(ray);
+			RayCollisionData rcd = this.checkForRayCollisions(ray);
 			if (rcd != null) {
 				this.remove();
 				server.collisionOccurred(this, rcd.entityHit);

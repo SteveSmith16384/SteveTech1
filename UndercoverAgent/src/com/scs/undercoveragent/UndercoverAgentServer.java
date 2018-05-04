@@ -270,7 +270,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
 		return collisionValidator.canCollide(a, b);
 	}
 

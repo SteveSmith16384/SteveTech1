@@ -70,7 +70,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			}
 			Ray ray = new Ray(from, shooter.getShootDir());
 			ray.setLimit(RANGE);
-			RayCollisionData rcd = shooter.checkForCollisions(ray);
+			RayCollisionData rcd = shooter.checkForRayCollisions(ray);
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
 				Globals.p("Hit " + rcd.entityHit + " at " + pos);

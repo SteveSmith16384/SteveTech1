@@ -45,8 +45,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 			TextureKey key3 = null;
 			key3 = new TextureKey( "Textures/sun.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
 				floor_mat.setTexture("DiffuseMap", tex3);
 			laserNode.setMaterial(floor_mat);
 		}

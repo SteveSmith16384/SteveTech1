@@ -272,11 +272,8 @@ ConsoleInputListener {
 								}
 								Ray ray = new Ray(from, avatar.getShootDir());
 								ray.setLimit(chip.getRange());
-								RayCollisionData rcd = avatar.checkForCollisions(ray);//, chip.getRange());
+								RayCollisionData rcd = avatar.checkForRayCollisions(ray);//, chip.getRange());
 								if (rcd != null) {
-									if (Globals.DEBUG_BULLET_HIT) {
-										Globals.p("Ray hit " + rcd.entityHit);
-									}
 									rcd.timestamp = timeTo; // For debugging
 								}
 								chip.setTarget(rcd); // Damage etc.. is calculated later
@@ -955,4 +952,15 @@ ConsoleInputListener {
 	public SimpleGameData getGameData() {
 		return this.gameData;
 	}
+
+
+	@Override
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
+		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
+
+		return canCollide(pa, pb);
+	}
+
+
 }

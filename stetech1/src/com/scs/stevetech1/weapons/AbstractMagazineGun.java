@@ -83,7 +83,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	protected void reload(AbstractGameServer server) {
 		IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
 		while (this.getBulletsInMag() < this.magazineSize) {
-			createBullet(server, server.getNextEntityID(), playerID, irac, -1);
+			createBullet(server, server.getNextEntityID(), playerID, irac, this.owner.side);
 		}
 	}
 

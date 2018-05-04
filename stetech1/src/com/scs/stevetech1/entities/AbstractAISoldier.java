@@ -39,6 +39,10 @@ import ssmith.util.RealtimeInterval;
 public abstract class AbstractAISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable { //, ICanShoot {//, IUnit {
 
+	public static final int BULLETS_IN_MAG = 6;
+	public static final float SHOOT_INTERVAL = 1f;
+	public static final float RELOAD_INTERVAL = 4f;
+	
 	public static final float START_HEALTH = 5f; // todo
 	public static final float SPEED = .53f;//.47f;
 
@@ -47,7 +51,11 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public int side;
 	protected IArtificialIntelligence ai;
 	private int serverSideCurrentAnimCode; // Server-side
-	private RealtimeInterval shootInt = new RealtimeInterval(3000);
+	
+	// Weapon
+	private int bullets = BULLETS_IN_MAG;
+	private float timeToNextShot = 0; 
+	//private RealtimeInterval shootInt = new RealtimeInterval(3000);
 
 	// HUD
 	private BitmapText hudNode;
@@ -109,6 +117,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (health > 0) {
+			timeToNextShot -= tpf_secs;
 			ai.process(server, tpf_secs);
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
 		} else {
@@ -255,7 +264,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 
 	public void shoot(PhysicalEntity target) {
-		if (this.shootInt.hitInterval()) {
+		//if (this.shootInt.hitInterval()) {
+		if (this.timeToNextShot <= 0) {
 			if (Globals.DEBUG_AI_BULLET_POS) {
 				Globals.p("AI shooting!");
 			}
@@ -264,6 +274,15 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			Vector3f dir = target.getMainNode().getWorldBound().getCenter().subtract(pos).normalizeLocal();
 			AbstractAIBullet bullet = this.createBullet(pos, dir);// new AIBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
 			this.game.addEntity(bullet);
+			
+			this.bullets--;
+			if (this.bullets > 0) {
+				this.timeToNextShot = SHOOT_INTERVAL;
+			} else {
+				this.timeToNextShot = RELOAD_INTERVAL;
+				bullets = BULLETS_IN_MAG;
+				Globals.p("AI Reloading");
+			}
 		}
 	}
 

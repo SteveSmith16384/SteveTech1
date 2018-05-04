@@ -7,6 +7,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.scs.simplephysics.SimplePhysicsController;
+import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
@@ -38,5 +39,7 @@ public interface IEntityController {
 	public <V> Future<V> enqueue(Callable<V> callable);
 	
 	int getNumEntities();
+	
+	boolean canCollide(PhysicalEntity a, PhysicalEntity b);
 	
 }

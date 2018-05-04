@@ -46,7 +46,7 @@ public class UnitTestGameServer extends AbstractGameServer {
 
 
 	@Override
-	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
 		return false;
 	}
 

@@ -15,7 +15,7 @@ import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IPhysicalEntity;
-import com.scs.stevetech1.components.IPlayerLaunchable;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ISetRotation;
@@ -36,7 +36,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
 	public boolean collideable = true;
 	public boolean blocksView;
-	
+
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
 
@@ -47,7 +47,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		super(_game, id, type, _name, _requiresProcessing);
 
 		blocksView = _blocksView;
-		
+
 		historicalPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode_" + id);
 
@@ -242,7 +242,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public RayCollisionData checkForCollisions(Ray r) {
+	public RayCollisionData checkForRayCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		int c = game.getGameNode().collideWith(r, res);
 		if (c == 0) {
@@ -264,15 +264,21 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			}
 			if (s != null && s.getUserData(Globals.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
-				if (pe != this && pe.collideable) {
+				if (pe != this) {
+					if (game.canCollide(this, pe)) {
+						/*if (pe != this && pe.collideable) {
 					if (this instanceof IPlayerLaunchable) {
-						IPlayerLaunchable bullet = (IPlayerLaunchable)this;
-						if (bullet.getLauncher() == pe) { // Don't collide with shooter
-							continue;
+						if (pe instanceof IPlayerLaunchable) {
+							continue; // Bullets don't collide with each other
 						}
+						IPlayerLaunchable bullet = (IPlayerLaunchable)this;
+						if (bullet.getLauncher() == pe) {
+							continue; // Don't collide with shooter
+						}
+					}*/
+						//Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
+						return new RayCollisionData(pe, col.getContactPoint(), col.getDistance());
 					}
-					//Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
-					return new RayCollisionData(pe, col.getContactPoint(), col.getDistance());
 				}
 			}
 		}
@@ -293,7 +299,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public boolean canSee(PhysicalEntity target, float range) { int x;
+	public boolean canSee(PhysicalEntity target, float range) {
 		// Test the ray from the middle of the entity
 		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter();
 		Vector3f theirPos = target.getMainNode().getWorldBound().getCenter();

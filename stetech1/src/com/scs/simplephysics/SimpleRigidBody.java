@@ -17,12 +17,13 @@ import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
+	private static final boolean DEBUG_AUTOMOVING = true;
+
+	private static final float AUTOMOVE_FRAC = .1f;
 	private static final float MAX_STEP_HEIGHT = 0.25f; // todo - make config
 	private static final float GRAVITY_WARNING = -15f;
 	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
 	
-	private static final boolean DEBUG_AUTOMOVING = true;
-
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f(); // Gets reduced by air resistance each frame
 	private Vector3f tmpMoveDir = new Vector3f();
@@ -236,8 +237,8 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 			}
 			if (doX) {
-				float len = ourBB.getCenter().x - theirBB.getCenter().x;
-				Vector3f diff = new Vector3f(len, 0, 0);
+				float len = ourBB.getCenter().x - theirBB.getCenter().x; //todo - adjust by diff of edges!
+				Vector3f diff = new Vector3f(len*AUTOMOVE_FRAC, 0, 0);
 				if (DEBUG_AUTOMOVING) {
 					p("Automoved  " + this + " by " + diff);
 				}
@@ -253,7 +254,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 			if (doZ) {
 				float len = ourBB.getCenter().z - theirBB.getCenter().z;
-				Vector3f diff = new Vector3f(0, 0, len);
+				Vector3f diff = new Vector3f(0, 0, len*AUTOMOVE_FRAC);
 				if (DEBUG_AUTOMOVING) {
 					p("Automoved  " + this + " by " + diff);
 				}
@@ -267,9 +268,9 @@ public class SimpleRigidBody<T> implements Collidable {
 					doY = false;
 				}
 			}
-			if (doY) {// || (doX == false && doZ == false)) {
+			if (doY) {
 				float len = ourBB.getCenter().y - theirBB.getCenter().y;
-				Vector3f diff = new Vector3f(0, len, 0);
+				Vector3f diff = new Vector3f(0, len*AUTOMOVE_FRAC, 0);
 				if (DEBUG_AUTOMOVING) {
 					p("Automoved  " + this + " by " + diff);
 				}

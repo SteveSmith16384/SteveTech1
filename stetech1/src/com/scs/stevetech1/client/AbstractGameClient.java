@@ -46,7 +46,7 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IKillable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
-import com.scs.stevetech1.components.IPlayerLaunchable;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
@@ -852,8 +852,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 			if (e instanceof PhysicalEntity) {
 				boolean add = true;
-				if (e instanceof IPlayerLaunchable) { // Don't add bullets until they are fired!
-					IPlayerLaunchable il = (IPlayerLaunchable)e;
+				if (e instanceof ILaunchable) { // Don't add bullets until they are fired!
+					ILaunchable il = (ILaunchable)e;
 					add = il.hasBeenLaunched();
 				}
 				if (add) {
@@ -1241,6 +1241,15 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	@Override
 	public int getPlayerID() {
 		return playerID;
+	}
+
+
+	@Override
+	public boolean canCollide(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
+		PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
+		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
+
+		return canCollide(pa, pb);
 	}
 
 

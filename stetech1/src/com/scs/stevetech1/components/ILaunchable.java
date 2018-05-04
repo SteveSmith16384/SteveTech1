@@ -2,7 +2,7 @@ package com.scs.stevetech1.components;
 
 import com.jme3.math.Vector3f;
 
-public interface IPlayerLaunchable { // todo - create a new IDontCollideWithOwner
+public interface ILaunchable {
 
 	IEntity getLauncher(); // So we know who not to collide with
 	
