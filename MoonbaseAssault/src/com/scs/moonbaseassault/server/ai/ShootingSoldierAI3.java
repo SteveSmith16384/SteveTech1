@@ -8,6 +8,7 @@ import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.stevetech1.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
@@ -18,7 +19,7 @@ import ssmith.util.RealtimeInterval;
 
 public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
-	private static final float WAIT_FOR_DOOR_DURATION = 3;
+	private static final float WAIT_FOR_DOOR_DURATION = 2;
 	private static final boolean SHOOT_AT_ENEMY = true;
 
 	private AbstractAISoldier soldierEntity;
@@ -48,15 +49,15 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			if (!cansee) {
 				//soldierEntity.canSee(this.currentTarget, 100f); // todo - remove
 				this.currentTarget = null;
-				if (Globals.DEBUG_AI_SEE_PLAYER) {
-					Globals.p("AI no longer see player");
+				if (Globals.DEBUG_AI_TARGETTING) {
+					Globals.p("AI no longer see target");
 				}
 			}
 		}
 		if (currentTarget == null) { // Check we can still see enemy
 			if (this.checkForEnemyInt.hitInterval()) {
 				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side);
-				if (Globals.DEBUG_AI_SEE_PLAYER && currentTarget != null) {
+				if (Globals.DEBUG_AI_TARGETTING && currentTarget != null) {
 					Globals.p("AI can now see " + currentTarget);
 				}
 			}
@@ -93,6 +94,12 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 					//Globals.p("AISoldier has collided with " + pe);
 					//changeDirection(currDir.mult(-1));
 					changeDirection(getRandomDirection()); // Start us pointing in the right direction
+				} else if (pe instanceof AbstractAISoldier || pe instanceof AbstractServerAvatar) {
+					if (NumberFunctions.rnd(1, 3) == 1) {
+						this.waitForSecs = 3;
+					} else {
+						changeDirection(getRandomDirection()); // Start us pointing in the right direction
+					}
 				} else if (pe instanceof SlidingDoor) {
 					this.waitForSecs += WAIT_FOR_DOOR_DURATION;
 				}

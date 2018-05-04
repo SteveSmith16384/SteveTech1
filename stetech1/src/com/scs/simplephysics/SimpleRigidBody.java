@@ -308,6 +308,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			Ray prevRay = new Ray(prevPos, DOWN_VEC);
 			rayCRs.clear();
 			cr.simpleEntity.getCollidable().collideWith(prevRay, rayCRs);
+			if (rayCRs.getClosestCollision().getContactPoint() != null) {
 			float prevHeight = rayCRs.getClosestCollision().getContactPoint().y;
 
 			Vector3f newPos = prevPos.add(moveOffset);
@@ -317,12 +318,13 @@ public class SimpleRigidBody<T> implements Collidable {
 			float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
 			
 			float diff = prevHeight - nextHeight; // todo - wrong?
-			Globals.p("Diff=" + diff);
+			//Globals.p("Diff=" + diff);
 			if (nextHeight < prevHeight) {
 				if (diff < moveOffset.length()) { // 45 degrees?
-					Globals.p("Walking up!");
+					//Globals.p("Walking up!");
 					this.oneOffForce.y += diff*100;
 				}
+			}
 			}
 			// Move up if it's a mesh/terrain?
 			//this.oneOffForce.y += (.5f);

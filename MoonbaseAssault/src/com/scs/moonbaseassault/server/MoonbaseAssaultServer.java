@@ -203,8 +203,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		// Add AI soldiers
 		for (int side=1 ; side<=2 ; side++) {
-			for (int i=0 ; i<2 ; i++) {
-				MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, side, AbstractAvatar.ANIM_IDLE, "Defender " + (i+1));
+			for (int i=0 ; i<3 ; i++) {
+				String name = (side == 1 ? "Attacker" : "Defender") + " " + (i+1);
+				MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, side, AbstractAvatar.ANIM_IDLE, name);
 				this.actuallyAddEntity(s);
 				moveAISoldierToStartPosition(s, s.side);
 			}
@@ -277,31 +278,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	public int getSide(ClientData client) {
 		// Players always on side 1?
 		return 1;
-		/*
-		// This DOESN'T Check maxPlayersPerside, maxSides
-		HashMap<Integer, Integer> map = getPlayersPerSide();
-		// Get lowest amount
-		int lowest = 999;
-		int highest = -1;
-		for (int i : map.values()) {
-			if (i < lowest) {
-				lowest = i;
-			}
-			if (i > highest) {
-				highest = i;
-			}
-		}
-		// Get the side
-		Iterator<Integer> it = map.keySet().iterator();
-		while (it.hasNext()) {
-			int i = it.next();
-			int val = map.get(i);
-			if (val <= lowest) {
-				return i;
-			}
-		}
-		throw new RuntimeException("Should not get here");
-		 */
 	}
 
 

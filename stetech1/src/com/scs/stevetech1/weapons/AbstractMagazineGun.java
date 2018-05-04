@@ -54,8 +54,15 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 				//Globals.p("Shooting too soon - wait for " + timeUntilShoot_secs + " secs");
 			}
 		}
+		if (game.isServer()) {
+			// If activation failed, clear out bullets to force a reload, since they must be out of sync
+			Globals.p("Forcing empty of magazine");
+			this.emptyMagazine();
+		}
 		return false;
 	}
+	
+	protected abstract void emptyMagazine();
 
 
 	@Override

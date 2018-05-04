@@ -242,7 +242,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public RayCollisionData checkForCollisions(Ray r) {//, float range) {
+	public RayCollisionData checkForCollisions(Ray r) {
 		CollisionResults res = new CollisionResults();
 		int c = game.getGameNode().collideWith(r, res);
 		if (c == 0) {
@@ -320,9 +320,15 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			}
 			if (s != null && s.getUserData(Globals.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
-				if (pe != this && pe.collideable && pe.blocksView) {
-					Globals.p("Ray collided with " + pe + " at " + col.getContactPoint());
-					return pe == target;
+				//Globals.p("Ray collided with " + pe + " at " + col.getContactPoint());
+				if (pe == this) {
+					continue; // Don't block by outrselves
+				}
+				if (pe == target) {
+					return true;
+				}
+				if (pe.blocksView) {
+					return false;
 				}
 			}
 		}

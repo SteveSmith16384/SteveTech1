@@ -39,7 +39,7 @@ import ssmith.util.RealtimeInterval;
 public abstract class AbstractAISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable { //, ICanShoot {//, IUnit {
 
-	public static final float START_HEALTH = 1f; // todo
+	public static final float START_HEALTH = 5f; // todo
 	public static final float SPEED = .53f;//.47f;
 
 	private IAvatarModel soldierModel; // Need this to animate the model
@@ -256,7 +256,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 	public void shoot(PhysicalEntity target) {
 		if (this.shootInt.hitInterval()) {
-			if (Globals.DEBUG_AI_SHOOTING) {
+			if (Globals.DEBUG_AI_BULLET_POS) {
 				Globals.p("AI shooting!");
 			}
 			Vector3f pos = this.getWorldTranslation().clone();

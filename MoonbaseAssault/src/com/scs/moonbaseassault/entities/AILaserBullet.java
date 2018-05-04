@@ -22,7 +22,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class AILaserBullet extends AbstractAIBullet implements INotifiedOfCollision {
 
-	private static final float SPEED = 10f;
+	private static final float SPEED = 3f;//10f; todo
 	private static final boolean USE_CYLINDER = true;
 
 	public AILaserBullet(IEntityController _game, int id, int side, float x, float y, float z, IEntity _shooter, Vector3f dir) {

@@ -170,4 +170,11 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	}
 
 
+	@Override
+	protected void emptyMagazine() {
+		this.bulletsInMag = 0;
+		
+	}
+
+
 }

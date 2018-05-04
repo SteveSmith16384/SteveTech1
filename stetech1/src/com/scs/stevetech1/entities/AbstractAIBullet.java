@@ -60,7 +60,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 			this.remove();
 		}
 
-		if (Globals.DEBUG_AI_SHOOTING) {
+		if (Globals.DEBUG_AI_BULLET_POS) {
 			Globals.p("AI Bullet at " + this.getWorldTranslation());
 		}
 
@@ -82,7 +82,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 	@Override
 	public void remove() {
 		if (!removed) {
-			if (Globals.DEBUG_AI_SHOOTING) {
+			if (Globals.DEBUG_AI_BULLET_POS) {
 				Globals.p("Removing AI bullet");
 			}
 
