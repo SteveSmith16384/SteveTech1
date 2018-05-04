@@ -149,8 +149,9 @@ public class TwoWeeksClientEntityCreator {
 		{
 			int side = (int)msg.data.get("side");
 			int animcode = (int)msg.data.get("animcode");
-			TWIB_AISoldier z = new TWIB_AISoldier(game, id, pos.x, pos.y, pos.z, side, animcode);
-			return z;
+			String name = (String)msg.data.get("name");
+			TWIB_AISoldier soldier = new TWIB_AISoldier(game, id, pos.x, pos.y, pos.z, side, animcode, name);
+			return soldier;
 		}
 
 		/*case MAP_BORDER:

@@ -181,7 +181,8 @@ public class MoonbaseAssaultClientEntityCreator {
 		{
 			int side = (int)msg.data.get("side");
 			int animcode = (int)msg.data.get("animcode");
-			MA_AISoldier z = new MA_AISoldier(game, id, pos.x, pos.y, pos.z, side, animcode);
+			String name = (String)msg.data.get("name");
+			MA_AISoldier z = new MA_AISoldier(game, id, pos.x, pos.y, pos.z, side, animcode, name);
 			return z;
 		}
 

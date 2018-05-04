@@ -90,7 +90,7 @@ public class UnitTestGameClient extends AbstractGameClient {
 			int avatarID = (int)msg.data.get("avatarID");
 			return new UnitTestAbility(client, id, playerID, null, avatarID);
 		default:
-			throw new RuntimeException("todo");
+			throw new RuntimeException("Unknown type: " + msg.type);
 
 		}
 	}

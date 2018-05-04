@@ -95,7 +95,6 @@ public class ZombieModel implements IAvatarModel {
 
 	@Override
 	public void setAnim(int anim) {
-		// Todo
 		
 	}
 

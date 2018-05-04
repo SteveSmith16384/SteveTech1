@@ -30,19 +30,21 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	public ClientData client;
 	private float maxHealth;
 
-	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, float _maxHealth) {
+	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, float _maxHealth, float _moveSpeed, float _jumpForce) {
 		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.side, anim);
 
 		server = (AbstractGameServer)_module;
 		client = _client;
 		maxHealth = _maxHealth;
+		this.moveSpeed = _moveSpeed;
+		this.setJumpForce(_jumpForce);
 	}
 
 
 	public void startAgain() {
 		alive = true;
-		this.moveSpeed = server.getAvatarMoveSpeed(this); // todo - send to client if it changes
-		this.setJumpForce(server.getAvatarJumpForce(this)); // todo - send to client if it changes
+		//this.moveSpeed = server.getAvatarMoveSpeed(this); // todo - send to client if it changes
+		//this.setJumpForce(server.getAvatarJumpForce(this)); // todo - send to client if it changes
 		this.setHealth(maxHealth);
 		this.simpleRigidBody.resetForces();//.currentGravInc = 0; // In case they fell off the edge
 		this.invulnerableTimeSecs = 5;

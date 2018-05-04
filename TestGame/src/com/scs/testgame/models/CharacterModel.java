@@ -79,7 +79,6 @@ public class CharacterModel implements IAvatarModel {
 
 	@Override
 	public void setAnim(int anim) {
-		// Todo
 		
 	}
 

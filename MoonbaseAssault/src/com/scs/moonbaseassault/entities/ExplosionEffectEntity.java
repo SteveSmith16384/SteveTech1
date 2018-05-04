@@ -12,7 +12,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class ExplosionEffectEntity extends PhysicalEntity implements IProcessByClient {
 
-	private static final float DURATION = 1;
+	private static final float DURATION = 5;
 	
 	private SmallExplosionModel expl;
 	private float timeLeft = DURATION;
@@ -32,9 +32,10 @@ public class ExplosionEffectEntity extends PhysicalEntity implements IProcessByC
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
-		expl.process();
+		expl.process(tpf_secs);
 		timeLeft -= tpf_secs;
 		if (timeLeft <= 0) {
+			expl.stop();
 			this.remove();
 		}
 	}

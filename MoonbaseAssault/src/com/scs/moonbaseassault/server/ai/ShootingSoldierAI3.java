@@ -46,7 +46,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		if (currentTarget != null) { // Find enemy
 			boolean cansee = soldierEntity.canSee(this.currentTarget, 100f);
 			if (!cansee) {
-				soldierEntity.canSee(this.currentTarget, 100f); // todo - remove
+				//soldierEntity.canSee(this.currentTarget, 100f); // todo - remove
 				this.currentTarget = null;
 				if (Globals.DEBUG_AI_SEE_PLAYER) {
 					Globals.p("AI no longer see player");

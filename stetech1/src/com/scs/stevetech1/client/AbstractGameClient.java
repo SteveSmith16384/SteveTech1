@@ -895,7 +895,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		while (this.entities.size() > 0) {
 			Iterator<IEntity> it = this.entities.values().iterator();
 			IEntity e = it.next();
-			e.remove(); // todo - onl;y remove for this game
+			e.remove();
 			it.remove();
 		}
 		if (Globals.STRICT) {

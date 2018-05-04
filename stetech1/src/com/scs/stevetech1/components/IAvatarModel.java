@@ -9,7 +9,6 @@ public interface IAvatarModel {
 	
 	Spatial getModel();
 	
-	//BoundingBox getBoundingBox(); // todo - change to Vector3f getSize();
 	Vector3f getSize();
 	
 	float getCameraHeight();

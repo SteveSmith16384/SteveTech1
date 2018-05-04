@@ -42,57 +42,8 @@ public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOf
 		ball_geo.setModelBound(new BoundingBox());
 		this.mainNode.attachChild(ball_geo); //ball_geo.getModelBound();
 		this.getMainNode().setUserData(Globals.ENTITY, this);
-
 	}
 
-/*
-	@Override
-	public void launch(IEntity _shooter, Vector3f startPos, Vector3f dir) {
-		if (launched) { // We might be the client that fired the bullet, which we've already launched
-			//Globals.p("Snowball already launched.  This may be a good sign.");
-			return;
-		}
-
-		if (_shooter == null) {
-			throw new RuntimeException("Null launcher");
-		}
-
-		launched = true;
-		shooter = _shooter;
-
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this.mainNode, game.getPhysicsController(), true, this);
-		this.simpleRigidBody.setBounciness(0f);
-		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));
-
-		game.getGameNode().attachChild(this.mainNode);
-		this.setWorldTranslation(startPos);
-		this.mainNode.updateGeometricState();
-
-		this.collideable = true;
-
-		if (game.isServer()) {
-			AbstractGameServer server = (AbstractGameServer)game;
-
-			// fast forward it!
-			float totalTimeToFFwd = server.clientRenderDelayMillis + (client.playerData.pingRTT/2);
-			float tpf_secs = (float)server.tickrateMillis / 1000f;
-			while (totalTimeToFFwd > 0) {
-				totalTimeToFFwd -= server.tickrateMillis;
-				super.processByServer(server, tpf_secs);
-				if (this.removed) {
-					break;
-				}
-			}
-
-			// If server, send messages to clients to tell them it has been launched
-			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
-			server.gameNetworkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), ld));
-		} else {
-			// todo - client confirms that bullet launched
-		}
-
-	}
-*/
 
 	@Override
 	public float getDamageCaused() {

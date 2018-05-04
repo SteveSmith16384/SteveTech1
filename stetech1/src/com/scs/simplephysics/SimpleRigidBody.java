@@ -188,9 +188,9 @@ public class SimpleRigidBody<T> implements Collidable {
 				this.oneOffForce.y = oneOffForce.y * aerodynamicness; // Slow down
 			}
 
-			if (this.currentGravInc < GRAVITY_WARNING) {
-				//todo - re-add p("Warning - high gravity offset: " + this.currentGravInc);
-			}
+			/*if (this.currentGravInc < GRAVITY_WARNING) {
+				p("Warning - high gravity offset: " + this.currentGravInc);
+			}*/
 		}
 	}
 

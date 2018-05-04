@@ -111,7 +111,7 @@ ConsoleInputListener {
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
-	private boolean doNotSendAddRemoveEntityMsgs = false; // Don't send "remove" messages  todo - reame
+	private boolean doNotSendAddRemoveEntityMsgs = false;
 
 	protected SimpleGameData gameData = new SimpleGameData();
 
@@ -133,7 +133,6 @@ ConsoleInputListener {
 
 		setShowSettings(false); // Don't show settings dialog
 		setPauseOnLostFocus(false);
-		//start(JmeContext.Type.Headless); // todo - don't start immed!
 	}
 
 
@@ -534,7 +533,7 @@ ConsoleInputListener {
 
 
 	//public abstract float getAvatarStartHealth(AbstractAvatar avatar);
-
+/*
 	public float getAvatarMoveSpeed(AbstractAvatar avatar) { // todo - move to constructor
 		return 3f; // Override if required
 	}
@@ -543,7 +542,7 @@ ConsoleInputListener {
 	public float getAvatarJumpForce(AbstractAvatar avatar) { // todo - move to constructor
 		return 2f; // Override if required
 	}
-
+*/
 	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid);
@@ -556,7 +555,7 @@ ConsoleInputListener {
 					nem.data.add(new NewEntityData(e));
 					if (nem.isFull()) {
 						this.gameNetworkServer.sendMessageToClient(client, nem);
-						Functions.sleep(50); // todo - remove?wwwwwww
+						Functions.sleep(50); // Try prevent buffer overflow
 						nem = new NewEntityMessage(this.getGameID());
 					}
 				}

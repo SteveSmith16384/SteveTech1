@@ -1,6 +1,7 @@
 package twoweeks.server;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.CollisionResults;
@@ -28,6 +29,8 @@ import twoweeks.entities.MercServerAvatar;
 import twoweeks.entities.Terrain1;
 
 public class TwoWeeksServer extends AbstractGameServer {
+
+	private static AtomicInteger nextSideNum = new AtomicInteger(1);
 
 	public static final String GAME_ID = "Two Weeks";
 	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
@@ -319,7 +322,7 @@ public class TwoWeeksServer extends AbstractGameServer {
 
 	@Override
 	public int getSide(ClientData client) {
-		return 1; // todo - return unique side
+		return nextSideNum.getAndAdd(1);
 
 	}
 

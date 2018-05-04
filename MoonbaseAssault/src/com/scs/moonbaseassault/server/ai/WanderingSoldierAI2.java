@@ -61,7 +61,7 @@ public class WanderingSoldierAI2 implements IArtificialIntelligence {
 				} else {
 					changeDirection(getRandomDirection()); // Start us pointing in the right direction
 				}
-			} else if (pe instanceof SlidingDoor) { // Todo - create IWaitForMove
+			} else if (pe instanceof SlidingDoor) {
 				this.waitForSecs = WAIT_FOR_DOOR_DURATION;
 			}
 		}

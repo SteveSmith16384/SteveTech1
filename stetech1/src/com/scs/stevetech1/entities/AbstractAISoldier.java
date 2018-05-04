@@ -54,7 +54,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	private static BitmapFont font_small;
 
 	public AbstractAISoldier(IEntityController _game, int id, int type, float x, float y, float z, int _side, 
-			IAvatarModel _model, int _csInitialAnimCode) {
+			IAvatarModel _model, int _csInitialAnimCode, String name) {
 		super(_game, id, type, "AISoldier", true, false);
 
 		side = _side;
@@ -64,6 +64,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
+			creationData.put("name", name);
 
 			//ai = new ShootingSoldierAI3(this);
 		} else {
@@ -90,7 +91,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
-		hudNode.setText("Cpl. Jonlan"); // todo - make param
+		hudNode.setText(name);
 
 	}
 

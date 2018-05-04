@@ -13,31 +13,26 @@ public class DummyHUD extends Node implements IHUD {
 
 	@Override
 	public void processByClient(AbstractGameClient client, float tpf_secs) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void setDebugText(String s) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void showDamageBox() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void showMessage(String s) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void addItem(Node n) {
-		// TODO Auto-generated method stub
 		
 	}
 

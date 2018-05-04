@@ -16,6 +16,7 @@ import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultGameData;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
+import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -201,11 +202,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		//this.actuallyAddEntity(floor);
 
 		// Add AI soldiers
-		for (int i=0 ; i<1 ; i++) {
-			MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, 2, AbstractAvatar.ANIM_IDLE);
-			this.actuallyAddEntity(s);
-			moveAISoldierToStartPosition(s, s.side);
-
+		for (int side=1 ; side<=2 ; side++) {
+			for (int i=0 ; i<2 ; i++) {
+				MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, side, AbstractAvatar.ANIM_IDLE, "Defender " + (i+1));
+				this.actuallyAddEntity(s);
+				moveAISoldierToStartPosition(s, s.side);
+			}
 		}
 
 	}
@@ -250,28 +252,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		super.collisionOccurred(a, b);
 
-	}
-
-
-	@Override
-	protected int getWinningSide() {
-		return 2;
-		/*	int highestScore = -1;
-		int winningSide = -1;
-		boolean draw = false;
-		for(ClientData c : super.clients.values()) {
-			if (c.getScore() > highestScore) {
-				winningSide = c.side;
-				highestScore = c.getScore();
-				draw = false;
-			} else if (c.getScore() == highestScore) {
-				draw = true;
-			}
-		}
-		if (draw) {
-			return -1;
-		}
-		return winningSide;*/
 	}
 
 
@@ -383,7 +363,22 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 
 	private void checkForWinner() {
-		// todo
+		if (this.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
+			if (this.getMAGameData().pointsForSide[1] >= 100 || this.getMAGameData().pointsForSide[2] >= 100) {
+				this.gameStatusChanged(SimpleGameData.ST_FINISHED);
+			}
+		}
+	}
+
+
+	@Override
+	protected int getWinningSide() {
+		for (int s=1 ; s<=2 ; s++) {
+			if (this.getMAGameData().pointsForSide[s] >= 100) {
+				return s;
+			}
+		}
+		throw new RuntimeException("No winning side!");
 	}
 
 

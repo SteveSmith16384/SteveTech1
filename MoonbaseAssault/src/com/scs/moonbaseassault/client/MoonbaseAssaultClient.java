@@ -12,6 +12,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
 import com.scs.moonbaseassault.entities.Computer;
+import com.scs.moonbaseassault.entities.ExplosionEffectEntity;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
@@ -276,13 +277,9 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
-				/*SmallExplosionModel ex = new SmallExplosionModel(this.getAssetManager(), this.getRenderManager());
-				ex.setLocalTranslation(0, 0, 0);
-				ex.process();
-				this.getGameNode().attachChild(ex);*/
+				ExplosionEffectEntity e = new ExplosionEffectEntity(this, this.getNextEntityID(), new Vector3f(1f, 1f, 1f));
+				this.addClientOnlyEntity(e);
 			}
-		} else {
-			super.onAction(name, value, tpf);
 		}
 	}
 
