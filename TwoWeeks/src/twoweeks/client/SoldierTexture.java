@@ -18,12 +18,13 @@ public class SoldierTexture {
 	
 	public static Texture getTexture() {
 		PaintableImage pi = new PaintableImage(SIZE, SIZE) {
+			
 			@Override
 			public void paint(Graphics2D g) {
 				for (int row=0 ; row<4 ; row++) {
 					switch (row) {
 					case 0:
-						g.setColor(Color.black);
+						g.setColor(getRandomHairColour());//Color.black);
 						break;
 					case 1:
 						g.setColor(Color.white);
@@ -38,9 +39,16 @@ public class SoldierTexture {
 					g.fillRect(0, row*(SIZE/4), SIZE, (row+1)*(SIZE/4));
 				}
 			}
+			
 		};
 		
 		pi.refreshImage();
 		return new Texture2D(pi);
 	}
+	
+	
+	private static Color getRandomHairColour() {
+		return Color.black;
+	}
+	
 }

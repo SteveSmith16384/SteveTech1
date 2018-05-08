@@ -28,10 +28,12 @@ import twoweeks.TwoWeeksGameData;
 import twoweeks.client.TwoWeeksClientEntityCreator;
 import twoweeks.entities.GenericStaticModel;
 import twoweeks.entities.MercServerAvatar;
+import twoweeks.entities.TWIB_AISoldier;
 import twoweeks.entities.Terrain1;
 
 public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeightAdjuster {
 
+	private static final int MAP_SIZE = 200; // Size to use
 	private static final int CITY_X = 20;
 	private static final int CITY_Z = 20;
 	private static final int CITY_SIZE = 60;
@@ -41,6 +43,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 	public static final String GAME_ID = "Two Weeks";
 	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
 
+	private Terrain1 terrain;
 	private TwoWeeksCollisionValidator collisionValidator = new TwoWeeksCollisionValidator();
 
 	public static void main(String[] args) {
@@ -94,7 +97,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 	private TwoWeeksServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
-		super(GAME_ID, new GameOptions(10*1000, 60*1000, 10*1000, 
+		super(GAME_ID, new GameOptions(10*1000, 10*60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);
 		start(JmeContext.Type.Headless);
@@ -133,7 +136,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 	protected void createGame() {
 		//super.gameData = new TwoWeeksGameData(nextGameID.getAndAdd(1));
 
-		Terrain1 terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0, this);
+		terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0, this);
 		this.actuallyAddEntity(terrain); // terrain.getMainNode().getWorldBound();
 		// 1280 x 1280
 
@@ -150,7 +153,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 				this.dropDebugSphere(terrain, x, z);
 			}
 		}*/
-
+			/*
 			// Place BigPalmTree
 			pos = new Vector3f(95, 0, 85);
 			GenericStaticModel tree = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/Desert/BigPalmTree.blend", 3f, "Models/Desert/Textures/PalmTree.png", pos.x, pos.y, pos.z, new Quaternion());
@@ -198,7 +201,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 			tree5.setWorldTranslation(pos);
 			this.actuallyAddEntity(tree5); //tree.getMainNode().getWorldBound();
 			tree5 = null;
-
+			 */
 			// Place trees
 			for (int z=80; z<=120 ; z+= 10) {
 				for (int x=80; x<=120 ; x+= 10) {
@@ -210,18 +213,19 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 		placeCity();
 
-		// todo
 		{
 			// Place AI
-			/*int num = 1;
+			for (int num=0 ; num<10 ; num++) {
+				Vector3f pos = new Vector3f(NumberFunctions.rndFloat(10, MAP_SIZE-10), 255, NumberFunctions.rndFloat(10, MAP_SIZE-10));
+				/*int num = 1;
 			for (int z=80; z<=120 ; z+= 10) {
-				for (int x=80; x<=120 ; x+= 10) {
-					Vector3f pos = this.getHeightAtPoint(x, z);
-					TWIB_AISoldier s = new TWIB_AISoldier(this, this.getNextEntityID(), pos.x, pos.y + 5, pos.z, this.nextSideNum.getAndAdd(1), AbstractAvatar.ANIM_IDLE, "Enemy " + num);
-					this.actuallyAddEntity(s);
-					num++;
-				}
-			}*/
+				for (int x=80; x<=120 ; x+= 10) {*/
+				//Vector3f pos = this.getHeightAtPoint(x, z);
+				TWIB_AISoldier s = new TWIB_AISoldier(this, this.getNextEntityID(), pos.x, pos.y + 5, pos.z, this.nextSideNum.getAndAdd(1), AbstractAvatar.ANIM_IDLE, "Enemy " + (num+1));
+				this.actuallyAddEntity(s);
+				//num++;
+				//}
+			}
 		}
 
 	}
@@ -277,16 +281,17 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 
 	private GenericStaticModel getRandomVehicle(Vector3f pos) {
+		float height = 0.7f;
 		int i = NumberFunctions.rnd(1, 4);
 		switch (i) {
 		case 1:
-			return new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "BasicCar", "Models/Car pack by Quaternius/BasicCar.blend", -1, "Models/Car pack by Quaternius/CarTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+			return new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "BasicCar", "Models/Car pack by Quaternius/BasicCar.blend", height, "Models/Car pack by Quaternius/CarTexture.png", pos.x, pos.y, pos.z, new Quaternion());
 		case 2:
-			return new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "CopCar", "Models/Car pack by Quaternius/CopCar.blend", -1, "Models/Car pack by Quaternius/CopTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+			return new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "CopCar", "Models/Car pack by Quaternius/CopCar.blend", height, "Models/Car pack by Quaternius/CopTexture.png", pos.x, pos.y, pos.z, new Quaternion());
 		case 3:
-			return new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "RaceCar", "Models/Car pack by Quaternius/RaceCar.blend", -1, "Models/Car pack by Quaternius/RaceCarTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+			return new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "RaceCar", "Models/Car pack by Quaternius/RaceCar.blend", height, "Models/Car pack by Quaternius/RaceCarTexture.png", pos.x, pos.y, pos.z, new Quaternion());
 		case 4:
-			return new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Taxi", "Models/Car pack by Quaternius/Taxi.blend", -1, "Models/Car pack by Quaternius/TaxiTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+			return new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Taxi", "Models/Car pack by Quaternius/Taxi.blend", height, "Models/Car pack by Quaternius/TaxiTexture.png", pos.x, pos.y, pos.z, new Quaternion());
 		default:
 			throw new RuntimeException("Invalid number: " + i);
 		}
@@ -417,7 +422,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 	@Override
 	public boolean doWeHaveSpaces() {
-		return true;
+		return true; // todo - not if game started
 	}
 
 
@@ -439,12 +444,14 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 		return 1;
 	}
 
+
 	@Override
 	public void adjustHeight(AbstractHeightMap heightmap) {
+		Vector3f pos = this.getHeightAtPoint(CITY_X, CITY_Z);
 		for (int z=CITY_Z ; z<CITY_Z+CITY_SIZE ; z++) {
 			for (int x=CITY_X ; x<CITY_X+CITY_SIZE ; x++) {
 				//Globals.p("x=" + x + ", z=" + z);
-				heightmap.setHeightAtPoint(1, x, z);
+				heightmap.setHeightAtPoint(pos.y, x, z);
 			}			
 		}
 

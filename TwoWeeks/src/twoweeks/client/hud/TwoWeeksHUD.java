@@ -239,15 +239,15 @@ public class TwoWeeksHUD extends Node implements IHUD {
 
 	private void updateTextArea(TwoWeeksClient client) {
 		StringBuilder str = new StringBuilder();
-		str.append(this.debugText + "\n");
 		str.append(this.gameStatus + "\n");
 		str.append(this.gameTime + "\n");
 		str.append(this.pingText + "\n");
 		str.append(this.scoreText + "\n");
 		str.append(this.numPlayers + "\n");
-		if (client.currentAvatar != null) {
+		/*if (client.currentAvatar != null) {
 			str.append("Pos: " + client.currentAvatar.getWorldTranslation() + "\n");
-		}
+		}*/
+		//str.append(this.debugText + "\n");
 		this.textArea.setText(str.toString());
 		
 	}

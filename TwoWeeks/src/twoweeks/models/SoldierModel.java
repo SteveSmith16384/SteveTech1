@@ -45,7 +45,6 @@ public class SoldierModel implements IAvatarModel {
 			JMEModelFunctions.moveYOriginTo(model, 0f);
 
 			AnimControl control = JMEModelFunctions.getNodeWithControls((Node)model);
-			//control.addListener(l);
 			channel = control.createChannel();
 		} else {
 			Box box1 = new Box(MODEL_WIDTH/2, MODEL_HEIGHT/2, MODEL_DEPTH/2);
