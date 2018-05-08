@@ -307,19 +307,5 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 		return null;
 	}
-/*
-	private void updateBB() {
-		Vector3f c = this.getMainNode().getWorldBound().getCenter();
-		this.boundingBox.setCenter(c.x, c.y, c.z);
-
-	}
-	*/
-/*
-	@Override
-	public void setWorldTranslation(float x, float y, float z) {
-		super.setWorldTranslation(x, y, z);
-		this.updateBB();
-	}
-*/
 
 }

@@ -38,7 +38,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	private List<Point> computerSquares;
 	public ArrayList<Point>[] deploySquares;
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
-	public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode; // todo - remove all this and do automatically
+	//public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode; // todo - remove all this and do automatically
 
 
 	public static void main(String[] args) {
@@ -103,12 +103,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	public void simpleInitApp() {
-		subNodeX0Y0 = new Node("00");
+		/*subNodeX0Y0 = new Node("00");
 		subNodeX1Y0 = new Node("10");
 		subNodeX0Y1 = new Node("01");
 		subNodeX1Y1 = new Node("11");
 		ceilingNode = new Node("Ceiling");
-		floorNode = new Node("Floor");
+		floorNode = new Node("Floor");*/
 
 		super.gameData = new MoonbaseAssaultGameData(this.getGameID()); // Replace normal data
 
@@ -143,16 +143,16 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected void createGame() {
-		this.getGameNode().attachChild(subNodeX0Y0);
+		/*this.getGameNode().attachChild(subNodeX0Y0);
 		this.getGameNode().attachChild(subNodeX1Y0);
 		this.getGameNode().attachChild(subNodeX0Y1);
 		this.getGameNode().attachChild(subNodeX1Y1);
-		this.getGameNode().attachChild(this.ceilingNode);
+		this.getGameNode().attachChild(this.ceilingNode);*/
 
 		MapLoader map = new MapLoader(this);
 		try {
-			map.loadMap("/serverdata/moonbaseassault_small.csv");
-			//map.loadMap("/serverdata/moonbaseassault.csv");
+			//map.loadMap("/serverdata/moonbaseassault_small.csv");
+			map.loadMap("/serverdata/moonbaseassault.csv");
 			scannerData = map.scannerData;
 			this.deploySquares = map.deploySquares;
 

@@ -5,12 +5,13 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, ILaunchable {
+public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, ILaunchable, INotifiedOfCollision {
 
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
@@ -35,12 +36,16 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 			}
 		}
 
-		this.createSimpleRigidBody(dir);
+		this.createBulletModel(dir);
 		this.setWorldTranslation(new Vector3f(x, y, z));
+
+		if (Globals.DEBUG_AI_BULLET_POS) {
+			Globals.p("AI bullet " + this.getID() + " starting at " + this.getWorldTranslation());
+		}
 	}
 
 
-	protected abstract void createSimpleRigidBody(Vector3f dir); // todo - rename to createModel or something
+	protected abstract void createBulletModel(Vector3f dir);
 
 
 	@Override
@@ -58,18 +63,22 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 				// Move spatial
 				Vector3f offset = this.dir.mult(speed * tpf_secs);
 				this.adjustWorldTranslation(offset);
+				if (Globals.DEBUG_AI_BULLET_POS) {
+					Globals.p("AI Bullet " + this.getID() + " moved by " + offset.length());
+				}
 			}
 		}
 
-		this.distLeft -= (speed * tpf_secs);
-		if (this.distLeft < 0) {
-			this.remove();
-		}
+		if (!this.removed) {
+			if (Globals.DEBUG_AI_BULLET_POS) {
+				Globals.p("AI Bullet " + this.getID() + " is at " + this.getWorldTranslation());
+			}
 
-		if (Globals.DEBUG_AI_BULLET_POS) {
-			Globals.p("AI Bullet at " + this.getWorldTranslation());
+			this.distLeft -= (speed * tpf_secs);
+			if (this.distLeft < 0) {
+				this.remove();
+			}
 		}
-
 	}
 
 
@@ -89,7 +98,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 	public void remove() {
 		if (!removed) {
 			if (Globals.DEBUG_AI_BULLET_POS) {
-				Globals.p("Removing AI bullet");
+				Globals.p("Removing AI bullet " + this.getID());
 			}
 
 			super.remove();
@@ -114,5 +123,6 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 	public boolean hasBeenLaunched() {
 		return true; // Always launched immed
 	}
+
 
 }

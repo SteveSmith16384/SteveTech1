@@ -3,9 +3,9 @@ package com.scs.moonbaseassault.client;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.entities.AILaserBullet;
+import com.scs.moonbaseassault.entities.BulletExplosionEntity;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
-import com.scs.moonbaseassault.entities.ExplosionEffectEntity;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.MapBorder;
@@ -13,6 +13,7 @@ import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.PlayerLaserBullet;
 import com.scs.moonbaseassault.entities.PlayersGrenade;
 import com.scs.moonbaseassault.entities.SlidingDoor;
+import com.scs.moonbaseassault.entities.SmallExplosionEntity;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
 import com.scs.moonbaseassault.entities.SpaceCrate;
@@ -46,11 +47,12 @@ public class MoonbaseAssaultClientEntityCreator {
 	public static final int DESTROYED_COMPUTER = 12;
 	public static final int GRENADE = 13;
 	public static final int GRENADE_LAUNCHER = 14;
-	public static final int EXPLOSION_EFFECT = 15;
+	public static final int SMALL_EXPLOSION_EFFECT = 15;
 	public static final int DEBUGGING_SPHERE = 16;
 	public static final int AI_LASER_BULLET = 17;
 	public static final int HITSCAN_RIFLE = 18;
 	public static final int BULLET_TRAIL = 19;
+	public static final int BULLET_EXPLOSION_EFFECT = 20;
 
 
 	public MoonbaseAssaultClientEntityCreator() {
@@ -227,9 +229,9 @@ public class MoonbaseAssaultClientEntityCreator {
 			return crate;
 		}
 
-		case EXPLOSION_EFFECT:
+		case SMALL_EXPLOSION_EFFECT:
 		{
-			ExplosionEffectEntity expl = new ExplosionEffectEntity(game, id, pos);
+			SmallExplosionEntity expl = new SmallExplosionEntity(game, id, pos);
 			return expl;
 		}
 
@@ -275,6 +277,12 @@ public class MoonbaseAssaultClientEntityCreator {
 			Vector3f dir = (Vector3f) msg.data.get("dir");
 			AILaserBullet bullet = new AILaserBullet(game, id, side, pos.x, pos.y, pos.z, shooter, dir);
 			return bullet;
+		}
+
+		case BULLET_EXPLOSION_EFFECT:
+		{
+			BulletExplosionEntity expl = new BulletExplosionEntity(game, id, pos);
+			return expl;
 		}
 
 		default:

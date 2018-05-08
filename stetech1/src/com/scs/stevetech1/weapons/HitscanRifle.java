@@ -129,7 +129,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	protected void reload(AbstractGameServer server) {
+	public void reload(AbstractGameServer server) {
 		this.bulletsInMag = this.magazineSize;
 	}
 	

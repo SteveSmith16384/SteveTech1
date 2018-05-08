@@ -511,19 +511,21 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof NewEntityMessage) {
 			NewEntityMessage newEntityMessage = (NewEntityMessage) message;
-			if (newEntityMessage.gameId == this.gameData.gameID) {
-				for (NewEntityData data : newEntityMessage.data) {
-					IEntity e = this.entities.get(data.entityID);
-					if (e == null) {// && this.isEntityGoingToBedAdded(newEntityMessage.entityID) == false) {
-						createEntity(data);
-					} else {
-						// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
-						Globals.p("Ignoring new entity " + e + " as we already know about it");
+			if (this.gameData != null) {
+				if (newEntityMessage.gameId == this.gameData.gameID) {
+					for (NewEntityData data : newEntityMessage.data) {
+						IEntity e = this.entities.get(data.entityID);
+						if (e == null) {
+							createEntity(data);
+						} else {
+							// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
+							Globals.p("Ignoring new entity " + e + " as we already know about it");
+						}
 					}
+				} else {
+					Globals.p("Ignoring NewEntityMessage for game " + newEntityMessage.gameId);
+					// It's not for this game, so ignore it
 				}
-			} else {
-				Globals.p("Ignoring NewEntityMessage for game " + newEntityMessage.gameId);
-				// It's not for this game, so ignore it
 			}
 
 		} else if (message instanceof EntityUpdateMessage) {

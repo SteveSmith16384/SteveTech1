@@ -1,11 +1,14 @@
 package com.scs.stevetech1.weapons;
 
+import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
+import com.scs.stevetech1.components.IReloadable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
+import com.scs.stevetech1.netmessages.ClientReloadingMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -13,7 +16,7 @@ import com.scs.stevetech1.shared.AbstractAbility;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractMagazineGun<T> extends AbstractAbility implements IAbility {
+public abstract class AbstractMagazineGun<T> extends AbstractAbility implements IAbility, IReloadable {
 
 	protected float timeUntilShoot_secs = 0;
 	protected int magazineSize;
@@ -48,20 +51,23 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			timeUntilShoot_secs = this.shotInterval_secs;
 			return true;
 		} else {
-			if (getBulletsInMag() <= 0) {
-				Globals.p("No bullets in mag!"); // Should rarely happen?
-			} else if (timeUntilShoot_secs > 0) {
+			if (timeUntilShoot_secs > 0) {
 				//Globals.p("Shooting too soon - wait for " + timeUntilShoot_secs + " secs");
+			} else if (getBulletsInMag() <= 0) {
+				if (game.isServer()) {
+					// If activation failed, clear out bullets to force a reload, since they must be out of sync
+					Globals.p("Forcing empty of magazine");
+					this.emptyMagazine();
+				} else {
+					AbstractGameClient client = (AbstractGameClient) game;
+					client.sendMessage(new ClientReloadingMessage(this.getID()));
+					this.timeUntilShoot_secs = this.reloadInterval_secs;
+				}
 			}
-		}
-		if (game.isServer()) {
-			// If activation failed, clear out bullets to force a reload, since they must be out of sync
-			Globals.p("Forcing empty of magazine");
-			this.emptyMagazine();
 		}
 		return false;
 	}
-	
+
 	protected abstract void emptyMagazine();
 
 
@@ -80,7 +86,9 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	}
 
 
-	protected void reload(AbstractGameServer server) {
+	@Override
+	public void reload(AbstractGameServer server) {
+		this.emptyMagazine(); // Remove any existing bullets
 		IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
 		while (this.getBulletsInMag() < this.magazineSize) {
 			createBullet(server, server.getNextEntityID(), playerID, irac, this.owner.side);
@@ -91,7 +99,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
 		super.processByClient(client, tpf_secs);
-		
+
 		timeUntilShoot_secs -= tpf_secs;
 	}
 

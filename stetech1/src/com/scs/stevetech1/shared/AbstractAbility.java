@@ -65,7 +65,6 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 		if (this.goingToBeActivated) {
 			if (activate() == false) { // This will also send the message
 				Globals.p("Warning - activate ability failed!");
-				// todo - if false, remove all bullets to force a reload
 			}
 			this.goingToBeActivated = false;
 		}
@@ -83,12 +82,8 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 			if (owner == null) {
 				IEntity e = client.getEntity(this.avatarID);
 				if (e != null) {
-					//try {
 					owner = (AbstractAvatar)e;
 					owner.ability[abilityNum] = this;
-					/*} catch (ClassCastException ex) {
-					ex.printStackTrace();
-				}*/
 				}
 			}
 		}

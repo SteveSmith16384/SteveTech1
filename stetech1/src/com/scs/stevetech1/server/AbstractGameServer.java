@@ -13,7 +13,6 @@ import com.jme3.asset.plugins.FileLocator;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.system.JmeContext;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -23,6 +22,7 @@ import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
+import com.scs.stevetech1.components.IReloadable;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.data.GameOptions;
@@ -32,6 +32,7 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
+import com.scs.stevetech1.netmessages.ClientReloadingMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
@@ -238,6 +239,12 @@ ConsoleInputListener {
 						} else {
 							Globals.p("Null shooter!");
 						}
+						
+					} else if (message instanceof ClientReloadingMessage) {
+						ClientReloadingMessage crm = (ClientReloadingMessage)message;
+						IReloadable e = (IReloadable)this.entities.get(crm.abilityId);
+						e.reload(this);
+						
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
 					}
@@ -423,8 +430,8 @@ ConsoleInputListener {
 		this.actuallyRemoveEntities();
 
 	}
-	
-	
+
+
 	private void actuallyRemoveEntities() {
 		for(Integer i : this.entitiesToRemove) {
 			this.actuallyRemoveEntity(i);
@@ -530,7 +537,7 @@ ConsoleInputListener {
 
 
 	//public abstract float getAvatarStartHealth(AbstractAvatar avatar);
-/*
+	/*
 	public float getAvatarMoveSpeed(AbstractAvatar avatar) { // todo - move to constructor
 		return 3f; // Override if required
 	}
@@ -539,7 +546,7 @@ ConsoleInputListener {
 	public float getAvatarJumpForce(AbstractAvatar avatar) { // todo - move to constructor
 		return 2f; // Override if required
 	}
-*/
+	 */
 	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid);
@@ -638,15 +645,15 @@ ConsoleInputListener {
 
 		// Tell clients
 		if (!doNotSendAddRemoveEntityMsgs) {
-		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
-		nem.data.add(new NewEntityData(e));
-		synchronized (clients) {
-			for (ClientData client : this.clients.values()) {
-				if (client.clientStatus == ClientStatus.Accepted) {
-					gameNetworkServer.sendMessageToClient(client, nem);
+			NewEntityMessage nem = new NewEntityMessage(this.getGameID());
+			nem.data.add(new NewEntityData(e));
+			synchronized (clients) {
+				for (ClientData client : this.clients.values()) {
+					if (client.clientStatus == ClientStatus.Accepted) {
+						gameNetworkServer.sendMessageToClient(client, nem);
+					}
 				}
 			}
-		}
 		}
 	}
 
@@ -810,7 +817,7 @@ ConsoleInputListener {
 			Globals.p("Starting new game " + gameData.gameID);
 			startNewGame();
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
-			
+
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {
 				for (IEntity e : entities.values()) {
@@ -820,7 +827,7 @@ ConsoleInputListener {
 					}
 				}
 			}
-			
+
 		} else if (newStatus == SimpleGameData.ST_FINISHED) {
 			int winningSide = this.getWinningSide();
 			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
@@ -884,19 +891,23 @@ ConsoleInputListener {
 
 	@Override
 	public void processConsoleInput(String s) {
-		//Globals.p("Received input: " + s);
-		if (s.equalsIgnoreCase("help") || s.equalsIgnoreCase("?")) {
-			Globals.p("mb, stats, entities");
-		} else if (s.equalsIgnoreCase("mb")) {
-			sendDebuggingBoxes();
-		} else if (s.equalsIgnoreCase("stats")) {
-			showStats();
-		} else if (s.equalsIgnoreCase("entities") || s.equalsIgnoreCase("e")) {
-			listEntities();
-		} else {
-			Globals.p("Unknown command: " + s);
+		// todo - do this in main thread!
+		try {
+			//Globals.p("Received input: " + s);
+			if (s.equalsIgnoreCase("help") || s.equalsIgnoreCase("?")) {
+				Globals.p("mb, stats, entities");
+			} else if (s.equalsIgnoreCase("mb")) {
+				sendDebuggingBoxes();
+			} else if (s.equalsIgnoreCase("stats")) {
+				showStats();
+			} else if (s.equalsIgnoreCase("entities") || s.equalsIgnoreCase("e")) {
+				listEntities();
+			} else {
+				Globals.p("Unknown command: " + s);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-
 	}
 
 
@@ -915,13 +926,13 @@ ConsoleInputListener {
 
 
 	private void listEntities() {
-		synchronized (entities) {
-			// Loop through the entities
-			for (IEntity e : entities.values()) {
-				Globals.p("Entity " + e.getID() + ": " + e.getName() + " (" + e + ")");
-			}
-			Globals.p("Total:" + getNumEntities());
+		//synchronized (entities) {
+		// Loop through the entities
+		for (IEntity e : entities.values()) {
+			Globals.p("Entity " + e.getID() + ": " + e.getName() + " (" + e + ")");
 		}
+		Globals.p("Total:" + getNumEntities());
+		//}
 	}
 
 

@@ -9,7 +9,7 @@ import ssmith.lang.Functions;
 public class Globals {
 	
 	public static final boolean HIDE_BELLS_WHISTLES = true;
-	public static final boolean HIDE_EXPLOSION = true;
+	public static final boolean HIDE_EXPLOSION = false;
 	public static final boolean RECORD_VID = false;
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 

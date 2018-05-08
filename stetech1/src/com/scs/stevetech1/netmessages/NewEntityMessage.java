@@ -20,7 +20,7 @@ public class NewEntityMessage extends MyAbstractMessage {
 	
 	
 	public NewEntityMessage(int _gameId) {
-		this();
+		super(true, false); // Not scheduled, since we need to know about the entity for when the position updates arrive
 		
 		gameId = _gameId;
 

@@ -50,12 +50,12 @@ public class MapImageTexture extends PaintableImage {
 		// Origin is bottom-left
 		if (data != null) {
 			// Map walls
-			g.setColor(new Color(.4f, 1f, .4f, ALPHA)); // green
+			g.setColor(new Color(.1f, .99f, 0.99f, ALPHA)); // green
 			for (int y=0 ; y<data.length ; y++) {
 				for (int x=0 ; x<data[y].length ; x++) {
 					if (data[y][x] == MapLoader.WALL) {
 						//g.fillRect((data.length-1-y)*pixelSize, (data[0].length-1-x)*pixelSize, pixelSize, pixelSize);
-						paintSquare(g, y, x);// scs new was x,y
+						paintSquare(g, x, y);
 					}
 				}
 			}

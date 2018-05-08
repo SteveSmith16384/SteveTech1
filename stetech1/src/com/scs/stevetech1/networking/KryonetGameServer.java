@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.KryoNetException;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.jme3.math.Quaternion;
@@ -16,6 +15,7 @@ import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
+import com.scs.stevetech1.netmessages.ClientReloadingMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
@@ -153,6 +153,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(SetAvatarMessage.class);
 		kryo.register(AbilityActivatedMessage.class);
 		kryo.register(NewEntityData.class);
+		kryo.register(ClientReloadingMessage.class);
 	}
 
 
