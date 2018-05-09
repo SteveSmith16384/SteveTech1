@@ -4,10 +4,9 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Cylinder;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
@@ -19,26 +18,22 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class Computer extends PhysicalEntity implements IDamagable {
+public class GasCannister extends PhysicalEntity implements IDamagable {
 
-	private static final float SIZE = 0.9f;
+	private static final float HEIGHT = 0.4f;
+	private static final float RAD = 0.1f;
 	private float health = 100;
 	private MoonbaseAssaultServer server;
 
-	public Computer(IEntityController _game, int id, float x, float y, float z) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false, true);
+	public GasCannister(IEntityController _game, int id, float x, float y, float z) {
+		super(_game, id, MoonbaseAssaultClientEntityCreator.GAS_CANNISTER, "GasCannister", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 		}
 
-		float w = SIZE;
-		float h = SIZE;
-		float d = SIZE;
-
-		Box box1 = new Box(w/2, h/2, d/2);
-
-		Geometry geometry = new Geometry("Computer", box1);
+		Cylinder cyl = new Cylinder(2, 8, RAD, HEIGHT);
+		Geometry geometry = new Geometry("GasCannister", cyl);
 		if (!_game.isServer()) {
 			geometry.setShadowMode(ShadowMode.CastAndReceive);
 
@@ -47,7 +42,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
 
-			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			Material floor_mat  = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 			floor_mat.setTexture("DiffuseMap", tex3);
 
 			geometry.setMaterial(floor_mat);
@@ -55,7 +50,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 			server = (MoonbaseAssaultServer)game;
 		}
 		this.mainNode.attachChild(geometry);
-		geometry.setLocalTranslation(w/2, h/2, d/2);
+		//todo geometry.setLocalTranslation(w/2, h/2, d/2);
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
@@ -68,16 +63,10 @@ public class Computer extends PhysicalEntity implements IDamagable {
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
-		Globals.p("Computer hit!");
+		Globals.p("Gas can hit!");
 		this.health -= amt;
 		if (this.health <= 0) {
-			server.computerDestroyed();
-
 			this.remove();
-
-			Vector3f pos = this.getWorldTranslation();
-			DestroyedComputer dc = new DestroyedComputer(game, game.getNextEntityID(), pos.x, pos.y, pos.z);
-			game.addEntity(dc);
 		}
 
 	}
@@ -85,7 +74,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 
 	@Override
 	public int getSide() {
-		return 2;
+		return -1;
 	}
 
 

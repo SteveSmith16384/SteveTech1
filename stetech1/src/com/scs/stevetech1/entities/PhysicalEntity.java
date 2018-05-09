@@ -36,6 +36,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
 	public boolean collideable = true;
 	public boolean blocksView;
+	public long timeToAdd; // Client side only; when to add the entity to the game
 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();

@@ -354,7 +354,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 				return s;
 			}
 		}
-		throw new RuntimeException("No winning side!");
+		return 2;
 	}
 
 

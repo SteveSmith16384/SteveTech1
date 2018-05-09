@@ -7,6 +7,7 @@ import com.scs.moonbaseassault.entities.BulletExplosionEntity;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.GasCannister;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
@@ -53,6 +54,7 @@ public class MoonbaseAssaultClientEntityCreator {
 	public static final int HITSCAN_RIFLE = 18;
 	public static final int BULLET_TRAIL = 19;
 	public static final int BULLET_EXPLOSION_EFFECT = 20;
+	public static final int GAS_CANNISTER = 21;
 
 
 	public MoonbaseAssaultClientEntityCreator() {
@@ -283,6 +285,12 @@ public class MoonbaseAssaultClientEntityCreator {
 		{
 			BulletExplosionEntity expl = new BulletExplosionEntity(game, id, pos);
 			return expl;
+		}
+
+		case GAS_CANNISTER:
+		{
+			GasCannister gas = new GasCannister(game, id, pos.x, pos.y, pos.z);
+			return gas;
 		}
 
 		default:

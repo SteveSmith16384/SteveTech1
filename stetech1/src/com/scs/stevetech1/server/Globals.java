@@ -54,6 +54,9 @@ public class Globals {
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
 
+	// Effects
+	public static final boolean TOONISH = false; // Outlines
+
 	//----
 	public static final int PCENT_DROPPED_PACKETS = 10;
 	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;
