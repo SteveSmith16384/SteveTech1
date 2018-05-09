@@ -1,4 +1,4 @@
-package twoweeks.client;
+package com.scs.moonbaseassault.client;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -25,7 +25,7 @@ public class SoldierTexture {
 	}
 	
 	
-	public static Texture getTexture() {
+	public static Texture getTexture(int side) {
 		PaintableImage pi = new PaintableImage(SIZE, SIZE) {
 			
 			@Override
@@ -42,9 +42,6 @@ public class SoldierTexture {
 						g.setColor(Color.green);
 						break;
 					case 3: // Shirt
-						g.setColor(Color.gray);
-						break;
-					case 4: // Trousers
 						g.setColor(Color.gray);
 						break;
 					}
@@ -64,3 +61,4 @@ public class SoldierTexture {
 	}
 	
 }
+

@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.jme3.scene.Node;
 import com.jme3.system.JmeContext;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.entities.GasCannister;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
@@ -180,11 +180,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		//SlidingDoor doorUD = new SlidingDoor(this, getNextEntityID(), 3, 0, 3, 1, CEILING_HEIGHT, "Textures/door_lr.png", 270);
 		//this.actuallyAddEntity(doorUD);
 
-		Computer computer = new Computer(this, getNextEntityID(), 5, 0, 5, 1f, 1f, 1f, "Textures/computerconsole2.jpg");
-		this.actuallyAddEntity(computer);
-
-
-		float mapSize = 20f;
 		/*
 
 		//MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 0, 0, 0, 1, CEILING_HEIGHT, 1, "Textures/spacewall2.png");//, 270);
@@ -200,6 +195,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		// Place floor & ceiling last
 		//Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
 		//this.actuallyAddEntity(floor);
+
+		GasCannister gas = new GasCannister(this, getNextEntityID(), 2f, 0.5f, 2f);
+		this.actuallyAddEntity(gas);
 
 		// Add AI soldiers
 		for (int side=1 ; side<=2 ; side++) {

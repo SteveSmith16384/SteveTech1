@@ -447,11 +447,11 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 	@Override
 	public void adjustHeight(AbstractHeightMap heightmap) {
-		Vector3f pos = this.getHeightAtPoint(CITY_X, CITY_Z);
+		float h = heightmap.getInterpolatedHeight(CITY_X, CITY_Z); 
 		for (int z=CITY_Z ; z<CITY_Z+CITY_SIZE ; z++) {
 			for (int x=CITY_X ; x<CITY_X+CITY_SIZE ; x++) {
 				//Globals.p("x=" + x + ", z=" + z);
-				heightmap.setHeightAtPoint(pos.y, x, z);
+				heightmap.setHeightAtPoint(h, x, z);
 			}			
 		}
 

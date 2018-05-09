@@ -50,7 +50,7 @@ public class MapImageTexture extends PaintableImage {
 		// Origin is bottom-left
 		if (data != null) {
 			// Map walls
-			g.setColor(new Color(.1f, .99f, 0.99f, ALPHA)); // green
+			g.setColor(new Color(0f, 1f, 0f, ALPHA)); // green
 			for (int y=0 ; y<data.length ; y++) {
 				for (int x=0 ; x<data[y].length ; x++) {
 					if (data[y][x] == MapLoader.WALL) {
@@ -71,7 +71,7 @@ public class MapImageTexture extends PaintableImage {
 
 			// Units
 			if (units != null) {
-				g.setColor(new Color(1f, .5f, .5f, ALPHA)); // Red
+				g.setColor(new Color(1f, 0f, 0f, ALPHA)); // Red
 
 				for (int i=0 ; i<units.size() ; i++) {
 					Point p = units.get(i);
@@ -92,7 +92,7 @@ public class MapImageTexture extends PaintableImage {
 
 			// Player
 			if (player != null) {
-				g.setColor(new Color(1f, 1f, .1f, ALPHA)); // Yellow
+				g.setColor(new Color(1f, 1f, 0f, ALPHA)); // Yellow
 				//g.fillRect((data.length-player.y)*pixelSize, (data.length-player.x)*pixelSize, pixelSize, pixelSize);
 				paintSquare(g, player.x, player.y);
 			}				

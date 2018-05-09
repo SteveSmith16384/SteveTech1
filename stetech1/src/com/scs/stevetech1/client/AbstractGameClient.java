@@ -47,12 +47,13 @@ import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IKillable;
+import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
-import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
+import com.scs.stevetech1.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -725,7 +726,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			Vector3f look = new Vector3f(15f, 1f, 15f);
 			getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
 		} else {
-			throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName());
+			throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);
 		}
 	}
 
@@ -921,7 +922,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (add) {
 			PhysicalEntity pe = (PhysicalEntity)e;
 			if (Globals.TOONISH) {
-				makeToonish(pe.getMainNode());
+				//if (pe instanceof AbstractAISoldier) {
+					makeToonish(pe.getMainNode());
+				//}
 			}
 			this.getGameNode().attachChild(pe.getMainNode());
 			if (pe.simpleRigidBody != null) {
@@ -1326,6 +1329,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	private void setupFilters() {
+        renderManager.setAlphaToCoverage(true);
 		if (renderer.getCaps().contains(Caps.GLSL100)){
 			FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
 			//fpp.setNumSamples(4);
@@ -1335,6 +1339,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			CartoonEdgeFilter toon=new CartoonEdgeFilter();
 			toon.setEdgeColor(ColorRGBA.Yellow);
+	        toon.setEdgeWidth(0.5f);
+	        toon.setEdgeIntensity(1.0f);
+	        toon.setNormalThreshold(0.8f);
 			fpp.addFilter(toon);
 			viewPort.addProcessor(fpp);
 		}

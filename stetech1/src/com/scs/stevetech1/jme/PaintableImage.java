@@ -12,16 +12,16 @@ public abstract class PaintableImage extends Image {
 	
 	public PaintableImage(int width, int height) {
 		super();
-		try {
+		//try {
 			backImg = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-
-			setFormat(Format.ABGR8);
+			//setFormat(Format.ABGR8);
+			setFormat(Format.RGBA8);
 			setWidth(backImg.getWidth());
 			setHeight(backImg.getHeight());
 			scratch = ByteBuffer.allocateDirect(4 * backImg.getWidth() * backImg.getHeight());
-		} catch (IllegalArgumentException e) {
+		/*} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 
