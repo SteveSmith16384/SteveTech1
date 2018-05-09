@@ -33,13 +33,13 @@ public class SoldierTexture {
 				for (int row=0 ; row<5 ; row++) {
 					switch (row) {
 					case 0: // Skin
-						g.setColor(getRandomHairColour());//Color.black);
+						g.setColor(Color.green);
 						break;
 					case 1: // Eyes and brows
 						g.setColor(Color.white);
 						break;
 					case 2: // Hair
-						g.setColor(Color.green);
+						g.setColor(getRandomHairColour());//Color.black);
 						break;
 					case 3: // Shirt
 						g.setColor(Color.gray);

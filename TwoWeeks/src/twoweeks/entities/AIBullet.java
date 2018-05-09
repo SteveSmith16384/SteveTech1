@@ -26,7 +26,7 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 	private static final boolean USE_CYLINDER = false;
 
 	public AIBullet(IEntityController _game, int id, int side, float x, float y, float z, IEntity shooter, Vector3f dir) {
-		super(_game, id, TwoWeeksClientEntityCreator.AI_BULLET, x, y, z, "AIBullet", side, shooter, dir, true, 20);
+		super(_game, id, TwoWeeksClientEntityCreator.AI_BULLET, x, y, z, "AIBullet", side, shooter, dir, true, 20, 30f);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

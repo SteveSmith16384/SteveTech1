@@ -391,7 +391,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 
 	@Override
-	protected int getWinningSide() {
+	protected int getWinningSideAtEnd() {
 		return 2; // todo
 	}
 

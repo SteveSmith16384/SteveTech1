@@ -1,5 +1,6 @@
 package com.scs.moonbaseassault.entities;
 
+import java.awt.Point;
 import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
@@ -24,13 +25,16 @@ public class Computer extends PhysicalEntity implements IDamagable {
 	private static final float SIZE = 0.9f;
 	private float health = 100;
 	private MoonbaseAssaultServer server;
+	private Point point; // Server-side only
 
-	public Computer(IEntityController _game, int id, float x, float y, float z) {
+	public Computer(IEntityController _game, int id, float x, float y, float z, int mx, int my) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
+			point = new Point(mx, my);
 		}
+		
 
 		float w = SIZE;
 		float h = SIZE;
@@ -71,7 +75,7 @@ public class Computer extends PhysicalEntity implements IDamagable {
 		Globals.p("Computer hit!");
 		this.health -= amt;
 		if (this.health <= 0) {
-			server.computerDestroyed();
+			server.computerDestroyed(point);
 
 			this.remove();
 

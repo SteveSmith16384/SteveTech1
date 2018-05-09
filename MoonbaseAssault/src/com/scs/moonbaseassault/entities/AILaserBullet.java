@@ -21,11 +21,12 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class AILaserBullet extends AbstractAIBullet {
 
+	private static final float RANGE = 30f;
 	private static final float SPEED = 10f;
 	private static final boolean USE_CYLINDER = true;
 
 	public AILaserBullet(IEntityController _game, int id, int side, float x, float y, float z, IEntity _shooter, Vector3f dir) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_LASER_BULLET, x, y, z, "LaserBullet", side, _shooter, dir, true, SPEED);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.AI_LASER_BULLET, x, y, z, "LaserBullet", side, _shooter, dir, true, SPEED, RANGE);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -68,7 +69,7 @@ public class AILaserBullet extends AbstractAIBullet {
 
 	@Override
 	public float getDamageCaused() {
-		return 1;
+		return ((RANGE-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 10;
 	}
 
 

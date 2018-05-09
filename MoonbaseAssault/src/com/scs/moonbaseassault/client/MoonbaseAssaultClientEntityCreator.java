@@ -164,7 +164,7 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case COMPUTER:
 		{
-			Computer computer = new Computer(game, id, pos.x, pos.y, pos.z);
+			Computer computer = new Computer(game, id, pos.x, pos.y, pos.z, -1, -1);
 			return computer;
 		}
 

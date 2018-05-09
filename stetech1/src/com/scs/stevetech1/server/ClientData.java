@@ -20,7 +20,7 @@ public class ClientData {
 	public SimplePlayerData playerData;
 	public ClientStatus clientStatus = ClientStatus.Connected;
 
-	private int score;
+	private int score; // todo - mvoe to UA game data
 	public int side = -1;
 
 	public ClientData(int _id, Object _networkObj) {

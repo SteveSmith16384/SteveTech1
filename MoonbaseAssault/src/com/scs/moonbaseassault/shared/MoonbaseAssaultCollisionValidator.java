@@ -8,9 +8,6 @@ public class MoonbaseAssaultCollisionValidator extends AbstractCollisionValidato
 
 	@Override
 	public boolean canCollide(PhysicalEntity pa, PhysicalEntity pb) {
-		//PhysicalEntity pa = a.userObject; //pa.getMainNode().getWorldBound();
-		//PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
-
 		// Sliding doors shouldn't collide with floor/ceiling
 		if ((pa.type == MoonbaseAssaultClientEntityCreator.FLOOR && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.FLOOR) {
 			return false;

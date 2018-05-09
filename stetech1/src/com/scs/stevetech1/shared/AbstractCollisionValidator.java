@@ -1,10 +1,13 @@
 package com.scs.stevetech1.shared;
 
-import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
+/**
+ * This determines whether two entities can collide.
+ *
+ */
 public class AbstractCollisionValidator {
 
 	public boolean canCollide(PhysicalEntity pa, PhysicalEntity pb) {

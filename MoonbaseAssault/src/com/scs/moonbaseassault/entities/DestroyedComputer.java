@@ -11,8 +11,6 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.ICausesHarmOnContact;
-import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Cylinder;
@@ -15,6 +16,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
@@ -23,7 +25,6 @@ public class GasCannister extends PhysicalEntity implements IDamagable {
 	private static final float HEIGHT = 0.4f;
 	private static final float RAD = 0.1f;
 	private float health = 100;
-	private MoonbaseAssaultServer server;
 
 	public GasCannister(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.GAS_CANNISTER, "GasCannister", false, true);
@@ -32,7 +33,7 @@ public class GasCannister extends PhysicalEntity implements IDamagable {
 			creationData = new HashMap<String, Object>();
 		}
 
-		Cylinder cyl = new Cylinder(2, 8, RAD, HEIGHT);
+		Cylinder cyl = new Cylinder(2, 8, RAD, HEIGHT, true);
 		Geometry geometry = new Geometry("GasCannister", cyl);
 		if (!_game.isServer()) {
 			geometry.setShadowMode(ShadowMode.CastAndReceive);
@@ -41,14 +42,11 @@ public class GasCannister extends PhysicalEntity implements IDamagable {
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
-
 			Material floor_mat  = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 			floor_mat.setTexture("DiffuseMap", tex3);
-
 			geometry.setMaterial(floor_mat);
-		} else {
-			server = (MoonbaseAssaultServer)game;
 		}
+		JMEAngleFunctions.rotateToDirection(geometry, new Vector3f(0, 1, 0));
 		this.mainNode.attachChild(geometry);
 		//todo geometry.setLocalTranslation(w/2, h/2, d/2);
 		mainNode.setLocalTranslation(x, y, z);

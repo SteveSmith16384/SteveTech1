@@ -18,10 +18,12 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 	protected boolean useRay;
 	private Vector3f dir;
 	protected float speed;
+	protected Vector3f origin;
+	protected float range;
 
-	private float distLeft = 30f;
+	//private float distLeft = 30f;
 
-	public AbstractAIBullet(IEntityController _game, int id, int type, float x, float y, float z, String name, int _side, IEntity _shooter, Vector3f _dir, boolean _useRay, float _speed) {
+	public AbstractAIBullet(IEntityController _game, int id, int type, float x, float y, float z, String name, int _side, IEntity _shooter, Vector3f _dir, boolean _useRay, float _speed, float _range) {
 		super(_game, id, type, name, true, false);
 
 		side = _side;
@@ -29,7 +31,9 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 		dir = _dir;
 		useRay = _useRay;
 		speed = _speed;
-
+		origin = new Vector3f(x, y, z);
+		range = _range;
+		
 		if (Globals.STRICT) {
 			if (side <= 0) {
 				throw new RuntimeException("Invalid side: " + side);
@@ -42,6 +46,11 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 		if (Globals.DEBUG_AI_BULLET_POS) {
 			Globals.p("AI bullet " + this.getID() + " starting at " + this.getWorldTranslation());
 		}
+	}
+
+
+	public float getDistanceTravelled() {
+		 return this.origin.distance(this.getWorldTranslation());
 	}
 
 
@@ -74,9 +83,11 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 				Globals.p("AI Bullet " + this.getID() + " is at " + this.getWorldTranslation());
 			}
 
-			this.distLeft -= (speed * tpf_secs);
-			if (this.distLeft < 0) {
-				this.remove();
+			if (range > 0) {
+				float dist = this.origin.distance(this.getWorldTranslation());
+				if (dist > range) {
+					this.remove();
+				}
 			}
 		}
 	}

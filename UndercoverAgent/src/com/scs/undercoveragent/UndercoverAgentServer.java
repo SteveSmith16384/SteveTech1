@@ -231,7 +231,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	protected int getWinningSide() {
+	protected int getWinningSideAtEnd() {
 		int highestScore = -1;
 		int winningSide = -1;
 		boolean draw = false;

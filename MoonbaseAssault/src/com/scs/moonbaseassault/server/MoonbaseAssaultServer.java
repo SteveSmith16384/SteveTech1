@@ -30,16 +30,17 @@ import ssmith.util.MyProperties;
 
 public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
 
+	private static final int MAX_PLAYERS = 20;
+	private static final int COMPS_DESTROYED_TO_WIN = 10;
 	public static final String GAME_ID = "Moonbase Assault";
 
 	public static final float CEILING_HEIGHT = 1.4f;
 
-	private int scannerData[][];
+	private int mapData[][]; // Also used to tell the client what the scanner should show
 	private List<Point> computerSquares;
 	public ArrayList<Point>[] deploySquares;
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
-	//public Node subNodeX0Y0, subNodeX1Y0, subNodeX0Y1, subNodeX1Y1, ceilingNode, floorNode; // todo - remove all this and do automatically
-
+	private int winningSide = 2; // Defenders win by default
 
 	public static void main(String[] args) {
 		try {
@@ -103,13 +104,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	public void simpleInitApp() {
-		/*subNodeX0Y0 = new Node("00");
-		subNodeX1Y0 = new Node("10");
-		subNodeX0Y1 = new Node("01");
-		subNodeX1Y1 = new Node("11");
-		ceilingNode = new Node("Ceiling");
-		floorNode = new Node("Floor");*/
-
 		super.gameData = new MoonbaseAssaultGameData(this.getGameID()); // Replace normal data
 
 		super.simpleInitApp();
@@ -143,23 +137,17 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected void createGame() {
-		/*this.getGameNode().attachChild(subNodeX0Y0);
-		this.getGameNode().attachChild(subNodeX1Y0);
-		this.getGameNode().attachChild(subNodeX0Y1);
-		this.getGameNode().attachChild(subNodeX1Y1);
-		this.getGameNode().attachChild(this.ceilingNode);*/
-
 		MapLoader map = new MapLoader(this);
 		try {
 			//map.loadMap("/serverdata/moonbaseassault_small.csv");
 			map.loadMap("/serverdata/moonbaseassault.csv");
-			scannerData = map.scannerData;
+			mapData = map.scannerData;
 			this.deploySquares = map.deploySquares;
 
 			this.computerSquares = new ArrayList<Point>();
-			for (int y=0 ; y<scannerData.length ; y++) {
-				for (int x=0 ; x<scannerData.length ; x++) {
-					if (this.scannerData[x][y] == MapLoader.COMPUTER) {
+			for (int y=0 ; y<mapData.length ; y++) {
+				for (int x=0 ; x<mapData.length ; x++) {
+					if (this.mapData[x][y] == MapLoader.COMPUTER) {
 						computerSquares.add(new Point(x, y));
 					}
 				}
@@ -172,29 +160,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		/*
-		// Testing
-		SlidingDoor door = new SlidingDoor(this, getNextEntityID(), 2, 0, 2, 1, CEILING_HEIGHT, "Textures/door_lr.png", 0);
-		this.actuallyAddEntity(door);
-
-		//SlidingDoor doorUD = new SlidingDoor(this, getNextEntityID(), 3, 0, 3, 1, CEILING_HEIGHT, "Textures/door_lr.png", 270);
-		//this.actuallyAddEntity(doorUD);
-
-		/*
-
-		//MoonbaseWall wall = new MoonbaseWall(this, getNextEntityID(), 0, 0, 0, 1, CEILING_HEIGHT, 1, "Textures/spacewall2.png");//, 270);
-		//this.actuallyAddEntity(wall);
-
-		//MoonbaseWall wall2 = new MoonbaseWall(this, getNextEntityID(), 4, 0, 4, 3, CEILING_HEIGHT, 1, "Textures/spacewall2.png");//, 0);
-		//this.actuallyAddEntity(wall2);
-
-		MoonbaseWall wall3 = new MoonbaseWall(this, getNextEntityID(), 6, 0, 4, 1, CEILING_HEIGHT, 3, "Textures/spacewall2.png");//, 0);
-		this.actuallyAddEntity(wall3);
-		 */
-
-		// Place floor & ceiling last
-		//Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, mapSize, .5f, mapSize, "Textures/escape_hatch.jpg");
-		//this.actuallyAddEntity(floor);
 
 		GasCannister gas = new GasCannister(this, getNextEntityID(), 2f, 0.5f, 2f);
 		this.actuallyAddEntity(gas);
@@ -218,7 +183,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		boolean found = false;
 		while (true) { // todo - only try a certain number of times
 			Point p = deploySquares.get(NumberFunctions.rnd(0, deploySquares.size()-1));
-			//for (Point p : deploySquares) {
 			soldier.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
 			if (soldier.simpleRigidBody.checkForCollisions().size() == 0) {
 				found = true;
@@ -262,10 +226,10 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected void playerJoinedGame(ClientData client) {
-		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.scannerData));
+		//this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.mapData));
 	}
-
-
+	
+	
 	@Override
 	protected Class[] getListofMessageClasses() {
 		return new Class[] {HudDataMessage.class, MoonbaseAssaultGameData.class};
@@ -310,7 +274,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 				currentPlayers++;
 			}
 		}
-		return currentPlayers < 12; // 2 sides, 6 per side
+		return currentPlayers < MAX_PLAYERS;
 	}
 
 
@@ -319,40 +283,29 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	}
 
 
-	public void computerDestroyed() {
-		this.getMAGameData().pointsForSide[1] += 10;
-		checkForWinner();
-	}
-
-
-	@Override
-	public void playerKilled(AbstractServerAvatar avatar) {
-		super.playerKilled(avatar);
-
-		if (avatar.side == 1) {
-			this.getMAGameData().pointsForSide[2] += 10;
-			checkForWinner();
-		}
-	}
-
-
-	private void checkForWinner() {
-		if (this.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
-			if (this.getMAGameData().pointsForSide[1] >= 100 || this.getMAGameData().pointsForSide[2] >= 100) {
-				this.gameStatusChanged(SimpleGameData.ST_FINISHED);
-			}
+	public void computerDestroyed(Point p) {
+		this.computerSquares.remove(p);
+		this.getMAGameData().computersDestroyed++;
+		this.mapData[p.x][p.y] = MapLoader.INT_FLOOR;
+		this.gameNetworkServer.sendMessageToAll(new HudDataMessage(this.mapData, this.getMAGameData().computersDestroyed));
+		this.getMAGameData().computersDestroyed++;//.pointsForSide[1] += 10;
+		
+		if (this.getMAGameData().computersDestroyed >= COMPS_DESTROYED_TO_WIN) {
+			winningSide = 1;
+			//this.gameStatusChanged(SimpleGameData.ST_FINISHED);
+			super.gameStatusSystem.setGameStatus(SimpleGameData.ST_FINISHED);
 		}
 	}
 
 
 	@Override
-	protected int getWinningSide() {
-		for (int s=1 ; s<=2 ; s++) {
+	protected int getWinningSideAtEnd() {
+		/*for (int s=1 ; s<=2 ; s++) {
 			if (this.getMAGameData().pointsForSide[s] >= 100) {
 				return s;
 			}
-		}
-		return 2;
+		}*/
+		return this.winningSide;
 	}
 
 
@@ -360,19 +313,19 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	public int getMapWidth() {
-		return this.scannerData[0].length;
+		return this.mapData[0].length;
 	}
 
 
 	@Override
 	public int getMapHeight() {
-		return this.scannerData.length;
+		return this.mapData.length;
 	}
 
 
 	@Override
 	public boolean isMapSquareTraversable(int x, int z) {
-		return this.scannerData[x][z] != MapLoader.WALL && this.scannerData[x][z] != MapLoader.COMPUTER;
+		return this.mapData[x][z] != MapLoader.WALL && this.mapData[x][z] != MapLoader.COMPUTER;
 	}
 
 

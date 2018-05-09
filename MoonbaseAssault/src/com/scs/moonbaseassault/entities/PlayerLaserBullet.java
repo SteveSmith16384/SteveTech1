@@ -22,9 +22,10 @@ import com.scs.stevetech1.shared.IEntityController;
 public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
 
 	private static final boolean USE_CYLINDER = true;
+	private static final float RANGE = 30f;
 
 	public PlayerLaserBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerOwnerId, owner, _side, _client, dir, true, 10f, 30f);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerOwnerId, owner, _side, _client, dir, true, 10f, RANGE);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -58,18 +59,17 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 
 	@Override
 	public float getDamageCaused() {
-		return 10;
+		return ((RANGE-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 10;
 	}
 
 
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
-			/*if (!Globals.HIDE_EXPLOSION) {
-				ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
+			if (!Globals.HIDE_EXPLOSION) {
+				BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
 				game.addEntity(expl);
-			}*/
-
+			}
 		}
 		this.remove();
 	}

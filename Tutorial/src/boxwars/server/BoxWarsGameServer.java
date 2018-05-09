@@ -31,7 +31,7 @@ public class BoxWarsGameServer extends AbstractGameServer {
 	}
 
 	@Override
-	protected int getWinningSide() {
+	protected int getWinningSideAtEnd() {
 		// TODO Auto-generated method stub
 		return 0;
 	}

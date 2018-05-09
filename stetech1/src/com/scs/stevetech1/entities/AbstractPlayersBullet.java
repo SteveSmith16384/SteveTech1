@@ -168,12 +168,17 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			}
 
 			if (range > 0) {
-				float dist = this.origin.distance(this.getWorldTranslation());
+				float dist = this.getDistanceTravelled();
 				if (dist > range) {
 					this.remove();
 				}
 			}
 		}
+	}
+	
+	
+	public float getDistanceTravelled() {
+		 return this.origin.distance(this.getWorldTranslation());
 	}
 
 

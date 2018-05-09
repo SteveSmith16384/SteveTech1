@@ -33,16 +33,37 @@ public class SoldierTexture {
 				for (int row=0 ; row<5 ; row++) {
 					switch (row) {
 					case 0: // Skin
-						g.setColor(getRandomHairColour());//Color.black);
+						g.setColor(getRandomSkinColour());//Color.black);
 						break;
 					case 1: // Eyes and brows
-						g.setColor(Color.white);
+						g.setColor(Color.BLACK);
 						break;
 					case 2: // Hair
-						g.setColor(Color.green);
+						g.setColor(getRandomHairColour());//Color.black);
 						break;
 					case 3: // Shirt
-						g.setColor(Color.gray);
+						switch (side) {
+						case 1:
+							g.setColor(Color.yellow);
+							break;
+						case 2:
+							g.setColor(Color.green);
+							break;
+						default:
+							throw new RuntimeException("Todo");
+						}
+						break;
+					case 4: // Trousers
+						switch (side) {
+						case 1:
+							g.setColor(Color.yellow.darker());
+							break;
+						case 2:
+							g.setColor(Color.green.darker());
+							break;
+						default:
+							throw new RuntimeException("Todo");
+						}
 						break;
 					}
 					g.fillRect(0, row*(SIZE/5), SIZE, (row+1)*(SIZE/5));
@@ -58,6 +79,11 @@ public class SoldierTexture {
 	
 	private static Color getRandomHairColour() {
 		return Color.black;
+	}
+	
+
+	private static Color getRandomSkinColour() {
+		return Color.PINK;
 	}
 	
 }

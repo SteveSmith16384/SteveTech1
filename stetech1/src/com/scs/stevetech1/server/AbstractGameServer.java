@@ -88,7 +88,7 @@ ConsoleInputListener {
 	private RealtimeInterval checkGameStatusInterval = new RealtimeInterval(5000);
 
 	// Systems
-	private ServerGameStatusSystem gameStatusSystem;
+	protected ServerGameStatusSystem gameStatusSystem;
 	private ServerPingSystem pingSystem;
 
 	protected HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities
@@ -107,7 +107,7 @@ ConsoleInputListener {
 	private LinkedList<ClientData> clientsToAdd = new LinkedList<>();
 	private LinkedList<Integer> clientsToRemove = new LinkedList<>();
 
-	public ServerSideCollisionLogic collisionLogic = new ServerSideCollisionLogic();
+	public ServerSideCollisionLogic collisionLogic;
 	private RealtimeInterval sendEntityUpdatesInterval;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
@@ -129,7 +129,7 @@ ConsoleInputListener {
 		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15); // todo - get 15,1 params from parent
-
+		collisionLogic = new ServerSideCollisionLogic(this);
 		loopTimer = new FixedLoopTime(tickrateMillis);
 
 		setShowSettings(false); // Don't show settings dialog
@@ -367,10 +367,12 @@ ConsoleInputListener {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
+			// todo - close connection?
 			return;
 		}
 		if (!this.doWeHaveSpaces()) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces available"));
+			// todo - close connection?
 			return;
 		}
 
@@ -829,13 +831,13 @@ ConsoleInputListener {
 			}
 
 		} else if (newStatus == SimpleGameData.ST_FINISHED) {
-			int winningSide = this.getWinningSide();
+			int winningSide = this.getWinningSideAtEnd();
 			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
 		}
 	}
 
 
-	protected abstract int getWinningSide();
+	protected abstract int getWinningSideAtEnd();
 
 
 	public abstract int getMinPlayersRequiredForGame();

@@ -96,7 +96,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	protected int getWinningSide() {
+	protected int getWinningSideAtEnd() {
 		return 0;
 	}
 

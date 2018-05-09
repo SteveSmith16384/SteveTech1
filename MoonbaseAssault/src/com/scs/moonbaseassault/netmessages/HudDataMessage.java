@@ -7,16 +7,18 @@ import com.scs.stevetech1.netmessages.MyAbstractMessage;
 public class HudDataMessage extends MyAbstractMessage {
 	
 	public int scannerData[][];
+	public int compsDestroyed;
 	
 	public HudDataMessage() {
 		super(true, true);
 	}
 	
 
-	public HudDataMessage(int _scannerData[][]) {
+	public HudDataMessage(int _scannerData[][], int _compsDestroyed) {
 		this();
 		
 		scannerData = _scannerData;
+		compsDestroyed = _compsDestroyed;
 	}
 	
 
