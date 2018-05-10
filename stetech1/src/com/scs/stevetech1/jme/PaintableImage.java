@@ -9,19 +9,16 @@ public abstract class PaintableImage extends Image {
 
 	private BufferedImage backImg;
 	private ByteBuffer scratch;
-	
+
 	public PaintableImage(int width, int height) {
 		super();
-		//try {
-			backImg = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-			//setFormat(Format.ABGR8);
-			setFormat(Format.RGBA8);
-			setWidth(backImg.getWidth());
-			setHeight(backImg.getHeight());
-			scratch = ByteBuffer.allocateDirect(4 * backImg.getWidth() * backImg.getHeight());
-		/*} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}*/
+
+		backImg = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+		//setFormat(Format.ABGR8);
+		setFormat(Format.RGBA8);
+		setWidth(backImg.getWidth());
+		setHeight(backImg.getHeight());
+		scratch = ByteBuffer.allocateDirect(4 * backImg.getWidth() * backImg.getHeight());
 	}
 
 

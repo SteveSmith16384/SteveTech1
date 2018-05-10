@@ -34,6 +34,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public Camera cam;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
 	private Spatial debugNode;
+	public PhysicalEntity killer;
 
 	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
 			float x, float y, float z, int side, IAvatarModel avatarModel, float _moveSpeed, float _jumpSpeed) {
@@ -89,10 +90,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			// Position cam above avatar when they're dead
 			Vector3f vec = this.getWorldTranslation();
 			cam.getLocation().x = vec.x;
-			cam.getLocation().y = 10f;
+			cam.getLocation().y = .1f;
 			cam.getLocation().z = vec.z;
-
-			cam.lookAt(this.getWorldTranslation(), Vector3f.UNIT_Y);
+			
+			if (this.killer != null) {
+				cam.lookAt(killer.getWorldTranslation(), Vector3f.UNIT_Y);
+			}
 			cam.update();
 
 		} else {

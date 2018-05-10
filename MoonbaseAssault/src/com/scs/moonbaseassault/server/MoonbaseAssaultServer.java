@@ -9,6 +9,7 @@ import java.util.List;
 import com.jme3.system.JmeContext;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.GasCannister;
+import com.scs.moonbaseassault.entities.GenericFloorTex;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
@@ -161,8 +162,13 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			System.exit(-1);
 		}
 
+		// todo - remove
 		GasCannister gas = new GasCannister(this, getNextEntityID(), 2f, 0.5f, 2f);
 		this.actuallyAddEntity(gas);
+
+		// todo - remove
+		GenericFloorTex gft = new GenericFloorTex(this, getNextEntityID(), 2f, 2f, 1f, 1f, "Textures/floor4.jpg");
+		this.actuallyAddEntity(gft);
 
 		// Add AI soldiers
 		for (int side=1 ; side<=2 ; side++) {

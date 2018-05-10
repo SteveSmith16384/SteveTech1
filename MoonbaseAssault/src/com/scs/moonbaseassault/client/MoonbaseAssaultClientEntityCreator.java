@@ -8,6 +8,7 @@ import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.GasCannister;
+import com.scs.moonbaseassault.entities.GenericFloorTex;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
@@ -55,6 +56,7 @@ public class MoonbaseAssaultClientEntityCreator {
 	public static final int BULLET_TRAIL = 19;
 	public static final int BULLET_EXPLOSION_EFFECT = 20;
 	public static final int GAS_CANNISTER = 21;
+	public static final int FLOOR_TEX = 22;
 
 
 	public MoonbaseAssaultClientEntityCreator() {
@@ -290,6 +292,14 @@ public class MoonbaseAssaultClientEntityCreator {
 		case GAS_CANNISTER:
 		{
 			GasCannister gas = new GasCannister(game, id, pos.x, pos.y, pos.z);
+			return gas;
+		}
+
+		case FLOOR_TEX:
+		{
+			Vector3f size = (Vector3f)msg.data.get("size");
+			String tex = (String)msg.data.get("tex");
+			GenericFloorTex gas = new GenericFloorTex(game, id, pos.x, pos.z, size.x, size.z, tex);
 			return gas;
 		}
 

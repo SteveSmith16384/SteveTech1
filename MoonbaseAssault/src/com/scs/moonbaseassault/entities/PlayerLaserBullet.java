@@ -25,7 +25,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 	private static final float RANGE = 30f;
 
 	public PlayerLaserBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerOwnerId, owner, _side, _client, dir, true, 10f, RANGE);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerOwnerId, owner, _side, _client, dir, true, AILaserBullet.SPEED, RANGE);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 

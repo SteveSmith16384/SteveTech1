@@ -373,7 +373,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						PhysicalEntity pe = entitiesToAddToGame.get(i);
 						if (pe.timeToAdd < renderTime) {
 							if (this.entities.containsKey(pe.getID())) { // Check it is still in the game
-							this.addEntityToGame(pe);
+								this.addEntityToGame(pe);
 							}
 							entitiesToAddToGame.remove(i);
 							i--;
@@ -637,6 +637,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				IKillable ik = (IKillable)killed;
 				ik.handleKilledOnClientSide(killer);
 			}
+			if (killed == this.currentAvatar) {
+				this.currentAvatar.killer = killer;
+			}
 
 		} else if (message instanceof EntityLaunchedMessage) {
 			/*if (Globals.DEBUG_SHOOTING) {
@@ -717,16 +720,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	private void setAvatar(IEntity e) {
-		if (e instanceof AbstractClientAvatar) {
-			this.currentAvatar = (AbstractClientAvatar)e;//this.entities.get(currentAvatarID);
-			if (Globals.DEBUG_AVATAR_SET) {
-				Globals.p("Avatar for player is now " + currentAvatar);
-			}
+		if (e != null) {
+			if (e instanceof AbstractClientAvatar) {
+				this.currentAvatar = (AbstractClientAvatar)e;//this.entities.get(currentAvatarID);
+				if (Globals.DEBUG_AVATAR_SET) {
+					Globals.p("Avatar for player is now " + currentAvatar);
+				}
 
-			Vector3f look = new Vector3f(15f, 1f, 15f);
-			getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
+				Vector3f look = new Vector3f(15f, 1f, 15f);
+				getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
+			} else {
+				throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);
+			}
 		} else {
-			throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);
+			Globals.pe("Trying to set null avatar");
 		}
 	}
 
@@ -923,7 +930,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			PhysicalEntity pe = (PhysicalEntity)e;
 			if (Globals.TOONISH) {
 				//if (pe instanceof AbstractAISoldier) {
-					makeToonish(pe.getMainNode());
+				makeToonish(pe.getMainNode());
 				//}
 			}
 			this.getGameNode().attachChild(pe.getMainNode());
@@ -1329,7 +1336,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	private void setupFilters() {
-        renderManager.setAlphaToCoverage(true);
+		renderManager.setAlphaToCoverage(true);
 		if (renderer.getCaps().contains(Caps.GLSL100)){
 			FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
 			//fpp.setNumSamples(4);
@@ -1339,9 +1346,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			CartoonEdgeFilter toon=new CartoonEdgeFilter();
 			toon.setEdgeColor(ColorRGBA.Yellow);
-	        toon.setEdgeWidth(0.5f);
-	        toon.setEdgeIntensity(1.0f);
-	        toon.setNormalThreshold(0.8f);
+			toon.setEdgeWidth(0.5f);
+			toon.setEdgeIntensity(1.0f);
+			toon.setNormalThreshold(0.8f);
 			fpp.addFilter(toon);
 			viewPort.addProcessor(fpp);
 		}

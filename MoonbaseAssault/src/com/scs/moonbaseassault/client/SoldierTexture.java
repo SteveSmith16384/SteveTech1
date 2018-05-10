@@ -8,7 +8,8 @@ import com.jme3.texture.Texture2D;
 import com.scs.stevetech1.jme.PaintableImage;
 
 /**
- * Rows:
+ * origin is top-left
+ * Rows (from top):
  * 0 - Skin tone
  * 1 - Eyes and eyebrows
  * 2 - Hair
@@ -35,12 +36,15 @@ public class SoldierTexture {
 					case 0: // Skin
 						g.setColor(getRandomSkinColour());//Color.black);
 						break;
+						
 					case 1: // Eyes and brows
-						g.setColor(Color.BLACK);
+						g.setColor(Color.cyan);
 						break;
+						
 					case 2: // Hair
 						g.setColor(getRandomHairColour());//Color.black);
 						break;
+						
 					case 3: // Shirt
 						switch (side) {
 						case 1:
@@ -54,6 +58,7 @@ public class SoldierTexture {
 						}
 						break;
 					case 4: // Trousers
+						
 						switch (side) {
 						case 1:
 							g.setColor(Color.yellow.darker());
@@ -66,7 +71,10 @@ public class SoldierTexture {
 						}
 						break;
 					}
-					g.fillRect(0, row*(SIZE/5), SIZE, (row+1)*(SIZE/5));
+					
+					int sy = getRowStart(row);
+					int ey = getRowStart(row+1)-1;
+					g.fillRect(0, sy, SIZE, ey);
 				}
 			}
 			
@@ -77,13 +85,53 @@ public class SoldierTexture {
 	}
 	
 	
+	private static int getRowStart(int row) {
+		switch (row) {
+		case 0:
+			return 0;
+		case 1:
+			return 10;
+		case 2:
+			return 15;
+		case 3:
+			return 21;
+		case 4:
+			return 26;
+		case 5:
+			return 31;
+			default:
+				throw new RuntimeException("Todo");
+		}
+	}
+	
+	
+	private static int getRowStart_OLD(int row) {
+		switch (row) {
+		case 0:
+			return 0;
+		case 1:
+			return 6;
+		case 2:
+			return 11;
+		case 3:
+			return 17;
+		case 4:
+			return 22;
+		case 5:
+			return 33;
+			default:
+				throw new RuntimeException("Todo");
+		}
+	}
+	
+	
 	private static Color getRandomHairColour() {
-		return Color.black;
+		return Color.green;
 	}
 	
 
 	private static Color getRandomSkinColour() {
-		return Color.PINK;
+		return Color.red;
 	}
 	
 }

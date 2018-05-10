@@ -38,7 +38,7 @@ public class GasCannister extends PhysicalEntity implements IDamagable {
 		if (!_game.isServer()) {
 			geometry.setShadowMode(ShadowMode.CastAndReceive);
 
-			TextureKey key3 = new TextureKey("Textures/computerconsole2.jpg");
+			TextureKey key3 = new TextureKey("Textures/gascannister.jpg");
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
@@ -48,7 +48,7 @@ public class GasCannister extends PhysicalEntity implements IDamagable {
 		}
 		JMEAngleFunctions.rotateToDirection(geometry, new Vector3f(0, 1, 0));
 		this.mainNode.attachChild(geometry);
-		geometry.setLocalTranslation(RAD, -HEIGHT/2, RAD);
+		geometry.setLocalTranslation(RAD, -HEIGHT, RAD);
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);

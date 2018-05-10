@@ -22,7 +22,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public class AILaserBullet extends AbstractAIBullet {
 
 	private static final float RANGE = 30f;
-	private static final float SPEED = 10f;
+	public static final float SPEED = 20f;
 	private static final boolean USE_CYLINDER = true;
 
 	public AILaserBullet(IEntityController _game, int id, int side, float x, float y, float z, IEntity _shooter, Vector3f dir) {

@@ -20,8 +20,6 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class Floor extends PhysicalEntity {
 
-	private Box box1;
-
 	public Floor(IEntityController _game, int id, String name, float x, float yTop, float z, float w, float h, float d, String tex) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR, name, false, true);
 
@@ -32,7 +30,7 @@ public class Floor extends PhysicalEntity {
 			creationData.put("name", name);
 		}
 
-		box1 = new Box(w/2, h/2, d/2);
+		Box box1 = new Box(w/2, h/2, d/2);
 
 		box1.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(new float[]{
 				0, h, w, h, w, 0, 0, 0, // back
