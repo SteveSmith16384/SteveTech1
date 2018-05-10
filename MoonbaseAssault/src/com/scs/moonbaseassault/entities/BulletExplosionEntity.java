@@ -11,7 +11,7 @@ import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class BulletExplosionEntity extends PhysicalEntity implements IProcessByClient {
+public class BulletExplosionEntity extends PhysicalEntity implements IProcessByClient { // todo - move to SteTech
 
 	private static final float DURATION = 5;
 	

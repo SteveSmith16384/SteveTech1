@@ -226,7 +226,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected void playerJoinedGame(ClientData client) {
-		//this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.mapData));
+		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.mapData, this.getMAGameData().computersDestroyed));
 	}
 	
 	

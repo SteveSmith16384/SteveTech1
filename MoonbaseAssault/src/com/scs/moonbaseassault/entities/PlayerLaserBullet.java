@@ -47,7 +47,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 			key3 = new TextureKey( "Textures/sun.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-				floor_mat.setTexture("DiffuseMap", tex3);
+			floor_mat.setTexture("DiffuseMap", tex3);
 			laserNode.setMaterial(floor_mat);
 		}
 
@@ -66,10 +66,8 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
-			if (!Globals.HIDE_EXPLOSION) {
-				BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-				game.addEntity(expl);
-			}
+			BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
+			game.addEntity(expl);
 		}
 		this.remove();
 	}

@@ -48,7 +48,7 @@ public class GasCannister extends PhysicalEntity implements IDamagable {
 		}
 		JMEAngleFunctions.rotateToDirection(geometry, new Vector3f(0, 1, 0));
 		this.mainNode.attachChild(geometry);
-		//todo geometry.setLocalTranslation(w/2, h/2, d/2);
+		geometry.setLocalTranslation(RAD, -HEIGHT/2, RAD);
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);

@@ -79,13 +79,13 @@ public class SimpleGameData { // POJO
 	public String getTime(long now) {
 		switch (this.gameStatus) {
 		case ST_WAITING_FOR_PLAYERS: 
-			return (now-statusStartTimeMS)/1000 + " seconds";
+			return (now-statusStartTimeMS)/1000 + " seconds remaining";
 		//case ST_CLEAR_OLD_GAME:
 		case ST_DEPLOYING:
 		case ST_STARTED: 
 		case ST_FINISHED:
 			long endTime = statusStartTimeMS + statusDurationMS;
-			return (endTime-now)/1000 + " seconds";
+			return (endTime-now)/1000 + " seconds remaining";
 		default: 
 			throw new RuntimeException("Unknown status: " + gameStatus);
 		}

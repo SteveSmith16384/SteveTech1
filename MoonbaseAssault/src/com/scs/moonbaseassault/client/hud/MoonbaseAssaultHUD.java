@@ -47,7 +47,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	private HUDMapImage hudMapImage;
 
 	private BitmapText abilityGun, abilityOther, healthText; // Update instantly 
-	private String debugText, gameStatus, gameTime, pingText, scoreText, numPlayers, gameID;
+	private String debugText, gameStatus, gameTime, pingText, compsDestroyedText, numPlayers, gameID;
 	private BitmapText textArea; 
 
 	public MoonbaseAssaultHUD(AbstractGameClient _game, Camera _cam) { 
@@ -187,7 +187,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 
 		this.updateGeometricState();
 
-		this.setModelBound(new BoundingBox());
+		//this.setModelBound(new BoundingBox());  scs new
 		this.updateModelBound();
 
 	}
@@ -204,7 +204,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 					this.setNumPlayers(client.playersList.size());
 				}
 			}
-			this.setScoreText(client.score);
+			//this.setCompsDestroyed(client.score);
 			this.setPing(client.pingRTT);
 			this.updateTextArea();
 		}
@@ -251,7 +251,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		str.append(this.gameStatus + "\n");
 		str.append(this.gameTime + "\n");
 		str.append(this.pingText + "\n");
-		str.append(this.scoreText + "\n");
+		str.append(this.compsDestroyedText + "\n");
 		str.append(this.numPlayers + "\n");
 		this.textArea.setText(str.toString());
 		
@@ -267,7 +267,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 
 	private void setGameStatus(String s) {
 		//this.gameStatus.setText("Game Status: " + s);
-		this.gameStatus = s;
+		this.gameStatus = "Game Status: " + s;
 		//this.updateTextArea();
 
 	}
@@ -300,24 +300,18 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	}
 
 
-	private void setScoreText(int s) {
-		//this.scoreText.setText("Score: " + s);
-		this.scoreText = "Score: " + s;
-		//this.updateTextArea();
+	public void setCompsDestroyed(int s) {
+		this.compsDestroyedText = "Computers Destroyed: " + s;
 	}
 
 
 	private void setPing(long i) {
-		//this.pingText.setText("Ping: " + i);
 		this.pingText = "Ping: " + i;
-		//this.updateTextArea();
 	}
 
 
 	private void setNumPlayers(int i) {
-		//this.numPlayers.setText("Num Players: " + i);
 		this.numPlayers = "Num Players: " + i;
-		//this.updateTextArea();
 	}
 
 
@@ -370,7 +364,6 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 	
 	private HUDMapImage addMapImage(int mapSize) {
 		float sizeInPixels = Math.max(cam.getWidth()/5, mapSize);
-		//float pxlh = cam.getHeight()/5;
 		hudMapImage = new HUDMapImage(game.getAssetManager(), (int)sizeInPixels, mapSize);
 		hudMapImage.setWidth(sizeInPixels);
 		hudMapImage.setHeight(sizeInPixels);

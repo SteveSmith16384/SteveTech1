@@ -155,8 +155,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	protected void handleMessage(MyAbstractMessage message) {
 		if (message instanceof HudDataMessage) {
 			HudDataMessage hdm = (HudDataMessage) message;
-			//this.hud.hudMapImage.mapImageTex.setMapData(hdm.scannerData);
 			this.hud.setMapData(hdm.scannerData);
+			this.hud.setCompsDestroyed(hdm.compsDestroyed);
 		} else {
 			super.handleMessage(message);
 		}
@@ -171,9 +171,6 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
-		//PhysicalEntity pea = a.userObject;
-		//PhysicalEntity peb = b.userObject;
-
 		super.collisionOccurred(a, b);
 
 	}

@@ -76,11 +76,8 @@ public class AILaserBullet extends AbstractAIBullet {
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
-			if (!Globals.HIDE_EXPLOSION) {
-				BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-				game.addEntity(expl);
-			}
-
+			BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
+			game.addEntity(expl);
 		}
 		this.remove();
 	}

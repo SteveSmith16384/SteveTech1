@@ -4,13 +4,13 @@ import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.LoopMode;
 import com.jme3.asset.AssetManager;
-import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.scs.moonbaseassault.client.SoldierTexture;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.jme.JMEModelFunctions;
@@ -39,13 +39,14 @@ public class SoldierModel implements IAvatarModel {
 	public Spatial createAndGetModel(int side) {
 		if (!Globals.USE_BOXES_FOR_AVATARS_SOLDIER) {
 			model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
-			if (side == 1) {
+			/*if (side == 1) {
 				JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side1.png");
 			} else if (side == 2) {
 				JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/side2.png");
 			} else {
 				throw new RuntimeException("Unknown side: " + side);
-			}
+			}*/
+			JMEModelFunctions.setTextureOnSpatial(assetManager, model, SoldierTexture.getTexture(side));
 			JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEModelFunctions.moveYOriginTo(model, 0f);
 

@@ -86,10 +86,8 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
-			if (!Globals.HIDE_EXPLOSION) {
-				//todo ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-				//game.addEntity(expl);
-			}
+			//todo BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
+			//game.addEntity(expl);
 
 		}
 		this.remove();
