@@ -8,8 +8,8 @@ import java.util.List;
 
 import com.jme3.system.JmeContext;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.entities.FlyingSpaceship2;
 import com.scs.moonbaseassault.entities.GasCannister;
-import com.scs.moonbaseassault.entities.GenericFloorTex;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
@@ -154,21 +154,20 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 				}
 			}
 
-			//Spaceship1 ss = new Spaceship1(this, this.getNextEntityID(), 8, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
-			//todo - re-add this.actuallyAddEntity(ss);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
 		}
 
+		//Spaceship1 ss = new Spaceship1(this, this.getNextEntityID(), 8, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
+		//todo - re-add this.actuallyAddEntity(ss);
+
+		FlyingSpaceship2 ss = new FlyingSpaceship2(this, this.getNextEntityID(), 8, 4f, 8);
+		this.actuallyAddEntity(ss);
+
 		// todo - remove
 		GasCannister gas = new GasCannister(this, getNextEntityID(), 2f, 0.5f, 2f);
 		this.actuallyAddEntity(gas);
-
-		// todo - remove
-		GenericFloorTex gft = new GenericFloorTex(this, getNextEntityID(), 2f, 0, 2f, 1f, 1f, "Textures/floor4.jpg");
-		this.actuallyAddEntity(gft);
 
 		// Add AI soldiers
 		if (!Globals.TEST_AI) {

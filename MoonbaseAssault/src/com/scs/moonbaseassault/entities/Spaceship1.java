@@ -1,4 +1,4 @@
-package com.scs.moonbaseassault.models;
+package com.scs.moonbaseassault.entities;
 
 import java.util.HashMap;
 
@@ -27,7 +27,7 @@ public class Spaceship1 extends PhysicalEntity {
 		if (!_game.isServer()) {
 			model.setShadowMode(ShadowMode.CastAndReceive);
 		}
-		this.mainNode.attachChild(model); //This creates the model bounds!
+		this.mainNode.attachChild(model);
 		mainNode.setLocalRotation(q);
 		mainNode.setLocalTranslation(x, y, z);
 
@@ -42,7 +42,7 @@ public class Spaceship1 extends PhysicalEntity {
 
 	@Override
 	public Collidable getCollidable() {
-		return this.mainNode;
+		return this.mainNode; // Since it's a complex model
 	}
 
 

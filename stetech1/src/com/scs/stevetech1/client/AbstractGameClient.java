@@ -312,6 +312,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
+		if (tpf_secs > 1) {
+			tpf_secs = 1;
+		}
+
 		if (Globals.STRICT) {
 			if (this.physicsController.getEntities().size() > this.entities.size()) {
 				Globals.pe("Warning: more simple rigid bodies than entities!");
@@ -320,11 +324,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				//Globals.p("Warning: No current avatar");
 			}
 		}
-
-		if (tpf_secs > 1) {
-			tpf_secs = 1;
-		}
-
 
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;

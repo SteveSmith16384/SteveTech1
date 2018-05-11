@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.components.IUnit;
+import com.scs.moonbaseassault.entities.AILaserBullet;
 import com.scs.moonbaseassault.entities.AbstractAISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
@@ -25,13 +26,13 @@ import ssmith.util.RealtimeInterval;
 
 public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 
-	private static final float WAIT_FOR_DOOR_DURATION = 2;
+	private static final float WAIT_FOR_DOOR_DURATION = 1.6f;
 	private static final boolean SHOOT_AT_ENEMY = true;
 
 	private AbstractAISoldier soldierEntity;
 	private Vector3f currDir;
 	private RealtimeInterval checkForEnemyInt;
-	private ITargetable currentTarget; // todo - change to ITargetable
+	private ITargetable currentTarget;
 	private int animCode = 0;
 	private float waitForSecs = 0; // e.g. wait for door to open
 
@@ -60,7 +61,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 			if (!this.currentTarget.isAlive()) {
 				this.currentTarget = null;
 			} else {
-				boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, 100f);
+				boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, AILaserBullet.RANGE);
 				if (!cansee) {
 					this.currentTarget = null;
 					if (Globals.DEBUG_AI_TARGETTING) {
@@ -71,7 +72,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 		}
 		if (currentTarget == null) { // Check we can still see enemy
 			if (this.checkForEnemyInt.hitInterval()) {
-				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side);
+				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AILaserBullet.RANGE);
 				if (Globals.DEBUG_AI_TARGETTING && currentTarget != null) {
 					Globals.p("AI can now see " + currentTarget);
 				}
@@ -79,7 +80,6 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 		} else { // Face enemy
 			PhysicalEntity pe = (PhysicalEntity)this.currentTarget;
 			Vector3f dir = pe.getWorldTranslation().subtract(this.soldierEntity.getWorldTranslation()); // todo - don't create each time
-			//this.currDir.subtractLocal();
 			dir.y = 0;
 			dir.normalizeLocal();
 			this.changeDirection(dir);

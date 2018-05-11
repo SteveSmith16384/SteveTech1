@@ -57,6 +57,7 @@ public class Globals {
 
 	// Effects
 	public static final boolean TOONISH = false; // Outlines
+	public static final boolean BULLETS_CONES = true;
 
 	//----
 	public static final int PCENT_DROPPED_PACKETS = 10;

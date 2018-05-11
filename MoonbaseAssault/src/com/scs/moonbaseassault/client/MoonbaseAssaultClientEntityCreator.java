@@ -7,6 +7,7 @@ import com.scs.moonbaseassault.entities.BulletExplosionEntity;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.Floor;
+import com.scs.moonbaseassault.entities.FlyingSpaceship2;
 import com.scs.moonbaseassault.entities.GasCannister;
 import com.scs.moonbaseassault.entities.GenericFloorTex;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
@@ -19,7 +20,7 @@ import com.scs.moonbaseassault.entities.SmallExplosionEntity;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
 import com.scs.moonbaseassault.entities.SpaceCrate;
-import com.scs.moonbaseassault.models.Spaceship1;
+import com.scs.moonbaseassault.entities.Spaceship1;
 import com.scs.moonbaseassault.weapons.GrenadeLauncher;
 import com.scs.moonbaseassault.weapons.LaserRifle;
 import com.scs.stevetech1.client.AbstractGameClient;
@@ -57,6 +58,7 @@ public class MoonbaseAssaultClientEntityCreator {
 	public static final int BULLET_EXPLOSION_EFFECT = 20;
 	public static final int GAS_CANNISTER = 21;
 	public static final int FLOOR_TEX = 22;
+	public static final int FLYING_SPACESHIP2 = 23;
 
 
 	public MoonbaseAssaultClientEntityCreator() {
@@ -302,6 +304,12 @@ public class MoonbaseAssaultClientEntityCreator {
 			String tex = (String)msg.data.get("tex");
 			GenericFloorTex gas = new GenericFloorTex(game, id, pos.x, pos.y, pos.z, size.x, size.z, tex);
 			return gas;
+		}
+
+		case FLYING_SPACESHIP2:
+		{
+			FlyingSpaceship2 spaceship1 = new FlyingSpaceship2(game, id, pos.x, pos.y, pos.z);
+			return spaceship1;
 		}
 
 		default:

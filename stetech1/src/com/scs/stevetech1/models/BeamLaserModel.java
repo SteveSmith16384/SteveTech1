@@ -22,20 +22,21 @@ public class BeamLaserModel extends Node {
 	private Geometry g;
 	private Cylinder cyl;
 
-	public static BeamLaserModel Factory(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex, float diam) {
+	public static BeamLaserModel Factory(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex, float diam, boolean cone) {
 		if (spare.size() > 0) {
 			BeamLaserModel m = spare.remove(0);
 			m.setPoints(start, end, true);
 			return  m;
 		} else {
-			return new BeamLaserModel(assetManager, start, end, col, generateMat, tex, diam);
+			return new BeamLaserModel(assetManager, start, end, col, generateMat, tex, diam, cone);
 		}
 	}
 
-	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex, float diam) {
+	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex, float diam, boolean cone) {
 		super("Laser");
 
-		cyl = new Cylinder(5, 10, diam, start.distance(end), true);
+		
+		cyl = new Cylinder(5, 10, diam, cone? 0: diam, start.distance(end), true, false);
 		cyl.setBound(new BoundingBox());
 		cyl.updateBound();
 		g = new Geometry();

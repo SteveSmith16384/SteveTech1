@@ -21,7 +21,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class AILaserBullet extends AbstractAIBullet {
 
-	private static final float RANGE = 30f;
+	public static final float RANGE = 30f;
 	public static final float SPEED = 20f;
 	private static final boolean USE_CYLINDER = true;
 
@@ -45,7 +45,7 @@ public class AILaserBullet extends AbstractAIBullet {
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;
-			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/yellowsun.jpg", Globals.LASER_DIAM);
+			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/yellowsun.jpg", Globals.LASER_DIAM, Globals.BULLETS_CONES);
 		} else {
 			Mesh sphere = null;
 			sphere = new Sphere(8, 8, 0.02f, true, false);

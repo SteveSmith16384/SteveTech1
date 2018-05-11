@@ -171,6 +171,10 @@ ConsoleInputListener {
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
+		if (tpf_secs > 1) {
+			tpf_secs = 1;
+		}
+
 		if (Globals.STRICT) {
 			if (this.physicsController.getEntities().size() > this.entities.size()) {
 				Globals.pe("Warning: more simple rigid bodies than entities!");
@@ -777,14 +781,14 @@ ConsoleInputListener {
 	}
 
 
-	public ITargetable getTarget(PhysicalEntity shooter, int ourSide) {
+	public ITargetable getTarget(PhysicalEntity shooter, int ourSide, float range) {
 		for (IEntity e : entitiesForProcessing) {
 			if (e != shooter) {
 				if (e instanceof ITargetable) {
 					ITargetable t = (ITargetable)e;
 					if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
 						PhysicalEntity pe = (PhysicalEntity)e;
-						if (shooter.canSee(pe, 100)) {
+						if (shooter.canSee(pe, range)) {
 							return t;
 						}
 					}
