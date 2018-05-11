@@ -167,17 +167,23 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		this.actuallyAddEntity(gas);
 
 		// todo - remove
-		GenericFloorTex gft = new GenericFloorTex(this, getNextEntityID(), 2f, 2f, 1f, 1f, "Textures/floor4.jpg");
+		GenericFloorTex gft = new GenericFloorTex(this, getNextEntityID(), 2f, 0, 2f, 1f, 1f, "Textures/floor4.jpg");
 		this.actuallyAddEntity(gft);
 
 		// Add AI soldiers
-		for (int side=1 ; side<=2 ; side++) {
-			for (int i=0 ; i<3 ; i++) {
-				String name = (side == 1 ? "Attacker" : "Defender") + " " + (i+1);
-				MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, side, AbstractAvatar.ANIM_IDLE, name);
-				this.actuallyAddEntity(s);
-				moveAISoldierToStartPosition(s, s.side);
+		if (!Globals.TEST_AI) {
+			for (int side=1 ; side<=2 ; side++) {
+				for (int i=0 ; i<3 ; i++) {
+					String name = (side == 1 ? "Attacker" : "Defender") + " " + (i+1);
+					MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, side, AbstractAvatar.ANIM_IDLE, name, side == 1);
+					this.actuallyAddEntity(s);
+					moveAISoldierToStartPosition(s, s.side);
+				}
 			}
+		} else {
+			MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, 1, AbstractAvatar.ANIM_IDLE, "AI TEST", true);
+			this.actuallyAddEntity(s);
+			moveAISoldierToStartPosition(s, s.side);
 		}
 
 	}
@@ -185,20 +191,24 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	private void moveAISoldierToStartPosition(PhysicalEntity soldier, int side) {
 		float startHeight = .1f;
-		List<Point> deploySquares = this.deploySquares[side-1];
-		boolean found = false;
-		while (true) { // todo - only try a certain number of times
-			Point p = deploySquares.get(NumberFunctions.rnd(0, deploySquares.size()-1));
-			soldier.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
-			if (soldier.simpleRigidBody.checkForCollisions().size() == 0) {
-				found = true;
-				break;
+		if (!Globals.TEST_AI) {
+			List<Point> deploySquares = this.deploySquares[side-1];
+			boolean found = false;
+			while (true) { // todo - only try a certain number of times
+				Point p = deploySquares.get(NumberFunctions.rnd(0, deploySquares.size()-1));
+				soldier.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
+				if (soldier.simpleRigidBody.checkForCollisions().size() == 0) {
+					found = true;
+					break;
+				}
 			}
-		}
-		if (found) {
-			Globals.p("AISoldier starting at " + soldier.getWorldTranslation());
+			if (found) {
+				Globals.p("AISoldier starting at " + soldier.getWorldTranslation());
+			} else {
+				throw new RuntimeException("No space to start!");
+			}
 		} else {
-			throw new RuntimeException("No space to start!");
+			soldier.setWorldTranslation(1.5f, startHeight, 1.5f);
 		}
 	}
 
@@ -234,8 +244,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	protected void playerJoinedGame(ClientData client) {
 		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.mapData, this.getMAGameData().computersDestroyed));
 	}
-	
-	
+
+
 	@Override
 	protected Class[] getListofMessageClasses() {
 		return new Class[] {HudDataMessage.class, MoonbaseAssaultGameData.class};
@@ -295,7 +305,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		this.mapData[p.x][p.y] = MapLoader.INT_FLOOR;
 		this.gameNetworkServer.sendMessageToAll(new HudDataMessage(this.mapData, this.getMAGameData().computersDestroyed));
 		this.getMAGameData().computersDestroyed++;//.pointsForSide[1] += 10;
-		
+
 		if (this.getMAGameData().computersDestroyed >= COMPS_DESTROYED_TO_WIN) {
 			winningSide = 1;
 			//this.gameStatusChanged(SimpleGameData.ST_FINISHED);

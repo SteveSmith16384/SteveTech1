@@ -1,12 +1,16 @@
 package com.scs.moonbaseassault.server.ai;
 
+import java.awt.Point;
+
 import com.jme3.math.Vector3f;
+import com.scs.moonbaseassault.components.IUnit;
+import com.scs.moonbaseassault.entities.AbstractAISoldier;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
-import com.scs.stevetech1.entities.AbstractAISoldier;
+import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -14,25 +18,31 @@ import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.IArtificialIntelligence;
 
+import ssmith.astar.WayPoints;
 import ssmith.lang.NumberFunctions;
 import ssmith.util.RealtimeInterval;
 
-public class ShootingSoldierAI3 implements IArtificialIntelligence {
+public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 
 	private static final float WAIT_FOR_DOOR_DURATION = 2;
 	private static final boolean SHOOT_AT_ENEMY = true;
 
 	private AbstractAISoldier soldierEntity;
 	private Vector3f currDir;
-	private RealtimeInterval checkForEnemyInt;// = new RealtimeInterval(1000);
+	private RealtimeInterval checkForEnemyInt;
 	private PhysicalEntity currentTarget;
 	private int animCode = 0;
-
 	private float waitForSecs = 0; // e.g. wait for door to open
 
-	public ShootingSoldierAI3(AbstractAISoldier _pe) {
-		soldierEntity = _pe;
+	private boolean attacker;
+	private FindComputerThread fcThread;
+	private WayPoints route = null;
 
+	public ShootingSoldierAI3(AbstractAISoldier _pe, boolean _attacker) {
+		super();
+
+		soldierEntity = _pe;
+		attacker = _attacker;
 		checkForEnemyInt = new RealtimeInterval(NumberFunctions.rnd(800,  1200)); // Avoid AI all shooting at the same time
 		currDir = new Vector3f();
 		changeDirection(getRandomDirection()); // Start us pointing in the right direction
@@ -70,18 +80,63 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			this.changeDirection(dir);
 		}
 
-		if (currentTarget != null && SHOOT_AT_ENEMY) {
+		if (currentTarget != null) {
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 			animCode = AbstractAvatar.ANIM_IDLE;
-			this.soldierEntity.shoot(currentTarget);
-		} else if (waitForSecs <= 0) {
+			if (SHOOT_AT_ENEMY) {
+				this.soldierEntity.shoot(currentTarget);
+			}
+
+		} else if (this.attacker && this.route == null) {
+			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
+			animCode = AbstractAvatar.ANIM_IDLE;
+			getRoute(server);
+
+		} else if (waitForSecs <= 0) { // Walk forwards
+			if (this.attacker && route != null) {
+				checkRoute();
+			}
 			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
 			animCode = AbstractAvatar.ANIM_WALKING;
-		} else {
+
+		} else { // Wait for door
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 			animCode = AbstractAvatar.ANIM_IDLE;
 		}
 
+	}
+
+
+	/*
+	 * Called if the unit has no route
+	 */
+	private void getRoute(AbstractGameServer server) {
+		if (fcThread == null) {
+			this.fcThread = new FindComputerThread((MoonbaseAssaultServer)server, (IUnit)soldierEntity);
+			this.fcThread.start();
+		} else if (!fcThread.isAlive()) {
+			this.route = this.fcThread.route;
+			fcThread = null;
+		} else {
+			// Still waiting
+		}
+	}
+
+
+	private void checkRoute() {
+		if (this.route.isEmpty()) {
+			this.route = null;
+		} else {
+			Point p = this.route.get(0);
+			Vector3f dest = new Vector3f(p.x+0.5f, this.soldierEntity.getWorldTranslation().y, p.y+0.5f); // todo - don't create each time
+			float dist = this.soldierEntity.getWorldTranslation().distance(dest);
+			if (dist < .7f) {
+				this.route.remove(0);
+			} else {
+				Vector3f dir = dest.subtract(this.soldierEntity.getWorldTranslation()).normalizeLocal();
+				changeDirection(dir);
+			}
+		}
 	}
 
 
@@ -142,4 +197,62 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		return this.currentTarget;
 	}
 
+
+	// IUnit
+
+	@Override
+	public PhysicalEntity getPhysicalEntity() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	@Override
+	public boolean isAlive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean hasAdequateHealth() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public int getSide() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public boolean hasRoute() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public int getRoutePriority() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void setRoutePriority(int p) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	@Override
+	public void setDest(int x, int y) {
+		// TODO Auto-generated method stub
+
+	}
+	 */
 }

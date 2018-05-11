@@ -14,8 +14,8 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimatedClientSide;
+import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IPhysicalEntity;
-import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ISetRotation;
@@ -138,6 +138,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 			if (this.mainNode.getParent() != null) { // Unlaunched bullets have no parent
 				this.mainNode.removeFromParent();
+			}
+			
+			if (this instanceof IDrawOnHUD) {
+				IDrawOnHUD idoh = (IDrawOnHUD)this;
+				idoh.getHUDItem().removeFromParent();
+
 			}
 		}
 		super.remove();
@@ -329,7 +335,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
 				//Globals.p("Ray collided with " + pe + " at " + col.getContactPoint());
 				if (pe == this) {
-					continue; // Don't block by outrselves
+					continue; // Don't block by ourselves
 				}
 				if (pe == target) {
 					return true;

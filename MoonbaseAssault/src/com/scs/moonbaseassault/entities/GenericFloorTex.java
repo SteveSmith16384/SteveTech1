@@ -12,12 +12,13 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 public class GenericFloorTex extends PhysicalEntity {
 
-	public GenericFloorTex(IEntityController _game, int id, float x, float z, float w, float d, String tex) {
+	public GenericFloorTex(IEntityController _game, int id, float x, float y, float z, float w, float d, String tex) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR_TEX, "GenericFloorTex", false, true);
 
 		if (_game.isServer()) {
@@ -42,8 +43,9 @@ public class GenericFloorTex extends PhysicalEntity {
 			geometry.setMaterial(floor_mat);
 		}
 		this.mainNode.attachChild(geometry);
-		geometry.setLocalTranslation((w/2), 0, (d/2));
-		mainNode.setLocalTranslation(x, .001f, z);
+		JMEAngleFunctions.rotateToDirection(geometry, new Vector3f(0, 1, 0));
+		geometry.setLocalTranslation((w/2), 0.001f, (d/2));
+		mainNode.setLocalTranslation(x, y, z);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);

@@ -4,10 +4,15 @@ import java.awt.Point;
 import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
+import com.jme3.font.BitmapFont;
+import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
+import com.jme3.renderer.Camera.FrustumIntersect;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
@@ -16,25 +21,31 @@ import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
+import com.scs.stevetech1.components.IDrawOnHUD;
+import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class Computer extends PhysicalEntity implements IDamagable {
+public class Computer extends PhysicalEntity implements IDamagable, ITargetable, IDrawOnHUD {
 
 	private static final float SIZE = 0.9f;
 	private float health = 100;
 	private MoonbaseAssaultServer server;
-	private Point point; // Server-side only
+	private Point point; // Server-side only - todo - rename
+
+	// HUD
+	private BitmapText hudNode;
+	private static BitmapFont font_small;
 
 	public Computer(IEntityController _game, int id, float x, float y, float z, int mx, int my) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", false, true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", true, true); // Requires processing so it can be a target
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			point = new Point(mx, my);
 		}
-		
+
 
 		float w = SIZE;
 		float h = SIZE;
@@ -67,6 +78,11 @@ public class Computer extends PhysicalEntity implements IDamagable {
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
+
+		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
+		hudNode = new BitmapText(font_small);
+		//hudNode.setText(name);
+
 	}
 
 
@@ -97,5 +113,43 @@ public class Computer extends PhysicalEntity implements IDamagable {
 	public float getHealth() {
 		return health;
 	}
+
+
+	@Override
+	public boolean isValidTargetForSide(int shootersSide) {
+		return shootersSide == 1;
+	}
+
+
+	@Override
+	public boolean isAlive() {
+		return true;
+	}
+
+
+	@Override
+	public Node getHUDItem() {
+		return this.hudNode;
+	}
+
+
+	@Override
+	public void drawOnHud(Camera cam) {
+		float dist = this.getWorldTranslation().distance(cam.getLocation());
+		if (dist < 5) {
+			FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
+			if (insideoutside != FrustumIntersect.Outside) {
+				if (this.hudNode.getText().length() == 0) {
+					hudNode.setText(this.health + "%");
+				}
+				Vector3f pos = this.getWorldTranslation();
+				Vector3f screen_pos = cam.getScreenCoordinates(pos);
+				this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
+			}
+		} else {
+			this.hudNode.setText(""); // Hide it
+		}
+	}
+
 
 }

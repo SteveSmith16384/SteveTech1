@@ -69,7 +69,8 @@ public class AILaserBullet extends AbstractAIBullet {
 
 	@Override
 	public float getDamageCaused() {
-		return ((RANGE-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 10;
+		float dist = Math.max(1, this.getDistanceTravelled());
+		return ((RANGE-dist) / dist) * 1;
 	}
 
 

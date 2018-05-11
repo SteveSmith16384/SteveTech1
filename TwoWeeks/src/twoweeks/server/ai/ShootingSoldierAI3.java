@@ -1,7 +1,7 @@
 package twoweeks.server.ai;
 
 import com.jme3.math.Vector3f;
-import com.scs.stevetech1.entities.AbstractAISoldier;
+import com.scs.moonbaseassault.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;

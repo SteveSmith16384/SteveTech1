@@ -13,7 +13,7 @@ public interface IUnit { // todo - rename
 	//AI getAI();
 	
 	//boolean canSee(PhysicalEntity pe);
-	
+	/*
 	boolean isAlive();
 	
 	boolean hasAdequateHealth();
@@ -27,5 +27,5 @@ public interface IUnit { // todo - rename
 	void setRoutePriority(int p);
 	
 	void setDest(int x, int y);
-	
+	*/
 }

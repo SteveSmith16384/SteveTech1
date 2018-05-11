@@ -188,7 +188,7 @@ public class MoonbaseAssaultClientEntityCreator {
 			int side = (int)msg.data.get("side");
 			int animcode = (int)msg.data.get("animcode");
 			String name = (String)msg.data.get("name");
-			MA_AISoldier z = new MA_AISoldier(game, id, pos.x, pos.y, pos.z, side, animcode, name);
+			MA_AISoldier z = new MA_AISoldier(game, id, pos.x, pos.y, pos.z, side, animcode, name, false);
 			return z;
 		}
 
@@ -299,7 +299,7 @@ public class MoonbaseAssaultClientEntityCreator {
 		{
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
-			GenericFloorTex gas = new GenericFloorTex(game, id, pos.x, pos.z, size.x, size.z, tex);
+			GenericFloorTex gas = new GenericFloorTex(game, id, pos.x, pos.y, pos.z, size.x, size.z, tex);
 			return gas;
 		}
 

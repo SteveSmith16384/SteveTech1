@@ -277,6 +277,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 				SmallExplosionEntity e = new SmallExplosionEntity(this, this.getNextEntityID(), new Vector3f(1f, 1f, 1f));
 				this.addClientOnlyEntity(e);
 			}
+		} else {
+			super.onAction(name, value, tpf);
 		}
 	}
 

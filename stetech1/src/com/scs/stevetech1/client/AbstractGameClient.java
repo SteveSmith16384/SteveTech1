@@ -53,7 +53,6 @@ import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
-import com.scs.stevetech1.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -116,6 +115,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private static final String JME_SETTINGS_NAME = "jme_client_settings.txt";
 
 	// Global controls
+	private static final String RELOAD = "Reload";
 	private static final String QUIT = "Quit";
 	protected static final String TEST = "Test";
 
@@ -227,6 +227,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Globals.CAM_DIST);
+
+		getInputManager().addMapping(RELOAD, new KeyTrigger(KeyInput.KEY_R));
+		getInputManager().addListener(this, RELOAD);            
 
 		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
 		getInputManager().addListener(this, QUIT);            
@@ -1053,8 +1056,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(QUIT)) {
 			if (value) {
-				quit("User chose to");
+				quit("User chose to.");
 			}
+		} else if (name.equalsIgnoreCase(RELOAD)) {
+			// todo
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
 				//new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.cam.getWidth(), this.cam.getHeight(), 5);

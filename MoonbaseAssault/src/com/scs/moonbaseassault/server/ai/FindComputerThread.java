@@ -30,44 +30,17 @@ public class FindComputerThread extends Thread {
 			int closest_dist = 9999;
 			AStar astar = new AStar(game);
 			for (Point p : game.getComputerSquares()) {
-				//MapSquare sq = game.mapdata.getMapSq_MaybeNULL(p.x, p.y);
-				//if (sq.major_type == MapDataTable.MT_COMPUTER && sq.isDestroyed() == false) {
-				// todo re-add  if (isComputerUnique(sq)) { // Check it hasn't been selected by another unit
-				//if (unit.ai.isAIControlled(game)) {
 				Vector3f pos = unit.getPhysicalEntity().getWorldTranslation();
-				astar.findPath((int)pos.x, (int)pos.y, p.x, p.y, closest_dist, false);
+				astar.findPath((int)pos.x, (int)pos.z, p.x, p.y, closest_dist, false);
 				if (astar.wasSuccessful()) {
 					if (astar.getRoute().size() < closest_dist) {
 						closest_dist = astar.getRoute().size();
 						route = astar.getRoute();
+						break;
 					}
 				}
-				/*} else {
-							if (unit.canSee(sq)) {
-								route = new WayPoints();
-								route.add(p); // get computer for us to shoot at
-							}
-						}*/
-				//}
-				//}
 			}
 		}
 	}
 
-	/* todo
-	private boolean isComputerUnique(MapSquare sq) {
-		for (IUnit comrade_unit : game.units) {
-			if (comrade_unit.getStatus() == UnitStatus.ST_DEPLOYED) {
-				if (comrade_unit.getSide() == this.unit.getSide()) {
-					if (comrade_unit != this.unit) {
-						if (comrade_unit.ai.getTargetMapSquare() == sq) {
-							return false;
-						}
-					}
-				}
-			}
-		}
-		return true;
-	}
-	 */
 }

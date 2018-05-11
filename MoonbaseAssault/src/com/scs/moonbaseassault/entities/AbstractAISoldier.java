@@ -1,4 +1,4 @@
-package com.scs.stevetech1.entities;
+package com.scs.moonbaseassault.entities;
 
 import java.util.HashMap;
 
@@ -11,6 +11,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
+import com.scs.moonbaseassault.components.IUnit;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
@@ -27,6 +28,10 @@ import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.components.ITargetable;
+import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.entities.AbstractAIBullet;
+import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -34,10 +39,8 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.IArtificialIntelligence;
 import com.scs.stevetech1.shared.IEntityController;
 
-import ssmith.util.RealtimeInterval;
-
 public abstract class AbstractAISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
-IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable { //, ICanShoot {//, IUnit {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable, IUnit {
 
 	public static final int BULLETS_IN_MAG = 6;
 	public static final float SHOOT_INTERVAL = 1f;
@@ -55,7 +58,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	// Weapon
 	private int bullets = BULLETS_IN_MAG;
 	private float timeToNextShot = 0; 
-	//private RealtimeInterval shootInt = new RealtimeInterval(3000);
 
 	// HUD
 	private BitmapText hudNode;
@@ -118,7 +120,9 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (health > 0) {
 			timeToNextShot -= tpf_secs;
-			ai.process(server, tpf_secs);
+			if (server.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
+				ai.process(server, tpf_secs);
+			}
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
 		} else {
 			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
@@ -171,7 +175,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		if (soldierModel.getModel() != null) {
 			this.soldierModel.getModel().removeFromParent();
 		}
-		this.hudNode.removeFromParent();
+		//this.hudNode.removeFromParent();
 	}
 
 
@@ -224,9 +228,14 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		if (health > 0) {
 			FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 			if (insideoutside != FrustumIntersect.Outside) {
+				if (this.hudNode.getText().length() == 0) {
+					hudNode.setText(name);
+				}
 				Vector3f pos = this.getWorldTranslation().add(0, soldierModel.getSize().y, 0); // todo - not this every time
 				Vector3f screen_pos = cam.getScreenCoordinates(pos);
 				this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
+			} else {
+				this.hudNode.setText(""); // Hide it
 			}
 		}
 	}
@@ -300,4 +309,10 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public float getHealth() {
 		return health;
 	}
+
+
+	public PhysicalEntity getPhysicalEntity() {
+		return this;
+	}
+
 }
