@@ -1,6 +1,7 @@
 package com.scs.stevetech1.server;
 
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
 public interface IArtificialIntelligence {
@@ -9,7 +10,7 @@ public interface IArtificialIntelligence {
 	
 	Vector3f getDirection(); // Current dir to point entity the right way
 	
-	PhysicalEntity getCurrentTarget();
+	ITargetable getCurrentTarget();
 	
 	int getAnimCode();
 	

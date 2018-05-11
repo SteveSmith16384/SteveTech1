@@ -777,7 +777,7 @@ ConsoleInputListener {
 	}
 
 
-	public PhysicalEntity getTarget(PhysicalEntity shooter, int ourSide) {
+	public ITargetable getTarget(PhysicalEntity shooter, int ourSide) {
 		for (IEntity e : entitiesForProcessing) {
 			if (e != shooter) {
 				if (e instanceof ITargetable) {
@@ -785,7 +785,7 @@ ConsoleInputListener {
 					if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
 						PhysicalEntity pe = (PhysicalEntity)e;
 						if (shooter.canSee(pe, 100)) {
-							return pe;
+							return t;
 						}
 					}
 				}

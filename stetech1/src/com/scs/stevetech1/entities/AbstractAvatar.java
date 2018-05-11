@@ -57,12 +57,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public AbstractAvatar(IEntityController _game, int avatarType, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _avatarModel) {
 		super(_game, eid, avatarType, "Player", true, false);
 
-		if (game.isServer()) {
+		/*if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("id", eid); this.getID();
 			creationData.put("playerID", _playerID);
 			creationData.put("side", _side);
-		}
+		}*/
 
 		playerID = _playerID;
 		input = _input;

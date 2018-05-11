@@ -1,5 +1,7 @@
 package com.scs.stevetech1.entities;
 
+import java.util.HashMap;
+
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.IAnimatedServerSide;
 import com.scs.stevetech1.components.IAvatarModel;
@@ -32,6 +34,14 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, float _maxHealth, float _moveSpeed, float _jumpForce) {
 		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.side, anim);
+
+		if (game.isServer()) {
+			creationData = new HashMap<String, Object>();
+			creationData.put("id", eid); this.getID();
+			creationData.put("playerID", _client.getPlayerID());
+			creationData.put("side", _client.side);
+			creationData.put("playersName", _client.playerData.playerName);
+		}
 
 		server = (AbstractGameServer)_module;
 		client = _client;

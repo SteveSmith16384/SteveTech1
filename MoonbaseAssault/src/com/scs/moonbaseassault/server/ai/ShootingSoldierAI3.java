@@ -11,6 +11,7 @@ import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
+import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -30,7 +31,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 	private AbstractAISoldier soldierEntity;
 	private Vector3f currDir;
 	private RealtimeInterval checkForEnemyInt;
-	private PhysicalEntity currentTarget;
+	private ITargetable currentTarget; // todo - change to ITargetable
 	private int animCode = 0;
 	private float waitForSecs = 0; // e.g. wait for door to open
 
@@ -56,12 +57,15 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 		} 
 
 		if (currentTarget != null) { // Find enemy
-			boolean cansee = soldierEntity.canSee(this.currentTarget, 100f);
-			if (!cansee) {
-				//soldierEntity.canSee(this.currentTarget, 100f); // todo - remove
+			if (!this.currentTarget.isAlive()) {
 				this.currentTarget = null;
-				if (Globals.DEBUG_AI_TARGETTING) {
-					Globals.p("AI no longer see target");
+			} else {
+				boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, 100f);
+				if (!cansee) {
+					this.currentTarget = null;
+					if (Globals.DEBUG_AI_TARGETTING) {
+						Globals.p("AI no longer see target");
+					}
 				}
 			}
 		}
@@ -73,7 +77,8 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 				}
 			}
 		} else { // Face enemy
-			Vector3f dir = this.currentTarget.getWorldTranslation().subtract(this.soldierEntity.getWorldTranslation()); // todo - don't create each time
+			PhysicalEntity pe = (PhysicalEntity)this.currentTarget;
+			Vector3f dir = pe.getWorldTranslation().subtract(this.soldierEntity.getWorldTranslation()); // todo - don't create each time
 			//this.currDir.subtractLocal();
 			dir.y = 0;
 			dir.normalizeLocal();
@@ -84,7 +89,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 			animCode = AbstractAvatar.ANIM_IDLE;
 			if (SHOOT_AT_ENEMY) {
-				this.soldierEntity.shoot(currentTarget);
+				this.soldierEntity.shoot((PhysicalEntity)currentTarget);
 			}
 
 		} else if (this.attacker && this.route == null) {
@@ -143,10 +148,9 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (pe instanceof Floor == false) {
-			// Change direction to away from blockage, unless it's a doior
+			// Change direction to away from blockage, unless it's a door
 			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof MapBorder) {
 				//Globals.p("AISoldier has collided with " + pe);
-				//changeDirection(currDir.mult(-1));
 				changeDirection(getRandomDirection()); // Start us pointing in the right direction
 			} else if (pe instanceof AbstractAISoldier || pe instanceof AbstractServerAvatar) {
 				if (NumberFunctions.rnd(1, 3) == 1) {
@@ -193,7 +197,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 
 
 	@Override
-	public PhysicalEntity getCurrentTarget() {
+	public ITargetable getCurrentTarget() {
 		return this.currentTarget;
 	}
 

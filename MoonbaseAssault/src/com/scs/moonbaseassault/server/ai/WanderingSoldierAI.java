@@ -6,6 +6,7 @@ import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.Floor;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
+import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -82,7 +83,7 @@ public class WanderingSoldierAI implements IArtificialIntelligence {
 
 
 	@Override
-	public PhysicalEntity getCurrentTarget() {
+	public ITargetable getCurrentTarget() {
 		return null;
 	}
 

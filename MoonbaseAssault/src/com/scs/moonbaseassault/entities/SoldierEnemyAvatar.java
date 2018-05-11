@@ -14,8 +14,8 @@ public class SoldierEnemyAvatar extends AbstractEnemyAvatar implements AnimEvent
 	private SoldierModel soldier;
 	private int currentAnimCode = -1;
 	
-	public SoldierEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, int side) {
-		super(game, type, eid, x, y, z, new SoldierModel(game.getAssetManager()), side);
+	public SoldierEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, int side, String playerName) {
+		super(game, type, eid, x, y, z, new SoldierModel(game.getAssetManager()), side, playerName);
 		
 		this.soldier = (SoldierModel)anim;
 	}

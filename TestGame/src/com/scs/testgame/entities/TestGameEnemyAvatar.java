@@ -11,7 +11,7 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 	private CharacterModel model;
 
 	public TestGameEnemyAvatar(IEntityController game, int eid, float x, float y, float z, int side) {
-		super(game, TestGameClientEntityCreator.AVATAR, eid, x, y, z, new CharacterModel(game.getAssetManager()), side);
+		super(game, TestGameClientEntityCreator.AVATAR, eid, x, y, z, new CharacterModel(game.getAssetManager()), side, "TestGame");
 		
 		model = (CharacterModel)super.anim;
 	}

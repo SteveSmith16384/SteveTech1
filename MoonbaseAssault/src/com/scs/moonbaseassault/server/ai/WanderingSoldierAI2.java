@@ -8,10 +8,10 @@ import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
+import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
-import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.IArtificialIntelligence;
 
 import ssmith.lang.NumberFunctions;
@@ -105,7 +105,7 @@ public class WanderingSoldierAI2 implements IArtificialIntelligence {
 
 
 	@Override
-	public PhysicalEntity getCurrentTarget() {
+	public ITargetable getCurrentTarget() {
 		return null;
 	}
 

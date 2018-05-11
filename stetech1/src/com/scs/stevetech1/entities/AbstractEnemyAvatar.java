@@ -30,18 +30,19 @@ ISetRotation, IDrawOnHUD {
 
 	protected IAvatarModel anim;
 	private Spatial avatarModel;
+	private String playersName;
 
 	// HUD
 	private BitmapText hudNode;
 	private static BitmapFont font_small;
 
-	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int side) {
+	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int side, String _playersName) {
 		super(game, eid, type, "EnemyAvatar", true, false);
 
 		anim = _anim;
-
+		playersName = _playersName;
+		
 		// Create box for collisions
-		//Box box = new Box(anim.getBoundingBox().getXExtent(), anim.getBoundingBox().getYExtent(), anim.getBoundingBox().getZExtent());
 		Box box = new Box(anim.getSize().x/2, anim.getSize().y/2, anim.getSize().z/2);
 		Geometry bbGeom = new Geometry("bbGeom_" + name, box);
 		bbGeom.setLocalTranslation(0, anim.getSize().y/2, 0); // origin is centre!

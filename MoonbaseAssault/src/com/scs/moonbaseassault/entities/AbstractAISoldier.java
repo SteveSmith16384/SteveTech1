@@ -75,8 +75,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
 			creationData.put("name", name);
-
-			//ai = new ShootingSoldierAI3(this);
 		} else {
 			this.soldierModel.createAndGetModel(_side);
 			game.getGameNode().attachChild(this.soldierModel.getModel());

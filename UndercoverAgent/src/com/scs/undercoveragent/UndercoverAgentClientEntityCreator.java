@@ -90,13 +90,14 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			float moveSpeed = (float)msg.data.get("moveSpeed");
 			float jumpForce = (float)msg.data.get("jumpForce");
+			String playersName = (String)msg.data.get("playersName");
 
 			if (playerID == game.playerID) {
 				AbstractClientAvatar avatar = new SnowmanClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side, moveSpeed, jumpForce);
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				AbstractEnemyAvatar avatar = new SnowmanEnemyAvatar(game, id, pos.x, pos.y, pos.z, side);
+				AbstractEnemyAvatar avatar = new SnowmanEnemyAvatar(game, id, pos.x, pos.y, pos.z, side, playersName);
 				return avatar;
 			}
 		}
