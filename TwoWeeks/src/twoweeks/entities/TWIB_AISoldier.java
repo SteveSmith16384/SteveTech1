@@ -1,9 +1,7 @@
 package twoweeks.entities;
 
 import com.jme3.math.Vector3f;
-import com.scs.moonbaseassault.entities.AbstractAISoldier;
 import com.scs.stevetech1.entities.AbstractAIBullet;
-import com.scs.stevetech1.server.IArtificialIntelligence;
 import com.scs.stevetech1.shared.IEntityController;
 
 import twoweeks.client.TwoWeeksClientEntityCreator;

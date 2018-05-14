@@ -23,10 +23,12 @@ import twoweeks.client.TwoWeeksClientEntityCreator;
 
 public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 
+	public static final float RANGE = 30f;
+	public static final float SPEED = 20f;
 	private static final boolean USE_CYLINDER = false;
 
 	public AIBullet(IEntityController _game, int id, int side, float x, float y, float z, IEntity shooter, Vector3f dir) {
-		super(_game, id, TwoWeeksClientEntityCreator.AI_BULLET, x, y, z, "AIBullet", side, shooter, dir, true, 20, 30f);
+		super(_game, id, TwoWeeksClientEntityCreator.AI_BULLET, x, y, z, "AIBullet", side, shooter, dir, true, SPEED, RANGE);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -45,7 +47,7 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;
-			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/bullet1.jpg", Globals.LASER_DIAM);
+			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/bullet1.jpg", Globals.LASER_DIAM, true);
 		} else {
 			Mesh sphere = new Sphere(8, 8, .02f, true, false);
 			laserNode = new Geometry("DebuggingSphere", sphere);
@@ -75,13 +77,6 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 		return 1;
 	}
 
-/*
-	@Override
-	public void processByServer(AbstractEntityServer server, float tpf_secs) {
-		super.processByServer(server, tpf_secs);
-		
-	}
-*/
 
 	@Override
 	public void collided(PhysicalEntity pe) {

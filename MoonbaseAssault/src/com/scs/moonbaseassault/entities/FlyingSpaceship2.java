@@ -18,7 +18,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class FlyingSpaceship2 extends PhysicalEntity implements ISetRotation, IGetRotation {
 
-	private static final float TURN_SPEED = 0.3f;
+	private static final float TURN_SPEED = 0.2f;
 	private static final float FWD_SPEED = 0.1f;
 
 	public FlyingSpaceship2(IEntityController _game, int id, float x, float y, float z) {
@@ -47,7 +47,7 @@ public class FlyingSpaceship2 extends PhysicalEntity implements ISetRotation, IG
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
-		this.turnLeft(tpf_secs);
+		this.turnRight(tpf_secs);
 		JMEAngleFunctions.moveForwards(this.getMainNode(), FWD_SPEED);
 		
 		this.sendUpdate = true;
