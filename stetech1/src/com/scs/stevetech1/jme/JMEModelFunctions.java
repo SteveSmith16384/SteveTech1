@@ -81,14 +81,6 @@ public class JMEModelFunctions {
 	}
 
 
-	public static float getAngleBetween(Spatial spatial, Vector3f target) {
-		Vector3f dir_to_target = target.subtract(spatial.getWorldTranslation()).normalizeLocal();
-		Vector3f forward = spatial.getLocalRotation().mult(Vector3f.UNIT_Z).normalizeLocal();
-		float diff = forward.distance(dir_to_target);
-		return diff;
-	}
-
-
 	public static void setTextureOnSpatial(AssetManager assetManager, Spatial spatial, String tex) {
 		TextureKey key3 = new TextureKey(tex);
 		key3.setGenerateMips(true);

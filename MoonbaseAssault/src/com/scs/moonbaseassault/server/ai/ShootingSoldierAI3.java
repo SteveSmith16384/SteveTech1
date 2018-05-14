@@ -35,6 +35,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 	private ITargetable currentTarget;
 	private int animCode = 0;
 	private float waitForSecs = 0; // e.g. wait for door to open
+	private float randomDirForSecs = 0; // e.g. collided with comrade
 
 	private boolean attacker;
 	private FindComputerThread fcThread;
@@ -97,16 +98,21 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 			animCode = AbstractAvatar.ANIM_IDLE;
 			getRoute(server);
 
-		} else if (waitForSecs <= 0) { // Walk forwards
+		} else if (waitForSecs > 0) { // Wait for door
+			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
+			animCode = AbstractAvatar.ANIM_IDLE;
+			
+		} else if (randomDirForSecs > 0) {
+			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
+			animCode = AbstractAvatar.ANIM_WALKING;
+			
+		} else {
 			if (this.attacker && route != null) {
 				checkRoute();
 			}
 			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
 			animCode = AbstractAvatar.ANIM_WALKING;
 
-		} else { // Wait for door
-			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
-			animCode = AbstractAvatar.ANIM_IDLE;
 		}
 
 	}
@@ -151,12 +157,18 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 			// Change direction to away from blockage, unless it's a door
 			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof MapBorder) {
 				//Globals.p("AISoldier has collided with " + pe);
-				changeDirection(getRandomDirection()); // Start us pointing in the right direction
+				//changeDirection(getRandomDirection());
+				if (this.attacker) {
+					this.route = null;
+				} else {
+					changeDirection(getRandomDirection());
+				}
 			} else if (pe instanceof AbstractAISoldier || pe instanceof AbstractServerAvatar) {
 				if (NumberFunctions.rnd(1, 3) == 1) {
 					this.waitForSecs = 3;
 				} else {
-					changeDirection(getRandomDirection()); // Start us pointing in the right direction
+					changeDirection(getRandomDirection());
+					randomDirForSecs = 3;
 				}
 			} else if (pe instanceof SlidingDoor) {
 				this.waitForSecs += WAIT_FOR_DOOR_DURATION;

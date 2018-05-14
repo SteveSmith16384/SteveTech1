@@ -147,7 +147,9 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 				this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 			}
 		} else {
-			this.hudNode.setText(""); // Hide it
+			if (this.hudNode.getText().length() > 0) {
+				this.hudNode.setText(""); // Hide it
+			}
 		}
 	}
 
