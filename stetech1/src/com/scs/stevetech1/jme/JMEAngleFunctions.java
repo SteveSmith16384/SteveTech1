@@ -35,6 +35,14 @@ public class JMEAngleFunctions {
 	}
 
 
+	public static float getAngleBetween(Spatial spatial, Vector3f target) {
+		Vector3f dir_to_target = target.subtract(spatial.getWorldTranslation()).normalizeLocal();
+		Vector3f forward = spatial.getLocalRotation().mult(Vector3f.UNIT_Z).normalizeLocal();
+		float diff = forward.distance(dir_to_target);
+		return diff;
+	}
+
+
 	public static Quaternion getRotation(float x, float z) {
 		Quaternion target_q = new Quaternion();
 		target_q.lookAt(new Vector3f(x, 0, z), Vector3f.UNIT_Y);

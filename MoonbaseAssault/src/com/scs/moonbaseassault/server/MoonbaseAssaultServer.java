@@ -162,7 +162,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		//Spaceship1 ss = new Spaceship1(this, this.getNextEntityID(), 8, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
 		//todo - re-add this.actuallyAddEntity(ss);
 
-		FlyingSpaceship2 ss = new FlyingSpaceship2(this, this.getNextEntityID(), 8, 4f, 8);
+		FlyingSpaceship2 ss = new FlyingSpaceship2(this, this.getNextEntityID(), 8, 5f, 8);
 		this.actuallyAddEntity(ss);
 
 		// todo - remove

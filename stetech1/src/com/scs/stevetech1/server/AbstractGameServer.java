@@ -243,124 +243,123 @@ ConsoleInputListener {
 						} else {
 							Globals.p("Null shooter!");
 						}
-						
+
 					} else if (message instanceof ClientReloadingMessage) {
 						ClientReloadingMessage crm = (ClientReloadingMessage)message;
 						IReloadable e = (IReloadable)this.entities.get(crm.abilityId);
 						e.reload(this);
-						
+
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
 					}
 				}
-			}
 
-			// Add and remove entities - do this as close to the list iteration as possible!
-			this.actuallyRemoveEntities();
+				// Add and remove entities - do this as close to the list iteration as possible!
+				this.actuallyRemoveEntities();
 
-			synchronized (this.clients) {
-				// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
-				boolean areAnyPlayersShooting = false;
-				for (ClientData c : this.clients.values()) {
-					AbstractServerAvatar avatar = c.avatar;
-					if (avatar != null && avatar.getAnyAbilitiesShootingInPast() != null) { //.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
-						areAnyPlayersShooting = true;
-						break;
-					}
-				}
-				if (areAnyPlayersShooting) {
-					long timeTo = System.currentTimeMillis() - clientRenderDelayMillis; // Should this be by their ping time?
-					this.rewindEntities(timeTo);
-					this.rootNode.updateGeometricState();
+				synchronized (this.clients) {
+					// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
+					boolean areAnyPlayersShooting = false;
 					for (ClientData c : this.clients.values()) {
 						AbstractServerAvatar avatar = c.avatar;
-						if (avatar != null) {
-							ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
-							if (chip != null) {
-								Vector3f from = avatar.getBulletStartPos();
-								if (Globals.DEBUG_SHOOTING_POS) {
-									Globals.p("Server shooting from " + from);
-								}
-								Ray ray = new Ray(from, avatar.getShootDir());
-								ray.setLimit(chip.getRange());
-								RayCollisionData rcd = avatar.checkForRayCollisions(ray);//, chip.getRange());
-								if (rcd != null) {
-									rcd.timestamp = timeTo; // For debugging
-								}
-								chip.setTarget(rcd); // Damage etc.. is calculated later
-							}
+						if (avatar != null && avatar.getAnyAbilitiesShootingInPast() != null) { //.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
+							areAnyPlayersShooting = true;
+							break;
 						}
 					}
-					this.restoreEntityPositions();
-				}
-			}
-
-			boolean sendUpdates = sendEntityUpdatesInterval.hitInterval();
-			EntityUpdateMessage eum = null;
-			if (sendUpdates) {
-				eum = new EntityUpdateMessage();
-			}
-
-			if (Globals.STRICT) {
-				for(IEntity e : this.entities.values()) {
-					if (e.requiresProcessing()) {
-						if (!this.entitiesForProcessing.contains(e)) {
-							Globals.p("Warning: Processed entity " + e + " not in process list!");
-						}
-					}
-				}
-			}
-
-
-			int numSent = 0;
-			// Loop through the entities
-			//for (IEntity e : entitiesForProcessing.values()) { // this.entities
-			for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
-				IEntity e = this.entitiesForProcessing.get(i);
-				if (e.hasNotBeenRemoved()) {
-					if (e instanceof IPlayerControlled) {
-						IPlayerControlled p = (IPlayerControlled)e;
-						p.resetPlayerInput();
-					}
-
-					if (e instanceof IProcessByServer) {
-						IProcessByServer p = (IProcessByServer)e;
-						p.processByServer(this, tpf_secs);
-					}
-
-					if (e instanceof PhysicalEntity) {
-						PhysicalEntity physicalEntity = (PhysicalEntity)e;
-						//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
-						if (sendUpdates) {
-							if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
-								eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
-								numSent++;
-								physicalEntity.sendUpdate = false;
-								if (eum.isFull()) {
-									gameNetworkServer.sendMessageToAll(eum);	
-									eum = new EntityUpdateMessage();
+					if (areAnyPlayersShooting) {
+						long timeTo = System.currentTimeMillis() - clientRenderDelayMillis; // Should this be by their ping time?
+						this.rewindEntities(timeTo);
+						this.rootNode.updateGeometricState();
+						for (ClientData c : this.clients.values()) {
+							AbstractServerAvatar avatar = c.avatar;
+							if (avatar != null) {
+								ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
+								if (chip != null) {
+									Vector3f from = avatar.getBulletStartPos();
+									if (Globals.DEBUG_SHOOTING_POS) {
+										Globals.p("Server shooting from " + from);
+									}
+									Ray ray = new Ray(from, avatar.getShootDir());
+									ray.setLimit(chip.getRange());
+									RayCollisionData rcd = avatar.checkForRayCollisions(ray);//, chip.getRange());
+									if (rcd != null) {
+										rcd.timestamp = timeTo; // For debugging
+									}
+									chip.setTarget(rcd); // Damage etc.. is calculated later
 								}
 							}
 						}
+						this.restoreEntityPositions();
 					}
 				}
-			}
 
-			if (sendUpdates) {
-				gameNetworkServer.sendMessageToAll(eum);	
-			}
-			if (Globals.SHOW_NUM_ENT_UPDATES_SENT) {
+				boolean sendUpdates = sendEntityUpdatesInterval.hitInterval();
+				EntityUpdateMessage eum = null;
 				if (sendUpdates) {
-					Globals.p("Num entity updates sent: " + numSent);
+					eum = new EntityUpdateMessage();
+				}
+
+				if (Globals.STRICT) {
+					for(IEntity e : this.entities.values()) {
+						if (e.requiresProcessing()) {
+							if (!this.entitiesForProcessing.contains(e)) {
+								Globals.p("Warning: Processed entity " + e + " not in process list!");
+							}
+						}
+					}
+				}
+
+
+				int numSent = 0;
+				// Loop through the entities
+				for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
+					IEntity e = this.entitiesForProcessing.get(i);
+					if (e.hasNotBeenRemoved()) {
+						if (e instanceof IPlayerControlled) {
+							IPlayerControlled p = (IPlayerControlled)e;
+							p.resetPlayerInput();
+						}
+
+						if (e instanceof IProcessByServer) {
+							IProcessByServer p = (IProcessByServer)e;
+							p.processByServer(this, tpf_secs);
+						}
+
+						if (e instanceof PhysicalEntity) {
+							PhysicalEntity physicalEntity = (PhysicalEntity)e;
+							//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
+							if (sendUpdates) {
+								if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
+									eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
+									numSent++;
+									physicalEntity.sendUpdate = false;
+									if (eum.isFull()) {
+										gameNetworkServer.sendMessageToAll(eum);	
+										eum = new EntityUpdateMessage();
+									}
+								}
+							}
+						}
+					}
+				}
+
+				if (sendUpdates) {
+					gameNetworkServer.sendMessageToAll(eum);	
+				}
+				if (Globals.SHOW_NUM_ENT_UPDATES_SENT) {
+					if (sendUpdates) {
+						Globals.p("Num entity updates sent: " + numSent);
+					}
 				}
 			}
-		}
 
-		if (checkGameStatusInterval.hitInterval()) {
-			gameStatusSystem.checkGameStatus(false);
-		}
+			if (checkGameStatusInterval.hitInterval()) {
+				gameStatusSystem.checkGameStatus(false);
+			}
 
-		this.pingSystem.process();
+			this.pingSystem.process();
+		}
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
 		loopTimer.start();

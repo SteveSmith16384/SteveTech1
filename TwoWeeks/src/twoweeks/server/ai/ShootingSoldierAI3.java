@@ -1,7 +1,7 @@
 package twoweeks.server.ai;
 
 import com.jme3.math.Vector3f;
-import com.scs.moonbaseassault.entities.AbstractAISoldier;
+import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -10,6 +10,8 @@ import com.scs.stevetech1.server.IArtificialIntelligence;
 
 import ssmith.lang.NumberFunctions;
 import ssmith.util.RealtimeInterval;
+import twoweeks.entities.AIBullet;
+import twoweeks.entities.AbstractAISoldier;
 import twoweeks.entities.Floor;
 import twoweeks.entities.Terrain1;
 
@@ -20,7 +22,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	private AbstractAISoldier soldierEntity;
 	private Vector3f currDir;
 	private RealtimeInterval checkForEnemyInt = new RealtimeInterval(1000);
-	private PhysicalEntity currentTarget;
+	private ITargetable currentTarget;
 	private int animCode = 0;
 
 	private float waitForSecs = 0; // e.g. wait for door to open
@@ -40,7 +42,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		} 
 
 		if (currentTarget != null) { // Find enemy
-			boolean cansee = soldierEntity.canSee(this.currentTarget, 100f);
+			boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, 100f);
 			if (!cansee) {
 				this.currentTarget = null;
 				if (Globals.DEBUG_AI_TARGETTING) {
@@ -50,14 +52,14 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		}
 		if (currentTarget == null) { // Check we can still see enemy
 			if (this.checkForEnemyInt.hitInterval()) {
-				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side);
+				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AIBullet.RANGE);
 				if (Globals.DEBUG_AI_TARGETTING) {
 					Globals.p("AI can now see " + currentTarget);
 				}
 			}
 		} else { // Face enemy
-			Vector3f dir = this.currentTarget.getWorldTranslation().subtract(this.soldierEntity.getWorldTranslation()); // todo - don't create each time
-			//this.currDir.subtractLocal();
+			PhysicalEntity pe = (PhysicalEntity)this.currentTarget;
+			Vector3f dir = pe.getWorldTranslation().subtract(this.soldierEntity.getWorldTranslation()); // todo - don't create each time
 			dir.y = 0;
 			dir.normalizeLocal();
 			this.changeDirection(dir);
@@ -66,7 +68,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		if (currentTarget != null && SHOOT_AT_ENEMY) {
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 			animCode = AbstractAvatar.ANIM_IDLE;
-			this.soldierEntity.shoot(currentTarget);
+			this.soldierEntity.shoot((PhysicalEntity)currentTarget);
 		} else if (waitForSecs <= 0) {
 			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
 			animCode = AbstractAvatar.ANIM_WALKING;
@@ -124,7 +126,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 
 	@Override
-	public PhysicalEntity getCurrentTarget() {
+	public ITargetable getCurrentTarget() {
 		return this.currentTarget;
 	}
 

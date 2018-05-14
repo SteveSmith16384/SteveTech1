@@ -7,6 +7,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
@@ -25,6 +26,8 @@ import com.scs.stevetech1.shared.IEntityController;
  *
  */
 public class MapBorder extends PhysicalEntity {
+
+	private static final boolean INVISIBLE = true;
 
 	public static final float BORDER_WIDTH = 2f;
 	public static final float BORDER_HEIGHT = 5f;
@@ -52,16 +55,19 @@ public class MapBorder extends PhysicalEntity {
 				w, 0, w, d, 0, d, 0, 0  // bottom
 		}));
 		Geometry geometry = new Geometry("MapBorderBox", box1);
-		if (!_game.isServer()) { // Not running in server
-			TextureKey key3 = new TextureKey("Textures/spacewall.png");
-			key3.setGenerateMips(true);
-			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			tex3.setWrap(WrapMode.Repeat);
+		if (!_game.isServer()) {			
+			if (INVISIBLE) {
+				geometry.setCullHint(CullHint.Always);
+			} else {
+				TextureKey key3 = new TextureKey("Textures/spacewall.png");
+				key3.setGenerateMips(true);
+				Texture tex3 = game.getAssetManager().loadTexture(key3);
+				tex3.setWrap(WrapMode.Repeat);
 
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+				Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 				floor_mat.setTexture("DiffuseMap", tex3);
-			geometry.setMaterial(floor_mat);
+				geometry.setMaterial(floor_mat);
+			}
 		}
 
 		geometry.setLocalTranslation(-BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);

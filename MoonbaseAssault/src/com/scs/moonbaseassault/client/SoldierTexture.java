@@ -33,19 +33,20 @@ public class SoldierTexture {
 			public void paint(Graphics2D g) {
 				for (int row=0 ; row<5 ; row++) {
 					switch (row) {
-					case 0: // Skin
-						g.setColor(getRandomSkinColour());//Color.black);
+					case 0: // Skin / trousers
+						switch (side) {
+						case 1:
+							g.setColor(Color.yellow.darker());
+							break;
+						case 2:
+							g.setColor(Color.green.darker());
+							break;
+						default:
+							throw new RuntimeException("Todo");
+						}
 						break;
 						
-					case 1: // Eyes and brows
-						g.setColor(Color.cyan);
-						break;
-						
-					case 2: // Hair
-						g.setColor(getRandomHairColour());//Color.black);
-						break;
-						
-					case 3: // Shirt
+					case 1: // Eyes and brows / top
 						switch (side) {
 						case 1:
 							g.setColor(Color.yellow);
@@ -57,18 +58,17 @@ public class SoldierTexture {
 							throw new RuntimeException("Todo");
 						}
 						break;
-					case 4: // Trousers
 						
-						switch (side) {
-						case 1:
-							g.setColor(Color.yellow.darker());
-							break;
-						case 2:
-							g.setColor(Color.green.darker());
-							break;
-						default:
-							throw new RuntimeException("Todo");
-						}
+					case 2: // Hair
+						g.setColor(getRandomHairColour());
+						break;
+						
+					case 3: // Shirt
+						g.setColor(Color.LIGHT_GRAY);
+						break;
+
+					case 4:
+						g.setColor(getRandomSkinColour());
 						break;
 					}
 					
@@ -126,12 +126,12 @@ public class SoldierTexture {
 	
 	
 	private static Color getRandomHairColour() {
-		return Color.green;
+		return Color.DARK_GRAY;
 	}
 	
 
 	private static Color getRandomSkinColour() {
-		return Color.red;
+		return Color.pink; // trousers
 	}
 	
 }
