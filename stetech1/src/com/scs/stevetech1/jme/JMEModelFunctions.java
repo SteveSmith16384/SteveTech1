@@ -101,7 +101,7 @@ public class JMEModelFunctions {
 	}
 
 
-	public static void setMaterialOnSpatial(Spatial spatial, Material mat) {
+	private static void setMaterialOnSpatial(Spatial spatial, Material mat) {
 		if (spatial instanceof Node) {
 			Node node = (Node) spatial;
 			for (Spatial s : node.getChildren()) {

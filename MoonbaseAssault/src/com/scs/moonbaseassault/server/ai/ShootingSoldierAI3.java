@@ -57,6 +57,9 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 		if (this.waitForSecs > 0) {
 			this.waitForSecs -= tpf_secs;
 		} 
+		if (this.randomDirForSecs > 0) {
+			this.randomDirForSecs -= tpf_secs;
+		} 
 
 		if (currentTarget != null) { // Find enemy
 			if (!this.currentTarget.isAlive()) {
@@ -141,7 +144,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 			Point p = this.route.get(0);
 			Vector3f dest = new Vector3f(p.x+0.5f, this.soldierEntity.getWorldTranslation().y, p.y+0.5f); // todo - don't create each time
 			float dist = this.soldierEntity.getWorldTranslation().distance(dest);
-			if (dist < .7f) {
+			if (dist < .5f) {
 				this.route.remove(0);
 			} else {
 				Vector3f dir = dest.subtract(this.soldierEntity.getWorldTranslation()).normalizeLocal();
@@ -159,6 +162,8 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 				//Globals.p("AISoldier has collided with " + pe);
 				//changeDirection(getRandomDirection());
 				if (this.attacker) {
+					changeDirection(getRandomDirection());
+					randomDirForSecs = 1.5f;
 					this.route = null;
 				} else {
 					changeDirection(getRandomDirection());
@@ -222,53 +227,5 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 		return null;
 	}
 
-	/*
-	@Override
-	public boolean isAlive() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-
-	@Override
-	public boolean hasAdequateHealth() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public int getSide() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public boolean hasRoute() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public int getRoutePriority() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public void setRoutePriority(int p) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void setDest(int x, int y) {
-		// TODO Auto-generated method stub
-
-	}
-	 */
 }

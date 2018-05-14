@@ -177,9 +177,6 @@ public class TestGameClientEntityCreator {
 			int num = (int)msg.data.get("num");
 			int playerID = (int)msg.data.get("playerID");
 			LaserRifle gl = new LaserRifle(game, id, playerID, null, ownerid, num, null);
-			if (Globals.DEBUG_NO_ABILITY0) {
-				Globals.p("Got new laser rifle for avatar " + ownerid);
-			}
 			return gl;
 			/*} else {
 				if (Globals.DEBUG_NO_ABILITY0) {

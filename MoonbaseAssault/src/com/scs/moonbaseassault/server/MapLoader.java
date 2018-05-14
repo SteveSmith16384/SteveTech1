@@ -193,7 +193,7 @@ public class MapLoader {
 		moonbaseAssaultServer.actuallyAddEntity(moonrock);
 
 		// Border
-		/*MapBorder borderL = new MapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, Vector3f.UNIT_Z);
+		MapBorder borderL = new MapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, 0, mapsize, Vector3f.UNIT_Z);
 		moonbaseAssaultServer.actuallyAddEntity(borderL);
 		MapBorder borderR = new MapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), mapsize+MapBorder.BORDER_WIDTH, 0, 0, mapsize, Vector3f.UNIT_Z);
 		moonbaseAssaultServer.actuallyAddEntity(borderR);
@@ -201,7 +201,7 @@ public class MapLoader {
 		moonbaseAssaultServer.actuallyAddEntity(borderBack);
 		MapBorder borderFront = new MapBorder(moonbaseAssaultServer, moonbaseAssaultServer.getNextEntityID(), 0, 0, -MapBorder.BORDER_WIDTH, mapsize, Vector3f.UNIT_X);
 		moonbaseAssaultServer.actuallyAddEntity(borderFront);
-*/
+
 		Globals.p("Finished.  Created " + this.totalWalls + " walls, " + this.totalFloors + " floors, " + this.totalCeilings + " ceilings, " + numCrates + " spacecrates.");
 	}
 

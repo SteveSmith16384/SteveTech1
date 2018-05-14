@@ -88,18 +88,21 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
-		Globals.p("Computer hit!");
-		this.health -= amt;
-		if (this.health <= 0) {
-			server.computerDestroyed(point);
+		if (this.health > 0) {
+			Globals.p("Computer hit!");
+			this.health -= amt;
+			if (this.health <= 0) {
+				server.computerDestroyed(point);
 
-			this.remove();
+				this.remove();
 
-			Vector3f pos = this.getWorldTranslation();
-			DestroyedComputer dc = new DestroyedComputer(game, game.getNextEntityID(), pos.x, pos.y, pos.z);
-			game.addEntity(dc);
+				Vector3f pos = this.getWorldTranslation();
+				DestroyedComputer dc = new DestroyedComputer(game, game.getNextEntityID(), pos.x, pos.y, pos.z);
+				game.addEntity(dc);
+			} else {
+				hudNode.setText((int)this.health + "%");
+			}
 		}
-
 	}
 
 
@@ -140,9 +143,10 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 			FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 			if (insideoutside != FrustumIntersect.Outside) {
 				if (this.hudNode.getText().length() == 0) {
-					hudNode.setText(this.health + "%");
+					hudNode.setText((int)this.health + "%");
 				}
-				Vector3f pos = this.getWorldTranslation();
+				Vector3f pos = this.getWorldTranslation().clone();
+				pos.y += SIZE;
 				Vector3f screen_pos = cam.getScreenCoordinates(pos);
 				this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 			}

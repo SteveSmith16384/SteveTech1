@@ -28,9 +28,13 @@ public class FlyingSpaceship2 extends PhysicalEntity implements ISetRotation, IG
 			creationData = new HashMap<String, Object>();
 		}
 
-		Spatial model = game.getAssetManager().loadModel("Models/spaceships/Spaceship2.blend");
+		//Spatial model = game.getAssetManager().loadModel("Models/spaceships/Spaceship2.blend");
+		//Spatial model = game.getAssetManager().loadModel("Models/spaceships2/BigSpaceship.obj");
+		Spatial model = game.getAssetManager().loadModel("Models/spaceships2/SpaceShip.obj");
 		JMEModelFunctions.moveYOriginTo(model, 0.1f);
 		if (!_game.isServer()) {
+			//JMEModelFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Models/spaceships2/BigSpaceship.png");
+			JMEModelFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Models/spaceships2/SpaceshipTexture.png");
 			model.setShadowMode(ShadowMode.CastAndReceive);
 		}
 		this.mainNode.attachChild(model);
