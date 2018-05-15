@@ -16,8 +16,8 @@ import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
-import com.scs.stevetech1.netmessages.NewClientOnlyEntity;
 import com.scs.stevetech1.netmessages.NewEntityData;
+import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -73,14 +73,16 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 			//BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
 			//game.addEntity(expl);
 
-			//ExplosionShard.Factory(game, id, type, pos, num);
-			if (game.isServer()) {
-				AbstractGameServer server = (AbstractGameServer)game;
+			/*NewEntityMessage nem = new NewEntityMessage(game.getGameID());
+
 				NewEntityData data = new NewEntityData();
 				data.type = MoonbaseAssaultClientEntityCreator.BULLET_EXPLOSION_EFFECT;
 				data.data.put("pos", this.getWorldTranslation());
-				server.gameNetworkServer.sendMessageToAll(new NewClientOnlyEntity(data));
-			}
+				nem.data.add(data);*/
+
+			MoonbaseAssaultServer server = (MoonbaseAssaultServer)game;
+			server.sendBulletExplosion(this.getWorldTranslation());
+			//server.gameNetworkServer.sendMessageToAll(nem);
 		}
 		this.remove();
 	}

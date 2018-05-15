@@ -73,7 +73,6 @@ import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
-import com.scs.stevetech1.netmessages.NewClientOnlyEntity;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
@@ -715,10 +714,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.currentAvatarID = sam.avatarEntityID;
 			this.setAvatar(this.entities.get(currentAvatarID));
 
-		} else if (message instanceof NewClientOnlyEntity) {
+		/*} else if (message instanceof NewClientOnlyEntity) {
 			NewClientOnlyEntity ncoe = (NewClientOnlyEntity)message;
 			createEntity(ncoe.data, ncoe.timestamp);
-
+*/
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}

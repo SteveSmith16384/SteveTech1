@@ -10,15 +10,10 @@ All the basic features are complete but not thoroughly stress-tested yet.  All a
 
 
 ## FEATURES:
-* Fully open source
-* Authoritative server
-* Client prediction
-* Lag-compensation
+* Client prediction & Lag-compensation
 * TCP and UDP for networking
-* Time "rewinding" for accurate shooting
 * Simple physics
-* Includes simple example games
-* Simulate packet delay/loss
+* Open source
 
 
 ## GETTING STARTED

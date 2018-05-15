@@ -11,14 +11,14 @@ import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class BulletExplosionEntity extends PhysicalEntity implements IProcessByClient { // todo - move to SteTech
+public class BulletExplosionEntity extends PhysicalEntity implements IProcessByClient { // todo - delete
 
 	private static final float DURATION = 5;
 	
 	private BulletExplosionModel expl;
 	private float timeLeft = DURATION;
 	
-	public BulletExplosionEntity(IEntityController _game, int id, Vector3f pos) {
+	public BulletExplosionEntity(int delme, IEntityController _game, int id, Vector3f pos) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.BULLET_EXPLOSION_EFFECT, "BulletExplosionEntity", true, false);
 
 		this.setWorldTranslation(pos);

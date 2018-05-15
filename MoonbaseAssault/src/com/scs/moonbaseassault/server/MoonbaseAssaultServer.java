@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.FlyingSpaceship2;
@@ -21,6 +22,8 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.netmessages.NewEntityData;
+import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -356,6 +359,19 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	@Override
 	public int getMinPlayersRequiredForGame() {
 		return 1;
+	}
+
+
+	public void sendBulletExplosion(Vector3f pos) {
+		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
+
+		NewEntityData data = new NewEntityData();
+		data.type = MoonbaseAssaultClientEntityCreator.BULLET_EXPLOSION_EFFECT;
+		data.data.put("pos", pos);//this.getWorldTranslation());
+		nem.data.add(data);
+
+		gameNetworkServer.sendMessageToAll(nem);
+
 	}
 
 

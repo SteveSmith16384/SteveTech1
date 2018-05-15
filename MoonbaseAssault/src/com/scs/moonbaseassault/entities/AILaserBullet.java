@@ -78,8 +78,10 @@ public class AILaserBullet extends AbstractAIBullet {
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
-			BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-			game.addEntity(expl);
+			//BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
+			//game.addEntity(expl);
+			MoonbaseAssaultServer server = (MoonbaseAssaultServer)game;
+			server.sendBulletExplosion(this.getWorldTranslation());
 		}
 		this.remove();
 	}

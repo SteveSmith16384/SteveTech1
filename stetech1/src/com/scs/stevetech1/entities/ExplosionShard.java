@@ -1,7 +1,6 @@
 package com.scs.stevetech1.entities;
 
 import com.jme3.asset.TextureKey;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -13,7 +12,6 @@ import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
-import com.sun.scenario.Settings;
 
 import ssmith.lang.NumberFunctions;
 
@@ -28,8 +26,8 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 	}
 	 */
 
-	private float timeLeft = 8f; 
-
+	private float timeLeft = 8f;
+	
 	public ExplosionShard(IEntityController _game, int type, float x, float y, float z) {
 		super(_game, _game.getNextEntityID(), type, "CubeExplosionShard", true, false);
 
