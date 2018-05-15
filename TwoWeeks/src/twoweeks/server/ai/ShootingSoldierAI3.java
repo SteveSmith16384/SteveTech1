@@ -42,7 +42,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		} 
 
 		if (currentTarget != null) { // Find enemy
-			boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, 100f);
+			boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, AIBullet.RANGE);
 			if (!cansee) {
 				this.currentTarget = null;
 				if (Globals.DEBUG_AI_TARGETTING) {

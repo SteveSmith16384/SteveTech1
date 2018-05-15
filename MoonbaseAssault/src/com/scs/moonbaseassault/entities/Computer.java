@@ -32,7 +32,7 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 	private static final float SIZE = 0.9f;
 	private float health = 100;
 	private MoonbaseAssaultServer server;
-	private Point point; // Server-side only - todo - rename
+	private Point position; // Server-side only
 
 	// HUD
 	private BitmapText hudNode;
@@ -43,7 +43,7 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			point = new Point(mx, my);
+			position = new Point(mx, my);
 		}
 
 
@@ -92,7 +92,7 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 			Globals.p("Computer hit!");
 			this.health -= amt;
 			if (this.health <= 0) {
-				server.computerDestroyed(point);
+				server.computerDestroyed(position);
 
 				this.remove();
 
@@ -139,7 +139,7 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 	@Override
 	public void drawOnHud(Camera cam) {
 		float dist = this.getWorldTranslation().distance(cam.getLocation());
-		if (dist < 5) {
+		if (dist < 3f) {
 			FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 			if (insideoutside != FrustumIntersect.Outside) {
 				if (this.hudNode.getText().length() == 0) {

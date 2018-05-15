@@ -36,7 +36,8 @@ public class BeamLaserModel extends Node {
 		super("Laser");
 
 		
-		cyl = new Cylinder(5, 10, diam, cone? 0: diam, start.distance(end), true, false);
+		//cyl = new Cylinder(5, 10, diam, cone? 0: diam, start.distance(end), true, false);
+		cyl = new Cylinder(2, 6, diam, cone? 0: diam, start.distance(end), true, false);
 		cyl.setBound(new BoundingBox());
 		cyl.updateBound();
 		g = new Geometry();

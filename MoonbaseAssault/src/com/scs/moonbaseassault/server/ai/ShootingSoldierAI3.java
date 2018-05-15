@@ -3,7 +3,6 @@ package com.scs.moonbaseassault.server.ai;
 import java.awt.Point;
 
 import com.jme3.math.Vector3f;
-import com.scs.moonbaseassault.components.IUnit;
 import com.scs.moonbaseassault.entities.AILaserBullet;
 import com.scs.moonbaseassault.entities.AbstractAISoldier;
 import com.scs.moonbaseassault.entities.Computer;
@@ -24,7 +23,7 @@ import ssmith.astar.WayPoints;
 import ssmith.lang.NumberFunctions;
 import ssmith.util.RealtimeInterval;
 
-public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
+public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 	private static final float WAIT_FOR_DOOR_DURATION = 1.6f;
 	private static final boolean SHOOT_AT_ENEMY = true;
@@ -126,7 +125,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 	 */
 	private void getRoute(AbstractGameServer server) {
 		if (fcThread == null) {
-			this.fcThread = new FindComputerThread((MoonbaseAssaultServer)server, (IUnit)soldierEntity);
+			this.fcThread = new FindComputerThread((MoonbaseAssaultServer)server, soldierEntity);
 			this.fcThread.start();
 		} else if (!fcThread.isAlive()) {
 			this.route = this.fcThread.route;
@@ -216,15 +215,6 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence, IUnit {
 	@Override
 	public ITargetable getCurrentTarget() {
 		return this.currentTarget;
-	}
-
-
-	// IUnit
-
-	@Override
-	public PhysicalEntity getPhysicalEntity() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

@@ -109,6 +109,13 @@ public class SimpleRigidBody<T> implements Collidable {
 		}
 
 		if (this.movedByForces) {
+			
+			if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
+				BoundingBox bv = this.getBoundingBox();
+				float y = bv.getCenter().y-bv.getYExtent();
+				Globals.p(this.simpleEntity  + " at " + y + " at start of process()");
+
+			}
 
 			// Check we're not already colliding *before* we've even moved
 			List<SimpleRigidBody<T>> crs = this.checkForCollisions();
@@ -193,7 +200,15 @@ public class SimpleRigidBody<T> implements Collidable {
 				p("Warning - high gravity offset: " + this.currentGravInc);
 			}*/
 		}
-	}
+
+		if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
+			BoundingBox bv = this.getBoundingBox();
+			float y = bv.getCenter().y-bv.getYExtent();
+			Globals.p(this.simpleEntity  + " at " + y + " at end of process()");
+
+		}
+
+}
 
 	/*
 	private void moveAwayFrom_SIMPLE(List<SimpleRigidBody<T>> crs) {
@@ -223,58 +238,75 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 	 */
 
-	private void moveAwayFrom(List<SimpleRigidBody<T>> crs) {
+	private void moveAwayFrom(List<SimpleRigidBody<T>> others) {
 		BoundingBox ourBB = this.getBoundingBox();
-		//Vector3f ourPos = bb.getCenter();
-		for (SimpleRigidBody<T> cr : crs) {
-			BoundingBox theirBB = cr.getBoundingBox();
+		for (SimpleRigidBody<T> otherSRB : others) {
+			if (otherSRB.simpleEntity.getCollidable() instanceof TerrainQuad) {
+				Vector3f start = ourBB.getCenter().clone();
+				start.y = 255f;
+				Ray ray = new Ray(start, DOWN_VEC);
+				CollisionResults crs2 = new CollisionResults();
+				if (otherSRB.collideWith(ray, crs2) > 0) {
+					Vector3f diff = crs2.getClosestCollision().getContactPoint();
+					diff.x = 0;
+					diff.y = diff.y - (ourBB.getCenter().y - ourBB.getYExtent());
+					diff.z = 0;
+					if (DEBUG_AUTOMOVING) {
+						p("Automoved  " + this + " by " + diff);
+					}
+					this.simpleEntity.moveEntity(diff);
+				}
 
-			// X axis
-			boolean doX = true;
-			if (ourBB.getCenter().x - ourBB.getXExtent() > theirBB.getCenter().x - theirBB.getXExtent()) {
-				if (ourBB.getCenter().x + ourBB.getXExtent() < theirBB.getCenter().x + theirBB.getXExtent()) {
-					doX = false;
-				}
-			}
-			if (doX) {
-				float len = ourBB.getCenter().x - theirBB.getCenter().x; //todo - adjust by diff of edges!
-				Vector3f diff = new Vector3f(len*AUTOMOVE_FRAC, 0, 0);
-				if (DEBUG_AUTOMOVING) {
-					p("Automoved  " + this + " by " + diff);
-				}
-				this.simpleEntity.moveEntity(diff); // Move away
-			}
+			} else {
+				BoundingBox theirBB = otherSRB.getBoundingBox();
 
-			// Z axis
-			boolean doZ = true;
-			if (ourBB.getCenter().z - ourBB.getZExtent() > theirBB.getCenter().z - theirBB.getZExtent()) {
-				if (ourBB.getCenter().z + ourBB.getZExtent() < theirBB.getCenter().z + theirBB.getZExtent()) {
-					doZ = false;
+				// X axis
+				boolean doX = true;
+				if (ourBB.getCenter().x - ourBB.getXExtent() > theirBB.getCenter().x - theirBB.getXExtent()) {
+					if (ourBB.getCenter().x + ourBB.getXExtent() < theirBB.getCenter().x + theirBB.getXExtent()) {
+						doX = false;
+					}
 				}
-			}
-			if (doZ) {
-				float len = ourBB.getCenter().z - theirBB.getCenter().z;
-				Vector3f diff = new Vector3f(0, 0, len*AUTOMOVE_FRAC);
-				if (DEBUG_AUTOMOVING) {
-					p("Automoved  " + this + " by " + diff);
+				if (doX) {
+					float len = ourBB.getCenter().x - theirBB.getCenter().x; //todo - adjust by diff of edges!
+					Vector3f diff = new Vector3f(len*AUTOMOVE_FRAC, 0, 0);
+					if (DEBUG_AUTOMOVING) {
+						p("Automoved  " + this + " by " + diff);
+					}
+					this.simpleEntity.moveEntity(diff); // Move away
 				}
-				this.simpleEntity.moveEntity(diff); // Move away
-			}
 
-			// Y axis
-			boolean doY = true;
-			if (ourBB.getCenter().y - ourBB.getYExtent() > theirBB.getCenter().y - theirBB.getYExtent()) {
-				if (ourBB.getCenter().y + ourBB.getYExtent() < theirBB.getCenter().y + theirBB.getYExtent()) {
-					doY = false;
+				// Z axis
+				boolean doZ = true;
+				if (ourBB.getCenter().z - ourBB.getZExtent() > theirBB.getCenter().z - theirBB.getZExtent()) {
+					if (ourBB.getCenter().z + ourBB.getZExtent() < theirBB.getCenter().z + theirBB.getZExtent()) {
+						doZ = false;
+					}
 				}
-			}
-			if (doY) {
-				float len = ourBB.getCenter().y - theirBB.getCenter().y;
-				Vector3f diff = new Vector3f(0, len*AUTOMOVE_FRAC, 0);
-				if (DEBUG_AUTOMOVING) {
-					p("Automoved  " + this + " by " + diff);
+				if (doZ) {
+					float len = ourBB.getCenter().z - theirBB.getCenter().z;
+					Vector3f diff = new Vector3f(0, 0, len*AUTOMOVE_FRAC);
+					if (DEBUG_AUTOMOVING) {
+						p("Automoved  " + this + " by " + diff);
+					}
+					this.simpleEntity.moveEntity(diff); // Move away
 				}
-				this.simpleEntity.moveEntity(diff); // Move away
+
+				// Y axis
+				boolean doY = true;
+				if (ourBB.getCenter().y - ourBB.getYExtent() > theirBB.getCenter().y - theirBB.getYExtent()) {
+					if (ourBB.getCenter().y + ourBB.getYExtent() < theirBB.getCenter().y + theirBB.getYExtent()) {
+						doY = false;
+					}
+				}
+				if (doY) {
+					float len = ourBB.getCenter().y - theirBB.getCenter().y;
+					Vector3f diff = new Vector3f(0, len*AUTOMOVE_FRAC, 0);
+					if (DEBUG_AUTOMOVING) {
+						p("Automoved  " + this + " by " + diff);
+					}
+					this.simpleEntity.moveEntity(diff); // Move away
+				}
 			}
 		}
 	}
@@ -344,7 +376,17 @@ public class SimpleRigidBody<T> implements Collidable {
 		this.simpleEntity.moveEntity(offset);
 		List<SimpleRigidBody<T>> crs = checkForCollisions();
 		if (crs.size() > 0) {
+			if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
+				BoundingBox bv = this.getBoundingBox();
+				float y = bv.getCenter().y-bv.getYExtent();
+				Globals.p(this.simpleEntity  + " at " + y + " prior to move");
+			}
 			this.simpleEntity.moveEntity(offset.negateLocal()); // Move back
+			if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
+				BoundingBox bv = this.getBoundingBox();
+				float y = bv.getCenter().y-bv.getYExtent();
+				Globals.p(this.simpleEntity  + " at " + y + " after move");
+			}
 		}
 		return crs;
 	}
@@ -396,7 +438,6 @@ public class SimpleRigidBody<T> implements Collidable {
 		tempCollisionResults.clear();
 		if (e != this) { // Don't check ourselves
 			if (this.physicsController.getCollisionListener().canCollide(this, e)) {
-				//CollisionResults localCollisionResults = new CollisionResults();
 				// Check which object is the most complex, and collide that against the bounding box of the other
 				int res = 0;
 				if (this.simpleEntity.getCollidable() instanceof TerrainQuad || e.simpleEntity.getCollidable() instanceof TerrainQuad) {
@@ -409,9 +450,24 @@ public class SimpleRigidBody<T> implements Collidable {
 						tq = (TerrainQuad)e.simpleEntity.getCollidable();
 						bv = this.getBoundingBox();
 					}
-					Ray ray = new Ray(bv.getCenter(), DOWN_VEC);
-					ray.setLimit(bv.getYExtent());
+					Vector3f start = bv.getCenter().clone();
+					start.y = 255f;
+					Ray ray = new Ray(start, DOWN_VEC);
+					//ray.setLimit(bv.getYExtent());
 					res = tq.collideWith(ray, tempCollisionResults);
+					if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
+						float y = bv.getCenter().y-bv.getYExtent();
+						Globals.p(this.simpleEntity  + " at " + y + ", terrain at " + tempCollisionResults.getClosestCollision().getContactPoint().y + ", res=" + res);
+					}
+					if (res > 0) {
+						// Compare positions
+						Vector3f pos = tempCollisionResults.getClosestCollision().getContactPoint();
+						if (bv.getCenter().y-bv.getYExtent() >= pos.y) {
+							return false;
+						} else {
+							Globals.p("Hit terrain");
+						}
+					}
 
 				} else if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
 					// Both are complex meshes!  Convert one into a simple boundingvolume

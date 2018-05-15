@@ -20,6 +20,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 import twoweeks.client.TwoWeeksClientEntityCreator;
+import twoweeks.server.TwoWeeksServer;
 
 public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 
@@ -47,7 +48,7 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;
-			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/bullet1.jpg", Globals.LASER_DIAM, true);
+			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(TwoWeeksServer.LASER_LENGTH)), ColorRGBA.Pink, !game.isServer(), "Textures/cells3.png", TwoWeeksServer.LASER_DIAM, true);
 		} else {
 			Mesh sphere = new Sphere(8, 8, .02f, true, false);
 			laserNode = new Geometry("DebuggingSphere", sphere);

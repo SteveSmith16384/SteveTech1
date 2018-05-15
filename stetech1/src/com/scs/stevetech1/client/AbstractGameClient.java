@@ -735,7 +735,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);
 			}
 		} else {
-			Globals.pe("Trying to set null avatar");
+			//Globals.pe("Trying to set null avatar");
 		}
 	}
 
@@ -1260,11 +1260,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				throw new RuntimeException("Entity " + e + " already exists (client-only)"); // Don't replace it, as entity has linked to other stuff, like Abilities
 			}
 			this.clientOnlyEntities.add(e);
-			/*if (e.requiresProcessing()) {
-				this.entitiesForProcessing.put(e.getID(), e);
-			}*/
 
 			if (e instanceof PhysicalEntity) {
+				if (Globals.DEBUG_SECONDARY_EXPLOSION) {
+					//if (e instanceof BulletExplosionEntity) {
+						Globals.p("Actually adding " + e);
+					//}
+				}
 				PhysicalEntity pe = (PhysicalEntity)e;
 				this.getGameNode().attachChild(pe.getMainNode());
 				if (pe.simpleRigidBody != null) {

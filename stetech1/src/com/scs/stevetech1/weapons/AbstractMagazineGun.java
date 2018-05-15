@@ -75,13 +75,13 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
-		if (this.getBulletsInMag() <= 0) {
+		/*if (this.getBulletsInMag() <= 0) { No, client tells server when it wants to reload
 			// Reload
 			//Globals.p("Reloading");
 			reload(server);// Only server can reload
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
-		}
+		}*/
 		timeUntilShoot_secs -= tpf_secs;
 	}
 
@@ -93,6 +93,8 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 		while (this.getBulletsInMag() < this.magazineSize) {
 			createBullet(server, server.getNextEntityID(), playerID, irac, this.owner.side);
 		}
+		this.timeUntilShoot_secs = this.reloadInterval_secs;
+		server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 	}
 
 

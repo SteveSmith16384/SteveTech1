@@ -155,10 +155,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 		this.currentAnimCode = newAnimCode;
 		
-		if (Globals.SHOW_AVATAR_BOUNDS) {
+		/*if (Globals.SHOW_AVATAR_BOUNDS) {
 			BoundingBox bb = (BoundingBox)this.getCollidable();
 			Globals.p("Avatar bounds: " + bb.getXExtent() + ", " + bb.getYExtent() + ", " + bb.getZExtent());
-		}
+		}*/
 	}
 
 

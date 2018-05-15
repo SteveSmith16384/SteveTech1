@@ -10,6 +10,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
@@ -37,7 +38,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;
-			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.4f)), ColorRGBA.Pink, !game.isServer(), "Textures/greensun.jpg", Globals.LASER_DIAM, Globals.BULLETS_CONES);
+			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.4f)), ColorRGBA.Pink, !game.isServer(), "Textures/greensun.jpg", MoonbaseAssaultServer.LASER_DIAM, Globals.BULLETS_CONES);
 		} else {
 			Mesh sphere = null;
 			sphere = new Sphere(8, 8, 0.02f, true, false);

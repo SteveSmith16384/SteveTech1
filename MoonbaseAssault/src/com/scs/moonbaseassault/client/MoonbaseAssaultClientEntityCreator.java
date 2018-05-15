@@ -32,6 +32,7 @@ import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityData;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.weapons.HitscanRifle;
 
 public class MoonbaseAssaultClientEntityCreator {
@@ -288,6 +289,9 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case BULLET_EXPLOSION_EFFECT:
 		{
+			if (Globals.DEBUG_SECONDARY_EXPLOSION) {
+				Globals.p("Rcvd BulletExplosionEntity");
+			}
 			BulletExplosionEntity expl = new BulletExplosionEntity(game, id, pos);
 			return expl;
 		}

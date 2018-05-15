@@ -63,9 +63,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
 
-		Material floor_mat = null;
-			floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			floor_mat.setTexture("DiffuseMap", tex3);
+		Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+		floor_mat.setTexture("DiffuseMap", tex3);
 		debugNode.setMaterial(floor_mat);
 
 		debugNode.setLocalTranslation(0, box1.yExtent/2, 0); // Origin is at the bottom
@@ -74,7 +73,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	}
 
-	
+
 	@Override
 	public void remove() {
 		super.remove();
@@ -82,7 +81,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			this.debugNode.removeFromParent();
 		}
 	}
-	
+
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
@@ -92,7 +91,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			//cam.getLocation().x = vec.x;
 			cam.getLocation().y = .1f;
 			//cam.getLocation().z = vec.z;
-			
+
 			if (this.killer != null) {
 				cam.lookAt(killer.getWorldTranslation(), Vector3f.UNIT_Y);
 			}
@@ -116,7 +115,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 
 			storeAvatarPosition(serverTime);
-			
+
 			// Set position of avatar model (direction doesn't matter)
 			//this.playerGeometry.setLocalTranslation(this.bbGeom.getWorldTranslation());
 			//Vector3f lookAtPoint = this.cam.getDirection());
@@ -168,7 +167,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			}
 			if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
 				if (Globals.DEBUG_CLIENT_SERVER_FAR_APART) {
-				Globals.p("Server and client avatars very far apart, forcing move: " + diff);
+					Globals.p("Server and client avatars very far apart, forcing move: " + diff);
 				}
 				// They're so far out, just move them
 				this.setWorldTranslation(historicalPositionData.getMostRecent().position); 
@@ -176,7 +175,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				//pe.adjustWorldTranslation(offset);
 				//adjustWorldTranslation(offset.mult(.5f));
 				//adjustWorldTranslation(offset.mult(.8f));
-				
+
 				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
 				simplePlayerControl.getAdditionalForce().addLocal(offset.mult(.8f));
 
@@ -201,7 +200,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public void handleKilledOnClientSide(PhysicalEntity killer) {
 		Globals.p("You have been killed by " + killer);
 		this.setAlive(false);
-	
+
 	}
 
 }

@@ -15,8 +15,10 @@ public class Globals {
 
 	// Lots of consts for specific debugging output
 	public static final boolean TRANSPARENT_WALLS = true;
+	public static final boolean TEST_AI = true;
 	
-	public static final boolean TEST_AI = false;
+	public static final boolean DEBUG_SECONDARY_EXPLOSION = false;
+	public static final boolean DEBUG_FALLING_THROUGH_FLOOR = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
 	public static final boolean DEBUG_BULLET_HIT = false;
 	public static final boolean DEBUG_AI_TARGETTING = false;
@@ -74,7 +76,6 @@ public class Globals {
 	public static final float MAX_MOVE_DIST = 1f;
 
 	public static final float CAM_DIST = 150f;
-	public static final float LASER_DIAM= 0.02f;
 
 	// User Data
 	public static final String ENTITY = "Entity";

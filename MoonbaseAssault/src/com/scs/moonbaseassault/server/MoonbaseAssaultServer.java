@@ -36,6 +36,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	public static final String GAME_ID = "Moonbase Assault";
 
 	public static final float CEILING_HEIGHT = 1.4f;
+	public static final float LASER_DIAM = 0.02f;
 
 	private int mapData[][]; // Also used to tell the client what the scanner should show
 	private List<Point> computerSquares;

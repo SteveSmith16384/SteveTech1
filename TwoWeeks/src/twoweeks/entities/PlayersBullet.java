@@ -20,13 +20,16 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 import twoweeks.client.TwoWeeksClientEntityCreator;
+import twoweeks.server.TwoWeeksServer;
 
 public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
 
+	public static final float RANGE = 30f;
+	public static final float SPEED = 10f;
 	private static final boolean USE_CYLINDER = true;
 
 	public PlayersBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
-		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_BULLET, "PlayersBullet", playerOwnerId, owner, _side, _client, dir, true, 10f, 30f);
+		super(_game, id, TwoWeeksClientEntityCreator.PLAYER_BULLET, "PlayersBullet", playerOwnerId, owner, _side, _client, dir, true, SPEED, RANGE);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -38,7 +41,7 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;
-			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/bullet1.jpg", Globals.LASER_DIAM, true);
+			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(TwoWeeksServer.LASER_LENGTH)), ColorRGBA.Pink, !game.isServer(), "Textures/cells3.png", TwoWeeksServer.LASER_DIAM, true);
 		} else {
 			Mesh sphere = null;
 			sphere = new Sphere(8, 8, 0.02f, true, false);
@@ -66,7 +69,8 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 
 	@Override
 	public float getDamageCaused() {
-		return 10;
+		float dist = Math.max(1, this.getDistanceTravelled());
+		return ((RANGE-dist) / dist) * 1;
 	}
 
 /*

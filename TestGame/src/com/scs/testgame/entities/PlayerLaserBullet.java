@@ -21,10 +21,12 @@ import com.scs.testgame.TestGameClientEntityCreator;
 
 public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
 
+	public static final float RANGE = 30f;
+	public static final float SPEED = 10f;
 	private static final boolean USE_CYLINDER = true;
 
 	public PlayerLaserBullet(IEntityController _game, int id, int playerId, IEntityContainer<AbstractPlayersBullet> gun, int _side, ClientData _client, Vector3f dir) {
-		super(_game, id, TestGameClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerId, gun, _side, _client, dir, true, 10f, 30f);
+		super(_game, id, TestGameClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerId, gun, _side, _client, dir, true, SPEED, RANGE);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -36,7 +38,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;
-			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/cells3.png", Globals.LASER_DIAM, Globals.BULLETS_CONES);
+			laserNode = BeamLaserModel.Factory(game.getAssetManager(), origin, origin.add(dir.mult(.2f)), ColorRGBA.Pink, !game.isServer(), "Textures/cells3.png", 0.02f, Globals.BULLETS_CONES);
 		} else {
 			Mesh sphere = null;
 			sphere = new Sphere(8, 8, 0.02f, true, false);
@@ -58,7 +60,8 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 
 	@Override
 	public float getDamageCaused() {
-		return 10;
+		float dist = Math.max(1, this.getDistanceTravelled());
+		return ((RANGE-dist) / dist) * 1;
 	}
 
 

@@ -83,13 +83,14 @@ public class Terrain1 extends PhysicalEntity {
 		heightmap.load();
 
 		int initialSize = 513;
+		
 		// raise edges
-		for (int i=0 ; i<initialSize-2 ; i++) {
+		/*for (int i=0 ; i<initialSize-2 ; i++) {
 			heightmap.setHeightAtPoint(255, 0,  i);
 			heightmap.setHeightAtPoint(255, i,  0);
 			heightmap.setHeightAtPoint(255, initialSize-2,  i);
 			heightmap.setHeightAtPoint(255, i, initialSize-2);
-		}
+		}*/
 		if (adj != null) {
 			adj.adjustHeight(heightmap);
 		}

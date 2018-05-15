@@ -73,15 +73,12 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
 		if (remove) {
-			//if (this.getID() <= 0) { // Client-controlled
-				this.timeLeft -= tpf_secs;
-				if (this.timeLeft <= 0) {
-					this.remove();
-				}
-			//}
+			this.timeLeft -= tpf_secs;
+			if (this.timeLeft <= 0) {
+				this.remove();
+			}
 		}
 
 	}
-
 
 }

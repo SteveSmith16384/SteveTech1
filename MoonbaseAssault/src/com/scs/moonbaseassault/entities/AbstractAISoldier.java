@@ -11,7 +11,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
-import com.scs.moonbaseassault.components.IUnit;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
@@ -40,7 +39,7 @@ import com.scs.stevetech1.server.IArtificialIntelligence;
 import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class AbstractAISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
-IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable, IUnit {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable {
 
 	public static final int BULLETS_IN_MAG = 6;
 	public static final float SHOOT_INTERVAL = 1f;
