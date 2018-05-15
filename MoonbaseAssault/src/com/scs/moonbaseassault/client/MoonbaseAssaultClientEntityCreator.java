@@ -3,7 +3,6 @@ package com.scs.moonbaseassault.client;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.entities.AILaserBullet;
-import com.scs.moonbaseassault.entities.BulletExplosionEntity;
 import com.scs.moonbaseassault.entities.Computer;
 import com.scs.moonbaseassault.entities.DestroyedComputer;
 import com.scs.moonbaseassault.entities.Floor;
@@ -31,8 +30,8 @@ import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
+import com.scs.stevetech1.entities.ExplosionShard;
 import com.scs.stevetech1.netmessages.NewEntityData;
-import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.weapons.HitscanRifle;
 
 public class MoonbaseAssaultClientEntityCreator {
@@ -289,10 +288,11 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case BULLET_EXPLOSION_EFFECT:
 		{
-			if (Globals.DEBUG_SECONDARY_EXPLOSION) {
+			/*if (Globals.DEBUG_SECONDARY_EXPLOSION) {
 				Globals.p("Rcvd BulletExplosionEntity");
-			}
-			BulletExplosionEntity expl = new BulletExplosionEntity(game, id, pos);
+			}*/
+			//BulletExplosionEntity expl = new BulletExplosionEntity(game, id, pos);
+			ExplosionShard expl = new ExplosionShard(game, BULLET_EXPLOSION_EFFECT, pos.x, pos.y, pos.z);
 			return expl;
 		}
 

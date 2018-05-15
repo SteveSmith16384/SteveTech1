@@ -73,6 +73,7 @@ import com.scs.stevetech1.netmessages.GenericStringMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
+import com.scs.stevetech1.netmessages.NewClientOnlyEntity;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
@@ -119,12 +120,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private static final String QUIT = "Quit";
 	protected static final String TEST = "Test";
 
-	protected static AtomicInteger nextEntityID = new AtomicInteger(-1);
+	private static AtomicInteger nextEntityID = new AtomicInteger(-1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	protected ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entites that we need to iterate over in game loop
-	protected LinkedList<PhysicalEntity> entitiesToAddToGame = new LinkedList<PhysicalEntity>();
-	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>(); // Still have a list so we don't have to lop through ALL entities
+	protected LinkedList<PhysicalEntity> entitiesToAddToGame = new LinkedList<PhysicalEntity>(); // Entities to add to RootNode, as we don't add them immed
+	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>(); // Still have a list so we don't have to loop through ALL entities
+	private ArrayList<IEntity> clientOnlyEntities = new ArrayList<>(100);
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer;  // Keep client and server running at the same time
@@ -132,8 +134,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
 
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
-
-	private ArrayList<IEntity> clientOnlyEntities = new ArrayList<>(100);
 
 	private String gameCode; // To check the right type of client is connecting
 	private String playerName = "[Player's Name]";
@@ -374,7 +374,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					for (int i=0 ; i<entitiesToAddToGame.size() ; i++) {
 						PhysicalEntity pe = entitiesToAddToGame.get(i);
 						if (pe.timeToAdd < renderTime) {
-							if (this.entities.containsKey(pe.getID())) { // Check it is still in the game
+							if (pe.getID() < 0 || this.entities.containsKey(pe.getID())) { // Check it is still in the game
 								this.addEntityToGame(pe);
 							}
 							entitiesToAddToGame.remove(i);
@@ -715,6 +715,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.currentAvatarID = sam.avatarEntityID;
 			this.setAvatar(this.entities.get(currentAvatarID));
 
+		} else if (message instanceof NewClientOnlyEntity) {
+			NewClientOnlyEntity ncoe = (NewClientOnlyEntity)message;
+			createEntity(ncoe.data, ncoe.timestamp);
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
@@ -812,19 +816,17 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	protected final void createEntity(NewEntityData msg, long timeToAdd) {
-		//if (msg.gameId == this.gameData.gameID) {
 		IEntity e = actuallyCreateEntity(this, msg);
 		if (e != null) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				pe.timeToAdd = timeToAdd;
 			}
-			/*if (e instanceof AbstractAvatar || e instanceof IAbility || e instanceof AbstractEnemyAvatar) {
-					this.actuallyAddEntity(e); // Need to add it immediately so there's an avatar to add the grenade launcher to, or a grenade launcher to add a bullet to
-					// todo -point camera here
-				} else {*/
-			this.addEntity(e); // Schedule it for addition at the right time
-			//}
+			//if (e.getID() > 0) {
+				this.addEntity(e); // Schedule it for addition at the right time
+			/*} else {
+				this.addClientOnlyEntity(e);
+			}*/
 		} else {
 			Globals.p("Not creating entity " + msg.entityID);
 			// It's not for this game, so ignore it
@@ -854,13 +856,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void addEntity(IEntity e) {
-		if (e.getID() <= 0) {
+		/*if (e.getID() <= 0) {
 			throw new RuntimeException("ID must be positive if not client-side!");
-		}
+		}*/
 
 		synchronized (entities) {
-			if (e.getID() <= 0) {
+			if (e.getID() == 0) {
 				throw new RuntimeException("No entity id!");
+			}
+			if (e.getGameID() != this.getGameID()) {
+				throw new RuntimeException("Entity is for game " + e.getGameID() + ", current game is " + this.getGameID());
 			}
 			if (this.entities.containsKey(e.getID())) {
 				/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
@@ -872,40 +877,22 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				this.actuallyRemoveEntity(e2.getID());*/
 				throw new RuntimeException("Entity " + e + " already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
 			}
-			if (e.getGameID() != this.getGameID()) {
-				throw new RuntimeException("Entity is for game " + e.getGameID() + ", current game is " + this.getGameID());
+			if (e.getID() > 0) {
+				this.entities.put(e.getID(), e);
+			} else {
+				this.clientOnlyEntities.add(e);
 			}
-			this.entities.put(e.getID(), e);
 			if (e.requiresProcessing()) {
 				this.entitiesForProcessing.add(e);
 			}
 			if (e instanceof PhysicalEntity) {
 				entitiesToAddToGame.add((PhysicalEntity)e);
-				/*boolean add = true;
-				if (e instanceof ILaunchable) { // Don't add bullets until they are fired!
-					ILaunchable il = (ILaunchable)e;
-					add = il.hasBeenLaunched();
-				}
-				if (add) {
-					PhysicalEntity pe = (PhysicalEntity)e;
-					if (Globals.TOONISH) {
-						makeToonish(pe.getMainNode());
-					}
-					this.getGameNode().attachChild(pe.getMainNode());
-					if (pe.simpleRigidBody != null) {
-						this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
-						if (Globals.STRICT) {
-							if (this.physicsController.getEntities().size() > this.entities.size()) {
-								Globals.pe("Warning: more simple rigid bodies than entities!");
-							}
-						}
-					}
-				}*/
 			}
-			if (e instanceof IDrawOnHUD) {
+/*			if (e instanceof IDrawOnHUD) {
 				IDrawOnHUD doh = (IDrawOnHUD)e;
 				this.hud.addItem(doh.getHUDItem());
 			}
+			*/
 			if (e.getID() == currentAvatarID && e != this.currentAvatar) {
 				// Avatar has been replaced
 				this.setAvatar(e);
@@ -943,6 +930,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						Globals.pe("Warning: more simple rigid bodies than entities!");
 					}
 				}
+			}
+			if (e instanceof IDrawOnHUD) {
+				IDrawOnHUD doh = (IDrawOnHUD)e;
+				this.hud.addItem(doh.getHUDItem());
 			}
 		}
 	}
@@ -1138,11 +1129,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		actuallyAddClientOnlyEntity(e);
 	}
 
-	/*
-	public void removeClientOnlyEntity(IEntity e) {
-		this.clientOnlyEntitiesToRemove.add(e.getID());
-	}
-	 */
 
 	@Override
 	public int getNextEntityID() {
@@ -1264,7 +1250,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (e instanceof PhysicalEntity) {
 				if (Globals.DEBUG_SECONDARY_EXPLOSION) {
 					//if (e instanceof BulletExplosionEntity) {
-						Globals.p("Actually adding " + e);
+					Globals.p("Actually adding " + e);
 					//}
 				}
 				PhysicalEntity pe = (PhysicalEntity)e;

@@ -18,20 +18,20 @@ import com.sun.scenario.Settings;
 import ssmith.lang.NumberFunctions;
 
 public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
-
-	public static void Factory(IEntityController _game, int id, int type, Vector3f pos, int num) {
+	/*
+	public static void Factory(IEntityController _game, int type, Vector3f pos, int num) {
 		for (int i=0 ; i<num ; i++) {
-			ExplosionShard s = new ExplosionShard(_game, id, type, pos.x, pos.y, pos.z);
+			ExplosionShard s = new ExplosionShard(_game, _game.getNextEntityID(), type, pos.x, pos.y, pos.z);
 			_game.getGameNode().attachChild(s.getMainNode());
 
 		}
 	}
-
+	 */
 
 	private float timeLeft = 8f; 
 
-	private ExplosionShard(IEntityController _game, int id, int type, float x, float y, float z) {
-		super(_game, id, type, "CubeExplosionShard", true, false);
+	public ExplosionShard(IEntityController _game, int type, float x, float y, float z) {
+		super(_game, _game.getNextEntityID(), type, "CubeExplosionShard", true, false);
 
 		float s = .1f;
 		Box box1 = new Box(s, s, s);
@@ -58,9 +58,8 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		Vector3f force = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
-		//Vector3f force = new Vector3f(0, 1.4f, 0);
 		simpleRigidBody.setAdditionalForce(force);
 
 	}
@@ -68,12 +67,12 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
-	//Settings.p("Pos: " + this.getLocation());
-	timeLeft -= tpf_secs;
-	if (timeLeft <= 0) {
-		this.remove();
+		//Settings.p("Pos: " + this.getLocation());
+		timeLeft -= tpf_secs;
+		if (timeLeft <= 0) {
+			this.remove();
+		}
 	}
-}
 
 
 }

@@ -13,7 +13,7 @@ public class NewEntityMessage extends MyAbstractMessage {
 	public int gameId;
 	public LinkedList<NewEntityData> data = new LinkedList<NewEntityData>();
 
-
+	
 	public NewEntityMessage() {
 		super(true, true);
 	}
