@@ -81,7 +81,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 				nem.data.add(data);*/
 
 			AbstractGameServer server = (AbstractGameServer)game;
-			server.sendBulletExplosion(this.getWorldTranslation());
+			server.sendBulletExplosion(this.getWorldTranslation(), 4);
 			//server.gameNetworkServer.sendMessageToAll(nem);
 		}
 		this.remove();

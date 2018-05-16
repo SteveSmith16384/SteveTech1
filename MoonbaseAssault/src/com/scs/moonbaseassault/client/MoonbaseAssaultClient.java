@@ -39,7 +39,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	private DirectionalLight sun;
 	private AbstractHUDImage currentHUDTextImage;
 	private MoonbaseAssaultHUD hud;
-	private RealtimeInterval updateHUDInterval;// = new RealtimeInterval(2000);
+	private RealtimeInterval updateHUDInterval;
 	private MoonbaseAssaultCollisionValidator collisionValidator;
 
 	public static void main(String[] args) {
@@ -235,6 +235,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		default:
 			// DO nothing
 		}
+		removeCurrentHUDTextImage(); // todo - remove!
 
 	}
 

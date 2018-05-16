@@ -1344,4 +1344,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}
 
+
+	@Override
+	public SimpleGameData getGameData() {
+		return this.gameData;
+	}
+
+
 }

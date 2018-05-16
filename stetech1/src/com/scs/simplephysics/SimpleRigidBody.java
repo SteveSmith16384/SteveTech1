@@ -47,6 +47,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
 	private Vector3f tmpPrevPos = new Vector3f();
+	private boolean collidable = true;
 
 	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean _movedByForces, T _tag) {
 		super();
@@ -109,12 +110,11 @@ public class SimpleRigidBody<T> implements Collidable {
 		}
 
 		if (this.movedByForces) {
-			
+
 			if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
 				BoundingBox bv = this.getBoundingBox();
 				float y = bv.getCenter().y-bv.getYExtent();
 				Globals.p(this.simpleEntity  + " at " + y + " at start of process()");
-
 			}
 
 			// Check we're not already colliding *before* we've even moved
@@ -208,35 +208,8 @@ public class SimpleRigidBody<T> implements Collidable {
 
 		}
 
-}
-
-	/*
-	private void moveAwayFrom_SIMPLE(List<SimpleRigidBody<T>> crs) {
-		BoundingBox bb = this.getBoundingBox();
-		Vector3f ourPos = bb.getCenter();
-		for (SimpleRigidBody<T> cr : crs) {
-			Vector3f diff = null;
-			Vector3f theirPos = cr.getBoundingBox().getCenter();
-			diff = ourPos.subtract(theirPos);
-			diff.y = 0; // Only move horizontally?
-
-			if (diff.length() == 0) {
-				//System.err.println("No direction!"); // Can't do anything
-			} else {
-				diff.normalizeLocal().multLocal(0.1f);
-				//SimpleRigidBody<T> tmpWasCollision = null;
-				//do {
-				this.simpleEntity.moveEntity(diff); // Move away
-				if (DEBUG_AUTOMOVING) {
-					p("Automoved  " + this + " by " + diff);
-				}
-				//tmpWasCollision = checkForCollisions();
-				//} while (tmpWasCollision != null && this.removed == false); Only adjust once, we'll do it again on the next iteration
-				//this.simpleEntity.hasMoved();
-			}
-		}
 	}
-	 */
+
 
 	private void moveAwayFrom(List<SimpleRigidBody<T>> others) {
 		BoundingBox ourBB = this.getBoundingBox();
@@ -392,6 +365,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	public List<SimpleRigidBody<T>> checkForCollisions() {
 		List<SimpleRigidBody<T>> crs = new ArrayList<SimpleRigidBody<T>>();
 
+		if (!this.collidable ) {
+			return crs;
+		}
+		
 		CollisionResults tempCollisionResults = new CollisionResults(); // Avoid creating a new one each time
 
 		if (SimplePhysicsController.USE_NEW_COLLISION_METHOD) {
@@ -614,6 +591,11 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	public float GetCurrentGravOffset() {
 		return this.currentGravInc;
+	}
+
+
+	public void setCollidable(boolean b) {
+		this.collidable = b;
 	}
 }
 

@@ -26,12 +26,12 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 	}
 	 */
 
-	private float timeLeft = 3f;
+	private float timeLeft = 1.5f;
 	
 	public ExplosionShard(IEntityController _game, float x, float y, float z) {
 		super(_game, _game.getNextEntityID(), Globals.BULLET_EXPLOSION_EFFECT, "ExplosionShard", true, false);
 
-		float s = .01f;
+		float s = .05f;
 		Box box1 = new Box(s, s, s);
 		Geometry geometry = new Geometry("Crate", box1);
 		TextureKey key3 = new TextureKey("Textures/sun.jpg");
@@ -57,7 +57,8 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		mainNode.setUserData(Globals.ENTITY, this);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
-		simpleRigidBody.setBounciness(.05f);
+		//simpleRigidBody.setBounciness(.0f);
+		simpleRigidBody.setCollidable(false);
 		Vector3f force = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
 		simpleRigidBody.setAdditionalForce(force);
 

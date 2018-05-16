@@ -4,6 +4,7 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.netmessages.NewEntityData;

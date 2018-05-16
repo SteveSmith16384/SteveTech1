@@ -997,13 +997,15 @@ ConsoleInputListener {
 	}
 
 
-	public void sendBulletExplosion(Vector3f pos) {
+	public void sendBulletExplosion(Vector3f pos, int num) {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
-		NewEntityData data = new NewEntityData();
-		data.type = Globals.BULLET_EXPLOSION_EFFECT;
-		data.data.put("pos", pos);//this.getWorldTranslation());
-		nem.data.add(data);
+		for (int i=0 ; i<num ; i++) {
+			NewEntityData data = new NewEntityData();
+			data.type = Globals.BULLET_EXPLOSION_EFFECT;
+			data.data.put("pos", pos);//this.getWorldTranslation());
+			nem.data.add(data);
+		}
 
 		gameNetworkServer.sendMessageToAll(nem);
 
