@@ -69,6 +69,7 @@ public class TwoWeeksClientEntityCreator {
 			int side = (int)msg.data.get("side");
 			float moveSpeed = (float)msg.data.get("moveSpeed");
 			float jumpForce = (float)msg.data.get("jumpForce");
+			String playersName = (String)msg.data.get("playersName");
 
 			if (playerID == game.playerID) {
 				AbstractClientAvatar avatar = new MercClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side, moveSpeed, jumpForce);
@@ -78,7 +79,7 @@ public class TwoWeeksClientEntityCreator {
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				AbstractEnemyAvatar avatar = new MercEnemyAvatar(game, SOLDIER_AVATAR, id, pos.x, pos.y, pos.z, side);
+				AbstractEnemyAvatar avatar = new MercEnemyAvatar(game, SOLDIER_AVATAR, id, pos.x, pos.y, pos.z, side, playersName);
 				return avatar;
 			}
 		}

@@ -144,7 +144,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 		// 1280 x 1280
 
 		placeCity(CITY_X, CITY_Z);
-		placeCity(CITY_X+(CITY_SIZE*2), CITY_Z+(CITY_SIZE*2));
+		//placeCity(CITY_X+(CITY_SIZE*2), CITY_Z+(CITY_SIZE*2));
 
 		{
 			// Place trees

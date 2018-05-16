@@ -17,7 +17,7 @@ public class Globals {
 	public static final boolean TRANSPARENT_WALLS = true;
 	public static final boolean TEST_AI = true;
 	
-	public static final boolean DEBUG_SECONDARY_EXPLOSION = false;
+	//public static final boolean DEBUG_SECONDARY_EXPLOSION = false;
 	public static final boolean DEBUG_FALLING_THROUGH_FLOOR = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
 	public static final boolean DEBUG_BULLET_HIT = false;

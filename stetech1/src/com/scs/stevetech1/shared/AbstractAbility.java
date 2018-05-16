@@ -78,8 +78,8 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
-		if (this.playerID == client.getPlayerID()) { // Otherwise we only have an EnemyAvatar to add the ability to
-			if (owner == null) {
+		if (owner == null) {
+			if (this.playerID == client.getPlayerID()) { // Otherwise we only have an EnemyAvatar to add the ability to
 				IEntity e = client.getEntity(this.avatarID);
 				if (e != null) {
 					owner = (AbstractAvatar)e;

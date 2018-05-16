@@ -55,6 +55,7 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
+import com.scs.stevetech1.entities.ExplosionShard;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
@@ -412,7 +413,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 									pe.processChronoData(renderTime, tpf_secs);
 
 									if (Globals.STRICT) {
-										if (e instanceof AbstractClientAvatar == false && e instanceof IClientControlled == false) {
+										if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof IClientControlled == false) {
 											if (pe.simpleRigidBody != null) {
 												if (pe.simpleRigidBody.movedByForces()) {
 													Globals.p("Warning: client-side entity " + pe + " not kinematic!");
@@ -442,7 +443,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 						// Now do client-only entities
 						//for (IEntity e : this.clientOnlyEntities.values()) {
-						for (int i=0 ; i<this.clientOnlyEntities.size() ; i++) {
+						/*for (int i=0 ; i<this.clientOnlyEntities.size() ; i++) {
 							IEntity e = this.clientOnlyEntities.get(i);
 							if (e.hasNotBeenRemoved()) {
 								if (e instanceof IProcessByClient) {
@@ -450,7 +451,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 									pbc.processByClient(this, tpf_secs);
 								}
 							}
-						}
+						}*/
 					}
 				}
 
@@ -1247,11 +1248,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.clientOnlyEntities.add(e);
 
 			if (e instanceof PhysicalEntity) {
-				if (Globals.DEBUG_SECONDARY_EXPLOSION) {
-					//if (e instanceof BulletExplosionEntity) {
-					Globals.p("Actually adding " + e);
-					//}
-				}
 				PhysicalEntity pe = (PhysicalEntity)e;
 				this.getGameNode().attachChild(pe.getMainNode());
 				if (pe.simpleRigidBody != null) {

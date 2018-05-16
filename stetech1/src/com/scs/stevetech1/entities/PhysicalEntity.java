@@ -124,7 +124,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			if (simpleRigidBody != null) {
 				if (Globals.STRICT) {
 					if (this.game.getPhysicsController().containsSRB(simpleRigidBody) == false) {
-						Globals.pe("Warning - srb is not in list for removal");
+						Globals.pe("Warning - srb for " + this + " is not in list for removal");
 					}
 				}
 				this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
