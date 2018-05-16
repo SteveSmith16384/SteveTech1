@@ -80,7 +80,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 				data.data.put("pos", this.getWorldTranslation());
 				nem.data.add(data);*/
 
-			MoonbaseAssaultServer server = (MoonbaseAssaultServer)game;
+			AbstractGameServer server = (AbstractGameServer)game;
 			server.sendBulletExplosion(this.getWorldTranslation());
 			//server.gameNetworkServer.sendMessageToAll(nem);
 		}

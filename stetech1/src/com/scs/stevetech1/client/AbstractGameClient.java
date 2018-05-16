@@ -973,6 +973,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			e.remove();
 			it.remove();
 		}
+		this.entitiesForProcessing.clear();
+		this.clientOnlyEntities.clear();
+		
 		if (Globals.STRICT) {
 			if (this.physicsController.getEntities().size() > this.entities.size()) {
 				Globals.pe("Warning: more simple rigid bodies than entities!");

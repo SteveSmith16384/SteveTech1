@@ -26,12 +26,12 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 	}
 	 */
 
-	private float timeLeft = 8f;
+	private float timeLeft = 3f;
 	
-	public ExplosionShard(IEntityController _game, int type, float x, float y, float z) {
-		super(_game, _game.getNextEntityID(), type, "CubeExplosionShard", true, false);
+	public ExplosionShard(IEntityController _game, float x, float y, float z) {
+		super(_game, _game.getNextEntityID(), Globals.BULLET_EXPLOSION_EFFECT, "ExplosionShard", true, false);
 
-		float s = .1f;
+		float s = .01f;
 		Box box1 = new Box(s, s, s);
 		Geometry geometry = new Geometry("Crate", box1);
 		TextureKey key3 = new TextureKey("Textures/sun.jpg");
@@ -57,6 +57,7 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		mainNode.setUserData(Globals.ENTITY, this);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
+		simpleRigidBody.setBounciness(.05f);
 		Vector3f force = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
 		simpleRigidBody.setAdditionalForce(force);
 
@@ -65,6 +66,7 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
+		this.simpleRigidBody.process(tpf_secs);
 		//Settings.p("Pos: " + this.getLocation());
 		timeLeft -= tpf_secs;
 		if (timeLeft <= 0) {

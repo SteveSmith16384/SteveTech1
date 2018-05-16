@@ -245,9 +245,12 @@ ConsoleInputListener {
 						}
 
 					} else if (message instanceof ClientReloadingMessage) {
+						Globals.p("Rcvd ClientReloadingMessage");
 						ClientReloadingMessage crm = (ClientReloadingMessage)message;
 						IReloadable e = (IReloadable)this.entities.get(crm.abilityId);
-						e.reload(this);
+						if (e != null) {
+							e.reload(this);
+						}
 
 					} else {
 						throw new RuntimeException("Unknown message type: " + message);
@@ -976,6 +979,34 @@ ConsoleInputListener {
 		PhysicalEntity pb = b.userObject; //pb.getMainNode().getWorldBound();
 
 		return canCollide(pa, pb);
+	}
+
+
+	public void sendBulletTrail(int playerID, Vector3f start, Vector3f end) {
+		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
+
+		NewEntityData data = new NewEntityData();
+		data.type = Globals.BULLET_TRAIL;
+
+		data.data.put("playerID", playerID);
+		data.data.put("start", start);
+		data.data.put("end", end);
+
+		gameNetworkServer.sendMessageToAll(nem);
+
+	}
+
+
+	public void sendBulletExplosion(Vector3f pos) {
+		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
+
+		NewEntityData data = new NewEntityData();
+		data.type = Globals.BULLET_EXPLOSION_EFFECT;
+		data.data.put("pos", pos);//this.getWorldTranslation());
+		nem.data.add(data);
+
+		gameNetworkServer.sendMessageToAll(nem);
+
 	}
 
 

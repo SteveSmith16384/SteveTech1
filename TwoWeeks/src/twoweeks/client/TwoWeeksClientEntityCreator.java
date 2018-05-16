@@ -10,6 +10,7 @@ import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityData;
+import com.scs.stevetech1.server.Globals;
 
 import twoweeks.abilities.PlayersMachineGun;
 import twoweeks.entities.AIBullet;
@@ -32,8 +33,8 @@ public class TwoWeeksClientEntityCreator {
 	public static final int MACHINE_GUN = 8;
 	public static final int AI_SOLDIER = 10;
 	public static final int MAP_BORDER = 11;
-	public static final int EXPLOSION_EFFECT = 15;
-	public static final int DEBUGGING_SPHERE = 16;
+	//public static final int EXPLOSION_EFFECT = 15;
+	//public static final int DEBUGGING_SPHERE = 16;
 	public static final int AI_BULLET = 17;
 
 
@@ -173,9 +174,9 @@ public class TwoWeeksClientEntityCreator {
 			return crate;
 		}
 		 */
-		case DEBUGGING_SPHERE:
+		case Globals.DEBUGGING_SPHERE:
 		{
-			DebuggingSphere sphere = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+			DebuggingSphere sphere = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true, false);
 			return sphere;
 		}
 

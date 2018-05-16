@@ -58,7 +58,7 @@ public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOf
 			if (game.isServer()) {
 				// Create debugging sphere
 				Vector3f pos = this.getWorldTranslation();
-				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), UndercoverAgentClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, false);
 				game.addEntity(ds);
 			}
 		}

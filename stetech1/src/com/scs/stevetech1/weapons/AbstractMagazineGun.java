@@ -18,6 +18,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class AbstractMagazineGun<T> extends AbstractAbility implements IAbility, IReloadable {
 
+	protected float timeSinceLastReload = 0;
 	protected float timeUntilShoot_secs = 0;
 	protected int magazineSize;
 	protected float shotInterval_secs, reloadInterval_secs;
@@ -59,9 +60,9 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 					Globals.p("Forcing empty of magazine");
 					this.emptyMagazine();
 				} else {
-					AbstractGameClient client = (AbstractGameClient) game;
+					/*AbstractGameClient client = (AbstractGameClient) game;
 					client.sendMessage(new ClientReloadingMessage(this.getID()));
-					this.timeUntilShoot_secs = this.reloadInterval_secs;
+					this.timeUntilShoot_secs = this.reloadInterval_secs;*/
 				}
 			}
 		}
@@ -83,18 +84,23 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 		}*/
 		timeUntilShoot_secs -= tpf_secs;
+		timeSinceLastReload += tpf_secs;
 	}
 
 
 	@Override
 	public void reload(AbstractGameServer server) {
-		this.emptyMagazine(); // Remove any existing bullets
-		IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
-		while (this.getBulletsInMag() < this.magazineSize) {
-			createBullet(server, server.getNextEntityID(), playerID, irac, this.owner.side);
+		if (timeSinceLastReload > 5) {
+			Globals.p("Reloading " + this);
+			this.emptyMagazine(); // Remove any existing bullets
+			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
+			while (this.getBulletsInMag() < this.magazineSize) {
+				createBullet(server, server.getNextEntityID(), playerID, irac, this.owner.side);
+			}
+			this.timeUntilShoot_secs = this.reloadInterval_secs;
+			timeSinceLastReload = 0;
+			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 		}
-		this.timeUntilShoot_secs = this.reloadInterval_secs;
-		server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
 	}
 
 
@@ -103,6 +109,12 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 		super.processByClient(client, tpf_secs);
 
 		timeUntilShoot_secs -= tpf_secs;
+
+		if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
+			//AbstractGameClient client = (AbstractGameClient) game;
+			client.sendMessage(new ClientReloadingMessage(this.getID()));
+			this.timeUntilShoot_secs = this.reloadInterval_secs;
+		}
 	}
 
 

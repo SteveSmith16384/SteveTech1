@@ -32,6 +32,7 @@ import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.entities.ExplosionShard;
 import com.scs.stevetech1.netmessages.NewEntityData;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.weapons.HitscanRifle;
 
 public class MoonbaseAssaultClientEntityCreator {
@@ -51,11 +52,8 @@ public class MoonbaseAssaultClientEntityCreator {
 	public static final int GRENADE = 13;
 	public static final int GRENADE_LAUNCHER = 14;
 	public static final int SMALL_EXPLOSION_EFFECT = 15;
-	public static final int DEBUGGING_SPHERE = 16;
 	public static final int AI_LASER_BULLET = 17;
 	public static final int HITSCAN_RIFLE = 18;
-	public static final int BULLET_TRAIL = 19;
-	public static final int BULLET_EXPLOSION_EFFECT = 20;
 	public static final int GAS_CANNISTER = 21;
 	public static final int FLOOR_TEX = 22;
 	public static final int FLYING_SPACESHIP2 = 23;
@@ -242,9 +240,9 @@ public class MoonbaseAssaultClientEntityCreator {
 			return expl;
 		}
 
-		case DEBUGGING_SPHERE:
+		case Globals.DEBUGGING_SPHERE:
 		{
-			DebuggingSphere hill = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+			DebuggingSphere hill = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true, false);
 			return hill;
 		}
 
@@ -255,20 +253,20 @@ public class MoonbaseAssaultClientEntityCreator {
 			//if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities
 			//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 			int num = (int)msg.data.get("num");
-			HitscanRifle gl = new HitscanRifle(game, id, HITSCAN_RIFLE, playerID, null, ownerid, num, null, BULLET_TRAIL, DEBUGGING_SPHERE);
+			HitscanRifle gl = new HitscanRifle(game, id, HITSCAN_RIFLE, playerID, null, ownerid, num, null);
 			//owner.addAbility(gl, num);
 			return gl;
 			//}
 			//return null;
 		}
 
-		case BULLET_TRAIL:
+		case Globals.BULLET_TRAIL:
 		{
 			int playerID = (int) msg.data.get("playerID");
 			if (playerID != game.getPlayerID()) {
 				Vector3f start = (Vector3f) msg.data.get("start");
 				Vector3f end = (Vector3f) msg.data.get("end");
-				BulletTrail bullet = new BulletTrail(game, id, BULLET_TRAIL, playerID, start, end);
+				BulletTrail bullet = new BulletTrail(game, playerID, start, end);
 				return bullet;
 			} else {
 				return null; // We create our own bullet trails, so ignore this
@@ -286,13 +284,13 @@ public class MoonbaseAssaultClientEntityCreator {
 			return bullet;
 		}
 
-		case BULLET_EXPLOSION_EFFECT:
+		case Globals.BULLET_EXPLOSION_EFFECT:
 		{
 			/*if (Globals.DEBUG_SECONDARY_EXPLOSION) {
 				Globals.p("Rcvd BulletExplosionEntity");
 			}*/
 			//BulletExplosionEntity expl = new BulletExplosionEntity(game, id, pos);
-			ExplosionShard expl = new ExplosionShard(game, BULLET_EXPLOSION_EFFECT, pos.x, pos.y, pos.z);
+			ExplosionShard expl = new ExplosionShard(game, pos.x, pos.y, pos.z);
 			return expl;
 		}
 

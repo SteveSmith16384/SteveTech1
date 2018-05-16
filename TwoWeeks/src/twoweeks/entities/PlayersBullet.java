@@ -116,7 +116,7 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 				if (game.isServer()) {
 					// Create debugging sphere
 					Vector3f pos = this.getWorldTranslation();
-					DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), TwoWeeksClientEntityCreator.DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+					DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, false);
 					game.addEntity(ds);
 				}
 			}

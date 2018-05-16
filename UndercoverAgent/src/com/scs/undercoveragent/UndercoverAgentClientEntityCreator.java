@@ -11,6 +11,7 @@ import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.DebuggingBox;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityData;
+import com.scs.stevetech1.server.Globals;
 import com.scs.undercoveragent.entities.BigTreeWithLeaves;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.InvisibleMapBorder;
@@ -45,7 +46,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 	public static final int SNOW_HILL_2 = 13;
 	public static final int SNOW_HILL_3 = 14;
 	public static final int SNOW_HILL_4 = 15;
-	public static final int DEBUGGING_SPHERE = 16;
+	//public static final int DEBUGGING_SPHERE = 16;
 	public static final int DEBUGGING_BOX = 17;
 
 	public UndercoverAgentClientEntityCreator() {
@@ -69,7 +70,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		case SNOW_HILL_2: return "SNOW_HILL_2";
 		case SNOW_HILL_3: return "SNOW_HILL_3";
 		case SNOW_HILL_4: return "SNOW_HILL_4";
-		case DEBUGGING_SPHERE: return "DEBUGGING_SPHERE";
+		//case DEBUGGING_SPHERE: return "DEBUGGING_SPHERE";
 		default: return "Unknown (" + type + ")";
 		}
 	}
@@ -226,10 +227,10 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 			return hill;
 		}
 
-		case DEBUGGING_SPHERE:
+		case Globals.DEBUGGING_SPHERE:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			DebuggingSphere hill = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, true, false);
+			DebuggingSphere hill = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true, false);
 			return hill;
 		}
 
@@ -237,7 +238,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
-			DebuggingBox hill = new DebuggingBox(game, DEBUGGING_SPHERE, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, true);
+			DebuggingBox hill = new DebuggingBox(game, Globals.DEBUGGING_SPHERE, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, true);
 			return hill;
 		}
 

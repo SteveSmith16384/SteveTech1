@@ -17,7 +17,6 @@ public class Globals {
 	public static final boolean TRANSPARENT_WALLS = true;
 	public static final boolean TEST_AI = true;
 	
-	//public static final boolean DEBUG_SECONDARY_EXPLOSION = false;
 	public static final boolean DEBUG_FALLING_THROUGH_FLOOR = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
 	public static final boolean DEBUG_BULLET_HIT = false;
@@ -56,6 +55,12 @@ public class Globals {
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
 
+	// Generic entity codes
+	public static final int DEBUGGING_SPHERE = -1;
+	public static final int BULLET_TRAIL = -2;
+	public static final int BULLET_EXPLOSION_EFFECT = -3;
+
+	
 	// Effects
 	public static final boolean TOONISH = false; // Outlines
 	public static final boolean BULLETS_CONES = true;

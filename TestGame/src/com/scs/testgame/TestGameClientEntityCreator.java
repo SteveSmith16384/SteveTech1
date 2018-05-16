@@ -82,7 +82,7 @@ public class TestGameClientEntityCreator {
 		case DEBUGGING_SPHERE:
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			DebuggingSphere laser = new DebuggingSphere(game, id, DEBUGGING_SPHERE, pos.x, pos.y, pos.z, false, true);
+			DebuggingSphere laser = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, false, true);
 			return laser;
 		}
 
@@ -93,7 +93,7 @@ public class TestGameClientEntityCreator {
 			//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 			int playerID = (int)msg.data.get("playerID");
 			int num = (int)msg.data.get("num");
-			HitscanRifle gl = new HitscanRifle(game, id, HITSCAN_RIFLE, playerID, null, ownerid, num, null, BULLET_TRAIL, DEBUGGING_SPHERE);
+			HitscanRifle gl = new HitscanRifle(game, id, HITSCAN_RIFLE, playerID, null, ownerid, num, null);
 			//owner.addAbility(gl, num);
 			return gl;
 			//}
@@ -204,7 +204,7 @@ public class TestGameClientEntityCreator {
 			if (playerID != game.getPlayerID()) {
 				Vector3f start = (Vector3f) msg.data.get("start");
 				Vector3f end = (Vector3f) msg.data.get("end");
-				BulletTrail bullet = new BulletTrail(game, id, BULLET_TRAIL, playerID, start, end);
+				BulletTrail bullet = new BulletTrail(game, playerID, start, end);
 				return bullet;
 			} else {
 				return null; // We create our own bullet trails, so ignore this

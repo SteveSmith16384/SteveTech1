@@ -359,9 +359,6 @@ public class SimpleRigidBody<T> implements Collidable {
 					}
 				}
 			}
-			// Move up if it's a mesh/terrain?
-			//this.oneOffForce.y += (.5f);
-			//this.oneOffForce.y += (.3f); // todo - make config
 		}
 
 

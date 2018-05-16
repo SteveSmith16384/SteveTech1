@@ -169,9 +169,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		FlyingSpaceship2 ss = new FlyingSpaceship2(this, this.getNextEntityID(), 8, 5f, 8);
 		this.actuallyAddEntity(ss);
 
-		// todo - remove
-		GasCannister gas = new GasCannister(this, getNextEntityID(), 2f, 0.5f, 2f);
-		this.actuallyAddEntity(gas);
+		//GasCannister gas = new GasCannister(this, getNextEntityID(), 2f, 0.5f, 2f);
+		//this.actuallyAddEntity(gas);
 
 		// Add AI soldiers
 		if (!Globals.TEST_AI) {
@@ -359,19 +358,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	@Override
 	public int getMinPlayersRequiredForGame() {
 		return 1;
-	}
-
-
-	public void sendBulletExplosion(Vector3f pos) {
-		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
-
-		NewEntityData data = new NewEntityData();
-		data.type = MoonbaseAssaultClientEntityCreator.BULLET_EXPLOSION_EFFECT;
-		data.data.put("pos", pos);//this.getWorldTranslation());
-		nem.data.add(data);
-
-		gameNetworkServer.sendMessageToAll(nem);
-
 	}
 
 
