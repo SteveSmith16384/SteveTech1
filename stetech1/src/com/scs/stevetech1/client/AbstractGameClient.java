@@ -1130,6 +1130,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 		//this.clientOnlyEntitiesToAdd.add(e);
 		actuallyAddClientOnlyEntity(e);
+		if (e.requiresProcessing()) {
+			this.entitiesForProcessing.add(e); // todo - strict check if already exists
+		}
 	}
 
 

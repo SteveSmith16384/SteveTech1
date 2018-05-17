@@ -116,7 +116,8 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			AbstractGameServer server = (AbstractGameServer)game;
 
 			// fast forward it!
-			float totalTimeToFFwd = server.clientRenderDelayMillis + (client.playerData.pingRTT/2);
+			//float totalTimeToFFwd = server.clientRenderDelayMillis + (client.playerData.pingRTT/2);
+			float totalTimeToFFwd = server.clientRenderDelayMillis + (client.playerData.pingRTT*2);///2);
 			float tpf_secs = (float)server.tickrateMillis / 1000f;
 			while (totalTimeToFFwd > 0) {
 				totalTimeToFFwd -= server.tickrateMillis;

@@ -204,7 +204,6 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 					this.setNumPlayers(client.playersList.size());
 				}
 			}
-			//this.setCompsDestroyed(client.score);
 			this.setPing(client.pingRTT);
 			this.updateTextArea();
 		}

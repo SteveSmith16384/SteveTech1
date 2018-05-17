@@ -29,6 +29,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 
 		guiNode.attachChild(this);
 		game.addClientOnlyEntity(this);
+		//game.ent
 
 	}
 

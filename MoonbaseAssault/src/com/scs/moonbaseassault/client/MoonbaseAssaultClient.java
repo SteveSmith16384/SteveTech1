@@ -235,7 +235,6 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		default:
 			// DO nothing
 		}
-		removeCurrentHUDTextImage(); // todo - remove!
 
 	}
 
