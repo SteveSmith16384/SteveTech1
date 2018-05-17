@@ -14,7 +14,7 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean TEST_AI = true;
+	public static final boolean TEST_AI = false;
 	public static final boolean DEBUG_DELAYED_EXPLOSION = true;
 
 	public static final boolean TRANSPARENT_WALLS = false;

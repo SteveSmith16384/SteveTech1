@@ -11,3 +11,4 @@ When it is finished, this game is designed to be a multiplayer realtime version 
 * The defenders must defend the computers by killing the attackers.
 * The attackers must destroy the computers.
 * The game is played for a fixed duration.  If enough computers are destroyed before this time, the attackers win, otherwise the defenders win.
+* Human players always play as the attackers.

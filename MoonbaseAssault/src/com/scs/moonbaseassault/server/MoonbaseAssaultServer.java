@@ -31,10 +31,11 @@ import com.scs.stevetech1.server.Globals;
 import ssmith.astar.IAStarMapInterface;
 import ssmith.lang.NumberFunctions;
 import ssmith.util.MyProperties;
+import ssmith.util.RealtimeInterval;
 
 public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
 
-	private static final int MAX_PLAYERS = 20;
+	//private static final int MAX_PLAYERS = 20;
 	private static final int COMPS_DESTROYED_TO_WIN = 10;
 	public static final String GAME_ID = "Moonbase Assault";
 
@@ -46,7 +47,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	public ArrayList<Point>[] deploySquares;
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
 	private int winningSide = 2; // Defenders win by default
-
+	private CreateUnitsSystem createUnitsSystem;
+	
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -110,11 +112,23 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	@Override
 	public void simpleInitApp() {
 		super.gameData = new MoonbaseAssaultGameData(this.getGameID()); // Replace normal data
-
+		createUnitsSystem = new CreateUnitsSystem(this);
 		super.simpleInitApp();
 	}
 
 
+	@Override
+	public void simpleUpdate(float tpf_secs) {
+		super.simpleUpdate(tpf_secs);
+		
+		if (this.gameData.isInGame()) {
+			if (!Globals.TEST_AI) {
+			this.createUnitsSystem.process();
+			}
+		}
+	}
+	
+	
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
 		float startHeight = .1f;
@@ -174,14 +188,14 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		// Add AI soldiers
 		if (!Globals.TEST_AI) {
-			for (int side=1 ; side<=2 ; side++) {
+			/*for (int side=1 ; side<=2 ; side++) {
 				for (int i=0 ; i<3 ; i++) {
 					String name = (side == 1 ? "Attacker" : "Defender") + " " + (i+1);
 					MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, side, AbstractAvatar.ANIM_IDLE, name, side == 1);
 					this.actuallyAddEntity(s);
 					moveAISoldierToStartPosition(s, s.side);
 				}
-			}
+			}*/
 		} else {
 			MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, 1, AbstractAvatar.ANIM_IDLE, "AI TEST", true);
 			this.actuallyAddEntity(s);
@@ -191,6 +205,15 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	}
 
 
+	public void addAISoldier(int side, int num) {
+		String name = (side == 1 ? "Attacker" : "Defender") + " " + num;
+		MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, side, AbstractAvatar.ANIM_IDLE, name, side == 1);
+		this.actuallyAddEntity(s);
+		moveAISoldierToStartPosition(s, s.side);
+
+	}
+	
+	
 	private void moveAISoldierToStartPosition(PhysicalEntity soldier, int side) {
 		float startHeight = .1f;
 		if (!Globals.TEST_AI) {
@@ -286,13 +309,14 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	public boolean doWeHaveSpaces() {
-		int currentPlayers = 0;
+		/*int currentPlayers = 0;
 		for(ClientData c : this.clients.values()) {
 			if (c.clientStatus == ClientData.ClientStatus.Accepted) {  // only count players actually Accepted!
 				currentPlayers++;
 			}
 		}
-		return currentPlayers < MAX_PLAYERS;
+		return currentPlayers < MAX_PLAYERS;*/
+		return true;
 	}
 
 

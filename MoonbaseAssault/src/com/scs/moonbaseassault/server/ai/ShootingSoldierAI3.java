@@ -39,6 +39,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	private boolean attacker;
 	private FindComputerThread fcThread;
 	private WayPoints route = null;
+	//private Computer computer; // The computer the defender is defending
 
 	public ShootingSoldierAI3(AbstractAISoldier _pe, boolean _attacker) {
 		super();
@@ -58,9 +59,12 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		} 
 		if (this.randomDirForSecs > 0) {
 			this.randomDirForSecs -= tpf_secs;
-		} 
+		}
+		/*if (computer != null && !computer.isAlive()) {
+			computer = null;
+		}*/
 
-		if (currentTarget != null) { // Find enemy
+		if (currentTarget != null) { // Check we can still see enemy
 			if (!this.currentTarget.isAlive()) {
 				this.currentTarget = null;
 			} else {
@@ -73,7 +77,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 				}
 			}
 		}
-		if (currentTarget == null) { // Check we can still see enemy
+		if (currentTarget == null) { // Find enemy
 			if (this.checkForEnemyInt.hitInterval()) {
 				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AILaserBullet.RANGE);
 				if (Globals.DEBUG_AI_TARGETTING && currentTarget != null) {
@@ -86,37 +90,37 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			dir.y = 0;
 			dir.normalizeLocal();
 			this.changeDirection(dir);
-		}
 
-		if (currentTarget != null) {
 			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 			animCode = AbstractAvatar.ANIM_IDLE;
 			if (SHOOT_AT_ENEMY) {
 				this.soldierEntity.shoot((PhysicalEntity)currentTarget);
 			}
-
-		} else if (this.attacker && this.route == null) {
-			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
-			animCode = AbstractAvatar.ANIM_IDLE;
-			getRoute(server);
-
-		} else if (waitForSecs > 0) { // Wait for door
-			soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
-			animCode = AbstractAvatar.ANIM_IDLE;
-			
-		} else if (randomDirForSecs > 0) {
-			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
-			animCode = AbstractAvatar.ANIM_WALKING;
-			
-		} else {
-			if (this.attacker && route != null) {
-				checkRoute();
-			}
-			soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
-			animCode = AbstractAvatar.ANIM_WALKING;
-
 		}
 
+		if (currentTarget == null) { // No current enemy
+			if (this.route == null) { // this.attacker &&
+				//if (this.attacker || (this.computer == null))
+				soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
+				animCode = AbstractAvatar.ANIM_IDLE;
+				getRoute(server);
+
+			} else if (waitForSecs > 0) { // Wait for door
+				soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
+				animCode = AbstractAvatar.ANIM_IDLE;
+
+			} else if (randomDirForSecs > 0) {
+				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
+				animCode = AbstractAvatar.ANIM_WALKING;
+
+			} else {
+				if (route != null) { //this.attacker && 
+					checkRoute();
+				}
+				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
+				animCode = AbstractAvatar.ANIM_WALKING;
+			}
+		}
 	}
 
 

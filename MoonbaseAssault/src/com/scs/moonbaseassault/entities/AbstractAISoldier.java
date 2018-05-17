@@ -53,6 +53,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public int side;
 	protected IArtificialIntelligence ai;
 	private int serverSideCurrentAnimCode; // Server-side
+	private long timeKilled;
 	
 	// Weapon
 	private int bullets = BULLETS_IN_MAG;
@@ -123,6 +124,11 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			this.serverSideCurrentAnimCode = ai.getAnimCode(); // AbstractAvatar.ANIM_WALKING;
 		} else {
 			this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving
+			long diff = System.currentTimeMillis() - timeKilled;
+			if (diff > 5000) {
+				this.remove();
+				return;
+			}
 		}
 
 		super.processByServer(server, tpf_secs);
@@ -160,6 +166,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 				this.game.getPhysicsController().removeSimpleRigidBody(this.simpleRigidBody); // Prevent us colliding
 				this.simpleRigidBody.setMovedByForces(false);
+				
+				this.timeKilled = System.currentTimeMillis();
 			}
 		}
 	}
