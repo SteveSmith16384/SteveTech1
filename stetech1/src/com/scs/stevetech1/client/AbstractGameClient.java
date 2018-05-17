@@ -562,9 +562,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							Globals.p("Received EntityUpdateMessage for " + e);
 						}
 						PhysicalEntity pe = (PhysicalEntity)e;
-						if (Globals.DEBUG_NO_BULLET && pe.type == 7) { // Laser bullet
-							Globals.p("Received EntityUpdateMessage for " + e);
-						}
 						pe.storePositionData(eud, mainmsg.timestamp);
 						pe.chronoUpdateData.addData(eud);
 					} else {
@@ -1322,11 +1319,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 				this.clientOnlyEntities.remove(e);
 				if (e.requiresProcessing()) {
-					this.entitiesForProcessing.remove(id);
+					this.entitiesForProcessing.remove(e);
 				}
 			} else {
 				Globals.pe("Entity id " + id + " not found for removal");
-				this.entitiesForProcessing.remove(id); // Just in case, otherwise we'll try and remove it foreer
+				//this.entitiesForProcessing.remove(id); // Just in case, otherwise we'll try and remove it foreer
 			}
 		}
 	}

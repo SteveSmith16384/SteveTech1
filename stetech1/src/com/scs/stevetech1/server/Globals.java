@@ -15,7 +15,7 @@ public class Globals {
 
 	// Lots of consts for specific debugging output
 	public static final boolean TEST_AI = true;
-	public static final boolean DEBUG_NO_BULLET = true;
+	public static final boolean DEBUG_DELAYED_EXPLOSION = true;
 
 	public static final boolean TRANSPARENT_WALLS = false;
 	public static final boolean DEBUG_FALLING_THROUGH_FLOOR = false;

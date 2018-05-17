@@ -110,25 +110,28 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		this.collideable = true;
 
 		if (game.isServer()) {
-			if (Globals.DEBUG_NO_BULLET) {
-				Globals.p("Start of ffwding -------------------------");
+			if (Globals.DEBUG_DELAYED_EXPLOSION) {
+				//Globals.p("Start of ffwding -------------------------");
 			}
 			AbstractGameServer server = (AbstractGameServer)game;
 
 			// fast forward it!
-			//float totalTimeToFFwd = server.clientRenderDelayMillis + (client.playerData.pingRTT/2);
-			float totalTimeToFFwd_Ms = server.clientRenderDelayMillis + (client.playerData.pingRTT*2);///2);
+			float totalTimeToFFwd = server.clientRenderDelayMillis + (client.playerData.pingRTT/2);
+			//float totalTimeToFFwd_Ms = server.clientRenderDelayMillis + (client.playerData.pingRTT*40);
 			float tpf_secs = (float)server.tickrateMillis / 1000f;
 			while (totalTimeToFFwd_Ms > 0) {
 				totalTimeToFFwd_Ms -= server.tickrateMillis;
-				super.processByServer(server, tpf_secs);
+				this.processByServer(server, tpf_secs);
 				if (this.removed) {
+					if (Globals.DEBUG_DELAYED_EXPLOSION) {
+						Globals.p("Bullet removed in mid ffwd");
+					}
 					break;
 				}
 			}
 
-			if (Globals.DEBUG_NO_BULLET) {
-				Globals.p("End of ffwding -------------------------");
+			if (Globals.DEBUG_DELAYED_EXPLOSION) {
+				//Globals.p("End of ffwding -------------------------");
 			}
 
 			// If server, send messages to clients to tell them it has been launched

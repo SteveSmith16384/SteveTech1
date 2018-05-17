@@ -997,15 +997,15 @@ ConsoleInputListener {
 	}
 
 
-	public void sendBulletExplosion(Vector3f pos, int num, float minForce, float maxForce) {
+	public void sendBulletExplosion(Vector3f pos, int num, float minForce, float maxForce) { // todo - rename
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
 		for (int i=0 ; i<num ; i++) {
 			NewEntityData data = new NewEntityData();
 			data.type = Globals.BULLET_EXPLOSION_EFFECT;
 			data.data.put("pos", pos);//this.getWorldTranslation());
-			data.data.put("minForce", minForce);//this.getWorldTranslation());
-			data.data.put("maxForce", maxForce);//this.getWorldTranslation());
+			data.data.put("minForce", minForce);
+			data.data.put("maxForce", maxForce);
 			nem.data.add(data);
 		}
 

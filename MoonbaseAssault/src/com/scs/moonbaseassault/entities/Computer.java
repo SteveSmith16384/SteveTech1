@@ -96,6 +96,8 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 
 				this.remove();
 
+				server.sendBulletExplosion(this.getMainNode().getWorldBound().getCenter(), 20, 3, 5);
+				
 				Vector3f pos = this.getWorldTranslation();
 				DestroyedComputer dc = new DestroyedComputer(game, game.getNextEntityID(), pos.x, pos.y, pos.z);
 				game.addEntity(dc);
