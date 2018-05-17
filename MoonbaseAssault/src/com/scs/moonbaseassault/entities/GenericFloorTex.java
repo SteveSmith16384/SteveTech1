@@ -19,7 +19,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public class GenericFloorTex extends PhysicalEntity {
 
 	public GenericFloorTex(IEntityController _game, int id, float x, float y, float z, float w, float d, String tex) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR_TEX, "GenericFloorTex", false, true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR_TEX, "GenericFloorTex", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

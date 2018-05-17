@@ -18,7 +18,7 @@ public class SmallExplosionEntity extends PhysicalEntity implements IProcessByCl
 	private float timeLeft = DURATION;
 	
 	public SmallExplosionEntity(IEntityController _game, int id, Vector3f pos) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.SMALL_EXPLOSION_EFFECT, "SmallExplosionEntity", true, false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.SMALL_EXPLOSION_EFFECT, "SmallExplosionEntity", true, false, true);
 
 		this.setWorldTranslation(pos);
 		if (_game.isServer()) {

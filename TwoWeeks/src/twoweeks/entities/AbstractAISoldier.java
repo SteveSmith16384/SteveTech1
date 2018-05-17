@@ -64,7 +64,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 	public AbstractAISoldier(IEntityController _game, int id, int type, float x, float y, float z, int _side, 
 			IAvatarModel _model, int _csInitialAnimCode, String name) {
-		super(_game, id, type, "AISoldier", true, false);
+		super(_game, id, type, "AISoldier", true, false, true);
 
 		side = _side;
 		soldierModel = _model; // Need it for dimensions for bb

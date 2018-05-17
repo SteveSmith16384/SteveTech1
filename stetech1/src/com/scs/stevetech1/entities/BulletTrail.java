@@ -15,7 +15,7 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 	private float timeLeft = DURATION;
 
 	public BulletTrail(IEntityController _game, int playerID,  Vector3f start, Vector3f end) {
-		super(_game, _game.getNextEntityID(), Globals.BULLET_TRAIL, "BulletTrail", true, false);
+		super(_game, _game.getNextEntityID(), Globals.BULLET_TRAIL, "BulletTrail", true, false, false);
 /*
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

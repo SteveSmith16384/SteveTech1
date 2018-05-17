@@ -40,6 +40,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.scs.simplephysics.ICollisionListener;
+import com.scs.simplephysics.SimpleNode;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimatedClientSide;
@@ -166,6 +167,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private float mouseSens;
 	private boolean gamePaused = true; // Prevent client doing stuff while setting up
 
+	// Subnodes
+	private int nodeSize = Globals.SUBNODE_SIZE;
+	public HashMap<String, Node> nodes;
+
 	// Entity systems
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
@@ -187,9 +192,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		//lobbyIP = _lobbyIP;
 		//lobbyPort = _lobbyPort;
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15); // todo - get 15,1 params from server?
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
+		
+		nodes = new HashMap<String, Node>();
 
 		mouseSens = _mouseSens;
 
@@ -922,7 +929,27 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				makeToonish(pe.getMainNode());
 				//}
 			}
-			this.getGameNode().attachChild(pe.getMainNode());
+			
+			BoundingBox bb = (BoundingBox)pe.getCollidable();
+			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
+			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
+				int x = (int)bb.getCenter().x / this.nodeSize;
+				int y = (int)bb.getCenter().y / this.nodeSize;
+				int z = (int)bb.getCenter().z / this.nodeSize;
+
+				String id = x + "_" + y + "_" + z;
+				if (!this.nodes.containsKey(id)) {
+					Node node = new Node(id);
+					this.nodes.put(id, node);
+					this.getGameNode().attachChild(node);
+				}
+				Node n = this.nodes.get(id);
+				n.attachChild(pe.getMainNode());			
+			} else {
+				this.getGameNode().attachChild(pe.getMainNode());
+			}
+			//this.getGameNode().attachChild(pe.getMainNode());
+			
 			if (pe.simpleRigidBody != null) {
 				this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
 				if (Globals.STRICT) {
@@ -975,6 +1002,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 		this.entitiesForProcessing.clear();
 		this.clientOnlyEntities.clear();
+		this.nodes.clear();
 		
 		if (Globals.STRICT) {
 			if (this.physicsController.getEntities().size() > this.entities.size()) {
@@ -1293,11 +1321,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					Globals.p("Actually removing entity " + id + ":" + e.getName());
 				}
 				this.clientOnlyEntities.remove(e);
-				/*if (e.requiresProcessing()) {
+				if (e.requiresProcessing()) {
 					this.entitiesForProcessing.remove(id);
-				}*/
+				}
 			} else {
 				Globals.pe("Entity id " + id + " not found for removal");
+				this.entitiesForProcessing.remove(id); // Just in case, otherwise we'll try and remove it foreer
 			}
 		}
 	}

@@ -636,12 +636,12 @@ ConsoleInputListener {
 			if (pe.getMainNode().getParent() != null) {
 				throw new RuntimeException("Entity already has a node");
 			}
-			Node parent = pe.getOwnerNode();
+			/*Node parent = pe.getOwnerNode();
 			if (parent != null) {
 				parent.attachChild(pe.getMainNode());
-			} else {
+			} else {*/
 				this.getGameNode().attachChild(pe.getMainNode());
-			}
+			//}
 			if (pe.simpleRigidBody != null) {
 				this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
 			}
@@ -997,13 +997,15 @@ ConsoleInputListener {
 	}
 
 
-	public void sendBulletExplosion(Vector3f pos, int num) {
+	public void sendBulletExplosion(Vector3f pos, int num, float minForce, float maxForce) {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
 		for (int i=0 ; i<num ; i++) {
 			NewEntityData data = new NewEntityData();
 			data.type = Globals.BULLET_EXPLOSION_EFFECT;
 			data.data.put("pos", pos);//this.getWorldTranslation());
+			data.data.put("minForce", minForce);//this.getWorldTranslation());
+			data.data.put("maxForce", maxForce);//this.getWorldTranslation());
 			nem.data.add(data);
 		}
 

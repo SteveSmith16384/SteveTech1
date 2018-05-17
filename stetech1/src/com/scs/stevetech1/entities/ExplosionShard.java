@@ -16,20 +16,11 @@ import com.scs.stevetech1.shared.IEntityController;
 import ssmith.lang.NumberFunctions;
 
 public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
-	/*
-	public static void Factory(IEntityController _game, int type, Vector3f pos, int num) {
-		for (int i=0 ; i<num ; i++) {
-			ExplosionShard s = new ExplosionShard(_game, _game.getNextEntityID(), type, pos.x, pos.y, pos.z);
-			_game.getGameNode().attachChild(s.getMainNode());
-
-		}
-	}
-	 */
 
 	private float timeLeft = 1.5f;
 	
-	public ExplosionShard(IEntityController _game, float x, float y, float z) {
-		super(_game, _game.getNextEntityID(), Globals.BULLET_EXPLOSION_EFFECT, "ExplosionShard", true, false);
+	public ExplosionShard(IEntityController _game, float x, float y, float z, float minForce, float maxForce) {
+		super(_game, _game.getNextEntityID(), Globals.BULLET_EXPLOSION_EFFECT, "ExplosionShard", true, false, true);
 
 		float s = .05f;
 		Box box1 = new Box(s, s, s);
@@ -59,8 +50,9 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		simpleRigidBody.setBounciness(.0001f);
 		//simpleRigidBody.setCollidable(false);
-		Vector3f force = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
-		simpleRigidBody.setAdditionalForce(force);
+		Vector3f forceDirection = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
+		float force = NumberFunctions.rndFloat(minForce,  maxForce);
+		simpleRigidBody.setAdditionalForce(forceDirection.multLocal(force));
 
 	}
 

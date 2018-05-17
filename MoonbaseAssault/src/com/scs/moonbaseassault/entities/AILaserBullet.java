@@ -81,7 +81,7 @@ public class AILaserBullet extends AbstractAIBullet {
 			//BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
 			//game.addEntity(expl);
 			MoonbaseAssaultServer server = (MoonbaseAssaultServer)game;
-			server.sendBulletExplosion(this.getWorldTranslation(), 4);
+			server.sendBulletExplosion(this.getWorldTranslation(), 4, .8f, 1.2f);
 		}
 		this.remove();
 	}

@@ -37,7 +37,7 @@ ISetRotation, IDrawOnHUD {
 	private static BitmapFont font_small;
 
 	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int side, String _playersName) {
-		super(game, eid, type, "EnemyAvatar", true, false);
+		super(game, eid, type, "EnemyAvatar", true, false, true);
 
 		anim = _anim;
 		playersName = _playersName;

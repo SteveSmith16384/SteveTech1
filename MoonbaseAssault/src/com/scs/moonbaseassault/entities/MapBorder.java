@@ -33,7 +33,7 @@ public class MapBorder extends PhysicalEntity {
 	public static final float BORDER_HEIGHT = 5f;
 
 	public MapBorder(IEntityController _game, int id, float x, float y, float z, float size, Vector3f dir) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.MAP_BORDER, "InvisibleMapBorder", false, true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.MAP_BORDER, "InvisibleMapBorder", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

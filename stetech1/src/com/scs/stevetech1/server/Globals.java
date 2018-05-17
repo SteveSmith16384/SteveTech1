@@ -15,7 +15,8 @@ public class Globals {
 
 	// Lots of consts for specific debugging output
 	public static final boolean TEST_AI = true;
-	
+	public static final boolean DEBUG_NO_BULLET = true;
+
 	public static final boolean TRANSPARENT_WALLS = false;
 	public static final boolean DEBUG_FALLING_THROUGH_FLOOR = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
@@ -27,7 +28,6 @@ public class Globals {
 	public static final boolean DEBUG_NO_AI_ANIM = false;
 	public static final boolean DEBUG_SLIDING_DOORS = false;
 	public static final boolean DEBUG_CLIENT_SERVER_FAR_APART = false;
-	public static final boolean DEBUG_NO_BULLET = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean SHOW_AVATAR_POS = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
@@ -73,9 +73,11 @@ public class Globals {
 	
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
 	public static final boolean ONLY_ADJUST_CLIENT_ON_MOVE = false; // Only adjust the client avatar's position when the player moves them.
+	public static final int SUBNODE_SIZE = 15;
 
 	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*7;
 	public static final int KRYO_OBJECT_BUFFER_SIZE = 4096*3*24;
+	
 	// Our movement speed
 	public static final float SMALLEST_MOVE_DIST = 0.001f;// 0.02f;
 	public static final float MAX_MOVE_DIST = 1f;

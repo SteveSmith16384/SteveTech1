@@ -21,7 +21,7 @@ import ssmith.lang.NumberFunctions;
 public class MountainMapBorder extends PhysicalEntity {
 
 	public MountainMapBorder(IEntityController _game, int id, float x, float y, float z, float size, Vector3f dir) {
-		super(_game, id, UndercoverAgentClientEntityCreator.MOUNTAIN_MAP_BORDER, "MountainMapBorder", false, true);
+		super(_game, id, UndercoverAgentClientEntityCreator.MOUNTAIN_MAP_BORDER, "MountainMapBorder", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

@@ -41,7 +41,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	private float range;
 
 	public AbstractPlayersBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntityContainer<AbstractPlayersBullet> container, int _side, ClientData _client, Vector3f _dir, boolean _useRay, float _speed, float _range) {
-		super(_game, entityId, type, name, true, false);
+		super(_game, entityId, type, name, true, false, true);
 
 		playerID = _playerOwnerId;
 		client = _client;
@@ -117,10 +117,10 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 			// fast forward it!
 			//float totalTimeToFFwd = server.clientRenderDelayMillis + (client.playerData.pingRTT/2);
-			float totalTimeToFFwd = server.clientRenderDelayMillis + (client.playerData.pingRTT*2);///2);
+			float totalTimeToFFwd_Ms = server.clientRenderDelayMillis + (client.playerData.pingRTT*2);///2);
 			float tpf_secs = (float)server.tickrateMillis / 1000f;
-			while (totalTimeToFFwd > 0) {
-				totalTimeToFFwd -= server.tickrateMillis;
+			while (totalTimeToFFwd_Ms > 0) {
+				totalTimeToFFwd_Ms -= server.tickrateMillis;
 				super.processByServer(server, tpf_secs);
 				if (this.removed) {
 					break;

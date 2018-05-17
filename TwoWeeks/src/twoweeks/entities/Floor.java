@@ -22,7 +22,7 @@ import twoweeks.client.TwoWeeksClientEntityCreator;
 public class Floor extends PhysicalEntity {
 
 	public Floor(IEntityController _game, int id, String name, float x, float yTop, float z, float w, float h, float d, String tex) {
-		super(_game, id, TwoWeeksClientEntityCreator.FLOOR, name, false, true);
+		super(_game, id, TwoWeeksClientEntityCreator.FLOOR, name, false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

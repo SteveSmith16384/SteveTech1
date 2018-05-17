@@ -20,7 +20,7 @@ public class House extends PhysicalEntity {
 	private static final float d = 3f;
 	
 	public House(IEntityController _game, int id, float x, float y, float z, float rotDegrees) {
-		super(_game, id, TestGameClientEntityCreator.HOUSE, "House", false, true);
+		super(_game, id, TestGameClientEntityCreator.HOUSE, "House", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

@@ -18,9 +18,9 @@ import com.scs.stevetech1.shared.IEntityController;
 public class DestroyedComputer extends PhysicalEntity{
 
 	private static final float SIZE = 0.8f;
-	
+
 	public DestroyedComputer(IEntityController _game, int id, float x, float y, float z) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.DESTROYED_COMPUTER, "Destroyed Computer", false, true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.DESTROYED_COMPUTER, "Destroyed Computer", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -29,21 +29,20 @@ public class DestroyedComputer extends PhysicalEntity{
 		float w = SIZE;
 		float h = SIZE/2;
 		float d = SIZE;
-		
+
 		Box box1 = new Box(w/2, h/2, d/2);
 
 		Geometry geometry = new Geometry("DestroyedComputer", box1);
 		if (!_game.isServer()) {
 			geometry.setShadowMode(ShadowMode.CastAndReceive);
-			
+
 			TextureKey key3 = new TextureKey("Textures/spaceship_wall.png");
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
 
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-				floor_mat.setTexture("DiffuseMap", tex3);
+			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			floor_mat.setTexture("DiffuseMap", tex3);
 			geometry.setMaterial(floor_mat);
 		}
 		this.mainNode.attachChild(geometry);

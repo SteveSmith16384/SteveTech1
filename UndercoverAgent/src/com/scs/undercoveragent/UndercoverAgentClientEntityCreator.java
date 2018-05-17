@@ -8,7 +8,6 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
-import com.scs.stevetech1.entities.DebuggingBox;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
@@ -46,8 +45,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 	public static final int SNOW_HILL_2 = 13;
 	public static final int SNOW_HILL_3 = 14;
 	public static final int SNOW_HILL_4 = 15;
-	//public static final int DEBUGGING_SPHERE = 16;
-	public static final int DEBUGGING_BOX = 17;
 
 	public UndercoverAgentClientEntityCreator() {
 		super();
@@ -231,14 +228,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		{
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			DebuggingSphere hill = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true, false);
-			return hill;
-		}
-
-		case DEBUGGING_BOX:
-		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
-			Vector3f size = (Vector3f)msg.data.get("size");
-			DebuggingBox hill = new DebuggingBox(game, Globals.DEBUGGING_SPHERE, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, true);
 			return hill;
 		}
 

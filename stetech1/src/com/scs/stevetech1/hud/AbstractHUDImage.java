@@ -8,6 +8,7 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.server.Globals;
 
 public class AbstractHUDImage extends Picture implements IEntity, IProcessByClient {
 
@@ -36,6 +37,10 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 
 	@Override
 	public void processByClient(IClientApp client, float tpf) {
+		if (Globals.HIDE_BELLS_WHISTLES) {
+			this.remove();
+			return;
+		}
 		if (timeLeftSecs > 0) {
 			this.timeLeftSecs -= tpf;
 			if (this.timeLeftSecs <= 0) {

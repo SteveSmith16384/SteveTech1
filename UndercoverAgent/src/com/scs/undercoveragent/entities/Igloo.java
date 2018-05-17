@@ -16,7 +16,7 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 public class Igloo extends PhysicalEntity {
 
 	public Igloo(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
-		super(_game, id, UndercoverAgentClientEntityCreator.IGLOO, "Igloo", false, true);
+		super(_game, id, UndercoverAgentClientEntityCreator.IGLOO, "Igloo", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

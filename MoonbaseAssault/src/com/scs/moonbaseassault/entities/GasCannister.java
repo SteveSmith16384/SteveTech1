@@ -27,7 +27,7 @@ public class GasCannister extends PhysicalEntity implements IDamagable {
 	private float health = 100;
 
 	public GasCannister(IEntityController _game, int id, float x, float y, float z) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.GAS_CANNISTER, "GasCannister", false, true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.GAS_CANNISTER, "GasCannister", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

@@ -42,13 +42,15 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f originalPos = new Vector3f();
 
 	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
-	public Node owner;
-
-	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing, boolean _blocksView) {
+	//public Node owner; // So we know what to attach it to
+	public boolean moves;
+	
+	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing, boolean _blocksView, boolean _moves) {
 		super(_game, id, type, _name, _requiresProcessing);
 
 		blocksView = _blocksView;
-
+		moves = _moves;
+		
 		historicalPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode_" + id);
 
@@ -239,6 +241,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void adjustWorldTranslation(Vector3f offset) {
+		if (!this.moves) {
+			Globals.p("Warning: moving an entity that is marked as not moving!");
+		}
 		this.setWorldTranslation(this.getWorldTranslation().add(offset));
 	}
 
@@ -349,11 +354,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return false;
 	}
 
-
+/*
 	public Node getOwnerNode() {
 		return owner; // Override if the entity should have a different parent node to the default 
 	}
-
+*/
 
 	@Override
 	public Collidable getCollidable() {

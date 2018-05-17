@@ -286,11 +286,9 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case Globals.BULLET_EXPLOSION_EFFECT:
 		{
-			/*if (Globals.DEBUG_SECONDARY_EXPLOSION) {
-				Globals.p("Rcvd BulletExplosionEntity");
-			}*/
-			//BulletExplosionEntity expl = new BulletExplosionEntity(game, id, pos);
-			ExplosionShard expl = new ExplosionShard(game, pos.x, pos.y, pos.z);
+			float minForce = (float) msg.data.get("minForce");
+			float maxForce = (float) msg.data.get("maxForce");
+			ExplosionShard expl = new ExplosionShard(game, pos.x, pos.y, pos.z, minForce, maxForce);
 			return expl;
 		}
 

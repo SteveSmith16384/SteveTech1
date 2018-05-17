@@ -24,7 +24,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 	//private float distLeft = 30f;
 
 	public AbstractAIBullet(IEntityController _game, int id, int type, float x, float y, float z, String name, int _side, IEntity _shooter, Vector3f _dir, boolean _useRay, float _speed, float _range) {
-		super(_game, id, type, name, true, false);
+		super(_game, id, type, name, true, false, true);
 
 		side = _side;
 		shooter = _shooter;

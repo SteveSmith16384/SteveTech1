@@ -22,7 +22,7 @@ public class FlyingSpaceship2 extends PhysicalEntity implements ISetRotation, IG
 	private static final float FWD_SPEED = 0.1f;
 
 	public FlyingSpaceship2(IEntityController _game, int id, float x, float y, float z) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.FLYING_SPACESHIP2, "FlyingSpaceship2", true, false);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.FLYING_SPACESHIP2, "FlyingSpaceship2", true, false, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

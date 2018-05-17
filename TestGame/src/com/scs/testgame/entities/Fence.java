@@ -22,7 +22,7 @@ public class Fence extends PhysicalEntity {
 	private static final float WIDTH = 2f;
 
 	public Fence(IEntityController _game, int id, float x, float height, float z, float rot, String tex) {
-		super(_game, id, TestGameClientEntityCreator.FENCE, "Fence", false, true);
+		super(_game, id, TestGameClientEntityCreator.FENCE, "Fence", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

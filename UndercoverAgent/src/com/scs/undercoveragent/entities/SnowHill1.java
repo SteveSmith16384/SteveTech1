@@ -17,7 +17,7 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 public class SnowHill1 extends PhysicalEntity {
 
 	public SnowHill1(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
-		super(_game, id, UndercoverAgentClientEntityCreator.SNOW_HILL_1, "SnowHill1", false, true);
+		super(_game, id, UndercoverAgentClientEntityCreator.SNOW_HILL_1, "SnowHill1", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

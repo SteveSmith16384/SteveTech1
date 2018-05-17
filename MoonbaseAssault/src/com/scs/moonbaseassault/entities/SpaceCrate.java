@@ -20,7 +20,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public class SpaceCrate extends PhysicalEntity implements IAffectedByPhysics {
 
 	public SpaceCrate(IEntityController _game, int id, float x, float y, float z, float w, float h, float d, String tex, float rotDegrees) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.CRATE, "Space Crate", true, true);
+		super(_game, id, MoonbaseAssaultClientEntityCreator.CRATE, "Space Crate", true, true, true);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();

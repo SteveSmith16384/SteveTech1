@@ -39,7 +39,7 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 	private static BitmapFont font_small;
 
 	public Computer(IEntityController _game, int id, float x, float y, float z, int mx, int my) {
-		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", true, true); // Requires processing so it can be a target
+		super(_game, id, MoonbaseAssaultClientEntityCreator.COMPUTER, "Computer", true, true, false); // Requires processing so it can be a target
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
