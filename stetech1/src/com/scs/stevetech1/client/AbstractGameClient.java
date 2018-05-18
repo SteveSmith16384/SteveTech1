@@ -207,7 +207,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			e.printStackTrace();
 		}
 		settings.setUseJoysticks(true);
-		//settings.setAudioRenderer(null); // Avoid error with no soundcard
+		
+		// Error if no soundcard - todo
+		//settings.setAudioRenderer(null); // Todo Avoid error with no soundcard
+		//super.audioRenderer = null;
+			
 		settings.setTitle(Globals.HIDE_BELLS_WHISTLES ? "Client" : appTitle);// + " (v" + Settings.VERSION + ")");
 		settings.setSettingsDialogImage(logoImage);
 
@@ -219,8 +223,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} catch (BackingStoreException e) {
 			e.printStackTrace();
 		}
-
-		//start();
 	}
 
 
@@ -927,7 +929,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				//}
 			}
 			
-			BoundingBox bb = (BoundingBox)pe.getCollidable();
+			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
 			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
 			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
 				int x = (int)bb.getCenter().x / this.nodeSize;

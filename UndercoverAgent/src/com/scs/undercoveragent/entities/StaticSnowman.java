@@ -38,10 +38,6 @@ public class StaticSnowman extends PhysicalEntity {
 
 		model.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
-
 	}
 
 

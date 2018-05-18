@@ -17,7 +17,7 @@ import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	private static final boolean DEBUG_AUTOMOVING = true;
+	private static final boolean DEBUG_AUTOMOVING = false;
 
 	private static final float AUTOMOVE_FRAC = .1f;
 	private static final float MAX_STEP_HEIGHT = 0.25f; // todo - make config
@@ -120,7 +120,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			// Check we're not already colliding *before* we've even moved
 			List<SimpleRigidBody<T>> crs = this.checkForCollisions();
 			if (crs.size() != 0) {
-				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
+				//todo - re-add System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				this.moveAwayFrom(crs);
 				return; // Don't bother moving any more!
 			}

@@ -1,6 +1,5 @@
 package com.scs.stevetech1.weapons;
 
-import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;

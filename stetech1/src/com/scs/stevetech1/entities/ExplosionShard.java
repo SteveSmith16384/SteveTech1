@@ -17,7 +17,7 @@ import ssmith.lang.NumberFunctions;
 
 public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 
-	private float timeLeft = 1.5f;
+	private float timeLeft = 3f;//1.5f;
 	
 	public ExplosionShard(IEntityController _game, float x, float y, float z, float minForce, float maxForce) {
 		super(_game, _game.getNextEntityID(), Globals.BULLET_EXPLOSION_EFFECT, "ExplosionShard", true, false, true);

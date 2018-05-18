@@ -168,6 +168,9 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 					// Move spatial
 					Vector3f offset = this.dir.mult(speed * tpf_secs);
 					this.adjustWorldTranslation(offset);
+					if (Globals.DEBUG_DELAYED_EXPLOSION) {
+						Globals.p("Server," + System.currentTimeMillis() + ",Pos," + this.getWorldTranslation());
+					}
 				}
 			}
 
@@ -201,6 +204,9 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 					// Move spatial
 					Vector3f offset = this.dir.mult(speed * tpf_secs);
 					this.adjustWorldTranslation(offset);
+					if (Globals.DEBUG_DELAYED_EXPLOSION) {
+						Globals.p("Client," + System.currentTimeMillis() + ",Pos," + this.getWorldTranslation());
+					}
 				}
 			}
 
