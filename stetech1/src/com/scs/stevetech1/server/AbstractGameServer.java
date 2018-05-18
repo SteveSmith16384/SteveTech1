@@ -373,16 +373,15 @@ ConsoleInputListener {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
-			// todo - close connection?
 			return;
 		}
 		if (!this.doWeHaveSpaces()) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces available"));
-			// todo - close connection?
 			return;
 		}
 
 		client.clientStatus = ClientData.ClientStatus.Accepted;
+		
 		client.side = getSide(client);
 		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.playerName, client.side);
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side)); // Must be before we send the avatar so they know it's their avatar
@@ -406,10 +405,7 @@ ConsoleInputListener {
 				players.add(client.playerData);
 			}
 		}
-		//Globals.p("Sending SimpleGameDataMessage with Game ID of " + gameData.gameID);
 		this.gameNetworkServer.sendMessageToAll(new SimpleGameDataMessage(this.gameData, players));
-
-
 	}
 
 
@@ -854,12 +850,12 @@ ConsoleInputListener {
 		return this.entities.size();
 	}
 
-
+/*
 	@Override
 	public void addClientOnlyEntity(IEntity e) {
 		throw new RuntimeException("Trying to add client-only entity to server");
 	}
-
+*/
 
 	public void handleCommand(String cmd) {
 		if (cmd.equals("warp")) {

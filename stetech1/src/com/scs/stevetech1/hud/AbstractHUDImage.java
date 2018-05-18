@@ -29,7 +29,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 		this.setPosition(w/2, h/2); // Centre it
 
 		guiNode.attachChild(this);
-		game.addClientOnlyEntity(this);
+		game.addEntity(this);
 		//game.ent
 
 	}
@@ -71,7 +71,6 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 	@Override
 	public void remove() {
 		this.removeFromParent();
-		//game.removeClientOnlyEntity(this);
 		game.removeEntity(this.getID());
 		
 	}
@@ -91,7 +90,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 
 	@Override
 	public boolean hasNotBeenRemoved() {
-		return true;
+		return this.parent != null;
 	}
 
 }

@@ -14,16 +14,18 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean TEST_AI = false;
+	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
+	public static final boolean NO_AI_UNITS = true;
 	public static final boolean DEBUG_DELAYED_EXPLOSION = true;
 
+	public static final boolean FEW_MODELS = false;
+	public static final boolean TEST_AI = false;
 	public static final boolean TRANSPARENT_WALLS = false;
 	public static final boolean DEBUG_FALLING_THROUGH_FLOOR = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
 	public static final boolean DEBUG_BULLET_HIT = false;
 	public static final boolean DEBUG_AI_TARGETTING = false;
 	public static final boolean DEBUG_HUD = false;
-	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean DEBUG_AVATAR_SET = false;
 	public static final boolean DEBUG_NO_AI_ANIM = false;
 	public static final boolean DEBUG_SLIDING_DOORS = false;
@@ -33,7 +35,6 @@ public class Globals {
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
-	public static final boolean SHOW_AVATAR_BOUNDS = false;
 	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;
@@ -42,7 +43,6 @@ public class Globals {
 	public static final boolean PROFILE_SERVER = false;
 	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;
 	public static final boolean SHOW_NUM_ENT_UPDATES_SENT = false;
-	public static final boolean FEW_MODELS = false;
 	public static final boolean EMPTY_MAP = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_CLIENT_ROTATION = false;

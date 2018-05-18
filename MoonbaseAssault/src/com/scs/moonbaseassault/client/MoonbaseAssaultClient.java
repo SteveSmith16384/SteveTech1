@@ -12,7 +12,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.scs.moonbaseassault.client.hud.MoonbaseAssaultHUD;
 import com.scs.moonbaseassault.entities.Computer;
-import com.scs.moonbaseassault.entities.SmallExplosionEntity;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
@@ -244,6 +243,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 			if (currentHUDTextImage.getParent() != null) {
 				currentHUDTextImage.remove();
 			}
+			currentHUDTextImage = null;
 		}
 	}
 
@@ -274,8 +274,8 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
-				SmallExplosionEntity e = new SmallExplosionEntity(this, this.getNextEntityID(), new Vector3f(1f, 1f, 1f));
-				this.addClientOnlyEntity(e);
+				//SmallExplosionEntity e = new SmallExplosionEntity(this, this.getNextEntityID(), new Vector3f(1f, 1f, 1f));
+				//this.addEntity(e);
 			}
 		} else {
 			super.onAction(name, value, tpf);

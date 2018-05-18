@@ -15,7 +15,6 @@ import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.PlayerLaserBullet;
 import com.scs.moonbaseassault.entities.PlayersGrenade;
 import com.scs.moonbaseassault.entities.SlidingDoor;
-import com.scs.moonbaseassault.entities.SmallExplosionEntity;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
 import com.scs.moonbaseassault.entities.SoldierEnemyAvatar;
 import com.scs.moonbaseassault.entities.SpaceCrate;
@@ -51,7 +50,7 @@ public class MoonbaseAssaultClientEntityCreator {
 	public static final int DESTROYED_COMPUTER = 12;
 	public static final int GRENADE = 13;
 	public static final int GRENADE_LAUNCHER = 14;
-	public static final int SMALL_EXPLOSION_EFFECT = 15;
+	//public static final int SMALL_EXPLOSION_EFFECT = 15;
 	public static final int AI_LASER_BULLET = 17;
 	public static final int HITSCAN_RIFLE = 18;
 	public static final int GAS_CANNISTER = 21;
@@ -234,11 +233,11 @@ public class MoonbaseAssaultClientEntityCreator {
 			return crate;
 		}
 
-		case SMALL_EXPLOSION_EFFECT:
+		/*case SMALL_EXPLOSION_EFFECT:
 		{
 			SmallExplosionEntity expl = new SmallExplosionEntity(game, id, pos);
 			return expl;
-		}
+		}*/
 
 		case Globals.DEBUGGING_SPHERE:
 		{

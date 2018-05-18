@@ -122,8 +122,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		super.simpleUpdate(tpf_secs);
 		
 		if (this.gameData.isInGame()) {
-			if (!Globals.TEST_AI) {
-			this.createUnitsSystem.process();
+			if (!Globals.TEST_AI && !Globals.NO_AI_UNITS) {
+				this.createUnitsSystem.process();
 			}
 		}
 	}

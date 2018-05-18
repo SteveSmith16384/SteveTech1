@@ -325,15 +325,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			tpf_secs = 1;
 		}
 
-		if (Globals.STRICT) {
-			if (this.physicsController.getEntities().size() > this.entities.size()) {
-				Globals.pe("Warning: more simple rigid bodies than entities!");
-			}
-			if (this.currentAvatar == null ) {
-				//Globals.p("Warning: No current avatar");
-			}
-		}
-
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 			renderTime = serverTime - clientRenderDelayMillis; // Render from history
@@ -866,13 +857,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			throw new RuntimeException("ID must be positive if not client-side!");
 		}*/
 
-		synchronized (entities) {
+		//synchronized (entities) {
 			if (e.getID() == 0) {
 				throw new RuntimeException("No entity id!");
 			}
 			if (e.getGameID() != this.getGameID()) {
 				throw new RuntimeException("Entity is for game " + e.getGameID() + ", current game is " + this.getGameID());
 			}
+			if (e.getID() > 0) {
 			if (this.entities.containsKey(e.getID())) {
 				/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Remove entity " + e + " since it already exists");
@@ -883,9 +875,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				this.actuallyRemoveEntity(e2.getID());*/
 				throw new RuntimeException("Entity " + e + " already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
 			}
-			if (e.getID() > 0) {
 				this.entities.put(e.getID(), e);
 			} else {
+				if (this.getClientOnlyEntityById(e.getID()) != null) {
+					throw new RuntimeException("Entity " + e + " already exists (client-only)"); // Don't replace it, as entity has linked to other stuff, like Abilities
+				}
 				this.clientOnlyEntities.add(e);
 			}
 			if (e.requiresProcessing()) {
@@ -903,7 +897,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				// Avatar has been replaced
 				this.setAvatar(e);
 			}
-		}
+		//}
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
@@ -930,7 +924,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			
 			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
-			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
+			boolean tooBig = true;// todo  bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
 			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
 				int x = (int)bb.getCenter().x / this.nodeSize;
 				int y = (int)bb.getCenter().y / this.nodeSize;
@@ -991,7 +985,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	private void removeAllEntities() {
-		Globals.p("Removing all entities");
+		Globals.p("REMOVING ALL ENTITIES=======================");
 		this.entitiesToAddToGame.clear();
 		while (this.entities.size() > 0) {
 			Iterator<IEntity> it = this.entities.values().iterator();
@@ -1149,19 +1143,19 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	}
 
-
+/*
 	//@Override
 	public void addClientOnlyEntity(IEntity e) {
 		if (e.getID() >= 0) {
 			throw new RuntimeException("Client-only entities must have negative id");
 		}
 		//this.clientOnlyEntitiesToAdd.add(e);
-		actuallyAddClientOnlyEntity(e);
+		actuallyAddClientOnlyEntity(e);  //this.clientOnlyEntities
 		if (e.requiresProcessing()) {
 			this.entitiesForProcessing.add(e); // todo - strict check if already exists
 		}
 	}
-
+*/
 
 	@Override
 	public int getNextEntityID() {
@@ -1268,7 +1262,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	}
 
-
+/*
 	private void actuallyAddClientOnlyEntity(IEntity e) {
 		//this.clientOnlyEntitiesToAdd.remove(e);
 		synchronized (entities) {
@@ -1306,14 +1300,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		}
 	}
-
+*/
 
 	/*
 	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
 	 */
 	private void actuallyRemoveClientOnlyEntity(int id) {
 		//this.clientOnlyEntitiesToRemove.removeFirstOccurrence(id);
-		synchronized (entities) {
+		//synchronized (entities) {
 			IEntity e = getClientOnlyEntityById(id);//this.clientOnlyEntities.get(id);
 			if (e != null) {
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
@@ -1327,7 +1321,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				Globals.pe("Entity id " + id + " not found for removal");
 				//this.entitiesForProcessing.remove(id); // Just in case, otherwise we'll try and remove it foreer
 			}
-		}
+		//}
 	}
 
 
