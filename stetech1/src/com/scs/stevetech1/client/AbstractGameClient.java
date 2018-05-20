@@ -102,6 +102,8 @@ import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 import ssmith.util.TextConsole;
 
+// todo - newentmsg not scheduled but new game id is
+// 
 public abstract class AbstractGameClient extends SimpleApplication implements IClientApp, IEntityController, 
 ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, ConsoleInputListener { 
 
@@ -517,7 +519,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 			this.gameData = gsm.gameData;
 			if (oldGameData == null || oldGameData.gameID != gsm.gameData.gameID) {
-				Globals.p("Game id is now " + gameData.gameID);
+				Globals.p("Client Game id is now " + gameData.gameID);
 			}
 			this.playersList = gsm.players;
 			if (oldGameData == null) {

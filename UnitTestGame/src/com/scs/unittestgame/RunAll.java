@@ -10,8 +10,8 @@ import ssmith.lang.Functions;
 
 public class RunAll {
 
-	public static final int NUM_ENTITIES = 30;
-	
+	public static final int NUM_ENTITIES = 5;
+
 	public static void main(String[] args) {
 		try {
 			//RunAll();
@@ -28,35 +28,28 @@ public class RunAll {
 
 		server = new UnitTestGameServer();
 
-		for (int i=0 ; i<3 ; i++) {
+		for (int i=0 ; i<1 ; i++) {
 			instances.add(new UnitTestGameClient());
 		}
 
 		Functions.sleep(10 * 1000);
 
-		//while (server.getGameData().isInGame())
 		for(SimpleApplication app : instances) {
 			UnitTestGameClient client = (UnitTestGameClient)app;
 			Globals.p("Num ents on client: " + client.entities.size());
 			if (client.entities.size() != server.getNumEntities()) {
-				throw new RuntimeException("Inconsistent entities!");
+				throw new RuntimeException("Inconsistent entities!  Client=" + client.getNumEntities() + ", Server=" + server.getNumEntities());
 			}
-
 		}
-
 
 		// Close clients
 		for(SimpleApplication app : instances) {
 			UnitTestGameClient client = (UnitTestGameClient)app;
 			client.quit("Manual");
-
 		}
 
 		Globals.p("Finished.");
-		
 		Functions.sleep(50000);
-
-
 	}
 
 
@@ -70,12 +63,12 @@ public class RunAll {
 			Globals.p("Num ents on client: " + client.getNumEntities());
 			Globals.p("Num ents on server: " + server.getNumEntities());
 			if (client.getNumEntities() != server.getNumEntities()) {
-				throw new RuntimeException("Inconsistent entities!");
+				throw new RuntimeException("Inconsistent entities!  Client=" + client.getNumEntities() + ", Server=" + server.getNumEntities());
 			}
 
 			client.quit("Manual");
 		}
-		
+
 		UnitTestGameClient client = new UnitTestGameClient();
 		Functions.sleep(10 * 1000);
 
@@ -90,7 +83,7 @@ public class RunAll {
 		client.quit("Manual");
 
 		Globals.p("Finished.");
-		
+
 		Functions.sleep(50000);
 
 

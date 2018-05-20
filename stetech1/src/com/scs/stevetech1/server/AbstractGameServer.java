@@ -417,17 +417,6 @@ ConsoleInputListener {
 			Globals.p("Removing all entities");
 		}
 
-		// remove All Entities
-		/*synchronized (this.clients) {
-			for (ClientData c : this.clients.values()) {
-				AbstractServerAvatar avatar = c.avatar;
-				if (avatar != null) {
-					avatar.remove();
-					c.avatar = null;
-				}
-			}
-		}*/
-
 		for (IEntity e : this.entities.values()) {
 			e.remove();
 		}
@@ -993,15 +982,18 @@ ConsoleInputListener {
 	}
 
 
-	public void sendBulletExplosion(Vector3f pos, int num, float minForce, float maxForce) { // todo - rename
+	public void sendBulletExplosion(Vector3f pos, int num, float minForce, float maxForce, float minSize, float maxSize, String tex) { // todo - rename
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
 		for (int i=0 ; i<num ; i++) {
 			NewEntityData data = new NewEntityData();
 			data.type = Globals.BULLET_EXPLOSION_EFFECT;
 			data.data.put("pos", pos);//this.getWorldTranslation());
-			data.data.put("minForce", minForce);
+			data.data.put("force", minForce);
 			data.data.put("maxForce", maxForce);
+			data.data.put("minSize", minSize);
+			data.data.put("maxSize", maxSize);
+			data.data.put("tex", tex);
 			nem.data.add(data);
 		}
 

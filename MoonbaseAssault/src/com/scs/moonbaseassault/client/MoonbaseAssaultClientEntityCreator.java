@@ -287,6 +287,8 @@ public class MoonbaseAssaultClientEntityCreator {
 		{
 			float minForce = (float) msg.data.get("minForce");
 			float maxForce = (float) msg.data.get("maxForce");
+			float minSize = (float) msg.data.get("minForce");
+			float maxSize = (float) msg.data.get("maxForce");
 			ExplosionShard expl = new ExplosionShard(game, pos.x, pos.y, pos.z, minForce, maxForce);
 			return expl;
 		}

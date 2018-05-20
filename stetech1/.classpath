@@ -8,11 +8,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-desktop"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl3"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jogl"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-effects"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-jogg"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-plugins"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-terrain"/>
 	<classpathentry kind="lib" path="libs/kryonet/jsonbeans-0.5.jar"/>
 	<classpathentry kind="lib" path="libs/kryonet/kryo-2.23.1-SNAPSHOT-all-debug.jar"/>
