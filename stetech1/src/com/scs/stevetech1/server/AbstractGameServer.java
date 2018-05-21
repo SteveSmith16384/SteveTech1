@@ -62,6 +62,7 @@ import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
 import com.scs.stevetech1.systems.server.ServerPingSystem;
 
 import ssmith.lang.Functions;
+import ssmith.lang.NumberFunctions;
 import ssmith.util.ConsoleInputListener;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
@@ -986,13 +987,15 @@ ConsoleInputListener {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
 		for (int i=0 ; i<num ; i++) {
+			Vector3f forceDirection = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
+			forceDirection.multLocal(NumberFunctions.rndFloat(minForce,  maxForce));
+			float size = NumberFunctions.rndFloat(minSize,  maxSize);
+
 			NewEntityData data = new NewEntityData();
 			data.type = Globals.BULLET_EXPLOSION_EFFECT;
 			data.data.put("pos", pos);//this.getWorldTranslation());
-			data.data.put("force", minForce);
-			data.data.put("maxForce", maxForce);
-			data.data.put("minSize", minSize);
-			data.data.put("maxSize", maxSize);
+			data.data.put("forceDirection", forceDirection);
+			data.data.put("size", size);
 			data.data.put("tex", tex);
 			nem.data.add(data);
 		}

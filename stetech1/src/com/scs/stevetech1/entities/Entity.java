@@ -24,7 +24,7 @@ public abstract class Entity implements IEntity, Savable {
 
 	public Entity(IEntityController _module, int _id, int _type, String _name, boolean _requiresProcessing) {
 		super();
-		
+
 		id = _id;
 		type = _type;
 		game = _module;
@@ -44,11 +44,7 @@ public abstract class Entity implements IEntity, Savable {
 
 	public void remove() {
 		if (!removed) {
-			//if (!this.clientSide) {
-				game.removeEntity(this.id);
-			/*} else {
-				
-			}*/
+			game.removeEntity(this.id);
 			removed = true;
 		}
 	}

@@ -285,11 +285,10 @@ public class MoonbaseAssaultClientEntityCreator {
 
 		case Globals.BULLET_EXPLOSION_EFFECT:
 		{
-			float minForce = (float) msg.data.get("minForce");
-			float maxForce = (float) msg.data.get("maxForce");
-			float minSize = (float) msg.data.get("minForce");
-			float maxSize = (float) msg.data.get("maxForce");
-			ExplosionShard expl = new ExplosionShard(game, pos.x, pos.y, pos.z, minForce, maxForce);
+			Vector3f forceDirection = (Vector3f) msg.data.get("forceDirection");
+			float size = (float) msg.data.get("size");
+			String tex = (String) msg.data.get("tex");
+			ExplosionShard expl = new ExplosionShard(game, pos.x, pos.y, pos.z, size, forceDirection, tex);
 			return expl;
 		}
 

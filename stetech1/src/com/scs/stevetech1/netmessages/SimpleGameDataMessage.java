@@ -22,7 +22,7 @@ public class SimpleGameDataMessage extends MyAbstractMessage {
 
 	
 	public SimpleGameDataMessage(SimpleGameData _gameData, ArrayList<SimplePlayerData> _players) {
-		super(true, true);
+		super(true, false); // Not scheduled since we need to know the correct game ID for when we receive new entities
 		
 		this.gameData = _gameData;
 		players = _players;

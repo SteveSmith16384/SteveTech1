@@ -19,11 +19,11 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 
 	private float timeLeft = 3f;//1.5f;
 	
-	public ExplosionShard(IEntityController _game, float x, float y, float z, float size, float force, String tex) {
+	public ExplosionShard(IEntityController _game, float x, float y, float z, float size, Vector3f forceDirection, String tex) {
 		super(_game, _game.getNextEntityID(), Globals.BULLET_EXPLOSION_EFFECT, "ExplosionShard", true, false, true);
 
-		float s = .05f; // todo
-		Box box1 = new Box(s, s, s);
+		//float s = .05f; // todo
+		Box box1 = new Box(size, size, size);
 		Geometry geometry = new Geometry("Crate", box1);
 		TextureKey key3 = new TextureKey(tex);//"Textures/sun.jpg");
 		key3.setGenerateMips(true);
@@ -50,9 +50,9 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		simpleRigidBody.setBounciness(.0001f);
 		//simpleRigidBody.setCollidable(false);
-		Vector3f forceDirection = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
-		float force = NumberFunctions.rndFloat(minForce,  maxForce);
-		simpleRigidBody.setAdditionalForce(forceDirection.multLocal(force));
+		//Vector3f forceDirection = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
+		//float force = NumberFunctions.rndFloat(minForce,  maxForce);
+		simpleRigidBody.setAdditionalForce(forceDirection);
 
 	}
 
