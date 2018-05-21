@@ -47,11 +47,11 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		mainNode.setUserData(Globals.ENTITY, this);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
-		simpleRigidBody.setBounciness(.0001f);
+		simpleRigidBody.setBounciness(0.5f);
 		//simpleRigidBody.setCollidable(false);
 		//Vector3f forceDirection = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
 		//float force = NumberFunctions.rndFloat(minForce,  maxForce);
-		simpleRigidBody.setAdditionalForce(forceDirection);
+		simpleRigidBody.setLinearVelocity(forceDirection);
 
 	}
 
@@ -63,6 +63,11 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		timeLeft -= tpf_secs;
 		if (timeLeft <= 0) {
 			this.remove();
+			if (Globals.STRICT) {
+				if (this.getMainNode().getParent() != null) {
+					Globals.pe("Warning: still have a parent!");
+				}
+			}
 		}
 	}
 

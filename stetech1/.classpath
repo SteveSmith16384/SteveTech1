@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="libs/kryonet/jsonbeans-0.5.jar"/>
 	<classpathentry kind="lib" path="libs/kryonet/kryo-2.23.1-SNAPSHOT-all-debug.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-blender"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

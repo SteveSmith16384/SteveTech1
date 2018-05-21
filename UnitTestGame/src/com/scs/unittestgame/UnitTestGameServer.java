@@ -96,7 +96,7 @@ public class UnitTestGameServer extends AbstractGameServer {
 
 	@Override
 	public int getMinPlayersRequiredForGame() {
-		return 0;
+		return 1;
 	}
 
 }

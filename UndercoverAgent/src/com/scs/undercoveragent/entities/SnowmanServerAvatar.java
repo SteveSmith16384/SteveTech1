@@ -1,14 +1,16 @@
 package com.scs.undercoveragent.entities;
 
+import com.scs.stevetech1.components.ICanScorePoints;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.undercoveragent.UASimplePlayerData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 import com.scs.undercoveragent.models.SnowmanModel;
 
-public class SnowmanServerAvatar extends AbstractServerAvatar {
+public class SnowmanServerAvatar extends AbstractServerAvatar implements ICanScorePoints {
 	
 	public SnowmanServerAvatar(IEntityController _module, ClientData client, IInputDevice _input, int eid) {
 		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), 2f, 3f, 2f);
@@ -30,4 +32,12 @@ public class SnowmanServerAvatar extends AbstractServerAvatar {
 	}
 
 
+	@Override
+	public void incScore(int i) {
+		UASimplePlayerData data = (UASimplePlayerData)this.client.playerData;
+		data.score += i;
+		this.sendStatusUpdateMessage(false);
+	}
+
+	
 }

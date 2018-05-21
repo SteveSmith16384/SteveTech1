@@ -25,7 +25,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame, ICanScorePoints, 
+public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame,  
 IGetRotation, IAnimatedServerSide, ITargetable {
 
 	private AbstractGameServer server;
@@ -166,14 +166,6 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	}
 
 
-
-	@Override
-	public void incScore(int i) {
-		//todo client.incScore(i);
-		this.sendStatusUpdateMessage(false);
-	}
-
-	
 	protected void sendStatusUpdateMessage(boolean damaged) {
 		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client, damaged));
 

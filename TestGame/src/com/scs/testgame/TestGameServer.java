@@ -70,7 +70,7 @@ public class TestGameServer extends AbstractGameServer {
 		c = new Crate(this, getNextEntityID(), 6, 30, 1, 1, 1, 1f, "Textures/crate.png", 45);
 		this.actuallyAddEntity(c);
 		c = new Crate(this, getNextEntityID(), 6, 30, 6, 1, 1, 1f, "Textures/crate.png", 65);
-		this.actuallyAddEntity(c);
+		this.actuallyAddEntity(c);*/
 		
 		Wall w1 = new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 		this.actuallyAddEntity(w1);
@@ -80,7 +80,7 @@ public class TestGameServer extends AbstractGameServer {
 		this.actuallyAddEntity(w3);
 		Wall w4 = new Wall(this, getNextEntityID(), 30, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 270);
 		this.actuallyAddEntity(w4);
-*/
+
 		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);
 		//new RoamingZombie(this, getNextEntityID(), 2, 2, 10);
 		

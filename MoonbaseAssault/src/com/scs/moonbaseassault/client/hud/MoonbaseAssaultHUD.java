@@ -113,31 +113,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		healthText.setColor(defaultColour);
 		healthText.setLocalTranslation(10, yPos, 0);
 		this.attachChild(healthText);
-/*
-		yPos -= LINE_SPACING;
-		scoreText = new BitmapText(font_small, false);
-		scoreText.setColor(defaultColour);
-		scoreText.setLocalTranslation(10, yPos, 0);
-		this.attachChild(scoreText);
 
-		yPos -= LINE_SPACING;
-		numPlayers = new BitmapText(font_small, false);
-		numPlayers.setColor(defaultColour);
-		numPlayers.setLocalTranslation(10, yPos, 0);
-		this.attachChild(numPlayers);
-
-		yPos -= LINE_SPACING;
-		pingText = new BitmapText(font_small, false);
-		pingText.setColor(defaultColour);
-		pingText.setLocalTranslation(10, yPos, 0);
-		this.attachChild(pingText);
-
-		yPos -= LINE_SPACING;
-		debugText = new BitmapText(font_small, false);
-		debugText.setColor(defaultColour);
-		debugText.setLocalTranslation(10, yPos, 0);
-		this.attachChild(debugText);
-*/
 		log_ta = new TextArea("log", font_small, 6, "");
 		log_ta.setColor(defaultColour);
 		log_ta.setLocalTranslation(0, hud_height/2, 0);
@@ -339,7 +315,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		targetting_reticule.setWidth(crosshairs_w);
 		float crosshairs_h = cam.getHeight()/10;
 		targetting_reticule.setHeight(crosshairs_h);
-		this.setLocalTranslation((cam.getWidth() - crosshairs_w)/2, (cam.getHeight() - crosshairs_h)/2, 0);
+		targetting_reticule.setLocalTranslation((cam.getWidth() - crosshairs_w)/2, (cam.getHeight() - crosshairs_h)/2, 0);
 		this.attachChild(targetting_reticule);
 	}
 

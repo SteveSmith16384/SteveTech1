@@ -37,9 +37,8 @@ public class PlayersGrenade extends AbstractPlayersBullet {
 			ball_geo.setShadowMode(ShadowMode.CastAndReceive);
 			TextureKey key3 = new TextureKey( "Textures/grenade.png");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-				floor_mat.setTexture("DiffuseMap", tex3);
+			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			floor_mat.setTexture("DiffuseMap", tex3);
 			ball_geo.setMaterial(floor_mat);
 		}
 
@@ -58,9 +57,9 @@ public class PlayersGrenade extends AbstractPlayersBullet {
 			if (this.checkForExploded(tpf_secs)) {
 				//SmallExplosionEntity expl = new SmallExplosionEntity(server, server.getNextEntityID(), this.getWorldTranslation());
 				//server.addEntity(expl);
-				
+
 				server.sendExplosion(this.getWorldTranslation(), 10, .8f, 1.2f, .04f, .1f, "Textures/sun.jpg");
-				
+
 			}
 		}
 	}
@@ -70,7 +69,7 @@ public class PlayersGrenade extends AbstractPlayersBullet {
 	public void processByClient(IClientApp client, float tpf_secs) {
 		if (launched) {
 			simpleRigidBody.process(tpf_secs);
-			
+
 			this.checkForExploded(tpf_secs);			
 		}
 	}

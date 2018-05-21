@@ -14,6 +14,16 @@ public class MoonbaseAssaultCollisionValidator extends AbstractCollisionValidato
 			return false;
 		}
 
+		// Explosion shards don't collide with player
+		if ((pa.type == Globals.BULLET_EXPLOSION_EFFECT && pb.type == MoonbaseAssaultClientEntityCreator.SOLDIER_AVATAR) || (pb.type == Globals.BULLET_EXPLOSION_EFFECT && pa.type == MoonbaseAssaultClientEntityCreator.SOLDIER_AVATAR)) {
+			return false;
+		}
+
+		// Explosion shards don't collide with AI
+		if ((pa.type == Globals.BULLET_EXPLOSION_EFFECT && pb.type == MoonbaseAssaultClientEntityCreator.AI_SOLDIER) || (pb.type == Globals.BULLET_EXPLOSION_EFFECT && pa.type == MoonbaseAssaultClientEntityCreator.AI_SOLDIER)) {
+			return false;
+		}
+
 		// Sliding doors shouldn't collide with floor/ceiling
 		if ((pa.type == MoonbaseAssaultClientEntityCreator.FLOOR && pb.type == MoonbaseAssaultClientEntityCreator.DOOR) || pa.type == MoonbaseAssaultClientEntityCreator.DOOR && pb.type == MoonbaseAssaultClientEntityCreator.FLOOR) {
 			return false;

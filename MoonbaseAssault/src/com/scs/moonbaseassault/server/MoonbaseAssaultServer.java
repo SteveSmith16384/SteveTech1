@@ -158,8 +158,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	protected void createGame() {
 		MapLoader map = new MapLoader(this);
 		try {
-			map.loadMap("/serverdata/moonbaseassault_small.csv");
-			//map.loadMap("/serverdata/moonbaseassault.csv");
+			//map.loadMap("/serverdata/moonbaseassault_small.csv");
+			map.loadMap("/serverdata/moonbaseassault.csv");
 			mapData = map.scannerData;
 			this.deploySquares = map.deploySquares;
 

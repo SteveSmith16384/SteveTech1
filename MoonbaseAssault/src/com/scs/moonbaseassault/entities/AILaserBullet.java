@@ -80,7 +80,7 @@ public class AILaserBullet extends AbstractAIBullet {
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
 			AbstractGameServer server = (AbstractGameServer)game;
-			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .04f, .1f, "Textures/sun.jpg");
+			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .01f, .04f, "Textures/sun.jpg");
 		}
 		this.remove();
 	}

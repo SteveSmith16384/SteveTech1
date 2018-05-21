@@ -96,7 +96,7 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 
 				this.remove();
 
-				server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .1f, .4f, "Textures/computerconsole2.jpg");
+				server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .04f, .12f, "Textures/computerconsole2.jpg");
 				
 				Vector3f pos = this.getWorldTranslation();
 				DestroyedComputer dc = new DestroyedComputer(game, game.getNextEntityID(), pos.x, pos.y, pos.z);

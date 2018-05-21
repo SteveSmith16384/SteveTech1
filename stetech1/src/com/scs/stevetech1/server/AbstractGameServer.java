@@ -93,9 +93,7 @@ ConsoleInputListener {
 	private ServerPingSystem pingSystem;
 
 	protected HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities
-	//protected HashMap<Integer, IEntity> entitiesForProcessing = new HashMap<>(100); // Entites that we need to iterate over in game loop
 	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entites that we need to iterate over in game loop
-	//protected LinkedList<IEntity> entitiesToAdd = new LinkedList<IEntity>();
 	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
@@ -384,7 +382,11 @@ ConsoleInputListener {
 		client.clientStatus = ClientData.ClientStatus.Accepted;
 		
 		int side = getSide(client);
-		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.playerName, side);
+		client.playerData = this.createSimplePlayerData();
+		//new SimplePlayerData(client.id, newPlayerMessage.playerName, side);
+		client.playerData.id = client.id;
+		client.playerData.playerName = newPlayerMessage.playerName;
+		client.playerData.side = side;
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
 		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
@@ -398,6 +400,14 @@ ConsoleInputListener {
 
 	}
 
+	
+	/**
+	 * Override if you need a custom SimplePlayerData
+	 */
+	protected SimplePlayerData createSimplePlayerData() {
+		return new SimplePlayerData();
+	}
+	
 
 	public void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();

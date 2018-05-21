@@ -14,7 +14,7 @@ public class RunAll {
 
 	public static void main(String[] args) {
 		try {
-			//RunAll();
+			RunAll();
 			ConnDisconn();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -23,11 +23,9 @@ public class RunAll {
 
 
 	public static void RunAll() throws IOException {
-		UnitTestGameServer server;
+		UnitTestGameServer server = new UnitTestGameServer();
+
 		ArrayList<SimpleApplication> instances = new ArrayList<>();
-
-		server = new UnitTestGameServer();
-
 		for (int i=0 ; i<1 ; i++) {
 			instances.add(new UnitTestGameClient());
 		}

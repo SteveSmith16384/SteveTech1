@@ -25,7 +25,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
 
 	private SimplePhysicsController<T> physicsController;
-	protected Vector3f oneOffForce = new Vector3f(); // Gets reduced by air resistance each frame
+	protected Vector3f oneOffForce = new Vector3f(); // e.g. force of explosion.  Gets reduced by air resistance each frame, and reversed if bounced
 	private Vector3f tmpMoveDir = new Vector3f();
 	private float bounciness = .2f;
 	private float aerodynamicness; // 0=stops immediately, 1=goes on forever
@@ -38,7 +38,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public ISimpleEntity<T> simpleEntity;
 	private boolean movedByForces = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
-	protected Vector3f additionalForce = new Vector3f(); // Additional force to apply, e.g. walking force or explosion force.  Does not get changed by this code.
+	protected Vector3f additionalForce = new Vector3f(); // Additional force to apply, e.g. walking force or jet.  Does not get changed by this code.
 	private int modelComplexity = 0; // For determining which way round to check.
 	public boolean canWalkUpSteps = false;
 

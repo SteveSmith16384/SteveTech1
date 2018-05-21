@@ -8,6 +8,7 @@ import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -280,6 +281,11 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		return 2;
 	}
 
+
+	protected SimplePlayerData createSimplePlayerData() {
+		return new UASimplePlayerData();
+	}
+	
 
 }
 
