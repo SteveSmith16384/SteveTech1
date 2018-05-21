@@ -20,8 +20,8 @@ public class ClientData {
 	public SimplePlayerData playerData;
 	public ClientStatus clientStatus = ClientStatus.Connected;
 
-	private int score; // todo - mvoe to UA game data
-	public int side = -1;
+	//private int score; // todo - mvoe to UA game data
+	//public int side = -1;
 
 	public ClientData(int _id, Object _networkObj) {
 		super();
@@ -41,6 +41,11 @@ public class ClientData {
 	}
 	
 	
+	public int getSide() {
+		return this.playerData.side;
+	}
+	
+	/*
 	public int getScore() {
 		return this.score;
 	}
@@ -54,5 +59,5 @@ public class ClientData {
 	public void setScore(int i) {
 		this.score = i;
 	}
-
+*/
 }

@@ -295,12 +295,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 		for (ClientData client : this.clients.values()) {
 			if (client.avatar != null) {
-				if (!map.containsKey(client.side)) {
-					map.put(client.side, 0);
+				if (!map.containsKey(client.getSide())) {
+					map.put(client.getSide(), 0);
 				}
-				int val = map.get(client.side);
+				int val = map.get(client.getSide());
 				val++;
-				map.put(client.side, val);
+				map.put(client.getSide(), val);
 			}
 		}
 		return map;

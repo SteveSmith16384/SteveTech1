@@ -17,6 +17,7 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractAIBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
@@ -78,10 +79,8 @@ public class AILaserBullet extends AbstractAIBullet {
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
-			//BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-			//game.addEntity(expl);
-			MoonbaseAssaultServer server = (MoonbaseAssaultServer)game;
-			server.sendBulletExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .04f, .1f, "Textures/sun.jpg");
+			AbstractGameServer server = (AbstractGameServer)game;
+			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .04f, .1f, "Textures/sun.jpg");
 		}
 		this.remove();
 	}

@@ -236,13 +236,13 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		int winningSide = -1;
 		boolean draw = false;
 		for(ClientData c : super.clients.values()) {
-			if (c.getScore() > highestScore) {
+			/*todo if (c.getScore() > highestScore) {
 				winningSide = c.side;
 				highestScore = c.getScore();
 				draw = false;
 			} else if (c.getScore() == highestScore) {
 				draw = true;
-			}
+			}*/
 		}
 		if (draw) {
 			return -1;

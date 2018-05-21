@@ -148,7 +148,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public int currentAvatarID = -1; // In case the avatar physical entity gets replaced, we can re-assign it
 	public int playerID = -1;
 	public int side = -1;
-	public int score;
+	//public int score;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
@@ -673,7 +673,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			AvatarStatusMessage asm = (AvatarStatusMessage)message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 				this.currentAvatar.setHealth(asm.health);
-				this.score = asm.score;
+				//this.score = asm.score;
 				this.currentAvatar.moveSpeed = asm.moveSpeed;
 				this.currentAvatar.setJumpForce(asm.jumpForce);
 				if (asm.damaged) {
@@ -924,7 +924,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 
 			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
-			boolean tooBig = true;// todo  bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
+			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
 			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
 				int x = (int)bb.getCenter().x / this.nodeSize;
 				int y = (int)bb.getCenter().y / this.nodeSize;
@@ -1140,23 +1140,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			INotifiedOfCollision ic = (INotifiedOfCollision)peb;
 			ic.collided(pea);
 		}
-
 	}
 
-	/*
-	//@Override
-	public void addClientOnlyEntity(IEntity e) {
-		if (e.getID() >= 0) {
-			throw new RuntimeException("Client-only entities must have negative id");
-		}
-		//this.clientOnlyEntitiesToAdd.add(e);
-		actuallyAddClientOnlyEntity(e);  //this.clientOnlyEntities
-		if (e.requiresProcessing()) {
-			this.entitiesForProcessing.add(e); // todo - strict check if already exists
-		}
-	}
-	 */
-
+	
 	@Override
 	public int getNextEntityID() {
 		return nextEntityID.decrementAndGet(); // Client-only entities are negative

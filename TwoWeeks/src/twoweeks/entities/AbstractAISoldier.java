@@ -45,7 +45,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public static final float SHOOT_INTERVAL = 1f;
 	public static final float RELOAD_INTERVAL = 4f;
 	
-	public static final float START_HEALTH = 5f; // todo
+	public static final float START_HEALTH = 5f;
 	public static final float SPEED = .53f;//.47f;
 
 	private IAvatarModel soldierModel; // Need this to animate the model

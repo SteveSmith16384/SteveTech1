@@ -217,7 +217,6 @@ public class KryonetGameServer implements IGameMessageServer {
 	
 	
 	private void sendMessage(final int id, final MyAbstractMessage msg) {
-		//try {
 			if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 				if (msg.isReliable()) {
 					server.sendToTCP(id, msg);
@@ -247,14 +246,6 @@ public class KryonetGameServer implements IGameMessageServer {
 				};
 				t.start();
 			}
-		/*} catch (KryoNetException ex) {
-			if (Globals.STRICT) {
-				throw ex;
-			} else {
-				Globals.pe("Error sending to client: " + ex.getMessage()); // todo - drop client?
-			}
-		}*/
-
 	}
 
 	@Override

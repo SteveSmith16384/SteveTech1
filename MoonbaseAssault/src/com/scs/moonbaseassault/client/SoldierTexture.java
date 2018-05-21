@@ -42,7 +42,7 @@ public class SoldierTexture {
 							g.setColor(Color.green.darker());
 							break;
 						default:
-							throw new RuntimeException("Todo");
+							throw new RuntimeException("Invalid side:" + side);
 						}
 						break;
 						
@@ -55,7 +55,7 @@ public class SoldierTexture {
 							g.setColor(Color.green);
 							break;
 						default:
-							throw new RuntimeException("Todo");
+							throw new RuntimeException("Invalid side:" + side);
 						}
 						break;
 						
@@ -100,30 +100,10 @@ public class SoldierTexture {
 		case 5:
 			return 31;
 			default:
-				throw new RuntimeException("Todo");
+				throw new RuntimeException("Invalid row:" + row);
 		}
 	}
-	
-	
-	private static int getRowStart_OLD(int row) {
-		switch (row) {
-		case 0:
-			return 0;
-		case 1:
-			return 6;
-		case 2:
-			return 11;
-		case 3:
-			return 17;
-		case 4:
-			return 22;
-		case 5:
-			return 33;
-			default:
-				throw new RuntimeException("Todo");
-		}
-	}
-	
+		
 	
 	private static Color getRandomHairColour() {
 		return Color.DARK_GRAY;

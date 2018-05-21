@@ -120,7 +120,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			// Check we're not already colliding *before* we've even moved
 			List<SimpleRigidBody<T>> crs = this.checkForCollisions();
 			if (crs.size() != 0) {
-				//todo - re-add System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
+				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				this.moveAwayFrom(crs);
 				return; // Don't bother moving any more!
 			}
@@ -368,26 +368,26 @@ public class SimpleRigidBody<T> implements Collidable {
 		if (!this.collidable ) {
 			return crs;
 		}
-		
+
 		CollisionResults tempCollisionResults = new CollisionResults(); // Avoid creating a new one each time
 
-		if (SimplePhysicsController.USE_NEW_COLLISION_METHOD) {
-			for(SimpleNode<T> node : this.physicsController.nodes.values()) {
-				node.getCollisions(this, crs, tempCollisionResults);
-			}
-			// Check against moving/big entities
-			List<SimpleRigidBody<T>> entities = physicsController.movingEntities;
-			synchronized (entities) {
-				// Loop through the entities
-				for (int i=0 ; i<entities.size() ; i++) {
-					SimpleRigidBody<T> e = entities.get(i);
-					if (this.checkSRBvSRB(e, tempCollisionResults)) {
-						crs.add(e);
-					}
+		//if (SimplePhysicsController.USE_NEW_COLLISION_METHOD) {
+		for(SimpleNode<T> node : this.physicsController.nodes.values()) {
+			node.getCollisions(this, crs, tempCollisionResults);
+		}
+		// Check against moving/big entities
+		List<SimpleRigidBody<T>> entities = physicsController.movingEntities;
+		synchronized (entities) {
+			// Loop through the entities
+			for (int i=0 ; i<entities.size() ; i++) {
+				SimpleRigidBody<T> e = entities.get(i);
+				if (this.checkSRBvSRB(e, tempCollisionResults)) {
+					crs.add(e);
 				}
 			}
+		}
 
-		} else {
+		/*} else {
 			List<SimpleRigidBody<T>> entities = physicsController.getEntities();
 			synchronized (entities) {
 				// Loop through the entities
@@ -398,7 +398,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					}
 				}
 			}
-		}
+		}*/
 		return crs;
 	}
 
@@ -553,14 +553,12 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * This should only be called from SimplePhysicsController.
 	 */
 	public void removeFromParent_INTERNAL() {
-		if (SimplePhysicsController.USE_NEW_COLLISION_METHOD) {
-			if (this.parent != null) {
-				this.parent.remove(this);
-				if (this.parent.getNumChildren() == 0) {
-					this.physicsController.nodes.remove(this.parent.id);
-				} else {
-					this.parent.recalcBounds();
-				}
+		if (this.parent != null) {
+			this.parent.remove(this);
+			if (this.parent.getNumChildren() == 0) {
+				this.physicsController.nodes.remove(this.parent.id);
+			} else {
+				this.parent.recalcBounds();
 			}
 		}
 	}

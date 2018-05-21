@@ -78,7 +78,7 @@ public class ServerGameStatusSystem {
 				gameData.setGameStatus(SimpleGameData.ST_FINISHED, gameOptions.finishedDurationMillis);
 				break;
 			default:
-				throw new RuntimeException("todo");
+				throw new RuntimeException("Invalid status: " + status);
 			}
 			server.sendGameStatusMessage();
 
@@ -92,8 +92,8 @@ public class ServerGameStatusSystem {
 		ArrayList<Integer> map = new ArrayList<Integer>();
 		for (ClientData client : server.clients.values()) {
 			if (client.avatar != null) {
-				if (!map.contains(client.side)) {
-					map.add(client.side);
+				if (!map.contains(client.getSide())) {
+					map.add(client.getSide());
 				}
 			}
 		}

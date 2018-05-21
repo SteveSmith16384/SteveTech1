@@ -194,7 +194,7 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 					this.setNumPlayers(client.playersList.size());
 				}
 			}
-			this.setScoreText(client.score);
+			//todo this.setScoreText(client.score);
 			this.setPing(client.pingRTT);
 		}
 

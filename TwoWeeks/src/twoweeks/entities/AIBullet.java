@@ -16,6 +16,7 @@ import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractAIBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
@@ -82,9 +83,8 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 	@Override
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
-			//todo BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-			//game.addEntity(expl);
-
+			AbstractGameServer server = (AbstractGameServer)game;
+			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .04f, .1f, "Textures/sun.jpg");
 		}
 		this.remove();
 	}

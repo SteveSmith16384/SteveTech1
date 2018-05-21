@@ -42,7 +42,7 @@ public class TwoWeeksHUD extends Node implements IHUD {
 	private static BitmapFont font_small;
 	
 	private BitmapText abilityGun, abilityOther, healthText; // Update instantly 
-	private String debugText, gameStatus, gameTime, pingText, scoreText, numPlayers;
+	private String debugText, gameStatus, gameTime, pingText, numPlayers;
 	private BitmapText textArea; 
 
 	public TwoWeeksHUD(AbstractGameClient _game, Camera _cam) { 
@@ -197,7 +197,6 @@ public class TwoWeeksHUD extends Node implements IHUD {
 					this.setNumPlayers(client.playersList.size());
 				}
 			}
-			this.setScoreText(client.score);
 			this.setPing(client.pingRTT);
 			this.updateTextArea((TwoWeeksClient)client);
 		}
@@ -242,7 +241,6 @@ public class TwoWeeksHUD extends Node implements IHUD {
 		str.append(this.gameStatus + "\n");
 		str.append(this.gameTime + "\n");
 		str.append(this.pingText + "\n");
-		str.append(this.scoreText + "\n");
 		str.append(this.numPlayers + "\n");
 		/*if (client.currentAvatar != null) {
 			str.append("Pos: " + client.currentAvatar.getWorldTranslation() + "\n");
@@ -295,17 +293,8 @@ public class TwoWeeksHUD extends Node implements IHUD {
 	}
 
 
-	private void setScoreText(int s) {
-		//this.scoreText.setText("Score: " + s);
-		this.scoreText = "Score: " + s;
-		//this.updateTextArea();
-	}
-
-
 	private void setPing(long i) {
-		//this.pingText.setText("Ping: " + i);
 		this.pingText = "Ping: " + i;
-		//this.updateTextArea();
 	}
 
 

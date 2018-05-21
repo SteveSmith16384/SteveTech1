@@ -383,9 +383,9 @@ ConsoleInputListener {
 
 		client.clientStatus = ClientData.ClientStatus.Accepted;
 		
-		client.side = getSide(client);
-		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.playerName, client.side);
-		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), client.side)); // Must be before we send the avatar so they know it's their avatar
+		int side = getSide(client);
+		client.playerData = new SimplePlayerData(client.id, newPlayerMessage.playerName, side);
+		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
 		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
 		sendGameStatusMessage();
@@ -530,17 +530,6 @@ ConsoleInputListener {
 	}
 
 
-	//public abstract float getAvatarStartHealth(AbstractAvatar avatar);
-	/*
-	public float getAvatarMoveSpeed(AbstractAvatar avatar) { // todo - move to constructor
-		return 3f; // Override if required
-	}
-
-
-	public float getAvatarJumpForce(AbstractAvatar avatar) { // todo - move to constructor
-		return 2f; // Override if required
-	}
-	 */
 	public abstract void moveAvatarToStartPosition(AbstractAvatar avatar);
 
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid);
@@ -983,7 +972,7 @@ ConsoleInputListener {
 	}
 
 
-	public void sendBulletExplosion(Vector3f pos, int num, float minForce, float maxForce, float minSize, float maxSize, String tex) { // todo - rename
+	public void sendExplosion(Vector3f pos, int num, float minForce, float maxForce, float minSize, float maxSize, String tex) {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
 		for (int i=0 ; i<num ; i++) {

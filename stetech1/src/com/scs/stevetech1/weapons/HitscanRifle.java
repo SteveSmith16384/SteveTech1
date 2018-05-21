@@ -20,20 +20,15 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
-	private static final int MAG_SIZE = 10; // todo
+	private static final int MAG_SIZE = 10;
 	private static final float RANGE = 99f;
 
 	private RayCollisionData hitThisMoment = null; // Only used server-side.  Null if nothing hit
 	private int bulletsInMag = MAG_SIZE;
-	//private int trailType;
-	//private int debugSphereType;
 
 	public HitscanRifle(IEntityController game, int id, int type, int playerID, AbstractAvatar owner, int avatarID, int num, ClientData client) {
 		super(game, id, type, playerID, owner, avatarID, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
 		
-		//trailType = _trailType;
-		//debugSphereType = _debugSphereType;
-
 	}
 
 
@@ -54,7 +49,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 				//BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.playerID, this.owner.getBulletStartPos(), hitThisMoment.point);
 				//game.addEntity(bt);
-				//todo server.sendBulletTrail(MAG_SIZE, start, end);
+				server.sendBulletTrail(MAG_SIZE, this.owner.getBulletStartPos(), hitThisMoment.point);
 
 				this.hitThisMoment = null; // Clear it ready for next loop
 			} else {

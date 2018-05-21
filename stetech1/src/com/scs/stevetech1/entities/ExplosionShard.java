@@ -22,7 +22,6 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 	public ExplosionShard(IEntityController _game, float x, float y, float z, float size, Vector3f forceDirection, String tex) {
 		super(_game, _game.getNextEntityID(), Globals.BULLET_EXPLOSION_EFFECT, "ExplosionShard", true, false, true);
 
-		//float s = .05f; // todo
 		Box box1 = new Box(size, size, size);
 		Geometry geometry = new Geometry("Crate", box1);
 		TextureKey key3 = new TextureKey(tex);//"Textures/sun.jpg");

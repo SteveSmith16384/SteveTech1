@@ -11,7 +11,6 @@ import jdk.nashorn.internal.objects.Global;
 
 public class SimplePhysicsController<T> {
 
-	public static final boolean USE_NEW_COLLISION_METHOD = true; // todo - remove
 	public static final boolean DEBUG = false;
 
 	public static final float MIN_MOVE_DIST = 0.001f;
@@ -52,10 +51,8 @@ public class SimplePhysicsController<T> {
 		gravity = _gravity;
 		aerodynamicness = _aerodynamicness;
 
-		if (USE_NEW_COLLISION_METHOD) {
-			nodes = new HashMap<String, SimpleNode<T>>();
-			movingEntities = new ArrayList<SimpleRigidBody<T>>();
-		}
+		nodes = new HashMap<String, SimpleNode<T>>();
+		movingEntities = new ArrayList<SimpleRigidBody<T>>();
 	}
 
 
@@ -86,7 +83,7 @@ public class SimplePhysicsController<T> {
 		if (srb == null) {
 			throw new RuntimeException("SimpleRigidBody is null");
 		}
-		
+
 		if (this.entities.contains(srb)) {
 			throw new RuntimeException("SRB already added");
 		}
@@ -95,29 +92,27 @@ public class SimplePhysicsController<T> {
 			this.entities.add(srb);
 		}
 
-		if (USE_NEW_COLLISION_METHOD) {
-			BoundingBox bb = srb.getBoundingBox();
-			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
-			if (srb.getNeverMoves() && this.nodeSize > 0 && !tooBig) {
-				int x = (int)bb.getCenter().x / this.nodeSize;
-				int y = (int)bb.getCenter().y / this.nodeSize;
-				int z = (int)bb.getCenter().z / this.nodeSize;
+		BoundingBox bb = srb.getBoundingBox();
+		boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
+		if (srb.getNeverMoves() && this.nodeSize > 0 && !tooBig) {
+			int x = (int)bb.getCenter().x / this.nodeSize;
+			int y = (int)bb.getCenter().y / this.nodeSize;
+			int z = (int)bb.getCenter().z / this.nodeSize;
 
-				String id = x + "_" + y + "_" + z;
-				if (!this.nodes.containsKey(id)) {
-					SimpleNode<T> node = new SimpleNode<T>(id);
-					this.nodes.put(id, node);
-				}
-				SimpleNode<T> n = this.nodes.get(id);
-				n.add(srb);			
-			} else {
-				movingEntities.add(srb);
+			String id = x + "_" + y + "_" + z;
+			if (!this.nodes.containsKey(id)) {
+				SimpleNode<T> node = new SimpleNode<T>(id);
+				this.nodes.put(id, node);
 			}
+			SimpleNode<T> n = this.nodes.get(id);
+			n.add(srb);			
+		} else {
+			movingEntities.add(srb);
 		}
 
 		srb.removed = false;
 		//srb.setCurrentGravInc = 0;
-		
+
 		if (srb.movedByForces()) {
 			// Check to see if they're not already colliding
 			/*SimpleRigidBody<T> tmpWasCollision = srb.checkForCollisions();
@@ -132,10 +127,8 @@ public class SimplePhysicsController<T> {
 		synchronized (entities) {
 			this.entities.remove(srb);
 		}
-		if (USE_NEW_COLLISION_METHOD) {
-			srb.removeFromParent_INTERNAL();
-			this.movingEntities.remove(srb);
-		}
+		srb.removeFromParent_INTERNAL();
+		this.movingEntities.remove(srb);
 		srb.removed = true;
 	}
 
@@ -180,8 +173,8 @@ public class SimplePhysicsController<T> {
 	public boolean containsSRB(SimpleRigidBody<T> srb) {
 		return this.entities.contains(srb);
 	}
-	
-	
+
+
 	public void setGravity(float g) {
 		this.gravity = g;
 	}

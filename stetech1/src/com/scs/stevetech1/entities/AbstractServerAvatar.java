@@ -33,13 +33,13 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	private float maxHealth;
 
 	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, float _maxHealth, float _moveSpeed, float _jumpForce) {
-		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.side, anim);
+		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.getSide(), anim);
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("id", eid); this.getID();
 			creationData.put("playerID", _client.getPlayerID());
-			creationData.put("side", _client.side);
+			creationData.put("side", _client.getSide());
 			creationData.put("playersName", _client.playerData.playerName);
 		}
 
@@ -156,12 +156,11 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	@Override
 	public void getReadyForGame() {
-		// Don't call startAgain() since that moves the avatar
-		//this.startAgain();
+		//this.startAgain();  Don't call startAgain() since that moves the avatar
 		
 		alive = true;
 		this.setHealth(maxHealth);
-		this.client.setScore(0);
+		//todo this.client.setScore(0);
 		this.invulnerableTimeSecs = 5;
 
 	}
@@ -170,7 +169,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	@Override
 	public void incScore(int i) {
-		client.incScore(i);
+		//todo client.incScore(i);
 		this.sendStatusUpdateMessage(false);
 	}
 

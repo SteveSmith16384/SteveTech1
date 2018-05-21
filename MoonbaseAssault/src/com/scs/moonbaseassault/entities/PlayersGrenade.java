@@ -59,10 +59,8 @@ public class PlayersGrenade extends AbstractPlayersBullet {
 				//SmallExplosionEntity expl = new SmallExplosionEntity(server, server.getNextEntityID(), this.getWorldTranslation());
 				//server.addEntity(expl);
 				
-				server.sendBulletExplosion(this.getWorldTranslation(), 10, .8f, 1.2f, .04f, .1f, "Textures/sun.jpg");
+				server.sendExplosion(this.getWorldTranslation(), 10, .8f, 1.2f, .04f, .1f, "Textures/sun.jpg");
 				
-				// todo - damage surrounding entities
-
 			}
 		}
 	}
