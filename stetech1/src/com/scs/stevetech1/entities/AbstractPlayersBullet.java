@@ -76,15 +76,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 	@Override
 	public void launch(IEntity _shooter, Vector3f startPos, Vector3f _dir) {
-		/*if (!game.isServer()) {
-			AbstractGameClient client = (AbstractGameClient)this.game;
-			if (this.playerID == client.playerID) {
-				return;
-			}
-		}*/
-		if (launched) { // We might be the client that fired the bullet, which we've already launched
-			//Globals.p("Snowball already launched.  This may be a good sign.");
-			//return;
+		if (launched) {
 			throw new RuntimeException("Trying to relaunch launched bullet");
 		}
 

@@ -34,14 +34,13 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	private ITargetable currentTarget;
 	private int animCode = 0;
 	private float waitForSecs = 0; // e.g. wait for door to open
-	private float randomDirForSecs = 0; // e.g. collided with comrade
+	private float maintainDirectionForSecs = 0; // e.g. collided with comrade
 
 	private boolean attacker;
 	private FindComputerThread fcThread;
 	private WayPoints route = null;
 	private float speed;
 	private boolean walks;
-	//private Computer computer; // The computer the defender is defending
 
 	public ShootingSoldierAI3(AbstractAISoldier _pe, boolean _attacker, boolean _walks) {
 		super();
@@ -65,8 +64,8 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		if (this.waitForSecs > 0) {
 			this.waitForSecs -= tpf_secs;
 		} 
-		if (this.randomDirForSecs > 0) {
-			this.randomDirForSecs -= tpf_secs;
+		if (this.maintainDirectionForSecs > 0) {
+			this.maintainDirectionForSecs -= tpf_secs;
 		}
 		/*if (computer != null && !computer.isAlive()) {
 			computer = null;
@@ -79,6 +78,8 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 				boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, AILaserBullet.RANGE);
 				if (!cansee) {
 					this.currentTarget = null;
+					maintainDirectionForSecs = 4f; // Walk towards them for 4 secs
+
 					if (Globals.DEBUG_AI_TARGETTING) {
 						Globals.p("AI no longer see target");
 					}
@@ -117,7 +118,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 				soldierEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 				animCode = AbstractAvatar.ANIM_IDLE;
 
-			} else if (randomDirForSecs > 0) {
+			} else if (maintainDirectionForSecs > 0) {
 				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(speed)); // Walk forwards
 				animCode = walks? AbstractAvatar.ANIM_WALKING : AbstractAvatar.ANIM_RUNNING;
 
@@ -174,7 +175,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 				//changeDirection(getRandomDirection());
 				//if (this.attacker) {
 					changeDirection(getRandomDirection());
-					randomDirForSecs = 1f;
+					maintainDirectionForSecs = 1f;
 					this.route = null;
 				/*} else {
 					changeDirection(getRandomDirection());

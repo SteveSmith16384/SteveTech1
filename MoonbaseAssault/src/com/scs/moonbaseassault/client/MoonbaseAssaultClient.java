@@ -262,7 +262,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		}
 	}
 
-/*
+
 	@Override
 	protected Spatial getPlayersWeaponModel() {
 		if (!Globals.HIDE_BELLS_WHISTLES) {
@@ -277,8 +277,9 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 			return null;
 		}
 	}
-*/
 
+
+	/*
 	@Override
 	protected Spatial getPlayersWeaponModel() {
 		//if (!Globals.HIDE_BELLS_WHISTLES) {
@@ -294,9 +295,9 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		/*} else {
 			return null;
 		}*/
-	}
-
-
+	//}
+	
+	
 	@Override
 	protected Class[] getListofMessageClasses() {
 		return new Class[] {HudDataMessage.class, MoonbaseAssaultGameData.class};
@@ -307,8 +308,6 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
-				//SmallExplosionEntity e = new SmallExplosionEntity(this, this.getNextEntityID(), new Vector3f(1f, 1f, 1f));
-				//this.addEntity(e);
 			}
 		} else {
 			super.onAction(name, value, tpf);

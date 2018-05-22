@@ -215,7 +215,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	@Override
 	public Vector3f getBulletStartPos() {
-		return this.getWorldTranslation().add(0, avatarModel.getBulletStartHeight(), 0);
+		Vector3f pos = this.getWorldTranslation().add(0, avatarModel.getBulletStartHeight(), 0);
+		pos.addLocal(-0.20f, -.2f, 0.4f); // todo - check this
+		return pos;//this.getWorldTranslation().add(0, avatarModel.getBulletStartHeight(), 0);
 	}
 
 

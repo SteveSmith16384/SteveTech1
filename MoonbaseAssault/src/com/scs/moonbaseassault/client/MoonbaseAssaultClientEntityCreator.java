@@ -12,7 +12,7 @@ import com.scs.moonbaseassault.entities.GenericFloorTex;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
-import com.scs.moonbaseassault.entities.PlayerLaserBullet;
+import com.scs.moonbaseassault.entities.PlayersLaserBullet;
 import com.scs.moonbaseassault.entities.PlayersGrenade;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.entities.SoldierClientAvatar;
@@ -150,7 +150,7 @@ public class MoonbaseAssaultClientEntityCreator {
 			int side = (int) msg.data.get("side");
 			Vector3f dir = (Vector3f) msg.data.get("dir");
 			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, playerID, irac, side, null, dir);
+			PlayersLaserBullet bullet = new PlayersLaserBullet(game, id, playerID, irac, side, null, dir);
 			return bullet;
 		}
 

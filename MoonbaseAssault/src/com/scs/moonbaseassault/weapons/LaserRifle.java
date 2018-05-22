@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
-import com.scs.moonbaseassault.entities.PlayerLaserBullet;
+import com.scs.moonbaseassault.entities.PlayersLaserBullet;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -18,9 +18,9 @@ import com.scs.stevetech1.weapons.AbstractMagazineGun;
 /*
  * This gun shoots physical laser bolts
  */
-public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implements IAbility, IEntityContainer<PlayerLaserBullet> {
+public class LaserRifle extends AbstractMagazineGun<PlayersLaserBullet> implements IAbility, IEntityContainer<PlayersLaserBullet> {
 
-	private LinkedList<PlayerLaserBullet> ammoCache = new LinkedList<PlayerLaserBullet>(); 
+	private LinkedList<PlayersLaserBullet> ammoCache = new LinkedList<PlayersLaserBullet>(); 
 
 	public LaserRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, int abilityNum, ClientData client) {
 		super(game, id, MoonbaseAssaultClientEntityCreator.LASER_RIFLE, playerID, owner, avatarID, abilityNum, "Laser Rifle", .2f, 2, 10, client);
@@ -31,7 +31,7 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 	@Override
 	public boolean launchBullet() {
 		if (!ammoCache.isEmpty()) {
-			PlayerLaserBullet bullet = ammoCache.remove();
+			PlayersLaserBullet bullet = ammoCache.remove();
 			ICanShoot ic = (ICanShoot)owner;
 			bullet.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			return true;
@@ -47,14 +47,14 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 
 
 	@Override
-	public void addToCache(PlayerLaserBullet o) {
+	public void addToCache(PlayersLaserBullet o) {
 		this.ammoCache.add(o);
 	}
 
 
 	public void remove() {
 		while (!ammoCache.isEmpty()) {
-			PlayerLaserBullet g = ammoCache.remove();
+			PlayersLaserBullet g = ammoCache.remove();
 			g.remove();
 		}
 		super.remove();
@@ -63,7 +63,7 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 
 	@Override
 	protected void createBullet(AbstractGameServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> owner, int side) {
-		PlayerLaserBullet l = new PlayerLaserBullet(game, entityid, playerID, owner, side, client, null);
+		PlayersLaserBullet l = new PlayersLaserBullet(game, entityid, playerID, owner, side, client, null);
 		server.addEntity(l);
 
 	}
@@ -78,7 +78,7 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 	@Override
 	protected void emptyMagazine() {
 		while (!ammoCache.isEmpty()) {
-			PlayerLaserBullet g = ammoCache.remove();
+			PlayersLaserBullet g = ammoCache.remove();
 			g.remove();
 		}
 		

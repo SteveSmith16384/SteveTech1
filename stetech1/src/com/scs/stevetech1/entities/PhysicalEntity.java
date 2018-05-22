@@ -144,7 +144,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			
 			if (this instanceof IDrawOnHUD) {
 				IDrawOnHUD idoh = (IDrawOnHUD)this;
-				idoh.getHUDItem().removeFromParent();
+				if (idoh.getHUDItem() != null) {
+					idoh.getHUDItem().removeFromParent();
+				}
 
 			}
 		}

@@ -23,12 +23,12 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
+public class PlayersLaserBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
 
 	private static final boolean USE_CYLINDER = true;
 	private static final float RANGE = 30f;
 
-	public PlayerLaserBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
+	public PlayersLaserBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client, Vector3f dir) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerOwnerId, owner, _side, _client, dir, true, AILaserBullet.SPEED, RANGE);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);

@@ -40,7 +40,6 @@ import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.scs.simplephysics.ICollisionListener;
-import com.scs.simplephysics.SimpleNode;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimatedClientSide;
@@ -954,7 +953,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			if (e instanceof IDrawOnHUD) {
 				IDrawOnHUD doh = (IDrawOnHUD)e;
-				this.hud.addItem(doh.getHUDItem());
+				if (doh.getHUDItem() != null) {
+					this.hud.addItem(doh.getHUDItem());
+				}
 			}
 		}
 	}
@@ -1143,7 +1144,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}
 
-	
+
 	@Override
 	public int getNextEntityID() {
 		return nextEntityID.decrementAndGet(); // Client-only entities are negative

@@ -99,9 +99,11 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		simpleRigidBody.canWalkUpSteps = true;
 		simpleRigidBody.setBounciness(0);
 
-		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-		hudNode = new BitmapText(font_small);
-		hudNode.setText(name);
+		if (Globals.SHOW_HUD_TEXT_FOR_UNITS) {
+			font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
+			hudNode = new BitmapText(font_small);
+			hudNode.setText(name);
+		}
 
 	}
 
@@ -232,6 +234,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 	@Override
 	public void drawOnHud(Camera cam) {
+		if (hudNode != null) {
 		if (health > 0) {
 			FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 			if (insideoutside != FrustumIntersect.Outside) {
@@ -244,6 +247,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 			} else {
 				this.hudNode.setText(""); // Hide it
 			}
+		}
 		}
 	}
 
@@ -269,7 +273,9 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 	@Override
 	public void handleKilledOnClientSide(PhysicalEntity killer) {
-		this.hudNode.removeFromParent();
+		if (hudNode != null) {
+			this.hudNode.removeFromParent();
+		}
 	}
 
 
