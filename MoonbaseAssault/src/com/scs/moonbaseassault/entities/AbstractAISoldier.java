@@ -21,6 +21,7 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IGetRotation;
+import com.scs.stevetech1.components.IHasSide;
 import com.scs.stevetech1.components.IKillable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
@@ -39,7 +40,7 @@ import com.scs.stevetech1.server.IArtificialIntelligence;
 import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class AbstractAISoldier extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
-IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByClient, IGetRotation, ISetRotation, IKillable, ITargetable, IHasSide {
 
 	public static final int BULLETS_IN_MAG = 6;
 	public static final float SHOOT_INTERVAL = 1f;

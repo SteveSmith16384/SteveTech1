@@ -1,7 +1,6 @@
 package com.scs.moonbaseassault.entities;
 
 import com.jme3.renderer.Camera;
-import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.models.SoldierModel;
 import com.scs.stevetech1.client.AbstractGameClient;

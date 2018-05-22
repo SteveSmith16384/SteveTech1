@@ -16,6 +16,7 @@ import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IDrawOnHUD;
+import com.scs.stevetech1.components.IHasSide;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
@@ -26,21 +27,23 @@ import com.scs.stevetech1.shared.IEntityController;
  * This is only used client-side.
  */
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimatedClientSide, IProcessByClient, 
-ISetRotation, IDrawOnHUD { 
+ISetRotation, IDrawOnHUD, IHasSide { 
 
 	protected IAvatarModel anim;
 	private Spatial avatarModel;
 	private String playersName;
+	protected int side;
 
 	// HUD
 	private BitmapText hudNode;
 	private static BitmapFont font_small;
 
-	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int side, String _playersName) {
+	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int _side, String _playersName) {
 		super(game, eid, type, "EnemyAvatar", true, false, true);
 
 		anim = _anim;
 		playersName = _playersName;
+		side = _side;
 		
 		// Create box for collisions
 		Box box = new Box(anim.getSize().x/2, anim.getSize().y/2, anim.getSize().z/2);
@@ -111,5 +114,10 @@ ISetRotation, IDrawOnHUD {
 		}
 	}
 
+
+	@Override
+	public int getSide() {
+		return side;
+	}
 
 }

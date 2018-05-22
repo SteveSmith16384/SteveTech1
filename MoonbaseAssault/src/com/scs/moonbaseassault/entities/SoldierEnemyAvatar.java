@@ -4,7 +4,6 @@ import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.scs.moonbaseassault.models.SoldierModel;
-import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.shared.IEntityController;

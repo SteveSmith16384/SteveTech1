@@ -2,7 +2,6 @@ package com.scs.stevetech1.entities;
 
 import java.util.HashMap;
 
-import com.jme3.bounding.BoundingBox;
 import com.jme3.collision.Collidable;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -14,6 +13,7 @@ import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
+import com.scs.stevetech1.components.IHasSide;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.input.IInputDevice;
@@ -22,7 +22,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerControlled, IProcessByServer, ICanShoot, IAffectedByPhysics {
+public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerControlled, IProcessByServer, ICanShoot, IAffectedByPhysics, IHasSide {
 
 	// Animation Codes
 	public static final int ANIM_IDLE = 0;

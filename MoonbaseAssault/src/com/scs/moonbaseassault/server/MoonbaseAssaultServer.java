@@ -131,10 +131,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		float startHeight = .1f;
+		/*float startHeight = .1f;
 		List<Point> deploySquares = this.deploySquares[avatar.side-1];
 		boolean found = false;
-		for (Point p : deploySquares) {
+		//for (Point p : deploySquares) {
+		while (true) { // todo - only try a certain number of times
+			Point p = deploySquares.get(NumberFunctions.rnd(0, deploySquares.size()-1));
 			avatar.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
 			if (avatar.simpleRigidBody.checkForCollisions().size() == 0) {
 				found = true;
@@ -145,7 +147,8 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			Globals.p("Player starting at " + avatar.getWorldTranslation());
 		} else {
 			throw new RuntimeException("No space to start!");
-		}
+		}*/
+		this.moveAISoldierToStartPosition(avatar, avatar.side);
 	}
 
 
