@@ -14,7 +14,7 @@ import com.scs.stevetech1.server.IArtificialIntelligence;
 
 import ssmith.lang.NumberFunctions;
 
-public class WanderingSoldierAI implements IArtificialIntelligence {
+public class WanderingSoldierAI implements IArtificialIntelligence { // todo - delete
 
 	private PhysicalEntity physicalEntity;
 	private Vector3f currDir;

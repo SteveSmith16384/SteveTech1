@@ -35,7 +35,7 @@ public class MoonbaseAssaultCollisionValidator extends AbstractCollisionValidato
 			return false;
 		}
 		
-		// Anywthing with a side don't collide if on same side
+		// Anything with a side don't collide if on same side
 		if (pa instanceof IHasSide && pb instanceof IHasSide) {
 			// units on the same side don't collide
 			IHasSide aa = (IHasSide)pa;

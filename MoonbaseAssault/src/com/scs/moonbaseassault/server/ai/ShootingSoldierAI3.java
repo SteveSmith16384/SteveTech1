@@ -39,15 +39,23 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	private boolean attacker;
 	private FindComputerThread fcThread;
 	private WayPoints route = null;
+	private float speed;
+	private boolean walks;
 	//private Computer computer; // The computer the defender is defending
 
-	public ShootingSoldierAI3(AbstractAISoldier _pe, boolean _attacker) {
+	public ShootingSoldierAI3(AbstractAISoldier _pe, boolean _attacker, boolean _walks) {
 		super();
 
 		soldierEntity = _pe;
 		attacker = _attacker;
 		checkForEnemyInt = new RealtimeInterval(NumberFunctions.rnd(800,  1200)); // Avoid AI all shooting at the same time
 		currDir = new Vector3f();
+		walks = _walks;
+		if (walks) {
+			speed = AbstractAISoldier.WALKING_SPEED;
+		} else {
+			speed = AbstractAISoldier.RUNNING_SPEED;
+		}
 		changeDirection(getRandomDirection()); // Start us pointing in the right direction
 	}
 
@@ -110,15 +118,15 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 				animCode = AbstractAvatar.ANIM_IDLE;
 
 			} else if (randomDirForSecs > 0) {
-				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.WALKING_SPEED)); // Walk forwards
-				animCode = AbstractAvatar.ANIM_WALKING;
+				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(speed)); // Walk forwards
+				animCode = walks? AbstractAvatar.ANIM_WALKING : AbstractAvatar.ANIM_RUNNING;
 
 			} else {
 				if (route != null) { //this.attacker && 
 					checkRoute();
 				}
-				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.WALKING_SPEED)); // Walk forwards
-				animCode = AbstractAvatar.ANIM_WALKING;
+				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(speed)); // Walk forwards
+				animCode = walks? AbstractAvatar.ANIM_WALKING : AbstractAvatar.ANIM_RUNNING;
 			}
 		}
 	}
@@ -147,7 +155,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			Point p = this.route.get(0);
 			Vector3f dest = new Vector3f(p.x+0.5f, this.soldierEntity.getWorldTranslation().y, p.y+0.5f); // todo - don't create each time
 			float dist = this.soldierEntity.getWorldTranslation().distance(dest);
-			if (dist < .5f) {
+			if (dist < .3f) {
 				this.route.remove(0);
 			} else {
 				Vector3f dir = dest.subtract(this.soldierEntity.getWorldTranslation()).normalizeLocal();
@@ -164,20 +172,20 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof MapBorder) {
 				//Globals.p("AISoldier has collided with " + pe);
 				//changeDirection(getRandomDirection());
-				if (this.attacker) {
+				//if (this.attacker) {
 					changeDirection(getRandomDirection());
-					randomDirForSecs = 1.5f;
+					randomDirForSecs = 1f;
 					this.route = null;
-				} else {
+				/*} else {
 					changeDirection(getRandomDirection());
-				}
-			} else if (pe instanceof AbstractAISoldier || pe instanceof AbstractServerAvatar) {
+				}*/
+			/*} else if (pe instanceof AbstractAISoldier || pe instanceof AbstractServerAvatar) {
 				if (NumberFunctions.rnd(1, 3) == 1) {
 					this.waitForSecs = 3;
 				} else {
 					changeDirection(getRandomDirection());
 					randomDirForSecs = 3;
-				}
+				}*/
 			} else if (pe instanceof SlidingDoor) {
 				this.waitForSecs += WAIT_FOR_DOOR_DURATION;
 			}

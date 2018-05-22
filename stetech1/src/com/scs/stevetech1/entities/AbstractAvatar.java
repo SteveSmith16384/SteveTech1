@@ -27,9 +27,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	// Animation Codes
 	public static final int ANIM_IDLE = 0;
 	public static final int ANIM_WALKING = 1;
-	public static final int ANIM_JUMP = 2;
-	public static final int ANIM_SHOOTING = 3;
-	public static final int ANIM_DIED = 4;
+	public static final int ANIM_RUNNING = 2;
+	public static final int ANIM_JUMP = 3;
+	public static final int ANIM_SHOOTING = 4;
+	public static final int ANIM_DIED = 5;
 
 	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	protected IInputDevice input;
@@ -113,23 +114,23 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 				Globals.p("fwd=" + camDir);
 			}
 			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
-			newAnimCode = ANIM_WALKING;
+			newAnimCode = ANIM_RUNNING;
 			lastMoveTime = System.currentTimeMillis();
 		} else if (input.getBackValue()) {
 			if (Globals.DEBUG_SLOW_CLIENT_AVATAR) {
 				Globals.p("Back=" + camDir.negate());
 			}
 			walkDirection.addLocal(camDir.negate());
-			newAnimCode = ANIM_WALKING;
+			newAnimCode = ANIM_RUNNING;
 			lastMoveTime = System.currentTimeMillis();
 		}
 		if (input.getStrafeLeftValue()) {		
 			walkDirection.addLocal(camLeft);
-			newAnimCode = ANIM_WALKING;
+			newAnimCode = ANIM_RUNNING;
 			lastMoveTime = System.currentTimeMillis();
 		} else if (input.getStrafeRightValue()) {		
 			walkDirection.addLocal(camLeft.negate());
-			newAnimCode = ANIM_WALKING;
+			newAnimCode = ANIM_RUNNING;
 			lastMoveTime = System.currentTimeMillis();
 		}
 		if (input.isJumpPressed()) {

@@ -16,7 +16,7 @@ import com.scs.stevetech1.server.IArtificialIntelligence;
 
 import ssmith.lang.NumberFunctions;
 
-public class WanderingSoldierAI2 implements IArtificialIntelligence {
+public class WanderingSoldierAI2 implements IArtificialIntelligence { // todo - delete
 
 	private static final float WAIT_FOR_DOOR_DURATION = 3;
 

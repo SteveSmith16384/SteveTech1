@@ -14,7 +14,7 @@ public class MA_AISoldier extends AbstractAISoldier {
 				new SoldierModel(_game.getAssetManager()), csInitialAnimCode, name);
 
 		if (_game.isServer()) {
-			ai = new ShootingSoldierAI3(this, attacker);
+			ai = new ShootingSoldierAI3(this, attacker, !attacker);
 		}
 	}
 

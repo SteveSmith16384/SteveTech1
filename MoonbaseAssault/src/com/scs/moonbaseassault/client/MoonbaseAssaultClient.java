@@ -24,6 +24,7 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.AbstractHUDImage;
 import com.scs.stevetech1.hud.IHUD;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.jme.JMEModelFunctions;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
@@ -261,7 +262,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		}
 	}
 
-
+/*
 	@Override
 	protected Spatial getPlayersWeaponModel() {
 		if (!Globals.HIDE_BELLS_WHISTLES) {
@@ -275,6 +276,24 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		} else {
 			return null;
 		}
+	}
+*/
+
+	@Override
+	protected Spatial getPlayersWeaponModel() {
+		//if (!Globals.HIDE_BELLS_WHISTLES) {
+			Spatial model = assetManager.loadModel("Models/QuaterniusGuns/Pistol.blend");
+			JMEAngleFunctions.rotateToDirection(model, new Vector3f(0, 0, -1));
+			//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
+			model.scale(0.3f);
+			// x moves l-r, z moves further away
+			//model.setLocalTranslation(-0.20f, -.2f, 0.4f);
+			//model.setLocalTranslation(-0.20f, -.2f, 1.8f);
+			model.setLocalTranslation(-0.20f, -.2f, 1.2f);
+			return model;
+		/*} else {
+			return null;
+		}*/
 	}
 
 
