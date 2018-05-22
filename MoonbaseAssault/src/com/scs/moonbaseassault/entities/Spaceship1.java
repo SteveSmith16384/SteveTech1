@@ -22,10 +22,15 @@ public class Spaceship1 extends PhysicalEntity {
 			creationData = new HashMap<String, Object>();
 		}
 
-		Spatial model = game.getAssetManager().loadModel("Models/spaceships/Spaceship.blend");
+		//Spatial model = game.getAssetManager().loadModel("Models/spaceships/Spaceship.blend");
+		//Spatial model = game.getAssetManager().loadModel("Models/spaceships2/CroissantShip.obj");
+		//JMEModelFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Models/spaceships2/CroissantShipTexture.png");
+		Spatial model = game.getAssetManager().loadModel("Models/spaceships2/Small Spaceship.obj");
+		JMEModelFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Models/spaceships2/SmallSpaceshipTexture.png");
+		model.setLocalScale(.7f);
 		JMEModelFunctions.moveYOriginTo(model, 0.1f);
 		if (!_game.isServer()) {
-			model.setShadowMode(ShadowMode.CastAndReceive);
+			model.setShadowMode(ShadowMode.Cast);
 		}
 		this.mainNode.attachChild(model);
 		mainNode.setLocalRotation(q);

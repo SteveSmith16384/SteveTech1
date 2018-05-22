@@ -61,9 +61,10 @@ public class GasCannister extends PhysicalEntity implements IDamagable {
 
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
-		Globals.p("Gas can hit!");
+		//Globals.p("Gas can hit!");
 		this.health -= amt;
 		if (this.health <= 0) {
+			// todo - explode
 			this.remove();
 		}
 

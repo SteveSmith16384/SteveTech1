@@ -2,12 +2,10 @@ package com.scs.undercoveragent;
 
 import java.io.IOException;
 
-import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.data.GameOptions;
-import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -35,7 +33,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	public static final String NAME = "Undercover Agent";
 	public static final String GAME_ID = "Undercover Agent";
-	
+
 	private int mapSize;
 	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
@@ -73,7 +71,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		}
 	}
 
-/*
+	/*
 	private static void startLobbyServer(int lobbyPort, int timeout) {
 		Thread r = new Thread("LobbyServer") {
 
@@ -88,7 +86,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		};
 		r.start();
 	}
-*/
+	 */
 
 	private UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
@@ -124,7 +122,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	protected void createGame() {
 		//super.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
-		
+
 		if (Globals.EMPTY_MAP) {
 			// Do nothing
 		} else if (Globals.FEW_MODELS) {
@@ -254,7 +252,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	protected Class[] getListofMessageClasses() {
-		return null;
+		return new Class[] {UASimplePlayerData.class};
 	}
 
 
@@ -285,7 +283,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	protected SimplePlayerData createSimplePlayerData() {
 		return new UASimplePlayerData();
 	}
-	
+
 
 }
 

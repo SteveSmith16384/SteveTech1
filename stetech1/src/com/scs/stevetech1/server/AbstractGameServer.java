@@ -986,7 +986,7 @@ ConsoleInputListener {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
 		for (int i=0 ; i<num ; i++) {
-			Vector3f forceDirection = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
+			Vector3f forceDirection = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 1.1f), NumberFunctions.rndFloat(-1, 1));
 			forceDirection.multLocal(NumberFunctions.rndFloat(minForce,  maxForce));
 			float size = NumberFunctions.rndFloat(minSize,  maxSize);
 

@@ -47,7 +47,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 	public static final float RELOAD_INTERVAL = 4f;
 	
 	public static final float START_HEALTH = 5f;
-	public static final float SPEED = .53f;//.47f;
+	public static final float WALKING_SPEED = .53f;//.47f;
 
 	private IAvatarModel soldierModel; // Need this to animate the model
 	private float health = START_HEALTH;
@@ -66,7 +66,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 
 	public AbstractAISoldier(IEntityController _game, int id, int type, float x, float y, float z, int _side, 
 			IAvatarModel _model, int _csInitialAnimCode, String name) {
-		super(_game, id, type, "AISoldier", true, false, true);
+		super(_game, id, type, name, true, false, true);
 
 		side = _side;
 		soldierModel = _model; // Need it for dimensions for bb

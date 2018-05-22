@@ -83,19 +83,7 @@ public class MoonbaseAssaultHUD extends Node implements IHUD {
 		textArea.setText("Waiting for data...\n...");
 
 		float yPos = hud_height - LINE_SPACING;
-/*
-		yPos -= LINE_SPACING;
-		gameStatus = new BitmapText(font_small, false);
-		gameStatus.setColor(defaultColour);
-		gameStatus.setLocalTranslation(10, yPos, 0);
-		this.attachChild(gameStatus);
 
-		yPos -= LINE_SPACING;
-		gameTime = new BitmapText(font_small, false);
-		gameTime.setColor(defaultColour);
-		gameTime.setLocalTranslation(10, yPos, 0);
-		this.attachChild(gameTime);
-*/
 		yPos -= LINE_SPACING;
 		abilityGun = new BitmapText(font_small, false);
 		abilityGun.setColor(defaultColour);

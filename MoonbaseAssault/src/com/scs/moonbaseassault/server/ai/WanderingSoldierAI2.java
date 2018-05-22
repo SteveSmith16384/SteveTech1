@@ -40,7 +40,7 @@ public class WanderingSoldierAI2 implements IArtificialIntelligence {
 			this.waitForSecs -= tpf_secs;
 			physicalEntity.simpleRigidBody.getAdditionalForce().set(0, 0, 0); // Stop walking
 		} else {
-			physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
+			physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.WALKING_SPEED)); // Walk forwards
 		}
 	}
 

@@ -6,13 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.FlyingSpaceship2;
-import com.scs.moonbaseassault.entities.GasCannister;
 import com.scs.moonbaseassault.entities.MA_AISoldier;
 import com.scs.moonbaseassault.entities.SoldierServerAvatar;
+import com.scs.moonbaseassault.entities.Spaceship1;
 import com.scs.moonbaseassault.netmessages.HudDataMessage;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultCollisionValidator;
 import com.scs.moonbaseassault.shared.MoonbaseAssaultGameData;
@@ -22,8 +21,7 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.netmessages.NewEntityData;
-import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -31,11 +29,9 @@ import com.scs.stevetech1.server.Globals;
 import ssmith.astar.IAStarMapInterface;
 import ssmith.lang.NumberFunctions;
 import ssmith.util.MyProperties;
-import ssmith.util.RealtimeInterval;
 
 public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
 
-	//private static final int MAX_PLAYERS = 20;
 	private static final int COMPS_DESTROYED_TO_WIN = 10;
 	public static final String GAME_ID = "Moonbase Assault";
 
@@ -180,11 +176,14 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			System.exit(-1);
 		}
 
-		//Spaceship1 ss = new Spaceship1(this, this.getNextEntityID(), 8, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
-		//todo - re-add this.actuallyAddEntity(ss);
-
-		FlyingSpaceship2 ss = new FlyingSpaceship2(this, this.getNextEntityID(), 8, 5f, 8);
+		Spaceship1 ss = new Spaceship1(this, this.getNextEntityID(), 8, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
 		this.actuallyAddEntity(ss);
+
+		ss = new Spaceship1(this, this.getNextEntityID(), 48, 0f, 8, JMEAngleFunctions.getRotation(-1, 0));
+		this.actuallyAddEntity(ss);
+
+		FlyingSpaceship2 fs = new FlyingSpaceship2(this, this.getNextEntityID(), 8, 5f, 8);
+		this.actuallyAddEntity(fs);
 
 		//GasCannister gas = new GasCannister(this, getNextEntityID(), 2f, 0.5f, 2f);
 		//this.actuallyAddEntity(gas);
@@ -213,7 +212,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		MA_AISoldier s = new MA_AISoldier(this, this.getNextEntityID(), 0,0,0, side, AbstractAvatar.ANIM_IDLE, name, side == 1);
 		this.actuallyAddEntity(s);
 		moveAISoldierToStartPosition(s, s.side);
-
+		Globals.p("Created AI soldier on side " + side);
 	}
 	
 	

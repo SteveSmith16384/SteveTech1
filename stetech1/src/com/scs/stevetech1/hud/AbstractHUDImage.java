@@ -16,7 +16,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 	private float timeLeftSecs;
 	private int id;
 
-	public AbstractHUDImage(AbstractGameClient _game, int _id, Node guiNode, String tex, int w, int h, float durSecs) {
+	public AbstractHUDImage(AbstractGameClient _game, int _id, Node guiNode, String tex, int x, int y, int w, int h, float durSecs) {
 		super("AbstractHUDImage");
 
 		id = _id;
@@ -26,12 +26,10 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 		setImage(game.getAssetManager(), tex, true);
 		setWidth(w);
 		setHeight(h);
-		this.setPosition(w/2, h/2); // Centre it
+		this.setPosition(x, y);//w/2, h/5);
 
 		guiNode.attachChild(this);
 		game.addEntity(this);
-		//game.ent
-
 	}
 
 

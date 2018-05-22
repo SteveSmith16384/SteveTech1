@@ -141,21 +141,33 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	@Override
 	protected void playerHasWon() {
 		removeCurrentHUDImage();
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+		int x = this.cam.getWidth()/2;
+		int y = this.cam.getHeight()/5;
+		int width = this.cam.getWidth()/2;
+		int height = this.cam.getHeight()/2;
+		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", x, y, width, height, 5);
 	}
 
 
 	@Override
 	protected void playerHasLost() {
 		removeCurrentHUDImage();
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+		int x = this.cam.getWidth()/2;
+		int y = this.cam.getHeight()/5;
+		int width = this.cam.getWidth()/2;
+		int height = this.cam.getHeight()/2;
+		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
 
 	@Override
 	protected void gameIsDrawn() {
 		removeCurrentHUDImage();
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", this.cam.getWidth()/2, this.cam.getHeight()/2, 5);
+		int x = this.cam.getWidth()/2;
+		int y = this.cam.getHeight()/5;
+		int width = this.cam.getWidth()/2;
+		int height = this.cam.getHeight()/2;
+		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
 
@@ -167,20 +179,22 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected void gameStatusChanged(int oldStatus, int newStatus) {
+		int x = this.cam.getWidth()/2;
+		int y = this.cam.getHeight()/5;
 		int width = this.cam.getWidth()/2;
 		int height = this.cam.getHeight()/2;
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
 			removeCurrentHUDImage();
-			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", width, height, 5);
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", x, y, width, height, 3);
 			break;
 		case SimpleGameData.ST_DEPLOYING:
 			removeCurrentHUDImage();
-			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", width, height, 5);
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", x, y, width, height, 3);
 			break;
 		case SimpleGameData.ST_STARTED:
 			removeCurrentHUDImage();
-			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", width, height, 5);
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", x, y, width, height, 3);
 			break;
 		case SimpleGameData.ST_FINISHED:
 			// Don't show anything, this will be handled with a win/lose message
@@ -209,7 +223,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected Class[] getListofMessageClasses() {
-		return null;
+		return new Class[] {UASimplePlayerData.class};
 	}
 
 

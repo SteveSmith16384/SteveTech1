@@ -110,14 +110,14 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 				animCode = AbstractAvatar.ANIM_IDLE;
 
 			} else if (randomDirForSecs > 0) {
-				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
+				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.WALKING_SPEED)); // Walk forwards
 				animCode = AbstractAvatar.ANIM_WALKING;
 
 			} else {
 				if (route != null) { //this.attacker && 
 					checkRoute();
 				}
-				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
+				soldierEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.WALKING_SPEED)); // Walk forwards
 				animCode = AbstractAvatar.ANIM_WALKING;
 			}
 		}

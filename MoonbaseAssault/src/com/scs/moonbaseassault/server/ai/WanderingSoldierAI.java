@@ -33,7 +33,7 @@ public class WanderingSoldierAI implements IArtificialIntelligence {
 			this.currDir = this.getRandomDirection();
 		}
 		//Globals.p("Currdir: " + this.currDir);
-		physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.SPEED)); // Walk forwards
+		physicalEntity.simpleRigidBody.setAdditionalForce(this.currDir.mult(AbstractAISoldier.WALKING_SPEED)); // Walk forwards
 
 	}
 
