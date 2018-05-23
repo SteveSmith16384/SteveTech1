@@ -6,7 +6,7 @@
 If you've got here, then you should have an empty project with references to SteveTech1 and jMonkeyEngine, hopefully with no compilationo errors.  To demonstrate a simple multiplayer realtime FPS, we're going to create a simple game called "Box Wars".  With SteveTech1, you can create any game you want to; <i>the only limit is your imagination!</i>  Actually a good imagination will be a real bonus here, since the game will consist of just boxes moving around on a big box shooting box-shaped bullets at each other.  It probably won't win you any Ludum Dare competitions, but it will demonstrate how to get a multiplayer FPS working.  Later, we might even add spheres or even some genuine 3D models.
 
 
-## Boilerplate Stuff
+## Creating a Multiplayer FPS
 Okay, the first thing to do is create our main client and server classes:-
 
 * Create a class called BoxWarsServer, and extend AbstractGameServer
@@ -29,7 +29,6 @@ All SteveTech1 servers extend AbstractGameServer, and then implement the abstrac
 * clientRenderDelayMillis - How far behind "reality" (i.e. the server's version of events) the client should show.  The reason for this is to take into account client lag, meaning the time it takes for the server to get data to the clients.  The client shows a delayed version of reality; that way, it (hopefully) always has data telling it what is going to happen.  If the client tried to show the current state, the game would be "stuttery", since if there was no new game data to show (maybe due to network latency), it would have to freeze everything until it got something.
 
 #### Overridden Methods
-
 * boolean canCollide(PhysicalEntity a, PhysicalEntity b); - Determines if two entities can collide.  You don't always want this (for example, a bullet shouldn't collide with the shooter).  Also, the same result should occur on both the client and the server, otherwise they will quickly get out of sync.
 
 * void createGame() - This is called at the start of each game in order to create the game entities.  More on this later.
@@ -38,6 +37,16 @@ All SteveTech1 servers extend AbstractGameServer, and then implement the abstrac
 
 
 ## Avatars
+Since we're on the subject of avatars, now is a good time to discuss them.  An "avatar" is the player's representation in the game.  In SteveTech1, for every player there are 3 avatar entities:-
 
-Since we're on the subject of avatars, now is a good time to discuss them.  An "avatar"
+1 - The avatar entity running on the server.  Does not require a 3D model, and is controlled indirectly (the client sends input to the server).
+2 - The avatar on the client that the player directly controls.  Does not require a 3D model, and is adjusted whenever the client and server get out of sync.
+3 - The avatars on the client representing other players.  Requires a 3d model, and is directly controlled by commands from the server.
+
+
+## Creating the Game
+Each time a game starts, the createGame() method is called, which is where all the entities required for the game should be created (with the exception of the player's avatars, which are created with calls to createPlayersAvatarEntity()).  In this game, we will only have a floor, since otherwise our physics engine would force is to drop into an infinite abyss (or until the y-co-ord becomes less than float.MINIMUM, pedants).
+
+## Entities
+This is the generic name for any game object.  Most will by "physical" objects, i.e. have domensions and be drawable (on the client at least).
 

@@ -132,15 +132,10 @@ public class MoonbaseAssaultClientEntityCreator {
 		case LASER_RIFLE:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			//if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-			//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 			int num = (int)msg.data.get("num");
 			int playerID = (int)msg.data.get("playerID");
 			LaserRifle gl = new LaserRifle(game, id, playerID, null, ownerid, num, null);
 			return gl;
-			//}
-			//return null;
-
 		}
 
 		case PLAYER_LASER_BULLET:

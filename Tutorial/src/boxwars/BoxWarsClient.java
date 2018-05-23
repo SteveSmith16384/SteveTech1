@@ -4,8 +4,10 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
+import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.netmessages.NewEntityData;
@@ -14,7 +16,9 @@ import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 import boxwars.entities.BoxWarsClientAvatar;
 import boxwars.entities.BoxWarsEnemyAvatar;
+import boxwars.entities.PlayersBullet;
 import boxwars.entities.Floor;
+import boxwars.weapons.PlayersGun;
 
 public class BoxWarsClient extends AbstractGameClient {
 
@@ -99,6 +103,25 @@ public class BoxWarsClient extends AbstractGameClient {
 			return floor;
 		}
 		
+		case BoxWarsServer.GUN:
+		{
+			int ownerid = (int)msg.data.get("ownerid");
+			int num = (int)msg.data.get("num");
+			int playerID = (int)msg.data.get("playerID");
+			PlayersGun gl = new PlayersGun(game, id, playerID, null, ownerid, num, null);
+			return gl;
+		}
+
+		case BoxWarsServer.BULLET:
+		{
+			int containerID = (int) msg.data.get("containerID");
+			int playerID = (int) msg.data.get("playerID");
+			int side = (int) msg.data.get("side");
+			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
+			PlayersBullet snowball = new PlayersBullet(game, id, playerID, irac, side, null);
+			return snowball;
+		}
+
 		default:
 			return null;
 		}

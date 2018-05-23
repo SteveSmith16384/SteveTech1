@@ -21,9 +21,9 @@ import com.scs.stevetech1.shared.IEntityController;
 
 import boxwars.BoxWarsServer;
 
-public class Bullet extends AbstractPlayersBullet implements INotifiedOfCollision {
+public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
 
-	public Bullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
+	public PlayersBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
 		super(_game, id, BoxWarsServer.BULLET, "Bullet", playerOwnerId, owner, _side, _client, null, false, 0f, 0f);
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);

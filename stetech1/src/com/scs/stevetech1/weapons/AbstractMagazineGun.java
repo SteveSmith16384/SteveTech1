@@ -109,14 +109,14 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 		timeUntilShoot_secs -= tpf_secs;
 
-		if (client.getGameData().isInGame()) {
+		//if (client.getGameData().isInGame()) { // Reload even if waiting for players
 			if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
 				//AbstractGameClient client = (AbstractGameClient) game;
 				client.sendMessage(new ClientReloadingMessage(this.getID()));
 				this.timeUntilShoot_secs = this.reloadInterval_secs;
 				Globals.p("Sending ClientReloadingMessage");
 			}
-		}
+		//}
 	}
 
 

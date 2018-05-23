@@ -13,6 +13,7 @@ All the basic features are complete but not thoroughly stress-tested yet.  All a
 * Client prediction & Lag-compensation
 * TCP and UDP for networking
 * Simple physics
+* Projectile and hitscan weapons
 * Open source
 
 
