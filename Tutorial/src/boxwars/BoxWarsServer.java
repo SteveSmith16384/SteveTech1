@@ -10,6 +10,7 @@ import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
+import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 import boxwars.entities.BoxWarsServerAvatar;
 import boxwars.entities.Floor;
@@ -23,6 +24,8 @@ public class BoxWarsServer extends AbstractGameServer {
 	public static final int BULLET = 4;
 
 	public static final int PORT = 16384;
+	
+	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
 	public static void main(String[] args) {
 		try {
@@ -44,7 +47,7 @@ public class BoxWarsServer extends AbstractGameServer {
 
 	@Override
 	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		return true;
+		return collisionValidator.canCollide(a, b);
 	}
 
 	@Override

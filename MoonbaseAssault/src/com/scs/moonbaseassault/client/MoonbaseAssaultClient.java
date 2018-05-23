@@ -219,7 +219,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 
 	@Override
-	protected IHUD getHUD() {
+	protected IHUD createAndGetHUD() {
 		hud = new MoonbaseAssaultHUD(this, this.getCamera());
 		return hud;
 	}

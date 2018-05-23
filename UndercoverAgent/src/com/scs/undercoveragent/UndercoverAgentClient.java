@@ -172,7 +172,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 
 	@Override
-	protected IHUD getHUD() {
+	protected IHUD createAndGetHUD() {
 		return new UndercoverAgentHUD(this, this.getCamera());
 	}
 

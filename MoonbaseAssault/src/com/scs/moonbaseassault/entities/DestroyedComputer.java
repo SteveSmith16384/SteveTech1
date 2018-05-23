@@ -17,7 +17,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class DestroyedComputer extends PhysicalEntity{
 
-	private static final float SIZE = 0.8f;
+	private static final float SIZE = 0.6f;
 
 	public DestroyedComputer(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.DESTROYED_COMPUTER, "Destroyed Computer", false, true, false);

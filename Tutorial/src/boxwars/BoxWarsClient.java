@@ -10,12 +10,15 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 import boxwars.entities.BoxWarsClientAvatar;
 import boxwars.entities.BoxWarsEnemyAvatar;
 import boxwars.entities.Floor;
 
 public class BoxWarsClient extends AbstractGameClient {
+
+	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
 	public static void main(String[] args) {
 		try {
@@ -36,7 +39,7 @@ public class BoxWarsClient extends AbstractGameClient {
 
 	@Override
 	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		return true;
+		return collisionValidator.canCollide(a, b);
 	}
 
 	@Override
@@ -45,8 +48,8 @@ public class BoxWarsClient extends AbstractGameClient {
 	}
 
 	@Override
-	protected IHUD getHUD() {
-		return null;
+	protected IHUD createAndGetHUD() {
+		return new DummyHUD();
 	}
 
 	@Override

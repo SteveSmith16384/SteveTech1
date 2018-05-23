@@ -109,9 +109,14 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	public void simpleInitApp() {
-		super.gameData = new MoonbaseAssaultGameData(this.getGameID()); // Replace normal data
+		//super.gameData = new MoonbaseAssaultGameData(this.getGameID()); // Replace normal data
 		createUnitsSystem = new CreateUnitsSystem(this);
 		super.simpleInitApp();
+	}
+
+
+	protected SimpleGameData createSimpleGameData(int gameID) {
+		return new MoonbaseAssaultGameData(gameID);
 	}
 
 

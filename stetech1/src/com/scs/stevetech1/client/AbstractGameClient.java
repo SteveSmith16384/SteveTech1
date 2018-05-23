@@ -247,10 +247,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		setUpLight();
 
-		hud = this.getHUD();
-		if (hud != null) {
-			getGuiNode().attachChild(hud.getRootNode());
-		}
+		hud = this.createAndGetHUD();
+		getGuiNode().attachChild(hud.getRootNode());
+
 		this.getRootNode().attachChild(this.debugNode);
 
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
@@ -296,7 +295,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	protected abstract Class[] getListofMessageClasses();
 
-	protected abstract IHUD getHUD(); // todo - pass in constructor
+	protected abstract IHUD createAndGetHUD(); // todo - pass in constructor
 
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;

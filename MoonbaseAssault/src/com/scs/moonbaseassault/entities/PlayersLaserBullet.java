@@ -70,17 +70,6 @@ public class PlayersLaserBullet extends AbstractPlayersBullet implements INotifi
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
 			Globals.p("PlayerLaserBullet collided");
-			
-			//BulletExplosionEntity expl = new BulletExplosionEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-			//game.addEntity(expl);
-
-			/*NewEntityMessage nem = new NewEntityMessage(game.getGameID());
-
-				NewEntityData data = new NewEntityData();
-				data.type = MoonbaseAssaultClientEntityCreator.BULLET_EXPLOSION_EFFECT;
-				data.data.put("pos", this.getWorldTranslation());
-				nem.data.add(data);*/
-
 			AbstractGameServer server = (AbstractGameServer)game;
 			String tex = "Textures/sun.jpg";
 			if (pe instanceof IDebrisTexture) {

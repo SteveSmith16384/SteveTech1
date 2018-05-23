@@ -163,7 +163,7 @@ public class TwoWeeksClient extends AbstractGameClient {
 
 
 	@Override
-	protected IHUD getHUD() {
+	protected IHUD createAndGetHUD() {
 		return hud;
 	}
 

@@ -45,7 +45,7 @@ public class UnitTestGameClient extends AbstractGameClient {
 	}
 
 	@Override
-	protected IHUD getHUD() {
+	protected IHUD createAndGetHUD() {
 		return new DummyHUD();
 	}
 

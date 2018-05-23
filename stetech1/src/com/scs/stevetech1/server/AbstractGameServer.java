@@ -113,13 +113,13 @@ ConsoleInputListener {
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
 	private boolean doNotSendAddRemoveEntityMsgs = false;
 
-	protected SimpleGameData gameData = new SimpleGameData();
+	protected SimpleGameData gameData;// = new SimpleGameData();
 
-	public AbstractGameServer(String _gameID, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
+	public AbstractGameServer(String _gameCode, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
 		//float gravity, float aerodynamicness) {
 		super();
 
-		gameCode = _gameID;
+		gameCode = _gameCode;
 		gameOptions = _gameOptions;
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
@@ -166,6 +166,14 @@ ConsoleInputListener {
 	 * @return a list of classes that must be registered in order to be sent from client to server or vice-versa.
 	 */
 	protected abstract Class[] getListofMessageClasses();
+
+	/**
+	 * Override if you need a custom game data class.
+	 * @return
+	 */
+	protected SimpleGameData createSimpleGameData(int gameID) {
+		return new SimpleGameData(gameID);
+	}
 
 
 	@Override
@@ -461,6 +469,12 @@ ConsoleInputListener {
 			Globals.p("Warning: There are still " + this.getPhysicsController().getEntities().size() + " children in the physics world!  Forcing removal...");
 			this.getPhysicsController().removeAllEntities();
 		}
+
+		int gameID = nextGameID.getAndAdd(1);
+		this.gameData = this.createSimpleGameData(gameID);
+		sendGameStatusMessage(); // To send the new game ID
+		Globals.p("------------------------------");
+		Globals.p("Starting new game " + gameData.gameID);
 
 		try {
 			doNotSendAddRemoveEntityMsgs = true; // Prevent sending new ent messages for all the entities
@@ -804,10 +818,6 @@ ConsoleInputListener {
 				doNotSendAddRemoveEntityMsgs = false;
 			}
 
-			this.gameData.gameID = nextGameID.getAndAdd(1);
-			sendGameStatusMessage(); // To send the new game ID
-			Globals.p("------------------------------");
-			Globals.p("Starting new game " + gameData.gameID);
 			startNewGame();
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
 
