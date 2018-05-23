@@ -5,7 +5,7 @@ import com.jme3.scene.Spatial;
 
 public interface IAvatarModel {
 
-	Spatial createAndGetModel(int side); // Only called client-side, since only the client uses full models.
+	Spatial createAndGetModel(int side); // Only called client-side, since only the client uses full models.  todo - rename to getModel()?
 	
 	Spatial getModel();
 	
@@ -13,7 +13,7 @@ public interface IAvatarModel {
 	
 	float getCameraHeight();
 	
-	float getBulletStartHeight();
+	float getBulletStartHeight(); // todo - change to bulletStartOffset
 	
 	void setAnim(int anim);
 	

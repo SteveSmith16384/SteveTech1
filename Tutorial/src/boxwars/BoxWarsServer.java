@@ -1,4 +1,4 @@
-package boxwars.server;
+package boxwars;
 
 import java.io.IOException;
 
@@ -11,11 +11,17 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 
-public class BoxWarsGameServer extends AbstractGameServer {
+public class BoxWarsServer extends AbstractGameServer {
+	
+	// Entity codes
+	public static final int AVATAR = 1;
+	public static final int FLOOR = 2;
+	public static final int GUN = 3;
+	public static final int BULLET = 4;
 	
 	public static final int PORT = 16384;
 	
-	public BoxWarsGameServer() throws IOException {
+	public BoxWarsServer() throws IOException {
 			super("BoxWars", 
 					new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
 					25, 50, 200, 10000);
@@ -26,8 +32,7 @@ public class BoxWarsGameServer extends AbstractGameServer {
 
 	@Override
 	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -38,20 +43,21 @@ public class BoxWarsGameServer extends AbstractGameServer {
 
 	@Override
 	protected Class[] getListofMessageClasses() {
-		// TODO Auto-generated method stub
-		return null;
+		return null; // No custom data in messages (yet?)
 	}
 
+	
 	@Override
 	public boolean doWeHaveSpaces() {
-		// TODO Auto-generated method stub
-		return false;
+		return true; // Always room for one more.
 	}
 
+	/*
+	 * Just use the client id as the side, to easily ensure every player is on a different side. 
+	 */
 	@Override
 	public int getSide(ClientData client) {
-		// TODO Auto-generated method stub
-		return 0;
+		return client.id;
 	}
 
 	@Override
@@ -76,7 +82,7 @@ public class BoxWarsGameServer extends AbstractGameServer {
 
 	@Override
 	public int getMinPlayersRequiredForGame() {
-		return 2;
+		return 2; // Need at least two players
 	}
 
 

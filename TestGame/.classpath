@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="assets"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/stetech1"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-terrain"/>
+	<classpathentry kind="lib" path="/stetech1/libs/jme-3.2-stable/jme3-core.jar"/>
+	<classpathentry kind="lib" path="/stetech1/libs/jme-3.2-stable/jme3-terrain.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

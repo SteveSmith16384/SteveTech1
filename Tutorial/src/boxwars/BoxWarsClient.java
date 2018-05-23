@@ -1,4 +1,4 @@
-package boxwars.client;
+package boxwars;
 
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -9,12 +9,10 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.netmessages.NewEntityData;
 
-import boxwars.server.BoxWarsGameServer;
-
-public class BoxWarsGameClient extends AbstractGameClient {
+public class BoxWarsClient extends AbstractGameClient {
 	
-	public BoxWarsGameClient() {
-		super("BoxWars", "Box Wars", null, "localhost", BoxWarsGameServer.PORT, 25, 200, 10000, 1f);
+	public BoxWarsClient() {
+		super("BoxWars", "Box Wars", null, "localhost", BoxWarsServer.PORT, 25, 200, 10000, 1f);
 		start();
 		}
 
