@@ -13,8 +13,9 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
+	public static final boolean TEST_AI = true;
+
 	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = false;
-	public static final boolean TEST_AI = false;
 	public static final boolean NO_AI_UNITS = false;
 	public static final boolean DEBUG_DELAYED_EXPLOSION = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;

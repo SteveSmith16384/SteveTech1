@@ -55,7 +55,7 @@ public class MapImageTexture extends PaintableImage {
 				for (int x=0 ; x<data[y].length ; x++) {
 					if (data[y][x] == MapLoader.WALL) {
 						//g.fillRect((data.length-1-y)*pixelSize, (data[0].length-1-x)*pixelSize, pixelSize, pixelSize);
-						paintSquare(g, x, y);
+						paintSquare(g, x, y, 1);
 					}
 				}
 			}
@@ -76,7 +76,7 @@ public class MapImageTexture extends PaintableImage {
 				for (int i=0 ; i<units.size() ; i++) {
 					Point p = units.get(i);
 					//g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
-					paintSquare(g, p.x, p.y);
+					paintSquare(g, p.x, p.y, 3);
 				}			
 			}
 
@@ -86,24 +86,23 @@ public class MapImageTexture extends PaintableImage {
 				for (int i=0 ; i<computers.size() ; i++) {
 					Point p = computers.get(i);
 					//g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
-					paintSquare(g, p.x, p.y);
+					paintSquare(g, p.x, p.y, 2);
 				}			
 			}
 
 			// Player
 			if (player != null) {
 				g.setColor(new Color(1f, 1f, 0f, ALPHA)); // Yellow
-				//g.fillRect((data.length-player.y)*pixelSize, (data.length-player.x)*pixelSize, pixelSize, pixelSize);
-				paintSquare(g, player.x, player.y);
+				paintSquare(g, player.x, player.y, 3);
 			}				
 		}
 
 	}
 
-	private void paintSquare(Graphics2D g, int mx, int my) {
+	private void paintSquare(Graphics2D g, int mx, int my, int pxlSizeMult) {
 		int x = (data.length-1-my)*pixelSize;
 		int y = (data[0].length-1-mx)*pixelSize;
-		g.fillRect(x, y, pixelSize, pixelSize);
+		g.fillRect(x, y, pixelSize*pxlSizeMult, pixelSize*pxlSizeMult);
 
 	}
 

@@ -635,12 +635,7 @@ ConsoleInputListener {
 			if (pe.getMainNode().getParent() != null) {
 				throw new RuntimeException("Entity already has a node");
 			}
-			/*Node parent = pe.getOwnerNode();
-			if (parent != null) {
-				parent.attachChild(pe.getMainNode());
-			} else {*/
-				this.getGameNode().attachChild(pe.getMainNode());
-			//}
+			this.getGameNode().attachChild(pe.getMainNode());
 			if (pe.simpleRigidBody != null) {
 				this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
 			}

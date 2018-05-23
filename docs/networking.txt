@@ -6,7 +6,7 @@ Render others from history - ~100ms ago, lerp between historical positions
 SERVER
 Receive player inputs and pass the to avatar (if later than prev)
 Run game loop every ~25ms
-	Send entity positions for changed entities
+Send entity positions for changed entities
 
 
 PLAYER CONTROL
