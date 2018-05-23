@@ -49,9 +49,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
 
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-				floor_mat.setTexture("DiffuseMap", tex3);
+			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			floor_mat.setTexture("DiffuseMap", tex3);
 			geometry.setMaterial(floor_mat);
 		}
 		geometry.setLocalTranslation(0, h, 0); // Origin is at the bottom
@@ -64,9 +63,6 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-
-		//game.getRootNode().attachChild(this.mainNode);
-		//game.addEntity(this);
 
 	}
 
@@ -86,7 +82,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		if (Globals.LOG_MOVING_TARGET_POS) {
 			IOFunctions.appendToFile("ServerMovingtarget.csv", "ServerMovingTarget," + System.currentTimeMillis() + "," + this.getWorldTranslation());
 		}
-		
+
 	}
 
 
@@ -105,8 +101,8 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		server.gameNetworkServer.sendMessageToAll(eum);
 
 	}
-	
-	
+
+
 	@Override
 	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
 		//this.respawn();
@@ -122,11 +118,11 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	@Override
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
 		super.calcPosition(serverTimeToUse, tpf_secs);
-		
+
 		if (Globals.LOG_MOVING_TARGET_POS) {
 			IOFunctions.appendToFile("ClientMovingtarget.csv", "ClientMovingTarget," + serverTimeToUse + "," + this.getWorldTranslation());
 		}
-		
+
 	}
 
 
