@@ -16,7 +16,7 @@ import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IDrawOnHUD;
-import com.scs.stevetech1.components.IHasSide;
+import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
@@ -27,7 +27,7 @@ import com.scs.stevetech1.shared.IEntityController;
  * This is only used client-side.
  */
 public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimatedClientSide, IProcessByClient, 
-ISetRotation, IDrawOnHUD, IHasSide { 
+ISetRotation, IDrawOnHUD, IDontCollideWithComrades { 
 
 	protected IAvatarModel anim;
 	private Spatial avatarModel;

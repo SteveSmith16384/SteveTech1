@@ -11,13 +11,12 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
+import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
-import com.scs.stevetech1.netmessages.NewEntityData;
-import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -83,7 +82,12 @@ public class PlayersLaserBullet extends AbstractPlayersBullet implements INotifi
 				nem.data.add(data);*/
 
 			AbstractGameServer server = (AbstractGameServer)game;
-			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .005f, .02f, "Textures/sun.jpg");
+			String tex = "Textures/sun.jpg";
+			if (pe instanceof IDebrisTexture) {
+				IDebrisTexture dt = (IDebrisTexture)pe;
+				tex = dt.getDebrisTexture();
+			}
+			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .005f, .02f, tex);
 		}
 		this.remove();
 	}

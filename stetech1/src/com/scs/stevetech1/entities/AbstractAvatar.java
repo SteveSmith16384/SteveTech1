@@ -13,7 +13,7 @@ import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
-import com.scs.stevetech1.components.IHasSide;
+import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.input.IInputDevice;
@@ -22,7 +22,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerControlled, IProcessByServer, ICanShoot, IAffectedByPhysics, IHasSide {
+public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerControlled, IProcessByServer, ICanShoot, IAffectedByPhysics, IDontCollideWithComrades {
 
 	// Animation Codes
 	public static final int ANIM_IDLE = 0;
@@ -216,7 +216,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	@Override
 	public Vector3f getBulletStartPos() {
 		Vector3f pos = this.getWorldTranslation().add(0, avatarModel.getBulletStartHeight(), 0);
-		pos.addLocal(-0.20f, -.2f, 0.4f); // todo - check this
+		//pos.addLocal(-0.20f, -.2f, 0.4f); // todo - check this
 		return pos;//this.getWorldTranslation().add(0, avatarModel.getBulletStartHeight(), 0);
 	}
 

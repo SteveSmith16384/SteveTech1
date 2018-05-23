@@ -1,7 +1,7 @@
 package com.scs.moonbaseassault.shared;
 
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
-import com.scs.stevetech1.components.IHasSide;
+import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
@@ -36,10 +36,10 @@ public class MoonbaseAssaultCollisionValidator extends AbstractCollisionValidato
 		}
 		
 		// Anything with a side don't collide if on same side
-		if (pa instanceof IHasSide && pb instanceof IHasSide) {
+		if (pa instanceof IDontCollideWithComrades && pb instanceof IDontCollideWithComrades) {
 			// units on the same side don't collide
-			IHasSide aa = (IHasSide)pa;
-			IHasSide ab = (IHasSide)pb;
+			IDontCollideWithComrades aa = (IDontCollideWithComrades)pa;
+			IDontCollideWithComrades ab = (IDontCollideWithComrades)pb;
 			if (aa.getSide() == ab.getSide()) {
 				return false;
 			}

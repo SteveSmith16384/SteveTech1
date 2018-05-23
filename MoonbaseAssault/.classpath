@@ -3,7 +3,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/stetech1"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
+	<classpathentry kind="lib" path="/stetech1/libs/jme-3.2-stable/jme3-core.jar"/>
+	<classpathentry kind="lib" path="/stetech1/libs/jme-3.2-stable/jme3-networking.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

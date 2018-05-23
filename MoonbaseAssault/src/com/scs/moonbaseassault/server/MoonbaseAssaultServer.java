@@ -34,6 +34,10 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	private static final int COMPS_DESTROYED_TO_WIN = 10;
 	public static final String GAME_ID = "Moonbase Assault";
+	
+	// Sides
+	public static final int SIDE_ATTACKER = 1;
+	public static final int SIDE_DEFENDER = 2;
 
 	public static final float CEILING_HEIGHT = 1.4f;
 	public static final float LASER_DIAM = 0.02f;
@@ -100,8 +104,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
 		start(JmeContext.Type.Headless);
-
-
 	}
 
 

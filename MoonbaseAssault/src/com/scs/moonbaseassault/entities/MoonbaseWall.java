@@ -15,12 +15,15 @@ import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class MoonbaseWall extends PhysicalEntity {
+public class MoonbaseWall extends PhysicalEntity implements IDebrisTexture {
 
+	private static final String TEX = "Textures/fence.png";
+	
 	public MoonbaseWall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, float d, String tex) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.WALL, "Wall", false, true, false);
 
@@ -55,7 +58,7 @@ public class MoonbaseWall extends PhysicalEntity {
 			if (!Globals.TRANSPARENT_WALLS) {
 				key3 = new TextureKey(tex);
 			} else {
-				key3 = new TextureKey("Textures/fence.png");
+				key3 = new TextureKey(TEX);
 			}
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
@@ -86,6 +89,11 @@ public class MoonbaseWall extends PhysicalEntity {
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
+	}
+
+	@Override
+	public String getDebrisTexture() {
+		return TEX;
 	}
 
 /*

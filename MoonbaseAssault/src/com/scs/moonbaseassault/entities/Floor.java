@@ -14,15 +14,20 @@ import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.BufferUtils;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class Floor extends PhysicalEntity {
+public class Floor extends PhysicalEntity implements IDebrisTexture {
 
-	public Floor(IEntityController _game, int id, String name, float x, float yTop, float z, float w, float h, float d, String tex) {
+	private String tex;
+	
+	public Floor(IEntityController _game, int id, String name, float x, float yTop, float z, float w, float h, float d, String _tex) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.FLOOR, name, false, true, false);
 
+		tex = _tex;
+		
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("size", new Vector3f(w, h, d));
@@ -64,6 +69,12 @@ public class Floor extends PhysicalEntity {
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
+	}
+
+	
+	@Override
+	public String getDebrisTexture() {
+		return tex;
 	}
 
 

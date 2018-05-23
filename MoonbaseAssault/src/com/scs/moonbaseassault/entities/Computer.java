@@ -21,13 +21,14 @@ import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
+import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class Computer extends PhysicalEntity implements IDamagable, ITargetable, IDrawOnHUD {
+public class Computer extends PhysicalEntity implements IDamagable, ITargetable, IDrawOnHUD, IDebrisTexture {
 
 	private static final float SIZE = 0.9f;
 	private float health = 100;
@@ -157,6 +158,12 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 				this.hudNode.setText(""); // Hide it
 			}
 		}
+	}
+
+
+	@Override
+	public String getDebrisTexture() {
+		return "Textures/computerconsole2.jpg";
 	}
 
 

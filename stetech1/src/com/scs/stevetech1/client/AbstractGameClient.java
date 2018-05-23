@@ -812,21 +812,18 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	protected final void createEntity(NewEntityData msg, long timeToAdd) {
-		IEntity e = actuallyCreateEntity(this, msg);
+	protected final void createEntity(NewEntityData data, long timeToAdd) {
+		IEntity e = actuallyCreateEntity(this, data);
 		if (e != null) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				pe.timeToAdd = timeToAdd;
 			}
-			//if (e.getID() > 0) {
-			this.addEntity(e); // Schedule it for addition at the right time
-			/*} else {
-				this.addClientOnlyEntity(e);
-			}*/
+			this.addEntity(e);
 		} else {
-			Globals.p("Not creating entity " + msg.entityID);
+			//Globals.p("Not creating entity " + msg.entityID);
 			// It's not for this game, so ignore it
+			throw new RuntimeException("Cannot create entity type " + data.type);
 		}
 
 	}

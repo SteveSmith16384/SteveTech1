@@ -67,9 +67,6 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		if (this.maintainDirectionForSecs > 0) {
 			this.maintainDirectionForSecs -= tpf_secs;
 		}
-		/*if (computer != null && !computer.isAlive()) {
-			computer = null;
-		}*/
 
 		if (currentTarget != null) { // Check we can still see enemy
 			if (!this.currentTarget.isAlive()) {
