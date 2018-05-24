@@ -147,7 +147,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public int currentAvatarID = -1; // In case the avatar physical entity gets replaced, we can re-assign it
 	public int playerID = -1;
 	public int side = -1;
-	//public int score;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
@@ -306,6 +305,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	 * Default light; override if required.
 	 */
 	protected void setUpLight() {
+		// Add lights to rootNode not gameNode since we recreate the gameNode each game
 		AmbientLight al = new AmbientLight();
 		al.setColor(ColorRGBA.White);
 		getGameNode().addLight(al);
@@ -369,15 +369,26 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 
 					// Add entities
-					for (int i=0 ; i<entitiesToAddToGame.size() ; i++) {
-						PhysicalEntity pe = entitiesToAddToGame.get(i);
-						if (pe.timeToAdd < renderTime) {
-							if (pe.getID() < 0 || this.entities.containsKey(pe.getID())) { // Check it is still in the game
-								this.addEntityToGame(pe);
+					if (entitiesToAddToGame.size() > 0) {
+						for (int i=0 ; i<entitiesToAddToGame.size() ; i++) {
+							PhysicalEntity pe = entitiesToAddToGame.get(i);
+							if (pe.timeToAdd < renderTime) {
+								if (pe.getID() < 0 || this.entities.containsKey(pe.getID())) { // Check it is still in the game
+									this.addEntityToGame(pe);
+								}
+								entitiesToAddToGame.remove(i);
+								i--;
 							}
-							entitiesToAddToGame.remove(i);
-							i--;
 						}
+					} else {
+						/*if (this.gameNode.getParent() == null) {
+							// todo - this doesn't work?
+							this.getRootNode().attachChild(this.gameNode);
+							this.getRootNode().updateGeometricState();
+							this.getRootNode().updateModelBound();
+							this.showPlayersWeapon();
+							gamePaused = false;
+						}*/
 					}
 
 					// Systems
@@ -595,6 +606,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			Globals.p("Rcvd GeneralCommandMessage: " + msg.command.toString());
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
 				clientStatus = STATUS_STARTED;
+				// Do this when all ents have actually been added
 				this.getRootNode().attachChild(this.gameNode);
 				this.showPlayersWeapon();
 				gamePaused = false;
@@ -994,6 +1006,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		this.entitiesForProcessing.clear();
 		this.clientOnlyEntities.clear();
 		this.nodes.clear();
+		//todo? this.gameNode = new Node("GameNode");
 
 		if (Globals.STRICT) {
 			if (this.physicsController.getEntities().size() > this.entities.size()) {

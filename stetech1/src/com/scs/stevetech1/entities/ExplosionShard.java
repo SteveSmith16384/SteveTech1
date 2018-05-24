@@ -3,6 +3,7 @@ package com.scs.stevetech1.entities;
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
@@ -28,6 +29,8 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		key3.setGenerateMips(true);
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
+
+		geometry.setShadowMode(ShadowMode.CastAndReceive);
 
 		Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 		floor_mat.setTexture("DiffuseMap", tex3);

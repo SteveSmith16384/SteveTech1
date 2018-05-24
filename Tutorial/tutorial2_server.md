@@ -48,3 +48,5 @@ Each time a game starts, the createGame() method is called, which is where all t
 ## Entities
 This is the generic name for any game object.  Most, but not all, entities will by "physical", i.e. have dimensions and be drawable (on the client at least).  In this game, our first entity is an instance of Floor.
 
+Todo: entity codes
+

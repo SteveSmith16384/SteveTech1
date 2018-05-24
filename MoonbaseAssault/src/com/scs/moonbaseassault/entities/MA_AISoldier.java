@@ -2,6 +2,7 @@ package com.scs.moonbaseassault.entities;
 
 import com.jme3.math.Vector3f;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
+import com.scs.moonbaseassault.client.SoldierTexture;
 import com.scs.moonbaseassault.models.SoldierModel;
 import com.scs.moonbaseassault.server.ai.ShootingSoldierAI3;
 import com.scs.stevetech1.entities.AbstractAIBullet;
@@ -22,6 +23,11 @@ public class MA_AISoldier extends AbstractAISoldier {
 	protected AbstractAIBullet createBullet(Vector3f pos, Vector3f dir) {
 		AILaserBullet bullet = new AILaserBullet(game, game.getNextEntityID(), side, pos.x, pos.y, pos.z, this, dir);
 		return bullet;
+	}
+
+	@Override
+	public String getDebrisTexture() {
+		return "Textures/blood.png";
 	}
 
 

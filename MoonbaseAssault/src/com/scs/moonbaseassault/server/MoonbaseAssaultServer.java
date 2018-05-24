@@ -115,6 +115,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	}
 
 
+	@Override
 	protected SimpleGameData createSimpleGameData(int gameID) {
 		return new MoonbaseAssaultGameData(gameID);
 	}
@@ -280,7 +281,11 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	@Override
 	public int getSide(ClientData client) {
 		// Players always on side 1?
-		return 1;
+		if (Globals.PLAYERS_ARE_ATTACKERS) {
+			return 1;
+		} else {
+			return 2;
+		}
 	}
 
 
@@ -342,11 +347,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected int getWinningSideAtEnd() {
-		/*for (int s=1 ; s<=2 ; s++) {
-			if (this.getMAGameData().pointsForSide[s] >= 100) {
-				return s;
-			}
-		}*/
 		return this.winningSide;
 	}
 

@@ -32,6 +32,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 	public void simpleInitApp() {
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class); // default
+		assetManager.registerLocator("../MoonbaseAssault/assets/", FileLocator.class); // default
 		//assetManager.registerLocator("assets/Textures/", FileLocator.class);
 
 		super.getViewPort().setBackgroundColor(ColorRGBA.Black);
@@ -40,14 +41,8 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-/*
-		Spatial model = assetManager.loadModel("Models/AnimatedHuman/Animated Human.blend");
-		JMEFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/ClothedDarkSkin2.png");
-		JMEFunctions.scaleModelToHeight(model, 10f);
-		JMEFunctions.moveYOriginTo(model, 0f);
-*/
-		Spatial model = assetManager.loadModel("Models/baechler-bug-monster-january2014.blend");
-		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/pistol/pistol_tex.png");
+		Spatial model = assetManager.loadModel("Models/QuaterniusGuns/Sniper rifle.obj");
+		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/QuaterniusGuns/pistol_tex.png");
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);

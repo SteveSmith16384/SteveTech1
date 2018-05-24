@@ -22,8 +22,8 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.LaunchData;
 
 /**
- * These bullets are processed separately on the client and the server, but includes code to ensure they are ready to be fired immediatey, and
- * launch at the same time on the client and the server. 
+ * These bullets are processed separately on the client and the server, but includes code to ensure they are ready to be fired immediately, and
+ * launch at (almost) the same time on the client and the server. 
  *
  */
 public abstract class AbstractPlayersBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, ICausesHarmOnContact, IClientControlled {

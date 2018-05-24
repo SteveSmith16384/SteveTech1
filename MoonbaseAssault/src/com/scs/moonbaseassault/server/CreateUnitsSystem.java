@@ -29,22 +29,24 @@ public class CreateUnitsSystem {
 
 			int numAttackers = 0;
 			int numDefenders = 0;
-			//float requiredAttackers = 0;
-			//int requiredDefenders = 0;
 
 			for (int i=0 ; i<server.entitiesForProcessing.size() ; i++) {
 				IEntity e = server.entitiesForProcessing.get(i);
 				if (e instanceof AbstractServerAvatar) {
-					numAttackers += 2;
-					//requiredDefenders += 3; // Players are always attackers, and worth more
+					AbstractServerAvatar asa = (AbstractServerAvatar)e;
+					if (asa.side == 1) { // Attacker
+						numAttackers += 2;
+					} else if (asa.side == 2) { // Defender
+						numDefenders += 2;
+					} else {
+						throw new RuntimeException("Invalid side: " + asa.side);
+					}
 				} else if (e instanceof AbstractAISoldier) {
 					AbstractAISoldier ai = (AbstractAISoldier)e;
 					if (ai.side == 1) { // Attacker
 						numAttackers++;
-						//requiredDefenders += 2;
 					} else if (ai.side == 2) { // Defender
 						numDefenders++;
-						//requiredAttackers += 0.5f;
 					} else {
 						throw new RuntimeException("Invalid side: " + ai.side);
 					}

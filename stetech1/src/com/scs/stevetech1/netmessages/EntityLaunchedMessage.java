@@ -22,7 +22,7 @@ public class EntityLaunchedMessage extends MyAbstractMessage {
 	public EntityLaunchedMessage(int eid, int _playerID, LaunchData _launchData) {
 		super(true, true);
 		
-		this.timestamp = _launchData.launchTime; // This will be earlier than most other messages
+		this.timestamp = _launchData.launchTime; // This will be earlier than most other messages, so the other clients launch immed
 		
 		entityID = eid;
 		playerID = _playerID;

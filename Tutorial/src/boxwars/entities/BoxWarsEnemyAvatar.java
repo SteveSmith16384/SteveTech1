@@ -15,13 +15,13 @@ public class BoxWarsEnemyAvatar extends AbstractEnemyAvatar {
 
 	@Override
 	public void setAnimCode(int s) {
-		
+		// Not animated
 	}
 
 	
 	@Override
 	public void processManualAnimation(float tpf_secs) {
-		
+		// Not animated
 	}
 
 

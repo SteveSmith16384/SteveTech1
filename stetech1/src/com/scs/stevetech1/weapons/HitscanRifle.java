@@ -37,10 +37,10 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 		bulletsInMag--;
 		if (game.isServer()) {
 			// We have already calculated the hit as part of ICalcHitInPast
+			AbstractGameServer server = (AbstractGameServer)game;
 			if (hitThisMoment != null) {
 				//Settings.p(hitThisMoment.entity + " has been shot!");
 
-				AbstractGameServer server = (AbstractGameServer)game;
 				server.collisionLogic.collision(hitThisMoment.entityHit, this);
 
 				/*Vector3f pos = this.hitThisMoment.point;
@@ -49,14 +49,16 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 				//BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.playerID, this.owner.getBulletStartPos(), hitThisMoment.point);
 				//game.addEntity(bt);
-				server.sendBulletTrail(MAG_SIZE, this.owner.getBulletStartPos(), hitThisMoment.point);
+				server.sendBulletTrail(this.playerID, this.owner.getBulletStartPos(), hitThisMoment.point);
 
 				this.hitThisMoment = null; // Clear it ready for next loop
 			} else {
 				// Bullet trail into the sky
 				Vector3f endPos = this.owner.getBulletStartPos().add(this.owner.getShootDir().mult(RANGE));
-				BulletTrail bt = new BulletTrail(game, this.playerID, this.owner.getBulletStartPos(), endPos);
-				game.addEntity(bt);
+				/*BulletTrail bt = new BulletTrail(game, this.playerID, this.owner.getBulletStartPos(), endPos);
+				game.addEntity(bt);*/
+				server.sendBulletTrail(this.playerID, this.owner.getBulletStartPos(), endPos);
+
 			}
 		} else { // Client
 			ICanShoot shooter = (ICanShoot)owner; 
@@ -70,9 +72,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			if (rcd != null) {
 				Vector3f pos = rcd.point;
 				Globals.p("Hit " + rcd.entityHit + " at " + pos);
-				
-				//AbstractGameClient client = (AbstractGameClient)game;
-				
+
 				// Show where hit
 				//DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), debugSphereType, pos.x, pos.y, pos.z, false, true);
 				//game.addClientOnlyEntity(ds);
@@ -85,7 +85,6 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 				// Bullet trail into the sky
 				Vector3f endPos = this.owner.getBulletStartPos().add(this.owner.getShootDir().mult(RANGE));
 				BulletTrail bt = new BulletTrail(game, this.playerID, this.owner.getBulletStartPos(), endPos);
-				//AbstractGameClient client = (AbstractGameClient)game;
 				game.addEntity(bt);
 			}
 		}
