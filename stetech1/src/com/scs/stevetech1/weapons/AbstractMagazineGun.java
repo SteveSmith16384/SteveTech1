@@ -22,6 +22,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	protected int magazineSize;
 	protected float shotInterval_secs, reloadInterval_secs;
 	protected ClientData client; // Only used server-side
+	private boolean toBeReloaded = true;
 
 	public AbstractMagazineGun(IEntityController _game, int id, int type, int playerID, ICanShoot owner, int avatarID, int abilityNum, String _name, 
 			float shotInt, float reloadInt, int magSize, ClientData _client) { 
@@ -75,13 +76,16 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
-		/*if (this.getBulletsInMag() <= 0) { No, client tells server when it wants to reload
+
+		if (toBeReloaded) {
+			toBeReloaded = false;
 			// Reload
 			//Globals.p("Reloading");
 			reload(server);// Only server can reload
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
-		}*/
+		}
+
 		timeUntilShoot_secs -= tpf_secs;
 		timeSinceLastReload += tpf_secs;
 	}
@@ -110,12 +114,12 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 		timeUntilShoot_secs -= tpf_secs;
 
 		//if (client.getGameData().isInGame()) { // Reload even if waiting for players
-			if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
-				//AbstractGameClient client = (AbstractGameClient) game;
-				client.sendMessage(new ClientReloadingMessage(this.getID()));
-				this.timeUntilShoot_secs = this.reloadInterval_secs;
-				Globals.p("Sending ClientReloadingMessage");
-			}
+		if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
+			//AbstractGameClient client = (AbstractGameClient) game;
+			client.sendMessage(new ClientReloadingMessage(this.getID()));
+			this.timeUntilShoot_secs = this.reloadInterval_secs;
+			Globals.p("Sending ClientReloadingMessage");
+		}
 		//}
 	}
 
@@ -140,6 +144,13 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	@Override
 	public void decode(AbilityUpdateMessage aum) {
 		timeUntilShoot_secs = aum.timeUntilShoot;
+	}
+
+
+	@Override
+	public void setToBeReloaded() {
+		toBeReloaded = true;
+
 	}
 
 

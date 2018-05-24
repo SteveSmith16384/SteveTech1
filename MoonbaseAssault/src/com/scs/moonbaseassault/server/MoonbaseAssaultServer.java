@@ -229,7 +229,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 				}
 			}
 			if (found) {
-				Globals.p("AISoldier starting at " + soldier.getWorldTranslation());
+				Globals.p(soldier + " starting at " + soldier.getWorldTranslation());
 			} else {
 				throw new RuntimeException("No space to start!");
 			}
@@ -280,11 +280,10 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	public int getSide(ClientData client) {
-		// Players always on side 1?
-		if (Globals.PLAYERS_ARE_ATTACKERS) {
-			return 1;
+		if (Globals.PLAYERS_ARE_DEFENDERS) {
+			return SIDE_DEFENDER;
 		} else {
-			return 2;
+			return SIDE_ATTACKER;
 		}
 	}
 

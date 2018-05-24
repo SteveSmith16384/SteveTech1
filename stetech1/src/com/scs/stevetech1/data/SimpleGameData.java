@@ -1,6 +1,7 @@
 package com.scs.stevetech1.data;
 
 import com.jme3.network.serializing.Serializable;
+import com.scs.stevetech1.server.Globals;
 
 /*
  * This should only contain stuff that is completely replaced when a new game starts.
@@ -44,7 +45,6 @@ public class SimpleGameData { // POJO
 	public static String getStatusDesc(int s) {
 		switch (s) {
 		case ST_WAITING_FOR_PLAYERS: return "Waiting for players";
-		//case ST_CLEAR_OLD_GAME: return "Removing Old Game";
 		case ST_DEPLOYING: return "Deploying";
 		case ST_STARTED: return "Started";
 		case ST_FINISHED: return "Finished";
@@ -72,6 +72,14 @@ public class SimpleGameData { // POJO
 			statusStartTimeMS = System.currentTimeMillis();
 			statusDurationMS = duration;
 			//server.gameStatusChanged(newStatus);
+			
+			if (Globals.DEBUG_GAME_NOT_STARTING) {
+				Globals.p("Game " + this.gameID + " status now " + getStatusDesc(this.gameStatus));
+			}
+		} else {
+			if (Globals.DEBUG_GAME_NOT_STARTING) {
+				Globals.p("Game " + this.gameID + " status remains " + getStatusDesc(newStatus));
+			}
 		}
 	}
 	

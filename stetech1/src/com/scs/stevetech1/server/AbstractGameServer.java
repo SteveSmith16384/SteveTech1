@@ -113,7 +113,7 @@ ConsoleInputListener {
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
 	private boolean doNotSendAddRemoveEntityMsgs = false;
 
-	protected SimpleGameData gameData;// = new SimpleGameData();
+	protected SimpleGameData gameData;
 
 	public AbstractGameServer(String _gameCode, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
 		//float gravity, float aerodynamicness) {
@@ -256,7 +256,7 @@ ConsoleInputListener {
 						ClientReloadingMessage crm = (ClientReloadingMessage)message;
 						IReloadable e = (IReloadable)this.entities.get(crm.abilityId);
 						if (e != null) {
-							e.reload(this);
+							e.setToBeReloaded(); //reload(this);
 						}
 
 					} else {
@@ -474,7 +474,7 @@ ConsoleInputListener {
 		this.gameData = this.createSimpleGameData(gameID);
 		sendGameStatusMessage(); // To send the new game ID
 		Globals.p("------------------------------");
-		Globals.p("Starting new game " + gameData.gameID);
+		Globals.p("Starting new game ID " + gameData.gameID);
 
 		try {
 			doNotSendAddRemoveEntityMsgs = true; // Prevent sending new ent messages for all the entities
@@ -936,6 +936,7 @@ ConsoleInputListener {
 
 	private void showStats() {
 		Globals.p("Game ID: " + this.getGameID());
+		Globals.p("Game Status: " + SimpleGameData.getStatusDesc(this.gameData.getGameStatus()));
 		Globals.p("Num Entities: " + this.entities.size());
 		Globals.p("Num Entities for processing: " + this.entitiesForProcessing.size());
 		Globals.p("Num Clients: " + this.clients.size());

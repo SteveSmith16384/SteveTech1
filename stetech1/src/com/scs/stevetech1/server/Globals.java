@@ -8,12 +8,13 @@ import ssmith.lang.Functions;
 
 public class Globals {
 	
-	public static final boolean RECORD_VID = true;
+	public static final boolean RECORD_VID = false;
 	public static final boolean HIDE_BELLS_WHISTLES = !RECORD_VID;
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean PLAYERS_ARE_ATTACKERS = false;
+	public static final boolean DEBUG_GAME_NOT_STARTING = true;
+	public static final boolean PLAYERS_ARE_DEFENDERS = true;
 	public static final boolean TEST_AI = true;
 
 	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = false;

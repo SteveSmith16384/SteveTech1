@@ -6,6 +6,7 @@ import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
+import com.scs.stevetech1.server.Globals;
 
 public class ServerGameStatusSystem {
 
@@ -20,10 +21,12 @@ public class ServerGameStatusSystem {
 
 	public void checkGameStatus(boolean playersChanged) {
 		SimpleGameData gameData = server.getGameData();
-		//GameOptions gameOptions = server.gameOptions;
 
 		if (playersChanged) {
 			boolean enoughPlayers = areThereEnoughPlayers();
+			if (Globals.DEBUG_GAME_NOT_STARTING) {
+				Globals.p("Checking game status.  enoughPlayers=" + enoughPlayers);
+			}
 			if (!enoughPlayers && gameData.isInGame()) {
 				//gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 				this.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS);
@@ -85,6 +88,7 @@ public class ServerGameStatusSystem {
 			if (oldStatus != gameData.getGameStatus()) {
 				server.gameStatusChanged(gameData.getGameStatus());
 			}
+			//Globals.p("New game status: " + gameData.getGameStatus());
 		}
 	}
 

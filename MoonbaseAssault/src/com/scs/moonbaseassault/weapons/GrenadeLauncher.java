@@ -7,6 +7,7 @@ import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.entities.PlayersGrenade;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntityContainer;
+import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
@@ -86,7 +87,6 @@ public class GrenadeLauncher extends AbstractMagazineGun<PlayersGrenade> impleme
 		}
 		
 	}
-
 
 }
 

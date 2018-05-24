@@ -4,5 +4,7 @@ import com.scs.stevetech1.server.AbstractGameServer;
 
 public interface IReloadable {
 
+	void setToBeReloaded();
+	
 	void reload(AbstractGameServer server);
 }

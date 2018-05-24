@@ -13,7 +13,7 @@ public class ClientData {
 	public Object networkObj;
 	public int id;
 	public AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
-	public long latestInputTimestamp;
+	public long latestInputTimestamp; // We ignore any messages sent earlier
 	public AbstractServerAvatar avatar;
 	public RemoteInput remoteInput = new RemoteInput(); // For storing message that are translated into input
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
