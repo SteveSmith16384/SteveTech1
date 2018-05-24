@@ -102,9 +102,9 @@ public class MapLoader {
 				scannerData[x][y] = mapCode[x][y];
 			}
 		}
-
+/*
 		// print map
-		/*for (int y=0 ; y<mapsize ; y++) {
+		for (int y=0 ; y<mapsize ; y++) {
 			for (int x=0 ; x<mapsize ; x++) {
 				if (mapCode[x][y] == WALL) {
 					System.out.print("X");
@@ -123,8 +123,8 @@ public class MapLoader {
 				}					
 			}
 			System.out.println("");
-		}*/
-
+		}
+*/
 
 		// Generate map!
 		totalWalls = 0;

@@ -8,7 +8,7 @@ import ssmith.lang.Functions;
 
 public class Globals {
 	
-	public static final boolean RECORD_VID = false;
+	public static final boolean RECORD_VID = true;
 	public static final boolean HIDE_BELLS_WHISTLES = !RECORD_VID;
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 

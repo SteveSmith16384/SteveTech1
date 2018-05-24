@@ -52,8 +52,8 @@ public class MapImageTexture extends PaintableImage {
 			// Map walls
 			g.setColor(new Color(0f, 1f, 0f, ALPHA)); // green
 			for (int y=0 ; y<data.length ; y++) {
-				for (int x=0 ; x<data[y].length ; x++) {
-					if (data[y][x] == MapLoader.WALL) {
+				for (int x=0 ; x<data[0].length ; x++) {
+					if (data[x][y] == MapLoader.WALL) {
 						//g.fillRect((data.length-1-y)*pixelSize, (data[0].length-1-x)*pixelSize, pixelSize, pixelSize);
 						paintSquare(g, x, y, 1);
 					}
@@ -100,8 +100,10 @@ public class MapImageTexture extends PaintableImage {
 	}
 
 	private void paintSquare(Graphics2D g, int mx, int my, int pxlSizeMult) {
-		int x = (data.length-1-my)*pixelSize;
-		int y = (data[0].length-1-mx)*pixelSize;
+		//int x = (data.length-1-mx)*pixelSize;
+		int x = (mx)*pixelSize;
+		//int y = (data[0].length-1-mx)*pixelSize;
+		int y = (data[0].length-1-my)*pixelSize;
 		g.fillRect(x, y, pixelSize*pxlSizeMult, pixelSize*pxlSizeMult);
 
 	}

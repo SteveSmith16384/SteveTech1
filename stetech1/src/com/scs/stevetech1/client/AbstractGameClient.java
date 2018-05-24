@@ -381,11 +381,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						}
 					} else {
 						if (this.gameNode.getParent() == null) {
-							// todo - this doesn't work?
 							this.getRootNode().attachChild(this.gameNode);
-							//this.getRootNode().updateGeometricState();
-							//this.getRootNode().updateModelBound();
-							this.showPlayersWeapon();
+							//this.showPlayersWeapon();
 							gamePaused = false;
 						}
 					}

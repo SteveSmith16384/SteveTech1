@@ -9,7 +9,7 @@ SteveTech1 is a 3D multiplayer FPS framework and engine, designed to help you cr
 All the basic features are complete but not thoroughly stress-tested yet.  All aspects are subject to change.
 
 
-## FEATURES:
+### FEATURES:
 * Client prediction & Lag-compensation
 * TCP and UDP for networking
 * Simple physics
@@ -23,7 +23,7 @@ All the basic features are complete but not thoroughly stress-tested yet.  All a
 * If you've never used JMonkeyEngine before, the excellent documentation can be found here: https://jmonkeyengine.github.io/wiki/jme3.html#tutorials-for-beginners 
 
 
-## TECHNICAL OVERVIEW
+### TECHNICAL OVERVIEW
 * To create the server, extend AbstractGameServer.  Various methods require overriding that will define how your game works. 
 * To create the client, extend AbstractGameClient.  Various methods require overriding that will define how your client works.  The client needs access to all the same data as the server; it currently doesn't download anything from the server.
 * The game primarily works around "entities", which can be anything, e.g. a player, a wall etc...  Entities are defined mainly by implementing interfaces.  For example, implement the IRemoveOnContact to force an entity to be removed automatically when it touches anything (e.g. a bullet hitting a wall).
@@ -39,13 +39,13 @@ All the basic features are complete but not thoroughly stress-tested yet.  All a
 * Enter "help" on the server console for a list of other commands.
 
 
-## CREDITS
+### CREDITS
 * Designed and developed by Stephen Carlyle-Smith (http://twitter.com/stephencsmith, stephen.carlylesmith@googlemail.com)
 * Uses JMonkeyEngine for the 3D
-* Uses Kryonet for networking (included).
+* Uses Kryonet for networking.
 
 
-## LICENCES
+### LICENCES
 * The SteveTech code is licenced under MIT: https://bitbucket.org/SteveSmith16384/stetech1/raw/5d3d7eb190119e4b77e4a3f5042a59906653b7a2/stevetech1_mit_licence.txt
 * JMonkeyEngine licence: [https://jmonkeyengine.github.io/wiki/bsd_license.html#jme-s-bsd-license]
 * Kryonet Licence: [https://raw.githubusercontent.com/EsotericSoftware/kryonet/master/license.txt]

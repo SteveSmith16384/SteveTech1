@@ -147,7 +147,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 
 	private void checkRoute() {
-		if (this.route.isEmpty()) {
+		if (this.route.isEmpty() || this.route.size() <= 1) { // Stop at last one since the dest is a comp0uter, and we don't want to walk into it
 			this.route = null;
 		} else {
 			Point p = this.route.get(0);

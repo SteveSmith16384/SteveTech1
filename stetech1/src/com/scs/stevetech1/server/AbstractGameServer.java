@@ -264,7 +264,7 @@ ConsoleInputListener {
 					}
 				}
 
-				// Add and remove entities - do this as close to the list iteration as possible!
+				// Remove entities - do this as close to the list iteration as possible!
 				this.actuallyRemoveEntities();
 
 				synchronized (this.clients) {
@@ -398,7 +398,7 @@ ConsoleInputListener {
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
 		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
-		sendGameStatusMessage();
+		//sendGameStatusMessage();
 		sendAllEntitiesToClient(client);
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 		this.pingSystem.sendPingToClient(client);
