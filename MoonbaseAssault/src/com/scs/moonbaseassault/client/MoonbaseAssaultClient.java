@@ -136,7 +136,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 						computers.add(new Point((int)pos.x, (int)pos.z));
 					} else if (pe instanceof MA_AISoldier) {
 						MA_AISoldier ai = (MA_AISoldier)pe;
-						if (ai.getSide() == 1) { // Only show attackers
+						if (ai.getSide() == this.side) { // Only show our side
 							Vector3f pos = pe.getWorldTranslation();
 							units.add(new Point((int)pos.x, (int)pos.z));
 						}

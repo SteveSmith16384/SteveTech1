@@ -305,7 +305,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	 * Default light; override if required.
 	 */
 	protected void setUpLight() {
-		// Add lights to rootNode not gameNode since we recreate the gameNode each game
 		AmbientLight al = new AmbientLight();
 		al.setColor(ColorRGBA.White);
 		getGameNode().addLight(al);
@@ -381,14 +380,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							}
 						}
 					} else {
-						/*if (this.gameNode.getParent() == null) {
+						if (this.gameNode.getParent() == null) {
 							// todo - this doesn't work?
 							this.getRootNode().attachChild(this.gameNode);
-							this.getRootNode().updateGeometricState();
-							this.getRootNode().updateModelBound();
+							//this.getRootNode().updateGeometricState();
+							//this.getRootNode().updateModelBound();
 							this.showPlayersWeapon();
 							gamePaused = false;
-						}*/
+						}
 					}
 
 					// Systems
@@ -607,9 +606,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
 				clientStatus = STATUS_STARTED;
 				// Do this when all ents have actually been added
-				this.getRootNode().attachChild(this.gameNode);
-				this.showPlayersWeapon();
-				gamePaused = false;
+				//this.getRootNode().attachChild(this.gameNode);
+				//this.showPlayersWeapon();
+				//gamePaused = false;
 			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
 				this.removeAllEntities();
 			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) { // We now have enough data to start
@@ -949,7 +948,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			} else {
 				this.getGameNode().attachChild(pe.getMainNode());
 			}
-			//this.getGameNode().attachChild(pe.getMainNode());
 
 			if (pe.simpleRigidBody != null) {
 				this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
@@ -1006,7 +1004,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		this.entitiesForProcessing.clear();
 		this.clientOnlyEntities.clear();
 		this.nodes.clear();
-		//todo? this.gameNode = new Node("GameNode");
+		this.gameNode.detachAllChildren();
+		this.gameNode.removeFromParent();
 
 		if (Globals.STRICT) {
 			if (this.physicsController.getEntities().size() > this.entities.size()) {

@@ -217,7 +217,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	
 	private void moveAISoldierToStartPosition(PhysicalEntity soldier, int side) {
 		float startHeight = .1f;
-		if (!Globals.TEST_AI) {
+		//if (!Globals.TEST_AI) {
 			List<Point> deploySquares = this.deploySquares[side-1];
 			boolean found = false;
 			while (true) { // todo - only try a certain number of times
@@ -233,9 +233,9 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 			} else {
 				throw new RuntimeException("No space to start!");
 			}
-		} else {
+		/*} else {
 			soldier.setWorldTranslation(1.5f, startHeight, 1.5f);
-		}
+		}*/
 	}
 
 
