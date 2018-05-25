@@ -22,11 +22,14 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public class MoonbaseWall extends PhysicalEntity implements IDebrisTexture {
 
-	private static final String TEX = "Textures/fence.png";
+	private static final String INVISIBLE_TEX = "Textures/fence.png";
+	private String tex;
 	
-	public MoonbaseWall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, float d, String tex) {
+	public MoonbaseWall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, float d, String _tex) {
 		super(_game, id, MoonbaseAssaultClientEntityCreator.WALL, "Wall", false, true, false);
 
+		tex = _tex;
+		
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("w", w);
@@ -58,7 +61,7 @@ public class MoonbaseWall extends PhysicalEntity implements IDebrisTexture {
 			if (!Globals.TRANSPARENT_WALLS) {
 				key3 = new TextureKey(tex);
 			} else {
-				key3 = new TextureKey(TEX);
+				key3 = new TextureKey(INVISIBLE_TEX);
 			}
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
@@ -94,34 +97,8 @@ public class MoonbaseWall extends PhysicalEntity implements IDebrisTexture {
 	
 	@Override
 	public String getDebrisTexture() {
-		return TEX;
+		return tex;
 	}
 
-/*
-	public Node getOwnerNode() {
-		Vector3f pos = this.getWorldTranslation();
-		String s = "";
-		if (pos.x < 35f) {
-			s = "0";
-		} else {
-			s = "1";
-		}
-		if (pos.y < 35f) {
-			s = s + "0";
-		} else {
-			s = s + "1";
-		}
-		
-		Node gameNode = game.getGameNode();
-		for (Spatial child : gameNode.getChildren()) {
-			if (child instanceof Node) {
-				Node n = (Node)child;
-				if (n.getName().equals(s)) {
-					return n;
-				}
-			}			
-		}
-		throw new RuntimeException("Node " + s + " not found");
-	}
-*/
+
 }

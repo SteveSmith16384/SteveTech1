@@ -13,6 +13,7 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.scs.moonbaseassault.client.MoonbaseAssaultClientEntityCreator;
 import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
+import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractAIBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -80,7 +81,12 @@ public class AILaserBullet extends AbstractAIBullet {
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
 			AbstractGameServer server = (AbstractGameServer)game;
-			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .01f, .04f, "Textures/sun.jpg");
+			String tex = "Textures/sun.jpg";
+			if (pe instanceof IDebrisTexture) {
+				IDebrisTexture dt = (IDebrisTexture)pe;
+				tex = dt.getDebrisTexture();
+			}
+			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .01f, .04f, tex);
 		}
 		this.remove();
 	}

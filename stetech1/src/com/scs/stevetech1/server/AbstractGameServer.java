@@ -195,7 +195,7 @@ ConsoleInputListener {
 		}
 
 		if (Globals.STRICT) {
-			if (this.physicsController.getEntities().size() > this.entities.size()) {
+			if (this.physicsController.getNumEntities() > this.entities.size()) {
 				Globals.pe("Warning: more simple rigid bodies than entities!");
 			}
 		}
@@ -453,7 +453,8 @@ ConsoleInputListener {
 			e.remove();
 		}
 		this.actuallyRemoveEntities();
-
+		//this.entities
+		//this.physicsController.getEntities()
 	}
 
 
@@ -478,8 +479,8 @@ ConsoleInputListener {
 			Globals.p("Warning: There are still " + this.getGameNode().getChildren().size() + " children in the game node!  Forcing removal...");
 			this.getGameNode().detachAllChildren();
 		}
-		if (this.getPhysicsController().getEntities().size() > 0) {
-			Globals.p("Warning: There are still " + this.getPhysicsController().getEntities().size() + " children in the physics world!  Forcing removal...");
+		if (this.getPhysicsController().getNumEntities() > 0) {
+			Globals.p("Warning: There are still " + this.getPhysicsController().getNumEntities() + " children in the physics world!  Forcing removal...");
 			this.getPhysicsController().removeAllEntities();
 		}
 

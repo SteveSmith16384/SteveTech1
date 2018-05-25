@@ -11,6 +11,7 @@ import com.jme3.scene.Mesh;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
+import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractAIBullet;
@@ -84,7 +85,12 @@ public class AIBullet extends AbstractAIBullet implements INotifiedOfCollision {
 	public void collided(PhysicalEntity pe) {
 		if (game.isServer()) {
 			AbstractGameServer server = (AbstractGameServer)game;
-			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .04f, .1f, "Textures/sun.jpg");
+			String tex = "Textures/sun.jpg";
+			if (pe instanceof IDebrisTexture) {
+				IDebrisTexture dt = (IDebrisTexture)pe;
+				tex = dt.getDebrisTexture();
+			}
+			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .04f, .1f, tex);
 		}
 		this.remove();
 	}

@@ -17,18 +17,18 @@ public class SimplePhysicsController<T> {
 	public static final float DEFAULT_AERODYNAMICNESS = 0.99f; // Prevent things moving forever
 	public static final float DEFAULT_GRAVITY = -5f;
 
-	private ArrayList<SimpleRigidBody<T>> entities = new ArrayList<>();
+	private ArrayList<SimpleRigidBody<T>> entities = new ArrayList<>(); // ALL entities
+	// Efficiency nodes
+	private int nodeSize; // The size of the node collections
+	public HashMap<String, SimpleNode<T>> nodes; // Contain non-moving entities
+	public ArrayList<SimpleRigidBody<T>> movingEntities; // Contain moving entities
+
 	private ICollisionListener<T> collListener;
 	private boolean enabled = true;
 
 	// Settings
 	private float gravity;
 	private float aerodynamicness;
-
-	// Efficiency
-	private int nodeSize; // The size of the node collections
-	public HashMap<String, SimpleNode<T>> nodes;
-	public ArrayList<SimpleRigidBody<T>> movingEntities;
 
 	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSize) {
 		this(_collListener, _nodeSize, DEFAULT_GRAVITY, DEFAULT_AERODYNAMICNESS);
@@ -71,10 +71,26 @@ public class SimplePhysicsController<T> {
 	}
 
 
+	public int getNumEntities() {
+		int total1 =  this.entities.size();
+		int total2 = this.movingEntities.size();
+		Iterator<SimpleNode<T>> it = this.nodes.values().iterator();
+		while (it.hasNext()) {
+			SimpleNode<T> n = it.next();
+			total2 += n.getNumChildren();
+		}
+		if (total1 != total2) {
+			throw new RuntimeException("Discrepancy between entity lists!  " + total1 + " != " + total2);
+		}
+		return total1;
+	}
+	
+	
 	public void removeAllEntities() {
 		synchronized (entities) {
 			this.entities.clear();
 		}
+		this.movingEntities.clear();
 		nodes.clear();
 	}
 
@@ -105,7 +121,8 @@ public class SimplePhysicsController<T> {
 				this.nodes.put(id, node);
 			}
 			SimpleNode<T> n = this.nodes.get(id);
-			n.add(srb);			
+			n.add(srb);
+			srb.setParent(n);
 		} else {
 			movingEntities.add(srb);
 		}
@@ -124,11 +141,11 @@ public class SimplePhysicsController<T> {
 
 
 	public void removeSimpleRigidBody(SimpleRigidBody<T> srb) {
-		synchronized (entities) {
+		synchronized (entities) { // this.entities.contains(srb);
 			this.entities.remove(srb);
 		}
 		srb.removeFromParent_INTERNAL();
-		this.movingEntities.remove(srb);
+		this.movingEntities.remove(srb); //this.movingEntities.contains(srb);
 		srb.removed = true;
 	}
 

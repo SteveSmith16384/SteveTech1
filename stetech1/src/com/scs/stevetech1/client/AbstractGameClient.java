@@ -964,7 +964,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (pe.simpleRigidBody != null) {
 				this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
 				if (Globals.STRICT) {
-					if (this.physicsController.getEntities().size() > this.entities.size()) {
+					if (this.physicsController.getNumEntities() > this.entities.size()) {
 						Globals.pe("Warning: more simple rigid bodies than entities!");
 					}
 				}
@@ -1020,7 +1020,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		this.gameNode.removeFromParent();
 
 		if (Globals.STRICT) {
-			if (this.physicsController.getEntities().size() > this.entities.size()) {
+			if (this.physicsController.getNumEntities() > this.entities.size()) {
 				Globals.pe("Warning: more simple rigid bodies than entities!");
 			}
 		}

@@ -141,10 +141,10 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	@Override
 	protected void playerHasWon() {
 		removeCurrentHUDImage();
-		int x = this.cam.getWidth()/2;
-		int y = this.cam.getHeight()/5;
 		int width = this.cam.getWidth()/2;
 		int height = this.cam.getHeight()/2;
+		int x = (this.cam.getWidth()/2)-(width/2);
+		int y = this.cam.getHeight()/5;
 		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", x, y, width, height, 5);
 	}
 
@@ -152,10 +152,10 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	@Override
 	protected void playerHasLost() {
 		removeCurrentHUDImage();
-		int x = this.cam.getWidth()/2;
-		int y = this.cam.getHeight()/5;
 		int width = this.cam.getWidth()/2;
 		int height = this.cam.getHeight()/2;
+		int x = (this.cam.getWidth()/2)-(width/2);
+		int y = this.cam.getHeight()/5;
 		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
@@ -163,10 +163,10 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	@Override
 	protected void gameIsDrawn() {
 		removeCurrentHUDImage();
-		int x = this.cam.getWidth()/2;
-		int y = this.cam.getHeight()/5;
 		int width = this.cam.getWidth()/2;
 		int height = this.cam.getHeight()/2;
+		int x = (this.cam.getWidth()/2)-(width/2);
+		int y = this.cam.getHeight()/5;
 		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
@@ -179,10 +179,10 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected void gameStatusChanged(int oldStatus, int newStatus) {
-		int x = this.cam.getWidth()/2;
-		int y = this.cam.getHeight()/5;
 		int width = this.cam.getWidth()/2;
 		int height = this.cam.getHeight()/2;
+		int x = (this.cam.getWidth()/2)-(width/2);
+		int y = this.cam.getHeight()/5;
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
 			removeCurrentHUDImage();

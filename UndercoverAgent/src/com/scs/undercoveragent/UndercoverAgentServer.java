@@ -108,7 +108,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			avatar.setWorldTranslation(new Vector3f(3f, startHeight, 3f + (avatar.playerID*2)));
 		} else {
 			// Find a random position
-			SimpleRigidBody<PhysicalEntity> collider;
 			do {
 				float x = NumberFunctions.rndFloat(2, mapSize-3);
 				float z = NumberFunctions.rndFloat(2, mapSize-3);
@@ -133,7 +132,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			}
 		} else {
 			// Place snowman
-			int numSnowmen = mapSize;
+			int numSnowmen = mapSize; //this.physicsController.getEntities()
 			for (int i=0 ; i<numSnowmen ; i++) {
 				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEAngleFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(snowman);
@@ -193,10 +192,10 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		float x = NumberFunctions.rndFloat(2, mapSize-3);
 		float z = NumberFunctions.rndFloat(2, mapSize-3);
 		this.actuallyAddEntity(entity);
-		while (entity.simpleRigidBody.checkForCollisions().size() > 0) {
+		while (entity.simpleRigidBody.checkForCollisions().size() > 0) { // todo - don't try forever
 			x = NumberFunctions.rndFloat(2, mapSize-3);
 			z = NumberFunctions.rndFloat(2, mapSize-3);
-			entity.setWorldTranslation(x, z);
+			entity.setWorldTranslation(x, z); //this.entities
 		}
 		// randomly rotate
 		JMEAngleFunctions.rotateToDirection(entity.getMainNode(), NumberFunctions.rnd(0,  359));

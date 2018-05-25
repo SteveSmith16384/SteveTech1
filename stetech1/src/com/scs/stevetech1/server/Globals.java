@@ -8,15 +8,16 @@ import ssmith.lang.Functions;
 
 public class Globals {
 	
-	public static final boolean RECORD_VID = false;
+	public static final boolean RECORD_VID = true;
 	public static final boolean HIDE_BELLS_WHISTLES = !RECORD_VID;
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean DEBUG_GAME_NOT_STARTING = true;
+	public static final boolean SHOW_ALL_UNITS_ON_HUD = true;
 	public static final boolean PLAYERS_ARE_DEFENDERS = true;
-	public static final boolean TEST_AI = true;
-
+	
+	public static final boolean DEBUG_GAME_NOT_STARTING = false;
+	public static final boolean TEST_AI = false;
 	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = false;
 	public static final boolean NO_AI_UNITS = false;
 	public static final boolean DEBUG_DELAYED_EXPLOSION = false;
@@ -40,7 +41,6 @@ public class Globals {
 	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;
-	public static final boolean DEBUG_SLOW_CLIENT_AVATAR = false;
 	public static final boolean TURN_OFF_CLIENT_POS_ADJ = false;
 	public static final boolean PROFILE_SERVER = false;
 	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;

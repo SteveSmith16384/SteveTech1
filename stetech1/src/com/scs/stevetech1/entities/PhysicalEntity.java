@@ -132,7 +132,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
 				// simpleRigidBody = null;  Don't set it to null as it might be removed in mid-function
 				if (Globals.STRICT) {
-					if (this.game.getPhysicsController().getEntities().size() > game.getNumEntities()) {
+					if (this.game.getPhysicsController().getNumEntities() > game.getNumEntities()) {
 						Globals.pe("Warning: more simple rigid bodies than entities!");
 					}
 				}

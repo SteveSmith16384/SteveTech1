@@ -595,5 +595,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	public void setCollidable(boolean b) {
 		this.collidable = b;
 	}
+	
+	
+	public void setParent(SimpleNode<T> n) {
+		if (this.parent != null) {
+			throw new RuntimeException(this + " already has a parent: " + this.parent);
+		}
+		this.parent = n;
+	}
 }
 

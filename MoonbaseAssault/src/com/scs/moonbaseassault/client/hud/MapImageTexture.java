@@ -76,7 +76,7 @@ public class MapImageTexture extends PaintableImage {
 				for (int i=0 ; i<units.size() ; i++) {
 					Point p = units.get(i);
 					//g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
-					paintSquare(g, p.x, p.y, 3);
+					paintSquare(g, p.x, p.y, 2);
 				}			
 			}
 
@@ -86,14 +86,14 @@ public class MapImageTexture extends PaintableImage {
 				for (int i=0 ; i<computers.size() ; i++) {
 					Point p = computers.get(i);
 					//g.fillRect((data.length-p.y)*pixelSize, (data.length-p.x)*pixelSize, pixelSize, pixelSize);
-					paintSquare(g, p.x, p.y, 2);
+					paintSquare(g, p.x, p.y, 1);
 				}			
 			}
 
 			// Player
 			if (player != null) {
 				g.setColor(new Color(1f, 1f, 0f, ALPHA)); // Yellow
-				paintSquare(g, player.x, player.y, 3);
+				paintSquare(g, player.x, player.y, 2);
 			}				
 		}
 

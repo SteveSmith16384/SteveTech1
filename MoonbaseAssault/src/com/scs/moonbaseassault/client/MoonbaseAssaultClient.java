@@ -136,7 +136,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 						computers.add(new Point((int)pos.x, (int)pos.z));
 					} else if (pe instanceof MA_AISoldier) {
 						MA_AISoldier ai = (MA_AISoldier)pe;
-						if (ai.getSide() == this.side) { // Only show our side
+						if (ai.getSide() == this.side || Globals.SHOW_ALL_UNITS_ON_HUD) { // Only show our side
 							Vector3f pos = pe.getWorldTranslation();
 							units.add(new Point((int)pos.x, (int)pos.z));
 						}
@@ -191,7 +191,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		int width = this.cam.getWidth()/5;
 		int height = this.cam.getHeight()/5;
 		int x = (this.cam.getWidth()/2)-(width/2);
-		int y = this.cam.getHeight()/5;
+		int y = (int)(this.cam.getHeight() * 0.8f);
 		currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", x, y, width, height, 5);
 	}
 
@@ -202,7 +202,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		int width = this.cam.getWidth()/5;
 		int height = this.cam.getHeight()/5;
 		int x = (this.cam.getWidth()/2)-(width/2);
-		int y = this.cam.getHeight()/5;
+		int y = (int)(this.cam.getHeight() * 0.8f);
 		currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
@@ -213,7 +213,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		int width = this.cam.getWidth()/5;
 		int height = this.cam.getHeight()/5;
 		int x = (this.cam.getWidth()/2)-(width/2);
-		int y = this.cam.getHeight()/5;
+		int y = (int)(this.cam.getHeight() * 0.8f);
 		currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
@@ -230,7 +230,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 		int width = this.cam.getWidth()/5;
 		int height = this.cam.getHeight()/5;
 		int x = (this.cam.getWidth()/2)-(width/2);
-		int y = this.cam.getHeight()/5;
+		int y = (int)(this.cam.getHeight() * 0.8f);
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
 			removeCurrentHUDTextImage();
