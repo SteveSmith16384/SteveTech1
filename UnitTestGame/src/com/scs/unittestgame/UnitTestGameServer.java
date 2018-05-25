@@ -34,7 +34,7 @@ public class UnitTestGameServer extends AbstractGameServer {
 	
 
 	public UnitTestGameServer() throws IOException {
-		super("UnitTest", 
+		super("UnitTest", "key", 
 				new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
 				25, 50, 200, Integer.MAX_VALUE);
 		

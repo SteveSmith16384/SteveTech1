@@ -36,7 +36,7 @@ public class BoxWarsClient extends AbstractGameClient {
 
 
 	private BoxWarsClient() {
-		super("BoxWars", "Box Wars", null, "localhost", BoxWarsServer.PORT, 25, 200, 10000, 1f);
+		super("BoxWars", "key", "Box Wars", null, "localhost", BoxWarsServer.PORT, 25, 200, 10000, 1f);
 		start();
 	}
 

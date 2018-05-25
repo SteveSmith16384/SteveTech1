@@ -112,14 +112,26 @@ ConsoleInputListener {
 	public GameOptions gameOptions;
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
 	private boolean doNotSendAddRemoveEntityMsgs = false;
+	private String key;
 
-	protected SimpleGameData gameData;
+	protected SimpleGameData gameData = new SimpleGameData();
 
-	public AbstractGameServer(String _gameCode, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
+	/**
+	 * 
+	 * @param _gameCode  Must match the client's game code.
+	 * @param _key Must match the server's game code.
+	 * @param _gameOptions
+	 * @param _tickrateMillis The interval between each iteration of the game loop.
+	 * @param sendUpdateIntervalMillis How often to send updates to the clients
+	 * @param _clientRenderDelayMillis How far in the past the client should render the game
+	 * @param _timeoutMillis How long without comms before the server disconnects the client 
+	 */
+	public AbstractGameServer(String _gameCode, String _key, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
 		//float gravity, float aerodynamicness) {
 		super();
 
 		gameCode = _gameCode;
+		key = _key;
 		gameOptions = _gameOptions;
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
@@ -171,9 +183,9 @@ ConsoleInputListener {
 	 * Override if you need a custom game data class.
 	 * @return
 	 */
-	protected SimpleGameData createSimpleGameData(int gameID) {
+	/*protected SimpleGameData createSimpleGameData(int gameID) {
 		return new SimpleGameData(gameID);
-	}
+	}*/
 
 
 	@Override
@@ -381,8 +393,10 @@ ConsoleInputListener {
 		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
 			return;
-		}
-		if (!this.doWeHaveSpaces()) {
+		} else if (!newPlayerMessage.key.equalsIgnoreCase(this.key)) {
+			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces available."));
+			return;
+		} else if (!this.doWeHaveSpaces()) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces available"));
 			return;
 		}
@@ -391,7 +405,6 @@ ConsoleInputListener {
 		
 		int side = getSide(client);
 		client.playerData = this.createSimplePlayerData();
-		//new SimplePlayerData(client.id, newPlayerMessage.playerName, side);
 		client.playerData.id = client.id;
 		client.playerData.playerName = newPlayerMessage.playerName;
 		client.playerData.side = side;
@@ -454,7 +467,7 @@ ConsoleInputListener {
 
 
 	protected void startNewGame() {
-		if (this.entities.size() > 0) {
+		if (this.entities.size() > 0) { // todo - move these
 			throw new RuntimeException("Outstanding entities");
 		}
 		if (this.entitiesToRemove.size() > 0) {
@@ -470,8 +483,7 @@ ConsoleInputListener {
 			this.getPhysicsController().removeAllEntities();
 		}
 
-		int gameID = nextGameID.getAndAdd(1);
-		this.gameData = this.createSimpleGameData(gameID);
+		this.gameData.gameID = nextGameID.getAndAdd(1);
 		sendGameStatusMessage(); // To send the new game ID
 		Globals.p("------------------------------");
 		Globals.p("Starting new game ID " + gameData.gameID);
@@ -496,6 +508,8 @@ ConsoleInputListener {
 			}
 		}
 
+		this.gameStatusSystem.checkGameStatus(true); // Set game status to "Deploying" if there's enough players
+		
 	}
 
 

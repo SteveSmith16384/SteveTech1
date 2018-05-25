@@ -260,4 +260,12 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		return shooter;
 	}
 
+
+	@Override
+	public float getDamageCaused() {
+		//return ((RANGE-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 10;
+		float dam = (((range-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 5)+5; 
+		Globals.p(this + " damage: " + dam);
+		return dam;
+	}
 }

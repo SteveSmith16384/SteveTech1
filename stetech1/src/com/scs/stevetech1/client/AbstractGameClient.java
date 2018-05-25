@@ -164,7 +164,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private int gamePort;//, lobbyPort;
 	private float mouseSens;
 	private boolean gamePaused = true; // Prevent client doing stuff while setting up
-
+	private String key;
+	
 	// Subnodes
 	private int nodeSize = Globals.SUBNODE_SIZE;
 	public HashMap<String, Node> nodes;
@@ -173,11 +174,25 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
 
-	protected AbstractGameClient(String _gameID, String appTitle, String logoImage, String _gameServerIP, int _gamePort, //String _lobbyIP, int _lobbyPort, 
+	/**
+	 * 
+	 * @param _gameCode
+	 * @param _key
+	 * @param appTitle
+	 * @param logoImage
+	 * @param _gameServerIP
+	 * @param _gamePort
+	 * @param _tickrateMillis
+	 * @param _clientRenderDelayMillis
+	 * @param _timeoutMillis
+	 * @param _mouseSens
+	 */
+	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage, String _gameServerIP, int _gamePort, //String _lobbyIP, int _lobbyPort, 
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { // float gravity, float aerodynamicness, 
 		super();
 
-		gameCode = _gameID;
+		gameCode = _gameCode;
+		key = _key;
 
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
@@ -511,7 +526,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			WelcomeClientMessage rem = (WelcomeClientMessage)message;
 			if (clientStatus < STATUS_RCVD_WELCOME) {
 				clientStatus = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
-				networkClient.sendMessageToServer(new NewPlayerRequestMessage(gameCode, playerName));
+				networkClient.sendMessageToServer(new NewPlayerRequestMessage(gameCode, playerName, key));
 				clientStatus = STATUS_SENT_JOIN_REQUEST;
 			} else {
 				throw new RuntimeException("Received second welcome message");

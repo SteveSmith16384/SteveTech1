@@ -5,9 +5,10 @@ import com.scs.stevetech1.server.Globals;
 
 /*
  * This should only contain stuff that is completely replaced when a new game starts.
+ * No!  We need to keep track of status and duration when going from waitingForPlayers to Deployment
  */
 @Serializable
-public class SimpleGameData { // POJO
+public final class SimpleGameData { // POJO
 
 	// Game statuses
 	public static final int ST_WAITING_FOR_PLAYERS = 0;
@@ -15,7 +16,7 @@ public class SimpleGameData { // POJO
 	public static final int ST_STARTED = 3; // Players released!
 	public static final int ST_FINISHED = 4;
 
-	public int gameID = 1;
+	public int gameID = -1;
 	private int gameStatus = ST_WAITING_FOR_PLAYERS;
 	private long statusStartTimeMS;
 	private long statusDurationMS;

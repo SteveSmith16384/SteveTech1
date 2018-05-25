@@ -78,7 +78,7 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	private MoonbaseAssaultClient(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,// float gravity, float aerodynamicness,
 			float mouseSensitivity) {
-		super(MoonbaseAssaultServer.GAME_ID, "Moonbase Assault", null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
+		super(MoonbaseAssaultServer.GAME_ID, "key", "Moonbase Assault", null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity); // gravity, aerodynamicness, 
 
 		start();
@@ -188,10 +188,10 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	@Override
 	protected void playerHasWon() {
 		removeCurrentHUDTextImage();
-		int x = this.cam.getWidth()/2;
-		int y = this.cam.getHeight()/5;
 		int width = this.cam.getWidth()/5;
 		int height = this.cam.getHeight()/5;
+		int x = (this.cam.getWidth()/2)-(width/2);
+		int y = this.cam.getHeight()/5;
 		currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", x, y, width, height, 5);
 	}
 
@@ -199,10 +199,10 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	@Override
 	protected void playerHasLost() {
 		removeCurrentHUDTextImage();
-		int x = this.cam.getWidth()/2;
-		int y = this.cam.getHeight()/5;
 		int width = this.cam.getWidth()/5;
 		int height = this.cam.getHeight()/5;
+		int x = (this.cam.getWidth()/2)-(width/2);
+		int y = this.cam.getHeight()/5;
 		currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
@@ -210,10 +210,10 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 	@Override
 	protected void gameIsDrawn() {
 		removeCurrentHUDTextImage();
-		int x = this.cam.getWidth()/2;
-		int y = this.cam.getHeight()/5;
 		int width = this.cam.getWidth()/5;
 		int height = this.cam.getHeight()/5;
+		int x = (this.cam.getWidth()/2)-(width/2);
+		int y = this.cam.getHeight()/5;
 		currentHUDTextImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
@@ -227,10 +227,10 @@ public class MoonbaseAssaultClient extends AbstractGameClient {
 
 	@Override
 	protected void gameStatusChanged(int oldStatus, int newStatus) {
-		int x = this.cam.getWidth()/2;
-		int y = this.cam.getHeight()/5;
 		int width = this.cam.getWidth()/5;
 		int height = this.cam.getHeight()/5;
+		int x = (this.cam.getWidth()/2)-(width/2);
+		int y = this.cam.getHeight()/5;
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
 			removeCurrentHUDTextImage();

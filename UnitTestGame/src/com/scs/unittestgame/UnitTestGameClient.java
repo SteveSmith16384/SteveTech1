@@ -27,7 +27,7 @@ public class UnitTestGameClient extends AbstractGameClient {
 	
 
 	public UnitTestGameClient() {
-		super("UnitTest", "Unit Test", null, "localhost", UnitTestGameServer.PORT, 25, 200, 10000, 1f);
+		super("UnitTest", "key", "Unit Test", null, "localhost", UnitTestGameServer.PORT, 25, 200, 10000, 1f);
 
 		start(JmeContext.Type.Headless);
 

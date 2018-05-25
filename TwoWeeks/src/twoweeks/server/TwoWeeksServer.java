@@ -48,7 +48,8 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 	private Terrain1 terrain;
 	private TwoWeeksCollisionValidator collisionValidator = new TwoWeeksCollisionValidator();
-
+	private TwoWeeksGameData twipGameData;
+	
 	public static void main(String[] args) {
 		try {
 			MyProperties props = null;
@@ -100,7 +101,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 	private TwoWeeksServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
-		super(GAME_ID, new GameOptions(10*1000, 10*60*1000, 10*1000, 
+		super(GAME_ID, "key", new GameOptions(10*1000, 10*60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);
 		start(JmeContext.Type.Headless);
@@ -129,15 +130,15 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 		avatar.setWorldTranslation(x, pos.y + 50f, z);
 	}
 
-
+/*
 	public TwoWeeksGameData getMAGameData() {
-		return (TwoWeeksGameData)super.gameData;
+		return (TwoWeeksGameData)super.gameData; todo
 	}
-
+*/
 
 	@Override
 	protected void createGame() {
-		//super.gameData = new TwoWeeksGameData(nextGameID.getAndAdd(1));
+		this.twipGameData = new TwoWeeksGameData();
 
 		terrain = new Terrain1(this, getNextEntityID(), 0, 0, 0, this);
 		this.actuallyAddEntity(terrain); // terrain.getMainNode().getWorldBound();

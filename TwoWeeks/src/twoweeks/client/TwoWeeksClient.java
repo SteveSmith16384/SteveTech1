@@ -64,7 +64,7 @@ public class TwoWeeksClient extends AbstractGameClient {
 	private TwoWeeksClient(String gameIpAddress, int gamePort, String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,
 			float mouseSensitivity) {
-		super(TwoWeeksServer.GAME_ID, "Two Weeks", null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
+		super(TwoWeeksServer.GAME_ID, "key", "Two Weeks", null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity); 
 		start();
 	}

@@ -48,6 +48,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	private MoonbaseAssaultCollisionValidator collisionValidator = new MoonbaseAssaultCollisionValidator();
 	private int winningSide = 2; // Defenders win by default
 	private CreateUnitsSystem createUnitsSystem;
+	private MoonbaseAssaultGameData maGameData;
 	
 	public static void main(String[] args) {
 		try {
@@ -100,7 +101,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	private MoonbaseAssaultServer(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
-		super(GAME_ID, new GameOptions(5*1000, 10*60*1000, 10*1000, 
+		super(GAME_ID, "key", new GameOptions(5*1000, 10*60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
 		start(JmeContext.Type.Headless);
@@ -114,12 +115,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		super.simpleInitApp();
 	}
 
-
+/*
 	@Override
 	protected SimpleGameData createSimpleGameData(int gameID) {
 		return new MoonbaseAssaultGameData(gameID);
 	}
-
+*/
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
@@ -155,14 +156,15 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		this.moveAISoldierToStartPosition(avatar, avatar.side);
 	}
 
-
+/*
 	public MoonbaseAssaultGameData getMAGameData() {
-		return (MoonbaseAssaultGameData)super.gameData;
+		return (MoonbaseAssaultGameData)super.gameData; todo
 	}
-
+*/
 
 	@Override
 	protected void createGame() {
+		this.maGameData = new MoonbaseAssaultGameData();
 		MapLoader map = new MapLoader(this);
 		try {
 			//map.loadMap("/serverdata/moonbaseassault_small.csv");
@@ -268,7 +270,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	protected void playerJoinedGame(ClientData client) {
-		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.mapData, this.getMAGameData().computersDestroyed));
+		this.gameNetworkServer.sendMessageToClient(client, new HudDataMessage(this.mapData, this.maGameData.computersDestroyed));
 	}
 
 
@@ -331,12 +333,12 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	public void computerDestroyed(Point p) {
 		this.computerSquares.remove(p);
-		this.getMAGameData().computersDestroyed++;
+		this.maGameData.computersDestroyed++;
 		this.mapData[p.x][p.y] = MapLoader.INT_FLOOR;
-		this.gameNetworkServer.sendMessageToAll(new HudDataMessage(this.mapData, this.getMAGameData().computersDestroyed));
-		this.getMAGameData().computersDestroyed++;//.pointsForSide[1] += 10;
+		this.gameNetworkServer.sendMessageToAll(new HudDataMessage(this.mapData, this.maGameData.computersDestroyed));
+		this.maGameData.computersDestroyed++;//.pointsForSide[1] += 10;
 
-		if (this.getMAGameData().computersDestroyed >= COMPS_DESTROYED_TO_WIN) {
+		if (this.maGameData.computersDestroyed >= COMPS_DESTROYED_TO_WIN) {
 			winningSide = 1;
 			//this.gameStatusChanged(SimpleGameData.ST_FINISHED);
 			super.gameStatusSystem.setGameStatus(SimpleGameData.ST_FINISHED);

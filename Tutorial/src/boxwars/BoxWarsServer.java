@@ -37,7 +37,7 @@ public class BoxWarsServer extends AbstractGameServer {
 
 
 	private BoxWarsServer() throws IOException {
-		super("BoxWars", 
+		super("BoxWars", "key",
 				new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
 				25, 50, 200, 10000);
 		start(JmeContext.Type.Headless);

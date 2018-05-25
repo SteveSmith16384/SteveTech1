@@ -91,6 +91,7 @@ public class MoonbaseWall extends PhysicalEntity implements IDebrisTexture {
 
 	}
 
+	
 	@Override
 	public String getDebrisTexture() {
 		return TEX;

@@ -7,17 +7,18 @@ public class NewPlayerRequestMessage extends MyAbstractMessage {
 	
 	public String gameCode;
 	public String playerName;
-
+	public String key;
+	
 	public NewPlayerRequestMessage() {
-		this(null, null);
+		this(null, null, null);
 	}
 	
-	public NewPlayerRequestMessage(String _gameCode, String _playerName) {
+	public NewPlayerRequestMessage(String _gameCode, String _playerName, String _key) {
 		super(true, false);
 		
 		gameCode = _gameCode;
 		playerName = _playerName;
-		//side = (byte)_side;
+		key = _key;
 	}
 
 }

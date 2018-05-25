@@ -50,7 +50,7 @@ public class MapImageTexture extends PaintableImage {
 		// Origin is bottom-left
 		if (data != null) {
 			// Map walls
-			g.setColor(new Color(0f, 1f, 0f, ALPHA)); // green
+			g.setColor(new Color(0f, 1f, 0f, 0.5f)); // green
 			for (int y=0 ; y<data.length ; y++) {
 				for (int x=0 ; x<data[0].length ; x++) {
 					if (data[x][y] == MapLoader.WALL) {
