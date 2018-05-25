@@ -33,11 +33,13 @@ import twoweeks.entities.Terrain1;
 
 public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeightAdjuster {
 
+	// Map data
 	private static final int MAP_SIZE = 200; // Size to use
 	private static final int CITY_X = 20;
 	private static final int CITY_Z = 20;
 	private static final int CITY_SIZE = 60;
 	private static final float SPACE_BETWEEN_BUILDINGS = 6f;
+	
 	public static final float LASER_DIAM = 0.01f;
 	public static final float LASER_LENGTH = 0.5f;
 
@@ -123,18 +125,13 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		float x = 10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
-		float z = 10 + NumberFunctions.rndFloat(10, MAP_SIZE-20);
+		float x = CITY_X + NumberFunctions.rndFloat(0, MAP_SIZE-20);
+		float z = CITY_Z + NumberFunctions.rndFloat(0, MAP_SIZE-20);
 
 		Vector3f pos = this.getHeightAtPoint(x, z);
 		avatar.setWorldTranslation(x, pos.y + 50f, z);
 	}
 
-/*
-	public TwoWeeksGameData getMAGameData() {
-		return (TwoWeeksGameData)super.gameData; todo
-	}
-*/
 
 	@Override
 	protected void createGame() {
@@ -149,12 +146,12 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 		{
 			// Place trees
-			/*for (int z=80; z<=120 ; z+= 10) {
+			for (int z=80; z<=120 ; z+= 10) {
 				for (int x=80; x<=120 ; x+= 10) {
 					GenericStaticModel tree6 = new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "Tree", "Models/MoreNature/Blends/BigTreeWithLeaves.blend", 3f, "Models/MoreNature/Blends/TreeTexture.png", x, 0, z, new Quaternion());
 					this.placeGenericModel(tree6, x, z);
 				}
-			}*/
+			}
 			for (int num=0 ; num<10 ; num++) {
 				//todo
 			}
@@ -162,11 +159,11 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 		{
 			// Place AI
-			/*for (int num=0 ; num<10 ; num++) {
+			for (int num=0 ; num<10 ; num++) {
 				Vector3f pos = new Vector3f(NumberFunctions.rndFloat(10, MAP_SIZE-10), 255, NumberFunctions.rndFloat(10, MAP_SIZE-10));
-				TWIB_AISoldier s = new TWIB_AISoldier(this, this.getNextEntityID(), pos.x, pos.y + 5, pos.z, this.nextSideNum.getAndAdd(1), AbstractAvatar.ANIM_IDLE, "Enemy " + (num+1));
+				TWIB_AISoldier s = new TWIB_AISoldier(this, this.getNextEntityID(), pos.x, pos.y + 5, pos.z, nextSideNum.getAndAdd(1), AbstractAvatar.ANIM_IDLE, "Enemy " + (num+1));
 				this.actuallyAddEntity(s);
-			}*/
+			}
 		}
 
 	}
@@ -187,7 +184,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 			for (int x=sx ; x<sx+CITY_SIZE ; x+=SPACE_BETWEEN_BUILDINGS) {
 				if (NumberFunctions.rnd(1, 3) == 1) {
 					Vector3f pos = new Vector3f(x, 0f, z);
-					GenericStaticModel building = this.getRandomBuilding(pos);// new GenericStaticModel(this, this.getNextEntityID(), TwoWeeksClientEntityCreator.GENERIC_STATIC_MODEL, "BurgerShop", "Models/Suburban pack Vol.2 by Quaternius/Blends/BurgerShop.blend", -1, "Models/Suburban pack Vol.2 by Quaternius/Blends/Textures/BurgerShopTexture.png", pos.x, pos.y, pos.z, new Quaternion());
+					GenericStaticModel building = this.getRandomBuilding(pos);
 					pos.y = this.getLowestHeightAtPoint(building.getMainNode());
 					building.setWorldTranslation(pos);
 					this.actuallyAddEntity(building); //building.getMainNode().getWorldBound();
@@ -326,7 +323,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 
 	@Override
 	protected int getWinningSideAtEnd() {
-		return 2; // todo
+		return -1; // todo
 	}
 
 

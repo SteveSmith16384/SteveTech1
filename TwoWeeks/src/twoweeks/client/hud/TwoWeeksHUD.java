@@ -56,11 +56,11 @@ public class TwoWeeksHUD extends Node implements IHUD {
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 
 		super.setLocalTranslation(0, 0, 0);
-
+/*
 		if (!Globals.HIDE_BELLS_WHISTLES) {
 			this.addTargetter();
 		}
-		
+	*/	
 		/*if (Globals.DEBUG_HUD) {
 			for (int i=0; i<100 ; i+=10) {
 				BitmapText deleteme = new BitmapText(font_small, false);
