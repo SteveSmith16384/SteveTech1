@@ -69,8 +69,6 @@ import ssmith.util.RealtimeInterval;
 import ssmith.util.TextConsole;
 
 /**
- * This is a bare-bones entity server for controlling entites over a network.
- * It has no concept of game state.
  *
  */
 public abstract class AbstractGameServer extends SimpleApplication implements 
