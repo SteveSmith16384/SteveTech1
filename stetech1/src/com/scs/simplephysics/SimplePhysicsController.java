@@ -11,7 +11,7 @@ import jdk.nashorn.internal.objects.Global;
 
 public class SimplePhysicsController<T> {
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = false; // todo - make param
 
 	public static final float MIN_MOVE_DIST = 0.001f;
 	public static final float DEFAULT_AERODYNAMICNESS = 0.99f; // Prevent things moving forever
