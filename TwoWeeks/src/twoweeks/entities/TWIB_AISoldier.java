@@ -27,11 +27,5 @@ public class TWIB_AISoldier extends AbstractAISoldier {
 	}
 
 
-	@Override
-	public int getTargetPriority() {
-		return 2;
-	}
-
-
 }
 

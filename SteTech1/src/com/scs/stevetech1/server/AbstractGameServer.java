@@ -833,7 +833,7 @@ ConsoleInputListener {
 			}
 
 			startNewGame();
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
+			//this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
 
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {

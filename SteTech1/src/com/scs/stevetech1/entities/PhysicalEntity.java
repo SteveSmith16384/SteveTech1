@@ -42,7 +42,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f originalPos = new Vector3f();
 
 	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
-	//public Node owner; // So we know what to attach it to
 	public boolean moves;
 	
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing, boolean _blocksView, boolean _moves) {

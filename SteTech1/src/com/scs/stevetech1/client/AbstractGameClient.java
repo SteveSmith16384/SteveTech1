@@ -111,7 +111,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public static final int STATUS_RCVD_WELCOME = 3;
 	public static final int STATUS_SENT_JOIN_REQUEST = 4;
 	public static final int STATUS_JOINED_GAME = 5; // About to be sent all the entities
-	public static final int STATUS_STARTED = 6; // Have received all entities
+	public static final int STATUS_ENTS_RCVD_NOT_ADDED = 6; // Have received all entities, but not added them yet
+	public static final int STATUS_IN_GAME = 7; // Have received all entities and added them
 
 	private static final String JME_SETTINGS_NAME = "jme_client_settings.txt";
 
@@ -163,9 +164,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private String gameServerIP;//, lobbyIP;
 	private int gamePort;//, lobbyPort;
 	private float mouseSens;
-	private boolean gamePaused = true; // Prevent client doing stuff while setting up
+	//private boolean gamePaused = true; // Prevent client doing stuff while setting up
 	private String key;
-	
+
 	// Subnodes
 	private int nodeSize = Globals.SUBNODE_SIZE;
 	public HashMap<String, Node> nodes;
@@ -309,7 +310,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	protected abstract Class[] getListofMessageClasses();
 
-	protected abstract IHUD createAndGetHUD(); // todo - pass in constructor
+	protected abstract IHUD createAndGetHUD();
 
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;
@@ -363,7 +364,34 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					networkClient.sendMessageToServer(new PingMessage(false, 0));
 				}
 
-				if (clientStatus == STATUS_STARTED) {
+				// Remove entities
+				while (this.entitiesToRemove.size() > 0) {
+					int i = this.entitiesToRemove.getFirst();
+					this.actuallyRemoveEntity(i);
+				}
+
+				// Add entities
+				if (entitiesToAddToGame.size() > 0) {
+					for (int i=0 ; i<entitiesToAddToGame.size() ; i++) {
+						PhysicalEntity pe = entitiesToAddToGame.get(i);
+						if (pe.timeToAdd < renderTime) {
+							if (pe.getID() < 0 || this.entities.containsKey(pe.getID())) { // Check it is still in the game
+								this.addEntityToGame(pe);
+							}
+							entitiesToAddToGame.remove(i);
+							i--;
+						}
+					}
+				} else {
+					if (this.clientStatus == STATUS_ENTS_RCVD_NOT_ADDED) {
+						clientStatus = STATUS_IN_GAME;
+						this.getRootNode().attachChild(this.gameNode);
+						//this.showPlayersWeapon();
+						//gamePaused = false;
+					}
+				}
+
+				if (clientStatus == STATUS_IN_GAME) {
 
 					this.sendInputs();
 
@@ -376,112 +404,73 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						}
 					}
 
-					// Remove entities
-					while (this.entitiesToRemove.size() > 0) {
-						int i = this.entitiesToRemove.getFirst();
-						this.actuallyRemoveEntity(i);
-					}
-
-					// Add entities
-					if (entitiesToAddToGame.size() > 0) {
-						for (int i=0 ; i<entitiesToAddToGame.size() ; i++) {
-							PhysicalEntity pe = entitiesToAddToGame.get(i);
-							if (pe.timeToAdd < renderTime) {
-								if (pe.getID() < 0 || this.entities.containsKey(pe.getID())) { // Check it is still in the game
-									this.addEntityToGame(pe);
-								}
-								entitiesToAddToGame.remove(i);
-								i--;
-							}
-						}
-					} else {
-						if (this.gameNode.getParent() == null) {
-							this.getRootNode().attachChild(this.gameNode);
-							//this.showPlayersWeapon();
-							gamePaused = false;
-						}
-					}
-
 					// Systems
-					if (!gamePaused) {
-						this.launchSystem.process(renderTime);
+					//if (!gamePaused) {
+					this.launchSystem.process(renderTime);
 
-						if (Globals.STRICT) {
-							for(IEntity e : this.entities.values()) {
-								if (e.requiresProcessing()) {
-									if (!this.entitiesForProcessing.contains(e)) {
-										Globals.p("Warning: Processed entity " + e + " not in process list!");
-									}
+					if (Globals.STRICT) {
+						for(IEntity e : this.entities.values()) {
+							if (e.requiresProcessing()) {
+								if (!this.entitiesForProcessing.contains(e)) {
+									Globals.p("Warning: Processed entity " + e + " not in process list!");
 								}
 							}
 						}
+					}
 
 
-						// Loop through each entity and process them
-						//for (IEntity e : entitiesForProcessing.values()) { //entitiesForProcessing.size();
-						for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
-							IEntity e = this.entitiesForProcessing.get(i); //this.rootNode;
-							if (e.hasNotBeenRemoved()) {
-								if (e instanceof IPlayerControlled) {
-									IPlayerControlled p = (IPlayerControlled)e;
-									p.resetPlayerInput();
-								}
-								if (e instanceof PhysicalEntity) {
-									PhysicalEntity pe = (PhysicalEntity)e;
+					// Loop through each entity and process them
+					//for (IEntity e : entitiesForProcessing.values()) { //entitiesForProcessing.size();
+					for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
+						IEntity e = this.entitiesForProcessing.get(i); //this.rootNode;
+						if (e.hasNotBeenRemoved()) {
+							if (e instanceof IPlayerControlled) {
+								IPlayerControlled p = (IPlayerControlled)e;
+								p.resetPlayerInput();
+							}
+							if (e instanceof PhysicalEntity) {
+								PhysicalEntity pe = (PhysicalEntity)e;
 
-									pe.calcPosition(renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
-									pe.processChronoData(renderTime, tpf_secs);
+								pe.calcPosition(renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
+								pe.processChronoData(renderTime, tpf_secs);
 
-									if (Globals.STRICT) {
-										if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof IClientControlled == false) {
-											if (pe.simpleRigidBody != null) {
-												if (pe.simpleRigidBody.movedByForces()) {
-													Globals.p("Warning: client-side entity " + pe + " not kinematic!");
-												}
+								if (Globals.STRICT) {
+									if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof IClientControlled == false) {
+										if (pe.simpleRigidBody != null) {
+											if (pe.simpleRigidBody.movedByForces()) {
+												Globals.p("Warning: client-side entity " + pe + " not kinematic!");
 											}
 										}
 									}
-
 								}
 
-								if (e instanceof IProcessByClient) {
-									IProcessByClient pbc = (IProcessByClient)e;
-									pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
-								}
+							}
 
-								if (e instanceof IAnimatedClientSide) {
-									IAnimatedClientSide pbc = (IAnimatedClientSide)e;
-									this.animSystem.process(pbc, tpf_secs);
-								}
+							if (e instanceof IProcessByClient) {
+								IProcessByClient pbc = (IProcessByClient)e;
+								pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
+							}
 
-								if (e instanceof IDrawOnHUD) {
-									IDrawOnHUD doh = (IDrawOnHUD)e;
-									doh.drawOnHud(cam);
-								}
+							if (e instanceof IAnimatedClientSide) {
+								IAnimatedClientSide pbc = (IAnimatedClientSide)e;
+								this.animSystem.process(pbc, tpf_secs);
+							}
+
+							if (e instanceof IDrawOnHUD) {
+								IDrawOnHUD doh = (IDrawOnHUD)e;
+								doh.drawOnHud(cam);
 							}
 						}
-
-						// Now do client-only entities
-						//for (IEntity e : this.clientOnlyEntities.values()) {
-						/*for (int i=0 ; i<this.clientOnlyEntities.size() ; i++) {
-							IEntity e = this.clientOnlyEntities.get(i);
-							if (e.hasNotBeenRemoved()) {
-								if (e instanceof IProcessByClient) {
-									IProcessByClient pbc = (IProcessByClient)e;
-									pbc.processByClient(this, tpf_secs);
-								}
-							}
-						}*/
 					}
-				}
 
-				// Show players gun
-				if (playersWeaponNode != null) {
-					playersWeaponNode.setLocalTranslation(cam.getLocation());
-					playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
-					//playersWeaponNode.updateGeometricState();  // Makes the gun black for some reason
-				}
+					// Show players gun
+					if (playersWeaponNode != null) {
+						playersWeaponNode.setLocalTranslation(cam.getLocation());
+						playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
+						//playersWeaponNode.updateGeometricState();  // Makes the gun black for some reason
+					}
 
+				}
 			}
 
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
@@ -616,17 +605,15 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			//if (msg.gameID == this.getGameID()) { Might not have game id
 			Globals.p("Rcvd GeneralCommandMessage: " + msg.command.toString());
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
-				clientStatus = STATUS_STARTED;
-				// Do this when all ents have actually been added
-				//this.getRootNode().attachChild(this.gameNode);
-				//this.showPlayersWeapon();
-				//gamePaused = false;
+				clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;
 			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
 				this.removeAllEntities();
-			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) { // We now have enough data to start
-				gamePaused = true;
-			} else if (msg.command == GeneralCommandMessage.Command.GameRestarted) { // We now have enough data to start
-				gamePaused = false;
+			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) {
+				//gamePaused = true;
+				clientStatus = STATUS_JOINED_GAME;
+			/*} else if (msg.command == GeneralCommandMessage.Command.GameRestarted) { // We now have enough data to start
+				//gamePaused = false;
+				clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;*/
 			} else {
 				throw new RuntimeException("Unknown command:" + msg.command);
 			}

@@ -6,10 +6,10 @@ import com.jme3.network.serializing.Serializable;
 public class GeneralCommandMessage extends MyAbstractMessage {
 
 	public enum Command {
-		AllEntitiesSent, // Tells a client (who has joined halfway through a game) that they now have all the entities
 		RemoveAllEntities,
 		GameRestarting, // So the client knows that all the entities are about to change
-		GameRestarted,
+		AllEntitiesSent, // Tells a client (who has joined halfway through a game) that they now have all the entities
+		//GameRestarted,
 	}
 	
 	public Command command;
