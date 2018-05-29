@@ -330,4 +330,11 @@ IDebrisTexture {
 		return this;
 	}
 
+
+	@Override
+	public int getTargetPriority() {
+		return 2;
+	}
+
+	
 }

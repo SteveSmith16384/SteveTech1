@@ -47,7 +47,6 @@ public class SoldierModel implements IAvatarModel {
 				throw new RuntimeException("Unknown side: " + side);
 			}*/
 			JMEModelFunctions.setTextureOnSpatial(assetManager, model, SoldierTexture.getTexture(side));
-			//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/AnimatedHuman/Textures/Test.png");
 
 			JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 			JMEModelFunctions.moveYOriginTo(model, 0f);

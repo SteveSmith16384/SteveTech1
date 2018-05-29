@@ -262,7 +262,7 @@ ConsoleInputListener {
 						}
 
 					} else if (message instanceof ClientReloadingMessage) {
-						Globals.p("Rcvd ClientReloadingMessage");
+						//Globals.p("Rcvd ClientReloadingMessage");
 						ClientReloadingMessage crm = (ClientReloadingMessage)message;
 						IReloadable e = (IReloadable)this.entities.get(crm.abilityId);
 						if (e != null) {
@@ -798,12 +798,12 @@ ConsoleInputListener {
 			if (e != shooter) {
 				if (e instanceof ITargetable) {
 					ITargetable t = (ITargetable)e;
-					if (t.getPriority() > highestPri) {
+					if (t.getTargetPriority() > highestPri) {
 						if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
 							PhysicalEntity pe = (PhysicalEntity)e;
 							if (shooter.canSee(pe, range)) {
 								target = t;
-								highestPri = t.getPriority();
+								highestPri = t.getTargetPriority();
 							}
 						}
 					}

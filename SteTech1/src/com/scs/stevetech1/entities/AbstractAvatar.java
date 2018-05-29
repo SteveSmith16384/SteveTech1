@@ -58,22 +58,13 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public AbstractAvatar(IEntityController _game, int avatarType, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _avatarModel) {
 		super(_game, eid, avatarType, "Player", true, false, true);
 
-		/*if (game.isServer()) {
-			creationData = new HashMap<String, Object>();
-			creationData.put("id", eid); this.getID();
-			creationData.put("playerID", _playerID);
-			creationData.put("side", _side);
-		}*/
-
 		playerID = _playerID;
 		input = _input;
 		side =_side;
 		avatarModel = _avatarModel;
 		
-		//Box box = new Box(avatarModel.getBoundingBox().getXExtent(), avatarModel.getBoundingBox().getYExtent(), avatarModel.getBoundingBox().getZExtent());
 		Box box = new Box(avatarModel.getSize().x/2, avatarModel.getSize().y/2, avatarModel.getSize().z/2);
 		bbGeom = new Geometry("bbGeom_" + name, box);
-		//bbGeom.setLocalTranslation(0, avatarModel.getBoundingBox().getYExtent(), 0); // origin is centre!
 		bbGeom.setLocalTranslation(0, avatarModel.getSize().y/2, 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw ourselves
 

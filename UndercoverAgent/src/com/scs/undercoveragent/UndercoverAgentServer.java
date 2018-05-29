@@ -91,7 +91,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	private UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException { // , float gravity, float aerodynamicness
-		super(GAME_ID, "key", new GameOptions(10*1000, 60*1000, 10*1000, 
+		super(GAME_ID, "key", new GameOptions(10*1000, 5*60*1000, 10*1000, 
 				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
 
@@ -234,13 +234,14 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		int winningSide = -1;
 		boolean draw = false;
 		for(ClientData c : super.clients.values()) {
-			/*todo if (c.getScore() > highestScore) {
-				winningSide = c.side;
-				highestScore = c.getScore();
+			UASimplePlayerData spd = (UASimplePlayerData)c.playerData;
+			if (spd.score > highestScore) {
+				winningSide = spd.side;
+				highestScore = spd.score;
 				draw = false;
-			} else if (c.getScore() == highestScore) {
+			} else if (spd.score == highestScore) {
 				draw = true;
-			}*/
+			}
 		}
 		if (draw) {
 			return -1;

@@ -18,4 +18,4 @@ Yes!  SteveTech1 is designed exactly to solve all of these problems for you.  It
 
 
 ### Okay, I'm up for a challenge.  What do I need to do?
-Firstly you must prove yourself by completing the following: set up a basic Java project in your favourite IDE, which includes both the jMonkeyEngine and SteveTech1 libraries.  To get full marks, get one of the SteveTech1 example games running, such as Undercover Agent.  Once you have something that compiles, go onto the next stage of the tutorial.
+Firstly you must prove yourself by completing the following: set up a basic Java project in your favourite IDE, which includes both the jMonkeyEngine and SteveTech1 libraries.  Everything required is included with this project.  To get full marks, get one of the SteveTech1 example games running, such as Undercover Agent.  Once you have something that compiles, go onto the next stage of the tutorial.

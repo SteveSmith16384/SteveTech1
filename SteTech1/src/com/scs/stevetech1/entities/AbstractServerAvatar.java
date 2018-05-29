@@ -5,7 +5,6 @@ import java.util.HashMap;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.IAnimatedServerSide;
 import com.scs.stevetech1.components.IAvatarModel;
-import com.scs.stevetech1.components.ICanScorePoints;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
@@ -19,7 +18,6 @@ import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
-import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -123,7 +121,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	}
 
 
-	private void setDied(IEntity killer, String reason) {
+	protected void setDied(IEntity killer, String reason) {
 		Globals.p("Player " + this.getID() + " died: " + reason);
 		this.alive = false;
 		this.restartTimeSecs = server.gameOptions.avatarRestartTimeSecs;
@@ -131,11 +129,11 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 		server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, killer));
 
 		this.currentAnimCode = ANIM_DIED; // Send death as an anim, so it gets scheduled and is not shown straight away
-
+/*
 		if (killer != null && killer instanceof ICanScorePoints) {
 			ICanScorePoints csp = (ICanScorePoints)killer;
 			csp.incScore(1);
-		}
+		}*/
 	}
 
 
@@ -206,7 +204,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 
 	@Override
-	public int getPriority() {
+	public int getTargetPriority() {
 		return 1;
 	}
 

@@ -11,6 +11,6 @@ public interface ITargetable {
 	
 	boolean isAlive();
 	
-	int getPriority();
+	int getTargetPriority();
 	
 }

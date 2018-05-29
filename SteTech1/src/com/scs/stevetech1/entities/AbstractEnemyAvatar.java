@@ -35,7 +35,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	protected int side;
 
 	// HUD
-	private BitmapText hudNode;
+	protected BitmapText hudNode;
 	private static BitmapFont font_small;
 
 	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int _side, String _playersName) {
@@ -104,7 +104,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 		if (insideoutside != FrustumIntersect.Outside) {
 			if (this.hudNode.getText().length() == 0) {
-				hudNode.setText(name);
+				hudNode.setText(playersName);
 			}
 			Vector3f pos = this.getWorldTranslation().add(0, anim.getSize().y, 0); // todo - not this every time
 			Vector3f screen_pos = cam.getScreenCoordinates(pos);

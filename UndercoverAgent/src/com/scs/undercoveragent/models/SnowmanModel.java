@@ -1,16 +1,16 @@
 package com.scs.undercoveragent.models;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.jme.JMEModelFunctions;
 
-/*
- * This class, and classes like this, are designed to keep all the model-specific settings in one place.
+/**
+ * This class, and classes like this (i.e. a class for a model), are designed to keep all the model-specific settings in one place.
  */
 public class SnowmanModel implements IAvatarModel {
 
@@ -40,7 +40,9 @@ public class SnowmanModel implements IAvatarModel {
 
 		origPos = model.getLocalTranslation().clone();
 
-		return model;
+		Node container = new Node();
+		container.attachChild(model); // Wrap the model in a node so we can keep the models rotation and position adjustment
+		return container;
 	}
 
 

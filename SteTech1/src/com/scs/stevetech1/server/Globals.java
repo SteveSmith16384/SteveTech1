@@ -15,7 +15,9 @@ public class Globals {
 	// Lots of consts for specific debugging output
 	public static final boolean SHOW_ALL_UNITS_ON_HUD = true;
 	public static final boolean PLAYERS_ARE_DEFENDERS = true;
-	
+
+	public static final boolean EMPTY_MAP = false;
+	public static final boolean DEBUG_UA_SINKING = false;
 	public static final boolean DEBUG_GAME_NOT_STARTING = false;
 	public static final boolean TEST_AI = false;
 	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = false;
@@ -45,7 +47,6 @@ public class Globals {
 	public static final boolean PROFILE_SERVER = false;
 	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;
 	public static final boolean SHOW_NUM_ENT_UPDATES_SENT = false;
-	public static final boolean EMPTY_MAP = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_CLIENT_ROTATION = false;
 	public static final boolean DEBUG_PLAYER_RESTART = false;

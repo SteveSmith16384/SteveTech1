@@ -312,4 +312,11 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IDrawOnHUD, IProcessByCli
 		return this;
 	}
 
+
+	@Override
+	public int getTargetPriority() {
+		return 2;
+	}
+
+
 }

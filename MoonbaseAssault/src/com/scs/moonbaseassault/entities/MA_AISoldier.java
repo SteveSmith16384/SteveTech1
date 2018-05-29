@@ -31,11 +31,5 @@ public class MA_AISoldier extends AbstractAISoldier {
 		return "Textures/blood.png";
 	}
 
-
-	@Override
-	public int getPriority() {
-		return 2;
-	}
-
 	
 }

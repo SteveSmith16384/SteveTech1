@@ -1,7 +1,10 @@
 package com.scs.undercoveragent.entities;
 
+import com.jme3.renderer.Camera;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 import com.scs.undercoveragent.models.SnowmanModel;
@@ -17,8 +20,26 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 		super(game, UndercoverAgentClientEntityCreator.AVATAR, eid, x, y, z, new SnowmanModel(game.getAssetManager()), side, playerName);
 		
 		this.snowman = (SnowmanModel)anim;
+		
+		//this.hudNode.setText(""); // Don't show anything!
 	}
 	
+	
+	@Override
+	public void drawOnHud(Camera cam) {
+		// Don't show anything!
+	}
+	
+
+	@Override
+	public void processByClient(IClientApp client, float tpf_secs) {
+		super.processByClient(client, tpf_secs);
+		
+		if (Globals.DEBUG_UA_SINKING) {
+			Globals.p("AbstractEnemyAvatar=" + this.getWorldTranslation());
+		}
+	}
+
 
 	@Override
 	public void setAnimCode(int s) {
@@ -27,7 +48,6 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 		} else {
 			this.showDied = false;
 		}
-		//this.currentAnimCode = s;
 	}
 
 
