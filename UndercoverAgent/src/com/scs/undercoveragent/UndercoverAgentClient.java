@@ -11,6 +11,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.AbstractHUDImage;
 import com.scs.stevetech1.hud.IHUD;
@@ -21,6 +22,7 @@ import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.systems.client.FallingSnowflakeSystem;
 
 import ssmith.util.MyProperties;
+import ssmith.util.RealtimeInterval;
 
 public class UndercoverAgentClient extends AbstractGameClient {
 
@@ -29,6 +31,9 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	private AbstractHUDImage currentHUDImage;
 	private DirectionalLight sun;
 	private AbstractCollisionValidator collisionValidator;
+	
+	private UndercoverAgentHUD hud;
+	private RealtimeInterval updateHudInterval = new RealtimeInterval(3000);
 
 	public static void main(String[] args) {
 		try {
@@ -92,6 +97,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
 
+		hud = new UndercoverAgentHUD(this, this.getCamera());
 	}
 
 
@@ -112,8 +118,19 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	public void simpleUpdate(float tpf_secs) {
 		super.simpleUpdate(tpf_secs);
 
-		if (this.clientStatus == AbstractGameClient.STATUS_STARTED) {
+		if (this.clientStatus == AbstractGameClient.STATUS_IN_GAME) {
 			snowflakeSystem.process(tpf_secs);
+		}
+		
+		if (updateHudInterval.hitInterval()) {
+			if (this.playersList != null) {
+				for (SimplePlayerData spd : this.playersList) {
+					if (spd.id == this.playerID) {
+						UASimplePlayerData ua = (UASimplePlayerData)spd;
+						this.hud.setScoreText(ua.score);
+					}
+				}
+			}
 		}
 	}
 
@@ -173,7 +190,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected IHUD createAndGetHUD() {
-		return new UndercoverAgentHUD(this, this.getCamera());
+		return hud;
 	}
 
 

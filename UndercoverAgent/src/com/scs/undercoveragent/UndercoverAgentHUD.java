@@ -296,20 +296,6 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 	}
 
 
-	private void addTargetter() {
-		Picture targetting_reticule = new Picture("HUD Picture");
-		targetting_reticule.setImage(game.getAssetManager(), "Textures/circular_recticle.png", true);
-		float crosshairs_w = cam.getWidth()/10;
-		targetting_reticule.setWidth(crosshairs_w);
-		float crosshairs_h = cam.getHeight()/10;
-		targetting_reticule.setHeight(crosshairs_h);
-		this.setLocalTranslation((cam.getWidth() - crosshairs_w)/2, (cam.getHeight() - crosshairs_h)/2, 0);
-		this.attachChild(targetting_reticule);
-
-		//this.targetting_reticules.add(targetting_reticule);
-	}
-
-
 	@Override
 	public Node getRootNode() {
 		return this;

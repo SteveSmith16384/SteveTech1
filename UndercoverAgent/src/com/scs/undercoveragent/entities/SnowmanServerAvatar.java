@@ -32,7 +32,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar {
 				long timeSinceMove = System.currentTimeMillis() - super.lastMoveTime;
 				if (timeSinceMove > 5 * 1000) {
 					//Globals.p("Forcing client to jump");
-					this.jump();  //todo Send message forcing client to jump
+					this.jump();
 				}
 			}
 		}

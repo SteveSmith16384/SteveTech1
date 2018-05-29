@@ -5,5 +5,6 @@
 	<classpathentry kind="src" path="assets"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/SteTech1"/>
 	<classpathentry kind="lib" path="/SteTech1/libs/jme-3.2-stable/jme3-core.jar"/>
+	<classpathentry kind="lib" path="/SteTech1/libs/jme-3.2-stable/jme3-networking.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
