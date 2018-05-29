@@ -400,7 +400,7 @@ ConsoleInputListener {
 		}
 
 		client.clientStatus = ClientData.ClientStatus.Accepted;
-		
+
 		int side = getSide(client);
 		client.playerData = this.createSimplePlayerData();
 		client.playerData.id = client.id;
@@ -419,14 +419,14 @@ ConsoleInputListener {
 
 	}
 
-	
+
 	/**
 	 * Override if you need a custom SimplePlayerData
 	 */
 	protected SimplePlayerData createSimplePlayerData() {
 		return new SimplePlayerData();
 	}
-	
+
 
 	public void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
@@ -508,7 +508,7 @@ ConsoleInputListener {
 		}
 
 		this.gameStatusSystem.checkGameStatus(true); // Set game status to "Deploying" if there's enough players
-		
+
 	}
 
 
@@ -791,20 +791,26 @@ ConsoleInputListener {
 
 
 	public ITargetable getTarget(PhysicalEntity shooter, int ourSide, float range) {
+		ITargetable target = null;
+		int highestPri = -1;
+
 		for (IEntity e : entitiesForProcessing) {
 			if (e != shooter) {
 				if (e instanceof ITargetable) {
 					ITargetable t = (ITargetable)e;
-					if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
-						PhysicalEntity pe = (PhysicalEntity)e;
-						if (shooter.canSee(pe, range)) {
-							return t;
+					if (t.getPriority() > highestPri) {
+						if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
+							PhysicalEntity pe = (PhysicalEntity)e;
+							if (shooter.canSee(pe, range)) {
+								target = t;
+								highestPri = t.getPriority();
+							}
 						}
 					}
 				}
 			}
 		}
-		return null; 
+		return target; 
 	}
 
 
@@ -857,12 +863,12 @@ ConsoleInputListener {
 		return this.entities.size();
 	}
 
-/*
+	/*
 	@Override
 	public void addClientOnlyEntity(IEntity e) {
 		throw new RuntimeException("Trying to add client-only entity to server");
 	}
-*/
+	 */
 
 	public void handleCommand(String cmd) {
 		if (cmd.equals("warp")) {

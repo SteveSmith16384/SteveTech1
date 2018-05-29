@@ -47,7 +47,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 		soldierEntity = _pe;
 		attacker = _attacker;
-		checkForEnemyInt = new RealtimeInterval(NumberFunctions.rnd(800,  1200)); // Avoid AI all shooting at the same time
+		checkForEnemyInt = new RealtimeInterval(NumberFunctions.rnd(1200,  2000)); // Avoid AI all shooting at the same time
 		currDir = new Vector3f();
 		walks = _walks;
 		if (walks) {
@@ -83,14 +83,16 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 				}
 			}
 		}
-		if (currentTarget == null) { // Find enemy
-			if (this.checkForEnemyInt.hitInterval()) {
-				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AILaserBullet.RANGE);
-				if (Globals.DEBUG_AI_TARGETTING && currentTarget != null) {
-					Globals.p("AI can now see " + currentTarget);
-				}
+
+		
+		if (this.checkForEnemyInt.hitInterval()) {
+			currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AILaserBullet.RANGE);
+			if (Globals.DEBUG_AI_TARGETTING && currentTarget != null) {
+				Globals.p("AI can now see " + currentTarget);
 			}
-		} else { // Face enemy
+		}
+
+		if (currentTarget != null) {
 			PhysicalEntity pe = (PhysicalEntity)this.currentTarget;
 			Vector3f dir = pe.getWorldTranslation().subtract(this.soldierEntity.getWorldTranslation()); // todo - don't create each time
 			dir.y = 0;

@@ -1,14 +1,16 @@
 package com.scs.stevetech1.components;
 
-import com.scs.stevetech1.entities.PhysicalEntity;
-
+/**
+ * Used by the AI to determine if something is a valid target for it.
+ * @author stephencs
+ *
+ */
 public interface ITargetable {
 
 	boolean isValidTargetForSide(int shootersSide);
 	
 	boolean isAlive();
 	
-	//Vector3f getWorldTranslation();
-	//PhysicalEntity getPhysicalEntity();
+	int getPriority();
 	
 }

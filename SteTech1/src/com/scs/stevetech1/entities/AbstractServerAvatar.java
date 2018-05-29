@@ -205,4 +205,10 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	}
 
 
+	@Override
+	public int getPriority() {
+		return 1;
+	}
+
+
 }

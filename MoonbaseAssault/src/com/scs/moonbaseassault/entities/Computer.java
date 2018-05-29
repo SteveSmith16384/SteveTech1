@@ -167,4 +167,10 @@ public class Computer extends PhysicalEntity implements IDamagable, ITargetable,
 	}
 
 
+	@Override
+	public int getPriority() {
+		return 1;
+	}
+
+	
 }

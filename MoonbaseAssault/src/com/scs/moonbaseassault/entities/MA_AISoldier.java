@@ -32,4 +32,10 @@ public class MA_AISoldier extends AbstractAISoldier {
 	}
 
 
+	@Override
+	public int getPriority() {
+		return 2;
+	}
+
+	
 }

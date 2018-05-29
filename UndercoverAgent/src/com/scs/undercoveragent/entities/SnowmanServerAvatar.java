@@ -39,5 +39,5 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements ICanSco
 		this.sendStatusUpdateMessage(false);
 	}
 
-	
+
 }
