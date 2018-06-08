@@ -31,6 +31,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public static final int ANIM_JUMP = 3;
 	public static final int ANIM_SHOOTING = 4;
 	public static final int ANIM_DIED = 5;
+	public static final int ANIM_ATTACK = 6;
 
 	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	protected IInputDevice input;

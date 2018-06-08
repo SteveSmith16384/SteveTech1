@@ -57,7 +57,9 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 		// Create model to look good
 		avatarModel = anim.createAndGetModel(side);
-		game.getGameNode().attachChild(avatarModel);
+		Node container = new Node();
+		container.attachChild(avatarModel); // Contain model in a separate node so we can rotate it without losing the models own rotation
+		game.getGameNode().attachChild(container);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 

@@ -13,6 +13,7 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
+	public static final boolean TRANSPARENT_WALLS = true;
 	public static final boolean SHOW_ALL_UNITS_ON_HUD = true;
 	public static final boolean PLAYERS_ARE_DEFENDERS = true;
 
@@ -25,7 +26,6 @@ public class Globals {
 	public static final boolean DEBUG_DELAYED_EXPLOSION = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean FEW_MODELS = false;
-	public static final boolean TRANSPARENT_WALLS = false;
 	public static final boolean DEBUG_FALLING_THROUGH_FLOOR = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
 	public static final boolean DEBUG_BULLET_HIT = false;

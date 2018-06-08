@@ -41,8 +41,8 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-		Spatial model = assetManager.loadModel("Models/QuaterniusGuns/Sniper rifle.obj");
-		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/QuaterniusGuns/pistol_tex.png");
+		Spatial model = assetManager.loadModel("Models/new_thin_zom/new_thin_zombie.blend");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/new_thin_zom/new_thin_zombie.png");
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);
@@ -50,7 +50,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 				control.addListener(this);
 				Globals.p("Animations: " + control.getAnimationNames());
 				AnimChannel channel = control.createChannel();
-				channel.setAnim("Walk");
+				channel.setAnim("run");
 			} else {
 				Globals.p("No animation control");
 			}

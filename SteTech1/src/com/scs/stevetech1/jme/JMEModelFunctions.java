@@ -157,6 +157,25 @@ public class JMEModelFunctions {
 		}
 		return null;
 	}
+	
+	
+	public static void printNodeTree(Spatial s) {
+		printNodeTree(s, 0);
+	}
+
+
+	public static void printNodeTree(Spatial s, int indent) {
+		for (int i=0 ; i<indent ; i++) {
+			System.out.print(" ");
+		}
+		System.out.println(s.getClass().getSimpleName() + " - " + s.getName());
+		if (s instanceof Node) {
+			Node n = (Node)s;
+			for(Spatial s2 : n.getChildren()) {
+				printNodeTree(s2, indent+3);
+			}
+		}
+	}
 
 
 }

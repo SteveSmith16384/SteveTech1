@@ -84,7 +84,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			}
 		}
 
-		
+
 		if (this.checkForEnemyInt.hitInterval()) {
 			currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AILaserBullet.RANGE);
 			if (Globals.DEBUG_AI_TARGETTING && currentTarget != null) {
@@ -171,21 +171,9 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			// Change direction to away from blockage, unless it's a door
 			if (pe instanceof MoonbaseWall || pe instanceof Computer || pe instanceof MapBorder) {
 				//Globals.p("AISoldier has collided with " + pe);
-				//changeDirection(getRandomDirection());
-				//if (this.attacker) {
-					changeDirection(getRandomDirection());
-					maintainDirectionForSecs = 1f;
-					this.route = null;
-				/*} else {
-					changeDirection(getRandomDirection());
-				}*/
-			/*} else if (pe instanceof AbstractAISoldier || pe instanceof AbstractServerAvatar) {
-				if (NumberFunctions.rnd(1, 3) == 1) {
-					this.waitForSecs = 3;
-				} else {
-					changeDirection(getRandomDirection());
-					randomDirForSecs = 3;
-				}*/
+				changeDirection(getRandomDirection());
+				maintainDirectionForSecs = 1f; // Hopefully allow us to walk around the corner which we've probably clipped
+				this.route = null;
 			} else if (pe instanceof SlidingDoor) {
 				this.waitForSecs += WAIT_FOR_DOOR_DURATION;
 			}

@@ -312,7 +312,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public boolean canSee(PhysicalEntity target, float range) {
+	public boolean canSee(PhysicalEntity target, float range) { // todo - add param to say whether to check field of view
 		// Test the ray from the middle of the entity
 		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter();
 		Vector3f theirPos = target.getMainNode().getWorldBound().getCenter();
