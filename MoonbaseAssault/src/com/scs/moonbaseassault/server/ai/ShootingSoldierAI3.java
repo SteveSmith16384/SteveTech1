@@ -25,6 +25,7 @@ import ssmith.util.RealtimeInterval;
 
 public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
+	private static final float VIEW_ANGLE_RADS = -1f; // See everywhere
 	private static final float WAIT_FOR_DOOR_DURATION = 1.6f;
 	private static final boolean SHOOT_AT_ENEMY = true;
 
@@ -72,7 +73,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 			if (!this.currentTarget.isAlive()) {
 				this.currentTarget = null;
 			} else {
-				boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, AILaserBullet.RANGE);
+				boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, AILaserBullet.RANGE, VIEW_ANGLE_RADS);
 				if (!cansee) {
 					this.currentTarget = null;
 					maintainDirectionForSecs = 4f; // Walk towards them for 4 secs
@@ -86,7 +87,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
 
 		if (this.checkForEnemyInt.hitInterval()) {
-			currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AILaserBullet.RANGE);
+			currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AILaserBullet.RANGE, VIEW_ANGLE_RADS);
 			if (Globals.DEBUG_AI_TARGETTING && currentTarget != null) {
 				Globals.p("AI can now see " + currentTarget);
 			}

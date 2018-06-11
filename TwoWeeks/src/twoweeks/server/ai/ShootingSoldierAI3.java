@@ -17,6 +17,7 @@ import twoweeks.entities.Terrain1;
 
 public class ShootingSoldierAI3 implements IArtificialIntelligence {
 
+	private static final float VIEW_ANGLE_RADS = -1f; // See everywhere
 	private static final boolean SHOOT_AT_ENEMY = true;
 
 	private AbstractAISoldier soldierEntity;
@@ -42,7 +43,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		} 
 
 		if (currentTarget != null) { // Find enemy
-			boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, AIBullet.RANGE);
+			boolean cansee = soldierEntity.canSee((PhysicalEntity)this.currentTarget, AIBullet.RANGE, VIEW_ANGLE_RADS);
 			if (!cansee) {
 				this.currentTarget = null;
 				if (Globals.DEBUG_AI_TARGETTING) {
@@ -52,7 +53,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 		}
 		if (currentTarget == null) { // Check we can still see enemy
 			if (this.checkForEnemyInt.hitInterval()) {
-				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AIBullet.RANGE);
+				currentTarget = server.getTarget(this.soldierEntity, this.soldierEntity.side, AIBullet.RANGE, VIEW_ANGLE_RADS);
 				if (Globals.DEBUG_AI_TARGETTING) {
 					Globals.p("AI can now see " + currentTarget);
 				}

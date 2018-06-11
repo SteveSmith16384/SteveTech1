@@ -19,6 +19,7 @@ import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ISetRotation;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
@@ -312,10 +313,33 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	}
 
 
-	public boolean canSee(PhysicalEntity target, float range) { // todo - add param to say whether to check field of view
-		// Test the ray from the middle of the entity
+	/**
+	 * 
+	 * @param target
+	 * @param range
+	 * @param maxAngleRads Make negative to NOT check the angle
+	 * @return
+	 */
+	public boolean canSee(PhysicalEntity target, float range, float maxAngleRads) {
+		// Check angle?
+		if (maxAngleRads > 0) {
+			float angle = JMEAngleFunctions.getAngleBetween(this.getMainNode(), target.getMainNode().getWorldBound().getCenter());
+			if (Globals.DEBUG_VIEW_ANGLE) {
+				Globals.p(target + " and " + this + " is " + angle);
+			}
+			if (angle > maxAngleRads) {
+				return false;
+			}
+		}
+
+		// Note: Test the ray from the middle of the entity
 		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter();
 		Vector3f theirPos = target.getMainNode().getWorldBound().getCenter();
+		
+		if (theirPos.distance(ourPos) > range) {
+			return false;
+		}
+		
 		Ray r = new Ray(ourPos, theirPos.subtract(ourPos).normalizeLocal());
 		r.setLimit(range);
 		CollisionResults res = new CollisionResults();

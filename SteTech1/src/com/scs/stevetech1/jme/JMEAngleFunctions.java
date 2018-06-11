@@ -38,8 +38,9 @@ public class JMEAngleFunctions {
 	public static float getAngleBetween(Spatial spatial, Vector3f target) {
 		Vector3f dir_to_target = target.subtract(spatial.getWorldTranslation()).normalizeLocal();
 		Vector3f forward = spatial.getLocalRotation().mult(Vector3f.UNIT_Z).normalizeLocal();
-		float diff = forward.distance(dir_to_target);
-		return diff;
+		//float diff = forward.distance(dir_to_target);
+		//return diff;
+		return dir_to_target.angleBetween(forward);
 	}
 
 

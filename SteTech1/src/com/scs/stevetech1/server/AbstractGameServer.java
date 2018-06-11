@@ -781,7 +781,7 @@ ConsoleInputListener {
 	}
 
 
-	public ITargetable getTarget(PhysicalEntity shooter, int ourSide, float range) {
+	public ITargetable getTarget(PhysicalEntity shooter, int ourSide, float range, float viewAngleRads) {
 		ITargetable target = null;
 		int highestPri = -1;
 
@@ -792,7 +792,7 @@ ConsoleInputListener {
 					if (t.getTargetPriority() > highestPri) {
 						if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
 							PhysicalEntity pe = (PhysicalEntity)e;
-							if (shooter.canSee(pe, range)) {
+							if (shooter.canSee(pe, range, viewAngleRads)) {
 								target = t;
 								highestPri = t.getTargetPriority();
 							}

@@ -526,7 +526,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	public void setAdditionalForce(float x, float y, float z) {
-		if (!this.movedByForces) {
+		if (!this.movedByForces && (x != 0 || y != 0 || z != 0)) {
 			p("Warning - setting additional force on non-moving entity");
 		}
 		this.additionalForce.set(x, y, z);
