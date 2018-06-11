@@ -153,7 +153,7 @@ public class TwoWeeksServer extends AbstractGameServer implements ITerrainHeight
 				}
 			}
 			for (int num=0 ; num<10 ; num++) {
-				//todo
+
 			}
 		}
 

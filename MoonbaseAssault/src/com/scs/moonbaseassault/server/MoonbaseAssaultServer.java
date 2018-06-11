@@ -136,23 +136,6 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 	
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		/*float startHeight = .1f;
-		List<Point> deploySquares = this.deploySquares[avatar.side-1];
-		boolean found = false;
-		//for (Point p : deploySquares) {
-		while (true) { // todo - only try a certain number of times
-			Point p = deploySquares.get(NumberFunctions.rnd(0, deploySquares.size()-1));
-			avatar.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
-			if (avatar.simpleRigidBody.checkForCollisions().size() == 0) {
-				found = true;
-				break;
-			}
-		}
-		if (found) {
-			Globals.p("Player starting at " + avatar.getWorldTranslation());
-		} else {
-			throw new RuntimeException("No space to start!");
-		}*/
 		this.moveAISoldierToStartPosition(avatar, avatar.side);
 	}
 
@@ -222,7 +205,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 		//if (!Globals.TEST_AI) {
 			List<Point> deploySquares = this.deploySquares[side-1];
 			boolean found = false;
-			while (true) { // todo - only try a certain number of times
+			for (int i=0 ; i<20 ; i++) { // only try a certain number of times
 				Point p = deploySquares.get(NumberFunctions.rnd(0, deploySquares.size()-1));
 				soldier.setWorldTranslation(p.x+0.5f, startHeight, p.y+0.5f);
 				if (soldier.simpleRigidBody.checkForCollisions().size() == 0) {

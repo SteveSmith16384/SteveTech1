@@ -16,6 +16,8 @@ public class Globals {
 	public static final boolean TRANSPARENT_WALLS = true;
 	public static final boolean SHOW_ALL_UNITS_ON_HUD = true;
 	public static final boolean PLAYERS_ARE_DEFENDERS = true;
+	public static final boolean AI_IGNORE_PLAYER = true;
+	public static final boolean TURN_OFF_FOG = true;
 
 	public static final boolean EMPTY_MAP = false;
 	public static final boolean DEBUG_UA_SINKING = false;

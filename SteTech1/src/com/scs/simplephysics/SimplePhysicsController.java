@@ -45,6 +45,10 @@ public class SimplePhysicsController<T> {
 	 */
 	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSize, float _gravity, float _aerodynamicness) {
 		super();
+		
+		if (_nodeSize == 0) {
+			throw new RuntimeException("Invalid node size: " + _nodeSize + ".  Must != 0");
+		}
 
 		collListener = _collListener;
 		nodeSize = _nodeSize;

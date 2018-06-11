@@ -164,7 +164,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private String gameServerIP;//, lobbyIP;
 	private int gamePort;//, lobbyPort;
 	private float mouseSens;
-	//private boolean gamePaused = true; // Prevent client doing stuff while setting up
 	private String key;
 
 	// Subnodes
@@ -222,7 +221,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 		settings.setUseJoysticks(true);
 
-		// Error if no soundcard - todo
 		//settings.setAudioRenderer(null); // Todo Avoid error with no soundcard
 		//super.audioRenderer = null;
 

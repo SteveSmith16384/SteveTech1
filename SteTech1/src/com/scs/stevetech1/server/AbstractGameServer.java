@@ -137,7 +137,7 @@ ConsoleInputListener {
 
 		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
 
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, 15); // todo - get 15,1 params from parent
+		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		collisionLogic = new ServerSideCollisionLogic(this);
 		loopTimer = new FixedLoopTime(tickrateMillis);
 
@@ -694,15 +694,6 @@ ConsoleInputListener {
 					this.entitiesForProcessing.remove(e);
 				}
 			}
-			/*if (e instanceof IClientControlled) {  No! Still tell client when to remove it
-				IClientControlled cc = (IClientControlled)e;
-				if (cc.isClientControlled()) {
-					if (Globals.DEBUG_NO_BULLET) {
-						Globals.p("NOT sending bullet remove");
-					}
-					return; // todo - remove?
-				}
-			}*/
 			if (!this.doNotSendAddRemoveEntityMsgs) {
 				this.gameNetworkServer.sendMessageToAll(new RemoveEntityMessage(id));
 			}

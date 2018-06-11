@@ -158,7 +158,6 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 		
 		alive = true;
 		this.setHealth(maxHealth);
-		//todo this.client.setScore(0);
 		this.invulnerableTimeSecs = 5;
 
 	}

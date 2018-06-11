@@ -19,6 +19,16 @@ public class SnowmanServerAvatar extends AbstractServerAvatar {
 
 
 	@Override
+	public void getReadyForGame() {
+		super.getReadyForGame();
+		
+		UASimplePlayerData data = (UASimplePlayerData)this.client.playerData;
+		data.score = 0;
+		//this.sendStatusUpdateMessage(false);
+	}
+	
+	
+	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);
 
