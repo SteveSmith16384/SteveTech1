@@ -48,5 +48,5 @@ Each time a game starts, the createGame() method is called, which is where all t
 ### Entities
 This is the generic name for any game object.  Most, but not all, entities will by "physical", i.e. have dimensions and be drawable (on the client at least).  In this game, our first entity is an instance of Floor.
 
-Todo: entity codes
+All entities have a "type" code, which is basically an integer which determines it's type.  This is so that a client knows what kind of game object to create.  You can create your own "positive codes" for your game.  There are some pre-defined entity codes, e.g. explosion, but these are all negative numbers to ensure you don't redefine them.
 

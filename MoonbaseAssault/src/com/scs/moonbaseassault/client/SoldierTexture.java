@@ -67,7 +67,7 @@ public class SoldierTexture {
 						g.setColor(Color.LIGHT_GRAY);
 						break;
 
-					case 4:
+					case 4: // Trousers
 						g.setColor(getRandomSkinColour());
 						break;
 					}

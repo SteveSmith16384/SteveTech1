@@ -33,6 +33,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class); // default
 		assetManager.registerLocator("../MoonbaseAssault/assets/", FileLocator.class); // default
+		assetManager.registerLocator("../TwoWeeks/assets/", FileLocator.class); // default
 		//assetManager.registerLocator("assets/Textures/", FileLocator.class);
 
 		super.getViewPort().setBackgroundColor(ColorRGBA.Black);
@@ -41,8 +42,8 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-		Spatial model = assetManager.loadModel("Models/new_thin_zom/new_thin_zombie.blend");
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/new_thin_zom/new_thin_zombie.png");
+		Spatial model = assetManager.loadModel("Models/landscape_asset_v2a/obj/grass.obj");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/landscape_asset_v2a/obj/basetexture.jpg");
 
 		if (model instanceof Node) {
 			control = this.getNodeWithControls((Node)model);
@@ -101,11 +102,11 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		// We add light so we see the scene
 		AmbientLight al = new AmbientLight();
-		al.setColor(ColorRGBA.White.mult(.5f));
+		al.setColor(ColorRGBA.White.mult(1));
 		rootNode.addLight(al);
 
 		DirectionalLight dirlight = new DirectionalLight(); // FSR need this for textures to show
-		dirlight.setColor(ColorRGBA.White.mult(.5f));
+		dirlight.setColor(ColorRGBA.White.mult(1.5f));
 		rootNode.addLight(dirlight);
 
 	}

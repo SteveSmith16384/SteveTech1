@@ -8,10 +8,10 @@ import com.scs.stevetech1.components.IEntity;
 @Serializable
 public class NewEntityMessage extends MyAbstractMessage {
 	
-	private static final int MAX_ITEMS = 10;
+	private static final int MAX_ENTITIES_PER_MSG = 10;
 
 	public int gameId;
-	public LinkedList<NewEntityData> data = new LinkedList<NewEntityData>();
+	public LinkedList<NewEntityData> data = new LinkedList<NewEntityData>(); // List of entities to create
 
 	
 	public NewEntityMessage() {
@@ -26,18 +26,18 @@ public class NewEntityMessage extends MyAbstractMessage {
 	}
 	
 	
-	public void Add(IEntity e) {
-		NewEntityData ned = new NewEntityData();
-		ned.type = e.getType();
-		ned.entityID = e.getID();
-		ned.data = e.getCreationData();
-		
+	public void add(IEntity e) {
+		NewEntityData ned = new NewEntityData(e);
 		data.add(ned);
+		
+		if (data.size() > MAX_ENTITIES_PER_MSG) {
+			throw new RuntimeException("Maximum entities exceeded in message");
+		}
 	}
 
 
 	public boolean isFull() {
-		return this.data.size() >= MAX_ITEMS;
+		return this.data.size() >= MAX_ENTITIES_PER_MSG;
 	}
 
 

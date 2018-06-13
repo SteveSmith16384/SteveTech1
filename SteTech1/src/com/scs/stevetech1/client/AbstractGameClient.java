@@ -828,9 +828,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			this.addEntity(e);
 		} else {
-			//Globals.p("Not creating entity " + msg.entityID);
+			Globals.p("Not creating entity type " + data.type);
 			// It's not for this game, so ignore it
-			throw new RuntimeException("Cannot create entity type " + data.type);
+			//throw new RuntimeException("Cannot create entity type " + data.type);
 		}
 
 	}
