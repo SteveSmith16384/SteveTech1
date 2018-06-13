@@ -33,6 +33,8 @@ import ssmith.util.MyProperties;
 public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarMapInterface {
 
 	private static final int COMPS_DESTROYED_TO_WIN = 10;
+	public static final boolean PLAYERS_ARE_DEFENDERS = true;
+
 	public static final String GAME_ID = "Moonbase Assault";
 	
 	// Sides
@@ -265,7 +267,7 @@ public class MoonbaseAssaultServer extends AbstractGameServer implements IAStarM
 
 	@Override
 	public int getSide(ClientData client) {
-		if (Globals.PLAYERS_ARE_DEFENDERS) {
+		if (PLAYERS_ARE_DEFENDERS) {
 			return SIDE_DEFENDER;
 		} else {
 			return SIDE_ATTACKER;

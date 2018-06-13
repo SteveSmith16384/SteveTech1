@@ -298,7 +298,20 @@ public class SimpleRigidBody<T> implements Collidable {
 
 		BoundingBox bba = (BoundingBox)this.getBoundingBox();
 		float aBottom = bba.getCenter().y - (bba.getYExtent());
-		if (cr.simpleEntity.getCollidable() instanceof BoundingBox) {
+		if (cr.simpleEntity.getCollidable() instanceof TerrainQuad == false) { //cr.simpleEntity.getCollidable()
+			//if (cr.simpleEntity.getCollidable() instanceof BoundingBox) { //cr.simpleEntity.getCollidable()
+			BoundingBox bbb = (BoundingBox)cr.getBoundingBox();
+			float bTop = bbb.getCenter().y + (bbb.getYExtent());
+			float heightDiff = bTop - aBottom;
+
+			if (heightDiff >= 0 && heightDiff <= MAX_STEP_HEIGHT) {
+				p("Going up step: " + heightDiff);
+				//this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
+				this.oneOffForce.y += (heightDiff*3);//15);// / -this.gravInc);
+				return true;
+			}
+			
+		/*} else if (cr.simpleEntity.getCollidable() instanceof Node) { // todo - check this
 			BoundingBox bbb = (BoundingBox)cr.getBoundingBox();
 			float bTop = bbb.getCenter().y + (bbb.getYExtent());
 			float heightDiff = bTop - aBottom;
@@ -308,7 +321,8 @@ public class SimpleRigidBody<T> implements Collidable {
 				//this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
 				this.oneOffForce.y += (heightDiff*15);// / -this.gravInc);
 				return true;
-			}
+			}*/
+			
 		} else {
 			CollisionResults rayCRs = new CollisionResults();
 			Ray prevRay = new Ray(prevPos, DOWN_VEC);

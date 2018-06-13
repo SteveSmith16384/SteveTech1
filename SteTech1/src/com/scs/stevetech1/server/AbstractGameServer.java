@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
+import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -1019,5 +1020,20 @@ ConsoleInputListener {
 
 	}
 
+
+	public boolean moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
+		CollisionResults cr = new CollisionResults();
+		/*if (pe.simpleRigidBody.checkForCollisions().size() > 0) {
+			//throw new RuntimeException("Stuck in wall!");
+			pe.remove();
+			return false;
+		}
+		cr.clear();*/
+		while (pe.simpleRigidBody.checkForCollisions().isEmpty()) {
+			pe.getMainNode().move(dir.mult(0.1f));
+			cr.clear();
+		}
+		return true;
+	}
 
 }

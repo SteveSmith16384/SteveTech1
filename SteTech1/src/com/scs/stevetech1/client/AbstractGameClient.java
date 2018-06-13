@@ -385,7 +385,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						clientStatus = STATUS_IN_GAME;
 						this.getRootNode().attachChild(this.gameNode);
 						//this.showPlayersWeapon();
-						//gamePaused = false;
 					}
 				}
 
@@ -403,7 +402,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 
 					// Systems
-					//if (!gamePaused) {
 					this.launchSystem.process(renderTime);
 
 					if (Globals.STRICT) {
@@ -913,7 +911,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	private void addEntityToGame(PhysicalEntity e) {
+	private void addEntityToGame(IEntity e) {
 		boolean add = true;
 		if (e instanceof ILaunchable) { // Don't add bullets until they are fired!
 			ILaunchable il = (ILaunchable)e;
@@ -926,7 +924,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				makeToonish(pe.getMainNode());
 				//}
 			}
-
+			// pe.getWorldTranslation();
 			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
 			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
 			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
@@ -1255,45 +1253,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	}
 
-	/*
-	private void actuallyAddClientOnlyEntity(IEntity e) {
-		//this.clientOnlyEntitiesToAdd.remove(e);
-		synchronized (entities) {
-			if (e.getID() > 0) {
-				throw new RuntimeException("Client-only must have negative id");
-			}
-			if (this.getClientOnlyEntityById(e.getID()) != null) {
-				throw new RuntimeException("Entity " + e + " already exists (client-only)"); // Don't replace it, as entity has linked to other stuff, like Abilities
-			}
-			this.clientOnlyEntities.add(e);
-
-			if (e instanceof PhysicalEntity) {
-				PhysicalEntity pe = (PhysicalEntity)e;
-				this.getGameNode().attachChild(pe.getMainNode());
-				if (pe.simpleRigidBody != null) {
-					this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
-					if (Globals.STRICT) {
-						if (this.physicsController.getEntities().size() > this.entities.size()) {
-							Globals.pe("Warning: more simple rigid bodies than entities!");
-						}
-					}
-				}
-			}
-			if (e instanceof IDrawOnHUD) {
-				IDrawOnHUD doh = (IDrawOnHUD)e;
-				this.hud.addItem(doh.getHUDItem());
-			}
-		}
-		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-			if (e instanceof PhysicalEntity) {
-				PhysicalEntity pe = (PhysicalEntity)e;
-				Globals.p("Created CO " + pe + " at " + pe.getWorldTranslation());
-			} else {
-				Globals.p("Created CO " + e);
-			}
-		}
-	}
-	 */
 
 	/*
 	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
