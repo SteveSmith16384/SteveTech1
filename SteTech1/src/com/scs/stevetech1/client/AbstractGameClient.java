@@ -39,6 +39,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
+import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -261,8 +262,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		setUpLight();
 
 		hud = this.createAndGetHUD();
-		getGuiNode().attachChild(hud.getRootNode());
-
+		if (hud != null) {
+			getGuiNode().attachChild(hud.getRootNode());
+		}
+		
 		this.getRootNode().attachChild(this.debugNode);
 
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
@@ -561,7 +564,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						}
 						PhysicalEntity pe = (PhysicalEntity)e;
 						pe.storePositionData(eud, mainmsg.timestamp);
-						pe.chronoUpdateData.addData(eud);
+						if (pe.chronoUpdateData != null) {
+							pe.chronoUpdateData.addData(eud);
+						}
 					} else {
 						// Globals.p("Unknown entity ID for update: " + eum.entityID);
 						// Ask the server for entity details since we don't know about it.
@@ -602,20 +607,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			Globals.p("Rcvd GeneralCommandMessage: " + msg.command.toString());
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
 				clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;
+				allEntitiesSent();
 			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
 				this.removeAllEntities();
 			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) {
-				//gamePaused = true;
 				clientStatus = STATUS_JOINED_GAME;
-			/*} else if (msg.command == GeneralCommandMessage.Command.GameRestarted) { // We now have enough data to start
-				//gamePaused = false;
-				clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;*/
 			} else {
 				throw new RuntimeException("Unknown command:" + msg.command);
 			}
-			/*} else {
-				Globals.p("Ignoring GeneralCommandMessage for gameid " + msg.gameID);
-			}*/
 
 		} else if (message instanceof AbilityUpdateMessage) {
 			AbilityUpdateMessage aum = (AbilityUpdateMessage) message;
@@ -726,6 +725,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}
 
+	
+	/**
+	 * Override if required
+	 */
+	protected void allEntitiesSent() {
+		//getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
+	}
 
 	private void setAvatar(IEntity e) {
 		if (e != null) {
@@ -905,7 +911,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				PhysicalEntity pe = (PhysicalEntity)e;
 				Globals.p("Created " + pe + " at " + pe.getWorldTranslation());
 			} else {
-				Globals.p("Created " + e);
+				Globals.p("Created " + e); //((PhysicalEntity)e).getMainNode().getChild(0).getLocalRotation();
 			}
 		}
 	}
@@ -923,7 +929,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				//if (pe instanceof AbstractAISoldier) {
 				makeToonish(pe.getMainNode());
 				//}
-			}
+			} //pe.getMainNode().getChild(0).getLocalRotation();
 			// pe.getWorldTranslation();
 			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
 			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
@@ -941,7 +947,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				Node n = this.nodes.get(id);
 				n.attachChild(pe.getMainNode());			
 			} else {
-				this.getGameNode().attachChild(pe.getMainNode());
+				this.getGameNode().attachChild(pe.getMainNode()); // pe.getMainNode().getChild(0).getLocalRotation();
 			}
 
 			if (pe.simpleRigidBody != null) {

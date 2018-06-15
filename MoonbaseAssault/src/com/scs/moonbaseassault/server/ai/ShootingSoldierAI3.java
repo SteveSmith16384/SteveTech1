@@ -11,6 +11,7 @@ import com.scs.moonbaseassault.entities.MapBorder;
 import com.scs.moonbaseassault.entities.MoonbaseWall;
 import com.scs.moonbaseassault.entities.SlidingDoor;
 import com.scs.moonbaseassault.server.MoonbaseAssaultServer;
+import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.ITargetable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -216,6 +217,16 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	@Override
 	public ITargetable getCurrentTarget() {
 		return this.currentTarget;
+	}
+
+
+	@Override
+	public void wounded(ICausesHarmOnContact collider) {
+		if (collider.getActualShooter() != null) {
+			PhysicalEntity pe = (PhysicalEntity)collider.getActualShooter();
+			Vector3f dir = pe.getWorldTranslation().subtract(soldierEntity.getWorldTranslation()).normalizeLocal();
+			this.changeDirection(dir);
+		}
 	}
 
 

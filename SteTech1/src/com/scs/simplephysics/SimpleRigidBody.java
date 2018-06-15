@@ -296,32 +296,20 @@ public class SimpleRigidBody<T> implements Collidable {
 		}
 		SimpleRigidBody<T> cr = crs.get(0);
 
-		BoundingBox bba = (BoundingBox)this.getBoundingBox();
-		float aBottom = bba.getCenter().y - (bba.getYExtent());
-		if (cr.simpleEntity.getCollidable() instanceof TerrainQuad == false) { //cr.simpleEntity.getCollidable()
-			//if (cr.simpleEntity.getCollidable() instanceof BoundingBox) { //cr.simpleEntity.getCollidable()
-			BoundingBox bbb = (BoundingBox)cr.getBoundingBox();
-			float bTop = bbb.getCenter().y + (bbb.getYExtent());
+		BoundingBox ourBB = (BoundingBox)this.getBoundingBox();
+		float aBottom = ourBB.getCenter().y - (ourBB.getYExtent());
+		if (cr.simpleEntity.getCollidable() instanceof TerrainQuad == false) {
+			BoundingBox theirBB = (BoundingBox)cr.getBoundingBox();
+			float bTop = theirBB.getCenter().y + (theirBB.getYExtent());
 			float heightDiff = bTop - aBottom;
 
-			if (heightDiff >= 0 && heightDiff <= MAX_STEP_HEIGHT) {
-				p("Going up step: " + heightDiff);
+			if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT) {
 				//this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
-				this.oneOffForce.y += (heightDiff*3);//15);// / -this.gravInc);
+				float force = heightDiff*10;
+				p("Going up step: " + heightDiff + " force=" + force);
+				this.oneOffForce.y += force;//15);// / -this.gravInc);
 				return true;
 			}
-			
-		/*} else if (cr.simpleEntity.getCollidable() instanceof Node) { // todo - check this
-			BoundingBox bbb = (BoundingBox)cr.getBoundingBox();
-			float bTop = bbb.getCenter().y + (bbb.getYExtent());
-			float heightDiff = bTop - aBottom;
-
-			if (heightDiff >= 0 && heightDiff <= MAX_STEP_HEIGHT) {
-				//p("Going up step: " + heightDiff);
-				//this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
-				this.oneOffForce.y += (heightDiff*15);// / -this.gravInc);
-				return true;
-			}*/
 			
 		} else {
 			CollisionResults rayCRs = new CollisionResults();

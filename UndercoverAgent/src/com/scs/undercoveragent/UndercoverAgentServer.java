@@ -132,7 +132,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			}
 		} else {
 			// Place snowman
-			int numSnowmen = mapSize; //this.physicsController.getEntities()
+			int numSnowmen = mapSize;
 			for (int i=0 ; i<numSnowmen ; i++) {
 				StaticSnowman snowman = new StaticSnowman(this, getNextEntityID(), mapSize/2, 0, mapSize/2, JMEAngleFunctions.getRotation(-1, 0));
 				this.addEntityToRandomPosition(snowman);

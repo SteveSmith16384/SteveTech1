@@ -1022,16 +1022,10 @@ ConsoleInputListener {
 
 
 	public boolean moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
-		CollisionResults cr = new CollisionResults();
-		/*if (pe.simpleRigidBody.checkForCollisions().size() > 0) {
-			//throw new RuntimeException("Stuck in wall!");
-			pe.remove();
-			return false;
-		}
-		cr.clear();*/
+		//CollisionResults cr = new CollisionResults();
 		while (pe.simpleRigidBody.checkForCollisions().isEmpty()) {
 			pe.getMainNode().move(dir.mult(0.1f));
-			cr.clear();
+			//cr.clear();
 		}
 		return true;
 	}

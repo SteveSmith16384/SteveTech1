@@ -39,12 +39,12 @@ public class SnowmanModel implements IAvatarModel {
 		JMEAngleFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 
 		origPos = model.getLocalTranslation().clone();
+		return model;
 /*
 		Node container = new Node();
 		container.attachChild(model); // Wrap the model in a node so we can keep the models rotation and position adjustment
 		return container;
-		*/
-		return model;
+*/
 	}
 
 

@@ -51,10 +51,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		blocksView = _blocksView;
 		moves = _moves;
 		
-		historicalPositionData = new PositionCalculator(true, 100);
 		mainNode = new Node(name + "_MainNode_" + id);
 
-		if (!game.isServer()) {
+		if (moves) { // scs new
+			historicalPositionData = new PositionCalculator(true, 100);
+		}
+		if (!game.isServer() && moves) { // scs new
 			chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(true, 100);
 		}
 	}
@@ -98,12 +100,15 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 * Called by the client 
 	 */
 	public void addPositionData(Vector3f pos, long time) {
-		this.historicalPositionData.addPositionData(pos, time);	
+		if (historicalPositionData != null) {
+			this.historicalPositionData.addPositionData(pos, time);
+		}
 	}
 
 
 	// This is overridden by client avatars to take into account local position
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
+		if (historicalPositionData != null) {
 		EntityPositionData epd = historicalPositionData.calcPosition(serverTimeToUse, false);
 		if (epd != null) {
 			this.setWorldTranslation(epd.position);
@@ -111,7 +116,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		} else {
 			//Settings.p("No position data for " + this);
 		}
-
+		}
 	}
 
 
@@ -428,6 +433,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void processChronoData(long serverTimeToUse, float tpf_secs) {
+		if (chronoUpdateData != null) {
 		EntityUpdateData epd = this.chronoUpdateData.get(serverTimeToUse, true);
 		if (epd != null) {
 			if (this instanceof ISetRotation) {
@@ -441,7 +447,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			}
 
 		}
-
+		}
 	}
 
 

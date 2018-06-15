@@ -13,7 +13,10 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which might slow stuff down)
 
 	// Lots of consts for specific debugging output
-	
+	public static final boolean NO_AI_UNITS = false;
+	public static final boolean FEW_MODELS = true;
+
+	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
 	public static final boolean TURN_OFF_FOG = false;
 	public static final boolean SHOW_ALL_UNITS_ON_HUD = false;
 	public static final boolean AI_IGNORE_PLAYER = false;
@@ -24,10 +27,8 @@ public class Globals {
 	public static final boolean DEBUG_GAME_NOT_STARTING = false;
 	public static final boolean TEST_AI = false;
 	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = false;
-	public static final boolean NO_AI_UNITS = false;
 	public static final boolean DEBUG_DELAYED_EXPLOSION = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
-	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_FALLING_THROUGH_FLOOR = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
 	public static final boolean DEBUG_BULLET_HIT = false;
@@ -41,7 +42,6 @@ public class Globals {
 	public static final boolean SHOW_AVATAR_POS = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
-	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
 	public static final boolean USE_BOXES_FOR_AI_SOLDIER = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;

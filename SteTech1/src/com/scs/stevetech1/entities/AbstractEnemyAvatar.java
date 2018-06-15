@@ -33,6 +33,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	private Spatial avatarModel;
 	private String playersName;
 	protected int side;
+	Node container;
 
 	// HUD
 	protected BitmapText hudNode;
@@ -57,9 +58,11 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 		// Create model to look good
 		avatarModel = anim.createAndGetModel(side);
-		Node container = new Node();
-		container.attachChild(avatarModel); // Contain model in a separate node so we can rotate it without losing the models own rotation
-		game.getGameNode().attachChild(container);
+		
+		// Contain model in a separate node so we can rotate it without losing the models own rotation
+		container = new Node();
+		container.attachChild(avatarModel); 
+		game.getGameNode().attachChild(avatarModel);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
@@ -76,7 +79,8 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
 		// Set position and direction of avatar model, which doesn't get moved automatically
-		this.avatarModel.setLocalTranslation(this.getWorldTranslation());
+		//this.avatarModel.setLocalTranslation(this.getWorldTranslation());
+		this.container.setLocalTranslation(this.getWorldTranslation());
 	}
 
 

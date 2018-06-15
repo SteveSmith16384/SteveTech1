@@ -97,7 +97,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
 
-		hud = new UndercoverAgentHUD(this, this.getCamera());
+		//hud = new UndercoverAgentHUD(this, this.getCamera());
 	}
 
 
@@ -190,6 +190,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected IHUD createAndGetHUD() {
+		hud = new UndercoverAgentHUD(this, this.getCamera());
 		return hud;
 	}
 
