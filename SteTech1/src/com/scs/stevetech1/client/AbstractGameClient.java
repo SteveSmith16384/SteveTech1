@@ -248,7 +248,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
-		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Globals.CAM_DIST);
+		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Globals.CAM_VIEW_DIST);
 
 		getInputManager().addMapping(RELOAD, new KeyTrigger(KeyInput.KEY_R));
 		getInputManager().addListener(this, RELOAD);            

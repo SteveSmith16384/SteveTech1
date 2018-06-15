@@ -72,6 +72,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		this.getMainNode().attachChild(bbGeom);
 		
 		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this, game.getPhysicsController(), this);
+		if (Globals.NO_GRAVITY) {
+			this.simpleRigidBody.setGravity(0);	
+		}
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 

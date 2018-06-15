@@ -30,10 +30,9 @@ public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAff
 ISetRotation, IDrawOnHUD, IDontCollideWithComrades { 
 
 	protected IAvatarModel anim;
-	private Spatial avatarModel;
 	private String playersName;
 	protected int side;
-	Node container;
+	private Node container;
 
 	// HUD
 	protected BitmapText hudNode;
@@ -57,12 +56,12 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		mainNode.setUserData(Globals.ENTITY, this);
 
 		// Create model to look good
-		avatarModel = anim.createAndGetModel(side);
+		Spatial avatarModel = anim.createAndGetModel(side);
 		
 		// Contain model in a separate node so we can rotate it without losing the models own rotation
 		container = new Node();
 		container.attachChild(avatarModel); 
-		game.getGameNode().attachChild(avatarModel);
+		game.getGameNode().attachChild(container);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
@@ -88,14 +87,14 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	public void remove() {
 		super.remove();
 
-		this.avatarModel.removeFromParent();
+		this.container.removeFromParent();
 	}
 
 
 	@Override
 	public void setRotation(Vector3f dir) {
 		Vector3f dir2 = new Vector3f(dir.x, 0, dir.z); 
-		JMEAngleFunctions.rotateToDirection(avatarModel, dir2);
+		JMEAngleFunctions.rotateToDirection(container, dir2);
 	}
 
 

@@ -38,7 +38,7 @@ public class ShootingSoldierAI3 implements IArtificialIntelligence {
 	private float waitForSecs = 0; // e.g. wait for door to open
 	private float maintainDirectionForSecs = 0; // e.g. collided with comrade
 
-	private boolean attacker;
+	private boolean attacker; // Might need this in the future
 	private FindComputerThread fcThread;
 	private WayPoints route = null;
 	private float speed;
