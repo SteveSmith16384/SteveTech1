@@ -20,6 +20,7 @@ import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
+import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
@@ -154,6 +155,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(AbilityActivatedMessage.class);
 		kryo.register(NewEntityData.class);
 		kryo.register(ClientReloadingMessage.class);
+		kryo.register(GameLogMessage.class);
 		//kryo.register(NewClientOnlyEntity.class);
 	}
 

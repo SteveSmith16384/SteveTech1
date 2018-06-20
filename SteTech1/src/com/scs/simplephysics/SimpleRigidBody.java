@@ -60,7 +60,6 @@ public class SimpleRigidBody<T> implements Collidable {
 		this.gravInc = physicsController.getGravity(); 
 		this.aerodynamicness = physicsController.getAerodynamicness();
 
-		//physicsController.addSimpleRigidBody(this); Don't add immediately!
 	}
 
 
@@ -298,28 +297,33 @@ public class SimpleRigidBody<T> implements Collidable {
 
 		BoundingBox ourBB = (BoundingBox)this.getBoundingBox();
 		float aBottom = ourBB.getCenter().y - (ourBB.getYExtent());
-		if (cr.simpleEntity.getCollidable() instanceof TerrainQuad == false) {
-			BoundingBox theirBB = (BoundingBox)cr.getBoundingBox();
+		if (cr.simpleEntity.getCollidable() instanceof TerrainQuad == false && cr.simpleEntity.getCollidable() instanceof Node == false) {
+			// Check simple BB against simple BB 
+			BoundingBox theirBB = (BoundingBox)cr.getBoundingBox(); cr.simpleEntity.getCollidable();
 			float bTop = theirBB.getCenter().y + (theirBB.getYExtent());
 			float heightDiff = bTop - aBottom;
 
 			if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT) {
 				//this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
 				float force = heightDiff*10;
-				p("Going up step: " + heightDiff + " force=" + force);
+				//p("Going up step: " + heightDiff + " force=" + force);
 				this.oneOffForce.y += force;//15);// / -this.gravInc);
 				return true;
 			}
-			
-		} else {
-			CollisionResults rayCRs = new CollisionResults();
-			Ray prevRay = new Ray(prevPos, DOWN_VEC);
-			rayCRs.clear();
-			cr.simpleEntity.getCollidable().collideWith(prevRay, rayCRs);
-			if (rayCRs.getClosestCollision() != null && rayCRs.getClosestCollision().getContactPoint() != null) {
-				float prevHeight = rayCRs.getClosestCollision().getContactPoint().y;
 
-				Vector3f newPos = prevPos.add(moveOffset);
+		} else {
+			try {
+				CollisionResults rayCRs = new CollisionResults();
+				//Vector3f pos = this.
+				Ray prevRay = new Ray(prevPos.add(moveOffset), DOWN_VEC);
+				rayCRs.clear();
+				cr.simpleEntity.getCollidable().collideWith(prevRay, rayCRs);
+				float prevHeight = 0;
+				if (rayCRs.getClosestCollision() != null && rayCRs.getClosestCollision().getContactPoint() != null) {
+					prevHeight = rayCRs.getClosestCollision().getContactPoint().y;
+				}
+
+				Vector3f newPos = prevPos.add(moveOffset.mult(2));
 				Ray nextRay = new Ray(newPos, DOWN_VEC);
 				rayCRs.clear();
 				cr.simpleEntity.getCollidable().collideWith(nextRay, rayCRs);
@@ -333,6 +337,8 @@ public class SimpleRigidBody<T> implements Collidable {
 						this.oneOffForce.y += diff*100;
 					}
 				}
+			} catch (Exception ex) { // todo - remove this
+				ex.printStackTrace();
 			}
 		}
 
@@ -605,8 +611,8 @@ public class SimpleRigidBody<T> implements Collidable {
 	public void setCollidable(boolean b) {
 		this.collidable = b;
 	}
-	
-	
+
+
 	public void setParent(SimpleNode<T> n) {
 		if (this.parent != null) {
 			throw new RuntimeException(this + " already has a parent: " + this.parent);

@@ -39,7 +39,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
-import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -68,6 +67,7 @@ import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
+import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
@@ -166,6 +166,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private int gamePort;//, lobbyPort;
 	private float mouseSens;
 	private String key;
+	//private LinkedList<String> gameLog = new LinkedList<>();
 
 	// Subnodes
 	private int nodeSize = Globals.SUBNODE_SIZE;
@@ -720,18 +721,23 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			NewClientOnlyEntity ncoe = (NewClientOnlyEntity)message;
 			createEntity(ncoe.data, ncoe.timestamp);
 			 */
+			
+		} else if (message instanceof GameLogMessage) {
+			GameLogMessage glm = (GameLogMessage)message;
+			this.hud.setLog(glm.log);
+			
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 	}
-
 	
+
 	/**
 	 * Override if required
 	 */
 	protected void allEntitiesSent() {
-		//getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 	}
+
 
 	private void setAvatar(IEntity e) {
 		if (e != null) {

@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
-import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -35,6 +34,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.netmessages.ClientReloadingMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
+import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
@@ -114,6 +114,8 @@ ConsoleInputListener {
 	private String key;
 
 	protected SimpleGameData gameData = new SimpleGameData();
+	private LinkedList<String> gameLog = new LinkedList<>();
+	
 
 	/**
 	 * 
@@ -126,7 +128,6 @@ ConsoleInputListener {
 	 * @param _timeoutMillis How long without comms before the server disconnects the client 
 	 */
 	public AbstractGameServer(String _gameCode, String _key, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
-		//float gravity, float aerodynamicness) {
 		super();
 
 		gameCode = _gameCode;
@@ -177,14 +178,6 @@ ConsoleInputListener {
 	 * @return a list of classes that must be registered in order to be sent from client to server or vice-versa.
 	 */
 	protected abstract Class[] getListofMessageClasses();
-
-	/**
-	 * Override if you need a custom game data class.
-	 * @return
-	 */
-	/*protected SimpleGameData createSimpleGameData(int gameID) {
-		return new SimpleGameData(gameID);
-	}*/
 
 
 	@Override
@@ -279,7 +272,7 @@ ConsoleInputListener {
 				this.actuallyRemoveEntities();
 
 				synchronized (this.clients) {
-					// If any avatars are shooting a gun the requires "rewinding time", rewind all avatars and calc the hits all together to save time
+					// If any avatars are shooting a gun the requires "rewinding time", rewind all rewindable entities and calc the hits all together to save time
 					boolean areAnyPlayersShooting = false;
 					for (ClientData c : this.clients.values()) {
 						AbstractServerAvatar avatar = c.avatar;
@@ -375,7 +368,7 @@ ConsoleInputListener {
 				}
 			}
 
-			if (checkGameStatusInterval.hitInterval()) {
+			if (checkGameStatusInterval.hitInterval() || this.gameData.getStatusEndTimeMS() < System.currentTimeMillis()) { // Try and catch it on zero-time remaining
 				gameStatusSystem.checkGameStatus(false);
 			}
 
@@ -416,6 +409,7 @@ ConsoleInputListener {
 		this.pingSystem.sendPingToClient(client);
 		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 		playerJoinedGame(client);
+		appendToGameLog(client.playerData.playerName + " has joined");
 		gameStatusSystem.checkGameStatus(true);
 
 	}
@@ -616,7 +610,9 @@ ConsoleInputListener {
 			client.avatar.remove();
 		}
 
-		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player left!", true));
+		//this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player left!", true));
+		appendToGameLog(client.playerData.playerName + " has left");
+		
 		this.sendGameStatusMessage();
 		gameStatusSystem.checkGameStatus(true);
 	}
@@ -1021,13 +1017,26 @@ ConsoleInputListener {
 	}
 
 
-	public boolean moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
-		//CollisionResults cr = new CollisionResults();
+	public void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
+		this.moveEntityUntilItHitsSomething(pe, dir, 1f);
+		this.moveEntityUntilItHitsSomething(pe, dir, 0.1f);
+	}
+	
+	
+	public void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir, float offset) {
 		while (pe.simpleRigidBody.checkForCollisions().isEmpty()) {
-			pe.getMainNode().move(dir.mult(0.1f));
-			//cr.clear();
+			pe.getMainNode().move(dir.mult(offset));
 		}
-		return true;
+		pe.getMainNode().move(dir.mult(-offset));
+	}
+	
+	
+	protected void appendToGameLog(String s) {
+		this.gameLog.add(s);
+		while (this.gameLog.size() > 6) {
+			this.gameLog.removeFirst();
+		}
+		this.gameNetworkServer.sendMessageToAll(new GameLogMessage(this.gameLog));
 	}
 
 }

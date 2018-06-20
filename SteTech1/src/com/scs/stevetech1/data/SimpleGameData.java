@@ -19,12 +19,14 @@ public final class SimpleGameData { // POJO
 	public int gameID = -1;
 	private int gameStatus = ST_WAITING_FOR_PLAYERS;
 	private long statusStartTimeMS;
+	private long statusEndTimeMS;
 	private long statusDurationMS;
 
 	public SimpleGameData() { // For Kryo
 		super();
 		
 		statusStartTimeMS = System.currentTimeMillis();
+		statusEndTimeMS = Long.MAX_VALUE;
 
 	}
 
@@ -34,6 +36,7 @@ public final class SimpleGameData { // POJO
 		
 		gameID = _gameID;
 		statusStartTimeMS = System.currentTimeMillis();
+		statusEndTimeMS = Long.MAX_VALUE;
 
 	}
 
@@ -64,6 +67,11 @@ public final class SimpleGameData { // POJO
 	}
 	
 
+	public long getStatusEndTimeMS() {
+		return statusEndTimeMS;
+	}
+	
+
 	/*
 	 * Only called by the server
 	 */
@@ -71,6 +79,11 @@ public final class SimpleGameData { // POJO
 		if (gameStatus != newStatus) {
 			gameStatus = newStatus;
 			statusStartTimeMS = System.currentTimeMillis();
+			if (duration > 0) {
+				statusEndTimeMS = System.currentTimeMillis() + duration;
+			} else {
+				statusEndTimeMS = Long.MAX_VALUE;
+			}
 			statusDurationMS = duration;
 			//server.gameStatusChanged(newStatus);
 			

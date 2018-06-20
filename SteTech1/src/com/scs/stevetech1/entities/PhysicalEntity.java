@@ -53,10 +53,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		
 		mainNode = new Node(name + "_MainNode_" + id);
 
-		if (moves) { // scs new
+		if (moves) {
 			historicalPositionData = new PositionCalculator(true, 100);
 		}
-		if (!game.isServer() && moves) { // scs new
+		if (!game.isServer() && moves) {
 			chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(true, 100);
 		}
 	}

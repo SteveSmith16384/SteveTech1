@@ -1,6 +1,7 @@
 package com.scs.undercoveragent;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
@@ -310,6 +311,13 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 	@Override
 	public void addItem(Node n) {
 		this.attachChild(n);
+	}
+
+
+	@Override
+	public void setLog(LinkedList<String> gameLog) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

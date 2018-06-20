@@ -11,6 +11,7 @@ import com.scs.stevetech1.server.Globals;
 public class ServerGameStatusSystem {
 
 	private AbstractGameServer server;
+	private long endOfCurrentStatus = -1;
 
 	public ServerGameStatusSystem(AbstractGameServer _server) {
 		super();
@@ -20,6 +21,9 @@ public class ServerGameStatusSystem {
 
 
 	public void checkGameStatus(boolean playersChanged) {
+		if (Globals.DEBUG_GAME_STATUS_CHECK) {
+			Globals.p("Checking game status.");
+		}
 		SimpleGameData gameData = server.getGameData();
 
 		if (playersChanged) {

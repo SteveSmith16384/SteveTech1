@@ -20,6 +20,7 @@ All the basic features are complete but not thoroughly stress-tested yet.  All a
 ## GETTING STARTED
 * This engine only requires JMonkeyEngine.  All other required libraries are included.
 * You are advised to look at the example game Undercover Agent to see how to create your own multiplayer FPS game using SteveTech1.  Feel free to contact me (probably via Twitter, though I may set up a forum if it becomes popular enough) with questions.
+* See the SteveTech1 Tutorial at https://bitbucket.org/SteveSmith16384/stetech1/src/master/Tutorial/
 * If you've never used JMonkeyEngine before, the excellent documentation can be found here: https://jmonkeyengine.github.io/wiki/jme3.html#tutorials-for-beginners 
 
 

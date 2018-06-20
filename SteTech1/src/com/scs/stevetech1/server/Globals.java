@@ -13,9 +13,10 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_GAME_STATUS_CHECK = true;
+
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean NO_GRAVITY = false;
-
 	public static final boolean NO_AI_UNITS = false;
 	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_NO_UPDATE_MSGS = false;

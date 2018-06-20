@@ -32,9 +32,6 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 	public void simpleInitApp() {
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class); // default
-		assetManager.registerLocator("../MoonbaseAssault/assets/", FileLocator.class); // default
-		assetManager.registerLocator("../TwoWeeks/assets/", FileLocator.class); // default
-		//assetManager.registerLocator("assets/Textures/", FileLocator.class);
 
 		super.getViewPort().setBackgroundColor(ColorRGBA.Black);
 

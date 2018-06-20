@@ -1,5 +1,7 @@
 package com.scs.unittestgame;
 
+import java.util.LinkedList;
+
 import com.jme3.scene.Node;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.hud.IHUD;
@@ -33,6 +35,12 @@ public class DummyHUD extends Node implements IHUD {
 
 	@Override
 	public void addItem(Node n) {
+		
+	}
+
+	
+	@Override
+	public void setLog(LinkedList<String> gameLog) {
 		
 	}
 
