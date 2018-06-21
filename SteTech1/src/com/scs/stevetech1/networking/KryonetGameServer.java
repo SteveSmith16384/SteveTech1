@@ -15,7 +15,7 @@ import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
-import com.scs.stevetech1.netmessages.ClientReloadingMessage;
+import com.scs.stevetech1.netmessages.ClientGunReloadRequestMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
@@ -26,6 +26,7 @@ import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage.Command;
 import com.scs.stevetech1.netmessages.GenericStringMessage;
+import com.scs.stevetech1.netmessages.GunReloadingMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -154,9 +155,9 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(SetAvatarMessage.class);
 		kryo.register(AbilityActivatedMessage.class);
 		kryo.register(NewEntityData.class);
-		kryo.register(ClientReloadingMessage.class);
+		kryo.register(ClientGunReloadRequestMessage.class);
 		kryo.register(GameLogMessage.class);
-		//kryo.register(NewClientOnlyEntity.class);
+		kryo.register(GunReloadingMessage.class);
 	}
 
 

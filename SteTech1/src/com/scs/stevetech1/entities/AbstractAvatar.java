@@ -63,14 +63,14 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		input = _input;
 		side =_side;
 		avatarModel = _avatarModel;
-		
+
 		Box box = new Box(avatarModel.getSize().x/2, avatarModel.getSize().y/2, avatarModel.getSize().z/2);
 		bbGeom = new Geometry("bbGeom_" + name, box);
 		bbGeom.setLocalTranslation(0, avatarModel.getSize().y/2, 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw ourselves
 
 		this.getMainNode().attachChild(bbGeom);
-		
+
 		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this, game.getPhysicsController(), this);
 		if (Globals.NO_GRAVITY) {
 			this.simpleRigidBody.setGravity(0);	
@@ -85,13 +85,16 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		this.resetWalkDir();
 
 		int newAnimCode = ANIM_IDLE; // Default
+		if (!this.isAlive()) {
+			newAnimCode = ANIM_DIED;
+		}
 		
 		if (Globals.STRICT) {
 			if (ability[0] == null) {
 				Globals.p("Warning - no ability0!");
 			}
 		}
-/*
+		/*
 		// Check for any abilities/guns being fired
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
@@ -104,37 +107,40 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed); // Y=0, so speed is constant regardless of direction
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
-		if (input.getFwdValue()) {
-			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
-			newAnimCode = ANIM_RUNNING;
-			lastMoveTime = System.currentTimeMillis();
-		} else if (input.getBackValue()) {
-			walkDirection.addLocal(camDir.negate());
-			newAnimCode = ANIM_RUNNING;
-			lastMoveTime = System.currentTimeMillis();
-		}
-		if (input.getStrafeLeftValue()) {		
-			walkDirection.addLocal(camLeft);
-			newAnimCode = ANIM_RUNNING;
-			lastMoveTime = System.currentTimeMillis();
-		} else if (input.getStrafeRightValue()) {		
-			walkDirection.addLocal(camLeft.negate());
-			newAnimCode = ANIM_RUNNING;
-			lastMoveTime = System.currentTimeMillis();
-		}
-		if (input.isJumpPressed()) {
-			if (this.jump()) {
-				newAnimCode = ANIM_JUMP;
-			}
-		}
 
-		playerWalked = false;
-		if (this.walkDirection.length() != 0) {
-			if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
-				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-				simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
+		if (this.isAlive()) {
+			if (input.getFwdValue()) {
+				walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
+				newAnimCode = ANIM_RUNNING;
+				lastMoveTime = System.currentTimeMillis();
+			} else if (input.getBackValue()) {
+				walkDirection.addLocal(camDir.negate());
+				newAnimCode = ANIM_RUNNING;
+				lastMoveTime = System.currentTimeMillis();
 			}
-			playerWalked = true;
+			if (input.getStrafeLeftValue()) {		
+				walkDirection.addLocal(camLeft);
+				newAnimCode = ANIM_RUNNING;
+				lastMoveTime = System.currentTimeMillis();
+			} else if (input.getStrafeRightValue()) {		
+				walkDirection.addLocal(camLeft.negate());
+				newAnimCode = ANIM_RUNNING;
+				lastMoveTime = System.currentTimeMillis();
+			}
+			if (input.isJumpPressed()) {
+				if (this.jump()) {
+					newAnimCode = ANIM_JUMP;
+				}
+			}
+
+			playerWalked = false;
+			if (this.walkDirection.length() != 0) {
+				if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
+					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+					simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
+				}
+				playerWalked = true;
+			}
 		}
 
 		if (Globals.SHOW_AVATAR_POS) {
@@ -144,7 +150,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		simpleRigidBody.process(tpf_secs);
 
 		this.currentAnimCode = newAnimCode;
-		
+
 		/*if (Globals.SHOW_AVATAR_BOUNDS) {
 			BoundingBox bb = (BoundingBox)this.getCollidable();
 			Globals.p("Avatar bounds: " + bb.getXExtent() + ", " + bb.getYExtent() + ", " + bb.getZExtent());
@@ -189,11 +195,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		return side;
 	}
 
-/*
+	/*
 	public void addAbility(IAbility a, int num) {
 		this.ability[num] = a;
 	}
-*/
+	 */
 
 	@Override
 	public void resetPlayerInput() {
@@ -281,15 +287,15 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		creationData.put("jumpForce", this.jumpForce);
 		return super.getCreationData();
 	}
-	
-	
+
+
 	@Override
 	public Collidable getCollidable() {
 		return this.getMainNode().getWorldBound();
 		//return this.bbGeom.getModelBound();//.boundingBox; // this.playerGeometry.getWorldBound();
 	}
 
-	
+
 	public IAbility getAbility(int eid) {
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null && this.ability[i].getID() == eid) {

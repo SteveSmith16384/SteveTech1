@@ -65,7 +65,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this); // scs new - was NOT kinematic
+		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
 		simpleRigidBody.setGravity(0); // So they move exactly where we want, even when client jumps
 
 		font_small = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");

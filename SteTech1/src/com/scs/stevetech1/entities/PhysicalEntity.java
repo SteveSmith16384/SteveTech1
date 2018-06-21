@@ -384,7 +384,54 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return false;
 	}
 
-/*
+
+	public boolean canSee(Vector3f pos, float range) {
+		// Note: Test the ray from the middle of the entity
+		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter();
+		Vector3f theirPos = pos; //target.getMainNode().getWorldBound().getCenter();
+		
+		if (theirPos.distance(ourPos) > range) {
+			return false;
+		}
+		
+		Ray r = new Ray(ourPos, theirPos.subtract(ourPos).normalizeLocal());
+		r.setLimit(range);
+		CollisionResults res = new CollisionResults();
+		int c = game.getGameNode().collideWith(r, res);
+		if (c == 0) {
+			//Globals.p("No Ray collisions?!");
+			return true;
+		}
+		Iterator<CollisionResult> it = res.iterator();
+		while (it.hasNext()) {
+			CollisionResult col = it.next();
+			if (col.getDistance() > range) {
+				return true;
+			}
+			Spatial s = col.getGeometry();
+			while (s.getUserData(Globals.ENTITY) == null) {
+				s = s.getParent();
+				if (s == null) {
+					break;
+				}
+			}
+			if (s != null && s.getUserData(Globals.ENTITY) != null) {
+				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
+				//Globals.p("Ray collided with " + pe + " at " + col.getContactPoint());
+				if (pe == this) {
+					continue; // Don't block by ourselves
+				}
+				if (pe.blocksView) {
+					return false;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	
+	/*
 	public Node getOwnerNode() {
 		return owner; // Override if the entity should have a different parent node to the default 
 	}

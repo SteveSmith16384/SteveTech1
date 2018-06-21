@@ -203,4 +203,15 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	}
 
+
+	@Override
+	public Vector3f getBulletStartPos() {
+		AbstractGameClient client = (AbstractGameClient)game;
+		Spatial s = client.playersWeaponNode.getChild(0);
+		Vector3f pos = s.getWorldTranslation().clone(); // todo - not every time
+		pos.y += 0.1f;
+		return pos;
+	}
+
+
 }

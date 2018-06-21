@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
-
-import jdk.nashorn.internal.objects.Global;
+import com.jme3.collision.Collidable;
+import com.jme3.math.Vector3f;
 
 public class SimplePhysicsController<T> {
 
@@ -45,7 +45,7 @@ public class SimplePhysicsController<T> {
 	 */
 	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSize, float _gravity, float _aerodynamicness) {
 		super();
-		
+
 		if (_nodeSize == 0) {
 			throw new RuntimeException("Invalid node size: " + _nodeSize + ".  Must != 0");
 		}
@@ -88,8 +88,8 @@ public class SimplePhysicsController<T> {
 		}
 		return total1;
 	}
-	
-	
+
+
 	public void removeAllEntities() {
 		synchronized (entities) {
 			this.entities.clear();
@@ -199,4 +199,30 @@ public class SimplePhysicsController<T> {
 	public void setGravity(float g) {
 		this.gravity = g;
 	}
+
+
+	public List<SimpleRigidBody<T>> getSRBsWithinRange(SimplePhysicsController<T> spc, Vector3f pos, float range) {
+		List<SimpleRigidBody<T>> crs = new ArrayList<SimpleRigidBody<T>>();
+
+		final BoundingBox bb = new BoundingBox(pos, range, range, range);
+
+		for(SimpleNode<T> node : this.nodes.values()) {
+			node.getCollisions(bb, crs);
+		}
+		// Check against moving/big entities
+		List<SimpleRigidBody<T>> entities = movingEntities;
+		synchronized (entities) {
+			// Loop through the entities
+			for (int i=0 ; i<entities.size() ; i++) {
+				SimpleRigidBody<T> e = entities.get(i);
+				if (e.getBoundingBox().intersects(bb)) {
+					crs.add(e);
+				}
+			}
+		}
+
+		return crs;
+	}
+
+
 }

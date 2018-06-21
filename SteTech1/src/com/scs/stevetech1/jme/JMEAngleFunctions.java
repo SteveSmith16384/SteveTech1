@@ -4,6 +4,8 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
+import ssmith.lang.NumberFunctions;
+
 public class JMEAngleFunctions {
 	
 	public static void turnTowards_Gentle(Spatial spatial, Vector3f target, float pcent) {
@@ -54,6 +56,7 @@ public class JMEAngleFunctions {
 	public static void rotateToDirection(Spatial s, Vector3f dir) {
 		Vector3f v = s.getLocalTranslation();
 		s.lookAt(v.add(dir), Vector3f.UNIT_Y);
+		//s.lookAt(dir.addLocal(v), Vector3f.UNIT_Y); // scs new
 	}
 
 
@@ -68,6 +71,36 @@ public class JMEAngleFunctions {
 		double ang = Math.toRadians(angdeg);
 		Quaternion q = getRotation((float)Math.cos(ang), (float)Math.sin(ang));
 		s.rotate(q);
+	}
+
+
+	public static Vector3f getRandomDirection_4() {
+		int i = NumberFunctions.rnd(0, 3);
+		switch (i) {
+		case 0: return new Vector3f(1f, 0, 0);
+		case 1: return new Vector3f(-1f, 0, 0);
+		case 2: return new Vector3f(0f, 0, 1f);
+		case 3: return new Vector3f(0f, 0, -1f);
+		}
+		throw new RuntimeException("Invalid direction: " + i);
+	}
+
+
+	public static Vector3f getRandomDirection_8() {
+		int i = NumberFunctions.rnd(0,  7);
+		switch (i) {
+		case 0: return new Vector3f(1f, 0, 0);
+		case 1: return new Vector3f(-1f, 0, 0);
+		case 2: return new Vector3f(0f, 0, 1f);
+		case 3: return new Vector3f(0f, 0, -1f);
+
+		// Diagonals
+		case 4: return new Vector3f(1f, 0, 1f);
+		case 5: return new Vector3f(-1f, 0, -1f);
+		case 6: return new Vector3f(-1f, 0, 1f);
+		case 7: return new Vector3f(1f, 0, -1f);
+		}
+		throw new RuntimeException("Invalid direction: " + i);
 	}
 
 

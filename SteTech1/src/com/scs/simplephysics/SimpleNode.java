@@ -109,5 +109,23 @@ public class SimpleNode<T> {
 	public int getNumChildren() {
 		return this.entities.size();
 	}
+	
+	
+	public int getCollisions(BoundingBox bb, List<SimpleRigidBody<T>> crs) {
+		int count = 0;
+		if (this.intersects(bb)) { // Check we're inside the Node
+			synchronized (this.entities) {
+				for (SimpleRigidBody<T> other : this.entities) {
+					if (other.getBoundingBox().intersects(bb)) {
+						crs.add(other);
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+	
+	
 
 }

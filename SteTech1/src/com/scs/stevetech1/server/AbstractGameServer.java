@@ -17,6 +17,7 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.ICalcHitInPast;
+import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.INotifiedOfCollision;
@@ -32,7 +33,7 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
-import com.scs.stevetech1.netmessages.ClientReloadingMessage;
+import com.scs.stevetech1.netmessages.ClientGunReloadRequestMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
@@ -92,7 +93,7 @@ ConsoleInputListener {
 	private ServerPingSystem pingSystem;
 
 	protected HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities
-	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entites that we need to iterate over in game loop
+	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entities that we need to iterate over in game loop
 	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
@@ -115,7 +116,7 @@ ConsoleInputListener {
 
 	protected SimpleGameData gameData = new SimpleGameData();
 	private LinkedList<String> gameLog = new LinkedList<>();
-	
+
 
 	/**
 	 * 
@@ -255,9 +256,9 @@ ConsoleInputListener {
 							Globals.p("Null shooter!");
 						}
 
-					} else if (message instanceof ClientReloadingMessage) {
+					} else if (message instanceof ClientGunReloadRequestMessage) {
 						//Globals.p("Rcvd ClientReloadingMessage");
-						ClientReloadingMessage crm = (ClientReloadingMessage)message;
+						ClientGunReloadRequestMessage crm = (ClientGunReloadRequestMessage)message;
 						IReloadable e = (IReloadable)this.entities.get(crm.abilityId);
 						if (e != null) {
 							e.setToBeReloaded(); //reload(this);
@@ -403,7 +404,6 @@ ConsoleInputListener {
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
 		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
-		//sendGameStatusMessage();
 		sendAllEntitiesToClient(client);
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 		this.pingSystem.sendPingToClient(client);
@@ -611,8 +611,11 @@ ConsoleInputListener {
 		}
 
 		//this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player left!", true));
-		appendToGameLog(client.playerData.playerName + " has left");
-		
+		if (client.playerData != null) {
+			appendToGameLog(client.playerData.playerName + " has left");
+		} else {
+			Globals.pe("Client playerData is null!");
+		}
 		this.sendGameStatusMessage();
 		gameStatusSystem.checkGameStatus(true);
 	}
@@ -822,6 +825,7 @@ ConsoleInputListener {
 
 			startNewGame();
 			//this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
+			this.appendToGameLog("Get ready!");
 
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
 			synchronized (entities) {
@@ -832,8 +836,11 @@ ConsoleInputListener {
 					}
 				}
 			}
+			this.appendToGameLog("Game Started!");
 
 		} else if (newStatus == SimpleGameData.ST_FINISHED) {
+			this.appendToGameLog("Game Finished!");
+
 			int winningSide = this.getWinningSideAtEnd();
 			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
 		}
@@ -1004,7 +1011,7 @@ ConsoleInputListener {
 			float size = NumberFunctions.rndFloat(minSize,  maxSize);
 
 			NewEntityData data = new NewEntityData();
-			data.type = Globals.BULLET_EXPLOSION_EFFECT;
+			data.type = Globals.EXPLOSION_SHARD;
 			data.data.put("pos", pos);//this.getWorldTranslation());
 			data.data.put("forceDirection", forceDirection);
 			data.data.put("size", size);
@@ -1021,22 +1028,37 @@ ConsoleInputListener {
 		this.moveEntityUntilItHitsSomething(pe, dir, 1f);
 		this.moveEntityUntilItHitsSomething(pe, dir, 0.1f);
 	}
-	
-	
+
+
 	public void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir, float offset) {
 		while (pe.simpleRigidBody.checkForCollisions().isEmpty()) {
 			pe.getMainNode().move(dir.mult(offset));
 		}
 		pe.getMainNode().move(dir.mult(-offset));
 	}
-	
-	
-	protected void appendToGameLog(String s) {
+
+
+	public void appendToGameLog(String s) {
 		this.gameLog.add(s);
 		while (this.gameLog.size() > 6) {
 			this.gameLog.removeFirst();
 		}
 		this.gameNetworkServer.sendMessageToAll(new GameLogMessage(this.gameLog));
+	}
+
+
+	public void damageSurroundingEntities(Vector3f pos, float range, float damage) {
+		List<SimpleRigidBody<PhysicalEntity>> list = this.physicsController.getSRBsWithinRange(physicsController, pos, range);
+		for (SimpleRigidBody<PhysicalEntity> srb : list) {
+			PhysicalEntity pe = (PhysicalEntity)srb.simpleEntity;
+			if (pe instanceof IDamagable) {
+				if (pe.canSee(pos, range)) {
+					IDamagable id = (IDamagable)pe;
+					id.damaged(damage, null, "Explosion");
+				}
+			}
+		}
+
 	}
 
 }

@@ -19,23 +19,20 @@ import com.scs.stevetech1.shared.IEntityController;
 
 import ssmith.lang.NumberFunctions;
 
-public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
+public class ExplosionSphere extends PhysicalEntity implements IProcessByClient {
 
 	private float timeLeft = 3f;//1.5f;
-	private int rot = NumberFunctions.rnd(0,365);
-	private Geometry geometry;
 	
-	public ExplosionShard(IEntityController _game, float x, float y, float z, float size, Vector3f forceDirection, String tex) {
-		super(_game, _game.getNextEntityID(), Globals.EXPLOSION_SHARD, "ExplosionShard", true, false, true);
+	public ExplosionSphere(IEntityController _game, float x, float y, float z, String tex) {
+		super(_game, _game.getNextEntityID(), Globals.EXPLOSION_SPHERE, "ExplosionSphere", true, false, true);
 
-		Box box1 = new Box(size, size, size);
-		geometry = new Geometry("ExplosionShard", box1);
+		// todo  - this
+		Box box1 = new Box(1f, 1f, 1f);
+		Geometry geometry = new Geometry("Crate", box1);
 		TextureKey key3 = new TextureKey(tex);//"Textures/sun.jpg");
 		key3.setGenerateMips(true);
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
-
-		geometry.setShadowMode(ShadowMode.CastAndReceive);
 
 		Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 		floor_mat.setTexture("DiffuseMap", tex3);
@@ -43,28 +40,12 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		
 		floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); 
 		geometry.setQueueBucket(Bucket.Transparent);
-/*
-		int rotDegreesX = NumberFunctions.rnd(0,365);
-		float radsX = (float)Math.toRadians(rotDegreesX);
-		int rotDegreesY = NumberFunctions.rnd(0,365);
-		float radsY = (float)Math.toRadians(rotDegreesY);
-		geometry.rotate(radsX, radsY, 0);
-		*/
-		//Vector3f v = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(-1, 1));
-		//JMEAngleFunctions.rotateToDirection(geometry, v);
-		
+
 		this.mainNode.attachChild(geometry);
 		mainNode.setLocalTranslation(x, y, z);
 
 		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
-
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
-		simpleRigidBody.setBounciness(0.5f);
-		//simpleRigidBody.setCollidable(false);
-		//Vector3f forceDirection = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 2), NumberFunctions.rndFloat(-1, 1));
-		//float force = NumberFunctions.rndFloat(minForce,  maxForce);
-		simpleRigidBody.setLinearVelocity(forceDirection);
 
 	}
 
@@ -74,15 +55,6 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		this.simpleRigidBody.process(tpf_secs);
 		//Settings.p("Pos: " + this.getLocation());
 		timeLeft -= tpf_secs;
-		
-		rot++;
-		if (rot > 360) {
-			rot = 0;
-		}
-		float radsX = (float)Math.toRadians(rot);
-		geometry.rotate(radsX, -radsX, 0);
-
-		
 		if (timeLeft <= 0) {
 			this.remove();
 			if (Globals.STRICT) {

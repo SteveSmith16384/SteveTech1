@@ -26,6 +26,7 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
@@ -60,6 +61,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
@@ -72,6 +74,7 @@ import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GenericStringMessage;
+import com.scs.stevetech1.netmessages.GunReloadingMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -96,6 +99,7 @@ import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.AnimationSystem;
 import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
 
+import ssmith.lang.NumberFunctions;
 import ssmith.util.AverageNumberCalculator;
 import ssmith.util.ConsoleInputListener;
 import ssmith.util.FixedLoopTime;
@@ -138,12 +142,15 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
 	private String gameCode; // To check the right type of client is connecting
-	private String playerName = "[Player's Name]";
+	private String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
 	//private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
 	public IHUD hud;
 	public IInputDevice input;
-	private Node playersWeaponNode;
+	
+	public Node playersWeaponNode;
+	private Spatial weaponModel;
+	private Quaternion weaponRot;
 
 	public AbstractClientAvatar currentAvatar;
 	public int currentAvatarID = -1; // In case the avatar physical entity gets replaced, we can re-assign it
@@ -155,6 +162,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public int clientStatus = STATUS_NOT_CONNECTED;
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
+	private float finishedReloadAt;
+	private boolean currentlyReloading = false;
 
 	protected Node gameNode = new Node("GameNode");
 	protected Node debugNode = new Node("DebugNode");
@@ -166,7 +175,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private int gamePort;//, lobbyPort;
 	private float mouseSens;
 	private String key;
-	//private LinkedList<String> gameLog = new LinkedList<>();
 
 	// Subnodes
 	private int nodeSize = Globals.SUBNODE_SIZE;
@@ -249,7 +257,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
-		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, Globals.CAM_VIEW_DIST);
+		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
 
 		getInputManager().addMapping(RELOAD, new KeyTrigger(KeyInput.KEY_R));
 		getInputManager().addListener(this, RELOAD);            
@@ -388,7 +396,15 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					if (this.clientStatus == STATUS_ENTS_RCVD_NOT_ADDED) {
 						clientStatus = STATUS_IN_GAME;
 						this.getRootNode().attachChild(this.gameNode);
-						//this.showPlayersWeapon();
+						this.showPlayersWeapon();
+					}
+				}
+				
+				if (currentlyReloading) {
+					this.finishedReloadAt -= tpf_secs;
+					if (this.finishedReloadAt < 0) {
+						currentlyReloading= false;
+						this.reloading(false);
 					}
 				}
 
@@ -725,6 +741,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else if (message instanceof GameLogMessage) {
 			GameLogMessage glm = (GameLogMessage)message;
 			this.hud.setLog(glm.log);
+			
+		} else if (message instanceof GunReloadingMessage) {
+			GunReloadingMessage grm = (GunReloadingMessage)message;
+			this.reloading(true);
+			this.finishedReloadAt = grm.duration_secs;
+			this.currentlyReloading = true;
 			
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
@@ -1178,9 +1200,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.getGameNode().attachChild(playersWeaponNode);
 		}
 		playersWeaponNode.detachAllChildren();
-		Spatial s = getPlayersWeaponModel();
-		if (s != null) {
-			playersWeaponNode.attachChild(s);
+		weaponModel = getPlayersWeaponModel();
+		if (weaponModel != null) {
+			playersWeaponNode.attachChild(weaponModel);
+			weaponRot = weaponModel.getLocalRotation().clone();
+		}
+	}
+	
+	
+	public void reloading(boolean started) {
+		Globals.p("reloading(" + started + ")"); playersWeaponNode.getLocalRotation();
+		if (started) {
+			JMEAngleFunctions.rotateToDirection(weaponModel, Vector3f.UNIT_Y);
+		} else {
+			weaponModel.setLocalRotation(weaponRot);
 		}
 	}
 

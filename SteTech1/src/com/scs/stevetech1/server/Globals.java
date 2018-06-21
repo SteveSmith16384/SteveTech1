@@ -13,8 +13,9 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean DEBUG_GAME_STATUS_CHECK = true;
-
+	
+	
+	public static final boolean DEBUG_GAME_STATUS_CHECK = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean NO_GRAVITY = false;
 	public static final boolean NO_AI_UNITS = false;
@@ -62,7 +63,8 @@ public class Globals {
 	// Generic entity codes
 	public static final int DEBUGGING_SPHERE = -1;
 	public static final int BULLET_TRAIL = -2;
-	public static final int BULLET_EXPLOSION_EFFECT = -3;
+	public static final int EXPLOSION_SHARD = -3;
+	public static final int EXPLOSION_SPHERE = -4;
 
 	
 	// Effects

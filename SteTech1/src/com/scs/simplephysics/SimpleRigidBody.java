@@ -312,7 +312,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 
 		} else {
-			try {
+			try { // todo - this is currently a mess
 				CollisionResults rayCRs = new CollisionResults();
 				//Vector3f pos = this.
 				Ray prevRay = new Ray(prevPos.add(moveOffset), DOWN_VEC);
@@ -379,7 +379,6 @@ public class SimpleRigidBody<T> implements Collidable {
 
 		CollisionResults tempCollisionResults = new CollisionResults(); // Avoid creating a new one each time
 
-		//if (SimplePhysicsController.USE_NEW_COLLISION_METHOD) {
 		for(SimpleNode<T> node : this.physicsController.nodes.values()) {
 			node.getCollisions(this, crs, tempCollisionResults);
 		}
@@ -394,19 +393,6 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 			}
 		}
-
-		/*} else {
-			List<SimpleRigidBody<T>> entities = physicsController.getEntities();
-			synchronized (entities) {
-				// Loop through the entities
-				for (int i=0 ; i<entities.size() ; i++) {
-					SimpleRigidBody<T> e = entities.get(i);
-					if (this.checkSRBvSRB(e, tempCollisionResults)) {
-						crs.add(e);
-					}
-				}
-			}
-		}*/
 		return crs;
 	}
 
