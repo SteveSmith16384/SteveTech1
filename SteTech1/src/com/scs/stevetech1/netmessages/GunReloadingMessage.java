@@ -19,7 +19,7 @@ public class GunReloadingMessage extends MyAbstractMessage {
 
 
 	public GunReloadingMessage(IAbility ability, float _duration) {
-		super(true, true);
+		super(true, false); // Not scheduled since the player wants to see anim straight away
 		
 		abilityId = ability.getID();
 		duration_secs = _duration;

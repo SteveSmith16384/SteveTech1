@@ -1,5 +1,6 @@
 package com.scs.stevetech1.jme;
 
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
@@ -7,13 +8,13 @@ import com.jme3.scene.Spatial;
 import ssmith.lang.NumberFunctions;
 
 public class JMEAngleFunctions {
-	
-	public static void turnTowards_Gentle(Spatial spatial, Vector3f target, float pcent) {
-		if (pcent <= 0) {
+
+	public static void turnTowards_Gentle(Spatial spatial, Vector3f target, float frac) {
+		if (frac <= 0) {
 			return; //throw new RuntimeException("Invalid pcent: " + pcent);
 		}
-		if (pcent > 1) {
-			pcent = 1;
+		if (frac > 1) {
+			frac = 1;
 		}
 		Vector3f dir_to_target = target.subtract(spatial.getWorldTranslation()).normalizeLocal();
 		Quaternion target_q = new Quaternion();
@@ -24,7 +25,7 @@ public class JMEAngleFunctions {
 			// Just look at it
 			new_q = target_q;
 		} else {
-			new_q.slerp(our_q, target_q, pcent);
+			new_q.slerp(our_q, target_q, frac);
 		}
 		spatial.setLocalRotation(new_q);
 	}
@@ -46,30 +47,30 @@ public class JMEAngleFunctions {
 	}
 
 
-	public static Quaternion getRotation(float x, float z) {
+	public static Quaternion getYAxisRotation(float x, float z) {
 		Quaternion target_q = new Quaternion();
 		target_q.lookAt(new Vector3f(x, 0, z), Vector3f.UNIT_Y);
 		return target_q;
 	}
 
 
-	public static void rotateToDirection(Spatial s, Vector3f dir) {
+	public static void rotateToWorldDirection(Spatial s, Vector3f dir) {
 		Vector3f v = s.getLocalTranslation();
 		s.lookAt(v.add(dir), Vector3f.UNIT_Y);
 		//s.lookAt(dir.addLocal(v), Vector3f.UNIT_Y); // scs new
 	}
 
 
-	public static void rotateToDirection(Spatial s, int angdeg) {
+	public static void rotateToWorldDirectionYAxis(Spatial s, int angdeg) {
 		double ang = Math.toRadians(angdeg);
 		Vector3f dir = new Vector3f((float)Math.cos(ang), 0, (float)Math.sin(ang));
-		rotateToDirection(s, dir);
+		rotateToWorldDirection(s, dir);
 	}
 
 
-	public static void rotateBy(Spatial s, int angdeg) {
+	public static void rotateYAxisBy(Spatial s, int angdeg) {
 		double ang = Math.toRadians(angdeg);
-		Quaternion q = getRotation((float)Math.cos(ang), (float)Math.sin(ang));
+		Quaternion q = getYAxisRotation((float)Math.cos(ang), (float)Math.sin(ang));
 		s.rotate(q);
 	}
 
@@ -104,5 +105,37 @@ public class JMEAngleFunctions {
 	}
 
 
+	// This function hasn't been tested
+	public static void turnLeft(Spatial spatial){
+		//Vector3f direction = new Vector3f(0, 0, 1);
+		Quaternion rotateLeft = new Quaternion().fromAngleAxis(FastMath.HALF_PI, Vector3f.UNIT_Y);
+		spatial.rotate(rotateLeft);
+		//rotateLeft.mult(direction, direction);
+		//system
+		//System.out.println("direction: " + direction);
+	}
 
+
+	// This function hasn't been tested
+	public static void turnUp(Spatial spatial){
+		//Vector3f direction = new Vector3f(0, 0, 1);
+		Quaternion rotateLeft = new Quaternion().fromAngleAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
+		spatial.rotate(rotateLeft);
+		//rotateLeft.mult(direction, direction);
+		//system
+		//System.out.println("direction: " + direction);
+	}
+
+
+	// This function hasn't been tested
+	public static void Turn(Spatial spatial, float timeFactor) {
+		Quaternion q1 = new Quaternion(); //start
+		Quaternion q2 = new Quaternion();
+		q2.fromAngles(new float[] {-90,0,0});//end
+
+		//during update rotate a little bit based on time
+		spatial.setLocalRotation(q1.slerp(q1,q2,timeFactor));
+		
+		//spatial.ro
+	}
 }

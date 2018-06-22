@@ -38,11 +38,11 @@ public class MountainMapBorder extends PhysicalEntity {
 				JMEModelFunctions.setTextureOnSpatial(game.getAssetManager(), model, "Textures/snow.jpg");
 				JMEModelFunctions.scaleModelToWidth(model, InvisibleMapBorder.BORDER_WIDTH+1); // Since we rotate it, needs to be slightly wider
 				model.setLocalTranslation(-InvisibleMapBorder.BORDER_WIDTH/2, 0, i);//-(InvisibleMapBorder.BORDER_WIDTH/2));
-				JMEAngleFunctions.rotateToDirection(model, NumberFunctions.rnd(0, 359));
+				JMEAngleFunctions.rotateToWorldDirectionYAxis(model, NumberFunctions.rnd(0, 359));
 				container.attachChild(model);
 			}
 			mainNode.attachChild(container);
-			JMEAngleFunctions.rotateToDirection(mainNode, dir);
+			JMEAngleFunctions.rotateToWorldDirection(mainNode, dir);
 		} else {
 			// Do nothing on server
 		}

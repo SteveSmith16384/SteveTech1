@@ -147,10 +147,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public IGameMessageClient networkClient;
 	public IHUD hud;
 	public IInputDevice input;
-	
+
+	// On-screen gun
 	public Node playersWeaponNode;
 	private Spatial weaponModel;
-	private Quaternion weaponRot;
+	private float finishedReloadAt;
+	private boolean currentlyReloading = false;
+	private float gunAngle = 0;
+	private Vector3f weaponRot;
 
 	public AbstractClientAvatar currentAvatar;
 	public int currentAvatarID = -1; // In case the avatar physical entity gets replaced, we can re-assign it
@@ -162,12 +166,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public int clientStatus = STATUS_NOT_CONNECTED;
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
-	private float finishedReloadAt;
-	private boolean currentlyReloading = false;
 
 	protected Node gameNode = new Node("GameNode");
 	protected Node debugNode = new Node("DebugNode");
-
+	protected FilterPostProcessor fpp;
+	
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public long serverTime, renderTime;
@@ -274,7 +277,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (hud != null) {
 			getGuiNode().attachChild(hud.getRootNode());
 		}
-		
+
 		this.getRootNode().attachChild(this.debugNode);
 
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
@@ -310,9 +313,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		// Start console
 		new TextConsole(this);
 
-		if (Globals.TOONISH) {
+		//if (Globals.TOONISH) {
 			this.setupFilters();
-		}
+		//}
 
 		loopTimer.start();
 
@@ -399,19 +402,22 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						this.showPlayersWeapon();
 					}
 				}
-				
+
 				if (currentlyReloading) {
-					this.finishedReloadAt -= tpf_secs;
-					if (this.finishedReloadAt < 0) {
-						currentlyReloading= false;
-						this.reloading(false);
-					}
+					this.reloading(tpf_secs, this.finishedReloadAt > 0);
 				}
 
 				if (clientStatus == STATUS_IN_GAME) {
 
 					this.sendInputs();
 
+					if (Globals.DEBUG_GUN_ROTATION) {
+						if (weaponModel != null) {
+							//weaponModel.rotate((float)Math.toRadians(1), 0f, 0f);
+						}
+					}
+					
+					
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
 							long timeDiff = this.currentAvatar.historicalPositionData.getMostRecent().serverTimestamp - renderTime;
@@ -483,7 +489,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					if (playersWeaponNode != null) {
 						playersWeaponNode.setLocalTranslation(cam.getLocation());
 						playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
-						//playersWeaponNode.updateGeometricState();  // Makes the gun black for some reason
 					}
 
 				}
@@ -737,22 +742,23 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			NewClientOnlyEntity ncoe = (NewClientOnlyEntity)message;
 			createEntity(ncoe.data, ncoe.timestamp);
 			 */
-			
+
 		} else if (message instanceof GameLogMessage) {
 			GameLogMessage glm = (GameLogMessage)message;
 			this.hud.setLog(glm.log);
-			
+
 		} else if (message instanceof GunReloadingMessage) {
 			GunReloadingMessage grm = (GunReloadingMessage)message;
-			this.reloading(true);
+			//this.reloading(true);
+			//this.gunAngle = 0;
 			this.finishedReloadAt = grm.duration_secs;
 			this.currentlyReloading = true;
-			
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
 	}
-	
+
 
 	/**
 	 * Override if required
@@ -1203,17 +1209,32 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		weaponModel = getPlayersWeaponModel();
 		if (weaponModel != null) {
 			playersWeaponNode.attachChild(weaponModel);
-			weaponRot = weaponModel.getLocalRotation().clone();
+			weaponRot = weaponModel.getLocalRotation().mult(Vector3f.UNIT_Z);
 		}
 	}
-	
-	
-	public void reloading(boolean started) {
-		Globals.p("reloading(" + started + ")"); playersWeaponNode.getLocalRotation();
+
+
+	private void reloading(float tpf_secs, boolean started) {
+		float gunRotSpeed = 400;
+		float diff = (gunRotSpeed * tpf_secs);
+
+		this.finishedReloadAt -= tpf_secs;
+		//Globals.p("reloading(" + started + ")"); // weaponModel.getLocalRotation();
 		if (started) {
-			JMEAngleFunctions.rotateToDirection(weaponModel, Vector3f.UNIT_Y);
+			if (gunAngle < 90) {
+				gunAngle += diff;
+				weaponModel.rotate((float)Math.toRadians(-diff), 0f, 0f);
+			}
 		} else {
-			weaponModel.setLocalRotation(weaponRot);
+			if (gunAngle > 0) {
+				gunAngle -= diff;
+				weaponModel.rotate((float)Math.toRadians(diff), 0f, 0f);
+			} else {
+				currentlyReloading = false;
+			}
+		}
+		if (Globals.DEBUG_GUN_ROTATION) {
+			Globals.p("Gun angle = " + gunAngle);
 		}
 	}
 
@@ -1344,21 +1365,22 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	private void setupFilters() {
+	protected void setupFilters() {
 		renderManager.setAlphaToCoverage(true);
 		if (renderer.getCaps().contains(Caps.GLSL100)){
-			FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
+			fpp = new FilterPostProcessor(assetManager);
 			//fpp.setNumSamples(4);
 			int numSamples = getContext().getSettings().getSamples();
 			if( numSamples > 0 ) {
 				fpp.setNumSamples(numSamples); 
 			}
-			CartoonEdgeFilter toon=new CartoonEdgeFilter();
+			
+			/*CartoonEdgeFilter toon=new CartoonEdgeFilter();
 			toon.setEdgeColor(ColorRGBA.Yellow);
 			toon.setEdgeWidth(0.5f);
 			toon.setEdgeIntensity(1.0f);
 			toon.setNormalThreshold(0.8f);
-			fpp.addFilter(toon);
+			fpp.addFilter(toon);*/
 			viewPort.addProcessor(fpp);
 		}
 	}

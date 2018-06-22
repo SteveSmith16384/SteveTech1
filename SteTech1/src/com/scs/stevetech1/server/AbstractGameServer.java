@@ -1048,7 +1048,7 @@ ConsoleInputListener {
 
 
 	public void damageSurroundingEntities(Vector3f pos, float range, float damage) {
-		List<SimpleRigidBody<PhysicalEntity>> list = this.physicsController.getSRBsWithinRange(physicsController, pos, range);
+		List<SimpleRigidBody<PhysicalEntity>> list = this.physicsController.getSRBsWithinRange(pos, range);
 		for (SimpleRigidBody<PhysicalEntity> srb : list) {
 			PhysicalEntity pe = (PhysicalEntity)srb.simpleEntity;
 			if (pe instanceof IDamagable) {

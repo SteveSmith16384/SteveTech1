@@ -312,7 +312,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			}
 
 		} else {
-			try { // todo - this is currently a mess
+			/*try { // todo - this is currently a mess
 				CollisionResults rayCRs = new CollisionResults();
 				//Vector3f pos = this.
 				Ray prevRay = new Ray(prevPos.add(moveOffset), DOWN_VEC);
@@ -339,7 +339,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 			} catch (Exception ex) { // todo - remove this
 				ex.printStackTrace();
-			}
+			}*/
 		}
 
 

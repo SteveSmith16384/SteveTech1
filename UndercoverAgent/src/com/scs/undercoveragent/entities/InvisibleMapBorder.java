@@ -63,7 +63,7 @@ public class InvisibleMapBorder extends PhysicalEntity {
 
 		geometry.setLocalTranslation(-BORDER_WIDTH/2, BORDER_HEIGHT/2, size/2);
 		mainNode.attachChild(geometry);
-		JMEAngleFunctions.rotateToDirection(mainNode, dir);
+		JMEAngleFunctions.rotateToWorldDirection(mainNode, dir);
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);

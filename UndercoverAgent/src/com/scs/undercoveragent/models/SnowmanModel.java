@@ -36,7 +36,7 @@ public class SnowmanModel implements IAvatarModel {
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);
 		JMEModelFunctions.moveYOriginTo(model, 0f);
-		JMEAngleFunctions.rotateToDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
+		JMEAngleFunctions.rotateToWorldDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 
 		origPos = model.getLocalTranslation().clone();
 		return model;

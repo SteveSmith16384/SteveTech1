@@ -201,7 +201,7 @@ public class SimplePhysicsController<T> {
 	}
 
 
-	public List<SimpleRigidBody<T>> getSRBsWithinRange(SimplePhysicsController<T> spc, Vector3f pos, float range) {
+	public List<SimpleRigidBody<T>> getSRBsWithinRange(Vector3f pos, float range) {
 		List<SimpleRigidBody<T>> crs = new ArrayList<SimpleRigidBody<T>>();
 
 		final BoundingBox bb = new BoundingBox(pos, range, range, range);
@@ -209,6 +209,7 @@ public class SimplePhysicsController<T> {
 		for(SimpleNode<T> node : this.nodes.values()) {
 			node.getCollisions(bb, crs);
 		}
+		
 		// Check against moving/big entities
 		List<SimpleRigidBody<T>> entities = movingEntities;
 		synchronized (entities) {
