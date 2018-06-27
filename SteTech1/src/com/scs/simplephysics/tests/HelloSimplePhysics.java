@@ -33,6 +33,7 @@ import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.jme.JMEModelFunctions;
 
 /*
  * An example of using Simple Physics.  
@@ -76,9 +77,9 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		cam.lookAt(new Vector3f(3, 1f, 20f), Vector3f.UNIT_Y);
 		viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
 
-		physicsController = new SimplePhysicsController<Spatial>(this, 5);
 		setUpKeys();
 
+		physicsController = new SimplePhysicsController<Spatial>(this, 5);
 
 		Box playerBox = new Box(.3f, .9f, .3f);
 		playerModel = new Geometry("Player", playerBox);
@@ -100,26 +101,32 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 		this.addFloor();
 		this.addWall();
-		this.addBox(2f, 8f, 7f, 1f, 1f, .1f);
-		this.addBox(2f, 6f, 7f, 1f, 1f, .3f);
+		
+		// Boxes on top of each other
+		this.addBox(2f, 8f, 7f, 1f, 1f, .1f, true);
+		this.addBox(2f, 6f, 7f, 1f, 1f, .3f, true);
 
 		// Add boxes with various states of bounciness
 		for (int i=0 ; i<10 ; i++) {
-			this.addBox(4f+(i*2), 7f, 9f, 1f, 1f, (i/10f));
+			this.addBox(4f+(i*2), 7f, 9f, 1f, 1f, (i/10f), true);
 		}
 
 		addMountainModel();
 		
+		addSlope();
+		
+		// Steps
+		for (int i=0 ; i<10 ; i++) {
+			float depth = 1f;//0.2f;
+			this.addBox(-10, i*i*.2f, -5+(i*depth), depth, .5f, 0f, false);
+		}
+
 		// Add shadows
 		final int SHADOWMAP_SIZE = 1024;
 		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
-		/*
-		p("Recording video");
-		VideoRecorderAppState video_recorder = new VideoRecorderAppState();
-		stateManager.attach(video_recorder);
-		 */
+
 	}
 
 
@@ -131,7 +138,36 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		this.rootNode.attachChild(model);
 
-		//ISimpleEntity<Spatial> hillEntity = new SimpleEntityHelper<Spatial>(model);
+		ISimpleEntity<Spatial> entity = new ISimpleEntity<Spatial>() {
+
+			@Override
+			public void moveEntity(Vector3f pos) {
+				// Do nothing
+				
+			}
+
+			@Override
+			public Collidable getCollidable() {
+				return model; // Don't just return a bounding box!
+			}
+
+		};
+
+
+		mountain = new SimpleRigidBody<Spatial>(entity, physicsController, false, model);		
+		this.physicsController.addSimpleRigidBody(mountain);
+		mountain.setModelComplexity(3);
+	}
+	
+	
+	private void addSlope() {
+		// Add a model
+		final Spatial model = getAssetManager().loadModel("Models/landscape_asset_v2a/obj/hill-ramp.obj");
+		JMEModelFunctions.setTextureOnSpatial(this.getAssetManager(), model, "Models/landscape_asset_v2a/obj/basetexture.jpg");
+		model.setLocalTranslation(20, -1, 17);
+		model.setShadowMode(ShadowMode.CastAndReceive);
+		this.rootNode.attachChild(model);
+
 		ISimpleEntity<Spatial> entity = new ISimpleEntity<Spatial>() {
 
 			@Override
@@ -201,7 +237,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	}
 
 
-	private void addBox(float x, float y, float z, float w, float h, float bounciness) {
+	private void addBox(float x, float y, float z, float w, float h, float bounciness, boolean addSrb) {
 		Box box = new Box(w/2, h/2, w/2);
 
 		//Material material = new Material(getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
@@ -220,8 +256,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		this.rootNode.attachChild(boxGeometry);
 
 		ISimpleEntity<Spatial> boxEntity = new SimpleEntityHelper<Spatial>(boxGeometry);
-
-		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(boxEntity, physicsController, true, boxGeometry);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(boxEntity, physicsController, addSrb, boxGeometry);
 		this.physicsController.addSimpleRigidBody(srb);
 		srb.setBounciness(bounciness);
 	}

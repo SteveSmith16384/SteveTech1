@@ -8,4 +8,8 @@ package com.scs.stevetech1.components;
 public interface IDebrisTexture {
 
 	String getDebrisTexture();
+	
+	float getMinDebrisSize();
+
+	float getMaxDebrisSize();
 }

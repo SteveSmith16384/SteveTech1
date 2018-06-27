@@ -26,11 +26,9 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
-import com.jme3.post.filters.CartoonEdgeFilter;
 import com.jme3.renderer.Caps;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
@@ -61,7 +59,6 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
-import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
@@ -154,7 +151,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private float finishedReloadAt;
 	private boolean currentlyReloading = false;
 	private float gunAngle = 0;
-	private Vector3f weaponRot;
 
 	public AbstractClientAvatar currentAvatar;
 	public int currentAvatarID = -1; // In case the avatar physical entity gets replaced, we can re-assign it
@@ -710,13 +706,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else if (message instanceof GameOverMessage) {
 			GameOverMessage gom = (GameOverMessage)message;
 			if (gom.winningSide == -1) {
-				Globals.p("The game is a draw!");
+				//Globals.p("The game is a draw!");
+				hud.showMessage("The game is a draw!");
 				this.gameIsDrawn();
 			} else if (gom.winningSide == this.side) {
-				Globals.p("You have won!");
+				//Globals.p("You have won!");
+				hud.showMessage("You have won!");
 				this.playerHasWon();
 			} else {
-				Globals.p("You have lost!");
+				//Globals.p("You have lost!");
+				hud.showMessage("You have won!");
 				this.playerHasLost();
 			}
 
@@ -1209,7 +1208,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		weaponModel = getPlayersWeaponModel();
 		if (weaponModel != null) {
 			playersWeaponNode.attachChild(weaponModel);
-			weaponRot = weaponModel.getLocalRotation().mult(Vector3f.UNIT_Z);
 		}
 	}
 

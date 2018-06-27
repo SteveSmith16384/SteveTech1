@@ -842,9 +842,14 @@ ConsoleInputListener {
 			this.appendToGameLog("Game Finished!");
 
 			int winningSide = this.getWinningSideAtEnd();
+			String name = getSideName(winningSide);
+			this.appendToGameLog(name + " has won!");
 			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
 		}
 	}
+
+
+	protected abstract String getSideName(int side);
 
 
 	protected abstract int getWinningSideAtEnd();

@@ -285,5 +285,10 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	}
 
 
+	@Override
+	protected String getSideName(int side) {
+		return this.clients.get(side).playerData.playerName;
+	}
+
 }
 

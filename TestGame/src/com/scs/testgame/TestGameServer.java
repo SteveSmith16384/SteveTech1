@@ -145,4 +145,9 @@ public class TestGameServer extends AbstractGameServer {
 	}
 
 
+	@Override
+	protected String getSideName(int side) {
+		return "Test Game";
+	}
+
 }

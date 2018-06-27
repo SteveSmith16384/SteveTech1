@@ -138,4 +138,23 @@ public class JMEAngleFunctions {
 		
 		//spatial.ro
 	}
+	
+	
+	public static Vector3f turnRight(Vector3f v) {
+		Vector3f v2 = v.normalize();
+		//float z = v.z;
+		v2.x += 1;
+		v2.y = v.y;
+		v2.z = v.z - 1;
+		
+		if (v2.x > 1) {
+			v2.x = 0;
+			v2.z -= 1;
+		} else if (v2.z < -1) {
+			v2.x -= 1;
+			v2.z = 1;
+		}
+		
+		return v2;
+	}
 }

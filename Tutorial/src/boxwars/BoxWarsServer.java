@@ -101,4 +101,10 @@ public class BoxWarsServer extends AbstractGameServer {
 	}
 
 
+	@Override
+	protected String getSideName(int side) {
+		return "Side " + side;
+	}
+
+
 }

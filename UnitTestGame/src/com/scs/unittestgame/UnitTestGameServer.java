@@ -31,15 +31,15 @@ public class UnitTestGameServer extends AbstractGameServer {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 	public UnitTestGameServer() throws IOException {
 		super("UnitTest", "key", 
 				new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
 				25, 50, 200, Integer.MAX_VALUE);
-		
+
 		super.physicsController.setGravity(0); // stop things falling
-		
+
 		start(JmeContext.Type.Headless);
 
 	}
@@ -68,7 +68,7 @@ public class UnitTestGameServer extends AbstractGameServer {
 	@Override
 	protected void createGame() {
 		//this.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
-		
+
 		for (int i=0 ; i<RunAll.NUM_ENTITIES ; i++) {
 			McGuffinEntity e = new McGuffinEntity(this, this.getNextEntityID());
 			this.actuallyAddEntity(e);
@@ -82,21 +82,28 @@ public class UnitTestGameServer extends AbstractGameServer {
 		avatar.setWorldTranslation(new Vector3f(0, 10, 0)); // stop them falling off edge
 	}
 
-	
+
 	@Override
 	protected AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid) {
 		return new ServerAvatarEntity(this, client, entityid);
 	}
-	
+
 
 	@Override
 	protected int getWinningSideAtEnd() {
 		return 0;
 	}
 
+
 	@Override
 	public int getMinPlayersRequiredForGame() {
 		return 1;
 	}
 
+
+	@Override
+	protected String getSideName(int side) {
+		return "Unit Test";
+	}
 }
+
