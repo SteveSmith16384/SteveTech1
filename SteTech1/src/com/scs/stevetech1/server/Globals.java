@@ -13,7 +13,7 @@ public class Globals {
 	public static final boolean STRICT = false;//true; // Extra checks (which will slow the game down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean SLEEP_BETWEEN_NEWENT_MSGS = true;
+	public static final boolean SLEEP_BETWEEN_NEWENT_MSGS = false;
 	
 	public static final boolean DEBUG_GUN_ROTATION = false;	
 	public static final boolean DEBUG_GAME_STATUS_CHECK = false;
