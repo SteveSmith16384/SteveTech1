@@ -58,7 +58,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	private Vector3f camDir = new Vector3f();
 	private Vector3f camLeft = new Vector3f();
 	
-	private SimpleRigidBody<Spatial> mountain;
+	//private SimpleRigidBody<Spatial> mountain;
 
 	public static void main(String[] args) {
 		AppSettings settings = new AppSettings(true);
@@ -115,10 +115,12 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		
 		addSlope();
 		
+		addKerb();
+
 		// Steps
 		for (int i=0 ; i<10 ; i++) {
 			float depth = 1f;//0.2f;
-			this.addBox(-10, i*i*.2f, -5+(i*depth), depth, .5f, 0f, false);
+			this.addBox(-10, (i*i*.1f)-.5f, -5+(i*depth), depth, 1.5f, 0f, false);
 		}
 
 		// Add shadows
@@ -154,9 +156,9 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		};
 
 
-		mountain = new SimpleRigidBody<Spatial>(entity, physicsController, false, model);		
-		this.physicsController.addSimpleRigidBody(mountain);
-		mountain.setModelComplexity(3);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(entity, physicsController, false, model);		
+		this.physicsController.addSimpleRigidBody(srb);
+		srb.setModelComplexity(3);
 	}
 	
 	
@@ -164,8 +166,8 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		// Add a model
 		final Spatial model = getAssetManager().loadModel("Models/landscape_asset_v2a/obj/hill-ramp.obj");
 		JMEModelFunctions.setTextureOnSpatial(this.getAssetManager(), model, "Models/landscape_asset_v2a/obj/basetexture.jpg");
-		model.setLocalTranslation(20, -1, 17);
-		model.setShadowMode(ShadowMode.CastAndReceive);
+		model.setLocalTranslation(-10, -1, 17);
+		model.setShadowMode(ShadowMode.Receive);
 		this.rootNode.attachChild(model);
 
 		ISimpleEntity<Spatial> entity = new ISimpleEntity<Spatial>() {
@@ -184,9 +186,39 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		};
 
 
-		mountain = new SimpleRigidBody<Spatial>(entity, physicsController, false, model);		
-		this.physicsController.addSimpleRigidBody(mountain);
-		mountain.setModelComplexity(3);
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(entity, physicsController, false, model);		
+		this.physicsController.addSimpleRigidBody(srb);
+		srb.setModelComplexity(3);
+	}
+	
+	
+	private void addKerb() {
+		// Add a model
+		final Spatial model = getAssetManager().loadModel("Models/landscape_asset_v2a/obj/road-straight-low.obj");
+		JMEModelFunctions.setTextureOnSpatial(this.getAssetManager(), model, "Models/landscape_asset_v2a/obj/basetexture.jpg");
+		model.setLocalTranslation(-10, 0, 8);
+		model.setShadowMode(ShadowMode.Receive);
+		this.rootNode.attachChild(model);
+
+		ISimpleEntity<Spatial> entity = new ISimpleEntity<Spatial>() {
+
+			@Override
+			public void moveEntity(Vector3f pos) {
+				// Do nothing
+				
+			}
+
+			@Override
+			public Collidable getCollidable() {
+				return model; // Don't just return a bounding box!
+			}
+
+		};
+
+
+		SimpleRigidBody<Spatial> srb = new SimpleRigidBody<Spatial>(entity, physicsController, false, model);		
+		this.physicsController.addSimpleRigidBody(srb);
+		srb.setModelComplexity(3);
 	}
 	
 	
@@ -252,7 +284,9 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		boxGeometry.setMaterial(material);
 		boxGeometry.setLocalTranslation(x, y, z);
 		boxGeometry.setShadowMode(ShadowMode.CastAndReceive);
+		if (addSrb) {
 		boxGeometry.lookAt(new Vector3f(0, y, 0), Vector3f.UNIT_Y); // Rotate them to different angles
+		}
 		this.rootNode.attachChild(boxGeometry);
 
 		ISimpleEntity<Spatial> boxEntity = new SimpleEntityHelper<Spatial>(boxGeometry);

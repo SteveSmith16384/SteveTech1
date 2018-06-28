@@ -8,11 +8,13 @@ import ssmith.lang.Functions;
 
 public class Globals {
 	
-	public static final boolean RECORD_VID = false;
+	public static final boolean RECORD_VID = true;
 	public static final boolean HIDE_BELLS_WHISTLES = !RECORD_VID;
-	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
+	public static final boolean STRICT = false;//true; // Extra checks (which will slow the game down)
 
 	// Lots of consts for specific debugging output
+	public static final boolean SLEEP_BETWEEN_NEWENT_MSGS = true;
+	
 	public static final boolean DEBUG_GUN_ROTATION = false;	
 	public static final boolean DEBUG_GAME_STATUS_CHECK = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
@@ -32,7 +34,6 @@ public class Globals {
 	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = false;
 	public static final boolean DEBUG_DELAYED_EXPLOSION = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
-	public static final boolean DEBUG_FALLING_THROUGH_FLOOR = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
 	public static final boolean DEBUG_BULLET_HIT = false;
 	public static final boolean DEBUG_AI_TARGETTING = false;
@@ -79,6 +80,7 @@ public class Globals {
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
 	public static final boolean ONLY_ADJUST_CLIENT_ON_MOVE = false; // Only adjust the client avatar's position when the player moves them.
 	public static final int SUBNODE_SIZE = 15;
+	public static final int DEF_VOL = 1;
 
 	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*7;
 	public static final int KRYO_OBJECT_BUFFER_SIZE = 4096*3*24;

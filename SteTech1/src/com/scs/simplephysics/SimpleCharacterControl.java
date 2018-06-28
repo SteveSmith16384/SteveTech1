@@ -1,8 +1,5 @@
 package com.scs.simplephysics;
 
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
-
 /*
  * A special version of SimpleRigidBody for walking around.  
  */

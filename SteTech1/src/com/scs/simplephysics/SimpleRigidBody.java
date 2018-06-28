@@ -1,7 +1,6 @@
 package com.scs.simplephysics;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
@@ -15,10 +14,11 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
-	private static final boolean AUTOMOVE_BY_FORCE = true;
+	private static final boolean AUTOMOVE_BY_FORCE = false; // Doesn't work since move() moves entity back to original pos on collision
 	private static final boolean DEBUG_AUTOMOVING = true;
 
 	private static final float AUTOMOVE_FRAC = .1f;
@@ -113,20 +113,22 @@ public class SimpleRigidBody<T> implements Collidable {
 		}
 
 		if (this.movedByForces) {
-/*
+			/*
 			if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
 				BoundingBox bv = this.getBoundingBox();
 				float y = bv.getCenter().y-bv.getYExtent();
 				Globals.p(this.simpleEntity  + " at " + y + " at start of process()");
 			}
-*/
+			 */
 			automoveForce.set(0, 0, 0);
 
 			// Check we're not already colliding *before* we've even moved
+			boolean doBounce = true;
 			List<SimpleRigidBody<T>> crs = this.checkForCollisions();
 			if (crs.size() != 0) {
 				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				if (AUTOMOVE_BY_FORCE) {
+					doBounce = false; // Don't bounce if we're being extracted from another entity
 					this.applyForceAwayFrom(crs);
 				} else {
 					this.moveAwayFrom(crs);
@@ -143,8 +145,10 @@ public class SimpleRigidBody<T> implements Collidable {
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
 						if (!checkForStep(crs2, tmpPrevPos, tmpMoveDir)) {
-							float bounce = this.bounciness;// * body.bounciness; // Combine bounciness?
-							oneOffForce.x = oneOffForce.x * bounce * -1;
+							if (doBounce) {
+								float bounce = this.bounciness;// * body.bounciness; // Combine bounciness?
+								oneOffForce.x = oneOffForce.x * bounce * -1;
+							}
 						}
 					}
 				}
@@ -160,8 +164,10 @@ public class SimpleRigidBody<T> implements Collidable {
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
 						if (!checkForStep(crs2, tmpPrevPos, this.tmpMoveDir)) {
-							float bounce = this.bounciness;// * body.bounciness;
-							oneOffForce.z = oneOffForce.z * bounce * -1; // Reverse direction
+							if (doBounce) {
+								float bounce = this.bounciness;// * body.bounciness;
+								oneOffForce.z = oneOffForce.z * bounce * -1; // Reverse direction
+							}
 						}
 					}
 				}
@@ -172,21 +178,26 @@ public class SimpleRigidBody<T> implements Collidable {
 			// Do Y last in case we're walking up steps
 			// Move along Y
 			{
-				float totalOffset = (oneOffForce.y + additionalForce.y +  + this.automoveForce.z + currentGravInc);
+				float totalOffset = (oneOffForce.y + additionalForce.y + this.automoveForce.y + currentGravInc);
 				boolean collided = false; 
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
+					/*if (this instanceof SimpleCharacterControl) {
+						Globals.p("Moving Y=" + tmpMoveDir);
+					}*/
 					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
 						collided = true;
-						// Bounce
-						float bounce = this.bounciness;
-						oneOffForce.y = oneOffForce.y * bounce * -1; // Reverse direction
-						if (Math.abs(this.currentGravInc) > 0.5f) {
-							currentGravInc = currentGravInc * bounce * -1;
-						} else {
-							// Avoid constantly bouncing
-							currentGravInc = 0;
+						if (doBounce) {
+							// Bounce
+							float bounce = this.bounciness;
+							oneOffForce.y = oneOffForce.y * bounce * -1; // Reverse direction
+							if (Math.abs(this.currentGravInc) > 0.5f) {
+								currentGravInc = currentGravInc * bounce * -1;
+							} else {
+								// Avoid constantly bouncing
+								currentGravInc = 0;
+							}
 						}
 						if (totalOffset < 0) { // Going down?
 							isOnGround = true;
@@ -209,14 +220,14 @@ public class SimpleRigidBody<T> implements Collidable {
 				p("Warning - high gravity offset: " + this.currentGravInc);
 			}*/
 		}
-/*
+		/*
 		if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
 			BoundingBox bv = this.getBoundingBox();
 			float y = bv.getCenter().y-bv.getYExtent();
 			Globals.p(this.simpleEntity  + " at " + y + " at end of process()");
 
 		}
-*/
+		 */
 	}
 
 
@@ -314,9 +325,11 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				if (doX) {
 					float len = ourBB.getCenter().x - theirBB.getCenter().x; //todo - adjust by diff of edges!
-					this.automoveForce.x += len*AUTOMOVE_FRAC;
-					if (DEBUG_AUTOMOVING) {
-						p("Automoved  " + this + " by " + automoveForce);
+					if (len != 0) {
+						this.automoveForce.x += len*AUTOMOVE_FRAC;
+						if (DEBUG_AUTOMOVING) {
+							p("Automoved  " + this + " by " + automoveForce);
+						}
 					}
 				}
 
@@ -329,9 +342,11 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				if (doZ) {
 					float len = ourBB.getCenter().z - theirBB.getCenter().z;
-					this.automoveForce.z += len*AUTOMOVE_FRAC;
-					if (DEBUG_AUTOMOVING) {
-						p("Automoved  " + this + " by " + automoveForce);
+					if (len != 0) {
+						this.automoveForce.z += len*AUTOMOVE_FRAC;
+						if (DEBUG_AUTOMOVING) {
+							p("Automoved  " + this + " by " + automoveForce);
+						}
 					}
 				}
 
@@ -344,9 +359,11 @@ public class SimpleRigidBody<T> implements Collidable {
 				}
 				if (doY) {
 					float len = ourBB.getCenter().y - theirBB.getCenter().y;
-					automoveForce.y += len*AUTOMOVE_FRAC;
-					if (DEBUG_AUTOMOVING) {
-						p("Automoved  " + this + " by " + automoveForce);
+					if (len != 0) {
+						automoveForce.y += len*AUTOMOVE_FRAC;
+						if (DEBUG_AUTOMOVING) {
+							p("Automoved  " + this + " by " + automoveForce);
+						}
 					}
 				}
 			}
@@ -375,10 +392,13 @@ public class SimpleRigidBody<T> implements Collidable {
 
 			if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT) {
 				//this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
-				float force = heightDiff*10;
-				p("Going up step height " + heightDiff + "; force=" + force);
-				this.oneOffForce.y += force;//15);// / -this.gravInc);
+				//float force = heightDiff*1.5f; //2;//;//*10;
+				p("Going up step: height=" + heightDiff);// + ", force=" + force);
+				this.oneOffForce.y += heightDiff * 1.5f;
+				//this.automoveForce.y += heightDiff * 400;
 				return true;
+			} else {
+				p("NOT Going up step: height=" + heightDiff);
 			}
 
 		} else {
@@ -388,22 +408,23 @@ public class SimpleRigidBody<T> implements Collidable {
 			Ray nextRay = new Ray(newPos, DOWN_VEC);
 			rayCRs.clear();
 			cr.simpleEntity.getCollidable().collideWith(nextRay, rayCRs);
-			float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
+			if (rayCRs.size() > 0) { // Will be empty if we're walking OFF a ramp
+				float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
 
-			float diff = nextHeight - currentHeight;
-			//Globals.p("Diff=" + diff);
-			if (diff > 0 && diff <= MAX_STEP_HEIGHT) {
-				if (diff < moveOffset.length()*2) { // 45 degrees?  Not!
+				float diff = nextHeight - currentHeight;
+				//Globals.p("Diff=" + diff);
+				if (diff > 0 && diff <= MAX_STEP_HEIGHT) {
+					//if (diff < moveOffset.length()*2) { // 45 degrees?  Not!
 					float ratio = diff / (moveOffset.length()*2);
-					this.oneOffForce.y += diff * 50 * ratio; // Adjust be steepness
-					p("Walking up! diff= " + diff);
-				} else {
+					this.oneOffForce.y += ratio * .5f; // Adjust be steepness
+					p("Walking up! ratio= " + ratio);
+					/*} else {
 					p("Not Walking up; diff= " + diff);
+				}*/
+					return true;
 				}
 			}
 		}
-
-
 		return false;
 	}
 

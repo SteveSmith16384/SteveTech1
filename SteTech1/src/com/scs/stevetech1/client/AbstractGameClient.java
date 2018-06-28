@@ -70,7 +70,7 @@ import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
-import com.scs.stevetech1.netmessages.GenericStringMessage;
+import com.scs.stevetech1.netmessages.ShowMessage;
 import com.scs.stevetech1.netmessages.GunReloadingMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
@@ -407,13 +407,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 					this.sendInputs();
 
-					if (Globals.DEBUG_GUN_ROTATION) {
-						if (weaponModel != null) {
-							//weaponModel.rotate((float)Math.toRadians(1), 0f, 0f);
-						}
-					}
-					
-					
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
 							long timeDiff = this.currentAvatar.historicalPositionData.getMostRecent().serverTimestamp - renderTime;
@@ -435,7 +428,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							}
 						}
 					}
-
 
 					// Loop through each entity and process them
 					//for (IEntity e : entitiesForProcessing.values()) { //entitiesForProcessing.size();
@@ -513,8 +505,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				networkClient.sendMessageToServer(message); // Send it straight back
 			}
 
-		} else if (message instanceof GenericStringMessage) {
-			GenericStringMessage gsm = (GenericStringMessage)message;
+		} else if (message instanceof ShowMessage) {
+			ShowMessage gsm = (ShowMessage)message;
 			this.hud.showMessage(gsm.msg);
 
 		} else if (message instanceof GameSuccessfullyJoinedMessage) {
@@ -816,31 +808,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	protected abstract void gameIsDrawn();
 
 	private void playSound(PlaySoundMessage psm) {
-		try {
-			AudioNode node = new AudioNode(this.getAssetManager(), psm.sound, psm.stream ?  AudioData.DataType.Stream : AudioData.DataType.Buffer);
-			node.setLocalTranslation(psm.pos);
-			node.setVolume(psm.volume);
-			node.setLooping(false);
-			node.play();
-
-			this.gameNode.attachChild(node);
-
-			// Create thread to remove it
-			this.enqueue(new Callable<Spatial>() {
-				public Spatial call() throws Exception {
-					try {
-						Thread.sleep((long)node.getPlaybackTime());
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					node.removeFromParent();
-					return node;
-				}
-			});
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		this.playSound(psm.sound, psm.pos, psm.volume, psm.stream);
 	}
 
 
@@ -1117,7 +1085,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				quit("User chose to.");
 			}
 		} else if (name.equalsIgnoreCase(RELOAD)) {
-			// todo
+
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
 				//new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.cam.getWidth(), this.cam.getHeight(), 5);
@@ -1389,5 +1357,35 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		return this.gameData;
 	}
 
+
+	@Override
+	public void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream) {
+		try {
+			AudioNode node = new AudioNode(this.getAssetManager(), _sound, _stream ? AudioData.DataType.Stream : AudioData.DataType.Buffer);
+			node.setLocalTranslation(_pos);
+			node.setVolume(_volume);
+			node.setLooping(false);
+			node.play();
+
+			this.gameNode.attachChild(node);
+
+			// Create thread to remove it
+			this.enqueue(new Callable<Spatial>() {
+				public Spatial call() throws Exception {
+					try {
+						Thread.sleep((long)node.getPlaybackTime() + 1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					node.removeFromParent();
+					return node;
+				}
+			});
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+	}
 
 }

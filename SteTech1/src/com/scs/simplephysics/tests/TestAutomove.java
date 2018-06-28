@@ -10,6 +10,11 @@ import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 
+/**
+ * This test creates 3 boxes in a line, all overlapping.  At the end of the test they should be spaced out.
+ * @author stephencs
+ *
+ */
 public class TestAutomove implements ICollisionListener<String> {
 
 	private static final float LOOP_INTERVAL_SECS = .001f;
@@ -41,14 +46,14 @@ public class TestAutomove implements ICollisionListener<String> {
 			time += LOOP_INTERVAL_SECS;
 		}
 		
-		p("Box 1: " + box1.getBoundingBox().getCenter());
-		p("Box 2: " + box2.getBoundingBox().getCenter());
-		p("Box 3: " + box3.getBoundingBox().getCenter());
+		p(box1 + " " + box1.getBoundingBox().getCenter());
+		p(box2 + " " + box2.getBoundingBox().getCenter());
+		p(box3 + " " + box3.getBoundingBox().getCenter());
 	}
 
 
 	private SimpleRigidBody<String> createBox(String name, Vector3f pos) {
-		Box box = new Box(.5f, .5f, .5f);
+		Box box = new Box(.5f, .5f, .5f); // 1x1x1 in size
 		final Geometry boxGeometry = new Geometry(name, box);
 		boxGeometry.setLocalTranslation(pos); // origin is the middle
 		ISimpleEntity<String> entity = new SimpleEntityHelper<String>(boxGeometry);

@@ -65,7 +65,7 @@ public class JMEModelFunctions {
 		mat.setColor("Color", ColorRGBA.White);
 		g.setMaterial(mat);
 
-		// Move to middle
+		// Move to middle  NO!
 		//g.move(-size/2, 0, -size/2);
 		return g;
 	}

@@ -39,7 +39,7 @@ import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
-import com.scs.stevetech1.netmessages.GenericStringMessage;
+import com.scs.stevetech1.netmessages.ShowMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -47,6 +47,7 @@ import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
+import com.scs.stevetech1.netmessages.PlaySoundMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
@@ -395,6 +396,7 @@ ConsoleInputListener {
 		}
 
 		client.clientStatus = ClientData.ClientStatus.Accepted;
+		this.gameNetworkServer.sendMessageToAllExcept(client, new ShowMessage("Player joined!", true));
 
 		int side = getSide(client);
 		client.playerData = this.createSimplePlayerData();
@@ -407,7 +409,6 @@ ConsoleInputListener {
 		sendAllEntitiesToClient(client);
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 		this.pingSystem.sendPingToClient(client);
-		this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player joined!", true));
 		playerJoinedGame(client);
 		appendToGameLog(client.playerData.playerName + " has joined");
 		gameStatusSystem.checkGameStatus(true);
@@ -461,7 +462,7 @@ ConsoleInputListener {
 
 
 	protected void startNewGame() {
-		if (this.entities.size() > 0) { // todo - move these
+		if (this.entities.size() > 0) {
 			throw new RuntimeException("Outstanding entities");
 		}
 		if (this.entitiesToRemove.size() > 0) {
@@ -574,7 +575,9 @@ ConsoleInputListener {
 					nem.data.add(new NewEntityData(e));
 					if (nem.isFull()) {
 						this.gameNetworkServer.sendMessageToClient(client, nem);
-						Functions.sleep(50); // Try prevent buffer overflow
+						if (Globals.SLEEP_BETWEEN_NEWENT_MSGS) {
+							Functions.sleep(50); // Try prevent buffer overflow
+						}
 						nem = new NewEntityMessage(this.getGameID());
 					}
 				}
@@ -1065,5 +1068,13 @@ ConsoleInputListener {
 		}
 
 	}
+
+
+	@Override
+	public void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream) {
+		gameNetworkServer.sendMessageToAll(new PlaySoundMessage(_sound, _pos, _volume, _stream));
+		
+	}
+
 
 }

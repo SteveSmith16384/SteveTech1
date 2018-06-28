@@ -316,8 +316,11 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 
 	@Override
 	public void setLog(LinkedList<String> gameLog) {
-		// TODO Auto-generated method stub
-		
+		StringBuilder str = new StringBuilder();
+		for(String line : gameLog) {
+			str.append(line + "\n");
+		}
+		this.log_ta.setText(str.toString());
 	}
 
 	

@@ -76,7 +76,7 @@ public final class PositionCalculator {
 				return diff >= 0;
 			}
 		} catch (NoSuchElementException ex) {
-			// todo - why do we get this?
+			// Why do we get this?
 		}
 		return false;
 	}

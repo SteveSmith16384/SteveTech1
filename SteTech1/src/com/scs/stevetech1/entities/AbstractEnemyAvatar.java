@@ -37,6 +37,8 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	// HUD
 	protected BitmapText hudNode;
 	private static BitmapFont font_small;
+	private Vector3f tmpHudPos = new Vector3f();
+	private Vector3f tmpScreenPos = new Vector3f();
 
 	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int _side, String _playersName) {
 		super(game, eid, type, "EnemyAvatar", true, false, true);
@@ -111,8 +113,10 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 			if (this.hudNode.getText().length() == 0) {
 				hudNode.setText(playersName);
 			}
-			Vector3f pos = this.getWorldTranslation().add(0, anim.getSize().y, 0); // todo - not this every time
-			Vector3f screen_pos = cam.getScreenCoordinates(pos);
+			tmpHudPos.set(this.getWorldTranslation());
+			this.getWorldTranslation().y += anim.getSize().y;
+			//Vector3f pos = this.getWorldTranslation().add(0, anim.getSize().y, 0);
+			Vector3f screen_pos = cam.getScreenCoordinates(tmpHudPos, tmpScreenPos);
 			this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 		} else {
 			this.hudNode.setText(""); // Hide it

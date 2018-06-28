@@ -4,6 +4,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.scs.simplephysics.SimplePhysicsController;
@@ -22,8 +23,6 @@ public interface IEntityController {
 
 	void addEntity(IEntity e);
 	
-	//void addClientOnlyEntity(IEntity e);
-	
 	void removeEntity(int id);
 	
 	AssetManager getAssetManager();
@@ -41,5 +40,7 @@ public interface IEntityController {
 	int getNumEntities();
 	
 	boolean canCollide(PhysicalEntity a, PhysicalEntity b);
+	
+	void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream);
 	
 }

@@ -138,4 +138,5 @@ public class BoxWarsClient extends AbstractGameClient {
 		return null;
 	}
 
+
 }
