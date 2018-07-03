@@ -95,7 +95,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	@Override
 	public void reload(AbstractGameServer server) {
 		if (timeSinceLastReload > 5) {
-			server.gameNetworkServer.sendMessageToAll(new GunReloadingMessage(this, reloadInterval_secs)); // todo - only send to the owner
+			server.gameNetworkServer.sendMessageToClient(client, new GunReloadingMessage(this, reloadInterval_secs));
 			Globals.p("Reloading " + this);
 			this.emptyMagazine(); // Remove any existing bullets
 			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
@@ -104,7 +104,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			}
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			timeSinceLastReload = 0;
-			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this)); // todo - only send to the owner
+			server.gameNetworkServer.sendMessageToClient(client, new AbilityUpdateMessage(true, this));
 		}
 	}
 
@@ -115,14 +115,11 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 
 		timeUntilShoot_secs -= tpf_secs;
 
-		//if (client.getGameData().isInGame()) { // Reload even if waiting for players
 		if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
-			//AbstractGameClient client = (AbstractGameClient) game;
 			client.sendMessage(new ClientGunReloadRequestMessage(this.getID()));
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			Globals.p("Sending ClientReloadingMessage");
 		}
-		//}
 	}
 
 

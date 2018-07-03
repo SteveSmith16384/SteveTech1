@@ -5,8 +5,7 @@ package com.scs.simplephysics;
  */
 public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
-	//private final Vector3f walkingDir = new Vector3f();
-	private float jumpForce = 5f;
+	private float jumpForce = 7f;//5f;
 	private long lastJumpTime = 0;
 
 	public SimpleCharacterControl(ISimpleEntity<T> s, SimplePhysicsController<T> _controller, T _tag) {
@@ -34,6 +33,15 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 		return false;
 	}
 
+	
+	@Override
+	public void process(float tpf_secs) {
+		super.process(tpf_secs);
+		
+		//p("Is on ground = " + this.isOnGround);
+	}
+	
+	
 /*
 	@Override
 	public Vector3f getAdditionalForce() {

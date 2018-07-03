@@ -116,7 +116,7 @@ ConsoleInputListener {
 	private String key;
 
 	protected SimpleGameData gameData = new SimpleGameData();
-	private LinkedList<String> gameLog = new LinkedList<>();
+	//private LinkedList<String> gameLog = new LinkedList<>();
 
 
 	/**
@@ -1047,11 +1047,11 @@ ConsoleInputListener {
 
 
 	public void appendToGameLog(String s) {
-		this.gameLog.add(s);
+		/*this.gameLog.add(s);
 		while (this.gameLog.size() > 6) {
 			this.gameLog.removeFirst();
-		}
-		this.gameNetworkServer.sendMessageToAll(new GameLogMessage(this.gameLog));
+		}*/
+		this.gameNetworkServer.sendMessageToAll(new GameLogMessage(s));
 	}
 
 

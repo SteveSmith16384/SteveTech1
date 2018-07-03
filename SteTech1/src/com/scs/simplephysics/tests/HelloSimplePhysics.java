@@ -58,8 +58,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 	private Vector3f camDir = new Vector3f();
 	private Vector3f camLeft = new Vector3f();
 	
-	//private SimpleRigidBody<Spatial> mountain;
-
 	public static void main(String[] args) {
 		AppSettings settings = new AppSettings(true);
 		settings.setSettingsDialogImage(null);

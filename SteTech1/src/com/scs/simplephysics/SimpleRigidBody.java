@@ -22,14 +22,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	private static final boolean DEBUG_AUTOMOVING = true;
 
 	private static final float AUTOMOVE_FRAC = .1f;
-	private static final float MAX_STEP_HEIGHT = 0.25f; // todo - make config
-	private static final float GRAVITY_WARNING = -15f;
+	private static final float MAX_STEP_HEIGHT = 0.3f;//0.25f; // todo - make config
 	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
 
 	private SimplePhysicsController<T> physicsController;
 	protected Vector3f oneOffForce = new Vector3f(); // e.g. force of explosion.  Gets reduced by air resistance each frame, and reversed if bounced
 	protected Vector3f additionalForce = new Vector3f(); // Additional force to apply, e.g. walking force or jet.  Does not get changed by this code.
-	protected Vector3f automoveForce = new Vector3f(); // Additional force to apply to move an entity out of another entity
+	protected Vector3f automoveForce = new Vector3f(); // Additional force to apply to move an entity "out" of another entity
 
 	private Vector3f tmpMoveDir = new Vector3f();
 	private float bounciness = .2f;
@@ -43,7 +42,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public ISimpleEntity<T> simpleEntity;
 	private boolean movedByForces = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
-	private int modelComplexity = 0; // For determining which way round to check.
+	private int modelComplexity = 0; // For determining which way round to check collisions
 	public boolean canWalkUpSteps = false;
 
 	private SimpleNode<T> parent;
@@ -113,13 +112,6 @@ public class SimpleRigidBody<T> implements Collidable {
 		}
 
 		if (this.movedByForces) {
-			/*
-			if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
-				BoundingBox bv = this.getBoundingBox();
-				float y = bv.getCenter().y-bv.getYExtent();
-				Globals.p(this.simpleEntity  + " at " + y + " at start of process()");
-			}
-			 */
 			automoveForce.set(0, 0, 0);
 
 			// Check we're not already colliding *before* we've even moved
@@ -179,11 +171,9 @@ public class SimpleRigidBody<T> implements Collidable {
 			// Move along Y
 			{
 				float totalOffset = (oneOffForce.y + additionalForce.y + this.automoveForce.y + currentGravInc);
-				boolean collided = false; 
+				boolean collided = false;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
-					/*if (this instanceof SimpleCharacterControl) {
-						Globals.p("Moving Y=" + tmpMoveDir);
-					}*/
+					isOnGround = false;
 					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
@@ -202,16 +192,18 @@ public class SimpleRigidBody<T> implements Collidable {
 						if (totalOffset < 0) { // Going down?
 							isOnGround = true;
 						}
+					} else {
+						// Not hit anything
+						/*if (totalOffset != 0) { 
+							this.isOnGround = true;
+						} else {
+							this.isOnGround = false;
+						}*/
+
 					}
 				}
 				if (!collided) {
-					// Not hit anything
 					currentGravInc = currentGravInc + (gravInc * tpf_secs); // Fall faster
-					if (totalOffset != 0) { 
-						this.isOnGround = true;
-					} else {
-						this.isOnGround = false;
-					}
 				}
 				this.oneOffForce.y = oneOffForce.y * aerodynamicness; // Slow down
 			}
@@ -220,14 +212,6 @@ public class SimpleRigidBody<T> implements Collidable {
 				p("Warning - high gravity offset: " + this.currentGravInc);
 			}*/
 		}
-		/*
-		if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
-			BoundingBox bv = this.getBoundingBox();
-			float y = bv.getCenter().y-bv.getYExtent();
-			Globals.p(this.simpleEntity  + " at " + y + " at end of process()");
-
-		}
-		 */
 	}
 
 
@@ -380,49 +364,56 @@ public class SimpleRigidBody<T> implements Collidable {
 		if (!this.canWalkUpSteps) {
 			return false;
 		}
+
+		if (!this.isOnGround) {
+			return false;
+		}
+
 		SimpleRigidBody<T> cr = crs.get(0);
 
 		BoundingBox ourBB = (BoundingBox)this.getBoundingBox();
-		float aBottom = ourBB.getCenter().y - (ourBB.getYExtent());
+		float ourHeight = ourBB.getCenter().y - ourBB.getYExtent();
+
+		// Check for stairs first.  treat stairs and slopes differently since we handle the upward force differently
 		if (cr.simpleEntity.getCollidable() instanceof TerrainQuad == false && cr.simpleEntity.getCollidable() instanceof Geometry == false) {
+			Globals.p("Checking for stairs");
 			// Check simple BB against simple BB 
-			BoundingBox theirBB = (BoundingBox)cr.getBoundingBox(); cr.simpleEntity.getCollidable();
-			float bTop = theirBB.getCenter().y + (theirBB.getYExtent());
-			float heightDiff = bTop - aBottom;
+			BoundingBox theirBB = (BoundingBox)cr.getBoundingBox(); // cr.simpleEntity.getCollidable();
+			float nextHeight = theirBB.getCenter().y + (theirBB.getYExtent());
+			float heightDiff = nextHeight - ourHeight;
 
 			if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT) {
-				//this.oneOffForce.y += (heightDiff / tpf_secs) / 4;
-				//float force = heightDiff*1.5f; //2;//;//*10;
-				p("Going up step: height=" + heightDiff);// + ", force=" + force);
-				this.oneOffForce.y += heightDiff * 1.5f;
-				//this.automoveForce.y += heightDiff * 400;
+				p("Going up step: height=" + heightDiff + ", stepForce=" + this.physicsController.getStepForce());
+				this.oneOffForce.y += Math.sqrt(heightDiff) * 8f; // 10f;//14f;//16f; // this.physicsController.getStepForce();
 				return true;
 			} else {
 				p("NOT Going up step: height=" + heightDiff);
 			}
 
 		} else {
+			Globals.p("Checking for slope");
+
+			float DEF_EXTENT = 0.1f;
+			float extent = ourBB.getXExtent() + DEF_EXTENT;
+
 			CollisionResults rayCRs = new CollisionResults();
-			float currentHeight = this.getBoundingBox().getCenter().y - this.getBoundingBox().getYExtent(); 
-			Vector3f newPos = posBeforeMove.add(moveOffset.normalize().mult(this.getBoundingBox().getXExtent()*2));
+			Vector3f newPos = posBeforeMove.add(moveOffset.normalize().mult(extent)); // todo - don't create new each time
 			Ray nextRay = new Ray(newPos, DOWN_VEC);
 			rayCRs.clear();
 			cr.simpleEntity.getCollidable().collideWith(nextRay, rayCRs);
-			if (rayCRs.size() > 0) { // Will be empty if we're walking OFF a ramp
+			if (rayCRs.size() > 0) { 
 				float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
-
-				float diff = nextHeight - currentHeight;
-				//Globals.p("Diff=" + diff);
-				if (diff > 0 && diff <= MAX_STEP_HEIGHT) {
-					//if (diff < moveOffset.length()*2) { // 45 degrees?  Not!
-					float ratio = diff / (moveOffset.length()*2);
-					this.oneOffForce.y += ratio * .5f; // Adjust be steepness
-					p("Walking up! ratio= " + ratio);
-					/*} else {
-					p("Not Walking up; diff= " + diff);
-				}*/
+				float heightDiff = nextHeight - ourHeight;
+				float ratio = heightDiff / DEF_EXTENT; // <1 = 45 degrees or walkable
+				if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT && ratio <= 1f) {
+					p("Walking up ramp! heightDiff=" + heightDiff + "; ratio= " + ratio);
+					this.oneOffForce.y += Math.sqrt(ratio) * 3f;//4f; // 6f;//this.physicsController.getRampForce(); //  Adjust by steepness
 					return true;
+				} else {
+					p("NOT Going up step: heightDiff=" + heightDiff);
 				}
+			} else {
+				// Will be empty if we're walking OFF a ramp
 			}
 		}
 		return false;
@@ -436,17 +427,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		this.simpleEntity.moveEntity(offset);
 		List<SimpleRigidBody<T>> crs = checkForCollisions();
 		if (crs.size() > 0) {
-			/*if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
-				BoundingBox bv = this.getBoundingBox();
-				float y = bv.getCenter().y-bv.getYExtent();
-				Globals.p(this.simpleEntity  + " at " + y + " prior to move");
-			}*/
 			this.simpleEntity.moveEntity(offset.negate()); // Move back
-			/*if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
-				BoundingBox bv = this.getBoundingBox();
-				float y = bv.getCenter().y-bv.getYExtent();
-				Globals.p(this.simpleEntity  + " at " + y + " after move");
-			}*/
 		}
 		return crs;
 	}
@@ -505,10 +486,6 @@ public class SimpleRigidBody<T> implements Collidable {
 					Ray ray = new Ray(start, DOWN_VEC);
 					//ray.setLimit(bv.getYExtent());
 					res = tq.collideWith(ray, tempCollisionResults);
-					/*if (Globals.DEBUG_FALLING_THROUGH_FLOOR) {
-						float y = bv.getCenter().y-bv.getYExtent();
-						Globals.p(this.simpleEntity  + " at " + y + ", terrain at " + tempCollisionResults.getClosestCollision().getContactPoint().y + ", res=" + res);
-					}*/
 					if (res > 0) {
 						// Compare positions
 						Vector3f pos = tempCollisionResults.getClosestCollision().getContactPoint();

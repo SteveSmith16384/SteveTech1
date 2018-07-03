@@ -15,7 +15,8 @@ public class SimplePhysicsController<T> {
 
 	public static final float MIN_MOVE_DIST = 0.001f;
 	public static final float DEFAULT_AERODYNAMICNESS = 0.99f; // Prevent things moving forever
-	public static final float DEFAULT_GRAVITY = -5f;
+	public static final float DEFAULT_GRAVITY = -10f;//-5f;
+	private static final float GRAVITY_WARNING = -15f;
 
 	private ArrayList<SimpleRigidBody<T>> entities = new ArrayList<>(); // ALL entities
 	// Efficiency nodes
@@ -29,6 +30,8 @@ public class SimplePhysicsController<T> {
 	// Settings
 	private float gravity;
 	private float aerodynamicness;
+	private float stepForce = 16f;
+	private float rampForce = 6f;
 
 	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSize) {
 		this(_collListener, _nodeSize, DEFAULT_GRAVITY, DEFAULT_AERODYNAMICNESS);
@@ -225,5 +228,24 @@ public class SimplePhysicsController<T> {
 		return crs;
 	}
 
+	
+	public float getStepForce() {
+		return this.stepForce;
+	}
+	
+	
+	public float getRampForce() {
+		return this.rampForce;
+	}
+
+
+	public void setStepForce(float f) {
+		this.stepForce = f;
+	}
+	
+	
+	public void setRampForce(float f) {
+		this.rampForce = f;
+	}
 
 }

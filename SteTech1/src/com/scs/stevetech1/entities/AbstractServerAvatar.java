@@ -51,8 +51,6 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	public void startAgain() {
 		alive = true;
-		//this.moveSpeed = server.getAvatarMoveSpeed(this); // todo - send to client if it changes
-		//this.setJumpForce(server.getAvatarJumpForce(this)); // todo - send to client if it changes
 		this.setHealth(maxHealth);
 		this.simpleRigidBody.resetForces();//.currentGravInc = 0; // In case they fell off the edge
 		this.invulnerableTimeSecs = 5;

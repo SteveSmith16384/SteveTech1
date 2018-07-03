@@ -39,7 +39,7 @@ public class DummyHUD implements IHUD {
 	}
 
 	@Override
-	public void setLog(LinkedList<String> gameLog) {
+	public void appendToLog(String s) {
 		
 	}
 

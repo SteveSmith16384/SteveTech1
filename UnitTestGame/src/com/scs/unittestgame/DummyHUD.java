@@ -40,7 +40,7 @@ public class DummyHUD extends Node implements IHUD {
 
 	
 	@Override
-	public void setLog(LinkedList<String> gameLog) {
+	public void appendToLog(String s) {
 		
 	}
 

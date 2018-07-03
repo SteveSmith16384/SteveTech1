@@ -1,7 +1,5 @@
 package com.scs.stevetech1.hud;
 
-import java.util.LinkedList;
-
 import com.jme3.scene.Node;
 import com.scs.stevetech1.client.AbstractGameClient;
 
@@ -19,7 +17,8 @@ public interface IHUD {
 
 	void addItem(Node n);
 
-	void setLog(LinkedList<String> gameLog);
+	//void setLog(LinkedList<String> gameLog);
+	void appendToLog(String s);
 
 
 }

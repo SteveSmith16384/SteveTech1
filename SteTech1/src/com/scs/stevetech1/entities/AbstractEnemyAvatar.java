@@ -114,7 +114,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 				hudNode.setText(playersName);
 			}
 			tmpHudPos.set(this.getWorldTranslation());
-			this.getWorldTranslation().y += anim.getSize().y;
+			tmpHudPos.y += anim.getSize().y;
 			//Vector3f pos = this.getWorldTranslation().add(0, anim.getSize().y, 0);
 			Vector3f screen_pos = cam.getScreenCoordinates(tmpHudPos, tmpScreenPos);
 			this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);

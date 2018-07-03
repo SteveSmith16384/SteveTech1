@@ -393,9 +393,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 				} else {
 					if (this.clientStatus == STATUS_ENTS_RCVD_NOT_ADDED) {
-						clientStatus = STATUS_IN_GAME;
 						this.getRootNode().attachChild(this.gameNode);
 						this.showPlayersWeapon();
+						clientStatus = STATUS_IN_GAME;
 					}
 				}
 
@@ -617,10 +617,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			Globals.p("Rcvd GeneralCommandMessage: " + msg.command.toString());
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
 				clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;
+				this.hud.appendToLog("All entities received");
 				allEntitiesSent();
 			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
 				this.removeAllEntities();
 			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) {
+				this.hud.appendToLog("Game restarting...");
 				clientStatus = STATUS_JOINED_GAME;
 			} else {
 				throw new RuntimeException("Unknown command:" + msg.command);
@@ -736,7 +738,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof GameLogMessage) {
 			GameLogMessage glm = (GameLogMessage)message;
-			this.hud.setLog(glm.log);
+			this.hud.appendToLog(glm.logEntry);
 
 		} else if (message instanceof GunReloadingMessage) {
 			GunReloadingMessage grm = (GunReloadingMessage)message;
