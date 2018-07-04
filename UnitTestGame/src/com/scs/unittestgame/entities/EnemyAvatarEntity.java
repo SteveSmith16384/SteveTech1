@@ -12,12 +12,12 @@ public class EnemyAvatarEntity extends AbstractEnemyAvatar {
 	}
 
 	@Override
-	public void setAnimCode(int animCode) {
+	public void setAnimCode_ClientSide(int animCode) {
 		
 	}
 
 	@Override
-	public void processManualAnimation(float tpf_secs) {
+	public void processManualAnimation_ClientSide(float tpf_secs) {
 		
 	}
 

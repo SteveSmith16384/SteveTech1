@@ -30,8 +30,8 @@ public class SimplePhysicsController<T> {
 	// Settings
 	private float gravity;
 	private float aerodynamicness;
-	private float stepForce = 16f;
-	private float rampForce = 6f;
+	private float stepForce = 8f;
+	private float rampForce = 3f;
 
 	public SimplePhysicsController(ICollisionListener<T> _collListener, int _nodeSize) {
 		this(_collListener, _nodeSize, DEFAULT_GRAVITY, DEFAULT_AERODYNAMICNESS);

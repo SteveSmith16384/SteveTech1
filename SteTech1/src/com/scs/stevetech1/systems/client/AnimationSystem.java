@@ -27,7 +27,7 @@ public class AnimationSystem extends AbstractSystem {
 		if (had != null) {
 			//if (had.animationCode != .equals(anim.getCurrentAnimCode())) { // Has the animation changed?
 				try {
-					anim.setAnimCode(had.animationCode);
+					anim.setAnimCode_ClientSide(had.animationCode);
 				} catch (IllegalArgumentException ex) {
 					Globals.pe(ex.getMessage());
 				}
@@ -35,7 +35,7 @@ public class AnimationSystem extends AbstractSystem {
 		} else {
 			//Globals.p("No anim data for " + pe);  Might be dead
 		}
-		anim.processManualAnimation(tpf_secs);
+		anim.processManualAnimation_ClientSide(tpf_secs);
 	}
 
 

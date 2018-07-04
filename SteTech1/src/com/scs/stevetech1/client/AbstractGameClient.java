@@ -12,6 +12,7 @@ import java.util.prefs.BackingStoreException;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
+import com.jme3.asset.AssetNotFoundException;
 import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
@@ -70,7 +71,6 @@ import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
-import com.scs.stevetech1.netmessages.ShowMessage;
 import com.scs.stevetech1.netmessages.GunReloadingMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
@@ -84,6 +84,7 @@ import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
+import com.scs.stevetech1.netmessages.ShowMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
@@ -166,7 +167,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	protected Node gameNode = new Node("GameNode");
 	protected Node debugNode = new Node("DebugNode");
 	protected FilterPostProcessor fpp;
-	
+
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public long serverTime, renderTime;
@@ -310,7 +311,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		new TextConsole(this);
 
 		//if (Globals.TOONISH) {
-			this.setupFilters();
+		this.setupFilters();
 		//}
 
 		loopTimer.start();
@@ -348,7 +349,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 
 		try {
-			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
+			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;  //this.entities
 			renderTime = serverTime - clientRenderDelayMillis; // Render from history
 
 			if (networkClient != null && networkClient.isConnected()) {
@@ -417,7 +418,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 
 					// Systems
-					this.launchSystem.process(renderTime);
+					this.launchSystem.process(renderTime); // this.entities
 
 					if (Globals.STRICT) {
 						for(IEntity e : this.entities.values()) {
@@ -576,6 +577,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						pe.storePositionData(eud, mainmsg.timestamp);
 						if (pe.chronoUpdateData != null) {
 							pe.chronoUpdateData.addData(eud);
+						}
+						if (Globals.DEBUG_DIE_ANIM) {
+							if (eud.animationCode == AbstractAvatar.ANIM_DIED) {
+								Globals.p("Rcvd death anim for " + e);
+							}
 						}
 					} else {
 						// Globals.p("Unknown entity ID for update: " + eum.entityID);
@@ -1342,7 +1348,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if( numSamples > 0 ) {
 				fpp.setNumSamples(numSamples); 
 			}
-			
+
 			/*CartoonEdgeFilter toon=new CartoonEdgeFilter();
 			toon.setEdgeColor(ColorRGBA.Yellow);
 			toon.setEdgeWidth(0.5f);
@@ -1384,10 +1390,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			});
 
+		} catch (AssetNotFoundException ex) {
+			//ex.printStackTrace();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
 	}
 
 }

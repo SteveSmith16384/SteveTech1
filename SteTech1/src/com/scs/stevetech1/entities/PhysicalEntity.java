@@ -44,13 +44,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
 	public boolean moves;
-	
+
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing, boolean _blocksView, boolean _moves) {
 		super(_game, id, type, _name, _requiresProcessing);
 
 		blocksView = _blocksView;
 		moves = _moves;
-		
+
 		mainNode = new Node(name + "_MainNode_" + id);
 
 		if (moves) {
@@ -109,13 +109,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	// This is overridden by client avatars to take into account local position
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
 		if (historicalPositionData != null) {
-		EntityPositionData epd = historicalPositionData.calcPosition(serverTimeToUse, false);
-		if (epd != null) {
-			this.setWorldTranslation(epd.position);
-			//this.setWorldRotation(epd.rotation);
-		} else {
-			//Settings.p("No position data for " + this);
-		}
+			EntityPositionData epd = historicalPositionData.calcPosition(serverTimeToUse, false);
+			if (epd != null) {
+				this.setWorldTranslation(epd.position);
+				//this.setWorldRotation(epd.rotation);
+			} else {
+				//Settings.p("No position data for " + this);
+			}
 		}
 	}
 
@@ -146,7 +146,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			if (this.mainNode.getParent() != null) { // Unlaunched bullets have no parent
 				this.mainNode.removeFromParent();
 			}
-			
+
 			if (this instanceof IDrawOnHUD) {
 				IDrawOnHUD idoh = (IDrawOnHUD)this;
 				if (idoh.getHUDItem() != null) {
@@ -340,11 +340,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		// Note: Test the ray from the middle of the entity
 		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter();
 		Vector3f theirPos = target.getMainNode().getWorldBound().getCenter();
-		
+
 		if (theirPos.distance(ourPos) > range) {
 			return false;
 		}
-		
+
 		Ray r = new Ray(ourPos, theirPos.subtract(ourPos).normalizeLocal());
 		r.setLimit(range);
 		CollisionResults res = new CollisionResults();
@@ -388,11 +388,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public boolean canSee(Vector3f pos, float range) {
 		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter(); // Note: Test the ray from the middle of the entity
 		Vector3f theirPos = pos; //target.getMainNode().getWorldBound().getCenter();
-		
+
 		if (theirPos.distance(ourPos) > range) {
 			return false;
 		}
-		
+
 		Ray r = new Ray(ourPos, theirPos.subtract(ourPos).normalizeLocal());
 		r.setLimit(range);
 		CollisionResults res = new CollisionResults();
@@ -428,12 +428,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return true;
 	}
 
-	
+
 	/*
 	public Node getOwnerNode() {
 		return owner; // Override if the entity should have a different parent node to the default 
 	}
-*/
+	 */
 
 	@Override
 	public Collidable getCollidable() {
@@ -479,19 +479,19 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public void processChronoData(long serverTimeToUse, float tpf_secs) {
 		if (chronoUpdateData != null) {
-		EntityUpdateData epd = this.chronoUpdateData.get(serverTimeToUse, true);
-		if (epd != null) {
-			if (this instanceof ISetRotation) {
-				ISetRotation isr = (ISetRotation)this;
-				isr.setRotation(epd.aimDir);
+			EntityUpdateData epd = this.chronoUpdateData.get(serverTimeToUse, true);
+			if (epd != null) {
+				if (this instanceof ISetRotation) {
+					ISetRotation isr = (ISetRotation)this;
+					isr.setRotation(epd.aimDir);
+
+				}
+				if (this instanceof IAnimatedClientSide) {
+					IAnimatedClientSide csa = (IAnimatedClientSide)this;
+					csa.setAnimCode_ClientSide(epd.animationCode);
+				}
 
 			}
-			if (this instanceof IAnimatedClientSide) {
-				IAnimatedClientSide csa = (IAnimatedClientSide)this;
-				csa.setAnimCode(epd.animationCode);
-			}
-
-		}
 		}
 	}
 

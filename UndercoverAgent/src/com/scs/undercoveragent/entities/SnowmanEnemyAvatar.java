@@ -42,7 +42,7 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 
 
 	@Override
-	public void setAnimCode(int s) {
+	public void setAnimCode_ClientSide(int s) {
 		if (s == AbstractAvatar.ANIM_DIED) {
 			this.showDied = true;
 		} else {
@@ -52,7 +52,7 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 
 
 	@Override
-	public void processManualAnimation(float tpf_secs) {
+	public void processManualAnimation_ClientSide(float tpf_secs) {
 		if (this.showDied) {
 			this.snowman.showDied(tpf_secs);
 		} else {

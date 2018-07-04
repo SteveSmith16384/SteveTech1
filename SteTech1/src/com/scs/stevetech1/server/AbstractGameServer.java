@@ -346,13 +346,13 @@ ConsoleInputListener {
 							PhysicalEntity physicalEntity = (PhysicalEntity)e;
 							//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 							if (sendUpdates) {
-								if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless Avatar)
+								if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless player's Avatar)
 									eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
 									numSent++;
 									physicalEntity.sendUpdate = false;
 									if (eum.isFull()) {
-										gameNetworkServer.sendMessageToAll(eum);	
-										eum = new EntityUpdateMessage();
+										gameNetworkServer.sendMessageToAll(eum);
+										eum = new EntityUpdateMessage(); // Start a new message
 									}
 								}
 							}
@@ -914,6 +914,7 @@ ConsoleInputListener {
 		// todo - do this in main thread!
 		try {
 			//Globals.p("Received input: " + s);
+			if (s != null) {
 			if (s.equalsIgnoreCase("help") || s.equalsIgnoreCase("?")) {
 				Globals.p("mb, stats, entities");
 			} else if (s.equalsIgnoreCase("mb")) {
@@ -924,6 +925,7 @@ ConsoleInputListener {
 				listEntities();
 			} else {
 				Globals.p("Unknown command: " + s);
+			}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1040,7 +1042,7 @@ ConsoleInputListener {
 
 	public void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir, float offset) {
 		while (pe.simpleRigidBody.checkForCollisions().isEmpty()) {
-			pe.getMainNode().move(dir.mult(offset));
+			pe.getMainNode().move(dir.mult(offset)); // todo- cache maths
 		}
 		pe.getMainNode().move(dir.mult(-offset));
 	}

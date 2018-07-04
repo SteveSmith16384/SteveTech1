@@ -5,7 +5,9 @@ import com.jme3.network.serializing.Serializable;
 import com.scs.stevetech1.components.IAnimatedServerSide;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IGetRotation;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.ITimeStamped;
 
 @Serializable
@@ -29,14 +31,15 @@ public class EntityUpdateData implements ITimeStamped {
 		timestamp = _timestamp;
 		entityID = pe.id;
 		pos = pe.getWorldTranslation();
-		
+
 		if (pe instanceof IAnimatedServerSide) {
 			IAnimatedServerSide csa = (IAnimatedServerSide)pe;
 			this.animationCode = csa.getCurrentAnimCode();
-		}
-		if (pe instanceof IGetRotation) {
-			IGetRotation ir = (IGetRotation)pe;
-			this.aimDir = ir.getRotation();
+			if (Globals.DEBUG_DIE_ANIM) {
+				if (this.animationCode == AbstractAvatar.ANIM_DIED) {
+					Globals.p("Sending die anim for " + pe);
+				}
+			}
 		}
 		if (pe instanceof IGetRotation) {
 			IGetRotation ir = (IGetRotation)pe;

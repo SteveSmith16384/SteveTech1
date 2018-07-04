@@ -8,7 +8,7 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 @Serializable
 public class EntityUpdateMessage extends MyAbstractMessage {
 
-	private static final int MAX_ITEMS = 10;
+	private static final int MAX_ITEMS = 12;
 
 	public LinkedList<EntityUpdateData> data = new LinkedList<EntityUpdateData>();
 
@@ -26,6 +26,5 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 	public boolean isFull() {
 		return this.data.size() >= MAX_ITEMS;
 	}
-
 
 }

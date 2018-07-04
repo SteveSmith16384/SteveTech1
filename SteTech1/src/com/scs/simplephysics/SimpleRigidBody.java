@@ -20,6 +20,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	private static final boolean AUTOMOVE_BY_FORCE = false; // Doesn't work since move() moves entity back to original pos on collision
 	private static final boolean DEBUG_AUTOMOVING = true;
+	private static final boolean DEBUG_STEPS_SLOPES = false;
 
 	private static final float AUTOMOVE_FRAC = .1f;
 	private static final float MAX_STEP_HEIGHT = 0.3f;//0.25f; // todo - make config
@@ -366,7 +367,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		}
 
 		if (!this.isOnGround) {
-			return false;
+			//return false;
 		}
 
 		SimpleRigidBody<T> cr = crs.get(0);
@@ -375,24 +376,31 @@ public class SimpleRigidBody<T> implements Collidable {
 		float ourHeight = ourBB.getCenter().y - ourBB.getYExtent();
 
 		// Check for stairs first.  treat stairs and slopes differently since we handle the upward force differently
-		if (cr.simpleEntity.getCollidable() instanceof TerrainQuad == false && cr.simpleEntity.getCollidable() instanceof Geometry == false) {
-			Globals.p("Checking for stairs");
+		if (cr.simpleEntity.getCollidable() instanceof TerrainQuad == false && cr.simpleEntity.getCollidable() instanceof BoundingBox) {
+			if (DEBUG_STEPS_SLOPES) {
+				Globals.p("Checking for stairs");
+			}
 			// Check simple BB against simple BB 
-			BoundingBox theirBB = (BoundingBox)cr.getBoundingBox(); // cr.simpleEntity.getCollidable();
+			BoundingBox theirBB = (BoundingBox)cr.getBoundingBox();
 			float nextHeight = theirBB.getCenter().y + (theirBB.getYExtent());
 			float heightDiff = nextHeight - ourHeight;
 
 			if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT) {
-				p("Going up step: height=" + heightDiff + ", stepForce=" + this.physicsController.getStepForce());
-				this.oneOffForce.y += Math.sqrt(heightDiff) * 8f; // 10f;//14f;//16f; // this.physicsController.getStepForce();
+				if (DEBUG_STEPS_SLOPES) {
+					p("Going up step: height=" + heightDiff + ", stepForce=" + this.physicsController.getStepForce());
+				}
+				this.oneOffForce.y += Math.sqrt(heightDiff) * this.physicsController.getStepForce(); // 8f; // 10f;//14f;//16f;
 				return true;
 			} else {
-				p("NOT Going up step: height=" + heightDiff);
+				if (DEBUG_STEPS_SLOPES) {
+					p("NOT Going up step: height=" + heightDiff);
+				}
 			}
 
 		} else {
-			Globals.p("Checking for slope");
-
+			if (DEBUG_STEPS_SLOPES) {
+				Globals.p("Checking for slope");
+			}
 			float DEF_EXTENT = 0.1f;
 			float extent = ourBB.getXExtent() + DEF_EXTENT;
 
@@ -405,12 +413,16 @@ public class SimpleRigidBody<T> implements Collidable {
 				float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
 				float heightDiff = nextHeight - ourHeight;
 				float ratio = heightDiff / DEF_EXTENT; // <1 = 45 degrees or walkable
-				if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT && ratio <= 1f) {
-					p("Walking up ramp! heightDiff=" + heightDiff + "; ratio= " + ratio);
-					this.oneOffForce.y += Math.sqrt(ratio) * 3f;//4f; // 6f;//this.physicsController.getRampForce(); //  Adjust by steepness
+				if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT && ratio <= 1f) { // todo - make ratio limit a config
+					if (DEBUG_STEPS_SLOPES) {
+						p("Walking up ramp! heightDiff=" + heightDiff + "; ratio= " + ratio);
+					}
+					this.oneOffForce.y += Math.sqrt(ratio) * this.physicsController.getRampForce(); // 3f;//4f; // 6f;// //  Adjust by steepness
 					return true;
 				} else {
-					p("NOT Going up step: heightDiff=" + heightDiff);
+					if (DEBUG_STEPS_SLOPES) {
+						p("NOT Going up step: heightDiff=" + heightDiff);
+					}
 				}
 			} else {
 				// Will be empty if we're walking OFF a ramp

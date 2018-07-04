@@ -30,13 +30,13 @@ public class TestGameEnemyAvatar extends AbstractEnemyAvatar {
 */
 
 	@Override
-	public void setAnimCode(int s) {
+	public void setAnimCode_ClientSide(int s) {
 		
 	}
 
 	
 	@Override
-	public void processManualAnimation(float tpf_secs) {
+	public void processManualAnimation_ClientSide(float tpf_secs) {
 		
 	}
 

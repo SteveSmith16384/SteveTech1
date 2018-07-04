@@ -75,6 +75,13 @@ public class JMEAngleFunctions {
 	}
 
 
+	public static Vector3f getRandomDirection_All() {
+		float x = NumberFunctions.rndFloat(-1, 1);
+		float z = NumberFunctions.rndFloat(-1, 1);
+		return new Vector3f(x, 0, z).normalizeLocal();
+	}
+
+
 	public static Vector3f getRandomDirection_4() {
 		int i = NumberFunctions.rnd(0, 3);
 		switch (i) {
