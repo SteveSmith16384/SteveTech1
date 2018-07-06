@@ -45,13 +45,16 @@ public class SimpleRigidBody<T> implements Collidable {
 	protected boolean isOnGround = false;
 	private int modelComplexity = 0; // For determining which way round to check collisions
 	public boolean canWalkUpSteps = false;
+	public boolean removed = false;
+	private boolean neverMoves = false; // More efficient if true
+	private boolean collidable = true;
+
 
 	private SimpleNode<T> parent;
 
-	public boolean removed = false;
-	private boolean neverMoves = false; // More efficient if true
+	// Temp caches
 	private Vector3f tmpPrevPos = new Vector3f();
-	private boolean collidable = true;
+	private Vector3f tmpPos = new Vector3f();
 
 	public SimpleRigidBody(ISimpleEntity<T> _ent, SimplePhysicsController<T> _controller, boolean _movedByForces, T _tag) {
 		super();
@@ -401,11 +404,13 @@ public class SimpleRigidBody<T> implements Collidable {
 			if (DEBUG_STEPS_SLOPES) {
 				Globals.p("Checking for slope");
 			}
-			float DEF_EXTENT = 0.1f;
-			float extent = ourBB.getXExtent() + DEF_EXTENT;
+			float DEF_EXTENT = 0.1f; // How far ahead to check the slope
+			float extent = ourBB.getXExtent() + DEF_EXTENT; // todo - get proper edge of BB
 
 			CollisionResults rayCRs = new CollisionResults();
-			Vector3f newPos = posBeforeMove.add(moveOffset.normalize().mult(extent)); // todo - don't create new each time
+			tmpPos.set(moveOffset).normalizeLocal().multLocal(extent);
+			Vector3f newPos = posBeforeMove.add(tmpPos);
+			//Vector3f newPos = posBeforeMove.add(moveOffset.normalize().mult(extent)); // todo - don't create new each time
 			Ray nextRay = new Ray(newPos, DOWN_VEC);
 			rayCRs.clear();
 			cr.simpleEntity.getCollidable().collideWith(nextRay, rayCRs);
@@ -417,7 +422,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					if (DEBUG_STEPS_SLOPES) {
 						p("Walking up ramp! heightDiff=" + heightDiff + "; ratio= " + ratio);
 					}
-					this.oneOffForce.y += Math.sqrt(ratio) * this.physicsController.getRampForce(); // 3f;//4f; // 6f;// //  Adjust by steepness
+					this.oneOffForce.y += Math.sqrt(ratio) * this.physicsController.getRampForce(); // 3f; //  Adjust by steepness
 					return true;
 				} else {
 					if (DEBUG_STEPS_SLOPES) {
@@ -520,7 +525,6 @@ public class SimpleRigidBody<T> implements Collidable {
 						Node s = (Node)this.simpleEntity.getCollidable();
 						BoundingVolume bv = (BoundingVolume)s.getWorldBound();
 						res = bv.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
-						//res = e.collideWith(this.simpleEntity.getCollidable(), tempCollisionResults);
 					}
 
 
@@ -528,17 +532,6 @@ public class SimpleRigidBody<T> implements Collidable {
 					res = this.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
 
 				}
-				/*if (this.modelComplexity >= e.modelComplexity) {
-					if (e.getBoundingBox() == null) {
-						throw new RuntimeException(e.userObject + " has no bounds");
-					}
-					res = this.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
-				} else {
-					if (this.getBoundingBox() == null) {
-						throw new RuntimeException(this.userObject + " has no bounds");
-					}
-					res = e.collideWith(this.simpleEntity.getCollidable(), tempCollisionResults);
-				}*/
 				if (res > 0) {
 					this.physicsController.getCollisionListener().collisionOccurred(this, e);
 					return true;
@@ -554,13 +547,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	 */
 	@Override
 	public int collideWith(Collidable other, CollisionResults results) throws UnsupportedCollisionException {
-		//try {
 		return this.simpleEntity.getCollidable().collideWith(other, results);
-		/*} catch (UnsupportedCollisionException ex) {
-			ex.printStackTrace();
-			this.simpleEntity.getCollidable().collideWith(other, results);
-		}
-		return 0;*/
 	}
 
 

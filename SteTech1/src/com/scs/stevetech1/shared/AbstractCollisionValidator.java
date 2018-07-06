@@ -11,9 +11,6 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 public class AbstractCollisionValidator {
 
 	public boolean canCollide(PhysicalEntity pa, PhysicalEntity pb) {
-		//PhysicalEntity pa = a.userObject;
-		//PhysicalEntity pb = b.userObject;
-
 		if (!pa.collideable || !pb.collideable) {
 			return false;
 		}

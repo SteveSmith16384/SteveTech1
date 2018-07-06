@@ -866,12 +866,6 @@ ConsoleInputListener {
 		return this.entities.size();
 	}
 
-	/*
-	@Override
-	public void addClientOnlyEntity(IEntity e) {
-		throw new RuntimeException("Trying to add client-only entity to server");
-	}
-	 */
 
 	public void handleCommand(String cmd) {
 		if (cmd.equals("warp")) {
@@ -1062,7 +1056,7 @@ ConsoleInputListener {
 		for (SimpleRigidBody<PhysicalEntity> srb : list) {
 			PhysicalEntity pe = (PhysicalEntity)srb.simpleEntity;
 			if (pe instanceof IDamagable) {
-				if (pe.canSee(pos, range)) {
+				if (pe.canSee(pos, range, -1f)) {
 					IDamagable id = (IDamagable)pe;
 					id.damaged(damage, null, "Explosion");
 				}

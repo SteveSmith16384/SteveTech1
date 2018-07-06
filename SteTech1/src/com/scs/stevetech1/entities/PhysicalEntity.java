@@ -35,12 +35,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 	public PositionCalculator historicalPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
-	public boolean collideable = true;
-	public boolean blocksView;
+	public boolean collideable = true; // Primarily used for ray checks, since that doesn't use the physics engine
+	public boolean blocksView; // Primarily used for canSee() ray checks, since that doesn't use the physics engine
 	public long timeToAdd; // Client side only; when to add the entity to the game
 
 	// Rewind settings
 	private Vector3f originalPos = new Vector3f();
+	private Vector3f tmpRayPos = new Vector3f();
 
 	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
 	public boolean moves;
@@ -285,16 +286,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
 				if (pe != this) {
 					if (game.canCollide(this, pe)) {
-						/*if (pe != this && pe.collideable) {
-					if (this instanceof IPlayerLaunchable) {
-						if (pe instanceof IPlayerLaunchable) {
-							continue; // Bullets don't collide with each other
-						}
-						IPlayerLaunchable bullet = (IPlayerLaunchable)this;
-						if (bullet.getLauncher() == pe) {
-							continue; // Don't collide with shooter
-						}
-					}*/
 						//Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
 						return new RayCollisionData(pe, col.getContactPoint(), col.getDistance());
 					}
@@ -325,27 +316,27 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 * @param maxAngleRads Make negative to NOT check the angle
 	 * @return
 	 */
-	public boolean canSee(PhysicalEntity target, float range, float maxAngleRads) {
+	public boolean canSee(Vector3f pos, float range, float maxAngleRads) {
 		// Check angle?
 		if (maxAngleRads > 0) {
-			float angle = JMEAngleFunctions.getAngleBetween(this.getMainNode(), target.getMainNode().getWorldBound().getCenter());
-			if (Globals.DEBUG_VIEW_ANGLE) {
+			float angle = JMEAngleFunctions.getAngleBetween(this.getMainNode(), pos);
+			/*if (Globals.DEBUG_VIEW_ANGLE) {
 				Globals.p(target + " and " + this + " is " + angle);
-			}
+			}*/
 			if (angle > maxAngleRads) {
 				return false;
 			}
 		}
 
 		// Note: Test the ray from the middle of the entity
-		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter();
-		Vector3f theirPos = target.getMainNode().getWorldBound().getCenter();
+		Vector3f ourPos = pos;//this.getMainNode().getWorldBound().getCenter();
+		Vector3f theirPos = pos;//target.getMainNode().getWorldBound().getCenter();
 
 		if (theirPos.distance(ourPos) > range) {
 			return false;
 		}
 
-		Ray r = new Ray(ourPos, theirPos.subtract(ourPos).normalizeLocal());
+		Ray r = new Ray(ourPos, theirPos.subtract(ourPos, tmpRayPos).normalizeLocal());
 		r.setLimit(range);
 		CollisionResults res = new CollisionResults();
 		int c = game.getGameNode().collideWith(r, res);
@@ -365,26 +356,31 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				if (s == null) {
 					break;
 				}
-			}
+			} // todo - set user data of all children?
 			if (s != null && s.getUserData(Globals.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
 				//Globals.p("Ray collided with " + pe + " at " + col.getContactPoint());
 				if (pe == this) {
 					continue; // Don't block by ourselves
 				}
-				if (pe == target) {
+				/*if (pe == target) {
 					return true;
-				}
+				}*/
 				if (pe.blocksView) {
 					return false;
 				}
 			}
 		}
 
-		return false;
+		return true;
 	}
 
+	
+	public boolean canSee(PhysicalEntity pe, float range, float maxAngleRads) {
+		return canSee(pe.getMainNode().getWorldBound().getCenter(), range, maxAngleRads);
+	}
 
+/*
 	public boolean canSee(Vector3f pos, float range) {
 		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter(); // Note: Test the ray from the middle of the entity
 		Vector3f theirPos = pos; //target.getMainNode().getWorldBound().getCenter();
@@ -427,18 +423,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		return true;
 	}
+*/
 
-
-	/*
-	public Node getOwnerNode() {
-		return owner; // Override if the entity should have a different parent node to the default 
-	}
-	 */
 
 	@Override
 	public Collidable getCollidable() {
 		return this.mainNode.getWorldBound(); // Return simple boundingbox by default, to avoid mesh v mesh collisions
-		//return this.mainNode;
 	}
 
 
@@ -455,15 +445,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 * @param time
 	 */
 	public void storePositionData(EntityUpdateData eum, long time) {
-		/*if (eum.force) {
-			// Set it now!
-			this.setWorldTranslation(eum.pos);
-			this.clearPositiondata();
-			/*if (pe == this.currentAvatar) {
-				currentAvatar.clientAvatarPositionData.clear(); // Clear our local data as well
-				currentAvatar.storeAvatarPosition(serverTime);
-			}
-		}*/
 		this.addPositionData(eum.pos, time); // Store the position for use later
 	}
 
