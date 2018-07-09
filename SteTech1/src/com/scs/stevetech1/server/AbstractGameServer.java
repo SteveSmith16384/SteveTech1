@@ -1035,28 +1035,26 @@ ConsoleInputListener {
 
 
 	public void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir, float offset) {
+		Vector3f voffset = dir.mult(offset);
 		while (pe.simpleRigidBody.checkForCollisions().isEmpty()) {
-			pe.getMainNode().move(dir.mult(offset)); // todo- cache maths
+			pe.getMainNode().move(voffset);
 		}
-		pe.getMainNode().move(dir.mult(-offset));
+		pe.getMainNode().move(dir.mult(-offset)); // Move back
 	}
 
 
 	public void appendToGameLog(String s) {
-		/*this.gameLog.add(s);
-		while (this.gameLog.size() > 6) {
-			this.gameLog.removeFirst();
-		}*/
 		this.gameNetworkServer.sendMessageToAll(new GameLogMessage(s));
 	}
 
 
-	public void damageSurroundingEntities(Vector3f pos, float range, float damage) {
+	public void damageSurroundingEntities(PhysicalEntity exploder, float range, float damage) {
+		Vector3f pos = exploder.getMainNode().getWorldBound().getCenter();
 		List<SimpleRigidBody<PhysicalEntity>> list = this.physicsController.getSRBsWithinRange(pos, range);
 		for (SimpleRigidBody<PhysicalEntity> srb : list) {
 			PhysicalEntity pe = (PhysicalEntity)srb.simpleEntity;
 			if (pe instanceof IDamagable) {
-				if (pe.canSee(pos, range, -1f)) {
+				if (pe.canSee(exploder, range, -1f)) {
 					IDamagable id = (IDamagable)pe;
 					id.damaged(damage, null, "Explosion");
 				}

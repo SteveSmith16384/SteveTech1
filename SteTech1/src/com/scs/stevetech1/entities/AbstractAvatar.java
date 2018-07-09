@@ -108,7 +108,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed); // Y=0, so speed is constant regardless of direction
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 
-		if (this.isAlive()) {
+		//if (this.isAlive()) {
 			if (input.getFwdValue()) {
 				walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
 				newAnimCode = ANIM_RUNNING;
@@ -141,7 +141,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 				}
 				playerWalked = true;
 			}
-		}
+		//}
 
 		if (Globals.SHOW_AVATAR_POS) {
 			Globals.p("pos=" + this.bbGeom.getWorldTranslation() + "  time=" + serverTime);
@@ -243,6 +243,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public void setAlive(boolean a) {
 		if (this.alive != a) {
 			this.alive = a;
+			if (Globals.DEBUG_SET_ALIVE) {
+				Globals.p("Avatar now slive=" + this.alive);
+			}
 			// Note that the client has been told they have died, but the player shouldn't know until the client render time has caught up!
 		}
 	}

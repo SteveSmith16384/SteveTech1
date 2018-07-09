@@ -26,6 +26,7 @@ public class SimplePhysicsController<T> {
 
 	private ICollisionListener<T> collListener;
 	private boolean enabled = true;
+	private BoundingBox tmpBB = new BoundingBox();
 
 	// Settings
 	private float gravity;
@@ -207,10 +208,13 @@ public class SimplePhysicsController<T> {
 	public List<SimpleRigidBody<T>> getSRBsWithinRange(Vector3f pos, float range) {
 		List<SimpleRigidBody<T>> crs = new ArrayList<SimpleRigidBody<T>>();
 
-		final BoundingBox bb = new BoundingBox(pos, range, range, range);
+		tmpBB.setCenter(pos);
+		tmpBB.setXExtent(range);
+		tmpBB.setYExtent(range);
+		tmpBB.setZExtent(range);
 
 		for(SimpleNode<T> node : this.nodes.values()) {
-			node.getCollisions(bb, crs);
+			node.getCollisions(tmpBB, crs);
 		}
 		
 		// Check against moving/big entities
@@ -219,7 +223,7 @@ public class SimplePhysicsController<T> {
 			// Loop through the entities
 			for (int i=0 ; i<entities.size() ; i++) {
 				SimpleRigidBody<T> e = entities.get(i);
-				if (e.getBoundingBox().intersects(bb)) {
+				if (e.getBoundingBox().intersects(tmpBB)) {
 					crs.add(e);
 				}
 			}

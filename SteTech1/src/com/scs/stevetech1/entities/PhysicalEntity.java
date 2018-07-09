@@ -316,10 +316,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 * @param maxAngleRads Make negative to NOT check the angle
 	 * @return
 	 */
-	public boolean canSee(Vector3f pos, float range, float maxAngleRads) {
+	public boolean canSee(PhysicalEntity target, float range, float maxAngleRads) {
+		Vector3f theirPos = target.getMainNode().getWorldBound().getCenter();
 		// Check angle?
 		if (maxAngleRads > 0) {
-			float angle = JMEAngleFunctions.getAngleBetween(this.getMainNode(), pos);
+			float angle = JMEAngleFunctions.getAngleBetween(this.getMainNode(), theirPos);
 			/*if (Globals.DEBUG_VIEW_ANGLE) {
 				Globals.p(target + " and " + this + " is " + angle);
 			}*/
@@ -329,8 +330,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		}
 
 		// Note: Test the ray from the middle of the entity
-		Vector3f ourPos = pos;//this.getMainNode().getWorldBound().getCenter();
-		Vector3f theirPos = pos;//target.getMainNode().getWorldBound().getCenter();
+		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter();
 
 		if (theirPos.distance(ourPos) > range) {
 			return false;
@@ -356,16 +356,16 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				if (s == null) {
 					break;
 				}
-			} // todo - set user data of all children?
+			}
 			if (s != null && s.getUserData(Globals.ENTITY) != null) {
 				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
 				//Globals.p("Ray collided with " + pe + " at " + col.getContactPoint());
 				if (pe == this) {
 					continue; // Don't block by ourselves
 				}
-				/*if (pe == target) {
+				if (pe == target) {
 					return true;
-				}*/
+				}
 				if (pe.blocksView) {
 					return false;
 				}
@@ -375,11 +375,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return true;
 	}
 
-	
+	/*
 	public boolean canSee(PhysicalEntity pe, float range, float maxAngleRads) {
 		return canSee(pe.getMainNode().getWorldBound().getCenter(), range, maxAngleRads);
 	}
-
+*/
 /*
 	public boolean canSee(Vector3f pos, float range) {
 		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter(); // Note: Test the ray from the middle of the entity

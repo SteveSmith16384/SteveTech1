@@ -50,7 +50,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 
 	public void startAgain() {
-		alive = true;
+		this.setAlive(true);
 		this.setHealth(maxHealth);
 		this.simpleRigidBody.resetForces();//.currentGravInc = 0; // In case they fell off the edge
 		this.invulnerableTimeSecs = 5;
@@ -121,7 +121,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	protected void setDied(IEntity killer, String reason) {
 		Globals.p("Player " + this.getID() + " died: " + reason);
-		this.alive = false;
+		this.setAlive(false);
 		this.restartTimeSecs = server.gameOptions.avatarRestartTimeSecs;
 		server.playerKilled(this);
 		server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, killer));
@@ -154,7 +154,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	public void getReadyForGame() {
 		//this.startAgain();  Don't call startAgain() since that moves the avatar
 		
-		alive = true;
+		this.setAlive(true);
 		this.setHealth(maxHealth);
 		this.invulnerableTimeSecs = 5;
 
