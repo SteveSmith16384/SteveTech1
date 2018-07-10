@@ -66,6 +66,10 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
+		if (Globals.DEBUG_SET_ALIVE) {
+			this.alive = false;
+		}
+
 		if (!this.alive) { //this.getWorldTranslation()
 			restartTimeSecs -= tpf;
 			this.currentAnimCode = ANIM_DIED;

@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.prefs.BackingStoreException;
 
+import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.AssetNotFoundException;
@@ -19,6 +20,7 @@ import com.jme3.asset.plugins.FileLocator;
 import com.jme3.audio.AudioData;
 import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingBox;
+import com.jme3.input.FlyByCamera;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -245,7 +247,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} catch (BackingStoreException e) {
 			e.printStackTrace();
 		}
-	}
+
+		FlyCamAppState state = stateManager.getState(FlyCamAppState.class);
+		if (state != null) {
+			this.stateManager.detach(state);
+		}
+
+}
 
 
 	@Override
@@ -284,7 +292,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			VideoRecorderAppState video_recorder = new VideoRecorderAppState();
 			stateManager.attach(video_recorder);
 		}
-
+		
 		// Don't connect to network until JME is up and running!
 		/*try {
 			if (lobbyIP != null) {
@@ -347,7 +355,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (tpf_secs > 1) {
 			tpf_secs = 1;
 		}
-
+		
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;  //this.entities
 			renderTime = serverTime - clientRenderDelayMillis; // Render from history
@@ -681,7 +689,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			AvatarStartedMessage asm = (AvatarStartedMessage)message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 				AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
-				avatar.setAlive(true); 
+				avatar.setAlive(true);  // todo - NPE
 				// Point camera fwds again
 				cam.lookAt(cam.getLocation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
 				cam.update();

@@ -85,11 +85,15 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
+		if (Globals.DEBUG_SET_ALIVE) {
+			this.alive = false;
+		}
+
 		if (!this.alive) {
 			// Position cam above avatar when they're dead
-			//Vector3f vec = this.getWorldTranslation();
+			Vector3f vec = this.getWorldTranslation();
 			//cam.getLocation().x = vec.x;
-			cam.getLocation().y = .1f;
+			cam.getLocation().y = vec.y + 0.1f;
 			//cam.getLocation().z = vec.z;
 
 			if (this.killer != null) {

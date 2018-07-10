@@ -82,9 +82,9 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		if (!enabled) {
 			return;
 		}
-		
+
 		value = value * mouseSens;
-		
+
 		if (name.equals("mFLYCAM_Left")){
 			//Settings.p("name=" + name);
 			rotateCamera(value, initialUpVec);
