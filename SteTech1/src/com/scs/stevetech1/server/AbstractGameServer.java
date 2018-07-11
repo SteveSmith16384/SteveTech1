@@ -576,7 +576,7 @@ ConsoleInputListener {
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {
 				if (e.getGameID() == this.getGameID()) { // Since we might still have old entities that have not actually been removed!
-					nem.data.add(new NewEntityData(e));
+					nem.add(e);
 					if (nem.isFull()) {
 						this.gameNetworkServer.sendMessageToClient(client, nem);
 						if (Globals.SLEEP_BETWEEN_NEWENT_MSGS) {
@@ -668,7 +668,7 @@ ConsoleInputListener {
 		// Tell clients
 		if (!doNotSendAddRemoveEntityMsgs) {
 			NewEntityMessage nem = new NewEntityMessage(this.getGameID());
-			nem.data.add(new NewEntityData(e));
+			nem.add(e);
 			synchronized (clients) {
 				for (ClientData client : this.clients.values()) {
 					if (client.clientStatus == ClientStatus.Accepted) {

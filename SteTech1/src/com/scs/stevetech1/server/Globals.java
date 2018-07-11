@@ -10,13 +10,14 @@ public class Globals {
 	
 	public static final boolean RECORD_VID = false;
 	public static final boolean HIDE_BELLS_WHISTLES = !RECORD_VID;
-	public static final boolean STRICT = false;//true; // Extra checks (which will slow the game down)
+	public static final boolean STRICT = !RECORD_VID;//true; // Extra checks (which will slow the game down)
 
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_DIE_ANIM = true;
+	
+	public static final boolean REMOVE_DEAD_SOLDIERS = true;
 	public static final boolean NO_GRAVITY = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
-	
 	public static final boolean DEBUG_SET_ALIVE = false;
 	public static final boolean DEBUG_PLAYER_START_POS = false;
 	public static final boolean SLEEP_BETWEEN_NEWENT_MSGS = true;
@@ -74,9 +75,9 @@ public class Globals {
 	public static final boolean BULLETS_CONES = true;
 
 	//----
-	public static final int PCENT_DROPPED_PACKETS = 10;
-	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;
-	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0;
+	public static final int PCENT_DROPPED_PACKETS = 10; // todo - remove if in release mode!
+	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 5;
+	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 50;
 	//----
 	
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings

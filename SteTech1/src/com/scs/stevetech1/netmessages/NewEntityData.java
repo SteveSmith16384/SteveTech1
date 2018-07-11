@@ -11,7 +11,6 @@ public class NewEntityData {
 	public int entityID;
 	public int type; // Entity code
 	public HashMap<String, Object> data = new HashMap<>();
-	//public boolean showImmediately = false; todo?
 	
 	public NewEntityData() {
 		

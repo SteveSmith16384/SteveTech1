@@ -3,6 +3,7 @@ package com.scs.stevetech1.netmessages;
 import java.util.LinkedList;
 
 import com.jme3.network.serializing.Serializable;
+import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
 @Serializable
@@ -19,7 +20,10 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 
 	public void addEntityData(PhysicalEntity sc, boolean force, EntityUpdateData updateData) {
 		this.data.add(updateData);
-
+		
+		if (updateData.animationCode == AbstractAvatar.ANIM_DIED) {
+			this.setReliable(true); // We must get the death anim to the server at all costs!
+		}
 	}
 
 
