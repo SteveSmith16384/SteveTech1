@@ -34,7 +34,6 @@ public class BeamLaserModel extends Node {
 
 	private BeamLaserModel(AssetManager assetManager, Vector3f start, Vector3f end, ColorRGBA col, boolean generateMat, String tex, float diam, boolean cone) {
 		super("Laser");
-
 		
 		//cyl = new Cylinder(5, 10, diam, cone? 0: diam, start.distance(end), true, false);
 		cyl = new Cylinder(2, 6, diam/2, cone? 0.001f: diam/2, start.distance(end), true, false);
@@ -67,13 +66,12 @@ public class BeamLaserModel extends Node {
 		}
 		setLocalTranslation(FastMath.interpolateLinear(.5f, start, end));
 		lookAt(end, Vector3f.UNIT_Y);
-
 	}
 
 
 	@Override
 	public boolean removeFromParent() {
-		this.spare.add(this);
+		spare.add(this);
 		return super.removeFromParent();
 	}
 

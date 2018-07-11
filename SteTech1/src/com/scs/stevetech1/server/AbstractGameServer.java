@@ -39,19 +39,20 @@ import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
-import com.scs.stevetech1.netmessages.ShowMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
+import com.scs.stevetech1.netmessages.NumEntitiesMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlaySoundMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
+import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
@@ -396,7 +397,7 @@ ConsoleInputListener {
 		}
 
 		client.clientStatus = ClientData.ClientStatus.Accepted;
-		this.gameNetworkServer.sendMessageToAllExcept(client, new ShowMessage("Player joined!", true));
+		this.gameNetworkServer.sendMessageToAllExcept(client, new ShowMessageMessage("Player joined!", true));
 
 		int side = getSide(client);
 		client.playerData = this.createSimplePlayerData();
@@ -568,6 +569,9 @@ ConsoleInputListener {
 	protected abstract AbstractServerAvatar createPlayersAvatarEntity(ClientData client, int entityid);
 
 	protected void sendAllEntitiesToClient(ClientData client) {
+		NumEntitiesMessage numem = new NumEntitiesMessage(this.entities.size());
+		this.gameNetworkServer.sendMessageToClient(client, numem);
+
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 		synchronized (entities) {
 			for (IEntity e : entities.values()) {

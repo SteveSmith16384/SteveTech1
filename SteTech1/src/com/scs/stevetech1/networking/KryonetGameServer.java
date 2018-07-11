@@ -25,7 +25,6 @@ import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage.Command;
-import com.scs.stevetech1.netmessages.ShowMessage;
 import com.scs.stevetech1.netmessages.GunReloadingMessage;
 import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
@@ -33,12 +32,14 @@ import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
+import com.scs.stevetech1.netmessages.NumEntitiesMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlaySoundMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
+import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.TestMessage;
 import com.scs.stevetech1.netmessages.UnknownEntityMessage;
@@ -150,7 +151,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(GameOverMessage.class);
 		kryo.register(PlaySoundMessage.class);
 		kryo.register(ModelBoundsMessage.class);
-		kryo.register(ShowMessage.class);
+		kryo.register(ShowMessageMessage.class);
 		kryo.register(JoinGameFailedMessage.class);
 		kryo.register(SetAvatarMessage.class);
 		kryo.register(AbilityActivatedMessage.class);
@@ -158,6 +159,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(ClientGunReloadRequestMessage.class);
 		kryo.register(GameLogMessage.class);
 		kryo.register(GunReloadingMessage.class);
+		kryo.register(NumEntitiesMessage.class);
 	}
 
 

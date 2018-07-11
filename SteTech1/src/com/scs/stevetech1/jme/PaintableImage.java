@@ -27,7 +27,7 @@ public abstract class PaintableImage extends Image {
 		paint(g);
 		g.dispose();
 
-		/* get the image data */
+		// get the image data
 		byte data[] = (byte[]) backImg.getRaster().getDataElements(0, 0, backImg.getWidth(), backImg.getHeight(), null);
 		scratch.clear();
 		scratch.put(data, 0, data.length);

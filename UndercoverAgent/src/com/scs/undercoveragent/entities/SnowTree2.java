@@ -21,7 +21,6 @@ public class SnowTree2 extends PhysicalEntity {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("q", q);
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/SnowNature/Tree2.blend");
@@ -31,8 +30,6 @@ public class SnowTree2 extends PhysicalEntity {
 		}
 		this.mainNode.attachChild(model); //This creates the model bounds!
 
-		//float rads = (float)Math.toRadians(rotDegrees);
-		//mainNode.rotate(0, rads, 0);
 		this.mainNode.setLocalRotation(q);
 
 		mainNode.setLocalTranslation(x, y, z);

@@ -8,12 +8,14 @@ import com.jme3.asset.AssetManager;
 import com.jme3.asset.AssetNotFoundException;
 import com.jme3.asset.TextureKey;
 import com.jme3.bounding.BoundingBox;
+import com.jme3.collision.CollisionResults;
 import com.jme3.export.binary.BinaryExporter;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -24,6 +26,8 @@ import com.jme3.texture.Texture.WrapMode;
 import com.scs.stevetech1.server.Globals;
 
 public class JMEModelFunctions {
+
+	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
 
 	private JMEModelFunctions() {
 	}
@@ -157,8 +161,8 @@ public class JMEModelFunctions {
 		}
 		return null;
 	}
-	
-	
+
+
 	public static void printNodeTree(Spatial s) {
 		printNodeTree(s, 0);
 	}
@@ -175,6 +179,57 @@ public class JMEModelFunctions {
 				printNodeTree(s2, indent+3);
 			}
 		}
+	}
+
+
+	public static Vector3f getHeightAtPoint(float x, float z, Node world) {
+		Ray r = new Ray(new Vector3f(x, 9999, z), DOWN_VEC);
+		CollisionResults crs = new CollisionResults();
+		world.collideWith(r, crs);
+		Vector3f pos = crs.getClosestCollision().getContactPoint();
+		return pos;
+	}
+
+
+	public static float getLowestHeightAtPoint(Spatial s, Node world) {
+		float res = 9999f;
+		try {
+			CollisionResults crs = new CollisionResults();
+			BoundingBox bb = (BoundingBox)s.getWorldBound();
+
+			Ray r1 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), DOWN_VEC);
+			crs.clear();
+			world.collideWith(r1, crs);
+			if (crs.size() > 0) {
+				Vector3f pos1 = crs.getClosestCollision().getContactPoint();
+				res = Math.min(res, pos1.y);
+			}
+			Ray r2 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z-bb.getZExtent()), DOWN_VEC);
+			crs.clear();
+			world.collideWith(r2, crs);
+			if (crs.size() > 0) {
+				Vector3f pos2 = crs.getClosestCollision().getContactPoint();
+				res = Math.min(res, pos2.y);
+			}
+			Ray r3 = new Ray(new Vector3f(bb.getCenter().x-bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), DOWN_VEC);
+			crs.clear();
+			world.collideWith(r3, crs);
+			if (crs.size() > 0) {
+				Vector3f pos3 = crs.getClosestCollision().getContactPoint();
+				res = Math.min(res, pos3.y);
+			}
+			Ray r4 = new Ray(new Vector3f(bb.getCenter().x+bb.getXExtent(), 255, bb.getCenter().z+bb.getZExtent()), DOWN_VEC);
+			crs.clear();
+			world.collideWith(r4, crs);
+			if (crs.size() > 0) {
+				Vector3f pos4 = crs.getClosestCollision().getContactPoint();
+				res = Math.min(res, pos4.y);
+			}
+		} catch (java.lang.NullPointerException ex) {
+			ex.printStackTrace();
+		}
+
+		return res;
 	}
 
 

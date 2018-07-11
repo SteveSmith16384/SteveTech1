@@ -18,9 +18,12 @@ public class BoxAvatarModel implements IAvatarModel {
 	private static final float h = 0.7f;
 	
 	private Geometry geometry;
+	private Vector3f size;
 	
 	public BoxAvatarModel(AssetManager assetManager) {
 		super();
+		
+		size = new Vector3f(w, h, d);
 
 		Box box1 = new Box(w/2, h/2, d/2);
 		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
@@ -51,7 +54,7 @@ public class BoxAvatarModel implements IAvatarModel {
 
 	@Override
 	public Vector3f getSize() {
-		return new Vector3f(w, h, d); // todo - don't create each time
+		return size;
 	}
 
 	@Override

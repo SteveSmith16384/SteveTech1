@@ -10,11 +10,9 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
-import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
@@ -43,7 +41,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public ISimpleEntity<T> simpleEntity;
 	private boolean movedByForces = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
-	private int modelComplexity = 0; // For determining which way round to check collisions
+	private int modelComplexity = 0; // For determining which way round to check collisions.  Todo - remove this
 	public boolean canWalkUpSteps = false;
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
@@ -381,7 +379,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		// Check for stairs first.  treat stairs and slopes differently since we handle the upward force differently
 		if (cr.simpleEntity.getCollidable() instanceof TerrainQuad == false && cr.simpleEntity.getCollidable() instanceof BoundingBox) {
 			if (DEBUG_STEPS_SLOPES) {
-				Globals.p("Checking for stairs");
+				p("Checking for stairs");
 			}
 			// Check simple BB against simple BB 
 			BoundingBox theirBB = (BoundingBox)cr.getBoundingBox();
@@ -402,15 +400,14 @@ public class SimpleRigidBody<T> implements Collidable {
 
 		} else {
 			if (DEBUG_STEPS_SLOPES) {
-				Globals.p("Checking for slope");
+				p("Checking for slope");
 			}
 			float DEF_EXTENT = 0.1f; // How far ahead to check the slope
 			float extent = ourBB.getXExtent() + DEF_EXTENT; // todo - get proper edge of BB
 
 			CollisionResults rayCRs = new CollisionResults();
 			tmpPos.set(moveOffset).normalizeLocal().multLocal(extent);
-			Vector3f newPos = posBeforeMove.add(tmpPos);
-			//Vector3f newPos = posBeforeMove.add(moveOffset.normalize().mult(extent)); // todo - don't create new each time
+			Vector3f newPos = tmpPos.addLocal(posBeforeMove);
 			Ray nextRay = new Ray(newPos, DOWN_VEC);
 			rayCRs.clear();
 			cr.simpleEntity.getCollidable().collideWith(nextRay, rayCRs);
@@ -478,9 +475,8 @@ public class SimpleRigidBody<T> implements Collidable {
 
 
 	/**
-	 * Returns whether the two SRB's collided.
 	 * @param e
-	 * @return
+	 * @return whether the two SRB's collided.
 	 */
 	public boolean checkSRBvSRB(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) {
 		tempCollisionResults.clear();
@@ -526,8 +522,8 @@ public class SimpleRigidBody<T> implements Collidable {
 						BoundingVolume bv = (BoundingVolume)s.getWorldBound();
 						res = bv.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
 					}
-
-
+					//res = this.meshVMesh(e, tempCollisionResults);
+					
 				} else {
 					res = this.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
 
@@ -542,6 +538,21 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
+	private int meshVMesh(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) {
+		Node s1 = (Node)e.simpleEntity.getCollidable();
+		BoundingVolume bv1 = (BoundingVolume)s1.getWorldBound();
+		int res1 = this.collideWith(bv1, tempCollisionResults);
+
+		// They are the most complex
+		Node s2 = (Node)this.simpleEntity.getCollidable();
+		BoundingVolume bv2 = (BoundingVolume)s2.getWorldBound();
+		int res2 = bv2.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
+
+		return res1>0 && res2>0 ? 1 : 0;
+		
+	}
+
+	
 	/**
 	 * If you get UnsupportedCollisionException, it means you're trying to collide a mesh with a mesh.
 	 */

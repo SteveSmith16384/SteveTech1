@@ -20,7 +20,6 @@ import com.jme3.asset.plugins.FileLocator;
 import com.jme3.audio.AudioData;
 import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingBox;
-import com.jme3.input.FlyByCamera;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -80,13 +79,14 @@ import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
 import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
+import com.scs.stevetech1.netmessages.NumEntitiesMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlaySoundMessage;
 import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
-import com.scs.stevetech1.netmessages.ShowMessage;
+import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
@@ -165,6 +165,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public int clientStatus = STATUS_NOT_CONNECTED;
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
+	private int expectedEntities = -1;
 
 	protected Node gameNode = new Node("GameNode");
 	protected Node debugNode = new Node("DebugNode");
@@ -514,8 +515,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				networkClient.sendMessageToServer(message); // Send it straight back
 			}
 
-		} else if (message instanceof ShowMessage) {
-			ShowMessage gsm = (ShowMessage)message;
+		} else if (message instanceof ShowMessageMessage) {
+			ShowMessageMessage gsm = (ShowMessageMessage)message;
 			this.hud.showMessage(gsm.msg);
 
 		} else if (message instanceof GameSuccessfullyJoinedMessage) {
@@ -631,6 +632,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			Globals.p("Rcvd GeneralCommandMessage: " + msg.command.toString());
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
 				clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;
+				this.expectedEntities = -1;
 				this.hud.appendToLog("All entities received");
 				allEntitiesSent();
 			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
@@ -688,12 +690,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			AvatarStartedMessage asm = (AvatarStartedMessage)message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
-				AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
-				avatar.setAlive(true);  // todo - NPE
+				//AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
+				currentAvatar.setAlive(true);
 				// Point camera fwds again
 				cam.lookAt(cam.getLocation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
 				cam.update();
-
 			}
 
 		} else if (message instanceof ListOfGameServersMessage) {
@@ -760,6 +761,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			//this.gunAngle = 0;
 			this.finishedReloadAt = grm.duration_secs;
 			this.currentlyReloading = true;
+
+		} else if (message instanceof NumEntitiesMessage) {
+			NumEntitiesMessage nem = (NumEntitiesMessage)message;
+			expectedEntities = nem.num;
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
@@ -841,6 +846,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	protected final void createEntity(NewEntityData data, long timeToAdd) {
+		//Globals.p("Creating entity " + data.type);
+
 		IEntity e = actuallyCreateEntity(this, data);
 		if (e != null) {
 			if (e instanceof PhysicalEntity) {
@@ -848,10 +855,18 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				pe.timeToAdd = timeToAdd;
 			}
 			this.addEntity(e);
+			//Globals.p("Finished creating entity " + data.type);
 		} else {
 			Globals.p("Not creating entity type " + data.type);
 			// It's not for this game, so ignore it
 			//throw new RuntimeException("Cannot create entity type " + data.type);
+		}
+		
+		if (this.expectedEntities > 0) {
+			float frac = (this.entities.size()) / (float)this.expectedEntities; //  this.entitiesToAddToGame.size()
+			int fracPC = (int)(frac * 100);
+			Globals.p("Entities: " + fracPC + "%");
+			this.hud.showMessage("Loading entities: " + fracPC + "%");
 		}
 
 	}

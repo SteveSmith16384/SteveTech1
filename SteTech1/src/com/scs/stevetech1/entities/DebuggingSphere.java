@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.shape.Box;
@@ -38,9 +39,8 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 		} else {
 			sphere = new Box(0.2f, 0.2f, 0.2f);
 		}
-		//sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("DebuggingSphere", sphere);
-
+		ball_geo.setShadowMode(ShadowMode.CastAndReceive);
 		TextureKey key3 = null;
 		if (server) {
 			key3 = new TextureKey( "Textures/sun.jpg");
@@ -78,7 +78,6 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 				this.remove();
 			}
 		}
-
 	}
 
 }
