@@ -15,7 +15,7 @@ public abstract class Entity implements IEntity, Savable {
 	public final int id;
 	public final int type;
 	protected transient IEntityController game;
-	public final String name;
+	public final String name; // todo - rename
 	public boolean removed = false;
 	private boolean requiresProcessing;
 

@@ -9,12 +9,14 @@ import ssmith.lang.Functions;
 public class Globals {
 	
 	public static final boolean RECORD_VID = false;
+	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean HIDE_BELLS_WHISTLES = !RECORD_VID;
 	public static final boolean STRICT = !RECORD_VID;//true; // Extra checks (which will slow the game down)
 
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_DIE_ANIM = true;
-	
+	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = true;
+
 	public static final boolean REMOVE_DEAD_SOLDIERS = true;
 	public static final boolean NO_GRAVITY = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
@@ -35,7 +37,6 @@ public class Globals {
 	public static final boolean DEBUG_UA_SINKING = false;
 	public static final boolean DEBUG_GAME_NOT_STARTING = false;
 	public static final boolean TEST_AI = false;
-	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = false;
 	public static final boolean DEBUG_DELAYED_EXPLOSION = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
@@ -76,8 +77,8 @@ public class Globals {
 
 	//----
 	public static final int PCENT_DROPPED_PACKETS = 10; // todo - remove if in release mode!
-	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 5;
-	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 50;
+	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0; //5;
+	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0; //50;
 	//----
 	
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
@@ -102,6 +103,13 @@ public class Globals {
 	private static final long GAME_START_TIME = System.currentTimeMillis();
 	
 
+	public static void showWarnings() {
+		if (RELEASE_MODE == false) {
+			p("WARNING: Game NOT in release mode");
+		}
+	}
+	
+	
 	public static void p(String s) {
 		System.out.println(System.currentTimeMillis() + ": " + s);
 	}

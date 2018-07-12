@@ -170,7 +170,7 @@ public class KryonetGameServer implements IGameMessageServer {
 
 
 	public static boolean isPacketDropped() {
-		return Globals.PCENT_DROPPED_PACKETS > 0 && NumberFunctions.rnd(0, 100) < Globals.PCENT_DROPPED_PACKETS;
+		return !Globals.RELEASE_MODE && Globals.PCENT_DROPPED_PACKETS > 0 && NumberFunctions.rnd(0, 100) < Globals.PCENT_DROPPED_PACKETS;
 	}
 
 	
@@ -180,7 +180,7 @@ public class KryonetGameServer implements IGameMessageServer {
 			Globals.p("Sending to all " + msg);
 		}
 
-		if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+		if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				server.sendToAllTCP(msg);
 			} else {
@@ -222,7 +222,7 @@ public class KryonetGameServer implements IGameMessageServer {
 	
 	
 	private void sendMessage(final int id, final MyAbstractMessage msg) {
-			if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+			if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 				if (msg.isReliable()) {
 					server.sendToTCP(id, msg);
 				} else {

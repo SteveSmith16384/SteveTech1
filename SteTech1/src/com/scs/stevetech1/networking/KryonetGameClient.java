@@ -49,7 +49,7 @@ public class KryonetGameClient implements IGameMessageClient {
 			public void disconnected (Connection connection) {
 				listener.disconnected();
 			}
-			
+
 			public void idle(Connection connection) {
 				//Globals.p(this.getClass().getSimpleName() + " is Idle!");
 			}
@@ -76,7 +76,7 @@ public class KryonetGameClient implements IGameMessageClient {
 			Globals.p("Sending to server: " + msg);
 		}
 
-		if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+		if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				client.sendTCP(msg);
 			} else {
@@ -84,8 +84,7 @@ public class KryonetGameClient implements IGameMessageClient {
 					client.sendUDP(msg);
 				}
 			}
-		}
-		else {
+		} else {
 			Thread t = new Thread("CommsDelayThread") {
 				@Override
 				public void run() {

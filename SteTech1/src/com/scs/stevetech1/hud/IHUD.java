@@ -15,7 +15,7 @@ public interface IHUD {
 
 	void showMessage(String s);
 
-	void addItem(Node n);
+	void addItem(Node n); // todo - rename to addChild()
 
 	//void setLog(LinkedList<String> gameLog);
 	void appendToLog(String s);

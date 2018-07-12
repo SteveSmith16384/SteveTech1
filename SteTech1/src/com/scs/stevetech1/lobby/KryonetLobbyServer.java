@@ -84,7 +84,7 @@ public class KryonetLobbyServer {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Sending to client: " + msg);
 		}
-		if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+		if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				server.sendToTCP(client.getID(), msg);
 			} else {

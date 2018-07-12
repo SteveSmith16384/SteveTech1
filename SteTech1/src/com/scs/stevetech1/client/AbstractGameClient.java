@@ -178,6 +178,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private int gamePort;//, lobbyPort;
 	private float mouseSens;
 	private String key;
+	private String consoleInput;
 
 	// Subnodes
 	private int nodeSize = Globals.SUBNODE_SIZE;
@@ -201,23 +202,23 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	 * @param _mouseSens
 	 */
 	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage, String _gameServerIP, int _gamePort, //String _lobbyIP, int _lobbyPort, 
-			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { // float gravity, float aerodynamicness, 
+			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
 		super();
-
+		
 		gameCode = _gameCode;
 		key = _key;
 
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
 		timeoutMillis = _timeoutMillis;
-
-		loopTimer = new FixedLoopTime(tickrateMillis);
-
 		gameServerIP = _gameServerIP;
 		gamePort = _gamePort;
 		//lobbyIP = _lobbyIP;
 		//lobbyPort = _lobbyPort;
 
+		Globals.showWarnings();
+
+		loopTimer = new FixedLoopTime(tickrateMillis);
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
@@ -249,12 +250,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			e.printStackTrace();
 		}
 
+		// Remove the automatically-added FlyCam
 		FlyCamAppState state = stateManager.getState(FlyCamAppState.class);
 		if (state != null) {
 			this.stateManager.detach(state);
 		}
 
-}
+	}
 
 
 	@Override
@@ -293,7 +295,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			VideoRecorderAppState video_recorder = new VideoRecorderAppState();
 			stateManager.attach(video_recorder);
 		}
-		
+
 		// Don't connect to network until JME is up and running!
 		/*try {
 			if (lobbyIP != null) {
@@ -356,9 +358,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (tpf_secs > 1) {
 			tpf_secs = 1;
 		}
+
+		checkConsoleInput();
 		
 		try {
-			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;  //this.entities
+			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 			renderTime = serverTime - clientRenderDelayMillis; // Render from history
 
 			if (networkClient != null && networkClient.isConnected()) {
@@ -368,7 +372,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					// Check we don't already know about it
 					Iterator<MyAbstractMessage> mit = this.unprocessedMessages.iterator();
 					while (mit.hasNext()) {
-						MyAbstractMessage message = mit.next();// this.unprocessedMessages.remove(0);
+						MyAbstractMessage message = mit.next();
 						if (message.scheduled) {
 							if (message.timestamp > renderTime) {
 								continue;
@@ -440,7 +444,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 
 					// Loop through each entity and process them
-					//for (IEntity e : entitiesForProcessing.values()) { //entitiesForProcessing.size();
 					for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
 						IEntity e = this.entitiesForProcessing.get(i); //this.rootNode;
 						if (e.hasNotBeenRemoved()) {
@@ -478,7 +481,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 							if (e instanceof IDrawOnHUD) {
 								IDrawOnHUD doh = (IDrawOnHUD)e;
-								doh.drawOnHud(cam);
+								doh.drawOnHud(hud, cam);
 							}
 						}
 					}
@@ -610,20 +613,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (e != null) {
 				e.remove();
 			} else {
-				// See if it's in our list of entities waiting to be added
-				/*boolean found = false;
-				Iterator<IEntity> it = this.entitiesToAdd.iterator();
-				while (it.hasNext()) {
-					IEntity e2a = it.next();
-					if (e2a.getID() == rem.entityID) {
-						it.remove();
-						found = true;
-						break;
-					}
-				}*/
-				//if (!found) {
 				Globals.p("Ignoring msg to remove entity " + rem.entityID + " as we have no record of it");
-				//}
 			}
 
 		} else if (message instanceof GeneralCommandMessage) {
@@ -746,11 +736,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.currentAvatarID = sam.avatarEntityID;
 			this.setAvatar(this.entities.get(currentAvatarID));
 
-			/*} else if (message instanceof NewClientOnlyEntity) {
-			NewClientOnlyEntity ncoe = (NewClientOnlyEntity)message;
-			createEntity(ncoe.data, ncoe.timestamp);
-			 */
-
 		} else if (message instanceof GameLogMessage) {
 			GameLogMessage glm = (GameLogMessage)message;
 			this.hud.appendToLog(glm.logEntry);
@@ -861,7 +846,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			// It's not for this game, so ignore it
 			//throw new RuntimeException("Cannot create entity type " + data.type);
 		}
-		
+
 		if (this.expectedEntities > 0) {
 			float frac = (this.entities.size()) / (float)this.expectedEntities; //  this.entitiesToAddToGame.size()
 			int fracPC = (int)(frac * 100);
@@ -893,11 +878,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void addEntity(IEntity e) {
-		/*if (e.getID() <= 0) {
-			throw new RuntimeException("ID must be positive if not client-side!");
-		}*/
-
-		//synchronized (entities) {
 		if (e.getID() == 0) {
 			throw new RuntimeException("No entity id!");
 		}
@@ -928,16 +908,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (e instanceof PhysicalEntity) {
 			entitiesToAddToGame.add((PhysicalEntity)e);
 		}
-		/*			if (e instanceof IDrawOnHUD) {
-				IDrawOnHUD doh = (IDrawOnHUD)e;
-				this.hud.addItem(doh.getHUDItem());
-			}
-		 */
 		if (e.getID() == currentAvatarID && e != this.currentAvatar) {
 			// Avatar has been replaced
 			this.setAvatar(e);
 		}
-		//}
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
@@ -961,8 +935,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				//if (pe instanceof AbstractAISoldier) {
 				makeToonish(pe.getMainNode());
 				//}
-			} //pe.getMainNode().getChild(0).getLocalRotation();
-			// pe.getWorldTranslation();
+			}
 			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
 			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
 			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
@@ -990,12 +963,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 				}
 			}
-			if (e instanceof IDrawOnHUD) {
+			/*if (e instanceof IDrawOnHUD) {
 				IDrawOnHUD doh = (IDrawOnHUD)e;
 				if (doh.getHUDItem() != null) {
 					this.hud.addItem(doh.getHUDItem());
 				}
-			}
+			}*/
 		}
 	}
 
@@ -1265,17 +1238,28 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void processConsoleInput(String s) {
+		this.consoleInput = s;
 		//Globals.p("Received input: " + s);
-		if (s.equalsIgnoreCase("help") || s.equalsIgnoreCase("?")) {
-			Globals.p("stats, entities");
-		} else if (s.equalsIgnoreCase("stats")) {
-			showStats();
-		} else if (s.equalsIgnoreCase("entities") || s.equalsIgnoreCase("e")) {
-			listEntities();
-		} else {
-			Globals.p("Unknown command: " + s);
-		}
+	}
 
+
+	private void checkConsoleInput() {
+		try {
+			if (this.consoleInput != null) {
+				if (this.consoleInput.equalsIgnoreCase("help") || this.consoleInput.equalsIgnoreCase("?")) {
+					Globals.p("stats, entities");
+				} else if (this.consoleInput.equalsIgnoreCase("stats")) {
+					showStats();
+				} else if (this.consoleInput.equalsIgnoreCase("entities") || this.consoleInput.equalsIgnoreCase("e")) {
+					listEntities();
+				} else {
+					Globals.p("Unknown command: " + this.consoleInput);
+				}
+				this.consoleInput = null;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 
@@ -1287,7 +1271,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private void listEntities() {
 		synchronized (entities) {
-			// DO server-side first
+			// Do server-side first
 			int count = 0;
 			for (IEntity e : entities.values()) {
 				if (e.getID() > 0) {
@@ -1297,7 +1281,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			Globals.p("Total server entities:" + count);
 
-			// DO client-side
+			// Do client-side
 			count = 0;
 			for (IEntity e : entities.values()) {
 				if (e.getID() < 0) {

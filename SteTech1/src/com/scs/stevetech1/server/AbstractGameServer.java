@@ -117,7 +117,7 @@ ConsoleInputListener {
 	private String key;
 
 	protected SimpleGameData gameData = new SimpleGameData();
-	//private LinkedList<String> gameLog = new LinkedList<>();
+	private String consoleInput;
 
 
 	/**
@@ -139,6 +139,8 @@ ConsoleInputListener {
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
 		timeoutMillis = _timeoutMillis;
+
+		Globals.showWarnings();
 
 		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
 
@@ -188,6 +190,8 @@ ConsoleInputListener {
 		if (tpf_secs > 1) {
 			tpf_secs = 1;
 		}
+		
+		this.checkConsoleInput();
 
 		if (Globals.STRICT) {
 			if (this.physicsController.getNumEntities() > this.entities.size()) {
@@ -397,23 +401,25 @@ ConsoleInputListener {
 		}
 
 		client.clientStatus = ClientData.ClientStatus.Accepted;
-		this.gameNetworkServer.sendMessageToAllExcept(client, new ShowMessageMessage("Player joined!", true));
 
-		int side = getSide(client);
 		client.playerData = this.createSimplePlayerData();
 		client.playerData.id = client.id;
 		client.playerData.playerName = newPlayerMessage.playerName;
+
+		this.gameNetworkServer.sendMessageToAllExcept(client, new ShowMessageMessage("Player joined!", true));
+		int side = getSide(client);
 		client.playerData.side = side;
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
 		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
-		sendAllEntitiesToClient(client);
+		if (this.clients.size() > 1) { // Is there already another player.  If none, don't bother sendin ents since we're about to recreate the game
+			sendAllEntitiesToClient(client);
+		}
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 		this.pingSystem.sendPingToClient(client);
 		playerJoinedGame(client);
 		appendToGameLog(client.playerData.playerName + " has joined");
 		gameStatusSystem.checkGameStatus(true);
-
 	}
 
 
@@ -821,17 +827,13 @@ ConsoleInputListener {
 	public void gameStatusChanged(int newStatus) {
 		if (newStatus == SimpleGameData.ST_DEPLOYING) {
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
-
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities)); // Before we increment the game id!
-			try {
-				doNotSendAddRemoveEntityMsgs = true; // Prevent sending "remove entities" messages for all the entities
-				removeOldGame();
-			} finally {
-				doNotSendAddRemoveEntityMsgs = false;
-			}
+			
+			doNotSendAddRemoveEntityMsgs = true; // Prevent sending "remove entities" messages for all the entities
+			removeOldGame();
+			doNotSendAddRemoveEntityMsgs = false;
 
 			startNewGame();
-			//this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarted));
 			this.appendToGameLog("Get ready!");
 
 		} else if (newStatus == SimpleGameData.ST_STARTED) {
@@ -909,21 +911,26 @@ ConsoleInputListener {
 
 	@Override
 	public void processConsoleInput(String s) {
-		// todo - do this in main thread!
+		//Globals.p("Received input: " + s);
+		this.consoleInput = s;
+	}
+	
+	
+	private void checkConsoleInput() {
 		try {
-			//Globals.p("Received input: " + s);
-			if (s != null) {
-			if (s.equalsIgnoreCase("help") || s.equalsIgnoreCase("?")) {
-				Globals.p("mb, stats, entities");
-			} else if (s.equalsIgnoreCase("mb")) {
-				sendDebuggingBoxes();
-			} else if (s.equalsIgnoreCase("stats")) {
-				showStats();
-			} else if (s.equalsIgnoreCase("entities") || s.equalsIgnoreCase("e")) {
-				listEntities();
-			} else {
-				Globals.p("Unknown command: " + s);
-			}
+			if (this.consoleInput != null) {
+				if (this.consoleInput.equalsIgnoreCase("help") || this.consoleInput.equalsIgnoreCase("?")) {
+					Globals.p("mb, stats, entities");
+				} else if (this.consoleInput.equalsIgnoreCase("mb")) {
+					sendDebuggingBoxes();
+				} else if (this.consoleInput.equalsIgnoreCase("stats")) {
+					showStats();
+				} else if (this.consoleInput.equalsIgnoreCase("entities") || this.consoleInput.equalsIgnoreCase("e")) {
+					listEntities();
+				} else {
+					Globals.p("Unknown command: " + this.consoleInput);
+				}
+				this.consoleInput = null;
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -1071,7 +1078,7 @@ ConsoleInputListener {
 	@Override
 	public void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream) {
 		gameNetworkServer.sendMessageToAll(new PlaySoundMessage(_sound, _pos, _volume, _stream));
-		
+
 	}
 
 

@@ -19,6 +19,7 @@ import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.ISetRotation;
+import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -107,7 +108,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 
 	@Override
-	public void drawOnHud(Camera cam) {
+	public void drawOnHud(IHUD hud, Camera cam) {
 		FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 		if (insideoutside != FrustumIntersect.Outside) {
 			if (this.hudNode.getText().length() == 0) {

@@ -9,6 +9,8 @@ import com.jme3.collision.CollisionResults;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
+import com.jme3.renderer.Camera.FrustumIntersect;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ISimpleEntity;
@@ -19,6 +21,7 @@ import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ISetRotation;
+import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -379,8 +382,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public boolean canSee(PhysicalEntity pe, float range, float maxAngleRads) {
 		return canSee(pe.getMainNode().getWorldBound().getCenter(), range, maxAngleRads);
 	}
-*/
-/*
+	 */
+	/*
 	public boolean canSee(Vector3f pos, float range) {
 		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter(); // Note: Test the ray from the middle of the entity
 		Vector3f theirPos = pos; //target.getMainNode().getWorldBound().getCenter();
@@ -423,7 +426,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 		return true;
 	}
-*/
+	 */
 
 
 	@Override
@@ -474,6 +477,30 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 			}
 		}
+	}
+
+
+	private Vector3f tmpHudPos = new Vector3f();
+	private Vector3f tmpScreenPos = new Vector3f();
+
+	protected void checkHUDNode(Node hudNode, IHUD hud, Camera cam, float maxDist, float yOffset) { // todo - use on other projecrs
+		//if (hudNode != null) {
+		boolean show = this.getWorldTranslation().distance(cam.getLocation()) < maxDist;
+		show = show && cam.contains(this.getMainNode().getWorldBound()) != FrustumIntersect.Outside;
+		if (show) {
+			if (hudNode.getParent() == null) {
+				hud.addItem(hudNode);
+			}
+			tmpHudPos.set(this.getWorldTranslation());
+			tmpHudPos.y += yOffset;
+			Vector3f screen_pos = cam.getScreenCoordinates(tmpHudPos, tmpScreenPos);
+			hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
+		} else {
+			if (hudNode.getParent() != null) {
+				hudNode.removeFromParent();
+			}
+		}
+		//}
 	}
 
 
