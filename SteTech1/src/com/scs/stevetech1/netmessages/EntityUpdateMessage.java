@@ -22,7 +22,7 @@ public class EntityUpdateMessage extends MyAbstractMessage {
 		this.data.add(updateData);
 		
 		if (updateData.animationCode == AbstractAvatar.ANIM_DIED) {
-			//this.setReliable(true); // We must get the death anim to the server at all costs!
+			this.setReliable(true); // We must get the death anim to the server at all costs! // scs new todo
 		}
 	}
 

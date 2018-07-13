@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IClientControlled;
@@ -13,7 +12,6 @@ import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
-import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;

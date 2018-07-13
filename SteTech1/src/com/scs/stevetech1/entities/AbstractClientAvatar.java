@@ -92,9 +92,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		if (!this.alive) {
 			// Position cam above avatar when they're dead
 			Vector3f vec = this.getWorldTranslation();
-			//cam.getLocation().x = vec.x;
 			cam.getLocation().y = vec.y + 0.1f;
-			//cam.getLocation().z = vec.z;
 
 			if (this.killer != null) {
 				cam.lookAt(killer.getWorldTranslation(), Vector3f.UNIT_Y);
@@ -119,12 +117,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			super.serverAndClientProcess(null, client, tpf_secs, serverTime);
 
 			storeAvatarPosition(serverTime);
-
-			// Set position of avatar model (direction doesn't matter)
-			//this.playerGeometry.setLocalTranslation(this.bbGeom.getWorldTranslation());
-			//Vector3f lookAtPoint = this.cam.getDirection());
-			//lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
-			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
 
 			// Position camera at node
 			Vector3f vec = this.getWorldTranslation();
@@ -157,9 +149,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	// Client Avatars have their own special position calculator
 	@Override
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
-		if (Globals.ONLY_ADJUST_CLIENT_ON_MOVE && !super.playerWalked) { // Only adjust us if the player tried to move?
+		/*if (Globals.ONLY_ADJUST_CLIENT_ON_MOVE && !super.playerWalked) { // Only adjust us if the player tried to move?
 			return;
-		}
+		}*/
 		if (Globals.TURN_OFF_CLIENT_POS_ADJ) {
 			return;
 		}
@@ -204,6 +196,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public void handleKilledOnClientSide(PhysicalEntity killer) {
 		Globals.p("You have been killed by " + killer);
 		this.setAlive(false);
+		this.killer = killer;
+		this.pla
 
 	}
 

@@ -1,6 +1,11 @@
 package com.scs.stevetech1.components;
 
 
+/**
+ * Anything implementing this interface will cause harm to an IDamagable on contact
+ * @author stephencs
+ *
+ */
 public interface ICausesHarmOnContact {
 
 	float getDamageCaused();

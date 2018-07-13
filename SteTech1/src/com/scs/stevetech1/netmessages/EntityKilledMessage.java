@@ -14,17 +14,19 @@ public class EntityKilledMessage extends MyAbstractMessage {
 	
 	public int killedEntityID;
 	public int killerEntityID;
+	public String reason;
 	
 	public EntityKilledMessage() {
 		super();
 	}
 
 
-	public EntityKilledMessage(IEntity killed, IEntity killer) {
+	public EntityKilledMessage(IEntity killed, IEntity killer, String _reason) {
 		super(true, true);
 		
 		this.killedEntityID = killed.getID();
 		this.killerEntityID = killer != null ? killer.getID() : -1;
+		reason = _reason;
 	}
 
 }

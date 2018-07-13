@@ -8,8 +8,8 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAffectedByPhysics;
-import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -98,7 +98,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 	
 	
 	@Override
-	public void damaged(float amt, ICausesHarmOnContact collider, String reason) {
+	public void damaged(float amt, IEntity collider, String reason) {
 		//this.currentAnim = "ZombieBite";
 	}
 

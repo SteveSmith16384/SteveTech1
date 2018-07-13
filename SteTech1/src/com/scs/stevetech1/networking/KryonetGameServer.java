@@ -7,6 +7,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.minlog.Log;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.data.SimpleGameData;
@@ -61,6 +62,8 @@ public class KryonetGameServer implements IGameMessageServer {
 
 		server = new Server(Globals.KRYO_WRITE_BUFFER_SIZE, Globals.KRYO_OBJECT_BUFFER_SIZE);
 		timeout = _timeout;
+		
+		//Log.set(Log.LEVEL_DEBUG);
 		
 		registerMessages(server.getKryo());
 		if (msgClasses != null) {
@@ -184,8 +187,10 @@ public class KryonetGameServer implements IGameMessageServer {
 			if (msg.isReliable()) {
 				server.sendToAllTCP(msg);
 			} else {
-				if (!this.isPacketDropped()) {
+				if (!isPacketDropped()) {
 					server.sendToAllUDP(msg);
+				} else {
+					Globals.p("Dropped msg: " + msg);
 				}
 			}		
 		}
@@ -203,6 +208,8 @@ public class KryonetGameServer implements IGameMessageServer {
 					} else {
 						if (!isPacketDropped()) {
 							server.sendToAllUDP(msg);
+						} else {
+							//Globals.p("Dropped msg: " + msg);
 						}
 					}		
 				}
@@ -245,6 +252,8 @@ public class KryonetGameServer implements IGameMessageServer {
 						} else {
 							if (!isPacketDropped()) {
 								server.sendToUDP(id, msg);
+							} else {
+								//Globals.p("Dropped msg: " + msg);
 							}
 						}		
 					}

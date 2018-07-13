@@ -412,7 +412,7 @@ ConsoleInputListener {
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
 		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
-		if (this.clients.size() > 1) { // Is there already another player.  If none, don't bother sendin ents since we're about to recreate the game
+		if (this.clients.size() > 1) { // Is there already another player.  If none, don't bother sending ents since we're about to recreate the game
 			sendAllEntitiesToClient(client);
 		}
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
@@ -1068,6 +1068,7 @@ ConsoleInputListener {
 				if (pe.canSee(exploder, range, -1f)) {
 					IDamagable id = (IDamagable)pe;
 					id.damaged(damage, null, "Explosion");
+					Globals.p(pe + " was damaged " + damage + " by explosion");
 				}
 			}
 		}

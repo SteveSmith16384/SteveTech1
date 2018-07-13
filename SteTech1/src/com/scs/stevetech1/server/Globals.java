@@ -14,10 +14,9 @@ public class Globals {
 	public static final boolean STRICT = !RECORD_VID;//true; // Extra checks (which will slow the game down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean DEBUG_DIE_ANIM = true;
 	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = true;
 
-	public static final boolean REMOVE_DEAD_SOLDIERS = true;
+	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean NO_GRAVITY = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_SET_ALIVE = false;
@@ -76,15 +75,16 @@ public class Globals {
 	public static final boolean BULLETS_CONES = true;
 
 	//----
-	public static final int PCENT_DROPPED_PACKETS = 10; // todo - remove if in release mode!
-	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0; //5;
-	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0; //50;
+	public static final int PCENT_DROPPED_PACKETS = 0;
+	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 5;
+	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 50;
 	//----
 	
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
-	public static final boolean ONLY_ADJUST_CLIENT_ON_MOVE = false; // Only adjust the client avatar's position when the player moves them.
+	//public static final boolean ONLY_ADJUST_CLIENT_ON_MOVE = false; // Only adjust the client avatar's position when the player moves them.
 	public static final int SUBNODE_SIZE = 15;
 	public static final int DEF_VOL = 1;
+	public static final boolean REMOVE_DEAD_SOLDIERS = true;
 
 	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*7;
 	public static final int KRYO_OBJECT_BUFFER_SIZE = 4096*3*24;

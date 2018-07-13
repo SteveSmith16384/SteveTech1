@@ -359,7 +359,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			tpf_secs = 1;
 		}
 
-		checkConsoleInput();
+		checkConsoleInput(); //this.entities //this.entitiesForProcessing //this.gameNode 
 		
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
@@ -659,7 +659,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				ik.handleKilledOnClientSide(killer);
 			}
 			if (killed == this.currentAvatar) {
-				this.currentAvatar.killer = killer;
+				this.playersWeaponNode.removeFromParent();
 			}
 
 		} else if (message instanceof EntityLaunchedMessage) {

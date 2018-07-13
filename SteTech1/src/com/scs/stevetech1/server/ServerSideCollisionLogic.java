@@ -2,6 +2,7 @@ package com.scs.stevetech1.server;
 
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.data.SimpleGameData;
 
 public class ServerSideCollisionLogic {
@@ -30,7 +31,7 @@ public class ServerSideCollisionLogic {
 	private void checkForDamage(ICausesHarmOnContact choc, IDamagable id) {
 		if (server.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
 			if (choc.getSide() != id.getSide()) {
-				id.damaged(choc.getDamageCaused(), choc, "Hit by " + choc);
+				id.damaged(choc.getDamageCaused(), (IEntity)choc, "Hit by " + choc);
 			}
 		}
 	}
