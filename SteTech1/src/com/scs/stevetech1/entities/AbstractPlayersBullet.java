@@ -30,6 +30,8 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	public int playerID;
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
+	private IEntityContainer<AbstractPlayersBullet> container;
+	
 	private ClientData client; // Only used server-side
 	protected Vector3f origin;
 
@@ -38,17 +40,18 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	protected float speed;
 	private float range;
 
-	public AbstractPlayersBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntityContainer<AbstractPlayersBullet> container, int _side, ClientData _client, Vector3f _dir, boolean _useRay, float _speed, float _range) {
+	public AbstractPlayersBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntityContainer<AbstractPlayersBullet> _container, int _side, ClientData _client, Vector3f _dir, boolean _useRay, float _speed, float _range) {
 		super(_game, entityId, type, name, true, false, true);
 
 		playerID = _playerOwnerId;
+		container = _container;
 		client = _client;
 		dir = _dir;
 		useRay = _useRay;
 		speed = _speed;
 		range = _range;
 		side = _side;
-		
+
 		if (Globals.STRICT) {
 			if (side <= 0) {
 				throw new RuntimeException("Invalid side: " + side);
@@ -66,8 +69,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			container.addToCache(this);
 		}
 
-
-		this.collideable = false;
+		this.collideable = false; // Wait until launched
 
 	}
 
@@ -77,7 +79,9 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		if (launched) {
 			throw new RuntimeException("Trying to relaunch launched bullet");
 		}
-
+		if (this.getMainNode().getChildren().size() > 0) {
+			throw new RuntimeException("Trying to relaunch launched bullet (has children)");
+		}
 		if (_shooter == null) {
 			throw new RuntimeException("Null launcher");
 		}
@@ -93,7 +97,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 		this.createSimpleRigidBody(dir);
 
-		game.getGameNode().attachChild(this.mainNode);
+		game.getGameNode().attachChild(this.mainNode); // Need this for client side
 		this.setWorldTranslation(startPos);
 		this.mainNode.updateGeometricState();
 
@@ -127,13 +131,6 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			// If server, send messages to clients to tell them it has been launched
 			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
 			server.gameNetworkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
-		} else {
-			/*if (tellServer) {
-				// client tells server that bullet launched
-				LaunchData ld = new LaunchData(this.getWorldTranslation(), dir, this.getID(), 0);
-				AbstractGameClient client = (AbstractGameClient)game; 
-				client.networkClient.sendMessageToServer(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
-			}*/
 		}
 
 	}
@@ -172,10 +169,10 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			}
 		}
 	}
-	
-	
+
+
 	public float getDistanceTravelled() {
-		 return this.origin.distance(this.getWorldTranslation());
+		return this.origin.distance(this.getWorldTranslation());
 	}
 
 
@@ -183,7 +180,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	public void processByClient(IClientApp client, float tpf_secs) {
 		if (this.launched) {
 			if (!useRay) {
-				simpleRigidBody.process(tpf_secs); //this.mainNode;
+				simpleRigidBody.process(tpf_secs);
 			} else {
 				Ray ray = new Ray(this.getWorldTranslation(), dir);
 				ray.setLimit(speed * tpf_secs);
@@ -212,7 +209,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 	@Override
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
-		// Do nothing!
+		// Do nothing!  The client controls it.
 	}
 
 
@@ -266,4 +263,14 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		Globals.p(this + " damage: " + dam);
 		return dam;
 	}
+
+
+	@Override
+	public void remove() {
+		this.container.removeFromCache(this);
+		super.remove();
+	}
+	
+	
 }
+

@@ -100,7 +100,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			cam.update();
 
 		} else {
-			final long serverTime = client.getServerTime();// System.currentTimeMillis() + client.clientToServerDiffTime;
+			final long serverTime = client.getServerTime();
 
 			// Check for any abilities/guns being fired
 			for (int i=0 ; i< this.ability.length ; i++) {
@@ -162,20 +162,15 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				Globals.p("Server and client avatars dist: " + diff);
 			}
 			if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
-				if (Globals.DEBUG_CLIENT_SERVER_FAR_APART) {
+				//if (Globals.DEBUG_CLIENT_SERVER_FAR_APART) {
 					Globals.p("Server and client avatars very far apart, forcing move: " + diff);
-				}
+				//}
 				// They're so far out, just move them
-				this.setWorldTranslation(historicalPositionData.getMostRecent().position); 
+				this.setWorldTranslation(historicalPositionData.getMostRecent().position);
+				this.simpleRigidBody.resetForces(); // Prevent from keeping falling
 			} else {
-				//pe.adjustWorldTranslation(offset);
-				//adjustWorldTranslation(offset.mult(.5f));
-				//adjustWorldTranslation(offset.mult(.8f));
-
 				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
 				simplePlayerControl.getAdditionalForce().addLocal(offset.mult(.8f));
-
-
 			}
 		}
 	}
@@ -197,8 +192,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		Globals.p("You have been killed by " + killer);
 		this.setAlive(false);
 		this.killer = killer;
-		this.pla
-
 	}
 
 

@@ -53,6 +53,12 @@ public class PlayersGun extends AbstractMagazineGun<PlayersBullet> implements IA
 	}
 
 
+	@Override
+	public void removeFromCache(PlayersBullet o) {
+		this.ammoCache.remove(o);
+	}
+
+
 	public void remove() {
 		while (!ammoCache.isEmpty()) {
 			PlayersBullet g = ammoCache.remove();

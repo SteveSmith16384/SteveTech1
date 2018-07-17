@@ -15,7 +15,7 @@ public abstract class Entity implements IEntity, Savable {
 	public final int id;
 	public final int type;
 	protected transient IEntityController game;
-	public final String name; // todo - rename
+	public final String entityName;
 	public boolean removed = false;
 	private boolean requiresProcessing;
 
@@ -28,7 +28,7 @@ public abstract class Entity implements IEntity, Savable {
 		id = _id;
 		type = _type;
 		game = _module;
-		name = _name;
+		entityName = _name;
 		requiresProcessing = _requiresProcessing;
 
 
@@ -38,7 +38,7 @@ public abstract class Entity implements IEntity, Savable {
 
 	@Override
 	public String toString() {
-		return "E_" + name + "_" + id;
+		return "E_" + entityName + "_" + id;
 	}
 
 
@@ -76,7 +76,7 @@ public abstract class Entity implements IEntity, Savable {
 
 	@Override
 	public String getName() {
-		return name;
+		return entityName;
 	}
 
 

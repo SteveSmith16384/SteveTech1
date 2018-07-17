@@ -82,6 +82,12 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 
 
 	@Override
+	public void removeFromCache(SnowballBullet o) {
+		this.ammoCache.remove(o);
+	}
+
+
+	@Override
 	protected void emptyMagazine() {
 		while (!ammoCache.isEmpty()) {
 			SnowballBullet g = ammoCache.remove();

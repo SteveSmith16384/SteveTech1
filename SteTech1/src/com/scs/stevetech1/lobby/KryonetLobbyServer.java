@@ -84,14 +84,14 @@ public class KryonetLobbyServer {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Sending to client: " + msg);
 		}
-		if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+		// todo - this
+		//if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 			if (msg.isReliable()) {
 				server.sendToTCP(client.getID(), msg);
 			} else {
 				server.sendToUDP(client.getID(), msg);
 			}		
-		}
-		else {
+		/*} else {
 			Thread t = new Thread("CommsDelayThread") {
 				@Override
 				public void run() {
@@ -108,7 +108,7 @@ public class KryonetLobbyServer {
 				}
 			};
 			t.start();
-		}
+		}*/
 
 	}
 

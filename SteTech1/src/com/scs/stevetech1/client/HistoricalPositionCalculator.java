@@ -19,27 +19,29 @@ public class HistoricalPositionCalculator {
 	public static Vector3f calcHistoricalPositionOffset(PositionCalculator serverPositionData, PositionCalculator clientPositionData, long serverTimeToUse) {
 		if (serverPositionData.hasRecentData(serverTimeToUse)) {
 			if (clientPositionData.hasRecentData(serverTimeToUse)) {
-			EntityPositionData serverEPD = serverPositionData.calcPosition(serverTimeToUse, true);
-			if (serverEPD != null) {
-				long clientTimeToUse = serverTimeToUse;// - ping;
-				// check where we should be based on where we were X ms ago
-				EntityPositionData clientEPD = clientPositionData.calcPosition(clientTimeToUse, true);
-				if (clientEPD != null) {
-					// Is there a difference
-					/*float diff = serverEPD.position.distance(clientEPD.position);
+				EntityPositionData serverEPD = serverPositionData.calcPosition(serverTimeToUse, true);
+				if (serverEPD != null) {
+					long clientTimeToUse = serverTimeToUse;// - ping;
+					// check where we should be based on where we were X ms ago
+					EntityPositionData clientEPD = clientPositionData.calcPosition(clientTimeToUse, true);
+					if (clientEPD != null) {
+						// Is there a difference
+						/*float diff = serverEPD.position.distance(clientEPD.position);
 					if (diff > 0.2) {
 						// There should be no difference!
 						//Globals.p("Server " + serverPositionData.toString(serverTimeToUse));
 						//Globals.p("Client " + clientAvatarPositionData.toString(clientTimeToUse));
 					}*/
-					Vector3f vdiff = serverEPD.position.subtract(clientEPD.position); 
-					return vdiff;
+						Vector3f vdiff = serverEPD.position.subtract(clientEPD.position); 
+						return vdiff;
+					}
 				}
-			}
+			} else {
+				
 			}
 		}
-		return null;
-
+		//return null;
+		return serverPositionData.getMostRecent().position; // scs new
 	}
 
 

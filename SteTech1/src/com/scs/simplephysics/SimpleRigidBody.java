@@ -497,7 +497,6 @@ public class SimpleRigidBody<T> implements Collidable {
 					Vector3f start = bv.getCenter().clone();
 					start.y = 255f;
 					Ray ray = new Ray(start, DOWN_VEC);
-					//ray.setLimit(bv.getYExtent());
 					res = tq.collideWith(ray, tempCollisionResults);
 					if (res > 0) {
 						// Compare positions
@@ -511,7 +510,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 				} else if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
 					// Both are complex meshes!  Convert one into a simple boundingvolume
-					if (this.modelComplexity >= e.modelComplexity) {
+					/*if (this.modelComplexity >= e.modelComplexity) {
 						// We are the most complex
 						Node s = (Node)e.simpleEntity.getCollidable();
 						BoundingVolume bv = (BoundingVolume)s.getWorldBound();
@@ -521,8 +520,8 @@ public class SimpleRigidBody<T> implements Collidable {
 						Node s = (Node)this.simpleEntity.getCollidable();
 						BoundingVolume bv = (BoundingVolume)s.getWorldBound();
 						res = bv.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
-					}
-					//res = this.meshVMesh(e, tempCollisionResults);
+					}*/
+					res = this.meshVMesh(e, tempCollisionResults) ? 1: 0;
 					
 				} else {
 					res = this.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
@@ -538,7 +537,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	private int meshVMesh(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) {
+	private boolean meshVMesh(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) {
 		Node s1 = (Node)e.simpleEntity.getCollidable();
 		BoundingVolume bv1 = (BoundingVolume)s1.getWorldBound();
 		int res1 = this.collideWith(bv1, tempCollisionResults);
@@ -548,7 +547,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		BoundingVolume bv2 = (BoundingVolume)s2.getWorldBound();
 		int res2 = bv2.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
 
-		return res1>0 && res2>0 ? 1 : 0;
+		return res1>0 && res2>0; // Only collide if both collisions fire
 		
 	}
 

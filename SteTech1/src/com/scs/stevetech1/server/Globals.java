@@ -14,7 +14,8 @@ public class Globals {
 	public static final boolean STRICT = !RECORD_VID;//true; // Extra checks (which will slow the game down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean SHOW_HUD_TEXT_FOR_UNITS = true;
+	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
+	public static final boolean DEBUG_ORPHAN_BULLETS = true;
 
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean NO_GRAVITY = false;
@@ -37,7 +38,6 @@ public class Globals {
 	public static final boolean DEBUG_GAME_NOT_STARTING = false;
 	public static final boolean TEST_AI = false;
 	public static final boolean DEBUG_DELAYED_EXPLOSION = false;
-	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean DEBUG_AI_BULLET_POS = false;
 	public static final boolean DEBUG_BULLET_HIT = false;
 	public static final boolean DEBUG_AI_TARGETTING = false;
@@ -75,13 +75,12 @@ public class Globals {
 	public static final boolean BULLETS_CONES = true;
 
 	//----
-	public static final int PCENT_DROPPED_PACKETS = 0;
-	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 5;
-	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 50;
+	public static final int PCENT_DROPPED_PACKETS = 10;
+	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 50; //0;
+	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 100;
 	//----
 	
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
-	//public static final boolean ONLY_ADJUST_CLIENT_ON_MOVE = false; // Only adjust the client avatar's position when the player moves them.
 	public static final int SUBNODE_SIZE = 15;
 	public static final int DEF_VOL = 1;
 	public static final boolean REMOVE_DEAD_SOLDIERS = true;

@@ -55,7 +55,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		blocksView = _blocksView;
 		moves = _moves;
 
-		mainNode = new Node(name + "_MainNode_" + id);
+		mainNode = new Node(entityName + "_MainNode_" + id);
 
 		if (moves) {
 			historicalPositionData = new PositionCalculator(true, 100);
@@ -483,7 +483,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f tmpHudPos = new Vector3f();
 	private Vector3f tmpScreenPos = new Vector3f();
 
-	protected void checkHUDNode(Node hudNode, IHUD hud, Camera cam, float maxDist, float yOffset) { // todo - use on other projecrs
+	protected void checkHUDNode(Node hudNode, IHUD hud, Camera cam, float maxDist, float yOffset) {
 		//if (hudNode != null) {
 		boolean show = this.getWorldTranslation().distance(cam.getLocation()) < maxDist;
 		show = show && cam.contains(this.getMainNode().getWorldBound()) != FrustumIntersect.Outside;

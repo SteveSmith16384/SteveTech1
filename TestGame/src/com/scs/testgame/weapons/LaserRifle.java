@@ -49,6 +49,12 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 	}
 
 
+	@Override
+	public void removeFromCache(PlayerLaserBullet o) {
+		this.ammoCache.remove(o);
+	}
+
+
 	public void remove() {
 		while (!ammoCache.isEmpty()) {
 			PlayerLaserBullet g = ammoCache.remove();

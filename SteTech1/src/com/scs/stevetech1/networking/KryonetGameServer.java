@@ -49,6 +49,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.systems.client.LaunchData;
 
+import ssmith.lang.Functions;
 import ssmith.lang.NumberFunctions;
 
 public class KryonetGameServer implements IGameMessageServer {
@@ -56,28 +57,27 @@ public class KryonetGameServer implements IGameMessageServer {
 	private IMessageServerListener listener;
 	private Server server;
 	private int timeout;
-	
+
 	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener, int _timeout, Class[] msgClasses) throws IOException {
 		super();
 
 		server = new Server(Globals.KRYO_WRITE_BUFFER_SIZE, Globals.KRYO_OBJECT_BUFFER_SIZE);
 		timeout = _timeout;
-		
+
 		//Log.set(Log.LEVEL_DEBUG);
-		
+
 		registerMessages(server.getKryo());
 		if (msgClasses != null) {
 			for(Class c : msgClasses) {
 				server.getKryo().register(c);
 			}
 		}
-		
+
 		setListener(_listener);
 		server.bind(tcpport, udpport);
 		Thread t = new Thread(server);
 		t.setDaemon(true);
 		t.start();
-		// server.start(); Not daemon!
 	}
 
 
@@ -125,7 +125,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(java.util.ArrayList.class);
 		kryo.register(com.jme3.bounding.BoundingBox.class);
 		kryo.register(com.jme3.bounding.BoundingSphere.class);
-		
+
 		// Messages
 		kryo.register(MyAbstractMessage.class);
 		kryo.register(WelcomeClientMessage.class);
@@ -173,48 +173,46 @@ public class KryonetGameServer implements IGameMessageServer {
 
 
 	public static boolean isPacketDropped() {
-		return !Globals.RELEASE_MODE && Globals.PCENT_DROPPED_PACKETS > 0 && NumberFunctions.rnd(0, 100) < Globals.PCENT_DROPPED_PACKETS;
+		return Globals.RELEASE_MODE == false && Globals.PCENT_DROPPED_PACKETS > 0 && NumberFunctions.rnd(0, 100) < Globals.PCENT_DROPPED_PACKETS;
 	}
 
-	
+
 	@Override
 	public void sendMessageToAll(final MyAbstractMessage msg) {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Sending to all " + msg);
 		}
 
-		if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+		if (Globals.RELEASE_MODE) {// || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+
 			if (msg.isReliable()) {
 				server.sendToAllTCP(msg);
 			} else {
-				if (!isPacketDropped()) {
-					server.sendToAllUDP(msg);
-				} else {
-					Globals.p("Dropped msg: " + msg);
-				}
-			}		
-		}
-		else {
-			Thread t = new Thread("CommsDelayThread") {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				server.sendToAllUDP(msg);
+			}
+
+		} else {
+
+			if (msg.isReliable()) {
+				server.sendToAllTCP(msg); // todo
+			} else {
+				if (!KryonetGameServer.isPacketDropped()) {
+					if (Globals.MAX_ARTIFICIAL_COMMS_DELAY <= 0) {
+						server.sendToAllUDP(msg);
+					} else { 
+						Thread t = new Thread("CommsDelayThread") {
+
+							@Override
+							public void run() {
+								Functions.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
+								server.sendToAllUDP(msg);
+							}
+
+						};
+						t.start();
 					}
-					if (msg.isReliable()) {
-						server.sendToAllTCP(msg);
-					} else {
-						if (!isPacketDropped()) {
-							server.sendToAllUDP(msg);
-						} else {
-							//Globals.p("Dropped msg: " + msg);
-						}
-					}		
 				}
-			};
-			t.start();
+			}
 		}
 	}
 
@@ -226,46 +224,42 @@ public class KryonetGameServer implements IGameMessageServer {
 		}
 		this.sendMessage(client.id, msg);
 	}
-	
-	
+
+
 	private void sendMessage(final int id, final MyAbstractMessage msg) {
-			if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
-				if (msg.isReliable()) {
-					server.sendToTCP(id, msg);
-				} else {
-					if (!isPacketDropped()) {
-						server.sendToUDP(id, msg);
-					}
-				}		
+		if (Globals.RELEASE_MODE) {
+
+			if (msg.isReliable()) {
+				server.sendToTCP(id, msg);
+			} else {
+				server.sendToUDP(id, msg);
 			}
-			else {
-				Thread t = new Thread("CommsDelayThread") {
-					@Override
-					public void run() {
-						try {
-							Thread.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
-						} catch (InterruptedException e) {
-							e.printStackTrace();
+
+		} else {
+
+			if (msg.isReliable()) {
+				server.sendToTCP(id, msg); // todo
+			} else {
+				if (!KryonetGameServer.isPacketDropped()) {
+					Thread t = new Thread("CommsDelayThread") {
+						
+						@Override
+						public void run() {
+							Functions.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
+							server.sendToUDP(id, msg);
 						}
-						if (msg.isReliable()) {
-							server.sendToTCP(id, msg);
-						} else {
-							if (!isPacketDropped()) {
-								server.sendToUDP(id, msg);
-							} else {
-								//Globals.p("Dropped msg: " + msg);
-							}
-						}		
-					}
-				};
-				t.start();
+					};
+					
+					t.start();
+				}
 			}
+		}
 	}
 
+	
 	@Override
 	public void close() {
 		server.close();
-
 	}
 
 

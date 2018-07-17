@@ -126,9 +126,9 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 	@Override
 	public String getHudText() {
 		if (this.getBulletsInMag() == this.magazineSize && this.timeUntilShoot_secs > shotInterval_secs) {
-			return name + " RELOADING";
+			return entityName + " RELOADING";
 		} else {
-			return name + " (" + this.getBulletsInMag() + "/" + this.magazineSize  +")";
+			return entityName + " (" + this.getBulletsInMag() + "/" + this.magazineSize  +")";
 		}
 	}
 

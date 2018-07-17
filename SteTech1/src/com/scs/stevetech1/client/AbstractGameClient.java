@@ -359,7 +359,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			tpf_secs = 1;
 		}
 
-		checkConsoleInput(); //this.entities //this.entitiesForProcessing //this.gameNode 
+		if (Globals.STRICT) {
+			if (this.physicsController.getNumEntities() > this.entities.size()) {
+				Globals.pe("Warning: more simple rigid bodies than entities!");
+			}
+		}
+		checkConsoleInput();  //this.entities //this.entitiesForProcessing //this.gameNode 
 		
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
@@ -369,7 +374,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				// Process messages in JME thread
 				synchronized (unprocessedMessages) {
-					// Check we don't already know about it
 					Iterator<MyAbstractMessage> mit = this.unprocessedMessages.iterator();
 					while (mit.hasNext()) {
 						MyAbstractMessage message = mit.next();
@@ -378,8 +382,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 								continue;
 							}
 						}
-						mit.remove();
-						this.handleMessage(message);
+						boolean accepted = this.handleMessage(message);
+						if (accepted) {
+							mit.remove();
+						}
 					}
 				}
 
@@ -400,6 +406,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						if (pe.timeToAdd < renderTime) {
 							if (pe.getID() < 0 || this.entities.containsKey(pe.getID())) { // Check it is still in the game
 								this.addEntityToGame(pe);
+							} else {
+								Globals.p("Not adding " + pe + " to the game as it's not in it any more");
+								if (pe.getMainNode().getParent() != null) {
+									pe.getMainNode().removeFromParent();
+								}
 							}
 							entitiesToAddToGame.remove(i);
 							i--;
@@ -437,7 +448,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						for(IEntity e : this.entities.values()) {
 							if (e.requiresProcessing()) {
 								if (!this.entitiesForProcessing.contains(e)) {
-									Globals.p("Warning: Processed entity " + e + " not in process list!");
+									Globals.pe("Warning: Processed entity " + e + " not in process list!");
 								}
 							}
 						}
@@ -461,7 +472,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 									if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof IClientControlled == false) {
 										if (pe.simpleRigidBody != null) {
 											if (pe.simpleRigidBody.movedByForces()) {
-												Globals.p("Warning: client-side entity " + pe + " not kinematic!");
+												Globals.pe("Warning: client-side entity " + pe + " not kinematic!");
 											}
 										}
 									}
@@ -494,7 +505,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				}
 			}
-
+			
+			if (Globals.STRICT) {
+				checkNodesExistInEntities();
+			}
+			
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
 
@@ -504,8 +519,26 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}
 
+	
+	private void checkNodesExistInEntities() {
+		if (Globals.STRICT) {
+			// Check all Nodes are in the entity list
+			for (Spatial n : this.gameNode.getChildren()) {
+				IEntity e = n.getUserData(Globals.ENTITY);
+				if (e instanceof PhysicalEntity) {
+					//PhysicalEntity pe = (PhysicalEntity)e;
+					if (!this.entities.containsValue(e)) {
+						Globals.pe("WARNING: Spatial " + e + " not found in entity list!");
+					}
+				}
+			}
+		}
 
-	protected void handleMessage(MyAbstractMessage message) {
+
+	}
+
+	
+	protected boolean handleMessage(MyAbstractMessage message) {
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
 			if (!pingMessage.s2c) {
@@ -574,6 +607,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					Globals.p("Ignoring NewEntityMessage for game " + newEntityMessage.gameId);
 					// It's not for this game, so ignore it
 				}
+			} else {
+				//Globals.p("Ignoring NewEntityMessage as we have no game data");
+				//throw new RuntimeException("No game data!");
+				return false; // Wait for game data
 			}
 
 		} else if (message instanceof EntityUpdateMessage) {
@@ -685,6 +722,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				// Point camera fwds again
 				cam.lookAt(cam.getLocation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
 				cam.update();
+				
+				this.showPlayersWeapon();
 			}
 
 		} else if (message instanceof ListOfGameServersMessage) {
@@ -754,6 +793,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
+		
+		return true;
 	}
 
 
@@ -847,6 +888,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			//throw new RuntimeException("Cannot create entity type " + data.type);
 		}
 
+		// Update % complete
 		if (this.expectedEntities > 0) {
 			float frac = (this.entities.size()) / (float)this.expectedEntities; //  this.entitiesToAddToGame.size()
 			int fracPC = (int)(frac * 100);
@@ -931,11 +973,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 		if (add) {
 			PhysicalEntity pe = (PhysicalEntity)e;
-			if (Globals.TOONISH) {
-				//if (pe instanceof AbstractAISoldier) {
-				makeToonish(pe.getMainNode());
-				//}
-			}
 			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
 			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
 			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
@@ -952,7 +989,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				Node n = this.nodes.get(id);
 				n.attachChild(pe.getMainNode());			
 			} else {
-				this.getGameNode().attachChild(pe.getMainNode()); // pe.getMainNode().getChild(0).getLocalRotation();
+				this.getGameNode().attachChild(pe.getMainNode());
 			}
 
 			if (pe.simpleRigidBody != null) {
@@ -963,16 +1000,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 				}
 			}
-			/*if (e instanceof IDrawOnHUD) {
-				IDrawOnHUD doh = (IDrawOnHUD)e;
-				if (doh.getHUDItem() != null) {
-					this.hud.addItem(doh.getHUDItem());
-				}
-			}*/
 		}
 	}
 
 
+	// Messing about with filters
 	private void makeToonish(Spatial spatial) {
 		try {
 			if (spatial instanceof Node){
@@ -1057,6 +1089,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		synchronized (entities) {
 			IEntity e = this.entities.get(id);
 			if (e != null) {
+				if (e.getType() == 7) { // Players bullet in TWIP
+					Globals.p("Removing " + e);
+				}
 				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Actually removing entity " + id + ":" + e);
 				}
@@ -1069,6 +1104,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						Globals.p("Avatar for player removed");
 					}
 					this.currentAvatar = null;
+				}
+				if (Globals.STRICT) {
+					if (e instanceof PhysicalEntity) {
+						PhysicalEntity pe = (PhysicalEntity)e;
+						if (pe.getMainNode().getParent() != null) {
+							Globals.pe("Entity still attached to rootNode!");
+						}
+					}
 				}
 			} else {
 				//Globals.pe("Entity id " + id + " not found for removal");
@@ -1302,14 +1345,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	/*
-	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
+	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  "e.remove()" does all the hard work.
 	 */
 	private void actuallyRemoveClientOnlyEntity(int id) {
 		IEntity e = getClientOnlyEntityById(id);//this.clientOnlyEntities.get(id);
 		if (e != null) {
-			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			//if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Actually removing CO entity " + id + ":" + e);
-			}
+			//}
 			this.clientOnlyEntities.remove(e);
 			if (e.requiresProcessing()) {
 				this.entitiesForProcessing.remove(e);

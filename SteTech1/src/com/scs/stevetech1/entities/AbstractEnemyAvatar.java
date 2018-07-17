@@ -38,8 +38,8 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	// HUD
 	protected BitmapText hudNode;
 	private static BitmapFont font_small;
-	private Vector3f tmpHudPos = new Vector3f();
-	private Vector3f tmpScreenPos = new Vector3f();
+	//private Vector3f tmpHudPos = new Vector3f();
+	//private Vector3f tmpScreenPos = new Vector3f();
 
 	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int _side, String _playersName) {
 		super(game, eid, type, "EnemyAvatar", true, false, true);
@@ -50,7 +50,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		
 		// Create box for collisions
 		Box box = new Box(anim.getSize().x/2, anim.getSize().y/2, anim.getSize().z/2);
-		Geometry bbGeom = new Geometry("bbGeom_" + name, box);
+		Geometry bbGeom = new Geometry("bbGeom_" + entityName, box);
 		bbGeom.setLocalTranslation(0, anim.getSize().y/2, 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw the collision box
 		this.mainNode.attachChild(bbGeom);
@@ -73,7 +73,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 		font_small = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
-		hudNode.setText(name);
+		hudNode.setText(playersName);
 
 	}
 
@@ -109,7 +109,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 	@Override
 	public void drawOnHud(IHUD hud, Camera cam) {
-		FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
+		/*FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
 		if (insideoutside != FrustumIntersect.Outside) {
 			if (this.hudNode.getText().length() == 0) {
 				hudNode.setText(playersName);
@@ -121,7 +121,9 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 			this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 		} else {
 			this.hudNode.setText(""); // Hide it
-		}
+		}*/
+		super.checkHUDNode(hudNode, hud, cam, 2f, anim.getSize().y);
+
 	}
 
 

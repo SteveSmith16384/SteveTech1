@@ -416,7 +416,7 @@ ConsoleInputListener {
 			sendAllEntitiesToClient(client);
 		}
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
-		this.pingSystem.sendPingToClient(client);
+		// this.pingSystem.sendPingToClient(client); No, give them time to warm up
 		playerJoinedGame(client);
 		appendToGameLog(client.playerData.playerName + " has joined");
 		gameStatusSystem.checkGameStatus(true);
@@ -654,7 +654,6 @@ ConsoleInputListener {
 			if (e.requiresProcessing()) {
 				this.entitiesForProcessing.add(e);
 			}
-
 		}
 		if (e instanceof PhysicalEntity) {
 			PhysicalEntity pe = (PhysicalEntity)e;

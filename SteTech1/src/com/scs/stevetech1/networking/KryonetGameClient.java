@@ -9,6 +9,7 @@ import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.server.Globals;
 import com.sun.media.jfxmedia.logging.Logger;
 
+import ssmith.lang.Functions;
 import ssmith.lang.NumberFunctions;
 
 public class KryonetGameClient implements IGameMessageClient {
@@ -76,33 +77,37 @@ public class KryonetGameClient implements IGameMessageClient {
 			Globals.p("Sending to server: " + msg);
 		}
 
-		if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+		if (Globals.RELEASE_MODE) {// || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+
 			if (msg.isReliable()) {
 				client.sendTCP(msg);
 			} else {
+				client.sendUDP(msg);
+			}
+			
+		} else {
+
+			if (msg.isReliable()) {
+				client.sendTCP(msg); // todo
+			} else {
 				if (!KryonetGameServer.isPacketDropped()) {
-					client.sendUDP(msg);
+					if (Globals.MAX_ARTIFICIAL_COMMS_DELAY <= 0) {
+						client.sendUDP(msg);
+					} else { 
+						Thread t = new Thread("CommsDelayThread") {
+
+							@Override
+							public void run() {
+								Functions.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
+								client.sendUDP(msg);
+							}
+
+						};
+						t.start();
+					}
 				}
 			}
-		} else {
-			Thread t = new Thread("CommsDelayThread") {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					if (msg.isReliable()) {
-						client.sendTCP(msg);
-					} else {
-						client.sendUDP(msg);
-					}
-				}
-			};
-			t.start();
 		}
-
 	}
 
 
