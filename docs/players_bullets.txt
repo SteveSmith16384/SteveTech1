@@ -10,3 +10,6 @@ Process:-
 * When the server receives the "fired" command, it fires its own projectile, and fast-forwards its position to where it should be in order for the server to be ahead of the shooting client, as per all other entities.
 * The server sends a message to all the clients saying that a bullet has been fired.  (The firing client ignores this message).
 * The other clients then launch their own projectiles, and are again responsible for its position, movement and removal.  No updates are sent by the server for it.
+
+Notes:
+* Bullets are attached to the rootNode before they are fired, but they have no visible children in their node until they are fired.
