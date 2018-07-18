@@ -41,7 +41,10 @@ public class HistoricalPositionCalculator {
 			}
 		}
 		//return null;
-		return serverPositionData.getMostRecent().position; // scs new
+		if (serverPositionData.hasAnyData()) {
+			return serverPositionData.getMostRecent().position; // scs new
+		}
+		return null;
 	}
 
 

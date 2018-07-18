@@ -12,7 +12,7 @@ import boxwars.weapons.PlayersGun;
 public class BoxWarsServerAvatar extends AbstractServerAvatar {
 	
 	public BoxWarsServerAvatar(BoxWarsServer _module, ClientData _client, IInputDevice _input, int eid) {
-		super(_module, BoxWarsServer.AVATAR, _client, _input, eid, new BoxAvatarModel(_module.getAssetManager()), 1f, 3f, 2f);
+		super(_module, BoxWarsServer.AVATAR, _client, _input, eid, new BoxAvatarModel(_module.getAssetManager()), 1f, 3f, 2f, 1);
 
 		IAbility abilityGun = new PlayersGun(_module, _module.getNextEntityID(), client.getPlayerID(), this, eid, 0, client);
 		_module.actuallyAddEntity(abilityGun);

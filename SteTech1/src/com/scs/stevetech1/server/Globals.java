@@ -14,9 +14,8 @@ public class Globals {
 	public static final boolean STRICT = !RECORD_VID;//true; // Extra checks (which will slow the game down)
 
 	// Lots of consts for specific debugging output
-	public static final boolean DEBUG_ENTITY_ADD_REMOVE = true;
-	public static final boolean DEBUG_ORPHAN_BULLETS = true;
-
+	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
+	public static final boolean DEBUG_ORPHAN_BULLETS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean NO_GRAVITY = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
@@ -69,7 +68,6 @@ public class Globals {
 	public static final int EXPLOSION_SHARD = -3;
 	public static final int EXPLOSION_SPHERE = -4;
 
-	
 	// Effects
 	public static final boolean TOONISH = false; // Outlines
 	public static final boolean BULLETS_CONES = true;

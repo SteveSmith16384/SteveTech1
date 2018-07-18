@@ -28,8 +28,9 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	private AbstractGameServer server;
 	public ClientData client;
 	private float maxHealth;
-
-	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, float _maxHealth, float _moveSpeed, float _jumpForce) {
+	private int playerTargetPriority;
+	
+	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, float _maxHealth, float _moveSpeed, float _jumpForce, int _playerTargetPriority) {
 		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.getSide(), anim);
 
 		if (game.isServer()) {
@@ -45,6 +46,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 		maxHealth = _maxHealth;
 		this.moveSpeed = _moveSpeed;
 		this.setJumpForce(_jumpForce);
+		playerTargetPriority = _playerTargetPriority;
 	}
 
 
@@ -205,7 +207,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	@Override
 	public int getTargetPriority() {
-		return 1;
+		return playerTargetPriority;
 	}
 
 

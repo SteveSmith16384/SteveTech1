@@ -165,7 +165,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public int clientStatus = STATUS_NOT_CONNECTED;
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
-	private int expectedEntities = -1;
+	private int expectedNumEntities = -1;
 
 	protected Node gameNode = new Node("GameNode");
 	protected Node debugNode = new Node("DebugNode");
@@ -204,7 +204,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage, String _gameServerIP, int _gamePort, //String _lobbyIP, int _lobbyPort, 
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
 		super();
-		
+
 		gameCode = _gameCode;
 		key = _key;
 
@@ -365,7 +365,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		}
 		checkConsoleInput();  //this.entities //this.entitiesForProcessing //this.gameNode 
-		
+
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
 			renderTime = serverTime - clientRenderDelayMillis; // Render from history
@@ -505,11 +505,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				}
 			}
-			
+
 			if (Globals.STRICT) {
 				checkNodesExistInEntities();
 			}
-			
+
 			loopTimer.waitForFinish(); // Keep clients and server running at same speed
 			loopTimer.start();
 
@@ -519,16 +519,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}
 
-	
+
 	private void checkNodesExistInEntities() {
 		if (Globals.STRICT) {
 			// Check all Nodes are in the entity list
 			for (Spatial n : this.gameNode.getChildren()) {
 				IEntity e = n.getUserData(Globals.ENTITY);
-				if (e instanceof PhysicalEntity) {
-					//PhysicalEntity pe = (PhysicalEntity)e;
-					if (!this.entities.containsValue(e)) {
-						Globals.pe("WARNING: Spatial " + e + " not found in entity list!");
+				if (e != null) {
+					if (e.getID() > 0) {
+						if (e instanceof PhysicalEntity) {
+							//PhysicalEntity pe = (PhysicalEntity)e;
+							if (!this.entities.containsValue(e)) {
+								Globals.pe("WARNING: Spatial " + e + " not found in entity list!");
+							}
+						}
 					}
 				}
 			}
@@ -537,7 +541,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	}
 
-	
+
 	protected boolean handleMessage(MyAbstractMessage message) {
 		if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
@@ -659,7 +663,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			Globals.p("Rcvd GeneralCommandMessage: " + msg.command.toString());
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
 				clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;
-				this.expectedEntities = -1;
+				this.expectedNumEntities = -1;
 				this.hud.appendToLog("All entities received");
 				allEntitiesSent();
 			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
@@ -722,7 +726,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				// Point camera fwds again
 				cam.lookAt(cam.getLocation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
 				cam.update();
-				
+
 				this.showPlayersWeapon();
 			}
 
@@ -788,12 +792,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof NumEntitiesMessage) {
 			NumEntitiesMessage nem = (NumEntitiesMessage)message;
-			expectedEntities = nem.num;
+			expectedNumEntities = nem.num;
 
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
-		
+
 		return true;
 	}
 
@@ -889,8 +893,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 
 		// Update % complete
-		if (this.expectedEntities > 0) {
-			float frac = (this.entities.size()) / (float)this.expectedEntities; //  this.entitiesToAddToGame.size()
+		if (this.expectedNumEntities > 0) {
+			float frac = (this.entities.size()) / (float)this.expectedNumEntities; //  this.entitiesToAddToGame.size()
 			int fracPC = (int)(frac * 100);
 			Globals.p("Entities: " + fracPC + "%");
 			this.hud.showMessage("Loading entities: " + fracPC + "%");
@@ -1217,6 +1221,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private void showPlayersWeapon() {
 		if (playersWeaponNode == null) {
 			playersWeaponNode = new Node("PlayersWeapon");
+		}
+		if (this.playersWeaponNode.getParent() == null) {
 			this.getGameNode().attachChild(playersWeaponNode);
 		}
 		playersWeaponNode.detachAllChildren();
@@ -1232,7 +1238,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		float diff = (gunRotSpeed * tpf_secs);
 
 		this.finishedReloadAt -= tpf_secs;
-		//Globals.p("reloading(" + started + ")"); // weaponModel.getLocalRotation();
 		if (started) {
 			if (gunAngle < 90) {
 				gunAngle += diff;
@@ -1350,9 +1355,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private void actuallyRemoveClientOnlyEntity(int id) {
 		IEntity e = getClientOnlyEntityById(id);//this.clientOnlyEntities.get(id);
 		if (e != null) {
-			//if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Actually removing CO entity " + id + ":" + e);
-			//}
+			}
 			this.clientOnlyEntities.remove(e);
 			if (e.requiresProcessing()) {
 				this.entitiesForProcessing.remove(e);

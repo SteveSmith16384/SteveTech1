@@ -76,10 +76,16 @@ public final class PositionCalculator {
 				return diff >= 0;
 			}
 		} catch (NoSuchElementException ex) {
-			// Why do we get this?
+			// No data!
 		}
 		return false;
 	}
+
+
+	public boolean hasAnyData() {
+		return this.positionData.size() > 0;
+	}
+
 
 	public EntityPositionData calcPosition(long serverTimeToUse, boolean warn) {
 		synchronized (positionData) {

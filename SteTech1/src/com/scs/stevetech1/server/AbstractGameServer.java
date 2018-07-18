@@ -190,7 +190,7 @@ ConsoleInputListener {
 		if (tpf_secs > 1) {
 			tpf_secs = 1;
 		}
-		
+
 		this.checkConsoleInput();
 
 		if (Globals.STRICT) {
@@ -796,17 +796,22 @@ ConsoleInputListener {
 	public ITargetable getTarget(PhysicalEntity shooter, int ourSide, float range, float viewAngleRads) {
 		ITargetable target = null;
 		int highestPri = -1;
+		float closestDist = 9999f;
 
 		for (IEntity e : entitiesForProcessing) {
 			if (e != shooter) {
 				if (e instanceof ITargetable) {
 					ITargetable t = (ITargetable)e;
-					if (t.getTargetPriority() > highestPri) {
+					if (t.getTargetPriority() >= highestPri) {
 						if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
 							PhysicalEntity pe = (PhysicalEntity)e;
-							if (shooter.canSee(pe, range, viewAngleRads)) {
-								target = t;
-								highestPri = t.getTargetPriority();
+							float dist = shooter.distance(pe);
+							if (t.getTargetPriority() > highestPri || dist < closestDist) {
+								if (shooter.canSee(pe, range, viewAngleRads)) {
+									target = t;
+									highestPri = t.getTargetPriority();
+									closestDist = dist;
+								}
 							}
 						}
 					}
@@ -827,7 +832,7 @@ ConsoleInputListener {
 		if (newStatus == SimpleGameData.ST_DEPLOYING) {
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
 			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities)); // Before we increment the game id!
-			
+
 			doNotSendAddRemoveEntityMsgs = true; // Prevent sending "remove entities" messages for all the entities
 			removeOldGame();
 			doNotSendAddRemoveEntityMsgs = false;
@@ -913,8 +918,8 @@ ConsoleInputListener {
 		//Globals.p("Received input: " + s);
 		this.consoleInput = s;
 	}
-	
-	
+
+
 	private void checkConsoleInput() {
 		try {
 			if (this.consoleInput != null) {

@@ -118,7 +118,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 		if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
 			client.sendMessage(new ClientGunReloadRequestMessage(this.getID()));
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
-			Globals.p("Sending ClientReloadingMessage");
+			//Globals.p("Sending ClientReloadingMessage");
 		}
 	}
 
