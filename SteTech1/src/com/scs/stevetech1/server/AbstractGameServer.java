@@ -1068,12 +1068,14 @@ ConsoleInputListener {
 		List<SimpleRigidBody<PhysicalEntity>> list = this.physicsController.getSRBsWithinRange(pos, range);
 		for (SimpleRigidBody<PhysicalEntity> srb : list) {
 			PhysicalEntity pe = (PhysicalEntity)srb.simpleEntity;
+			if (pe != exploder) { // DOn't damage ourselves (we'll get caught in a loopprobably)
 			if (pe instanceof IDamagable) {
 				if (pe.canSee(exploder, range, -1f)) {
 					IDamagable id = (IDamagable)pe;
 					id.damaged(damage, null, "Explosion");
 					Globals.p(pe + " was damaged " + damage + " by explosion");
 				}
+			}
 			}
 		}
 

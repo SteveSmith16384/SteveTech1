@@ -24,7 +24,7 @@ public class ExplosionSphere extends PhysicalEntity implements IProcessByClient 
 	private float timeLeft = 3f;//1.5f;
 	
 	public ExplosionSphere(IEntityController _game, float x, float y, float z, String tex) {
-		super(_game, _game.getNextEntityID(), Globals.EXPLOSION_SPHERE, "ExplosionSphere", true, false, true);
+		super(_game, _game.getNextEntityID(), Globals.EXPLOSION_SPHERE, "ExplosionSphere", true, false, false);
 
 		// todo  - this
 		Box box1 = new Box(1f, 1f, 1f);
