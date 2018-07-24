@@ -13,6 +13,7 @@ public class Globals {
 	public static final boolean HIDE_BELLS_WHISTLES = !RECORD_VID;
 	public static final boolean STRICT = !RECORD_VID;//true; // Extra checks (which will slow the game down)
 
+	public static final boolean SHOW_VIEW_FROM_KILLER_ON_DEATH = false;
 
 	// Lots of consts for specific debugging output
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
@@ -83,6 +84,7 @@ public class Globals {
 	public static final int SUBNODE_SIZE = 15;
 	public static final int DEF_VOL = 1;
 	public static final boolean REMOVE_DEAD_SOLDIERS = true;
+	public static final long HISTORY_DURATION = 5000; // todo - make same as avatar restart time
 
 	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*7;
 	public static final int KRYO_OBJECT_BUFFER_SIZE = 4096*3*24;

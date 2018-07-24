@@ -6,8 +6,7 @@ import com.jme3.math.Vector3f;
 public class EntityPositionData {
 
 	public long serverTimestamp;	
-	public Vector3f position = new Vector3f();	
-	//public Quaternion rotation = new Quaternion();
+	public Vector3f position = new Vector3f();
 
 	public EntityPositionData() {
 		super();

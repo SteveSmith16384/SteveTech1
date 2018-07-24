@@ -32,7 +32,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	public IHUD hud;
 	public Camera cam;
-	public PositionCalculator clientAvatarPositionData = new PositionCalculator(true, 500); // So we know where we were in the past to compare against where the server says we should have been
+	public PositionCalculator clientAvatarPositionData = new PositionCalculator(Globals.HISTORY_DURATION); // So we know where we were in the past to compare against where the server says we should have been
 	private Spatial debugNode;
 	public PhysicalEntity killer;
 
@@ -90,12 +90,22 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		}
 
 		if (!this.alive) {
-			// Position cam above avatar when they're dead
-			Vector3f vec = this.getWorldTranslation();
-			cam.getLocation().y = vec.y + 0.1f;
+			if (Globals.SHOW_VIEW_FROM_KILLER_ON_DEATH && this.killer != null) {
+				Vector3f vec = killer.getWorldTranslation();
+				cam.getLocation().x = vec.x;
+				cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
+				cam.getLocation().z = vec.z;
 
-			if (this.killer != null) {
-				cam.lookAt(killer.getWorldTranslation(), Vector3f.UNIT_Y);
+				cam.lookAt(this.getWorldTranslation(), Vector3f.UNIT_Y);
+				
+			} else {
+				// Position cam above avatar when they're dead
+				Vector3f vec = this.getWorldTranslation();
+				cam.getLocation().y = vec.y + 0.1f;
+
+				if (this.killer != null) {
+					cam.lookAt(killer.getWorldTranslation(), Vector3f.UNIT_Y);
+				}
 			}
 			cam.update();
 
@@ -162,11 +172,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				Globals.p("Server and client avatars dist: " + diff);
 			}
 			if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
-				//if (Globals.DEBUG_CLIENT_SERVER_FAR_APART) {
-					Globals.p("Server and client avatars very far apart, forcing move: " + diff);
-				//}
 				// They're so far out, just move them
-				this.setWorldTranslation(historicalPositionData.getMostRecent().position);
+				Globals.p("Server and client avatars very far apart, forcing move: " + diff);
+				Vector3f pos = historicalPositionData.getMostRecent().position;
+				Globals.p("Moving client to " + pos);
+				this.setWorldTranslation(pos);
 				this.simpleRigidBody.resetForces(); // Prevent from keeping falling
 			} else {
 				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;

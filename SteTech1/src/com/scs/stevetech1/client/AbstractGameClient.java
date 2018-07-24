@@ -179,6 +179,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private float mouseSens;
 	private String key;
 	private String consoleInput;
+	private boolean showHistory = false;
 
 	// Subnodes
 	private int nodeSize = Globals.SUBNODE_SIZE;
@@ -188,19 +189,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
 
-	/**
-	 * 
-	 * @param _gameCode
-	 * @param _key
-	 * @param appTitle
-	 * @param logoImage
-	 * @param _gameServerIP
-	 * @param _gamePort
-	 * @param _tickrateMillis
-	 * @param _clientRenderDelayMillis
-	 * @param _timeoutMillis
-	 * @param _mouseSens
-	 */
+
 	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage, String _gameServerIP, int _gamePort, //String _lobbyIP, int _lobbyPort, 
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
 		super();
@@ -368,7 +357,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
-			renderTime = serverTime - clientRenderDelayMillis; // Render from history
+			if (!this.showHistory) {
+				renderTime = serverTime - clientRenderDelayMillis; // Render from history
+			} else {
+				renderTime = serverTime - Globals.HISTORY_DURATION;
+			}
 
 			if (networkClient != null && networkClient.isConnected()) {
 
@@ -701,6 +694,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			if (killed == this.currentAvatar) {
 				this.playersWeaponNode.removeFromParent();
+				this.showHistory = true;
 			}
 
 		} else if (message instanceof EntityLaunchedMessage) {
@@ -723,6 +717,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 				//AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
 				currentAvatar.setAlive(true);
+				currentAvatar.killer = null;
+				this.showHistory = false;
+
 				// Point camera fwds again
 				cam.lookAt(cam.getLocation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
 				cam.update();
@@ -748,15 +745,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else if (message instanceof GameOverMessage) {
 			GameOverMessage gom = (GameOverMessage)message;
 			if (gom.winningSide == -1) {
-				//Globals.p("The game is a draw!");
 				hud.showMessage("The game is a draw!");
 				this.gameIsDrawn();
 			} else if (gom.winningSide == this.side) {
-				//Globals.p("You have won!");
 				hud.showMessage("You have won!");
 				this.playerHasWon();
 			} else {
-				//Globals.p("You have lost!");
 				hud.showMessage("You have won!");
 				this.playerHasLost();
 			}

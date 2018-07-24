@@ -1,5 +1,10 @@
 package ssmith.lang;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
+
 public class Functions {
 
 
@@ -10,8 +15,8 @@ public class Functions {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	public static String Exception2String(Throwable ex) {
 		StringBuffer str = new StringBuffer();
 		while (ex != null) {
@@ -30,6 +35,24 @@ public class Functions {
 		return str.toString();
 	}
 
+
+	public static String readAllFileFromJar(ClassLoader classLoader, String filename) throws FileNotFoundException {
+		StringBuilder result = new StringBuilder("");
+
+		//Get file from resources folder
+		//ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource(filename).getFile());
+
+		try (Scanner scanner = new Scanner(file)) {
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				result.append(line).append("\n");
+			}
+			scanner.close();
+		}
+
+		return result.toString();
+	}
 
 
 }
