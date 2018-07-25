@@ -1043,9 +1043,22 @@ ConsoleInputListener {
 	}
 
 
+	public void sendExpandingSphere(Vector3f pos) {
+		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
+
+		NewEntityData data = new NewEntityData();
+		data.type = Globals.EXPLOSION_SPHERE;
+		data.data.put("pos", pos);
+		nem.data.add(data);
+
+		gameNetworkServer.sendMessageToAll(nem);
+
+	}
+
+
 	public void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
 		this.moveEntityUntilItHitsSomething(pe, dir, 1f);
-		this.moveEntityUntilItHitsSomething(pe, dir, 0.1f);
+		this.moveEntityUntilItHitsSomething(pe, dir, 0.01f); // Was 0.1f, but spacecrates were floating
 	}
 
 
@@ -1069,13 +1082,13 @@ ConsoleInputListener {
 		for (SimpleRigidBody<PhysicalEntity> srb : list) {
 			PhysicalEntity pe = (PhysicalEntity)srb.simpleEntity;
 			if (pe != exploder) { // DOn't damage ourselves (we'll get caught in a loopprobably)
-			if (pe instanceof IDamagable) {
-				if (pe.canSee(exploder, range, -1f)) {
-					IDamagable id = (IDamagable)pe;
-					id.damaged(damage, null, "Explosion");
-					Globals.p(pe + " was damaged " + damage + " by explosion");
+				if (pe instanceof IDamagable) {
+					if (pe.canSee(exploder, range, -1f)) {
+						IDamagable id = (IDamagable)pe;
+						id.damaged(damage, null, "Explosion");
+						Globals.p(pe + " was damaged " + damage + " by explosion");
+					}
 				}
-			}
 			}
 		}
 

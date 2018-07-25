@@ -97,7 +97,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				cam.getLocation().z = vec.z;
 
 				cam.lookAt(this.getWorldTranslation(), Vector3f.UNIT_Y);
-				
+
 			} else {
 				// Position cam above avatar when they're dead
 				Vector3f vec = this.getWorldTranslation();
@@ -159,29 +159,30 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	// Client Avatars have their own special position calculator
 	@Override
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
-		/*if (Globals.ONLY_ADJUST_CLIENT_ON_MOVE && !super.playerWalked) { // Only adjust us if the player tried to move?
-			return;
-		}*/
-		if (Globals.TURN_OFF_CLIENT_POS_ADJ) {
-			return;
-		}
-		Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(historicalPositionData, clientAvatarPositionData, serverTimeToUse);
-		if (offset != null) {
-			float diff = offset.length();
-			if (Globals.SHOW_SERVER_CLIENT_AVATAR_DIST) {
-				Globals.p("Server and client avatars dist: " + diff);
+		if (this.isAlive()) {
+			if (Globals.TURN_OFF_CLIENT_POS_ADJ) {
+				return;
 			}
-			if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
-				// They're so far out, just move them
-				Globals.p("Server and client avatars very far apart, forcing move: " + diff);
-				Vector3f pos = historicalPositionData.getMostRecent().position;
-				Globals.p("Moving client to " + pos);
-				this.setWorldTranslation(pos);
-				this.simpleRigidBody.resetForces(); // Prevent from keeping falling
-			} else {
-				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-				simplePlayerControl.getAdditionalForce().addLocal(offset.mult(.8f));
+			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(historicalPositionData, clientAvatarPositionData, serverTimeToUse);
+			if (offset != null) {
+				float diff = offset.length();
+				if (Globals.SHOW_SERVER_CLIENT_AVATAR_DIST) {
+					Globals.p("Server and client avatars dist: " + diff);
+				}
+				if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
+					// They're so far out, just move them
+					Globals.p("Server and client avatars very far apart, forcing move: " + diff);
+					Vector3f pos = historicalPositionData.getMostRecent().position;
+					Globals.p("Moving client to " + pos);
+					this.setWorldTranslation(pos);
+					this.simpleRigidBody.resetForces(); // Prevent from keeping falling
+				} else {
+					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
+					simplePlayerControl.getAdditionalForce().addLocal(offset.mult(.8f));
+				}
 			}
+		} else {
+			super.calcPosition(serverTimeToUse, tpf_secs); // Showing history, so just show where server says we are
 		}
 	}
 

@@ -694,7 +694,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			if (killed == this.currentAvatar) {
 				this.playersWeaponNode.removeFromParent();
-				this.showHistory = true;
+				if (Globals.SHOW_VIEW_FROM_KILLER_ON_DEATH) {
+					this.showHistory = true;
+				}
 			}
 
 		} else if (message instanceof EntityLaunchedMessage) {

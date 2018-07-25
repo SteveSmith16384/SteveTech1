@@ -111,10 +111,10 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	@Override
 	public void damaged(float amt, IEntity collider, String reason) {
 		if (server.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
-			if (this.alive && invulnerableTimeSecs < 0) {
+			if (this.alive && invulnerableTimeSecs < 0 && this.getHealth() > 0) {
 				this.decHealth(amt);
 				if (this.getHealth() <= 0) {
-					IEntity killer = collider;//.getActualShooter();
+					IEntity killer = collider;//.getActualShooter(); todo
 					setDied(killer, reason);
 				} else {
 					Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);

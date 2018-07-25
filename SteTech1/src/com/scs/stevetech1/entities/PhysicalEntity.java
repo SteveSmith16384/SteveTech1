@@ -134,11 +134,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public void remove() {
 		if (!removed) {
 			if (simpleRigidBody != null) {
-				/*if (Globals.STRICT) {
-					if (this.game.getPhysicsController().containsSRB(simpleRigidBody) == false) {
-						Globals.pe("Warning - srb for " + this + " is not in list for removal");
-					}
-				}*/
 				this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
 				// simpleRigidBody = null;  Don't set it to null as it might be removed in mid-function
 				if (Globals.STRICT) {
@@ -170,7 +165,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public float distance(PhysicalEntity o) {
-		//return distance(o.getMainNode().getWorldTranslation());
 		return distance(o.getWorldTranslation());
 	}
 
@@ -182,19 +176,16 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public Vector3f getWorldTranslation() {
-		//return this.main_node.getWorldTranslation();  // 000?
 		return this.getMainNode().getLocalTranslation();
 	}
 
 
 	public void setWorldTranslation(Vector3f pos) {
-		//this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
 		this.setWorldTranslation(pos.x, pos.y, pos.z);
 	}
 
 
 	public void setWorldTranslation(float x, float z) {
-		//this.getMainNode().setLocalTranslation(x, this.getWorldTranslation().y, z);
 		this.setWorldTranslation(x, this.getWorldTranslation().y, z);
 	}
 
@@ -317,7 +308,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 * 
 	 * @param target
 	 * @param range
-	 * @param maxAngleRads Make negative to NOT check the angle
+	 * @param maxAngleRads If negative, don't check the angle
 	 * @return
 	 */
 	public boolean canSee(PhysicalEntity target, float range, float maxAngleRads) {
