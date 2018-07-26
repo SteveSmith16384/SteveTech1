@@ -21,4 +21,11 @@ public class TestGameServerAvatar extends AbstractServerAvatar {
 	}
 	
 
+	@Override
+	public void updateClientSideHealth(int amt) {
+		
+	}
+	
+
+
 }

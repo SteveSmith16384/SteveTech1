@@ -131,4 +131,12 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		return 0;
 	}
 
+
+	@Override
+	public void updateClientSideHealth(int amt) {
+		// Do nothing
+		
+	}
+	
+
 }

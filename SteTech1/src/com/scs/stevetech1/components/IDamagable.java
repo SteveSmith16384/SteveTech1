@@ -8,4 +8,6 @@ public interface IDamagable {
 	
 	float getHealth();
 	
+	void updateClientSideHealth(int amt); // e.g. update HUD
+	
 }

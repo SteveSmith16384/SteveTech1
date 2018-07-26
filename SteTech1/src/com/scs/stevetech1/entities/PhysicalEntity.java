@@ -16,6 +16,7 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimatedClientSide;
+import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
@@ -37,7 +38,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	protected Node mainNode;
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 	public PositionCalculator historicalPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
-	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
+	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction todo - make protected
 	
 	public boolean collideable = true; // Primarily used for ray checks, since that doesn't use the physics engine
 	public boolean blocksView; // Primarily used for canSee() ray checks, since that doesn't use the physics engine
@@ -465,6 +466,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				if (this instanceof IAnimatedClientSide) {
 					IAnimatedClientSide csa = (IAnimatedClientSide)this;
 					csa.setAnimCode_ClientSide(epd.animationCode);
+				}
+				if (this instanceof IDamagable) {
+					IDamagable id = (IDamagable)this;
+					id.updateClientSideHealth(epd.health);
+
 				}
 
 			}

@@ -4,7 +4,6 @@ import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
-import com.jme3.renderer.Camera.FrustumIntersect;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -15,8 +14,8 @@ import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IAvatarModel;
-import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IDontCollideWithComrades;
+import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.ISetRotation;
 import com.scs.stevetech1.hud.IHUD;
@@ -38,8 +37,6 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	// HUD
 	protected BitmapText hudNode;
 	private static BitmapFont font_small;
-	//private Vector3f tmpHudPos = new Vector3f();
-	//private Vector3f tmpScreenPos = new Vector3f();
 
 	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int _side, String _playersName) {
 		super(game, eid, type, "EnemyAvatar", true, false, true);
@@ -47,7 +44,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		anim = _anim;
 		playersName = _playersName;
 		side = _side;
-		
+
 		// Create box for collisions
 		Box box = new Box(anim.getSize().x/2, anim.getSize().y/2, anim.getSize().z/2);
 		Geometry bbGeom = new Geometry("bbGeom_" + entityName, box);
@@ -60,7 +57,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 		// Create model to look good
 		Spatial avatarModel = anim.createAndGetModel(side);
-		
+
 		// Contain model in a separate node so we can rotate it without losing the models own rotation
 		container = new Node();
 		container.attachChild(avatarModel); 
@@ -74,7 +71,6 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		font_small = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		hudNode = new BitmapText(font_small);
 		hudNode.setText(playersName);
-
 	}
 
 

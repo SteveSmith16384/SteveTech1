@@ -682,23 +682,24 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			EntityKilledMessage asm = (EntityKilledMessage) message;
 			PhysicalEntity killed = (PhysicalEntity)this.entities.get(asm.killedEntityID);
 			PhysicalEntity killer = (PhysicalEntity)this.entities.get(asm.killerEntityID);
-			if (killed.simpleRigidBody != null) {
-				this.physicsController.removeSimpleRigidBody(killed.simpleRigidBody);
-			}
-			if (killer == this.currentAvatar) {
-				Globals.p("You have killed " + killed);
-			}
-			if (killed instanceof IKillable) {
-				IKillable ik = (IKillable)killed;
-				ik.handleKilledOnClientSide(killer);
-			}
-			if (killed == this.currentAvatar) {
-				this.playersWeaponNode.removeFromParent();
-				if (Globals.SHOW_VIEW_FROM_KILLER_ON_DEATH) {
-					this.showHistory = true;
+			if (killed != null) {
+				if (killed.simpleRigidBody != null) {
+					this.physicsController.removeSimpleRigidBody(killed.simpleRigidBody);
+				}
+				if (killer == this.currentAvatar) {
+					Globals.p("You have killed " + killed);
+				}
+				if (killed instanceof IKillable) {
+					IKillable ik = (IKillable)killed;
+					ik.handleKilledOnClientSide(killer);
+				}
+				if (killed == this.currentAvatar) {
+					this.playersWeaponNode.removeFromParent();
+					if (Globals.SHOW_VIEW_FROM_KILLER_ON_DEATH) {
+						this.showHistory = true;
+					}
 				}
 			}
-
 		} else if (message instanceof EntityLaunchedMessage) {
 			/*if (Globals.DEBUG_SHOOTING) {
 				Globals.p("Received EntityLaunchedMessage");
@@ -717,7 +718,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			AvatarStartedMessage asm = (AvatarStartedMessage)message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
-				//AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
 				currentAvatar.setAlive(true);
 				currentAvatar.killer = null;
 				this.showHistory = false;
@@ -1443,6 +1443,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} catch (AssetNotFoundException ex) {
 			//ex.printStackTrace();
+		} catch (IllegalStateException ex) {
+			// No sound card
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

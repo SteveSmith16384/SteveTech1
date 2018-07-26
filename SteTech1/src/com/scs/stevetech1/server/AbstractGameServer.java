@@ -490,12 +490,9 @@ ConsoleInputListener {
 		Globals.p("------------------------------");
 		Globals.p("Starting new game ID " + gameData.gameID);
 
-		try {
-			doNotSendAddRemoveEntityMsgs = true; // Prevent sending new ent messages for all the entities
-			this.createGame();
-		} finally {
-			doNotSendAddRemoveEntityMsgs = false;
-		}
+		doNotSendAddRemoveEntityMsgs = true; // Prevent sending new ent messages for all the entities
+		this.createGame();
+		doNotSendAddRemoveEntityMsgs = false;
 
 		// Create avatars and send new entities to players
 		synchronized (this.clients) {
