@@ -1,9 +1,11 @@
 package ssmith.lang;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 public class Functions {
 
@@ -36,12 +38,11 @@ public class Functions {
 	}
 
 
-	public static String readAllFileFromJar(ClassLoader classLoader, String filename) throws FileNotFoundException {
+	public static String readAllFileFromJar(String filename) throws IOException {
 		StringBuilder result = new StringBuilder("");
 
 		//Get file from resources folder
-		//ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource(filename).getFile());
+		/*File file = new File(classLoader.getResource(filename).getFile());
 
 		try (Scanner scanner = new Scanner(file)) {
 			while (scanner.hasNextLine()) {
@@ -49,6 +50,14 @@ public class Functions {
 				result.append(line).append("\n");
 			}
 			scanner.close();
+		}*/
+		
+		InputStream inputStream = ClassLoader.getSystemClassLoader().getSystemResourceAsStream(filename);
+		InputStreamReader streamReader = new InputStreamReader(inputStream, "UTF-8");
+		BufferedReader in = new BufferedReader(streamReader);
+
+		for (String line; (line = in.readLine()) != null;) {
+			result.append(line).append("\n");
 		}
 
 		return result.toString();
