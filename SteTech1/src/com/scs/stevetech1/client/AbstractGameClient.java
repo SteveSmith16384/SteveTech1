@@ -227,7 +227,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		//settings.setAudioRenderer(null); // Todo Avoid error with no soundcard
 		//super.audioRenderer = null;
 
-		settings.setTitle(Globals.HIDE_BELLS_WHISTLES ? "Client" : appTitle);// + " (v" + Settings.VERSION + ")");
+		settings.setTitle(!Globals.RELEASE_MODE ? "Client" : appTitle);// + " (v" + Settings.VERSION + ")");
 		settings.setSettingsDialogImage(logoImage);
 
 		setSettings(settings);

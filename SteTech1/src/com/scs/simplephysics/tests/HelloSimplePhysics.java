@@ -226,7 +226,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 
 		//Material floorMaterial = new Material(getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 		Material floorMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-		TextureKey key3 = new TextureKey("Textures/grass.jpg");
+		TextureKey key3 = new TextureKey("Textures/grass.png");
 		key3.setGenerateMips(true);
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);

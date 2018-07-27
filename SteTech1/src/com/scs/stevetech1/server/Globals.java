@@ -10,7 +10,7 @@ public class Globals {
 	
 	public static final boolean RECORD_VID = false;
 	public static final boolean RELEASE_MODE = true; // Turn off simulated packet dropping etc...
-	public static final boolean HIDE_BELLS_WHISTLES = false;//!RECORD_VID;
+	//public static final boolean HIDE_BELLS_WHISTLES = false;//!RECORD_VID;
 	public static final boolean STRICT = false;//!RECORD_VID;//true; // Extra checks (which will slow the game down)
 
 	public static final boolean SHOW_VIEW_FROM_KILLER_ON_DEATH = false;

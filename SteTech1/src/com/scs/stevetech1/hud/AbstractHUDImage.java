@@ -35,10 +35,6 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 
 	@Override
 	public void processByClient(IClientApp client, float tpf) {
-		if (Globals.HIDE_BELLS_WHISTLES) {
-			this.remove();
-			return;
-		}
 		if (timeLeftSecs > 0) {
 			this.timeLeftSecs -= tpf;
 			if (this.timeLeftSecs <= 0) {
