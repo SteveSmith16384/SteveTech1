@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.runner.Computer;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
@@ -315,12 +317,6 @@ ConsoleInputListener {
 					}
 				}
 
-				boolean sendUpdates = sendEntityUpdatesInterval.hitInterval();
-				EntityUpdateMessage eum = null;
-				if (sendUpdates) {
-					eum = new EntityUpdateMessage();
-				}
-
 				if (Globals.STRICT) {
 					for(IEntity e : this.entities.values()) {
 						if (e.requiresProcessing()) {
@@ -331,6 +327,11 @@ ConsoleInputListener {
 					}
 				}
 
+				boolean sendUpdates = sendEntityUpdatesInterval.hitInterval();
+				EntityUpdateMessage eum = null;
+				if (sendUpdates) {
+					eum = new EntityUpdateMessage();
+				}
 
 				int numSent = 0;
 				// Loop through the entities
@@ -351,7 +352,15 @@ ConsoleInputListener {
 							PhysicalEntity physicalEntity = (PhysicalEntity)e;
 							//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 							if (sendUpdates) {
+								
+								if (Globals.DEBUG_CPU_HUD_TEXT) {
+									if (e.getName().equalsIgnoreCase("computer")) {
+										Globals.p("Sending computer update");
+									}
+								}								
+
 								if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless player's Avatar)
+									
 									eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
 									numSent++;
 									physicalEntity.sendUpdate = false;

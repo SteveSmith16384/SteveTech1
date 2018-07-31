@@ -39,7 +39,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 	public PositionCalculator historicalPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction todo - make protected
-	
+
 	public boolean collideable = true; // Primarily used for ray checks, since that doesn't use the physics engine
 	public boolean blocksView; // Primarily used for canSee() ray checks, since that doesn't use the physics engine
 	public long timeToAdd; // Client side only; when to add the entity to the game
@@ -62,9 +62,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		if (moves) {
 			historicalPositionData = new PositionCalculator(Globals.HISTORY_DURATION);
 		}
-		if (!game.isServer() && moves) {
-			chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(Globals.HISTORY_DURATION);
-		}
+		//if (!game.isServer() && moves) {  No, always create this as Computer's need health history
+		chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(Globals.HISTORY_DURATION);
+		//}
 	}
 
 

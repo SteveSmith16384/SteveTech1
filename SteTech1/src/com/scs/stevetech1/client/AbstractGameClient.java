@@ -13,6 +13,7 @@ import java.util.prefs.BackingStoreException;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
+import com.jme3.asset.AssetLoadException;
 import com.jme3.asset.AssetNotFoundException;
 import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.ClasspathLocator;
@@ -619,6 +620,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						if (Globals.DEBUG_NO_UPDATE_MSGS) {
 							Globals.p("Received EntityUpdateMessage for " + e);
 						}
+						if (Globals.DEBUG_CPU_HUD_TEXT) {
+							if (e.getName().equalsIgnoreCase("computer")) {
+								Globals.p("Sending computer update");
+							}
+						}								
 						PhysicalEntity pe = (PhysicalEntity)e;
 						pe.storePositionData(eud, mainmsg.timestamp);
 						if (pe.chronoUpdateData != null) {
@@ -1441,6 +1447,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			});
 
+		} catch (AssetLoadException ex) {
 		} catch (AssetNotFoundException ex) {
 			//ex.printStackTrace();
 		} catch (IllegalStateException ex) {

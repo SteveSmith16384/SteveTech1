@@ -13,9 +13,10 @@ public class Globals {
 	//public static final boolean HIDE_BELLS_WHISTLES = false;//!RECORD_VID;
 	public static final boolean STRICT = false;//!RECORD_VID;//true; // Extra checks (which will slow the game down)
 
-	public static final boolean SHOW_VIEW_FROM_KILLER_ON_DEATH = false;
+	public static final boolean DEBUG_MISSING_WON_MSG = true;
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_CPU_HUD_TEXT = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean DEBUG_ORPHAN_BULLETS = false;
@@ -73,6 +74,7 @@ public class Globals {
 	// Effects
 	public static final boolean TOONISH = false; // Outlines
 	public static final boolean BULLETS_CONES = true;
+	public static final boolean SHOW_VIEW_FROM_KILLER_ON_DEATH = false;
 
 	//----
 	public static final int PCENT_DROPPED_PACKETS = 10;

@@ -6,8 +6,6 @@ public class ChronologicalLookup<T extends ITimeStamped> {
 
 	private LinkedList<T> chronoData = new LinkedList<>(); // Newest entry is at the start
 
-	//private int maxEntries;
-	//private boolean cleardown;
 	private long historyLength;
 
 	public ChronologicalLookup(long _historyLength) {//boolean _cleardown, int _maxEntries) {
