@@ -31,7 +31,8 @@ public class ServerSideCollisionLogic {
 	private void checkForDamage(ICausesHarmOnContact choc, IDamagable id) {
 		if (server.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
 			if (choc.getSide() != id.getSide()) {
-				id.damaged(choc.getDamageCaused(), (IEntity)choc, "Hit by " + choc);
+				float damage = Math.max(0,  choc.getDamageCaused());
+				id.damaged(damage, (IEntity)choc, "Hit by " + choc);
 			}
 		}
 	}

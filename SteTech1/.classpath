@@ -6,7 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="libs/kryonet/jsonbeans-0.5.jar"/>
-	<classpathentry kind="lib" path="libs/kryonet/kryo-2.23.1-SNAPSHOT-all-debug.jar"/>
 	<classpathentry kind="lib" path="libs/jme-3.2-stable/core.jar"/>
 	<classpathentry kind="lib" path="libs/jme-3.2-stable/dense64.jar"/>
 	<classpathentry kind="lib" path="libs/jme-3.2-stable/denseC64.jar"/>
@@ -98,5 +97,8 @@
 	<classpathentry kind="lib" path="libs/jme-3.2-stable/stack-alloc.jar"/>
 	<classpathentry kind="lib" path="libs/jme-3.2-stable/vecmath.jar"/>
 	<classpathentry kind="lib" path="libs/jme-3.2-stable/xpp3.jar"/>
+	<classpathentry kind="lib" path="libs/kryonet/minlog-1.3.0.jar"/>
+	<classpathentry kind="lib" path="libs/kryonet/objenesis-2.6.jar"/>
+	<classpathentry kind="lib" path="libs/kryonet/reflectasm-1.11.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

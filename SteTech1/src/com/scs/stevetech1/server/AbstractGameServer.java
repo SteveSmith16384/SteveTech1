@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.runner.Computer;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
@@ -315,12 +317,6 @@ ConsoleInputListener {
 					}
 				}
 
-				boolean sendUpdates = sendEntityUpdatesInterval.hitInterval();
-				EntityUpdateMessage eum = null;
-				if (sendUpdates) {
-					eum = new EntityUpdateMessage();
-				}
-
 				if (Globals.STRICT) {
 					for(IEntity e : this.entities.values()) {
 						if (e.requiresProcessing()) {
@@ -331,6 +327,11 @@ ConsoleInputListener {
 					}
 				}
 
+				boolean sendUpdates = sendEntityUpdatesInterval.hitInterval();
+				EntityUpdateMessage eum = null;
+				if (sendUpdates) {
+					eum = new EntityUpdateMessage();
+				}
 
 				int numSent = 0;
 				// Loop through the entities
@@ -351,7 +352,15 @@ ConsoleInputListener {
 							PhysicalEntity physicalEntity = (PhysicalEntity)e;
 							//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 							if (sendUpdates) {
+								
+								if (Globals.DEBUG_CPU_HUD_TEXT) {
+									if (e.getName().equalsIgnoreCase("computer")) {
+										Globals.p("Sending computer update");
+									}
+								}								
+
 								if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless player's Avatar)
+									
 									eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
 									numSent++;
 									physicalEntity.sendUpdate = false;
@@ -490,12 +499,9 @@ ConsoleInputListener {
 		Globals.p("------------------------------");
 		Globals.p("Starting new game ID " + gameData.gameID);
 
-		try {
-			doNotSendAddRemoveEntityMsgs = true; // Prevent sending new ent messages for all the entities
-			this.createGame();
-		} finally {
-			doNotSendAddRemoveEntityMsgs = false;
-		}
+		doNotSendAddRemoveEntityMsgs = true; // Prevent sending new ent messages for all the entities
+		this.createGame();
+		doNotSendAddRemoveEntityMsgs = false;
 
 		// Create avatars and send new entities to players
 		synchronized (this.clients) {
@@ -1043,9 +1049,22 @@ ConsoleInputListener {
 	}
 
 
+	public void sendExpandingSphere(Vector3f pos) {
+		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
+
+		NewEntityData data = new NewEntityData();
+		data.type = Globals.EXPLOSION_SPHERE;
+		data.data.put("pos", pos);
+		nem.data.add(data);
+
+		gameNetworkServer.sendMessageToAll(nem);
+
+	}
+
+
 	public void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
 		this.moveEntityUntilItHitsSomething(pe, dir, 1f);
-		this.moveEntityUntilItHitsSomething(pe, dir, 0.1f);
+		this.moveEntityUntilItHitsSomething(pe, dir, 0.01f); // Was 0.1f, but spacecrates were floating
 	}
 
 
@@ -1068,11 +1087,13 @@ ConsoleInputListener {
 		List<SimpleRigidBody<PhysicalEntity>> list = this.physicsController.getSRBsWithinRange(pos, range);
 		for (SimpleRigidBody<PhysicalEntity> srb : list) {
 			PhysicalEntity pe = (PhysicalEntity)srb.simpleEntity;
-			if (pe instanceof IDamagable) {
-				if (pe.canSee(exploder, range, -1f)) {
-					IDamagable id = (IDamagable)pe;
-					id.damaged(damage, null, "Explosion");
-					Globals.p(pe + " was damaged " + damage + " by explosion");
+			if (pe != exploder) { // DOn't damage ourselves (we'll get caught in a loopprobably)
+				if (pe instanceof IDamagable) {
+					if (pe.canSee(exploder, range, -1f)) {
+						IDamagable id = (IDamagable)pe;
+						id.damaged(damage, null, "Explosion");
+						Globals.p(pe + " was damaged " + damage + " by explosion");
+					}
 				}
 			}
 		}

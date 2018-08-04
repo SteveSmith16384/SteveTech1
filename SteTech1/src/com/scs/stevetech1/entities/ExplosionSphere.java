@@ -7,7 +7,9 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -21,30 +23,29 @@ import ssmith.lang.NumberFunctions;
 
 public class ExplosionSphere extends PhysicalEntity implements IProcessByClient {
 
-	private float timeLeft = 3f;//1.5f;
+	private static final float SIZE_INC = 1.05f;
 	
-	public ExplosionSphere(IEntityController _game, float x, float y, float z, String tex) {
-		super(_game, _game.getNextEntityID(), Globals.EXPLOSION_SPHERE, "ExplosionSphere", true, false, true);
+	private Geometry ball_geo;
+	private float currentRad = 1;
+	
+	public ExplosionSphere(IEntityController _game, float x, float y, float z) {//, String tex) {
+		super(_game, _game.getNextEntityID(), Globals.EXPLOSION_SPHERE, "ExplosionSphere", true, false, false);
 
-		// todo  - this
-		Box box1 = new Box(1f, 1f, 1f);
-		Geometry geometry = new Geometry("Crate", box1);
-		TextureKey key3 = new TextureKey(tex);//"Textures/sun.jpg");
-		key3.setGenerateMips(true);
+		Sphere sphere = new Sphere(16, 16, currentRad, true, false);
+		ball_geo = new Geometry("ExplosionSphere", sphere);
+		//TextureKey key3 = new TextureKey( "Textures/sun.jpg");
+		TextureKey key3 = new TextureKey( "Textures/roblox.png");
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
-		tex3.setWrap(WrapMode.Repeat);
-
-		Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+		Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
 		floor_mat.setTexture("DiffuseMap", tex3);
-		geometry.setMaterial(floor_mat);
+		ball_geo.setMaterial(floor_mat);
+
+		this.mainNode.attachChild(ball_geo);
+		this.mainNode.setLocalTranslation(x, y, z);
 		
-		floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha); 
-		geometry.setQueueBucket(Bucket.Transparent);
+		ball_geo.setQueueBucket(Bucket.Transparent);
+		floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 
-		this.mainNode.attachChild(geometry);
-		mainNode.setLocalTranslation(x, y, z);
-
-		geometry.setUserData(Globals.ENTITY, this);
 		mainNode.setUserData(Globals.ENTITY, this);
 
 	}
@@ -52,16 +53,10 @@ public class ExplosionSphere extends PhysicalEntity implements IProcessByClient 
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
-		this.simpleRigidBody.process(tpf_secs);
-		//Settings.p("Pos: " + this.getLocation());
-		timeLeft -= tpf_secs;
-		if (timeLeft <= 0) {
+		ball_geo.scale(SIZE_INC);
+		if (ball_geo.getWorldScale().x > 5) {
+			Globals.p("Removed sphere");
 			this.remove();
-			if (Globals.STRICT) {
-				if (this.getMainNode().getParent() != null) {
-					Globals.pe("Warning: still have a parent!");
-				}
-			}
 		}
 	}
 

@@ -161,4 +161,11 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		return 0;
 	}
 
+
+	@Override
+	public void updateClientSideHealth(int amt) {
+		
+	}
+	
+
 }

@@ -1,5 +1,6 @@
 package com.scs.undercoveragent.entities;
 
+import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.input.IInputDevice;
@@ -11,7 +12,7 @@ import com.scs.undercoveragent.UASimplePlayerData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 import com.scs.undercoveragent.models.SnowmanModel;
 
-public class SnowmanServerAvatar extends AbstractServerAvatar {
+public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebrisTexture {
 
 	public SnowmanServerAvatar(IEntityController _module, ClientData client, IInputDevice _input, int eid) {
 		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), 2f, 3f, 2f, 0);
@@ -66,5 +67,29 @@ public class SnowmanServerAvatar extends AbstractServerAvatar {
 		this.sendStatusUpdateMessage(false);
 	}
 
+
+	@Override
+	public String getDebrisTexture() {
+		return "Textures/snow.jpg";
+	}
+
+	
+	@Override
+	public float getMinDebrisSize() {
+		return 0.001f;
+	}
+
+
+	@Override
+	public float getMaxDebrisSize() {
+		return 0.004f;
+	}
+
+
+	@Override
+	public void updateClientSideHealth(int amt) {
+		
+	}
+	
 
 }

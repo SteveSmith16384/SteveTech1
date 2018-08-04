@@ -13,6 +13,7 @@ import java.util.prefs.BackingStoreException;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
+import com.jme3.asset.AssetLoadException;
 import com.jme3.asset.AssetNotFoundException;
 import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.ClasspathLocator;
@@ -179,6 +180,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private float mouseSens;
 	private String key;
 	private String consoleInput;
+	private boolean showHistory = false;
 
 	// Subnodes
 	private int nodeSize = Globals.SUBNODE_SIZE;
@@ -188,19 +190,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private AnimationSystem animSystem;
 	private ClientEntityLauncherSystem launchSystem;
 
-	/**
-	 * 
-	 * @param _gameCode
-	 * @param _key
-	 * @param appTitle
-	 * @param logoImage
-	 * @param _gameServerIP
-	 * @param _gamePort
-	 * @param _tickrateMillis
-	 * @param _clientRenderDelayMillis
-	 * @param _timeoutMillis
-	 * @param _mouseSens
-	 */
+
 	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage, String _gameServerIP, int _gamePort, //String _lobbyIP, int _lobbyPort, 
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
 		super();
@@ -238,7 +228,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		//settings.setAudioRenderer(null); // Todo Avoid error with no soundcard
 		//super.audioRenderer = null;
 
-		settings.setTitle(Globals.HIDE_BELLS_WHISTLES ? "Client" : appTitle);// + " (v" + Settings.VERSION + ")");
+		settings.setTitle(!Globals.RELEASE_MODE ? "Client" : appTitle);// + " (v" + Settings.VERSION + ")");
 		settings.setSettingsDialogImage(logoImage);
 
 		setSettings(settings);
@@ -368,7 +358,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
-			renderTime = serverTime - clientRenderDelayMillis; // Render from history
+			if (!this.showHistory) {
+				renderTime = serverTime - clientRenderDelayMillis; // Render from history
+			} else {
+				renderTime = serverTime - Globals.HISTORY_DURATION;
+			}
 
 			if (networkClient != null && networkClient.isConnected()) {
 
@@ -626,6 +620,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						if (Globals.DEBUG_NO_UPDATE_MSGS) {
 							Globals.p("Received EntityUpdateMessage for " + e);
 						}
+						if (Globals.DEBUG_CPU_HUD_TEXT) {
+							if (e.getName().equalsIgnoreCase("computer")) {
+								Globals.p("Sending computer update");
+							}
+						}								
 						PhysicalEntity pe = (PhysicalEntity)e;
 						pe.storePositionData(eud, mainmsg.timestamp);
 						if (pe.chronoUpdateData != null) {
@@ -689,20 +688,24 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			EntityKilledMessage asm = (EntityKilledMessage) message;
 			PhysicalEntity killed = (PhysicalEntity)this.entities.get(asm.killedEntityID);
 			PhysicalEntity killer = (PhysicalEntity)this.entities.get(asm.killerEntityID);
-			if (killed.simpleRigidBody != null) {
-				this.physicsController.removeSimpleRigidBody(killed.simpleRigidBody);
+			if (killed != null) {
+				if (killed.simpleRigidBody != null) {
+					this.physicsController.removeSimpleRigidBody(killed.simpleRigidBody);
+				}
+				if (killer == this.currentAvatar) {
+					Globals.p("You have killed " + killed);
+				}
+				if (killed instanceof IKillable) {
+					IKillable ik = (IKillable)killed;
+					ik.handleKilledOnClientSide(killer);
+				}
+				if (killed == this.currentAvatar) {
+					this.playersWeaponNode.removeFromParent();
+					if (Globals.SHOW_VIEW_FROM_KILLER_ON_DEATH) {
+						this.showHistory = true;
+					}
+				}
 			}
-			if (killer == this.currentAvatar) {
-				Globals.p("You have killed " + killed);
-			}
-			if (killed instanceof IKillable) {
-				IKillable ik = (IKillable)killed;
-				ik.handleKilledOnClientSide(killer);
-			}
-			if (killed == this.currentAvatar) {
-				this.playersWeaponNode.removeFromParent();
-			}
-
 		} else if (message instanceof EntityLaunchedMessage) {
 			/*if (Globals.DEBUG_SHOOTING) {
 				Globals.p("Received EntityLaunchedMessage");
@@ -721,8 +724,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			AvatarStartedMessage asm = (AvatarStartedMessage)message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
-				//AbstractAvatar avatar = (AbstractAvatar)this.entities.get(asm.entityID);
 				currentAvatar.setAlive(true);
+				currentAvatar.killer = null;
+				this.showHistory = false;
+
 				// Point camera fwds again
 				cam.lookAt(cam.getLocation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
 				cam.update();
@@ -748,15 +753,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else if (message instanceof GameOverMessage) {
 			GameOverMessage gom = (GameOverMessage)message;
 			if (gom.winningSide == -1) {
-				//Globals.p("The game is a draw!");
 				hud.showMessage("The game is a draw!");
 				this.gameIsDrawn();
 			} else if (gom.winningSide == this.side) {
-				//Globals.p("You have won!");
 				hud.showMessage("You have won!");
 				this.playerHasWon();
 			} else {
-				//Globals.p("You have lost!");
 				hud.showMessage("You have won!");
 				this.playerHasLost();
 			}
@@ -1445,8 +1447,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			});
 
+		} catch (AssetLoadException ex) {
 		} catch (AssetNotFoundException ex) {
 			//ex.printStackTrace();
+		} catch (IllegalStateException ex) {
+			// No sound card
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

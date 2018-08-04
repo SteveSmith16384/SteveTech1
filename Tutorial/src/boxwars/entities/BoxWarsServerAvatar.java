@@ -18,6 +18,13 @@ public class BoxWarsServerAvatar extends AbstractServerAvatar {
 		_module.actuallyAddEntity(abilityGun);
 		
 	}
+
+
+	@Override
+	public void updateClientSideHealth(int amt) {
+		// Do nothing
+		
+	}
 	
 
 }

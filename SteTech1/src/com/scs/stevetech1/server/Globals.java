@@ -9,11 +9,15 @@ import ssmith.lang.Functions;
 public class Globals {
 	
 	public static final boolean RECORD_VID = false;
-	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
-	public static final boolean HIDE_BELLS_WHISTLES = !RECORD_VID;
-	public static final boolean STRICT = !RECORD_VID;//true; // Extra checks (which will slow the game down)
+	public static final boolean RELEASE_MODE = true; // Turn off simulated packet dropping etc...
+	//public static final boolean HIDE_BELLS_WHISTLES = false;//!RECORD_VID;
+	public static final boolean STRICT = false;//!RECORD_VID;//true; // Extra checks (which will slow the game down)
+
+	public static final boolean DEBUG_MISSING_WON_MSG = true;
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_CPU_HUD_TEXT = false;
+	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean DEBUG_ORPHAN_BULLETS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
@@ -46,7 +50,6 @@ public class Globals {
 	public static final boolean DEBUG_CLIENT_SERVER_FAR_APART = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean SHOW_AVATAR_POS = false;
-	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;
 	public static final boolean TURN_OFF_CLIENT_POS_ADJ = false;
@@ -71,17 +74,19 @@ public class Globals {
 	// Effects
 	public static final boolean TOONISH = false; // Outlines
 	public static final boolean BULLETS_CONES = true;
+	public static final boolean SHOW_VIEW_FROM_KILLER_ON_DEATH = false;
 
 	//----
 	public static final int PCENT_DROPPED_PACKETS = 10;
-	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 50; //0;
-	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 100;
+	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;//50; //0;
+	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0;//100;
 	//----
 	
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
 	public static final int SUBNODE_SIZE = 15;
 	public static final int DEF_VOL = 1;
 	public static final boolean REMOVE_DEAD_SOLDIERS = true;
+	public static final long HISTORY_DURATION = 5000; // todo - make same as avatar restart time
 
 	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*7;
 	public static final int KRYO_OBJECT_BUFFER_SIZE = 4096*3*24;

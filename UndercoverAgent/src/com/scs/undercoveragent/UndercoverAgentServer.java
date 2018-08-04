@@ -103,7 +103,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	public void moveAvatarToStartPosition(AbstractAvatar avatar) {
-		float startHeight = 3f; // Must be higher than the highest entity so they don't start "inside" something else
+		float startHeight = 3f;
 		if (Globals.PLAYERS_START_IN_CORNER) {
 			avatar.setWorldTranslation(new Vector3f(3f, startHeight, 3f + (avatar.playerID*2)));
 		} else {

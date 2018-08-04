@@ -3,22 +3,24 @@ package com.scs.stevetech1.shared;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.server.Globals;
 
 public final class PositionCalculator {
 
 	private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // Newest entry is at the start
-	private LinkedList<EntityPositionData> oldPositionData = new LinkedList<>();
-	private int maxEntries;
-	private boolean cleardown;
+	private LinkedList<EntityPositionData> oldPositionData = new LinkedList<>(); // Keep a cache of objects to re-use
 
-	public PositionCalculator(boolean _cleardown, int _maxEntries) {
+	//private int maxEntries;
+	//private boolean cleardown;
+	private long historyLength;
+
+	public PositionCalculator(long _historyLength) {//boolean _cleardown) {//, int _maxEntries) {
 		super();
 
-		maxEntries = _maxEntries;
-		cleardown = _cleardown;
+		//maxEntries = _maxEntries;
+		//cleardown = _cleardown;
+		historyLength = _historyLength;
 	}
 
 
@@ -33,38 +35,33 @@ public final class PositionCalculator {
 
 
 	public void addPositionData(Vector3f pos, long time) {
-		//long diff = System.currentTimeMillis() - time;
-
 		EntityPositionData newData = null;
 		if (this.oldPositionData.size() > 0) {
-			newData = this.oldPositionData.removeLast();
+			newData = this.oldPositionData.removeLast(); // Re-use object from cache
 		} else {
 			newData = new EntityPositionData();
 		}
 		newData.position.set(pos);
-		/*if (q != null) {
-			newData.rotation.set(q);
-		}*/
 		newData.serverTimestamp = time;
 
-		synchronized (positionData) {
-			boolean added = false;
-			for(int i=0 ; i<this.positionData.size() ; i++) { // Goes backwards in time, number gets smaller
-				EntityPositionData epd = this.positionData.get(i);
-				if (!added) {
-					if (newData.serverTimestamp > epd.serverTimestamp) {
-						positionData.add(i, newData);
-						added = true;
-						break;
-					}
+		//synchronized (positionData) {
+		boolean added = false;
+		for(int i=0 ; i<this.positionData.size() ; i++) { // Goes backwards in time, number gets smaller
+			EntityPositionData epd = this.positionData.get(i);
+			if (!added) {
+				if (newData.serverTimestamp > epd.serverTimestamp) {
+					positionData.add(i, newData);
+					added = true;
+					break;
 				}
 			}
-			if (!added) {
-				// Add to end
-				positionData.add(newData);
-			}
-			this.cleardown(maxEntries);
 		}
+		if (!added) {
+			// Add to end
+			positionData.add(newData);
+		}
+		this.cleardown(time);
+		//}
 	}
 
 
@@ -91,12 +88,12 @@ public final class PositionCalculator {
 		synchronized (positionData) {
 			if (this.positionData.size() > 0) {
 				if (this.positionData.getFirst().serverTimestamp < serverTimeToUse) {
-					// Requested time is too soon
+					// Requested time is too recent
 					if (warn) {
 						//long diff = System.currentTimeMillis() - serverTimeToUse;
 						long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
 						//Globals.p("Warning: Requested time is " + startDiff + " too soon");
-						Globals.p(startDiff + " too soon!\n" + this.toString(serverTimeToUse));
+						Globals.p(startDiff + " too recent!\n" + this.toString(serverTimeToUse));
 					}
 					return this.positionData.getFirst(); // Our selected time is too soon!
 				} else if (this.positionData.getLast().serverTimestamp > serverTimeToUse) {
@@ -113,9 +110,9 @@ public final class PositionCalculator {
 				for(EntityPositionData secondEPD : this.positionData) { // Time gets earlier, number goes down
 					if (firstEPD != null) {
 						if (firstEPD.serverTimestamp >= serverTimeToUse && secondEPD.serverTimestamp <= serverTimeToUse) {
-							if (cleardown) {
+							/*if (cleardown) {
 								this.cleardown(pos+4);
-							}
+							}*/
 							return firstEPD.getInterpol(secondEPD, serverTimeToUse);
 						}
 					}
@@ -130,11 +127,19 @@ public final class PositionCalculator {
 	}
 
 
-	private void cleardown(int num) {
-		if (num >= 0) {
-			while (this.positionData.size() > num) {
+	private void cleardown(long currentTime) {
+		/*while (this.positionData.size() > num) {
 				EntityPositionData epd = this.positionData.removeLast();
 				this.oldPositionData.add(epd);
+			}*/
+		long thresh = currentTime - this.historyLength;
+		while (this.positionData.size() > 100) { // Keep at least X amount
+			EntityPositionData epd = this.positionData.getLast();
+			if (epd.serverTimestamp < thresh) {
+				this.positionData.removeLast();
+				this.oldPositionData.add(epd);
+			} else {
+				break;			
 			}
 		}
 	}
@@ -142,9 +147,9 @@ public final class PositionCalculator {
 
 	public void clear() {
 		this.oldPositionData.addAll(this.positionData);
-		synchronized (positionData) {
-			positionData.clear();
-		}
+		//synchronized (positionData) {
+		positionData.clear();
+		//}
 	}
 
 

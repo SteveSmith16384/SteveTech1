@@ -15,4 +15,12 @@ public class ServerAvatarEntity extends AbstractServerAvatar {
 		UnitTestAbility ability = new UnitTestAbility(_module, _module.getNextEntityID(), _client.getPlayerID(), this, eid);
 		_module.addEntity(ability);
 	}
+
+
+	@Override
+	public void updateClientSideHealth(int amt) {
+		
+	}
+	
+
 }

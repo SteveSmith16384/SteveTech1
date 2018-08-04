@@ -16,6 +16,7 @@ import com.jme3.scene.Spatial;
 import com.scs.simplephysics.ISimpleEntity;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimatedClientSide;
+import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
@@ -37,7 +38,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	protected Node mainNode;
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 	public PositionCalculator historicalPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
-	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
+	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction todo - make protected
+
 	public boolean collideable = true; // Primarily used for ray checks, since that doesn't use the physics engine
 	public boolean blocksView; // Primarily used for canSee() ray checks, since that doesn't use the physics engine
 	public long timeToAdd; // Client side only; when to add the entity to the game
@@ -58,11 +60,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		mainNode = new Node(entityName + "_MainNode_" + id);
 
 		if (moves) {
-			historicalPositionData = new PositionCalculator(true, 100);
+			historicalPositionData = new PositionCalculator(Globals.HISTORY_DURATION);
 		}
-		if (!game.isServer() && moves) {
-			chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(true, 100);
-		}
+		//if (!game.isServer() && moves) {  No, always create this as Computer's need health history
+		chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(Globals.HISTORY_DURATION);
+		//}
 	}
 
 
@@ -133,11 +135,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public void remove() {
 		if (!removed) {
 			if (simpleRigidBody != null) {
-				/*if (Globals.STRICT) {
-					if (this.game.getPhysicsController().containsSRB(simpleRigidBody) == false) {
-						Globals.pe("Warning - srb for " + this + " is not in list for removal");
-					}
-				}*/
 				this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
 				// simpleRigidBody = null;  Don't set it to null as it might be removed in mid-function
 				if (Globals.STRICT) {
@@ -169,7 +166,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public float distance(PhysicalEntity o) {
-		//return distance(o.getMainNode().getWorldTranslation());
 		return distance(o.getWorldTranslation());
 	}
 
@@ -181,19 +177,16 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public Vector3f getWorldTranslation() {
-		//return this.main_node.getWorldTranslation();  // 000?
 		return this.getMainNode().getLocalTranslation();
 	}
 
 
 	public void setWorldTranslation(Vector3f pos) {
-		//this.getMainNode().setLocalTranslation(pos.x, pos.y, pos.z);
 		this.setWorldTranslation(pos.x, pos.y, pos.z);
 	}
 
 
 	public void setWorldTranslation(float x, float z) {
-		//this.getMainNode().setLocalTranslation(x, this.getWorldTranslation().y, z);
 		this.setWorldTranslation(x, this.getWorldTranslation().y, z);
 	}
 
@@ -316,7 +309,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 * 
 	 * @param target
 	 * @param range
-	 * @param maxAngleRads Make negative to NOT check the angle
+	 * @param maxAngleRads If negative, don't check the angle
 	 * @return
 	 */
 	public boolean canSee(PhysicalEntity target, float range, float maxAngleRads) {
@@ -473,6 +466,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				if (this instanceof IAnimatedClientSide) {
 					IAnimatedClientSide csa = (IAnimatedClientSide)this;
 					csa.setAnimCode_ClientSide(epd.animationCode);
+				}
+				if (this instanceof IDamagable) {
+					IDamagable id = (IDamagable)this;
+					id.updateClientSideHealth(epd.health);
+
 				}
 
 			}

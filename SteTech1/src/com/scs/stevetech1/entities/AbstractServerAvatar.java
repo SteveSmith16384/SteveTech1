@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.IAnimatedServerSide;
 import com.scs.stevetech1.components.IAvatarModel;
+import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
@@ -111,10 +112,17 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	@Override
 	public void damaged(float amt, IEntity collider, String reason) {
 		if (server.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
-			if (this.alive && invulnerableTimeSecs < 0) {
+			if (this.alive && invulnerableTimeSecs < 0 && this.getHealth() > 0) {
 				this.decHealth(amt);
 				if (this.getHealth() <= 0) {
-					IEntity killer = collider;//.getActualShooter();
+					IEntity killer = collider;
+					if (collider instanceof ICausesHarmOnContact) {
+						ICausesHarmOnContact choc = (ICausesHarmOnContact)collider;
+						killer = choc.getActualShooter();
+						if (killer == null) {
+							killer = collider;
+						}
+					}
 					setDied(killer, reason);
 				} else {
 					Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);

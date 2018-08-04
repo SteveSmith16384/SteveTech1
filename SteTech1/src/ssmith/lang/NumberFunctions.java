@@ -12,8 +12,12 @@ public class NumberFunctions {
 
 	
 	public static int rnd(int a, int b) {
-		int var = b + 1 - a;
-		return random.nextInt(var) + a;
+		try {
+			int var = b + 1 - a;
+			return random.nextInt(var) + a;
+		} catch (Exception ex) {
+			throw new RuntimeException("Error trying to create rnd number from " + a + " to " + b, ex);
+		}
 	}
 
 	

@@ -11,7 +11,7 @@ import com.scs.stevetech1.server.Globals;
 public class ServerGameStatusSystem {
 
 	private AbstractGameServer server;
-	private long endOfCurrentStatus = -1;
+	//private long endOfCurrentStatus = -1;
 
 	public ServerGameStatusSystem(AbstractGameServer _server) {
 		super();
