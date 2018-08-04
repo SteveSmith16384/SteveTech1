@@ -40,7 +40,7 @@ public class ByteBufferOutput extends Output {
 
 	/** Creates an uninitialized Output, {@link #setBuffer(ByteBuffer)} must be called before the Output is used. */
 	public ByteBufferOutput () {
-		super(Util.maxArraySize, Util.maxArraySize);
+		super(16384, Util.maxArraySize); // scs
 	}
 
 	/** Creates a new Output for writing to a direct {@link ByteBuffer}.
