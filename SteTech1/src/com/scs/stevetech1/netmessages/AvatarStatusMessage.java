@@ -23,9 +23,8 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 		
 		this.entityID = avatar.getID();
 		this.health = avatar.getHealth();
-		//this.score = client.getScore();
-		this.moveSpeed = avatar.moveSpeed;
-		this.jumpForce = avatar.getJumpForce();
+		//this.moveSpeed = avatar.moveSpeed;
+		//this.jumpForce = avatar.getJumpForce();
 		damaged = _damaged;
 		
 	}

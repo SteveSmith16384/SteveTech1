@@ -10,6 +10,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.simplephysics.SimpleCharacterControl;
+import com.scs.stevetech1.avatartypes.IAvatarControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.HistoricalPositionCalculator;
 import com.scs.stevetech1.client.IClientApp;
@@ -37,13 +38,13 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public PhysicalEntity killer;
 
 	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
-			float x, float y, float z, int side, IAvatarModel avatarModel, float _moveSpeed, float _jumpSpeed) {
-		super(_client, avatarType, _playerID, _input, eid, side, avatarModel);
+			float x, float y, float z, int side, IAvatarModel avatarModel, IAvatarControl _avatarControl) {
+		super(_client, avatarType, _playerID, _input, eid, side, avatarModel, _avatarControl);
 
 		cam = _cam;
 		hud = _hud;
-		moveSpeed = _moveSpeed;
-		this.setJumpForce(_jumpSpeed);
+		//moveSpeed = _moveSpeed;
+		//this.setJumpForce(_jumpSpeed);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 

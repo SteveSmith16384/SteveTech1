@@ -742,9 +742,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			AvatarStatusMessage asm = (AvatarStatusMessage)message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 				this.currentAvatar.setHealth(asm.health);
-				//this.score = asm.score;
-				this.currentAvatar.moveSpeed = asm.moveSpeed;
-				this.currentAvatar.setJumpForce(asm.jumpForce);
+				//this.currentAvatar.moveSpeed = asm.moveSpeed;
+				//this.currentAvatar.setJumpForce(asm.jumpForce);
 				if (asm.damaged) {
 					hud.showDamageBox();
 				}
@@ -1236,25 +1235,27 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	private void reloading(float tpf_secs, boolean started) {
-		float gunRotSpeed = 400;
-		float diff = (gunRotSpeed * tpf_secs);
+		if (weaponModel != null) {
+			float gunRotSpeed = 400;
+			float diff = (gunRotSpeed * tpf_secs);
 
-		this.finishedReloadAt -= tpf_secs;
-		if (started) {
-			if (gunAngle < 90) {
-				gunAngle += diff;
-				weaponModel.rotate((float)Math.toRadians(-diff), 0f, 0f);
-			}
-		} else {
-			if (gunAngle > 0) {
-				gunAngle -= diff;
-				weaponModel.rotate((float)Math.toRadians(diff), 0f, 0f);
+			this.finishedReloadAt -= tpf_secs;
+			if (started) {
+				if (gunAngle < 90) {
+					gunAngle += diff;
+					weaponModel.rotate((float)Math.toRadians(-diff), 0f, 0f);
+				}
 			} else {
-				currentlyReloading = false;
+				if (gunAngle > 0) {
+					gunAngle -= diff;
+					weaponModel.rotate((float)Math.toRadians(diff), 0f, 0f);
+				} else {
+					currentlyReloading = false;
+				}
 			}
-		}
-		if (Globals.DEBUG_GUN_ROTATION) {
-			Globals.p("Gun angle = " + gunAngle);
+			if (Globals.DEBUG_GUN_ROTATION) {
+				Globals.p("Gun angle = " + gunAngle);
+			}
 		}
 	}
 

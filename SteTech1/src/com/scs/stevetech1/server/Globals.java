@@ -11,7 +11,7 @@ public class Globals {
 	public static final boolean RECORD_VID = false;
 	public static final boolean RELEASE_MODE = true; // Turn off simulated packet dropping etc...
 	//public static final boolean HIDE_BELLS_WHISTLES = false;//!RECORD_VID;
-	public static final boolean STRICT = false;//!RECORD_VID;//true; // Extra checks (which will slow the game down)
+	public static final boolean STRICT = true;//!RECORD_VID;//true; // Extra checks (which will slow the game down)
 
 	public static final boolean DEBUG_MISSING_WON_MSG = true;
 
@@ -21,7 +21,7 @@ public class Globals {
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean DEBUG_ORPHAN_BULLETS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
-	public static final boolean NO_GRAVITY = false;
+	//public static final boolean NO_GRAVITY = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_SET_ALIVE = false;
 	public static final boolean DEBUG_PLAYER_START_POS = false;

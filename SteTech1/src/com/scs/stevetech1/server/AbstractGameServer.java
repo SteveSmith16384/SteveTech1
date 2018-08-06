@@ -239,42 +239,7 @@ ConsoleInputListener {
 			synchronized (unprocessedMessages) {
 				while (!this.unprocessedMessages.isEmpty()) {
 					MyAbstractMessage message = this.unprocessedMessages.remove(0);
-					ClientData client = message.client;
-
-					if (message instanceof NewPlayerRequestMessage) {
-						this.playerConnected(client, message);
-
-					} else if (message instanceof PlayerLeftMessage) {
-						this.connectionRemoved(client.getPlayerID());
-
-					} else if (message instanceof PlayerInputMessage) { // Process these here so the inputs don't change values mid-thread
-						PlayerInputMessage pim = (PlayerInputMessage)message;
-						if (pim.timestamp > client.latestInputTimestamp) {
-							client.remoteInput.decodeMessage(pim);
-							client.latestInputTimestamp = pim.timestamp;
-						}
-
-					} else if (message instanceof AbilityActivatedMessage) {
-						AbilityActivatedMessage elm = (AbilityActivatedMessage)message;
-						AbstractServerAvatar shooter = (AbstractServerAvatar)this.entities.get(elm.avatarID);
-						if (shooter != null) {
-							IAbility ability = shooter.getAbility(elm.abilityID);
-							ability.setToBeActivated(true);
-						} else {
-							Globals.p("Null shooter!");
-						}
-
-					} else if (message instanceof ClientGunReloadRequestMessage) {
-						//Globals.p("Rcvd ClientReloadingMessage");
-						ClientGunReloadRequestMessage crm = (ClientGunReloadRequestMessage)message;
-						IReloadable e = (IReloadable)this.entities.get(crm.abilityId);
-						if (e != null) {
-							e.setToBeReloaded(); //reload(this);
-						}
-
-					} else {
-						throw new RuntimeException("Unknown message type: " + message);
-					}
+					this.handleMessage(message);
 				}
 
 				// Remove entities - do this as close to the list iteration as possible!
@@ -352,7 +317,7 @@ ConsoleInputListener {
 							PhysicalEntity physicalEntity = (PhysicalEntity)e;
 							//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 							if (sendUpdates) {
-								
+
 								if (Globals.DEBUG_CPU_HUD_TEXT) {
 									if (e.getName().equalsIgnoreCase("computer")) {
 										Globals.p("Sending computer update");
@@ -360,7 +325,7 @@ ConsoleInputListener {
 								}								
 
 								if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless player's Avatar)
-									
+
 									eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
 									numSent++;
 									physicalEntity.sendUpdate = false;
@@ -396,6 +361,46 @@ ConsoleInputListener {
 	}
 
 
+	protected void handleMessage(MyAbstractMessage message) {
+		ClientData client = message.client;
+
+		if (message instanceof NewPlayerRequestMessage) {
+			this.playerConnected(client, message);
+
+		} else if (message instanceof PlayerLeftMessage) {
+			this.connectionRemoved(client.getPlayerID());
+
+		} else if (message instanceof PlayerInputMessage) { // Process these here so the inputs don't change values mid-thread
+			PlayerInputMessage pim = (PlayerInputMessage)message;
+			if (pim.timestamp > client.latestInputTimestamp) {
+				client.remoteInput.decodeMessage(pim);
+				client.latestInputTimestamp = pim.timestamp;
+			}
+
+		} else if (message instanceof AbilityActivatedMessage) {
+			AbilityActivatedMessage elm = (AbilityActivatedMessage)message;
+			AbstractServerAvatar shooter = (AbstractServerAvatar)this.entities.get(elm.avatarID);
+			if (shooter != null) {
+				IAbility ability = shooter.getAbility(elm.abilityID);
+				ability.setToBeActivated(true);
+			} else {
+				Globals.p("Null shooter!");
+			}
+
+		} else if (message instanceof ClientGunReloadRequestMessage) {
+			//Globals.p("Rcvd ClientReloadingMessage");
+			ClientGunReloadRequestMessage crm = (ClientGunReloadRequestMessage)message;
+			IReloadable e = (IReloadable)this.entities.get(crm.abilityId);
+			if (e != null) {
+				e.setToBeReloaded(); //reload(this);
+			}
+
+		} else {
+			throw new RuntimeException("Unknown message type: " + message);
+		}
+	}
+
+
 	protected synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
@@ -421,9 +426,7 @@ ConsoleInputListener {
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
 		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
-		if (this.clients.size() > 1) { // Is there already another player.  If none, don't bother sending ents since we're about to recreate the game
-			sendAllEntitiesToClient(client);
-		}
+		sendAllEntitiesToClient(client);
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 		// this.pingSystem.sendPingToClient(client); No, give them time to warm up
 		playerJoinedGame(client);

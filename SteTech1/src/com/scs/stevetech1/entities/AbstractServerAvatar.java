@@ -3,6 +3,7 @@ package com.scs.stevetech1.entities;
 import java.util.HashMap;
 
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.avatartypes.IAvatarControl;
 import com.scs.stevetech1.components.IAnimatedServerSide;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
@@ -31,8 +32,9 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	private float maxHealth;
 	private int playerTargetPriority;
 	
-	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, float _maxHealth, float _moveSpeed, float _jumpForce, int _playerTargetPriority) {
-		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.getSide(), anim);
+	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, 
+			float _maxHealth, int _playerTargetPriority, IAvatarControl _avatarControl) {
+		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.getSide(), anim, _avatarControl);
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();
@@ -45,8 +47,8 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 		server = (AbstractGameServer)_module;
 		client = _client;
 		maxHealth = _maxHealth;
-		this.moveSpeed = _moveSpeed;
-		this.setJumpForce(_jumpForce);
+		//this.moveSpeed = _moveSpeed;
+		//this.setJumpForce(_jumpForce);
 		playerTargetPriority = _playerTargetPriority;
 	}
 

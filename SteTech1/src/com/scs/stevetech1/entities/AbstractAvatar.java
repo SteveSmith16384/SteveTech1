@@ -8,6 +8,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.scs.simplephysics.SimpleCharacterControl;
+import com.scs.stevetech1.avatartypes.IAvatarControl;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAvatarModel;
@@ -33,12 +34,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public static final int ANIM_DIED = 5;
 	public static final int ANIM_ATTACK = 6;
 
-	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
+	//private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	protected IInputDevice input;
 
 	//Temporary vectors used on each frame.
-	private final Vector3f camDir = new Vector3f();
-	private final Vector3f camLeft = new Vector3f();
+	//private final Vector3f camDir = new Vector3f();
+	//private final Vector3f camLeft = new Vector3f();
 
 	public final int playerID;
 	protected Geometry bbGeom; // Non-rotating box for collisions
@@ -48,21 +49,24 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	protected boolean alive = true;
 	protected float restartTimeSecs, invulnerableTimeSecs;
-	protected long lastMoveTime = System.currentTimeMillis() + 5000;
-	protected boolean playerWalked; // Has the player tried to move us?
+	//protected long lastMoveTime = System.currentTimeMillis() + 5000;
+	//protected boolean playerWalked; // Has the player tried to move us?
 
 	private float health;
-	public float moveSpeed = 0f;
-	private float jumpForce = 0;
+	//public float moveSpeed = 0f;
+	//private float jumpForce = 0;
 	public int currentAnimCode = -1;
 
-	public AbstractAvatar(IEntityController _game, int avatarType, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _avatarModel) {
+	protected IAvatarControl avatarControl;
+
+	public AbstractAvatar(IEntityController _game, int avatarType, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _avatarModel, IAvatarControl _avatarControl) {
 		super(_game, eid, avatarType, "Player", true, false, true);
 
 		playerID = _playerID;
 		input = _input;
 		side =_side;
 		avatarModel = _avatarModel;
+		avatarControl = _avatarControl;
 
 		Box box = new Box(avatarModel.getSize().x/2, avatarModel.getSize().y/2, avatarModel.getSize().z/2);
 		bbGeom = new Geometry("bbGeom_" + entityName, box);
@@ -70,11 +74,10 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		bbGeom.setCullHint(CullHint.Always); // Don't draw ourselves
 
 		this.getMainNode().attachChild(bbGeom);
+		
+		avatarControl.init(this);
 
-		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this, game.getPhysicsController(), this);
-		if (Globals.NO_GRAVITY) {
-			this.simpleRigidBody.setGravity(0);	
-		}
+		this.simpleRigidBody = this.avatarControl.getSimpleRigidBody();// new SimpleCharacterControl<PhysicalEntity>(this, game.getPhysicsController(), this);
 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
@@ -82,74 +85,69 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 
 	protected void serverAndClientProcess(AbstractGameServer server, IClientApp client, float tpf_secs, long serverTime) {
-		this.resetWalkDir();
-
-		int newAnimCode = ANIM_IDLE; // Default
-		if (!this.isAlive()) {
-			newAnimCode = ANIM_DIED;
-		}
-		
 		if (Globals.STRICT) {
 			if (ability[0] == null) {
 				Globals.p("Warning - no ability0!");
 			}
 		}
-		/*
-		// Check for any abilities/guns being fired
-		for (int i=0 ; i< this.ability.length ; i++) {
-			if (this.ability[i] != null) {
-				if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
-					newAnimCode = ANIM_SHOOTING;
-					this.ability[i].activate();
-				}
-			}
-		}*/
+
+		this.avatarControl.process();
+		/*		this.resetWalkDir();
+
+		int newAnimCode = ANIM_IDLE; // Default
+		if (!this.isAlive()) {
+			newAnimCode = ANIM_DIED;
+		}
 
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed); // Y=0, so speed is constant regardless of direction
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 
 		//if (this.isAlive()) {
-			if (input.getFwdValue()) {
-				walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
-				newAnimCode = ANIM_RUNNING;
-				lastMoveTime = System.currentTimeMillis();
-			} else if (input.getBackValue()) {
-				walkDirection.addLocal(camDir.negate());
-				newAnimCode = ANIM_RUNNING;
-				lastMoveTime = System.currentTimeMillis();
+		if (input.getFwdValue()) {
+			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
+			newAnimCode = ANIM_RUNNING;
+			lastMoveTime = System.currentTimeMillis();
+		} else if (input.getBackValue()) {
+			walkDirection.addLocal(camDir.negate());
+			newAnimCode = ANIM_RUNNING;
+			lastMoveTime = System.currentTimeMillis();
+		}
+		if (input.getStrafeLeftValue()) {		
+			walkDirection.addLocal(camLeft);
+			newAnimCode = ANIM_RUNNING;
+			lastMoveTime = System.currentTimeMillis();
+		} else if (input.getStrafeRightValue()) {		
+			walkDirection.addLocal(camLeft.negate());
+			newAnimCode = ANIM_RUNNING;
+			lastMoveTime = System.currentTimeMillis();
+		}
+		if (input.isJumpPressed()) {
+			if (this.jump()) {
+				newAnimCode = ANIM_JUMP;
 			}
-			if (input.getStrafeLeftValue()) {		
-				walkDirection.addLocal(camLeft);
-				newAnimCode = ANIM_RUNNING;
-				lastMoveTime = System.currentTimeMillis();
-			} else if (input.getStrafeRightValue()) {		
-				walkDirection.addLocal(camLeft.negate());
-				newAnimCode = ANIM_RUNNING;
-				lastMoveTime = System.currentTimeMillis();
-			}
-			if (input.isJumpPressed()) {
-				if (this.jump()) {
-					newAnimCode = ANIM_JUMP;
-				}
-			}
+		}
 
-			playerWalked = false;
-			if (this.walkDirection.length() != 0) {
-				if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
-					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-					simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
-				}
-				playerWalked = true;
+		playerWalked = false;
+		if (this.walkDirection.length() != 0) {
+			if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
+				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
+				simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
 			}
+			playerWalked = true;
+		}
 		//}
-
+		 */
 		if (Globals.SHOW_AVATAR_POS) {
 			Globals.p("pos=" + this.bbGeom.getWorldTranslation() + "  time=" + serverTime);
 		}
 
 		simpleRigidBody.process(tpf_secs);
 
-		this.currentAnimCode = newAnimCode;
+		if (!this.isAlive()) {
+			currentAnimCode = ANIM_DIED;
+		} else {
+			this.currentAnimCode = this.avatarControl.getCurrentAnimCode();
+		}
 
 		/*if (Globals.SHOW_AVATAR_BOUNDS) {
 			BoundingBox bb = (BoundingBox)this.getCollidable();
@@ -157,7 +155,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}*/
 	}
 
-
+	/*
 	protected void resetWalkDir() {
 		this.walkDirection.set(0, 0, 0);
 	}
@@ -171,7 +169,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 		return false;
 	}
-
+	 */
 
 	@Override
 	public boolean sendUpdates() {
@@ -268,7 +266,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 	}
 
-
+/*
 	public void setJumpForce(float jf) {
 		jumpForce = jf;
 
@@ -288,12 +286,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		creationData.put("jumpForce", this.jumpForce);
 		return super.getCreationData();
 	}
-
+*/
 
 	@Override
 	public Collidable getCollidable() {
 		return this.getMainNode().getWorldBound();
-		//return this.bbGeom.getModelBound();//.boundingBox; // this.playerGeometry.getWorldBound();
 	}
 
 

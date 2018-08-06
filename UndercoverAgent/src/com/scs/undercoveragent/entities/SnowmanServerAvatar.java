@@ -1,5 +1,6 @@
 package com.scs.undercoveragent.entities;
 
+import com.scs.stevetech1.avatartypes.PersonAvatar;
 import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -15,7 +16,7 @@ import com.scs.undercoveragent.models.SnowmanModel;
 public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebrisTexture {
 
 	public SnowmanServerAvatar(IEntityController _module, ClientData client, IInputDevice _input, int eid) {
-		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), 2f, 3f, 2f, 0);
+		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), 2f, 0, new PersonAvatar(_module, _input, 3f, 2f));
 	}
 
 
@@ -40,10 +41,10 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 		if (!Globals.DEBUG_UA_SINKING) {
 			// Force player to jump if they haven't moved!
 			if (this.alive) {// && server.gameData.isInGame()) {
-				long timeSinceMove = System.currentTimeMillis() - super.lastMoveTime;
+				long timeSinceMove = System.currentTimeMillis() - super.avatarControl.getLastMoveTime();
 				if (timeSinceMove > 5 * 1000) {
 					//Globals.p("Forcing client to jump");
-					this.jump();
+					this.avatarControl.jump();
 				}
 			}
 		}
