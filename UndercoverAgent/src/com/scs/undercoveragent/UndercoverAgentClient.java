@@ -34,6 +34,8 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	
 	private UndercoverAgentHUD hud;
 	private RealtimeInterval updateHudInterval = new RealtimeInterval(3000);
+	private String ipAddress;
+	private int port;
 
 	public static void main(String[] args) {
 		try {
@@ -46,16 +48,11 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			}
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
-			//String lobbyIpAddress = props.getPropertyAsString("lobbyIpAddress", "localhost");
-			//int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
 
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 			
-			//float gravity = props.getPropertyAsFloat("gravity", -5f);
-			//float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
-
 			float mouseSensitivity = props.getPropertyAsFloat("mouseSensitivity", 1f);
 
 			new UndercoverAgentClient(gameIpAddress, gamePort, //null, -1,
@@ -68,11 +65,14 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 
 
-	private UndercoverAgentClient(String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
-			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis, //float gravity, float aerodynamicness,
+	private UndercoverAgentClient(String gameIpAddress, int gamePort, 
+			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,
 			float mouseSensitivity) {
-		super(UndercoverAgentServer.GAME_ID, "key", UndercoverAgentServer.NAME, null, gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
+		super(UndercoverAgentServer.GAME_ID, "key", UndercoverAgentServer.NAME, null, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity);
+		ipAddress = gameIpAddress;
+		port = gamePort;
+		
 		start();
 		
 	}
@@ -97,7 +97,8 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
 
-		//hud = new UndercoverAgentHUD(this, this.getCamera());
+		this.setupForGame();
+		this.connect(ipAddress, port);
 	}
 
 

@@ -123,7 +123,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private static final String JME_SETTINGS_NAME = "jme_client_settings.txt";
 
 	// Global controls
-	private static final String RELOAD = "Reload";
+	//private static final String RELOAD = "Reload";
 	private static final String QUIT = "Quit";
 	protected static final String TEST = "Test";
 
@@ -175,8 +175,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 
 	public long serverTime, renderTime;
-	private String gameServerIP;//, lobbyIP;
-	private int gamePort;//, lobbyPort;
 	private float mouseSens;
 	private String key;
 	private String consoleInput;
@@ -191,7 +189,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private ClientEntityLauncherSystem launchSystem;
 
 
-	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage, String _gameServerIP, int _gamePort, //String _lobbyIP, int _lobbyPort, 
+	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage, //String _gameServerIP, int _gamePort,  
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
 		super();
 
@@ -201,10 +199,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
 		timeoutMillis = _timeoutMillis;
-		gameServerIP = _gameServerIP;
-		gamePort = _gamePort;
-		//lobbyIP = _lobbyIP;
-		//lobbyPort = _lobbyPort;
+		//gameServerIP = _gameServerIP;
+		//gamePort = _gamePort;
 
 		Globals.showWarnings();
 
@@ -260,9 +256,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
 
-		getInputManager().addMapping(RELOAD, new KeyTrigger(KeyInput.KEY_R));
-		getInputManager().addListener(this, RELOAD);            
-
 		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
 		getInputManager().addListener(this, QUIT);            
 
@@ -271,14 +264,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		setUpLight();
 
-		hud = this.createAndGetHUD();
-		if (hud != null) {
-			getGuiNode().attachChild(hud.getRootNode());
-		}
-
 		this.getRootNode().attachChild(this.debugNode);
-
-		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
 
 		if (Globals.RECORD_VID) {
 			Globals.p("Recording video");
@@ -297,13 +283,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			throw new RuntimeException(e.getMessage());
 		}*/
 
-		try {
-			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis, getListofMessageClasses());
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
-		}
-
 		// Turn off stats
 		setDisplayFps(false);
 		setDisplayStatView(false);
@@ -316,6 +295,32 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		//}
 
 		loopTimer.start();
+		
+		//this.connect();
+
+	}
+	
+	
+	public void setupForGame() {
+		/*getInputManager().addMapping(RELOAD, new KeyTrigger(KeyInput.KEY_R));
+		getInputManager().addListener(this, RELOAD);            
+*/
+		hud = this.createAndGetHUD();
+		if (hud != null) {
+			getGuiNode().attachChild(hud.getRootNode());
+		}
+
+		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
+	}
+	
+	
+	public void connect(String gameServerIP, int gamePort) {
+		try {
+			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis, getListofMessageClasses());
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		}
 
 	}
 
@@ -417,7 +422,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						clientStatus = STATUS_IN_GAME;
 					}
 				}
-
+				
 				if (currentlyReloading) {
 					this.reloading(tpf_secs, this.finishedReloadAt > 0);
 				}
@@ -1136,7 +1141,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (value) {
 				quit("User chose to.");
 			}
-		} else if (name.equalsIgnoreCase(RELOAD)) {
+		//} else if (name.equalsIgnoreCase(RELOAD)) {
 
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
