@@ -43,7 +43,7 @@ public class TestGameClient extends AbstractGameClient {
 
 		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 		
-		this.connect(TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT);
+		this.connect(this, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, false);
 
 	}
 	

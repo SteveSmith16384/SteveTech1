@@ -179,7 +179,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private String key;
 	private String consoleInput;
 	private boolean showHistory = false;
-	protected boolean isConnected = false;
+
+	public boolean isConnected = false;
+	public Exception lastConnectException;
 
 	// Subnodes
 	private int nodeSize = Globals.SUBNODE_SIZE;
@@ -285,16 +287,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		//}
 
 		loopTimer.start();
-		
+
 		//this.connect();
 
 	}
-	
-	
+
+
 	public void setupForGame() {
 		/*getInputManager().addMapping(RELOAD, new KeyTrigger(KeyInput.KEY_R));
 		getInputManager().addListener(this, RELOAD);            
-*/
+		 */
 		hud = this.createAndGetHUD();
 		if (hud != null) {
 			getGuiNode().attachChild(hud.getRootNode());
@@ -302,15 +304,28 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
 	}
-	
-	
-	public void connect(String gameServerIP, int gamePort) {
-		try {
-			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis, getListofMessageClasses());
-			this.isConnected = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
+
+
+	public void connect(AbstractGameClient client, String gameServerIP, int gamePort, boolean thread) {
+		lastConnectException = null;
+		client.isConnected = false;
+		
+		Thread r = new Thread("ConnectingToServer") {
+
+			@Override
+			public void run() {
+				try {
+					networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, client, timeoutMillis, getListofMessageClasses());
+					client.isConnected = true;
+				} catch (Exception e) {
+					lastConnectException = e;
+				}
+			}
+		};
+		if (thread) {
+			r.start();
+		} else {
+			r.run();
 		}
 
 	}
@@ -413,7 +428,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						clientStatus = STATUS_IN_GAME;
 					}
 				}
-				
+
 				if (currentlyReloading) {
 					this.reloading(tpf_secs, this.finishedReloadAt > 0);
 				}
@@ -1132,7 +1147,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (value) {
 				quit("User chose to.");
 			}
-		//} else if (name.equalsIgnoreCase(RELOAD)) {
+			//} else if (name.equalsIgnoreCase(RELOAD)) {
 
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {

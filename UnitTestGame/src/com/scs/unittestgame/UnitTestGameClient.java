@@ -29,7 +29,7 @@ public class UnitTestGameClient extends AbstractGameClient {
 	public UnitTestGameClient() {
 		super("UnitTest", "key", "Unit Test", null, 25, 200, 10000, 1f);
 
-		this.connect("localhost", UnitTestGameServer.PORT);
+		this.connect(this, "localhost", UnitTestGameServer.PORT, false);
 		start(JmeContext.Type.Headless);
 
 	}
