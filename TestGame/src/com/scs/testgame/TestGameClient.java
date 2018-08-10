@@ -28,7 +28,7 @@ public class TestGameClient extends AbstractGameClient {
 
 
 	private TestGameClient() {
-		super(TestGameServer.GAME_ID, "Key", "test Game", null, TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //null, -1, 
+		super(TestGameServer.GAME_ID, "Key", "test Game", null, //TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //null, -1, 
 				25, 200, Integer.MAX_VALUE, 1f);
 		start();
 	}
@@ -42,6 +42,8 @@ public class TestGameClient extends AbstractGameClient {
 		collisionValidator = new AbstractCollisionValidator();
 
 		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
+		
+		this.connect(TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT);
 
 	}
 	

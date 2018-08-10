@@ -179,6 +179,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private String key;
 	private String consoleInput;
 	private boolean showHistory = false;
+	protected boolean isConnected = false;
 
 	// Subnodes
 	private int nodeSize = Globals.SUBNODE_SIZE;
@@ -272,17 +273,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			stateManager.attach(video_recorder);
 		}
 
-		// Don't connect to network until JME is up and running!
-		/*try {
-			if (lobbyIP != null) {
-				lobbyClient = new KryonetLobbyClient(lobbyIP, lobbyPort, lobbyPort, this, timeoutMillis);
-				this.clientStatus = STATUS_CONNECTED_TO_LOBBY;
-				lobbyClient.sendMessageToServer(new RequestListOfGameServersMessage());
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
-		}*/
-
 		// Turn off stats
 		setDisplayFps(false);
 		setDisplayStatView(false);
@@ -317,6 +307,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public void connect(String gameServerIP, int gamePort) {
 		try {
 			networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, this, timeoutMillis, getListofMessageClasses());
+			this.isConnected = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
@@ -1179,7 +1170,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	@Override
 	public void connected() {
 		Globals.p("Connected!");
-
+		this.isConnected = true;
 	}
 
 

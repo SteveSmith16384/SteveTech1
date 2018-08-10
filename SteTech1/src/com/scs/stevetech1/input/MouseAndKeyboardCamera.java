@@ -114,6 +114,7 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 	}
 
 
+	@Override
 	public void onAction(String binding, boolean isPressed, float tpf) {
 		if (binding.equals("Left")) {
 			left = isPressed;
