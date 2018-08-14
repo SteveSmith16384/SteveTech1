@@ -1,6 +1,5 @@
 package com.scs.stevetech1.client;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -287,9 +286,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		//}
 
 		loopTimer.start();
-
-		//this.connect();
-
 	}
 
 
@@ -326,6 +322,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			r.start();
 		} else {
 			r.run();
+			if (this.lastConnectException != null) {
+				throw new RuntimeException("Unable to connect", this.lastConnectException);
+			}
 		}
 
 	}

@@ -23,7 +23,7 @@ public class ServerPingSystem {
 	public void process() {
 		if (sendPingInterval.hitInterval()) {
 			randomPingCode = NumberFunctions.rnd(0,  999999);
-			server.gameNetworkServer.sendMessageToAll(new PingMessage(true, randomPingCode));
+			server.sendMessageToAll_AreYouSure(new PingMessage(true, randomPingCode));
 		}
 
 	}

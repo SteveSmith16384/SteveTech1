@@ -130,7 +130,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 			// If server, send messages to clients to tell them it has been launched
 			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
-			server.gameNetworkServer.sendMessageToAll(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
+			server.sendMessageToAcceptedClients(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
 		}
 
 	}

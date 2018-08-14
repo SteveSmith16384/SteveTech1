@@ -330,7 +330,7 @@ ConsoleInputListener {
 									numSent++;
 									physicalEntity.sendUpdate = false;
 									if (eum.isFull()) {
-										gameNetworkServer.sendMessageToAll(eum);
+										sendMessageToAcceptedClients(eum);
 										eum = new EntityUpdateMessage(); // Start a new message
 									}
 								}
@@ -340,7 +340,7 @@ ConsoleInputListener {
 				}
 
 				if (sendUpdates) {
-					gameNetworkServer.sendMessageToAll(eum);	
+					sendMessageToAcceptedClients(eum);	
 				}
 				if (Globals.SHOW_NUM_ENT_UPDATES_SENT) {
 					if (sendUpdates) {
@@ -420,7 +420,7 @@ ConsoleInputListener {
 		client.playerData.id = client.id;
 		client.playerData.playerName = newPlayerMessage.playerName;
 
-		this.gameNetworkServer.sendMessageToAllExcept(client, new ShowMessageMessage("Player joined!", true));
+		this.sendMessageToAcceptedClientsExcept(client, new ShowMessageMessage("Player joined!", true));
 		int side = getSide(client);
 		client.playerData.side = side;
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
@@ -450,7 +450,7 @@ ConsoleInputListener {
 				players.add(client.playerData);
 			}
 		}
-		this.gameNetworkServer.sendMessageToAll(new SimpleGameDataMessage(this.gameData, players));
+		this.sendMessageToAcceptedClients(new SimpleGameDataMessage(this.gameData, players));
 	}
 
 
@@ -466,8 +466,6 @@ ConsoleInputListener {
 			e.remove();
 		}
 		this.actuallyRemoveEntities();
-		//this.entities
-		//this.physicsController.getEntities()
 	}
 
 
@@ -716,7 +714,7 @@ ConsoleInputListener {
 				}
 			}
 			if (!this.doNotSendAddRemoveEntityMsgs) {
-				this.gameNetworkServer.sendMessageToAll(new RemoveEntityMessage(id));
+				this.sendMessageToAcceptedClients(new RemoveEntityMessage(id));
 			}
 		}
 
@@ -839,8 +837,8 @@ ConsoleInputListener {
 
 	public void gameStatusChanged(int newStatus) {
 		if (newStatus == SimpleGameData.ST_DEPLOYING) {
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
-			this.gameNetworkServer.sendMessageToAll(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities)); // Before we increment the game id!
+			sendMessageToAcceptedClients(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
+			sendMessageToAcceptedClients(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities)); // Before we increment the game id!
 
 			doNotSendAddRemoveEntityMsgs = true; // Prevent sending "remove entities" messages for all the entities
 			removeOldGame();
@@ -866,7 +864,7 @@ ConsoleInputListener {
 			int winningSide = this.getWinningSideAtEnd();
 			String name = getSideName(winningSide);
 			this.appendToGameLog(name + " has won!");
-			this.gameNetworkServer.sendMessageToAll(new GameOverMessage(winningSide));
+			this.sendMessageToAcceptedClients(new GameOverMessage(winningSide));
 		}
 	}
 
@@ -957,7 +955,7 @@ ConsoleInputListener {
 			for (IEntity e : entities.values()) {
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe  = (PhysicalEntity)e;
-					this.gameNetworkServer.sendMessageToAll(new ModelBoundsMessage(pe));
+					this.sendMessageToAcceptedClients(new ModelBoundsMessage(pe));
 				}
 			}
 		}
@@ -1025,7 +1023,7 @@ ConsoleInputListener {
 		data.data.put("start", start);
 		data.data.put("end", end);
 
-		gameNetworkServer.sendMessageToAll(nem);
+		sendMessageToAcceptedClients(nem);
 
 	}
 
@@ -1047,7 +1045,7 @@ ConsoleInputListener {
 			nem.data.add(data);
 		}
 
-		gameNetworkServer.sendMessageToAll(nem);
+		sendMessageToAcceptedClients(nem);
 
 	}
 
@@ -1060,7 +1058,7 @@ ConsoleInputListener {
 		data.data.put("pos", pos);
 		nem.data.add(data);
 
-		gameNetworkServer.sendMessageToAll(nem);
+		sendMessageToAcceptedClients(nem);
 
 	}
 
@@ -1081,7 +1079,7 @@ ConsoleInputListener {
 
 
 	public void appendToGameLog(String s) {
-		this.gameNetworkServer.sendMessageToAll(new GameLogMessage(s));
+		this.sendMessageToAcceptedClients(new GameLogMessage(s));
 	}
 
 
@@ -1106,9 +1104,38 @@ ConsoleInputListener {
 
 	@Override
 	public void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream) {
-		gameNetworkServer.sendMessageToAll(new PlaySoundMessage(_sound, _pos, _volume, _stream));
+		sendMessageToAcceptedClients(new PlaySoundMessage(_sound, _pos, _volume, _stream));
 
 	}
 
+
+	public void sendMessageToAcceptedClients(MyAbstractMessage msg) {
+		for(ClientData client : this.clients.values()) {
+			if (client.clientStatus == ClientStatus.Accepted) {
+				this.gameNetworkServer.sendMessageToClient(client, msg);
+			}
+		}
+	}
+
+
+	/*
+	 * This will send a message to all connected clients, whether they've joined the game or not.
+	 */
+	public void sendMessageToAll_AreYouSure(MyAbstractMessage msg) {
+		for(ClientData client : this.clients.values()) {
+			this.gameNetworkServer.sendMessageToClient(client, msg);
+		}
+	}
+
+
+	public void sendMessageToAcceptedClientsExcept(ClientData ex, MyAbstractMessage msg) {
+		for(ClientData client : this.clients.values()) {
+			if (client != ex) {
+				if (client.clientStatus == ClientStatus.Accepted) {
+					this.gameNetworkServer.sendMessageToClient(client, msg);
+				}
+			}
+		}
+	}
 
 }

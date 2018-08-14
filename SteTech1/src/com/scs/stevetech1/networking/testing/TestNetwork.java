@@ -44,12 +44,13 @@ public class TestNetwork implements IMessageServerListener, IMessageClientListen
 
 	@Override
 	public void connectionAdded(int id, Object net) {
+		/* todo - this
 		server.sendMessageToAll(new TestMessage(1));
 		server.sendMessageToAll(new TestMessage(1));
 		server.sendMessageToAll(new TestMessage(1));
 		server.sendMessageToAll(new TestMessage(1));
 		server.sendMessageToAll(new TestMessage(1));
-		
+		*/
 	}
 
 	@Override
@@ -57,7 +58,7 @@ public class TestNetwork implements IMessageServerListener, IMessageClientListen
 		TestMessage tmsg = (TestMessage)msg;
 		Globals.p("Server rcvd id " + tmsg.num);
 		if (tmsg.num < 10) {
-			server.sendMessageToAll(new TestMessage(tmsg.num+1));
+			//todo server.sendMessageToAll(new TestMessage(tmsg.num+1));
 			Globals.p("Server sent " + (tmsg.num+1));
 		} else {
 			server.close();

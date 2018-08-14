@@ -84,7 +84,7 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 			//Globals.p("Reloading");
 			reload(server);// Only server can reload
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
-			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(true, this));
+			server.sendMessageToAcceptedClients(new AbilityUpdateMessage(true, this));
 		}
 
 		timeUntilShoot_secs -= tpf_secs;

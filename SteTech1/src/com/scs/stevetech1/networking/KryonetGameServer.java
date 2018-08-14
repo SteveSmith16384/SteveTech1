@@ -54,7 +54,7 @@ import ssmith.lang.NumberFunctions;
 
 public class KryonetGameServer implements IGameMessageServer {
 
-	private IMessageServerListener listener;
+	//private IMessageServerListener listener;
 	private Server server;
 	private int timeout;
 
@@ -81,8 +81,8 @@ public class KryonetGameServer implements IGameMessageServer {
 	}
 
 
-	public void setListener(IMessageServerListener _listener) {
-		listener = _listener;
+	public void setListener(IMessageServerListener listener) {
+		//listener = _listener;
 
 		server.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
@@ -95,14 +95,14 @@ public class KryonetGameServer implements IGameMessageServer {
 				}
 			}
 
-			public void connected (Connection connection) {
+			public void connected(Connection connection) {
 				connection.setIdleThreshold(timeout);
 				connection.setTimeout(timeout);
 
 				listener.connectionAdded(connection.getID(), connection);
 			}
 
-			public void disconnected (Connection connection) {
+			public void disconnected(Connection connection) {
 				listener.connectionRemoved(connection.getID());
 			}
 
@@ -176,7 +176,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		return Globals.RELEASE_MODE == false && Globals.PCENT_DROPPED_PACKETS > 0 && NumberFunctions.rnd(0, 100) < Globals.PCENT_DROPPED_PACKETS;
 	}
 
-
+/*
 	@Override
 	public void sendMessageToAll(final MyAbstractMessage msg) {
 		if (Globals.DEBUG_MSGS) {
@@ -215,7 +215,7 @@ public class KryonetGameServer implements IGameMessageServer {
 			}
 		}
 	}
-
+*/
 
 	@Override
 	public void sendMessageToClient(final ClientData client, final MyAbstractMessage msg) {
@@ -262,7 +262,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		server.close();
 	}
 
-
+/*
 	@Override
 	public void sendMessageToAllExcept(ClientData client, MyAbstractMessage msg) {
 		for (Connection c : this.server.getConnections()) {
@@ -271,5 +271,5 @@ public class KryonetGameServer implements IGameMessageServer {
 			}
 		}		
 	}
-
+*/
 }

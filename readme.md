@@ -44,6 +44,7 @@ All the basic features are complete but not thoroughly stress-tested yet.  All a
 * Designed and developed by Stephen Carlyle-Smith (http://twitter.com/stephencsmith, stephen.carlylesmith@googlemail.com)
 * Uses JMonkeyEngine for the 3D
 * Uses Kryonet for networking.
+* For model credits, see the relevant folder containing the model.
 
 
 ### LICENCES

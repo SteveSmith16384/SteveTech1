@@ -60,7 +60,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 		this.invulnerableTimeSecs = 5;
 		server.moveAvatarToStartPosition(this); // this also sends the update message to tell the client about the new move speed values etc...
 
-		server.gameNetworkServer.sendMessageToAll(new AvatarStartedMessage(this));
+		server.sendMessageToAcceptedClients(new AvatarStartedMessage(this));
 		if (Globals.DEBUG_PLAYER_RESTART) {
 			Globals.p("Sent AvatarStartedMessage");
 		}
@@ -84,7 +84,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 				// Send position update
 				EntityUpdateMessage eum = new EntityUpdateMessage();
 				eum.addEntityData(this, true, this.createEntityUpdateDataRecord());
-				server.gameNetworkServer.sendMessageToAll(eum);
+				server.sendMessageToAcceptedClients(eum);
 			}
 		} else {
 			if (invulnerableTimeSecs >= 0) {
@@ -139,7 +139,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 		this.setAlive(false);
 		this.restartTimeSecs = server.gameOptions.avatarRestartTimeSecs;
 		server.playerKilled(this);
-		server.gameNetworkServer.sendMessageToAll(new EntityKilledMessage(this, killer, reason));
+		server.sendMessageToAcceptedClients(new EntityKilledMessage(this, killer, reason));
 
 		this.currentAnimCode = ANIM_DIED; // Send death as an anim, so it gets scheduled and is not shown straight away
 /*

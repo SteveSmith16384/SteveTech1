@@ -70,7 +70,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 		}
 		timeUntilNextSend_secs -= tpf_secs;
 		if (timeUntilNextSend_secs <= 0) {
-			server.gameNetworkServer.sendMessageToAll(new AbilityUpdateMessage(false, this));
+			server.sendMessageToAcceptedClients(new AbilityUpdateMessage(false, this));
 			timeUntilNextSend_secs = SEND_INT_SECS;
 		}
 	}
