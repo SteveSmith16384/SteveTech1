@@ -86,7 +86,7 @@ public class KryonetLobbyServer {
 		}
 		// todo - this
 		//if (Globals.RELEASE_MODE || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
-			if (msg.isReliable()) {
+			if (msg.isTCP()) {
 				server.sendToTCP(client.getID(), msg);
 			} else {
 				server.sendToUDP(client.getID(), msg);

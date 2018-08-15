@@ -233,7 +233,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		int highestScore = -1;
 		int winningSide = -1;
 		boolean draw = false;
-		for(ClientData c : super.clients.values()) {
+		for(ClientData c : this.clientList.getClients()) {
 			UASimplePlayerData spd = (UASimplePlayerData)c.playerData;
 			if (spd.score > highestScore) {
 				winningSide = spd.side;
@@ -287,7 +287,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	protected String getSideName(int side) {
-		return this.clients.get(side).playerData.playerName;
+		return this.clientList.getClient(side).playerData.playerName;
 	}
 
 }

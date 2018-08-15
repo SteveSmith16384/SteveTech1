@@ -79,7 +79,7 @@ public class KryonetGameClient implements IGameMessageClient {
 
 		if (Globals.RELEASE_MODE) {// || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
 
-			if (msg.isReliable()) {
+			if (msg.isTCP()) {
 				client.sendTCP(msg);
 			} else {
 				client.sendUDP(msg);
@@ -87,7 +87,7 @@ public class KryonetGameClient implements IGameMessageClient {
 			
 		} else {
 
-			if (msg.isReliable()) {
+			if (msg.isTCP()) {
 				client.sendTCP(msg); // todo
 			} else {
 				if (!KryonetGameServer.isPacketDropped()) {

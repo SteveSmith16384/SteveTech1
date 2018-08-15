@@ -6,7 +6,7 @@ public class TestMessage extends MyAbstractMessage {
 	public byte[] b = new byte[1000];
 	
 	public TestMessage() {
-		this.setReliable(false);
+		this.setUseTCP(false);
 	}
 
 	public TestMessage(int i) {

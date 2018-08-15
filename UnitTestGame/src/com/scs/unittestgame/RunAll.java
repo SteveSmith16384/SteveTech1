@@ -70,7 +70,7 @@ public class RunAll {
 		UnitTestGameClient client = new UnitTestGameClient();
 		Functions.sleep(10 * 1000);
 
-		Globals.p("Num clients: " + server.clients.size());
+		Globals.p("Num clients: " + server.clientList.getNumClients());
 		Globals.p("Num ents on client: " + client.entities.size());
 		Globals.p("Num ents on server: " + server.getNumEntities());
 		if (client.entities.size() != server.getNumEntities()) {

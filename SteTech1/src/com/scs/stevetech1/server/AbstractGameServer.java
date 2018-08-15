@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.runner.Computer;
-
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
@@ -56,9 +54,7 @@ import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
-import com.scs.stevetech1.netmessages.WelcomeClientMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
-import com.scs.stevetech1.networking.IMessageClientListener;
 import com.scs.stevetech1.networking.IMessageServerListener;
 import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
@@ -102,9 +98,10 @@ ConsoleInputListener {
 	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
 
 	public IGameMessageServer gameNetworkServer;
-	public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
-	private LinkedList<ClientData> clientsToAdd = new LinkedList<>();
-	private LinkedList<Integer> clientsToRemove = new LinkedList<>();
+	//public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
+	//private LinkedList<ClientData> clientsToAdd = new LinkedList<>();
+	//private LinkedList<Integer> clientsToRemove = new LinkedList<>();
+	public ClientList clientList;
 
 	public ServerSideCollisionLogic collisionLogic;
 	private RealtimeInterval sendEntityUpdatesInterval;
@@ -148,6 +145,8 @@ ConsoleInputListener {
 
 		setShowSettings(false); // Don't show settings dialog
 		setPauseOnLostFocus(false);
+
+		clientList = new ClientList(this);
 	}
 
 
@@ -204,7 +203,7 @@ ConsoleInputListener {
 			}
 		}
 
-		addRemoveClients();
+		this.clientList.addRemoveClients();
 
 		if (gameNetworkServer.getNumClients() > 0) {
 			handleMessages();			
@@ -226,31 +225,6 @@ ConsoleInputListener {
 	}
 
 
-	private void addRemoveClients() {
-		// Add/remove queued clients
-		synchronized (clientsToAdd) {
-			while (this.clientsToAdd.size() > 0) {
-				ClientData client = this.clientsToAdd.remove();
-				this.clients.put(client.id, client);
-				this.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
-				//Globals.p("Actually added client " + client.id);
-			}
-		}
-
-		synchronized (clientsToRemove) {
-			while (this.clientsToRemove.size() > 0) {
-				int id = this.clientsToRemove.remove();
-				ClientData client = this.clients.remove(id);
-				if (client != null) {
-					this.playerLeft(client);
-				}
-				Globals.p("Actually removed client " + id);
-			}
-		}
-
-	}
-
-
 	private void handleMessages() {
 		// Process all messages
 		synchronized (unprocessedMessages) {
@@ -266,7 +240,7 @@ ConsoleInputListener {
 	private void checkForRewinding() {
 		// If any avatars are shooting a gun the requires "rewinding time", rewind all rewindable entities and calc the hits all together to save time
 		boolean areAnyPlayersShooting = false;
-		for (ClientData c : this.clients.values()) {
+		for (ClientData c : this.clientList.getClients()) {
 			AbstractServerAvatar avatar = c.avatar;
 			if (avatar != null && avatar.getAnyAbilitiesShootingInPast() != null) { //.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
 				areAnyPlayersShooting = true;
@@ -277,7 +251,7 @@ ConsoleInputListener {
 			long timeTo = System.currentTimeMillis() - clientRenderDelayMillis; // Should this be by their ping time?
 			this.rewindEntities(timeTo);
 			this.rootNode.updateGeometricState();
-			for (ClientData c : this.clients.values()) {
+			for (ClientData c : this.clientList.getClients()) {
 				AbstractServerAvatar avatar = c.avatar;
 				if (avatar != null) {
 					ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
@@ -457,7 +431,7 @@ ConsoleInputListener {
 
 	public void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
-		for(ClientData client : this.clients.values()) {
+		for(ClientData client : this.clientList.getClients()) {
 			if (client.clientStatus == ClientStatus.Accepted) {
 				players.add(client.playerData);
 			}
@@ -518,8 +492,8 @@ ConsoleInputListener {
 		sendAddRemoveEntityMsgs = true;
 
 		// Create avatars and send new entities to players
-		synchronized (this.clients) {
-			for (ClientData client : this.clients.values()) {
+		//synchronized (this.clients) {
+			for (ClientData client : this.clientList.getClients()) {
 				if (client.clientStatus == ClientData.ClientStatus.Accepted) {
 					int side = getSide(client); // New sides
 					client.playerData.side = side;
@@ -528,7 +502,7 @@ ConsoleInputListener {
 					this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 				}
 			}
-		}
+		//}
 
 		this.gameStatusSystem.checkGameStatus(true); // Set game status to "Deploying" if there's enough players
 
@@ -558,8 +532,8 @@ ConsoleInputListener {
 		}
 
 		ClientData client = null;
-		synchronized (clients) {
-			client = clients.get(clientid);
+		synchronized (clientList) {
+			client = clientList.getClient(clientid);
 		}
 
 		if (client == null) {
@@ -625,16 +599,14 @@ ConsoleInputListener {
 	public void connectionAdded(int id, Object net) {
 		Globals.p("Client connected!");
 		ClientData client = new ClientData(id, net);
-		synchronized (clientsToAdd) {
-			clientsToAdd.add(client);
-		}
+		this.clientList.addClient(client);
 	}
 
 
 	@Override
 	public void connectionRemoved(int id) {
 		Globals.p("connectionRemoved()");
-		this.clientsToRemove.add(id);
+		this.clientList.removeClient(id);
 	}
 
 
@@ -645,7 +617,6 @@ ConsoleInputListener {
 			client.avatar.remove();
 		}
 
-		//this.gameNetworkServer.sendMessageToAllExcept(client, new GenericStringMessage("Player left!", true));
 		if (client.playerData != null) {
 			appendToGameLog(client.playerData.playerName + " has left");
 		} else {
@@ -695,11 +666,9 @@ ConsoleInputListener {
 		if (sendAddRemoveEntityMsgs) {
 			NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 			nem.add(e);
-			synchronized (clients) {
-				for (ClientData client : this.clients.values()) {
-					if (client.clientStatus == ClientStatus.Accepted) {
-						gameNetworkServer.sendMessageToClient(client, nem);
-					}
+			for (ClientData client : this.clientList.getClients()) {
+				if (client.clientStatus == ClientStatus.Accepted) {
+					gameNetworkServer.sendMessageToClient(client, nem);
 				}
 			}
 		}
@@ -859,7 +828,7 @@ ConsoleInputListener {
 
 	public void handleCommand(String cmd) {
 		if (cmd.equals("warp")) {
-			for(ClientData client : this.clients.values()) {
+			for(ClientData client : this.clientList.getClients()) {
 				if (client.avatar != null) {
 					Globals.p("Warping player");
 					client.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
@@ -938,7 +907,7 @@ ConsoleInputListener {
 		Globals.p("Game Status: " + SimpleGameData.getStatusDesc(this.gameData.getGameStatus()));
 		Globals.p("Num Entities: " + this.entities.size());
 		Globals.p("Num Entities for processing: " + this.entitiesForProcessing.size());
-		Globals.p("Num Clients: " + this.clients.size());
+		Globals.p("Num Clients: " + this.clientList.getNumClients());
 	}
 
 
@@ -1058,7 +1027,7 @@ ConsoleInputListener {
 
 
 	public void sendMessageToAcceptedClients(MyAbstractMessage msg) {
-		for(ClientData client : this.clients.values()) {
+		for(ClientData client : this.clientList.getClients()) {
 			if (client.clientStatus == ClientStatus.Accepted) {
 				this.gameNetworkServer.sendMessageToClient(client, msg);
 			}
@@ -1071,14 +1040,14 @@ ConsoleInputListener {
 	 * Are you sure you need to call this method?
 	 */
 	public void sendMessageToAll_AreYouSure(MyAbstractMessage msg) {
-		for(ClientData client : this.clients.values()) {
+		for(ClientData client : this.clientList.getClients()) {
 			this.gameNetworkServer.sendMessageToClient(client, msg);
 		}
 	}
 
 
 	public void sendMessageToAcceptedClientsExcept(ClientData ex, MyAbstractMessage msg) {
-		for(ClientData client : this.clients.values()) {
+		for(ClientData client : this.clientList.getClients()) {
 			if (client != ex) {
 				if (client.clientStatus == ClientStatus.Accepted) {
 					this.gameNetworkServer.sendMessageToClient(client, msg);

@@ -98,7 +98,7 @@ public class ServerGameStatusSystem {
 
 	private boolean areThereEnoughPlayers() {
 		ArrayList<Integer> map = new ArrayList<Integer>();
-		for (ClientData client : server.clients.values()) {
+		for (ClientData client : server.clientList.getClients()) {
 			if (client.avatar != null) {
 				if (!map.contains(client.getSide())) {
 					map.add(client.getSide());

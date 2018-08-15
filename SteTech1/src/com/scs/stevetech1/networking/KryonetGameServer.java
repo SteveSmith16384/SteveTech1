@@ -229,7 +229,7 @@ public class KryonetGameServer implements IGameMessageServer {
 	private void sendMessage(final int id, final MyAbstractMessage msg) {
 		if (Globals.RELEASE_MODE) {
 
-			if (msg.isReliable()) {
+			if (msg.isTCP()) {
 				server.sendToTCP(id, msg);
 			} else {
 				server.sendToUDP(id, msg);
@@ -237,7 +237,7 @@ public class KryonetGameServer implements IGameMessageServer {
 
 		} else {
 
-			if (msg.isReliable()) {
+			if (msg.isTCP()) {
 				server.sendToTCP(id, msg); // todo
 			} else {
 				if (!KryonetGameServer.isPacketDropped()) {
