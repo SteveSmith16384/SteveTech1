@@ -76,8 +76,7 @@ import ssmith.util.TextConsole;
 public abstract class AbstractGameServer extends SimpleApplication implements 
 IEntityController, 
 IMessageServerListener, // To listen for connecting game clients 
-ICollisionListener<PhysicalEntity>,
-ConsoleInputListener {
+ICollisionListener<PhysicalEntity> {
 
 	protected static AtomicInteger nextEntityID = new AtomicInteger(1);
 	private static AtomicInteger nextGameID = new AtomicInteger(1);
@@ -112,8 +111,7 @@ ConsoleInputListener {
 	private String key;
 
 	protected SimpleGameData gameData = new SimpleGameData();
-	private String consoleInput;
-
+	private ConsoleInputHandler consoleInput;
 
 	/**
 	 * 
@@ -147,6 +145,8 @@ ConsoleInputListener {
 		setPauseOnLostFocus(false);
 
 		clientList = new ClientList(this);
+		
+		consoleInput = new ConsoleInputHandler(this); 
 	}
 
 
@@ -167,7 +167,7 @@ ConsoleInputListener {
 		this.pingSystem = new ServerPingSystem(this);
 
 		// Start console
-		new TextConsole(this);
+		new TextConsole(consoleInput);
 
 		startNewGame(); // Even though there are no players connected, this created the gameData to avoid NPEs.
 
@@ -188,7 +188,7 @@ ConsoleInputListener {
 			tpfSecs = 1;
 		}
 
-		this.checkConsoleInput();
+		consoleInput.checkConsoleInput();
 
 		if (Globals.STRICT) {
 			if (this.physicsController.getNumEntities() > this.entities.size()) {
@@ -845,69 +845,6 @@ ConsoleInputListener {
 	@Override
 	public Node getGameNode() {
 		return rootNode;
-	}
-
-
-	@Override
-	public void processConsoleInput(String s) {
-		//Globals.p("Received input: " + s);
-		this.consoleInput = s;
-	}
-
-
-	private void checkConsoleInput() {
-		try {
-			if (this.consoleInput != null) {
-				if (this.consoleInput.equalsIgnoreCase("help") || this.consoleInput.equalsIgnoreCase("?")) {
-					Globals.p("mb, stats, entities");
-				} else if (this.consoleInput.equalsIgnoreCase("mb")) {
-					sendDebuggingBoxes();
-				} else if (this.consoleInput.equalsIgnoreCase("stats")) {
-					showStats();
-				} else if (this.consoleInput.equalsIgnoreCase("entities") || this.consoleInput.equalsIgnoreCase("e")) {
-					listEntities();
-				} else {
-					Globals.p("Unknown command: " + this.consoleInput);
-				}
-				this.consoleInput = null;
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-
-	private void sendDebuggingBoxes() {
-		synchronized (entities) {
-			// Loop through the entities
-			for (IEntity e : entities.values()) {
-				if (e instanceof PhysicalEntity) {
-					PhysicalEntity pe  = (PhysicalEntity)e;
-					this.sendMessageToAcceptedClients(new ModelBoundsMessage(pe));
-				}
-			}
-		}
-		Globals.p("Sent model bounds to all clients");
-	}
-
-
-	private void listEntities() {
-		//synchronized (entities) {
-		// Loop through the entities
-		for (IEntity e : entities.values()) {
-			Globals.p("Entity " + e.getID() + ": " + e.getName() + " (" + e + ")");
-		}
-		Globals.p("Total:" + getNumEntities());
-		//}
-	}
-
-
-	private void showStats() {
-		Globals.p("Game ID: " + this.getGameID());
-		Globals.p("Game Status: " + SimpleGameData.getStatusDesc(this.gameData.getGameStatus()));
-		Globals.p("Num Entities: " + this.entities.size());
-		Globals.p("Num Entities for processing: " + this.entitiesForProcessing.size());
-		Globals.p("Num Clients: " + this.clientList.getNumClients());
 	}
 
 
