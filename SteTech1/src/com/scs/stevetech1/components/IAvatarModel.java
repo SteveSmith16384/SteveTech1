@@ -10,7 +10,7 @@ import com.jme3.scene.Spatial;
  */
 public interface IAvatarModel {
 
-	Spatial createAndGetModel(int side); // Only called client-side, since only the client uses full models.
+	Spatial createAndGetModel(); // Only called client-side, since only the client uses full models.
 	
 	Spatial getModel();
 	

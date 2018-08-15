@@ -22,6 +22,9 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		this.inputManager = _inputManager;
 		mouseSens = _mouseSens;
 
+		inputManager.clearMappings();
+		inputManager.clearRawInputListeners();
+		
 		inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addListener(this, "Left");
 		inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));

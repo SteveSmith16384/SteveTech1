@@ -8,7 +8,7 @@ import com.scs.stevetech1.components.IAvatarModel;
 public class AvatarModel implements IAvatarModel {
 
 	@Override
-	public Spatial createAndGetModel(int side) {
+	public Spatial createAndGetModel() {
 		return new Node("AvatarModel");
 	}
 

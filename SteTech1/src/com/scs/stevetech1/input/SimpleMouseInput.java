@@ -10,35 +10,24 @@ import com.jme3.math.Vector3f;
 //todo - tidy this
 public class SimpleMouseInput implements InputListener, IInputDevice, ActionListener {
 
-	private boolean left = false, right = false, up = false, down = false, jump = false, ability1 = false, ability2 = false;
-	private float mouseSens;
+	private boolean ability1 = false;
 
-	public SimpleMouseInput(InputManager inputManager, float _mouseSens) {
+	public SimpleMouseInput(InputManager inputManager) {
+		inputManager.clearMappings();
+		inputManager.clearRawInputListeners();
+		
 		inputManager.addMapping("Ability1", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		inputManager.addListener(this, "Ability1");
 		inputManager.addMapping("Ability2", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
 		inputManager.addListener(this, "Ability2");
 
-		mouseSens = _mouseSens;
 	}
 
 
 	@Override
 	public void onAction(String binding, boolean isPressed, float tpf) {
-		/*if (binding.equals("Left")) {
-			left = isPressed;
-		} else if (binding.equals("Right")) {
-			right = isPressed;
-		} else if (binding.equals("Up")) {
-			up = isPressed;
-		} else if (binding.equals("Down")) {
-			down = isPressed;
-		} else if (binding.equals("Jump")) {
-			jump = isPressed;
-		} else */if (binding.equals("Ability1")) {
+		if (binding.equals("Ability1")) {
 			ability1 = isPressed;
-		} else if (binding.equals("Ability2")) {
-			ability2 = isPressed;
 		}		
 	}
 
@@ -87,6 +76,6 @@ public class SimpleMouseInput implements InputListener, IInputDevice, ActionList
 
 	@Override
 	public boolean isAbilityPressed(int i) {
-		return ability1; // todo - ability2
+		return ability1;
 	}
 }

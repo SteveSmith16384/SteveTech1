@@ -43,7 +43,7 @@ public class BoxAvatarModel implements IAvatarModel {
 	}
 
 	@Override
-	public Spatial createAndGetModel(int side) {
+	public Spatial createAndGetModel() {
 		return geometry;
 	}
 

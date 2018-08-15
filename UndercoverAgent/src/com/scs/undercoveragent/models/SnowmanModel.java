@@ -31,7 +31,7 @@ public class SnowmanModel implements IAvatarModel {
 
 
 	@Override
-	public Spatial createAndGetModel(int side) {
+	public Spatial createAndGetModel() {
 		model = assetManager.loadModel("Models/Holiday/Snowman.obj");
 		model.setShadowMode(ShadowMode.CastAndReceive);
 		JMEModelFunctions.scaleModelToHeight(model, MODEL_HEIGHT);

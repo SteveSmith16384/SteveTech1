@@ -23,7 +23,7 @@ public class StaticSnowman extends PhysicalEntity {
 		}
 
 		SnowmanModel m = new SnowmanModel(game.getAssetManager());
-		Spatial model = m.createAndGetModel(0);
+		Spatial model = m.createAndGetModel();
 
 		this.mainNode.attachChild(model);
 		

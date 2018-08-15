@@ -111,7 +111,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	// Statuses
 	public static final int STATUS_NOT_CONNECTED = 0;
-	//public static final int STATUS_CONNECTED_TO_LOBBY = 1;
 	public static final int STATUS_CONNECTED_TO_GAME = 2;
 	public static final int STATUS_RCVD_WELCOME = 3;
 	public static final int STATUS_SENT_JOIN_REQUEST = 4;
@@ -143,7 +142,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private String gameCode; // To check the right type of client is connecting
 	private String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
-	//private KryonetLobbyClient lobbyClient;
 	public IGameMessageClient networkClient;
 	public IHUD hud;
 	public IInputDevice input;
@@ -191,7 +189,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private ClientEntityLauncherSystem launchSystem;
 
 
-	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage, //String _gameServerIP, int _gamePort,  
+	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage,   
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
 		super();
 
@@ -201,8 +199,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
 		timeoutMillis = _timeoutMillis;
-		//gameServerIP = _gameServerIP;
-		//gamePort = _gamePort;
 
 		Globals.showWarnings();
 
@@ -318,6 +314,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			}
 		};
+		
 		if (thread) {
 			r.start();
 		} else {

@@ -56,7 +56,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		mainNode.setUserData(Globals.ENTITY, this);
 
 		// Create model to look good
-		Spatial avatarModel = anim.createAndGetModel(side);
+		Spatial avatarModel = anim.createAndGetModel();
 
 		// Contain model in a separate node so we can rotate it without losing the models own rotation
 		container = new Node();

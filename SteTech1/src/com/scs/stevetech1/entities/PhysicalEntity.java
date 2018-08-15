@@ -62,9 +62,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		if (moves) {
 			historicalPositionData = new PositionCalculator(Globals.HISTORY_DURATION);
 		}
-		//if (!game.isServer() && moves) {  No, always create this as Computer's need health history
+		// Always create this as Computer's need health history
 		chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(Globals.HISTORY_DURATION);
-		//}
 	}
 
 

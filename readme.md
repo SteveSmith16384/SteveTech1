@@ -2,6 +2,9 @@
 
 Complete open source multiplayer FPS Engine for Java
 
+Designed and Developed by Stephen Carlyle-Smith (stephen.carlylesmith@googlemail.com)
+
+
 SteveTech1 is a 3D multiplayer FPS framework and engine, designed to help you create games such as Team Fortress 2, Overwatch, PUBG etc.. in Java.  It includes almost all the code you'll need to create your own multiplayer FPS, and uses JMonkeyEngine for the 3D.  It is designed to be easily modifiable and extendable (as the example games will show).  It is intended to be the Java equivalent of something like the Source engine.  You will need to provide your own assets of course.
 
 
