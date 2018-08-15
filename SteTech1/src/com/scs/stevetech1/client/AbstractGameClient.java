@@ -352,6 +352,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
+		if (input.exitPressed()) {
+			this.stop();
+		}
+		
 		if (tpf_secs > 1) {
 			tpf_secs = 1;
 		}

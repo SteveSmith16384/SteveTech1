@@ -13,8 +13,11 @@ import com.jme3.renderer.Camera;
 
 public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListener, IInputDevice { 
 
-	private boolean left = false, right = false, up = false, down = false, jump = false, ability1 = false, ability2 = false;//, cycleAbility = false;
+    public static final String INPUT_MAPPING_EXIT = "SIMPLEAPP_Exit";
+
+    private boolean left = false, right = false, up = false, down = false, jump = false, ability1 = false, ability2 = false;//, cycleAbility = false;
 	private float mouseSens;
+	private boolean isExitPressed = false;
 
 	public MouseAndKeyboardCamera(Camera cam, InputManager _inputManager, float _mouseSens) {
 		super(cam);
@@ -25,6 +28,9 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		inputManager.clearMappings();
 		inputManager.clearRawInputListeners();
 		
+		inputManager.addMapping(INPUT_MAPPING_EXIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
+		inputManager.addListener(this, INPUT_MAPPING_EXIT);
+
 		inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addListener(this, "Left");
 		inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
@@ -119,7 +125,9 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 
 	@Override
 	public void onAction(String binding, boolean isPressed, float tpf) {
-		if (binding.equals("Left")) {
+		if (binding.equals(INPUT_MAPPING_EXIT)) {
+			isExitPressed = true;
+		} else if (binding.equals("Left")) {
 			left = isPressed;
 		} else if (binding.equals("Right")) {
 			right = isPressed;
@@ -186,6 +194,12 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 	@Override
 	public Vector3f getLeft() {
 		return cam.getLeft();
+	}
+
+
+	@Override
+	public boolean exitPressed() {
+		return isExitPressed;
 	}
 
 

@@ -76,4 +76,10 @@ public class RemoteInput implements IInputDevice {
 	}
 
 
+	@Override
+	public boolean exitPressed() {
+		return false;
+	}
+
+
 }
