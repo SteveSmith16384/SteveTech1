@@ -8,12 +8,12 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector3f;
 
 //todo - tidy this
-public class SimpleMouseInput extends DefaultInput implements InputListener, IInputDevice, ActionListener {
+public class SimpleMouseInput implements InputListener, ActionListener { // todo - delete this?
 
 	private boolean ability1 = false;
 
 	public SimpleMouseInput(InputManager inputManager) {
-		super(inputManager);
+		super();
 		
 		inputManager.addMapping("Ability1", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		inputManager.addListener(this, "Ability1");
@@ -28,11 +28,11 @@ public class SimpleMouseInput extends DefaultInput implements InputListener, IIn
 		if (binding.equals("Ability1")) {
 			ability1 = isPressed;
 		} else {
-			super.onAction(binding, isPressed, tpf);
+			//super.onAction(binding, isPressed, tpf);
 		}
 	}
 
-
+/*
 	@Override
 	public Vector3f getDirection() {
 		// TODO Auto-generated method stub
@@ -80,5 +80,5 @@ public class SimpleMouseInput extends DefaultInput implements InputListener, IIn
 		return ability1;
 	}
 
-
+*/
 }

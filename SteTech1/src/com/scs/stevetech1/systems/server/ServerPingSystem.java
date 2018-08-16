@@ -13,6 +13,7 @@ public class ServerPingSystem {
 	protected RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
 	private AbstractGameServer server;
+	private int prevPingCode = -1;
 	private int randomPingCode = NumberFunctions.rnd(0,  999999);
 
 	public ServerPingSystem(AbstractGameServer _server) {
@@ -22,6 +23,7 @@ public class ServerPingSystem {
 
 	public void process() {
 		if (sendPingInterval.hitInterval()) {
+			prevPingCode = randomPingCode;
 			randomPingCode = NumberFunctions.rnd(0,  999999);
 			server.sendMessageToAll_AreYouSure(new PingMessage(true, randomPingCode));
 		}
@@ -39,7 +41,7 @@ public class ServerPingSystem {
 		if (pingMessage.s2c) {
 			try {
 				// Check code
-				if (pingMessage.randomCode == this.randomPingCode) {
+				if (pingMessage.randomCode == this.randomPingCode || pingMessage.randomCode == this.prevPingCode) {
 					try {
 						long rttDuration = System.currentTimeMillis() - pingMessage.originalSentTime;
 						if (client.playerData != null) {
@@ -53,7 +55,7 @@ public class ServerPingSystem {
 						Globals.HandleError(ex);
 					}
 				} else {
-					Globals.pe("Unexpected ping response code!");
+					Globals.pe("Unexpected ping response code:" + pingMessage.randomCode);
 				}
 			} catch (NullPointerException npe) {
 				Globals.HandleError(npe);

@@ -97,9 +97,6 @@ ICollisionListener<PhysicalEntity> {
 	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
 
 	public IGameMessageServer gameNetworkServer;
-	//public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
-	//private LinkedList<ClientData> clientsToAdd = new LinkedList<>();
-	//private LinkedList<Integer> clientsToRemove = new LinkedList<>();
 	public ClientList clientList;
 
 	public ServerSideCollisionLogic collisionLogic;
@@ -188,7 +185,7 @@ ICollisionListener<PhysicalEntity> {
 			tpfSecs = 1;
 		}
 
-		consoleInput.checkConsoleInput();
+		consoleInput.checkConsoleInput(); // this.entitiesForProcessing;
 
 		if (Globals.STRICT) {
 			if (this.physicsController.getNumEntities() > this.entities.size()) {

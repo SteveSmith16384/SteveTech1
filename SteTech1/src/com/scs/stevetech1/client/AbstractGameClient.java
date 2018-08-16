@@ -121,7 +121,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private static final String JME_SETTINGS_NAME = "jme_client_settings.txt";
 
 	// Global controls
-	//private static final String RELOAD = "Reload";
 	private static final String QUIT = "Quit";
 	protected static final String TEST = "Test";
 
@@ -177,7 +176,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private String consoleInput;
 	private boolean showHistory = false;
 
-	public boolean isConnected = false;
+	//public boolean isConnected = false;
 	public Exception lastConnectException;
 
 	// Subnodes
@@ -278,7 +277,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		new TextConsole(this);
 
 		//if (Globals.TOONISH) {
-		this.setupFilters();
+		//this.setupFilters();
 		//}
 
 		loopTimer.start();
@@ -300,7 +299,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	public void connect(AbstractGameClient client, String gameServerIP, int gamePort, boolean thread) {
 		lastConnectException = null;
-		client.isConnected = false;
+		//client.isConnected = false;
 		
 		Thread r = new Thread("ConnectingToServer") {
 
@@ -308,7 +307,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			public void run() {
 				try {
 					networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, client, timeoutMillis, getListofMessageClasses());
-					client.isConnected = true;
+					//client.isConnected = true;
 				} catch (Exception e) {
 					lastConnectException = e;
 				}
@@ -351,13 +350,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	@Override
-	public void simpleUpdate(float tpf_secs) {
-		if (input.exitPressed()) {
-			this.stop();
-		}
-		
-		if (tpf_secs > 1) {
-			tpf_secs = 1;
+	public void simpleUpdate(float tpfSecs) {
+		if (tpfSecs > 1) {
+			tpfSecs = 1;
 		}
 
 		if (Globals.STRICT) {
@@ -377,22 +372,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 			if (networkClient != null && networkClient.isConnected()) {
 
-				// Process messages in JME thread
-				synchronized (unprocessedMessages) {
-					Iterator<MyAbstractMessage> mit = this.unprocessedMessages.iterator();
-					while (mit.hasNext()) {
-						MyAbstractMessage message = mit.next();
-						if (message.scheduled) {
-							if (message.timestamp > renderTime) {
-								continue;
-							}
-						}
-						boolean accepted = this.handleMessage(message);
-						if (accepted) {
-							mit.remove();
-						}
-					}
-				}
+				processMessages();
 
 				if (clientStatus >= STATUS_CONNECTED_TO_GAME && sendPingInterval.hitInterval()) {
 					networkClient.sendMessageToServer(new PingMessage(false, 0));
@@ -430,7 +410,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 
 				if (currentlyReloading) {
-					this.reloading(tpf_secs, this.finishedReloadAt > 0);
+					this.reloading(tpfSecs, this.finishedReloadAt > 0);
 				}
 
 				if (clientStatus == STATUS_IN_GAME) {
@@ -459,48 +439,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						}
 					}
 
-					// Loop through each entity and process them
-					for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
-						IEntity e = this.entitiesForProcessing.get(i); //this.rootNode;
-						if (e.hasNotBeenRemoved()) {
-							if (e instanceof IPlayerControlled) {
-								IPlayerControlled p = (IPlayerControlled)e;
-								p.resetPlayerInput();
-							}
-							if (e instanceof PhysicalEntity) {
-								PhysicalEntity pe = (PhysicalEntity)e;
-
-								pe.calcPosition(renderTime, tpf_secs); // Must be before we process physics as this calcs additionalForce
-								pe.processChronoData(renderTime, tpf_secs);
-
-								if (Globals.STRICT) {
-									if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof IClientControlled == false) {
-										if (pe.simpleRigidBody != null) {
-											if (pe.simpleRigidBody.movedByForces()) {
-												Globals.pe("Warning: client-side entity " + pe + " not kinematic!");
-											}
-										}
-									}
-								}
-
-							}
-
-							if (e instanceof IProcessByClient) {
-								IProcessByClient pbc = (IProcessByClient)e;
-								pbc.processByClient(this, tpf_secs); // Mainly to process client-side movement of the avatar
-							}
-
-							if (e instanceof IAnimatedClientSide) {
-								IAnimatedClientSide pbc = (IAnimatedClientSide)e;
-								this.animSystem.process(pbc, tpf_secs);
-							}
-
-							if (e instanceof IDrawOnHUD) {
-								IDrawOnHUD doh = (IDrawOnHUD)e;
-								doh.drawOnHud(hud, cam);
-							}
-						}
-					}
+					iterateThroughEntities(tpfSecs);
 
 					// Show players gun
 					if (playersWeaponNode != null) {
@@ -525,6 +464,73 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
+	private void processMessages() {
+		synchronized (unprocessedMessages) {
+			Iterator<MyAbstractMessage> mit = this.unprocessedMessages.iterator();
+			while (mit.hasNext()) {
+				MyAbstractMessage message = mit.next();
+				if (message.scheduled) {
+					if (message.timestamp > renderTime) {
+						continue;
+					}
+				}
+				boolean accepted = this.handleMessage(message);
+				if (accepted) {
+					mit.remove();
+				}
+			}
+		}
+
+	}
+	
+	
+	private void iterateThroughEntities(float tpfSecs) {
+		// Loop through each entity and process them
+		for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
+			IEntity e = this.entitiesForProcessing.get(i); //this.rootNode;
+			if (e.hasNotBeenRemoved()) {
+				if (e instanceof IPlayerControlled) {
+					IPlayerControlled p = (IPlayerControlled)e;
+					p.resetPlayerInput();
+				}
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity pe = (PhysicalEntity)e;
+
+					pe.calcPosition(renderTime, tpfSecs); // Must be before we process physics as this calcs additionalForce
+					pe.processChronoData(renderTime, tpfSecs);
+
+					if (Globals.STRICT) {
+						if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof IClientControlled == false) {
+							if (pe.simpleRigidBody != null) {
+								if (pe.simpleRigidBody.movedByForces()) {
+									Globals.pe("Warning: client-side entity " + pe + " not kinematic!");
+								}
+							}
+						}
+					}
+
+				}
+
+				if (e instanceof IProcessByClient) {
+					IProcessByClient pbc = (IProcessByClient)e;
+					pbc.processByClient(this, tpfSecs); // Mainly to process client-side movement of the avatar
+				}
+
+				if (e instanceof IAnimatedClientSide) {
+					IAnimatedClientSide pbc = (IAnimatedClientSide)e;
+					this.animSystem.process(pbc, tpfSecs);
+				}
+
+				if (e instanceof IDrawOnHUD) {
+					IDrawOnHUD doh = (IDrawOnHUD)e;
+					doh.drawOnHud(hud, cam);
+				}
+			}
+		}
+
+	}
+
+	
 	private void checkNodesExistInEntities() {
 		if (Globals.STRICT) {
 			// Check all Nodes are in the entity list
@@ -718,9 +724,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			}
 		} else if (message instanceof EntityLaunchedMessage) {
-			/*if (Globals.DEBUG_SHOOTING) {
-				Globals.p("Received EntityLaunchedMessage");
-			}*/
 			EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 			if (elm.playerID != this.playerID) {
 				this.launchSystem.scheduleLaunch(elm); //this.entities
@@ -866,10 +869,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	protected abstract void playerHasWon();
 
+	
 	protected abstract void playerHasLost();
 
+	
 	protected abstract void gameIsDrawn();
 
+	
 	private void playSound(PlaySoundMessage psm) {
 		this.playSound(psm.sound, psm.pos, psm.volume, psm.stream);
 	}
@@ -877,19 +883,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private void sendInputs() {
 		if (this.currentAvatar != null) {
-			// Send inputs
-			if (networkClient.isConnected()) {
-				//if (sendInputsInterval.hitInterval()) {  Don't need this since it's once a loop anyway
-				this.networkClient.sendMessageToServer(new PlayerInputMessage(this.input));
-				//}
-			}
+			this.networkClient.sendMessageToServer(new PlayerInputMessage(this.input));
 		}
 	}
 
 
 	protected final void createEntity(NewEntityData data, long timeToAdd) {
-		//Globals.p("Creating entity " + data.type);
-
 		IEntity e = actuallyCreateEntity(this, data);
 		if (e != null) {
 			if (e instanceof PhysicalEntity) {
@@ -1145,7 +1144,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(QUIT)) {
 			if (value) {
-				quit("User chose to.");
+				quit("User quit.");
 			}
 			//} else if (name.equalsIgnoreCase(RELOAD)) {
 
@@ -1185,14 +1184,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	@Override
 	public void connected() {
 		Globals.p("Connected!");
-		this.isConnected = true;
+		//this.isConnected = true;
 	}
 
 
 	@Override
 	public void disconnected() {
 		Globals.p("Disconnected!");
-		quit("");
 	}
 
 
@@ -1460,6 +1458,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			});
 
 		} catch (AssetLoadException ex) {
+			//ex.printStackTrace();
 		} catch (AssetNotFoundException ex) {
 			//ex.printStackTrace();
 		} catch (IllegalStateException ex) {

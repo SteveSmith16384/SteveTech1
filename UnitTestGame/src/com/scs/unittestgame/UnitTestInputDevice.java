@@ -47,9 +47,4 @@ public class UnitTestInputDevice implements IInputDevice {
 		return false;
 	}
 
-	@Override
-	public boolean exitPressed() {
-		return false;
-	}
-
 }

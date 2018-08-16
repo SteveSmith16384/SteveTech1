@@ -25,7 +25,7 @@ public class Globals {
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_SET_ALIVE = false;
 	public static final boolean DEBUG_PLAYER_START_POS = false;
-	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
+	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = false;
 	public static final boolean DEBUG_GUN_ROTATION = false;	
 	public static final boolean DEBUG_GAME_STATUS_CHECK = false;
 	public static final boolean NO_AI_UNITS = false;

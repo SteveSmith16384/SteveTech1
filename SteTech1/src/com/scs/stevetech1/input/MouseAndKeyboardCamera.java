@@ -17,7 +17,6 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 
     private boolean left = false, right = false, up = false, down = false, jump = false, ability1 = false, ability2 = false;//, cycleAbility = false;
 	private float mouseSens;
-	private boolean isExitPressed = false;
 
 	public MouseAndKeyboardCamera(Camera cam, InputManager _inputManager, float _mouseSens) {
 		super(cam);
@@ -125,9 +124,7 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 
 	@Override
 	public void onAction(String binding, boolean isPressed, float tpf) {
-		if (binding.equals(INPUT_MAPPING_EXIT)) {
-			isExitPressed = true;
-		} else if (binding.equals("Left")) {
+		if (binding.equals("Left")) {
 			left = isPressed;
 		} else if (binding.equals("Right")) {
 			right = isPressed;
@@ -194,12 +191,6 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 	@Override
 	public Vector3f getLeft() {
 		return cam.getLeft();
-	}
-
-
-	@Override
-	public boolean exitPressed() {
-		return isExitPressed;
 	}
 
 
