@@ -114,12 +114,13 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			final long serverTime = client.getServerTime();
 
 			// Check for any abilities/guns being fired
-			for (int i=0 ; i< this.ability.length ; i++) {
-				if (this.ability[i] != null) {
-					if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
-						//newAnimCode = ANIM_SHOOTING;
-						if (this.ability[i].activate()) {
-							client.sendMessage(new AbilityActivatedMessage(this.getID(), this.ability[i].getID()));
+			if (this.input != null) {
+				for (int i=0 ; i<this.ability.length ; i++) {
+					if (this.ability[i] != null) {
+						if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
+							if (this.ability[i].activate()) {
+								client.sendMessage(new AbilityActivatedMessage(this.getID(), this.ability[i].getID()));
+							}
 						}
 					}
 				}
@@ -142,7 +143,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		}
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
-			//long serverTimePast = serverTime - Globals.CLIENT_RENDER_DELAY; // Render from history
 			EntityPositionData epd = historicalPositionData.calcPosition(System.currentTimeMillis(), false);
 			if (epd != null) {
 				debugNode.setLocalTranslation(epd.position);

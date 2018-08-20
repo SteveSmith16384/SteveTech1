@@ -111,7 +111,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	// Statuses
 	public static final int STATUS_NOT_CONNECTED = 0;
-	public static final int STATUS_CONNECTED_TO_GAME = 2;
+	public static final int STATUS_CONNECTED_TO_GAME_SERVER = 2;
 	public static final int STATUS_RCVD_WELCOME = 3;
 	public static final int STATUS_SENT_JOIN_REQUEST = 4;
 	public static final int STATUS_JOINED_GAME = 5; // About to be sent all the entities
@@ -253,12 +253,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
 
-		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
-		getInputManager().addListener(this, QUIT);            
-
-		getInputManager().addMapping(TEST, new KeyTrigger(KeyInput.KEY_T));
-		getInputManager().addListener(this, TEST);            
-
+		addDefaultKeyboardMappings();
+		
 		setUpLight();
 
 		this.getRootNode().attachChild(this.debugNode);
@@ -281,18 +277,29 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		//}
 
 		loopTimer.start();
-	}
-
-
-	public void setupForGame() {
-		/*getInputManager().addMapping(RELOAD, new KeyTrigger(KeyInput.KEY_R));
-		getInputManager().addListener(this, RELOAD);            
-		 */
+		
 		hud = this.createAndGetHUD();
 		if (hud != null) {
 			getGuiNode().attachChild(hud.getRootNode());
 		}
+	}
 
+
+	public void addDefaultKeyboardMappings() {
+		getInputManager().clearMappings();
+		getInputManager().clearRawInputListeners();
+		
+		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
+		getInputManager().addListener(this, QUIT);            
+
+		if (!Globals.RELEASE_MODE) {
+			getInputManager().addMapping(TEST, new KeyTrigger(KeyInput.KEY_T));
+			getInputManager().addListener(this, TEST);            
+		}
+	}
+	
+	
+	public void setupForGame() {
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
 	}
 
@@ -307,6 +314,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			public void run() {
 				try {
 					networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, client, timeoutMillis, getListofMessageClasses());
+					clientStatus = STATUS_CONNECTED_TO_GAME_SERVER;
 					//client.isConnected = true;
 				} catch (Exception e) {
 					lastConnectException = e;
@@ -360,7 +368,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				Globals.pe("Warning: more simple rigid bodies than entities!");
 			}
 		}
-		checkConsoleInput();  //this.entities //this.entitiesForProcessing //this.gameNode 
+		checkConsoleInput(); 
 
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
@@ -374,7 +382,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				processMessages();
 
-				if (clientStatus >= STATUS_CONNECTED_TO_GAME && sendPingInterval.hitInterval()) {
+				if (clientStatus >= STATUS_CONNECTED_TO_GAME_SERVER && sendPingInterval.hitInterval()) {
 					networkClient.sendMessageToServer(new PingMessage(false, 0));
 				}
 
@@ -882,7 +890,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	private void sendInputs() {
-		if (this.currentAvatar != null) {
+		if (this.currentAvatar != null && input != null) {
 			this.networkClient.sendMessageToServer(new PlayerInputMessage(this.input));
 		}
 	}
@@ -1184,7 +1192,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	@Override
 	public void connected() {
 		Globals.p("Connected!");
-		//this.isConnected = true;
 	}
 
 
@@ -1469,4 +1476,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	}
 
+	
+	public boolean isConnected() {
+		return this.networkClient != null && networkClient.isConnected();
+	}
 }

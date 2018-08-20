@@ -34,7 +34,7 @@ public class DummyHUD extends Node implements IHUD {
 	}
 
 	@Override
-	public void addItem(Node n) {
+	public void addChild(Node n) {
 		
 	}
 

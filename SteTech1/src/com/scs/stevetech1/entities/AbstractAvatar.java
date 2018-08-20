@@ -92,51 +92,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 
 		this.avatarControl.process();
-		/*		this.resetWalkDir();
 
-		int newAnimCode = ANIM_IDLE; // Default
-		if (!this.isAlive()) {
-			newAnimCode = ANIM_DIED;
-		}
-
-		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed); // Y=0, so speed is constant regardless of direction
-		camLeft.set(input.getLeft()).multLocal(moveSpeed);
-
-		//if (this.isAlive()) {
-		if (input.getFwdValue()) {
-			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
-			newAnimCode = ANIM_RUNNING;
-			lastMoveTime = System.currentTimeMillis();
-		} else if (input.getBackValue()) {
-			walkDirection.addLocal(camDir.negate());
-			newAnimCode = ANIM_RUNNING;
-			lastMoveTime = System.currentTimeMillis();
-		}
-		if (input.getStrafeLeftValue()) {		
-			walkDirection.addLocal(camLeft);
-			newAnimCode = ANIM_RUNNING;
-			lastMoveTime = System.currentTimeMillis();
-		} else if (input.getStrafeRightValue()) {		
-			walkDirection.addLocal(camLeft.negate());
-			newAnimCode = ANIM_RUNNING;
-			lastMoveTime = System.currentTimeMillis();
-		}
-		if (input.isJumpPressed()) {
-			if (this.jump()) {
-				newAnimCode = ANIM_JUMP;
-			}
-		}
-
-		playerWalked = false;
-		if (this.walkDirection.length() != 0) {
-			if (!this.game.isServer() || Globals.STOP_SERVER_AVATAR_MOVING == false) {
-				SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-				simplePlayerControl.getAdditionalForce().addLocal(walkDirection);
-			}
-			playerWalked = true;
-		}
-		//}
-		 */
 		if (Globals.SHOW_AVATAR_POS) {
 			Globals.p("pos=" + this.bbGeom.getWorldTranslation() + "  time=" + serverTime);
 		}
@@ -148,45 +104,13 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		} else {
 			this.currentAnimCode = this.avatarControl.getCurrentAnimCode();
 		}
-
-		/*if (Globals.SHOW_AVATAR_BOUNDS) {
-			BoundingBox bb = (BoundingBox)this.getCollidable();
-			Globals.p("Avatar bounds: " + bb.getXExtent() + ", " + bb.getYExtent() + ", " + bb.getZExtent());
-		}*/
 	}
 
-	/*
-	protected void resetWalkDir() {
-		this.walkDirection.set(0, 0, 0);
-	}
-
-
-	protected boolean jump() {
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		if (simplePlayerControl.jump()) {
-			lastMoveTime = System.currentTimeMillis();
-			return true;
-		}
-		return false;
-	}
-	 */
 
 	@Override
 	public boolean sendUpdates() {
 		return true; // Always send for avatars
 	}
-
-
-	/*
-	 * Need this since we can't warp a player to correct their position, as they may warp into walls!
-	 * Also, we're adjusting their position based on the past, so we want to offset them, rather than move them to
-	 * a specific point
-	 */
-	/*@Override
-	public void adjustWorldTranslation(Vector3f offset) { // Adjust avatars differently to normal entities
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-		simplePlayerControl.getAdditionalForce().addLocal(offset);
-	}*/
 
 
 	public int getSide() {
@@ -266,27 +190,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		}
 	}
 
-/*
-	public void setJumpForce(float jf) {
-		jumpForce = jf;
-
-		SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody; 
-		simplePlayerControl.setJumpForce(jf);
-	}
-
-
-	public float getJumpForce() {
-		return this.jumpForce;
-	}
-
-
-	@Override
-	public HashMap<String, Object> getCreationData() {
-		creationData.put("moveSpeed", this.moveSpeed);
-		creationData.put("jumpForce", this.jumpForce);
-		return super.getCreationData();
-	}
-*/
 
 	@Override
 	public Collidable getCollidable() {

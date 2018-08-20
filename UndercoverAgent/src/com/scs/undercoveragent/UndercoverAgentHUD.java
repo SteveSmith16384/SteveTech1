@@ -309,7 +309,7 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 
 
 	@Override
-	public void addItem(Node n) {
+	public void addChild(Node n) {
 		this.attachChild(n);
 	}
 

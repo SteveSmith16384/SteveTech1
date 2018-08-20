@@ -486,7 +486,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		show = show && cam.contains(this.getMainNode().getWorldBound()) != FrustumIntersect.Outside;
 		if (show) {
 			if (hudNode.getParent() == null) {
-				hud.addItem(hudNode);
+				hud.addChild(hudNode);
 			}
 			tmpHudPos.set(this.getWorldTranslation());
 			tmpHudPos.y += yOffset;

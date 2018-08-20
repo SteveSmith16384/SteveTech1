@@ -7,7 +7,7 @@ import com.jme3.network.serializing.Serializable;
 import com.scs.stevetech1.server.ClientData;
 
 @Serializable
-public class MyAbstractMessage { //extends AbstractMessage {
+public class MyAbstractMessage {
 
 	private transient static AtomicLong nextMsgID = new AtomicLong();
 

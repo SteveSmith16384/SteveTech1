@@ -5,100 +5,19 @@
 	<classpathentry kind="src" path="assets"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="libs/kryonet/jsonbeans-0.5.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/core.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/dense64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/denseC64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/eventbus.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-main.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-android-aarch64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-android-armv6.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-linux-armv6.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-linux-armv6hf.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-linux-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-macosx-universal.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-solaris-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-solaris-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gluegen-rt.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/gson.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/j-ogg-all.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jbullet.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jglfont-core.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jinput-platform-natives-linux.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jinput-platform-natives-osx.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jinput-platform-natives-windows.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jinput.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-blender.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-core.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-desktop.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-effects.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-jbullet.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-jogg.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-jogl.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-lwjgl.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-networking.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-niftygui.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-plugins.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-terrain.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jme3-testdata.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-main.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-android-aarch64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-android-armv6.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-linux-armv6.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-linux-armv6hf.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-linux-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-macosx-universal.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-solaris-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-solaris-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/joal.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-main.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-android-aarch64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-android-armv6.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-linux-armv6.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-linux-armv6hf.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-linux-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-macosx-universal.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-solaris-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-solaris-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jocl.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-main.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-android-aarch64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-android-armv6.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-linux-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-linux-armv6.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-linux-armv6hf.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-linux-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-macosx-universal.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-solaris-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-solaris-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-windows-amd64.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all-natives-windows-i586.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jogl-all.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jsr305.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/jutils.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/lwjgl-platform-natives-linux.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/lwjgl-platform-natives-osx.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/lwjgl-platform-natives-windows.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/lwjgl.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/nifty-default-controls.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/nifty-examples.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/nifty-style-black.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/nifty.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/simple.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/stack-alloc.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/vecmath.jar"/>
-	<classpathentry kind="lib" path="libs/jme-3.2-stable/xpp3.jar"/>
 	<classpathentry kind="lib" path="libs/kryonet/minlog-1.3.0.jar"/>
 	<classpathentry kind="lib" path="libs/kryonet/objenesis-2.6.jar"/>
+	<classpathentry kind="lib" path="libs/kryonet/jsonbeans-0.5.jar"/>
 	<classpathentry kind="lib" path="libs/kryonet/reflectasm-1.11.6.jar"/>
+	<classpathentry kind="lib" path="libs/mp3/jl1.0.jar"/>
+	<classpathentry kind="lib" path="libs/mp3/mp3spi1.9.4.jar"/>
+	<classpathentry kind="lib" path="libs/mp3/tritonus_share.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-terrain"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-effects"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-desktop"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jme3-blender"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
