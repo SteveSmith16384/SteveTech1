@@ -13,6 +13,7 @@ public class Globals {
 	//public static final boolean HIDE_BELLS_WHISTLES = false;//!RECORD_VID;
 	public static final boolean STRICT = true;//!RECORD_VID;//true; // Extra checks (which will slow the game down)
 
+	public static final boolean DEBUG_CLICK_TO_SKIP = true;
 	public static final boolean DEBUG_MISSING_WON_MSG = true;
 
 	// Lots of consts for specific debugging output

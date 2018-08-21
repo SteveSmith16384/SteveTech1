@@ -1,0 +1,7 @@
+Client connects to server
+
+client sends login details to server
+server responds with welcome message
+
+client request to join game
+server responds with "game joined" message (or "failed" message)

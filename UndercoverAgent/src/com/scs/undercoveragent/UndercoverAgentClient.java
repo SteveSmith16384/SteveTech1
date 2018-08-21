@@ -92,12 +92,12 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		this.snowflakeSystem = new FallingSnowflakeSystem(this);
 		
 		// Add shadows
-		final int SHADOWMAP_SIZE = 1024;
+		final int SHADOWMAP_SIZE = 512;
 		DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), SHADOWMAP_SIZE, 2);
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
 
-		this.setupForGame();
+		//this.setupForGame();
 		this.connect(this, ipAddress, port, false);
 	}
 

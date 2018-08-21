@@ -10,12 +10,13 @@ import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
+import com.scs.stevetech1.server.Globals;
 
 public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListener, IInputDevice { 
 
-    public static final String INPUT_MAPPING_EXIT = "SIMPLEAPP_Exit";
+	//public static final String INPUT_MAPPING_EXIT = "SIMPLEAPP_Exit";
 
-    private boolean left = false, right = false, up = false, down = false, jump = false, ability1 = false, ability2 = false;//, cycleAbility = false;
+	private boolean left = false, right = false, up = false, down = false, jump = false, ability0 = false, ability1 = false;//, escape = false;
 	private float mouseSens;
 
 	public MouseAndKeyboardCamera(Camera cam, InputManager _inputManager, float _mouseSens) {
@@ -24,11 +25,11 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		this.inputManager = _inputManager;
 		mouseSens = _mouseSens;
 
-		inputManager.clearMappings();
-		inputManager.clearRawInputListeners();
-		
-		inputManager.addMapping(INPUT_MAPPING_EXIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
-		inputManager.addListener(this, INPUT_MAPPING_EXIT);
+		//inputManager.clearMappings();
+		//inputManager.clearRawInputListeners();
+
+		//inputManager.addMapping(INPUT_MAPPING_EXIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
+		//inputManager.addListener(this, INPUT_MAPPING_EXIT);
 
 		inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
 		inputManager.addListener(this, "Left");
@@ -135,9 +136,17 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		} else if (binding.equals("Jump")) {
 			jump = isPressed;
 		} else if (binding.equals("Ability1")) {
-			ability1 = isPressed;
+			ability0 = isPressed;
+			if (Globals.DEBUG_CLICK_TO_SKIP) {
+				Globals.p("ability0=" + ability0);
+			}
 		} else if (binding.equals("Ability2")) {
-			ability2 = isPressed;
+			ability1 = isPressed;
+			if (Globals.DEBUG_CLICK_TO_SKIP) {
+				Globals.p("ability1=" + ability1);
+			}
+			/*} else if (binding.equals(INPUT_MAPPING_EXIT)) {
+			escape = isPressed;*/
 		}		
 	}
 
@@ -175,10 +184,10 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 	@Override
 	public boolean isAbilityPressed(int i) {
 		switch (i) {
-		case 0: return ability1;
-		case 1: return ability2;
+		case 0: return ability0;
+		case 1: return ability1;
+		default: throw new IllegalArgumentException("Invalid ability: " + i);
 		}
-		return false;
 	}        
 
 

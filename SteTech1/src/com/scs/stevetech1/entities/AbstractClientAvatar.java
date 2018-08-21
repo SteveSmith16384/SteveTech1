@@ -43,8 +43,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		cam = _cam;
 		hud = _hud;
-		//moveSpeed = _moveSpeed;
-		//this.setJumpForce(_jumpSpeed);
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
@@ -55,8 +53,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 
 	private void createDebugBox() {
-		//BoundingBox bb = (BoundingBox)super.playerGeometry.getWorldBound();
-		//Box box1 = new Box(bb.getXExtent()*2, bb.getYExtent()*2, bb.getZExtent()*2);
 		Box box1 = new Box(.5f, .1f, .5f);
 		debugNode = new Geometry("DebugBox", box1);
 		TextureKey key3 = new TextureKey("Textures/neon1.jpg");

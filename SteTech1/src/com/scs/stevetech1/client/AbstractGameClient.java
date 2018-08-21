@@ -70,15 +70,12 @@ import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
-import com.scs.stevetech1.netmessages.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GunReloadingMessage;
-import com.scs.stevetech1.netmessages.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
-import com.scs.stevetech1.netmessages.NewPlayerRequestMessage;
 import com.scs.stevetech1.netmessages.NumEntitiesMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlaySoundMessage;
@@ -88,7 +85,10 @@ import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
-import com.scs.stevetech1.netmessages.WelcomeClientMessage;
+import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
+import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
+import com.scs.stevetech1.netmessages.connecting.NewPlayerRequestMessage;
+import com.scs.stevetech1.netmessages.connecting.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
 import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
@@ -176,7 +176,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private String consoleInput;
 	private boolean showHistory = false;
 
-	//public boolean isConnected = false;
+	protected Thread connectingThread;
 	public Exception lastConnectException;
 
 	// Subnodes
@@ -244,23 +244,26 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void simpleInitApp() {
+		assetManager.registerLocator("assets/", FileLocator.class); // default
+		assetManager.registerLocator("assets/", ClasspathLocator.class);
+
 		// Clear existing mappings
 		getInputManager().clearMappings();
 		getInputManager().clearRawInputListeners();
 
-		assetManager.registerLocator("assets/", FileLocator.class); // default
-		assetManager.registerLocator("assets/", ClasspathLocator.class);
-
-		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
-
+		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
 		addDefaultKeyboardMappings();
 		
+		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
+
 		setUpLight();
 
-		this.getRootNode().attachChild(this.debugNode);
-
+		if (!Globals.RELEASE_MODE) {
+			this.getRootNode().attachChild(this.debugNode);
+		}
+		
 		if (Globals.RECORD_VID) {
-			Globals.p("Recording video");
+			Globals.p("Recording video!");
 			VideoRecorderAppState video_recorder = new VideoRecorderAppState();
 			stateManager.attach(video_recorder);
 		}
@@ -269,12 +272,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		setDisplayFps(false);
 		setDisplayStatView(false);
 
-		// Start console
 		new TextConsole(this);
-
-		//if (Globals.TOONISH) {
-		//this.setupFilters();
-		//}
 
 		loopTimer.start();
 		
@@ -285,10 +283,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	public void addDefaultKeyboardMappings() {
-		getInputManager().clearMappings();
-		getInputManager().clearRawInputListeners();
-		
+	private void addDefaultKeyboardMappings() {
 		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
 		getInputManager().addListener(this, QUIT);            
 
@@ -297,25 +292,18 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			getInputManager().addListener(this, TEST);            
 		}
 	}
-	
-	
-	public void setupForGame() {
-		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
-	}
 
 
 	public void connect(AbstractGameClient client, String gameServerIP, int gamePort, boolean thread) {
 		lastConnectException = null;
-		//client.isConnected = false;
 		
-		Thread r = new Thread("ConnectingToServer") {
+		connectingThread = new Thread("ConnectingToServer") {
 
 			@Override
 			public void run() {
 				try {
 					networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, client, timeoutMillis, getListofMessageClasses());
 					clientStatus = STATUS_CONNECTED_TO_GAME_SERVER;
-					//client.isConnected = true;
 				} catch (Exception e) {
 					lastConnectException = e;
 				}
@@ -323,14 +311,19 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		};
 		
 		if (thread) {
-			r.start();
+			connectingThread.start();
 		} else {
-			r.run();
+			connectingThread.run();
+			connectingThread = null;
 			if (this.lastConnectException != null) {
 				throw new RuntimeException("Unable to connect", this.lastConnectException);
 			}
 		}
 
+	}
+	
+	public boolean isConnecting() {
+		return connectingThread != null && connectingThread.isAlive();
 	}
 
 	protected abstract Class[] getListofMessageClasses();

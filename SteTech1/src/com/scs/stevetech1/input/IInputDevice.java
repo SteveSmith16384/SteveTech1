@@ -4,8 +4,6 @@ import com.jme3.math.Vector3f;
 
 public interface IInputDevice {
 
-	//public boolean exitPressed();
-	
 	public abstract Vector3f getDirection();
 
 	public abstract Vector3f getLeft();

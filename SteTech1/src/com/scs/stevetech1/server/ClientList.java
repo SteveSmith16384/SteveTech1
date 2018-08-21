@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.scs.stevetech1.netmessages.WelcomeClientMessage;
+import com.scs.stevetech1.netmessages.connecting.WelcomeClientMessage;
 
 public class ClientList {
 
