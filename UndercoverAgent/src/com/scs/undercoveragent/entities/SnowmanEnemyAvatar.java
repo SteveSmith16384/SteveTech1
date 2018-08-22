@@ -1,10 +1,10 @@
 package com.scs.undercoveragent.entities;
 
 import com.jme3.renderer.Camera;
+import com.jme3.scene.Node;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
-import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
@@ -27,7 +27,7 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 	
 	
 	@Override
-	public void drawOnHud(IHUD hud, Camera cam) {
+	public void drawOnHud(Node hud, Camera cam) {
 		// Don't show anything
 	}
 	

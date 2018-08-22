@@ -47,40 +47,10 @@ public class TestGameClient extends AbstractGameClient {
 
 	}
 	
-	
-	@Override
-	protected IHUD createAndGetHUD() {
-		return null;
-	}
-
-
-	@Override
-	protected void playerHasWon() {
-		// Do nothing
-	}
-
-
-	@Override
-	protected void playerHasLost() {
-		// Do nothing
-	}
-
-
-	@Override
-	protected void gameIsDrawn() {
-		// Do nothing
-	}
-
 
 	@Override
 	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg) {
 		return creator.createEntity(client, msg);
-	}
-
-
-	@Override
-	protected void gameStatusChanged(int oldStatus, int newStatus) {
-		// Do nothing
 	}
 
 

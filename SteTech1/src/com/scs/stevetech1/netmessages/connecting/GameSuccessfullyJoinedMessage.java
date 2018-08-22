@@ -10,7 +10,7 @@ public class GameSuccessfullyJoinedMessage extends MyAbstractMessage {
 	public int playerID;
 
 	public GameSuccessfullyJoinedMessage() {
-		super();
+		super(true, false);
 	}
 	
 	

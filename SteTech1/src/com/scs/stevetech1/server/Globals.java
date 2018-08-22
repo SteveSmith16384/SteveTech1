@@ -9,24 +9,24 @@ import ssmith.lang.Functions;
 public class Globals {
 	
 	public static final boolean RECORD_VID = false;
-	public static final boolean RELEASE_MODE = true; // Turn off simulated packet dropping etc...
+	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	//public static final boolean HIDE_BELLS_WHISTLES = false;//!RECORD_VID;
 	public static final boolean STRICT = true;//!RECORD_VID;//true; // Extra checks (which will slow the game down)
 
-	public static final boolean DEBUG_CLICK_TO_SKIP = true;
+	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
 	public static final boolean DEBUG_MISSING_WON_MSG = true;
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_MSGS = false;
+	public static final boolean DEBUG_CLICK_TO_SKIP = false;
 	public static final boolean DEBUG_CPU_HUD_TEXT = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean DEBUG_ORPHAN_BULLETS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
-	//public static final boolean NO_GRAVITY = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_SET_ALIVE = false;
 	public static final boolean DEBUG_PLAYER_START_POS = false;
-	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = false;
 	public static final boolean DEBUG_GUN_ROTATION = false;	
 	public static final boolean DEBUG_GAME_STATUS_CHECK = false;
 	public static final boolean NO_AI_UNITS = false;
@@ -63,7 +63,6 @@ public class Globals {
 	public static final boolean SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP = false;
 	public static final boolean DEBUG_REWIND_POS1 = false;
 	public static final boolean LOG_MOVING_TARGET_POS = false;
-	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
 
 	// Generic entity codes

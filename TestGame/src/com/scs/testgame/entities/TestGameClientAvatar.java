@@ -11,8 +11,8 @@ import com.scs.testgame.models.CharacterModel;
 
 public class TestGameClientAvatar extends AbstractClientAvatar {
 
-	public TestGameClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, float x, float y, float z, int side) {
-		super(_module, TestGameClientEntityCreator.AVATAR, _playerID, _input, _cam, _hud, eid, x, y, z, side, new CharacterModel(_module.getAssetManager()), new PersonAvatar(_module, _input, 3f, 2f));
+	public TestGameClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, int eid, float x, float y, float z, int side) {
+		super(_module, TestGameClientEntityCreator.AVATAR, _playerID, _input, _cam, eid, x, y, z, side, new CharacterModel(_module.getAssetManager()), new PersonAvatar(_module, _input, 3f, 2f));
 		
 	}
 

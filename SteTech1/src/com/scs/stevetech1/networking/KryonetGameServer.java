@@ -7,7 +7,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.minlog.Log;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.data.SimpleGameData;
@@ -25,10 +24,6 @@ import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage.Command;
-import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
-import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
-import com.scs.stevetech1.netmessages.connecting.NewPlayerRequestMessage;
-import com.scs.stevetech1.netmessages.connecting.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.GunReloadingMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
@@ -45,6 +40,10 @@ import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.TestMessage;
 import com.scs.stevetech1.netmessages.UnknownEntityMessage;
+import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
+import com.scs.stevetech1.netmessages.connecting.HelloMessage;
+import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
+import com.scs.stevetech1.netmessages.connecting.NewPlayerRequestMessage;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.systems.client.LaunchData;
@@ -54,7 +53,6 @@ import ssmith.lang.NumberFunctions;
 
 public class KryonetGameServer implements IGameMessageServer {
 
-	//private IMessageServerListener listener;
 	private Server server;
 	private int timeout;
 
@@ -128,7 +126,6 @@ public class KryonetGameServer implements IGameMessageServer {
 
 		// Messages
 		kryo.register(MyAbstractMessage.class);
-		kryo.register(WelcomeClientMessage.class);
 		kryo.register(PingMessage.class);
 		kryo.register(NewPlayerRequestMessage.class);
 		kryo.register(GameSuccessfullyJoinedMessage.class);
@@ -163,6 +160,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(GameLogMessage.class);
 		kryo.register(GunReloadingMessage.class);
 		kryo.register(NumEntitiesMessage.class);
+		kryo.register(HelloMessage.class);
 	}
 
 
@@ -176,46 +174,6 @@ public class KryonetGameServer implements IGameMessageServer {
 		return Globals.RELEASE_MODE == false && Globals.PCENT_DROPPED_PACKETS > 0 && NumberFunctions.rnd(0, 100) < Globals.PCENT_DROPPED_PACKETS;
 	}
 
-/*
-	@Override
-	public void sendMessageToAll(final MyAbstractMessage msg) {
-		if (Globals.DEBUG_MSGS) {
-			Globals.p("Sending to all " + msg);
-		}
-
-		if (Globals.RELEASE_MODE) {// || Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
-
-			if (msg.isReliable()) {
-				server.sendToAllTCP(msg);
-			} else {
-				server.sendToAllUDP(msg);
-			}
-
-		} else {
-
-			if (msg.isReliable()) {
-				server.sendToAllTCP(msg); // todo
-			} else {
-				if (!KryonetGameServer.isPacketDropped()) {
-					if (Globals.MAX_ARTIFICIAL_COMMS_DELAY <= 0) {
-						server.sendToAllUDP(msg);
-					} else { 
-						Thread t = new Thread("CommsDelayThread") {
-
-							@Override
-							public void run() {
-								Functions.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
-								server.sendToAllUDP(msg);
-							}
-
-						};
-						t.start();
-					}
-				}
-			}
-		}
-	}
-*/
 
 	@Override
 	public void sendMessageToClient(final ClientData client, final MyAbstractMessage msg) {
@@ -238,38 +196,33 @@ public class KryonetGameServer implements IGameMessageServer {
 		} else {
 
 			if (msg.isTCP()) {
-				server.sendToTCP(id, msg); // todo
+				server.sendToTCP(id, msg); // todo - delay
 			} else {
 				if (!KryonetGameServer.isPacketDropped()) {
-					Thread t = new Thread("CommsDelayThread") {
-						
-						@Override
-						public void run() {
-							Functions.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
-							server.sendToUDP(id, msg);
-						}
-					};
-					
-					t.start();
+					if (Globals.MAX_ARTIFICIAL_COMMS_DELAY == 0) {
+						server.sendToUDP(id, msg);
+					} else {
+						Thread t = new Thread("CommsDelayThread") {
+
+							@Override
+							public void run() {
+								Functions.sleep(NumberFunctions.rnd(Globals.MIN_ARTIFICIAL_COMMS_DELAY, Globals.MAX_ARTIFICIAL_COMMS_DELAY));
+								server.sendToUDP(id, msg);
+							}
+						};
+
+						t.start();
+					}
 				}
 			}
 		}
 	}
 
-	
+
 	@Override
 	public void close() {
 		server.close();
 	}
 
-/*
-	@Override
-	public void sendMessageToAllExcept(ClientData client, MyAbstractMessage msg) {
-		for (Connection c : this.server.getConnections()) {
-			if (c.getID() != client.id) {
-				this.sendMessage(client.id, msg);
-			}
-		}		
-	}
-*/
+
 }

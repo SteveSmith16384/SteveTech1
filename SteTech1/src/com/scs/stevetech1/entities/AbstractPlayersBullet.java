@@ -130,13 +130,13 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 			// If server, send messages to clients to tell them it has been launched
 			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
-			server.sendMessageToAcceptedClients(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
+			server.sendMessageToInGameClients(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
 		}
 
 	}
 
 
-	protected abstract void createSimpleRigidBody(Vector3f dir); // todo - rename to createModel or something
+	protected abstract void createSimpleRigidBody(Vector3f dir);
 
 
 	@Override
@@ -259,7 +259,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	@Override
 	public float getDamageCaused() {
 		//return ((RANGE-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 10;
-		float dam = (((range-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 5)+5;  // todo - better
+		float dam = (((range-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 5)+5;
 		Globals.p(this + " damage: " + dam);
 		return dam;
 	}

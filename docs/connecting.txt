@@ -1,7 +1,5 @@
 Client connects to server
+MAYBE: server responds with HelloMessage() - need server to send us something before we can send to server?
 
-client sends login details to server
-server responds with welcome message
-
-client request to join game
-server responds with "game joined" message (or "failed" message)
+client request to join game with NewPlayerRequestMessage
+server responds with "GameSuccessfullyJoinedMessage" message (or "JoinGameFailedMessage" message)

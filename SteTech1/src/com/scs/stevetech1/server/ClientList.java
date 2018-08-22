@@ -4,11 +4,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.scs.stevetech1.netmessages.connecting.WelcomeClientMessage;
-
 public class ClientList {
 
-	public HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
+	private HashMap<Integer, ClientData> clients = new HashMap<>(10); // PlayerID::ClientData
 	private LinkedList<ClientData> clientsToAdd = new LinkedList<>();
 	private LinkedList<Integer> clientsToRemove = new LinkedList<>();
 
@@ -56,7 +54,7 @@ public class ClientList {
 			while (this.clientsToAdd.size() > 0) {
 				ClientData client = this.clientsToAdd.remove();
 				this.clients.put(client.id, client);
-				server.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
+				//server.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
 				//Globals.p("Actually added client " + client.id);
 			}
 		}

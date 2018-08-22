@@ -38,7 +38,6 @@ import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
-import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
@@ -52,6 +51,7 @@ import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
+import com.scs.stevetech1.netmessages.connecting.HelloMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.connecting.NewPlayerRequestMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
@@ -65,7 +65,6 @@ import com.scs.stevetech1.systems.server.ServerPingSystem;
 
 import ssmith.lang.Functions;
 import ssmith.lang.NumberFunctions;
-import ssmith.util.ConsoleInputListener;
 import ssmith.util.FixedLoopTime;
 import ssmith.util.RealtimeInterval;
 import ssmith.util.TextConsole;
@@ -142,7 +141,7 @@ ICollisionListener<PhysicalEntity> {
 		setPauseOnLostFocus(false);
 
 		clientList = new ClientList(this);
-		
+
 		consoleInput = new ConsoleInputHandler(this); 
 	}
 
@@ -203,7 +202,8 @@ ICollisionListener<PhysicalEntity> {
 		this.clientList.addRemoveClients();
 
 		if (gameNetworkServer.getNumClients() > 0) {
-			handleMessages();			
+			handleMessages();
+			iterateThroughClients();
 			this.actuallyRemoveEntities();
 
 			checkForRewinding();
@@ -214,7 +214,9 @@ ICollisionListener<PhysicalEntity> {
 				gameStatusSystem.checkGameStatus(false);
 			}
 
-			this.pingSystem.process();
+			if (!Globals.DEBUG_MSGS) { // Don't send pings if we're debugging msgs
+				this.pingSystem.process();
+			}
 		}
 
 		loopTimer.waitForFinish(); // Keep clients and server running at same speed
@@ -234,6 +236,16 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
+	private void iterateThroughClients() {
+		for (ClientData client : this.clientList.getClients()) {
+			if (!client.sentHello) {
+				this.gameNetworkServer.sendMessageToClient(client, new HelloMessage());
+				client.sentHello = true;
+			}
+		}
+	}
+	
+	
 	private void checkForRewinding() {
 		// If any avatars are shooting a gun the requires "rewinding time", rewind all rewindable entities and calc the hits all together to save time
 		boolean areAnyPlayersShooting = false;
@@ -329,7 +341,7 @@ ICollisionListener<PhysicalEntity> {
 							eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
 							physicalEntity.sendUpdate = false;
 							if (eum.isFull()) {
-								sendMessageToAcceptedClients(eum);
+								sendMessageToInGameClients(eum);
 								eum = new EntityUpdateMessage(); // Start a new message
 							}
 						}
@@ -339,7 +351,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		if (sendUpdates) {
-			sendMessageToAcceptedClients(eum);	
+			sendMessageToInGameClients(eum);	
 		}
 	}
 
@@ -348,7 +360,7 @@ ICollisionListener<PhysicalEntity> {
 		ClientData client = message.client;
 
 		if (message instanceof NewPlayerRequestMessage) {
-			this.playerConnected(client, message);
+			this.playerRequestToJoin(client, message);
 
 		} else if (message instanceof PlayerLeftMessage) {
 			this.connectionRemoved(client.getPlayerID());
@@ -384,7 +396,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	protected synchronized void playerConnected(ClientData client, MyAbstractMessage message) {
+	protected synchronized void playerRequestToJoin(ClientData client, MyAbstractMessage message) {
 		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
 		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
@@ -397,13 +409,13 @@ ICollisionListener<PhysicalEntity> {
 			return;
 		}
 
-		client.clientStatus = ClientData.ClientStatus.Accepted;
-
+		client.clientStatus = ClientData.ClientStatus.InGame;
 		client.playerData = this.createSimplePlayerData();
 		client.playerData.id = client.id;
 		client.playerData.playerName = newPlayerMessage.playerName;
 
-		this.sendMessageToAcceptedClientsExcept(client, new ShowMessageMessage("Player joined!", true));
+		this.sendMessageToInGameClientsExcept(client, new ShowMessageMessage("Player joined game!", true));
+
 		int side = getSide(client);
 		client.playerData.side = side;
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
@@ -411,9 +423,9 @@ ICollisionListener<PhysicalEntity> {
 		client.avatar = createPlayersAvatar(client);
 		sendAllEntitiesToClient(client);
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
-		// this.pingSystem.sendPingToClient(client); No, give them time to warm up
+		client.avatar.startAgain(); // scs new
 		playerJoinedGame(client);
-		appendToGameLog(client.playerData.playerName + " has joined");
+		appendToGameLog(client.playerData.playerName + " has joined the game");
 		gameStatusSystem.checkGameStatus(true);
 	}
 
@@ -429,11 +441,13 @@ ICollisionListener<PhysicalEntity> {
 	public void sendGameStatusMessage() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
 		for(ClientData client : this.clientList.getClients()) {
-			if (client.clientStatus == ClientStatus.Accepted) {
+			if (client.clientStatus == ClientStatus.InGame) {
 				players.add(client.playerData);
 			}
 		}
-		this.sendMessageToAcceptedClients(new SimpleGameDataMessage(this.gameData, players));
+		if (players.size() > 0) {
+			this.sendMessageToInGameClients(new SimpleGameDataMessage(this.gameData, players));
+		}
 	}
 
 
@@ -489,19 +503,17 @@ ICollisionListener<PhysicalEntity> {
 		sendAddRemoveEntityMsgs = true;
 
 		// Create avatars and send new entities to players
-		//synchronized (this.clients) {
-			for (ClientData client : this.clientList.getClients()) {
-				if (client.clientStatus == ClientData.ClientStatus.Accepted) {
-					int side = getSide(client); // New sides
-					client.playerData.side = side;
-					client.avatar = createPlayersAvatar(client);
-					sendAllEntitiesToClient(client);
-					this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
-				}
+		for (ClientData client : this.clientList.getClients()) {
+			if (client.clientStatus == ClientData.ClientStatus.InGame) {
+				int side = getSide(client); // New sides
+				client.playerData.side = side;
+				client.avatar = createPlayersAvatar(client);
+				sendAllEntitiesToClient(client);
+				this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
 			}
-		//}
+		}
 
-		this.gameStatusSystem.checkGameStatus(true); // Set game status to "Deploying" if there's enough players
+		this.gameStatusSystem.checkGameStatus(true); // Sets game status to "Deploying" if there's enough players
 
 	}
 
@@ -534,6 +546,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		if (client == null) {
+			Globals.p("Client unknown so msg ignored");
 			return;
 		}
 
@@ -597,6 +610,8 @@ ICollisionListener<PhysicalEntity> {
 		Globals.p("Client connected!");
 		ClientData client = new ClientData(id, net);
 		this.clientList.addClient(client);
+		
+		//this.gameNetworkServer.sendMessageToClient(client, new HelloMessage()); Don't send straight away since they won't be on the client list yet
 	}
 
 
@@ -607,6 +622,9 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
+	/**
+	 * This gets called by the clientList, when we actually remove the client.
+	 */
 	protected void playerLeft(ClientData client) {
 		Globals.p("Removing player " + client.getPlayerID());
 		// Remove avatar
@@ -664,7 +682,7 @@ ICollisionListener<PhysicalEntity> {
 			NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 			nem.add(e);
 			for (ClientData client : this.clientList.getClients()) {
-				if (client.clientStatus == ClientStatus.Accepted) {
+				if (client.clientStatus == ClientStatus.InGame) {
 					gameNetworkServer.sendMessageToClient(client, nem);
 				}
 			}
@@ -693,7 +711,7 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 		if (sendAddRemoveEntityMsgs) {
-			this.sendMessageToAcceptedClients(new RemoveEntityMessage(id));
+			this.sendMessageToInGameClients(new RemoveEntityMessage(id));
 		}
 	}
 
@@ -776,8 +794,8 @@ ICollisionListener<PhysicalEntity> {
 
 	public void gameStatusChanged(int newStatus) {
 		if (newStatus == SimpleGameData.ST_DEPLOYING) {
-			sendMessageToAcceptedClients(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
-			sendMessageToAcceptedClients(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities)); // Before we increment the game id!
+			sendMessageToInGameClients(new GeneralCommandMessage(GeneralCommandMessage.Command.GameRestarting));
+			sendMessageToInGameClients(new GeneralCommandMessage(GeneralCommandMessage.Command.RemoveAllEntities)); // Before we increment the game id!
 
 			sendAddRemoveEntityMsgs = false; // Prevent sending "remove entities" messages for all the entities
 			removeOldGame();
@@ -803,7 +821,7 @@ ICollisionListener<PhysicalEntity> {
 			int winningSide = this.getWinningSideAtEnd();
 			String name = getSideName(winningSide);
 			this.appendToGameLog(name + " has won!");
-			this.sendMessageToAcceptedClients(new GameOverMessage(winningSide));
+			this.sendMessageToInGameClients(new GameOverMessage(winningSide));
 		}
 	}
 
@@ -874,7 +892,7 @@ ICollisionListener<PhysicalEntity> {
 		data.data.put("start", start);
 		data.data.put("end", end);
 
-		sendMessageToAcceptedClients(nem);
+		sendMessageToInGameClients(nem);
 
 	}
 
@@ -896,7 +914,7 @@ ICollisionListener<PhysicalEntity> {
 			nem.data.add(data);
 		}
 
-		sendMessageToAcceptedClients(nem);
+		sendMessageToInGameClients(nem);
 
 	}
 
@@ -909,7 +927,7 @@ ICollisionListener<PhysicalEntity> {
 		data.data.put("pos", pos);
 		nem.data.add(data);
 
-		sendMessageToAcceptedClients(nem);
+		sendMessageToInGameClients(nem);
 
 	}
 
@@ -930,7 +948,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	public void appendToGameLog(String s) {
-		this.sendMessageToAcceptedClients(new GameLogMessage(s));
+		this.sendMessageToInGameClients(new GameLogMessage(s));
 	}
 
 
@@ -955,17 +973,13 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream) {
-		sendMessageToAcceptedClients(new PlaySoundMessage(_sound, _pos, _volume, _stream));
+		sendMessageToInGameClients(new PlaySoundMessage(_sound, _pos, _volume, _stream));
 
 	}
 
 
-	public void sendMessageToAcceptedClients(MyAbstractMessage msg) {
-		for(ClientData client : this.clientList.getClients()) {
-			if (client.clientStatus == ClientStatus.Accepted) {
-				this.gameNetworkServer.sendMessageToClient(client, msg);
-			}
-		}
+	public void sendMessageToInGameClients(MyAbstractMessage msg) {
+		this.sendMessageToInGameClientsExcept(null, msg);
 	}
 
 
@@ -980,10 +994,10 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	public void sendMessageToAcceptedClientsExcept(ClientData ex, MyAbstractMessage msg) {
+	public void sendMessageToInGameClientsExcept(ClientData ex, MyAbstractMessage msg) {
 		for(ClientData client : this.clientList.getClients()) {
 			if (client != ex) {
-				if (client.clientStatus == ClientStatus.Accepted) {
+				if (client.clientStatus == ClientStatus.InGame) {
 					this.gameNetworkServer.sendMessageToClient(client, msg);
 				}
 			}

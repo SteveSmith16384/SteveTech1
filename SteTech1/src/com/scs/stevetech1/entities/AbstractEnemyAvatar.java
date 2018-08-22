@@ -104,22 +104,8 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 
 	@Override
-	public void drawOnHud(IHUD hud, Camera cam) {
-		/*FrustumIntersect insideoutside = cam.contains(this.getMainNode().getWorldBound());
-		if (insideoutside != FrustumIntersect.Outside) {
-			if (this.hudNode.getText().length() == 0) {
-				hudNode.setText(playersName);
-			}
-			tmpHudPos.set(this.getWorldTranslation());
-			tmpHudPos.y += anim.getSize().y;
-			//Vector3f pos = this.getWorldTranslation().add(0, anim.getSize().y, 0);
-			Vector3f screen_pos = cam.getScreenCoordinates(tmpHudPos, tmpScreenPos);
-			this.hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
-		} else {
-			this.hudNode.setText(""); // Hide it
-		}*/
-		super.checkHUDNode(hudNode, hud, cam, 2f, anim.getSize().y);
-
+	public void drawOnHud(Node hud, Camera cam) {
+		super.checkHUDNode(hudNode, cam, 2f, anim.getSize().y);
 	}
 
 

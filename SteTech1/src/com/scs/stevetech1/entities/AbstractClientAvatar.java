@@ -31,18 +31,16 @@ import com.scs.stevetech1.shared.PositionCalculator;
  */
 public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient, IKillable {
 
-	public IHUD hud;
 	public Camera cam;
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(Globals.HISTORY_DURATION); // So we know where we were in the past to compare against where the server says we should have been
 	private Spatial debugNode;
 	public PhysicalEntity killer;
 
-	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, IHUD _hud, int eid, 
+	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, int eid, 
 			float x, float y, float z, int side, IAvatarModel avatarModel, IAvatarControl _avatarControl) {
 		super(_client, avatarType, _playerID, _input, eid, side, avatarModel, _avatarControl);
 
 		cam = _cam;
-		hud = _hud;
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 
@@ -133,11 +131,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			cam.getLocation().z = vec.z;
 			cam.update();
 		}
-
+/*
 		if (hud != null) {
 			hud.processByClient((AbstractGameClient)client, tpf_secs);
 		}
-
+*/
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			EntityPositionData epd = historicalPositionData.calcPosition(System.currentTimeMillis(), false);
 			if (epd != null) {
@@ -206,7 +204,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public Vector3f getBulletStartPos() {
 		AbstractGameClient client = (AbstractGameClient)game;
-		Spatial s = client.playersWeaponNode.getChild(0);
+		Spatial s = client.playersWeaponNode;
+		if (client.playersWeaponNode.getChildren().size() > 0) {
+			s = client.playersWeaponNode.getChild(0);
+		}
 		Vector3f pos = s.getWorldTranslation().clone();
 		pos.y += 0.1f;
 		return pos;

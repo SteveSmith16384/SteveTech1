@@ -9,7 +9,7 @@ import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class PersonAvatar implements IAvatarControl { // todo - rename
+public class PersonAvatar implements IAvatarControl {
 
 	protected IEntityController game;
 	private IInputDevice input;

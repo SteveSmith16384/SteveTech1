@@ -480,13 +480,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f tmpHudPos = new Vector3f();
 	private Vector3f tmpScreenPos = new Vector3f();
 
-	protected void checkHUDNode(Node hudNode, IHUD hud, Camera cam, float maxDist, float yOffset) {
+	protected void checkHUDNode(Node hudNode, Camera cam, float maxDist, float yOffset) {
 		//if (hudNode != null) {
 		boolean show = this.getWorldTranslation().distance(cam.getLocation()) < maxDist;
 		show = show && cam.contains(this.getMainNode().getWorldBound()) != FrustumIntersect.Outside;
 		if (show) {
 			if (hudNode.getParent() == null) {
-				hud.addChild(hudNode);
+				hudNode.attachChild(hudNode);
 			}
 			tmpHudPos.set(this.getWorldTranslation());
 			tmpHudPos.y += yOffset;

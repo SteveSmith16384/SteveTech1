@@ -4,6 +4,7 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.util.SkyFactory;
@@ -97,6 +98,8 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		dlsr.setLight(sun);
 		this.viewPort.addProcessor(dlsr);
 
+		hud = new UndercoverAgentHUD(this, this.getCamera());
+		
 		//this.setupForGame();
 		this.connect(this, ipAddress, port, false);
 	}
@@ -119,7 +122,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	public void simpleUpdate(float tpf_secs) {
 		super.simpleUpdate(tpf_secs);
 
-		if (this.clientStatus == AbstractGameClient.STATUS_IN_GAME) {
+		if (this.joinedGame) {
 			snowflakeSystem.process(tpf_secs);
 		}
 		
@@ -188,13 +191,13 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
-
+/*
 	@Override
 	protected IHUD createAndGetHUD() {
 		hud = new UndercoverAgentHUD(this, this.getCamera());
 		return hud;
 	}
-
+*/
 
 	@Override
 	protected void gameStatusChanged(int oldStatus, int newStatus) {
@@ -205,15 +208,15 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
 			removeCurrentHUDImage();
-			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/waitingforplayers.png", x, y, width, height, 3);
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/waitingforplayers.png", x, y, width, height, 3);
 			break;
 		case SimpleGameData.ST_DEPLOYING:
 			removeCurrentHUDImage();
-			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/getready.png", x, y, width, height, 3);
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/getready.png", x, y, width, height, 3);
 			break;
 		case SimpleGameData.ST_STARTED:
 			removeCurrentHUDImage();
-			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/missionstarted.png", x, y, width, height, 3);
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/missionstarted.png", x, y, width, height, 3);
 			break;
 		case SimpleGameData.ST_FINISHED:
 			// Don't show anything, this will be handled with a win/lose message
@@ -236,7 +239,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected Spatial getPlayersWeaponModel() {
-		return null;
+		return null;//new Node("Weapon node");
 	}
 
 

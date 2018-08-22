@@ -70,7 +70,7 @@ public class TestGameClientEntityCreator {
 			//float jumpForce = (float)msg.data.get("jumpForce");
 
 			if (playerID == game.playerID) {
-				AbstractClientAvatar avatar = new TestGameClientAvatar(game, id, game.input, game.getCamera(), game.hud, id, pos.x, pos.y, pos.z, side);
+				AbstractClientAvatar avatar = new TestGameClientAvatar(game, id, game.input, game.getCamera(), id, pos.x, pos.y, pos.z, side);
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these

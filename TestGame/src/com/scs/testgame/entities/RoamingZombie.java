@@ -92,7 +92,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		EntityUpdateMessage eum = new EntityUpdateMessage();
 		eum.addEntityData(this, true, this.createEntityUpdateDataRecord());
 		AbstractGameServer server = (AbstractGameServer)this.game;
-		server.sendMessageToAcceptedClients(eum);
+		server.sendMessageToInGameClients(eum);
 
 	}
 	

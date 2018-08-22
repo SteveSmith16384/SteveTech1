@@ -8,5 +8,5 @@ public interface IDrawOnHUD {
 
 	Node getHUDItem();
 	
-	void drawOnHud(IHUD hud, Camera cam);
+	void drawOnHud(Node node, Camera cam);
 }

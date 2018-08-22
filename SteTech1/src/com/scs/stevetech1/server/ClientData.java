@@ -8,7 +8,7 @@ import ssmith.util.AverageNumberCalculator;
 
 public class ClientData {
 
-	public enum ClientStatus { Connected, Accepted, Spectating }; // Accepted == has been given a slot in the game
+	public enum ClientStatus { Connected, InGame, Spectator };
 
 	public Object networkObj;
 	public int id;
@@ -19,6 +19,7 @@ public class ClientData {
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
 	public SimplePlayerData playerData;
 	public ClientStatus clientStatus = ClientStatus.Connected;
+	public boolean sentHello = false;
 
 	public ClientData(int _id, Object _networkObj) {
 		super();
@@ -42,19 +43,4 @@ public class ClientData {
 		return this.playerData.side;
 	}
 	
-	/*
-	public int getScore() {
-		return this.score;
-	}
-
-
-	public void incScore(int i) {
-		this.score += i;
-	}
-
-
-	public void setScore(int i) {
-		this.score = i;
-	}
-*/
 }

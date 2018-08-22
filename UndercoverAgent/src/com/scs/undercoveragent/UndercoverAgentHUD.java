@@ -304,7 +304,7 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 
 	@Override
 	public void showMessage(String s) {
-		this.appendToLog(s); // todo - show bigger msg
+		this.appendToLog(s);
 	}
 
 

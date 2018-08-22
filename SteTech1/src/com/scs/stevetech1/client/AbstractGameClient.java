@@ -58,7 +58,6 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.ExplosionShard;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
@@ -86,9 +85,9 @@ import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
+import com.scs.stevetech1.netmessages.connecting.HelloMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.connecting.NewPlayerRequestMessage;
-import com.scs.stevetech1.netmessages.connecting.WelcomeClientMessage;
 import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
 import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
@@ -109,14 +108,13 @@ import ssmith.util.TextConsole;
 public abstract class AbstractGameClient extends SimpleApplication implements IClientApp, IEntityController, 
 ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, ConsoleInputListener { 
 
-	// Statuses
-	public static final int STATUS_NOT_CONNECTED = 0;
-	public static final int STATUS_CONNECTED_TO_GAME_SERVER = 2;
-	public static final int STATUS_RCVD_WELCOME = 3;
-	public static final int STATUS_SENT_JOIN_REQUEST = 4;
-	public static final int STATUS_JOINED_GAME = 5; // About to be sent all the entities
-	public static final int STATUS_ENTS_RCVD_NOT_ADDED = 6; // Have received all entities, but not added them yet
-	public static final int STATUS_IN_GAME = 7; // Have received all entities and added them
+	// Login Statuses/stages
+	//public static final int STATUS_PRE_GAME = 0;
+	//public static final int STATUS_RCVD_HELLO_MSG = 1;
+	//public static final int STATUS_RCVD_WELCOME = 2;
+	//public static final int STATUS_JOINED_GAME = 5; // About to be sent all the entities
+	//public static final int STATUS_ENTS_RCVD_NOT_ADDED = 6; // Have received all entities, but not added them yet
+	//public static final int STATUS_IN_GAME = 7; // Have received all entities and added them
 
 	private static final String JME_SETTINGS_NAME = "jme_client_settings.txt";
 
@@ -140,9 +138,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
 	private String gameCode; // To check the right type of client is connecting
+	private String key; // Check we're a valid client
 	private String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
 	public IGameMessageClient networkClient;
-	public IHUD hud;
+	//public IHUD hud;
 	public IInputDevice input;
 
 	// On-screen gun
@@ -159,10 +158,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
-	public int clientStatus = STATUS_NOT_CONNECTED;
+	//private int clientStatus = STATUS_PRE_GAME;
+	protected boolean joinedGame = false;
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
-	private int expectedNumEntities = -1;
+	private int expectedNumEntities = -1; // So we can show "% complete"
 
 	protected Node gameNode = new Node("GameNode");
 	protected Node debugNode = new Node("DebugNode");
@@ -172,9 +172,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	public long serverTime, renderTime;
 	private float mouseSens;
-	private String key;
 	private String consoleInput;
-	private boolean showHistory = false;
+	private boolean showHistory = false; // SHowing history cam (feature in progress)
 
 	protected Thread connectingThread;
 	public Exception lastConnectException;
@@ -253,7 +252,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		input = new MouseAndKeyboardCamera(getCamera(), getInputManager(), mouseSens);
 		addDefaultKeyboardMappings();
-		
+
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
 
 		setUpLight();
@@ -261,7 +260,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (!Globals.RELEASE_MODE) {
 			this.getRootNode().attachChild(this.debugNode);
 		}
-		
+
 		if (Globals.RECORD_VID) {
 			Globals.p("Recording video!");
 			VideoRecorderAppState video_recorder = new VideoRecorderAppState();
@@ -275,11 +274,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		new TextConsole(this);
 
 		loopTimer.start();
-		
+		/*
 		hud = this.createAndGetHUD();
 		if (hud != null) {
 			getGuiNode().attachChild(hud.getRootNode());
 		}
+		 */
 	}
 
 
@@ -296,20 +296,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	public void connect(AbstractGameClient client, String gameServerIP, int gamePort, boolean thread) {
 		lastConnectException = null;
-		
+
 		connectingThread = new Thread("ConnectingToServer") {
 
 			@Override
 			public void run() {
 				try {
 					networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, client, timeoutMillis, getListofMessageClasses());
-					clientStatus = STATUS_CONNECTED_TO_GAME_SERVER;
+					//clientStatus = STATUS_CONNECTED_TO_GAME_SERVER;
 				} catch (Exception e) {
 					lastConnectException = e;
 				}
 			}
 		};
-		
+
 		if (thread) {
 			connectingThread.start();
 		} else {
@@ -321,14 +321,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 
 	}
-	
+
 	public boolean isConnecting() {
 		return connectingThread != null && connectingThread.isAlive();
 	}
 
 	protected abstract Class[] getListofMessageClasses();
 
-	protected abstract IHUD createAndGetHUD();
+	//protected abstract IHUD createAndGetHUD(); // todo - remove?
 
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;
@@ -375,8 +375,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				processMessages();
 
-				if (clientStatus >= STATUS_CONNECTED_TO_GAME_SERVER && sendPingInterval.hitInterval()) {
-					networkClient.sendMessageToServer(new PingMessage(false, 0));
+				if (!Globals.DEBUG_MSGS) { // Don't send pings if we're debugging msgs
+					if (this.isConnected() && sendPingInterval.hitInterval()) {
+						networkClient.sendMessageToServer(new PingMessage(false, 0));
+					}
 				}
 
 				// Remove entities
@@ -402,26 +404,26 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							i--;
 						}
 					}
-				} else {
+				}/* else {
 					if (this.clientStatus == STATUS_ENTS_RCVD_NOT_ADDED) {
 						this.getRootNode().attachChild(this.gameNode);
 						this.showPlayersWeapon();
 						clientStatus = STATUS_IN_GAME;
 					}
-				}
+				}*/
 
 				if (currentlyReloading) {
 					this.reloading(tpfSecs, this.finishedReloadAt > 0);
 				}
 
-				if (clientStatus == STATUS_IN_GAME) {
+				if (joinedGame) {
 
 					this.sendInputs();
 
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
 							long timeDiff = this.currentAvatar.historicalPositionData.getMostRecent().serverTimestamp - renderTime;
-							this.hud.setDebugText("Latest Data is " + timeDiff + " newer than we need");
+							//this.hud.setDebugText("Latest Data is " + timeDiff + " newer than we need");
 						} catch (Exception ex) {
 							// do nothing, no data yet
 						}
@@ -483,8 +485,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 
 	}
-	
-	
+
+
 	private void iterateThroughEntities(float tpfSecs) {
 		// Loop through each entity and process them
 		for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
@@ -524,14 +526,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				if (e instanceof IDrawOnHUD) {
 					IDrawOnHUD doh = (IDrawOnHUD)e;
-					doh.drawOnHud(hud, cam);
+					doh.drawOnHud(this.getGuiNode(), cam);
 				}
 			}
 		}
 
 	}
 
-	
+
 	private void checkNodesExistInEntities() {
 		if (Globals.STRICT) {
 			// Check all Nodes are in the entity list
@@ -569,28 +571,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof ShowMessageMessage) {
 			ShowMessageMessage gsm = (ShowMessageMessage)message;
-			this.hud.showMessage(gsm.msg);
+			this.showMessage(gsm.msg);
 
 		} else if (message instanceof GameSuccessfullyJoinedMessage) {
 			GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
 				this.side = npcm.side;
-				//this.hud.setDebugText("PlayerID=" + this.playerID);
-				clientStatus = STATUS_JOINED_GAME;
+				joinedGame = true;
 			} else {
-				throw new RuntimeException("Already rcvd NewPlayerAckMessage");
+				throw new RuntimeException("Already received GameSuccessfullyJoinedMessage");
 			}
 
-		} else if (message instanceof WelcomeClientMessage) {
-			WelcomeClientMessage rem = (WelcomeClientMessage)message;
-			if (clientStatus < STATUS_RCVD_WELCOME) {
-				clientStatus = STATUS_RCVD_WELCOME; // Need to wait until we receive something from the server before we can send to them?
-				networkClient.sendMessageToServer(new NewPlayerRequestMessage(gameCode, playerName, key));
-				clientStatus = STATUS_SENT_JOIN_REQUEST;
-			} else {
-				throw new RuntimeException("Received second welcome message");
-			}
+		} else if (message instanceof HelloMessage) {
+			receivedWelcomeMessage();
 
 		} else if (message instanceof SimpleGameDataMessage) {
 			SimpleGameData oldGameData = this.gameData;
@@ -630,37 +624,37 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 
 		} else if (message instanceof EntityUpdateMessage) {
-			if (clientStatus >= STATUS_JOINED_GAME) {
-				EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
-				for(EntityUpdateData eud : mainmsg.data) {
-					IEntity e = this.entities.get(eud.entityID);
-					if (e != null) {
-						if (Globals.DEBUG_NO_UPDATE_MSGS) {
-							Globals.p("Received EntityUpdateMessage for " + e);
-						}
-						if (Globals.DEBUG_CPU_HUD_TEXT) {
-							if (e.getName().equalsIgnoreCase("computer")) {
-								Globals.p("Sending computer update");
-							}
-						}								
-						PhysicalEntity pe = (PhysicalEntity)e;
-						pe.storePositionData(eud, mainmsg.timestamp);
-						if (pe.chronoUpdateData != null) {
-							pe.chronoUpdateData.addData(eud);
-						}
-						if (Globals.DEBUG_DIE_ANIM) {
-							if (eud.animationCode == AbstractAvatar.ANIM_DIED) {
-								Globals.p("Rcvd death anim for " + e);
-							}
-						}
-					} else {
-						// Globals.p("Unknown entity ID for update: " + eum.entityID);
-						// Ask the server for entity details since we don't know about it.
-						// No, since we might not have joined the game yet! (server uses broadcast()
-						// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
+			//if (clientStatus >= STATUS_JOINED_GAME) {
+			EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
+			for(EntityUpdateData eud : mainmsg.data) {
+				IEntity e = this.entities.get(eud.entityID);
+				if (e != null) {
+					if (Globals.DEBUG_NO_UPDATE_MSGS) {
+						Globals.p("Received EntityUpdateMessage for " + e);
 					}
+					if (Globals.DEBUG_CPU_HUD_TEXT) {
+						if (e.getName().equalsIgnoreCase("computer")) {
+							Globals.p("Sending computer update");
+						}
+					}								
+					PhysicalEntity pe = (PhysicalEntity)e;
+					pe.storePositionData(eud, mainmsg.timestamp);
+					if (pe.chronoUpdateData != null) {
+						pe.chronoUpdateData.addData(eud);
+					}
+					if (Globals.DEBUG_DIE_ANIM) {
+						if (eud.animationCode == AbstractAvatar.ANIM_DIED) {
+							Globals.p("Rcvd death anim for " + e);
+						}
+					}
+				} else {
+					// Globals.p("Unknown entity ID for update: " + eum.entityID);
+					// Ask the server for entity details since we don't know about it.
+					// No, since we might not have joined the game yet! (server uses broadcast()
+					// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
 				}
 			}
+			//}
 
 		} else if (message instanceof RemoveEntityMessage) {
 			RemoveEntityMessage rem = (RemoveEntityMessage)message;
@@ -679,15 +673,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			//if (msg.gameID == this.getGameID()) { Might not have game id
 			Globals.p("Rcvd GeneralCommandMessage: " + msg.command.toString());
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
-				clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;
+				//clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;
 				this.expectedNumEntities = -1;
-				this.hud.appendToLog("All entities received");
-				allEntitiesSent();
+				this.appendToLog("All entities received");
+				allEntitiesReceived();
 			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
 				this.removeAllEntities();
 			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) {
-				this.hud.appendToLog("Game restarting...");
-				clientStatus = STATUS_JOINED_GAME;
+				this.appendToLog("Game restarting...");
+				//clientStatus = STATUS_JOINED_GAME;
+				// todo - remove gun and gameNode?
 			} else {
 				throw new RuntimeException("Unknown command:" + msg.command);
 			}
@@ -737,7 +732,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (Globals.DEBUG_PLAYER_RESTART) {
 				Globals.p("Rcvd AvatarStartedMessage");
 			}
-			AvatarStartedMessage asm = (AvatarStartedMessage)message;
+			AvatarStartedMessage asm = (AvatarStartedMessage) message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 				currentAvatar.setAlive(true);
 				currentAvatar.killer = null;
@@ -760,20 +755,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				//this.currentAvatar.moveSpeed = asm.moveSpeed;
 				//this.currentAvatar.setJumpForce(asm.jumpForce);
 				if (asm.damaged) {
-					hud.showDamageBox();
+					showDamageBox();
 				}
 			}
 
 		} else if (message instanceof GameOverMessage) {
 			GameOverMessage gom = (GameOverMessage)message;
 			if (gom.winningSide == -1) {
-				hud.showMessage("The game is a draw!");
+				showMessage("The game is a draw!");
 				this.gameIsDrawn();
 			} else if (gom.winningSide == this.side) {
-				hud.showMessage("You have won!");
+				showMessage("You have won!");
 				this.playerHasWon();
 			} else {
-				hud.showMessage("You have won!");
+				showMessage("You have won!");
 				this.playerHasLost();
 			}
 
@@ -797,12 +792,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof GameLogMessage) {
 			GameLogMessage glm = (GameLogMessage)message;
-			this.hud.appendToLog(glm.logEntry);
+			this.appendToLog(glm.logEntry);
 
 		} else if (message instanceof GunReloadingMessage) {
 			GunReloadingMessage grm = (GunReloadingMessage)message;
-			//this.reloading(true);
-			//this.gunAngle = 0;
 			this.finishedReloadAt = grm.duration_secs;
 			this.currentlyReloading = true;
 
@@ -816,19 +809,62 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		return true;
 	}
+	
+	
+	/**
+	 * Override if required
+	 */
+	protected void showDamageBox() {
+	}
 
 
 	/**
 	 * Override if required
 	 */
-	protected void allEntitiesSent() {
+	protected void showMessage(String msg) {
+		Globals.p(msg);
+	}
+
+
+	/**
+	 * Override if required
+	 */
+	protected void appendToLog(String msg) {
+		Globals.p(msg);
+	}
+
+
+	/**
+	 * Override this if you don't want to join a game immediately after connecting.
+	 */
+	protected void receivedWelcomeMessage() {
+		this.joinGame();
+	}
+
+
+	public void joinGame() {
+		/*if (this.clientStatus < STATUS_RCVD_WELCOME) {
+			throw new RuntimeException("Trying to join game before logging in");
+		}*/
+		networkClient.sendMessageToServer(new NewPlayerRequestMessage(this.gameCode, this.playerName, this.key));
+	}
+
+
+	/**
+	 * Override if required
+	 */
+	protected void allEntitiesReceived() {
+		//allEntitiesReceived = true;
+		this.getRootNode().attachChild(this.gameNode); // todo - do once all actually added?
+		this.showPlayersWeapon();
+
 	}
 
 
 	private void setAvatar(IEntity e) {
 		if (e != null) {
 			if (e instanceof AbstractClientAvatar) {
-				this.currentAvatar = (AbstractClientAvatar)e;//this.entities.get(currentAvatarID);
+				this.currentAvatar = (AbstractClientAvatar)e;
 				if (Globals.DEBUG_AVATAR_SET) {
 					Globals.p("Avatar for player is now " + currentAvatar);
 				}
@@ -838,8 +874,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			} else {
 				throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);
 			}
-		} else {
-			//Globals.pe("Trying to set null avatar");
 		}
 	}
 
@@ -868,15 +902,21 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	protected abstract void playerHasWon();
+	protected void playerHasWon() {
+		// Override if required
+	}
 
-	
-	protected abstract void playerHasLost();
 
-	
-	protected abstract void gameIsDrawn();
+	protected void playerHasLost() {
+		// Override if required
+	}
 
-	
+
+	protected void gameIsDrawn() {
+		// Override if required
+	}
+
+
 	private void playSound(PlaySoundMessage psm) {
 		this.playSound(psm.sound, psm.pos, psm.volume, psm.stream);
 	}
@@ -909,7 +949,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			float frac = (this.entities.size()) / (float)this.expectedNumEntities; //  this.entitiesToAddToGame.size()
 			int fracPC = (int)(frac * 100);
 			Globals.p("Entities: " + fracPC + "%");
-			this.hud.showMessage("Loading entities: " + fracPC + "%");
+			this.showMessage("Loading entities: " + fracPC + "%");
 		}
 
 	}
@@ -931,7 +971,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	protected abstract void gameStatusChanged(int oldStatus, int newStatus);
+	protected void gameStatusChanged(int oldStatus, int newStatus) {
+		// Override if required
+	}
 
 
 	@Override
@@ -1190,6 +1232,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void disconnected() {
+		joinedGame = false;
 		Globals.p("Disconnected!");
 	}
 
@@ -1469,7 +1512,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	}
 
-	
+
 	public boolean isConnected() {
 		return this.networkClient != null && networkClient.isConnected();
 	}

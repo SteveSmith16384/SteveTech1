@@ -88,7 +88,7 @@ public class KryonetGameClient implements IGameMessageClient {
 		} else {
 
 			if (msg.isTCP()) {
-				client.sendTCP(msg); // todo
+				client.sendTCP(msg); // todo - delay
 			} else {
 				if (!KryonetGameServer.isPacketDropped()) {
 					if (Globals.MAX_ARTIFICIAL_COMMS_DELAY <= 0) {

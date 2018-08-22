@@ -52,7 +52,7 @@ public class ConsoleInputHandler implements ConsoleInputListener {
 			for (IEntity e : server.entities.values()) {
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity pe  = (PhysicalEntity)e;
-					server.sendMessageToAcceptedClients(new ModelBoundsMessage(pe));
+					server.sendMessageToInGameClients(new ModelBoundsMessage(pe));
 				}
 			}
 		//}
