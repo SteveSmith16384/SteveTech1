@@ -12,7 +12,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, ILaunchable, INotifiedOfCollision, IDontCollideWithComrades {
+public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, INotifiedOfCollision, IDontCollideWithComrades, ILaunchable { 
 
 	public IEntity shooter; // So we know who not to collide with
 	private int side;

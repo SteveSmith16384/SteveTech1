@@ -1,7 +1,6 @@
 package com.scs.undercoveragent;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
@@ -14,13 +13,9 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
-import com.jme3.ui.Picture;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.gui.TextArea;
-import com.scs.stevetech1.hud.IHUD;
-import com.scs.stevetech1.server.Globals;
 
 import ssmith.util.RealtimeInterval;
 
@@ -28,7 +23,7 @@ import ssmith.util.RealtimeInterval;
  * Positioning text = the co-ords of BitmapText are for the top-left of the first line of text, and they go down from there.
  * 
  */
-public class UndercoverAgentHUD extends Node implements IHUD {
+public class UndercoverAgentHUD extends Node {
 
 	private static final float LINE_SPACING = 10;
 	private static final int MAX_LINES = 5;
@@ -185,7 +180,6 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 	}
 
 
-	@Override
 	public void processByClient(AbstractGameClient client, float tpf) {
 		if (showGameTimeInterval.hitInterval()) {
 			if (client.gameData != null) {
@@ -295,7 +289,7 @@ public class UndercoverAgentHUD extends Node implements IHUD {
 		this.dam_box_col.b = 1f;
 	}
 
-
+/*
 	@Override
 	public Node getRootNode() {
 		return this;
