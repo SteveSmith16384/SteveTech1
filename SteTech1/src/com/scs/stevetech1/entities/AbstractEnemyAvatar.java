@@ -18,7 +18,6 @@ import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.ISetRotation;
-import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -35,7 +34,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	private Node container;
 
 	// HUD
-	protected BitmapText hudNode;
+	protected BitmapText bmpText;
 	private static BitmapFont font_small;
 
 	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int _side, String _playersName) {
@@ -69,8 +68,8 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		simpleRigidBody.setGravity(0); // So they move exactly where we want, even when client jumps
 
 		font_small = game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-		hudNode = new BitmapText(font_small);
-		hudNode.setText(playersName);
+		bmpText = new BitmapText(font_small);
+		bmpText.setText(playersName);
 	}
 
 
@@ -99,13 +98,13 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 	@Override
 	public Node getHUDItem() {
-		return this.hudNode;
+		return this.bmpText;
 	}
 
 
 	@Override
 	public void drawOnHud(Node hud, Camera cam) {
-		super.checkHUDNode(hudNode, cam, 2f, anim.getSize().y);
+		super.checkHUDNode(hud, bmpText, cam, 2f, anim.getSize().y);
 	}
 
 

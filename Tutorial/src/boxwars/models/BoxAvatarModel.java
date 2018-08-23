@@ -38,7 +38,7 @@ public class BoxAvatarModel implements IAvatarModel {
 		floor_mat.setTexture("DiffuseMap", tex3);
 		geometry.setMaterial(floor_mat);
 
-		geometry.setLocalTranslation(0, h, 0); // Origin is at the bottom
+		geometry.setLocalTranslation(0, h/2, 0); // Origin is at the bottom
 
 	}
 

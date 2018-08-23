@@ -31,7 +31,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
 	private IEntityContainer<AbstractPlayersBullet> container;
-	
+
 	private ClientData client; // Only used server-side
 	protected Vector3f origin;
 
@@ -76,18 +76,20 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 	@Override
 	public void launch(IEntity _shooter, Vector3f startPos, Vector3f _dir) {
-		if (launched) {
-			throw new RuntimeException("Trying to relaunch launched bullet");
-		}
-		if (this.getMainNode().getChildren().size() > 0) {
-			throw new RuntimeException("Trying to relaunch launched bullet (has children)");
-		}
-		if (_shooter == null) {
-			throw new RuntimeException("Null launcher");
-		}
-
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			Globals.p("Launching entity " + this);
+		}
+
+		if (Globals.STRICT) {
+			if (launched) {
+				throw new RuntimeException("Trying to relaunch launched bullet");
+			}
+			if (this.getMainNode().getChildren().size() > 0) {
+				throw new RuntimeException("Trying to relaunch launched bullet (has children)");
+			}
+			if (_shooter == null) {
+				throw new RuntimeException("Null launcher");
+			}
 		}
 
 		launched = true;
@@ -95,7 +97,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		shooter = _shooter;
 		origin = startPos.clone();
 
-		this.createSimpleRigidBody(dir);
+		this.createModelAndSimpleRigidBody(dir);
 
 		game.getGameNode().attachChild(this.mainNode); // Need this for client side
 		this.setWorldTranslation(startPos);
@@ -105,7 +107,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 
 		if (game.isServer()) {
 			if (Globals.DEBUG_DELAYED_EXPLOSION) {
-				//Globals.p("Start of ffwding -------------------------");
+				Globals.p("Start of ffwding -------------------------");
 			}
 			AbstractGameServer server = (AbstractGameServer)game;
 
@@ -125,7 +127,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			}
 
 			if (Globals.DEBUG_DELAYED_EXPLOSION) {
-				//Globals.p("End of ffwding -------------------------");
+				Globals.p("End of ffwding -------------------------");
 			}
 
 			// If server, send messages to clients to tell them it has been launched
@@ -136,7 +138,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 	}
 
 
-	protected abstract void createSimpleRigidBody(Vector3f dir);
+	protected abstract void createModelAndSimpleRigidBody(Vector3f dir);
 
 
 	@Override
@@ -270,7 +272,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		this.container.removeFromCache(this);
 		super.remove();
 	}
-	
-	
+
+
 }
 

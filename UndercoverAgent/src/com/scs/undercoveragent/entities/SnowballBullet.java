@@ -20,26 +20,11 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
-public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOfCollision {//, IRemoveOnContact {
+public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
 
 	public SnowballBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
 		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", playerOwnerId, owner, _side, _client, null, false, 0f, 0f);
 
-		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
-		sphere.setTextureMode(TextureMode.Projected);
-		Geometry ball_geo = new Geometry("grenade", sphere);
-
-		if (!_game.isServer()) { // Not running in server
-			ball_geo.setShadowMode(ShadowMode.CastAndReceive);
-			TextureKey key3 = new TextureKey( "Textures/snow.jpg");
-			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-			floor_mat.setTexture("DiffuseMap", tex3);
-			ball_geo.setMaterial(floor_mat);
-		}
-
-		ball_geo.setModelBound(new BoundingBox());
-		this.mainNode.attachChild(ball_geo); //ball_geo.getModelBound();
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 	}
 
@@ -52,7 +37,6 @@ public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOf
 
 	@Override
 	public void collided(PhysicalEntity pe) {
-		//Globals.p("Snowball hit something at " + System.currentTimeMillis());
 		if (Globals.SHOW_BULLET_COLLISION_POS) {
 			if (game.isServer()) {
 				// Create debugging sphere
@@ -66,7 +50,23 @@ public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOf
 
 
 	@Override
-	protected void createSimpleRigidBody(Vector3f dir) {
+	protected void createModelAndSimpleRigidBody(Vector3f dir) {
+		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
+		sphere.setTextureMode(TextureMode.Projected);
+		Geometry ball_geo = new Geometry("grenade", sphere);
+
+		if (!game.isServer()) {
+			ball_geo.setShadowMode(ShadowMode.CastAndReceive);
+			TextureKey key3 = new TextureKey( "Textures/snow.jpg");
+			Texture tex3 = game.getAssetManager().loadTexture(key3);
+			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			floor_mat.setTexture("DiffuseMap", tex3);
+			ball_geo.setMaterial(floor_mat);
+		}
+
+		ball_geo.setModelBound(new BoundingBox());
+		this.mainNode.attachChild(ball_geo);
+
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		this.simpleRigidBody.setBounciness(0f);
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));

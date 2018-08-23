@@ -24,6 +24,7 @@ public class ServerGameStatusSystem {
 		if (Globals.DEBUG_GAME_STATUS_CHECK) {
 			Globals.p("Checking game status.");
 		}
+		
 		SimpleGameData gameData = server.getGameData();
 
 		if (playersChanged) {
@@ -32,10 +33,8 @@ public class ServerGameStatusSystem {
 				Globals.p("Checking game status.  enoughPlayers=" + enoughPlayers);
 			}
 			if (!enoughPlayers && gameData.isInGame()) {
-				//gameData.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS, 0);
 				this.setGameStatus(SimpleGameData.ST_WAITING_FOR_PLAYERS);
 			} else if (enoughPlayers && gameData.getGameStatus() == SimpleGameData.ST_WAITING_FOR_PLAYERS) {
-				//gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 				this.setGameStatus(SimpleGameData.ST_DEPLOYING);
 			}
 		}
@@ -45,17 +44,14 @@ public class ServerGameStatusSystem {
 			// Do nothing...
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_DEPLOYING) {
 			if (currentDuration >= gameData.getStatusDuration()) {
-				//gameData.setGameStatus(SimpleGameData.ST_STARTED, gameOptions.gameDurationMillis);
 				this.setGameStatus(SimpleGameData.ST_STARTED);
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_STARTED) {
 			if (currentDuration >= gameData.getStatusDuration()) {
-				//gameData.setGameStatus(SimpleGameData.ST_FINISHED, gameOptions.finishedDurationMillis);
 				this.setGameStatus(SimpleGameData.ST_FINISHED);
 			}
 		} else if (gameData.getGameStatus() == SimpleGameData.ST_FINISHED) {
 			if (currentDuration >= gameData.getStatusDuration()) {
-				//gameData.setGameStatus(SimpleGameData.ST_DEPLOYING, gameOptions.deployDurationMillis);
 				this.setGameStatus(SimpleGameData.ST_DEPLOYING);
 			}
 		} else {

@@ -108,14 +108,6 @@ import ssmith.util.TextConsole;
 public abstract class AbstractGameClient extends SimpleApplication implements IClientApp, IEntityController, 
 ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, ConsoleInputListener { 
 
-	// Login Statuses/stages
-	//public static final int STATUS_PRE_GAME = 0;
-	//public static final int STATUS_RCVD_HELLO_MSG = 1;
-	//public static final int STATUS_RCVD_WELCOME = 2;
-	//public static final int STATUS_JOINED_GAME = 5; // About to be sent all the entities
-	//public static final int STATUS_ENTS_RCVD_NOT_ADDED = 6; // Have received all entities, but not added them yet
-	//public static final int STATUS_IN_GAME = 7; // Have received all entities and added them
-
 	private static final String JME_SETTINGS_NAME = "jme_client_settings.txt";
 
 	// Global controls
@@ -526,11 +518,19 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				if (e instanceof IDrawOnHUD) {
 					IDrawOnHUD doh = (IDrawOnHUD)e;
-					doh.drawOnHud(this.getGuiNode(), cam);
+					doh.drawOnHud(this.getHudNode(), cam);
 				}
 			}
 		}
 
+	}
+
+
+	/**
+	 * Override if required
+	 */
+	public Node getHudNode() {
+		return this.getGuiNode();
 	}
 
 
@@ -809,8 +809,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Override if required
 	 */
@@ -935,6 +935,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				pe.timeToAdd = timeToAdd;
+				/*if (Globals.STRICT) {
+					if (e instanceof ILaunchable) {
+						ILaunchable il = (ILaunchable)e;
+						if (pe.getMainNode().getChildren().size() > 0) {
+							throw new RuntimeException("ILaunchables must have an empty mainNode!");
+						}
+					}
+				}*/
 			}
 			this.addEntity(e);
 			//Globals.p("Finished creating entity " + data.type);
@@ -1232,8 +1240,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void disconnected() {
-		joinedGame = false;
 		Globals.p("Disconnected!");
+		joinedGame = false;
+		this.removeAllEntities();
+		//this.quit("Disconnected");
 	}
 
 

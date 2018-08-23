@@ -100,7 +100,6 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 		hud = new UndercoverAgentHUD(this, this.getCamera());
 		
-		//this.setupForGame();
 		this.connect(this, ipAddress, port, false);
 	}
 
@@ -166,7 +165,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		int height = this.cam.getHeight()/2;
 		int x = (this.cam.getWidth()/2)-(width/2);
 		int y = this.cam.getHeight()/5;
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/victory.png", x, y, width, height, 5);
+		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/victory.png", x, y, width, height, 5);
 	}
 
 
@@ -177,7 +176,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		int height = this.cam.getHeight()/2;
 		int x = (this.cam.getWidth()/2)-(width/2);
 		int y = this.cam.getHeight()/5;
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
+		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
 
@@ -188,16 +187,9 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		int height = this.cam.getHeight()/2;
 		int x = (this.cam.getWidth()/2)-(width/2);
 		int y = this.cam.getHeight()/5;
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.hud.getRootNode(), "Textures/text/defeat.png", x, y, width, height, 5);
+		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/defeat.png", x, y, width, height, 5);
 	}
 
-/*
-	@Override
-	protected IHUD createAndGetHUD() {
-		hud = new UndercoverAgentHUD(this, this.getCamera());
-		return hud;
-	}
-*/
 
 	@Override
 	protected void gameStatusChanged(int oldStatus, int newStatus) {

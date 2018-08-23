@@ -18,7 +18,6 @@ import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IKillable;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IShowOnHUD;
-import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.server.Globals;

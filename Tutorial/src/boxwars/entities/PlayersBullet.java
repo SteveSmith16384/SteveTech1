@@ -58,7 +58,7 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 
 
 	@Override
-	protected void createSimpleRigidBody(Vector3f dir) {
+	protected void createModelAndSimpleRigidBody(Vector3f dir) {
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		this.simpleRigidBody.setBounciness(0f);
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));

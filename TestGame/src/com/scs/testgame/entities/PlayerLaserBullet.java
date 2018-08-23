@@ -34,7 +34,7 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 
 
 	@Override
-	protected void createSimpleRigidBody(Vector3f dir) {
+	protected void createModelAndSimpleRigidBody(Vector3f dir) {
 		Spatial laserNode = null;
 		if (USE_CYLINDER) {
 			Vector3f origin = Vector3f.ZERO;

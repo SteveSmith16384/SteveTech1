@@ -22,7 +22,6 @@ import com.scs.stevetech1.components.IPhysicalEntity;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ISetRotation;
-import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -480,24 +479,22 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	private Vector3f tmpHudPos = new Vector3f();
 	private Vector3f tmpScreenPos = new Vector3f();
 
-	protected void checkHUDNode(Node hudNode, Camera cam, float maxDist, float yOffset) {
-		//if (hudNode != null) {
+	protected void checkHUDNode(Node hudParent, Node hudItem, Camera cam, float maxDist, float yOffset) {
 		boolean show = this.getWorldTranslation().distance(cam.getLocation()) < maxDist;
 		show = show && cam.contains(this.getMainNode().getWorldBound()) != FrustumIntersect.Outside;
 		if (show) {
-			if (hudNode.getParent() == null) {
-				hudNode.attachChild(hudNode);
+			if (hudItem.getParent() == null) {
+				hudParent.attachChild(hudItem);
 			}
 			tmpHudPos.set(this.getWorldTranslation());
 			tmpHudPos.y += yOffset;
 			Vector3f screen_pos = cam.getScreenCoordinates(tmpHudPos, tmpScreenPos);
-			hudNode.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
+			hudItem.setLocalTranslation(screen_pos.x, screen_pos.y, 0);
 		} else {
-			if (hudNode.getParent() != null) {
-				hudNode.removeFromParent();
+			if (hudItem.getParent() != null) {
+				hudItem.removeFromParent();
 			}
 		}
-		//}
 	}
 
 

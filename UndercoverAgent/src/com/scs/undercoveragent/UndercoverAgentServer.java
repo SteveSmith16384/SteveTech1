@@ -48,20 +48,14 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			}
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
-			//String lobbyIpAddress = null; //No lobby yet   props.getPropertyAsString("lobbyIpAddress", "localhost");
-			//int lobbyPort = props.getPropertyAsInt("lobbyPort", 6144);
 
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
 			int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
 			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
 			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
-			//float gravity = props.getPropertyAsFloat("gravity", -5);
-			//float aerodynamicness = props.getPropertyAsFloat("aerodynamicness", 0.99f);
 
 			// Game specific
 			int mapSize = props.getPropertyAsInt("mapSize", 20);
-
-			//startLobbyServer(lobbyPort, timeoutMillis); // Start the lobby in the same process, why not?  Feel from to comment this line out and run it seperately.  If you want a lobby.
 
 			new UndercoverAgentServer(mapSize, 
 					gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
@@ -71,28 +65,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		}
 	}
 
-	/*
-	private static void startLobbyServer(int lobbyPort, int timeout) {
-		Thread r = new Thread("LobbyServer") {
-
-			@Override
-			public void run() {
-				try {
-					new UndercoverAgentLobbyServer(lobbyPort, timeout);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		r.start();
-	}
-	 */
 
 	private UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException { // , float gravity, float aerodynamicness
 		super(GAME_ID, "key", new GameOptions(10*1000, 5*60*1000, 10*1000, 
-				gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
+				gameIpAddress, gamePort, 
 				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
 
 		mapSize = _mapSize;
