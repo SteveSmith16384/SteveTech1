@@ -43,6 +43,7 @@ import com.jme3.texture.Texture;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.client.povweapon.IPOVWeapon;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
@@ -132,15 +133,15 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private String key; // Check we're a valid client
 	private String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
 	public IGameMessageClient networkClient;
-	//public IHUD hud;
 	public IInputDevice input;
 
 	// On-screen gun
-	public Node playersWeaponNode;
-	private Spatial weaponModel;
-	private float finishedReloadAt;
+	//public Node playersWeaponNode;
+	//private Spatial weaponModel;
+	public IPOVWeapon povWeapon;
+	/*private float finishedReloadAt;
 	private boolean currentlyReloading = false;
-	private float gunAngle = 0;
+	private float gunAngle = 0;*/
 
 	public AbstractClientAvatar currentAvatar;
 	public int currentAvatarID = -1; // In case the avatar physical entity gets replaced, we can re-assign it
@@ -149,7 +150,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
-	//private int clientStatus = STATUS_PRE_GAME;
 	protected boolean joinedGame = false;
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
@@ -265,12 +265,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		new TextConsole(this);
 
 		loopTimer.start();
-		/*
-		hud = this.createAndGetHUD();
-		if (hud != null) {
-			getGuiNode().attachChild(hud.getRootNode());
-		}
-		 */
 	}
 
 
@@ -294,7 +288,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			public void run() {
 				try {
 					networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, client, timeoutMillis, getListofMessageClasses());
-					//clientStatus = STATUS_CONNECTED_TO_GAME_SERVER;
 				} catch (Exception e) {
 					lastConnectException = e;
 				}
@@ -350,7 +343,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				Globals.pe("Warning: more simple rigid bodies than entities!");
 			}
 		}
-		checkConsoleInput(); 
+		checkConsoleInput();
 
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
@@ -400,11 +393,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						clientStatus = STATUS_IN_GAME;
 					}
 				}*/
-
+/*
 				if (currentlyReloading) {
 					this.reloading(tpfSecs, this.finishedReloadAt > 0);
 				}
-
+*/
 				if (joinedGame) {
 
 					this.sendInputs();
@@ -433,10 +426,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 					iterateThroughEntities(tpfSecs);
 
-					// Show players gun
-					if (playersWeaponNode != null) {
-						playersWeaponNode.setLocalTranslation(cam.getLocation());
-						playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
+					if (this.povWeapon != null) {
+						this.povWeapon.update(tpfSecs);
+						//playersWeaponNode.setLocalTranslation(cam.getLocation());
+						//playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
 					}
 
 				}
@@ -621,7 +614,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 
 		} else if (message instanceof EntityUpdateMessage) {
-			//if (clientStatus >= STATUS_JOINED_GAME) {
 			EntityUpdateMessage mainmsg = (EntityUpdateMessage)message;
 			for(EntityUpdateData eud : mainmsg.data) {
 				IEntity e = this.entities.get(eud.entityID);
@@ -651,7 +643,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					// networkClient.sendMessageToServer(new UnknownEntityMessage(eum.entityID));
 				}
 			}
-			//}
 
 		} else if (message instanceof RemoveEntityMessage) {
 			RemoveEntityMessage rem = (RemoveEntityMessage)message;
@@ -670,7 +661,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			//if (msg.gameID == this.getGameID()) { Might not have game id
 			Globals.p("Rcvd GeneralCommandMessage: " + msg.command.toString());
 			if (msg.command == GeneralCommandMessage.Command.AllEntitiesSent) { // We now have enough data to start
-				//clientStatus = STATUS_ENTS_RCVD_NOT_ADDED;
 				this.expectedNumEntities = -1;
 				this.appendToLog("All entities received");
 				allEntitiesReceived();
@@ -678,7 +668,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				this.removeAllEntities();
 			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) {
 				this.appendToLog("Game restarting...");
-				//clientStatus = STATUS_JOINED_GAME;
 				// todo - remove gun and gameNode?
 			} else {
 				throw new RuntimeException("Unknown command:" + msg.command);
@@ -710,7 +699,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					ik.handleKilledOnClientSide(killer);
 				}
 				if (killed == this.currentAvatar) {
-					this.playersWeaponNode.removeFromParent();
+					this.currentAvatar.setAlive(false);
+					this.avatarKilled();
 					if (Globals.SHOW_VIEW_FROM_KILLER_ON_DEATH) {
 						this.showHistory = true;
 					}
@@ -732,14 +722,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			AvatarStartedMessage asm = (AvatarStartedMessage) message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 				currentAvatar.setAlive(true);
-				currentAvatar.killer = null;
+				this.avatarStarted();
 				this.showHistory = false;
 
 				// Point camera fwds again
 				cam.lookAt(cam.getLocation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
 				cam.update();
-
-				this.showPlayersWeapon();
 			}
 
 		} else if (message instanceof ListOfGameServersMessage) {
@@ -749,8 +737,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			AvatarStatusMessage asm = (AvatarStatusMessage)message;
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 				this.currentAvatar.setHealth(asm.health);
-				//this.currentAvatar.moveSpeed = asm.moveSpeed;
-				//this.currentAvatar.setJumpForce(asm.jumpForce);
 				if (asm.damaged) {
 					showDamageBox();
 				}
@@ -793,8 +779,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof GunReloadingMessage) {
 			GunReloadingMessage grm = (GunReloadingMessage)message;
-			this.finishedReloadAt = grm.duration_secs;
-			this.currentlyReloading = true;
+			//this.finishedReloadAt = grm.duration_secs;
+			//this.currentlyReloading = true;
+			if (this.povWeapon != null) {
+				povWeapon.reload(grm.durationSecs);	
+			}
 
 		} else if (message instanceof NumEntitiesMessage) {
 			NumEntitiesMessage nem = (NumEntitiesMessage)message;
@@ -853,7 +842,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	protected void allEntitiesReceived() {
 		//allEntitiesReceived = true;
 		this.getRootNode().attachChild(this.gameNode); // todo - do once all actually added?
-		this.showPlayersWeapon();
+		//this.showPlayersWeapon();
 
 	}
 
@@ -1276,7 +1265,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		return gameNode;
 	}
 
-
+	/*
 	private void showPlayersWeapon() {
 		if (playersWeaponNode == null) {
 			playersWeaponNode = new Node("PlayersWeapon");
@@ -1290,8 +1279,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			playersWeaponNode.attachChild(weaponModel);
 		}
 	}
-
-
+	 */
+/*
 	private void reloading(float tpf_secs, boolean started) {
 		if (weaponModel != null) {
 			float gunRotSpeed = 400;
@@ -1316,9 +1305,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		}
 	}
+*/
 
-
-	protected abstract Spatial getPlayersWeaponModel();
+	//protected abstract Spatial getPlayersWeaponModel();
 
 
 	@Override
@@ -1522,4 +1511,33 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public boolean isConnected() {
 		return this.networkClient != null && networkClient.isConnected();
 	}
+
+	
+	public void setPOVWeapon(IPOVWeapon weapon) {
+		if (this.povWeapon != null) {
+			this.povWeapon.hide();
+		}
+		this.povWeapon = weapon;
+	}
+	
+
+	protected void avatarStarted() {
+		if (povWeapon != null) {
+			povWeapon.show(this.getGameNode());
+		}
+		//todo Node n = this.ge
+		/*if (playersWeaponNode != null) {
+			this.playersWeaponNode
+			playersWeaponNode.setLocalTranslation(cam.getLocation());
+			playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
+		}*/
+	}
+
+
+	protected void avatarKilled() {
+		if (povWeapon != null) {
+			povWeapon.hide();
+		}
+	}
+
 }

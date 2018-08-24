@@ -69,9 +69,9 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	private UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException { // , float gravity, float aerodynamicness
-		super(GAME_ID, "key", new GameOptions(10*1000, 5*60*1000, 10*1000, 
+		super(GAME_ID, "key", new GameOptions(tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, 10*1000, 5*60*1000, 10*1000, 
 				gameIpAddress, gamePort, 
-				10, 5), tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
+				10, 5));
 
 		mapSize = _mapSize;
 		start(JmeContext.Type.Headless);
@@ -262,11 +262,11 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		return new UASimplePlayerData();
 	}
 
-
+/*
 	@Override
 	protected String getSideName(int side) {
 		return this.clientList.getClient(side).playerData.playerName;
 	}
-
+*/
 }
 

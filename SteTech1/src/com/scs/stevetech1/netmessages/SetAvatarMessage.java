@@ -14,7 +14,7 @@ public class SetAvatarMessage extends MyAbstractMessage {
 	
 	
 	public SetAvatarMessage(int _playerID, int _avatarEntityID) {
-		super(true, true);
+		super(true, false); // Must not be scheduled, since we're about to send all the entities to the client, and they need to know which one is theirs
 		
 		playerID = _playerID;
 		avatarEntityID = _avatarEntityID;

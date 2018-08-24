@@ -34,6 +34,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(Globals.HISTORY_DURATION); // So we know where we were in the past to compare against where the server says we should have been
 	private Spatial debugNode;
 	public PhysicalEntity killer;
+	//private Vector3f defaultBulletStartPosition = new Vector3f();
 
 	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, int eid, 
 			float x, float y, float z, int side, IAvatarModel avatarModel, IAvatarControl _avatarControl) {
@@ -68,6 +69,15 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	}
 
 
+	@Override
+	public void setAlive(boolean a) {
+		super.setAlive(a);
+		if (a) {
+			this.killer = null;
+		}
+	}
+	
+	
 	@Override
 	public void remove() {
 		super.remove();
@@ -195,22 +205,44 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public void handleKilledOnClientSide(PhysicalEntity killer) {
 		Globals.p("You have been killed by " + killer);
-		this.setAlive(false);
+		//this.setAlive(false);
 		this.killer = killer;
 	}
 
 
+	/**
+	 * Override bullet position so it looks like it's coming from our gun
+	 */
 	@Override
 	public Vector3f getBulletStartPos() {
 		AbstractGameClient client = (AbstractGameClient)game;
+		
+		Vector3f pos = null;
+		if (client.povWeapon == null) {
+			pos = client.getCamera().getLocation().clone(); // todo - don't create each time
+		} else {
+			pos = client.povWeapon.getPOVBulletStartPos().clone(); // todo - don't create each time
+		}
+		
+/*		
+
 		Spatial s = client.playersWeaponNode;
 		if (client.playersWeaponNode.getChildren().size() > 0) {
 			s = client.playersWeaponNode.getChild(0);
-		}
-		Vector3f pos = s.getWorldTranslation().clone();
+		}*/
+		//Vector3f pos = s.getWorldTranslation().clone();
+		//Vector3f pos = this.getPOVBulletStartPosition().clone();
 		pos.y += 0.1f;
 		return pos;
 	}
-
+	
+	
+	/**
+	 * Default to shooting from the centre of the screen.  Override if required.
+	 * @return
+	 */
+	public Vector3f getPOVBulletStartPosition() {
+		return this.cam.getLocation();
+	}
 
 }

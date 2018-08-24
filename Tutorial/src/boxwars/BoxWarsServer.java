@@ -38,8 +38,7 @@ public class BoxWarsServer extends AbstractGameServer {
 
 	private BoxWarsServer() throws IOException {
 		super("BoxWars", "key",
-				new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
-				25, 50, 200, 10000);
+				new GameOptions(25, 50, 200, 10000, 10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5));
 		start(JmeContext.Type.Headless);
 
 	}
@@ -52,7 +51,6 @@ public class BoxWarsServer extends AbstractGameServer {
 
 	@Override
 	protected int getWinningSideAtEnd() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -64,9 +62,10 @@ public class BoxWarsServer extends AbstractGameServer {
 
 	@Override
 	public boolean doWeHaveSpaces() {
-		return true; // Always room for one more.
+		return true; // Always room for one more!
 	}
 
+	
 	/*
 	 * Just use the client id as the side, to easily ensure every player is on a different side. 
 	 */
@@ -75,11 +74,12 @@ public class BoxWarsServer extends AbstractGameServer {
 		return client.id;
 	}
 
+	
 	@Override
 	protected void createGame() {
+		// Just a floor.
 		Floor floor = new Floor(this, getNextEntityID(), 0, 0, 0, 30, .5f, 30, "Textures/floor015.png", null);
 		this.actuallyAddEntity(floor);
-
 	}
 
 
@@ -100,11 +100,11 @@ public class BoxWarsServer extends AbstractGameServer {
 		return 2; // Need at least two players
 	}
 
-
+/*
 	@Override
 	protected String getSideName(int side) {
 		return "Side " + side;
 	}
-
+*/
 
 }

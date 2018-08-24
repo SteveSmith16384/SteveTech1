@@ -46,6 +46,7 @@ public class BoxWarsClient extends AbstractGameClient {
 		return collisionValidator.canCollide(a, b);
 	}
 
+	
 	@Override
 	protected Class[] getListofMessageClasses() {
 		return null;

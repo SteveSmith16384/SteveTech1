@@ -93,8 +93,6 @@ ICollisionListener<PhysicalEntity> {
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer;  // Keep client and server running at the same time
 
-	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
-
 	public IGameMessageServer gameNetworkServer;
 	public ClientList clientList;
 
@@ -119,23 +117,23 @@ ICollisionListener<PhysicalEntity> {
 	 * @param _clientRenderDelayMillis How far in the past the client should render the game
 	 * @param _timeoutMillis How long without comms before the server disconnects the client 
 	 */
-	public AbstractGameServer(String _gameCode, String _key, GameOptions _gameOptions, int _tickrateMillis, int sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis) { 
+	public AbstractGameServer(String _gameCode, String _key, GameOptions _gameOptions) { 
 		super();
 
 		gameCode = _gameCode;
 		key = _key;
 		gameOptions = _gameOptions;
-		tickrateMillis = _tickrateMillis;
-		clientRenderDelayMillis = _clientRenderDelayMillis;
-		timeoutMillis = _timeoutMillis;
+		//tickrateMillis = _tickrateMillis;
+		//clientRenderDelayMillis = _clientRenderDelayMillis;
+		//timeoutMillis = _timeoutMillis;
 
 		Globals.showWarnings();
 
-		sendEntityUpdatesInterval = new RealtimeInterval(sendUpdateIntervalMillis);
+		sendEntityUpdatesInterval = new RealtimeInterval(gameOptions.sendUpdateIntervalMillis);
 
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		collisionLogic = new ServerSideCollisionLogic(this);
-		loopTimer = new FixedLoopTime(tickrateMillis);
+		loopTimer = new FixedLoopTime(gameOptions.tickrateMillis);
 
 		setShowSettings(false); // Don't show settings dialog
 		setPauseOnLostFocus(false);
@@ -149,7 +147,7 @@ ICollisionListener<PhysicalEntity> {
 	@Override
 	public void simpleInitApp() {
 		try {
-			gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, timeoutMillis, getListofMessageClasses());
+			gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, gameOptions.timeoutMillis, getListofMessageClasses());
 			Globals.p("Listening on port " + gameOptions.ourExternalPort);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -257,7 +255,7 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 		if (areAnyPlayersShooting) {
-			long timeTo = System.currentTimeMillis() - clientRenderDelayMillis; // Should this be by their ping time?
+			long timeTo = System.currentTimeMillis() - gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
 			this.rewindEntities(timeTo);
 			this.rootNode.updateGeometricState();
 			for (ClientData c : this.clientList.getClients()) {
@@ -423,7 +421,7 @@ ICollisionListener<PhysicalEntity> {
 		client.avatar = createPlayersAvatar(client);
 		sendAllEntitiesToClient(client);
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
-		client.avatar.startAgain(); // scs new
+		client.avatar.startAgain();
 		playerJoinedGame(client);
 		appendToGameLog(client.playerData.playerName + " has joined the game");
 		gameStatusSystem.checkGameStatus(true);
@@ -819,14 +817,21 @@ ICollisionListener<PhysicalEntity> {
 			this.appendToGameLog("Game Finished!");
 
 			int winningSide = this.getWinningSideAtEnd();
-			String name = getSideName(winningSide);
-			this.appendToGameLog(name + " has won!");
+			//String name = getSideName(winningSide);
+			//this.appendToGameLog(name + " has won!");
 			this.sendMessageToInGameClients(new GameOverMessage(winningSide));
 		}
 	}
 
 
-	protected abstract String getSideName(int side);
+	/**
+	 * Override if required
+	 * @param side
+	 * @return
+	 */
+	protected String getSideName_(int side) {
+		return "Side " + side;
+	}
 
 
 	protected abstract int getWinningSideAtEnd();

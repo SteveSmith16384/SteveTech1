@@ -35,8 +35,7 @@ public class UnitTestGameServer extends AbstractGameServer {
 
 	public UnitTestGameServer() throws IOException {
 		super("UnitTest", "key", 
-				new GameOptions(10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5), 
-				25, 50, 200, Integer.MAX_VALUE);
+				new GameOptions(25, 50, 200, Integer.MAX_VALUE, 10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5));
 
 		super.physicsController.setGravity(0); // stop things falling
 
@@ -100,10 +99,11 @@ public class UnitTestGameServer extends AbstractGameServer {
 		return 1;
 	}
 
-
+/*
 	@Override
 	protected String getSideName(int side) {
 		return "Unit Test";
 	}
+	*/
 }
 

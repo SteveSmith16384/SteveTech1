@@ -112,11 +112,11 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			AbstractGameServer server = (AbstractGameServer)game;
 
 			// fast forward it!
-			float totalTimeToFFwd_Ms = server.clientRenderDelayMillis + (client.playerData.pingRTT/2);
+			float totalTimeToFFwd_Ms = server.gameOptions.clientRenderDelayMillis + (client.playerData.pingRTT/2);
 			//float totalTimeToFFwd_Ms = server.clientRenderDelayMillis + (client.playerData.pingRTT*40);
-			float tpf_secs = (float)server.tickrateMillis / 1000f;
+			float tpf_secs = (float)server.gameOptions.tickrateMillis / 1000f;
 			while (totalTimeToFFwd_Ms > 0) {
-				totalTimeToFFwd_Ms -= server.tickrateMillis;
+				totalTimeToFFwd_Ms -= server.gameOptions.tickrateMillis;
 				this.processByServer(server, tpf_secs);
 				if (this.removed) {
 					if (Globals.DEBUG_DELAYED_EXPLOSION) {
@@ -131,7 +131,7 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			}
 
 			// If server, send messages to clients to tell them it has been launched
-			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
+			LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.gameOptions.clientRenderDelayMillis); // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
 			server.sendMessageToInGameClients(new EntityLaunchedMessage(this.getID(), this.playerID, ld));
 		}
 

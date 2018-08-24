@@ -18,7 +18,7 @@ public interface IAvatarModel {
 	
 	float getCameraHeight();
 	
-	float getBulletStartHeight(); // todo - change to bulletStartOffset
+	float getBulletStartHeight(); // todo - change to bulletStartOffset.  Or remove this and use ICanShoot.bulletStartPos!
 	
 	void setAnim(int anim);
 	

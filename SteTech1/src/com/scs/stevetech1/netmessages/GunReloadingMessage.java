@@ -11,7 +11,7 @@ import com.scs.stevetech1.shared.IAbility;
 public class GunReloadingMessage extends MyAbstractMessage {
 	
 	public int abilityId;
-	public float duration_secs;
+	public float durationSecs;
 	
 	public GunReloadingMessage() {
 		super();
@@ -22,7 +22,7 @@ public class GunReloadingMessage extends MyAbstractMessage {
 		super(true, false); // Not scheduled since the player wants to see anim straight away
 		
 		abilityId = ability.getID();
-		duration_secs = _duration;
+		durationSecs = _duration;
 	}
 
 }
