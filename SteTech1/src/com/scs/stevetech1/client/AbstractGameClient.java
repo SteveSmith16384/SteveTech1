@@ -44,7 +44,6 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IAnimatedClientSide;
-import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IKillable;
@@ -320,8 +319,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	protected abstract Class[] getListofMessageClasses();
 
-	//protected abstract IHUD createAndGetHUD(); // todo - remove?
-
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;
 	}
@@ -495,7 +492,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					pe.processChronoData(renderTime, tpfSecs);
 
 					if (Globals.STRICT) {
-						if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof IClientControlled == false) {
+						if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false) {
 							if (pe.simpleRigidBody != null) {
 								if (pe.simpleRigidBody.movedByForces()) {
 									Globals.pe("Warning: client-side entity " + pe + " not kinematic!");
@@ -949,12 +946,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else {
 			Globals.p("Not creating entity type " + data.type);
 			// It's not for this game, so ignore it
-			//throw new RuntimeException("Cannot create entity type " + data.type);
 		}
 
 		// Update % complete
 		if (this.expectedNumEntities > 0) {
-			float frac = (this.entities.size()) / (float)this.expectedNumEntities; //  this.entitiesToAddToGame.size()
+			float frac = (this.entities.size()) / (float)this.expectedNumEntities;
 			int fracPC = (int)(frac * 100);
 			Globals.p("Entities: " + fracPC + "%");
 			this.showMessage("Loading entities: " + fracPC + "%");

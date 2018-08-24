@@ -37,7 +37,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	protected Node mainNode;
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 	public PositionCalculator historicalPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
-	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction todo - make protected
+	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
 
 	public boolean collideable = true; // Primarily used for ray checks, since that doesn't use the physics engine
 	public boolean blocksView; // Primarily used for canSee() ray checks, since that doesn't use the physics engine

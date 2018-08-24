@@ -9,15 +9,14 @@ import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractEnemyAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.hud.IHUD;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 import boxwars.entities.BoxWarsClientAvatar;
 import boxwars.entities.BoxWarsEnemyAvatar;
-import boxwars.entities.PlayersBullet;
 import boxwars.entities.Floor;
+import boxwars.entities.PlayersBullet;
 import boxwars.weapons.PlayersGun;
 
 public class BoxWarsClient extends AbstractGameClient {

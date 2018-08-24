@@ -91,7 +91,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 			String playersName = (String)msg.data.get("playersName");
 
 			if (playerID == game.playerID) {
-				AbstractClientAvatar avatar = new SnowmanClientAvatar(game, id, game.input, game.getCamera(), id, pos.x, pos.y, pos.z, side, 3f, 2f); // todo consts
+				AbstractClientAvatar avatar = new SnowmanClientAvatar(game, id, game.input, game.getCamera(), id, pos.x, pos.y, pos.z, side);
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these

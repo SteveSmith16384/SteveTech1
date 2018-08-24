@@ -41,7 +41,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	public ISimpleEntity<T> simpleEntity;
 	private boolean movedByForces = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
-	private int modelComplexity = 0; // For determining which way round to check collisions.  Todo - remove this
+	//private int modelComplexity = 0; // For determining which way round to check collisions.  Todo - remove this
 	public boolean canWalkUpSteps = false;
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
@@ -606,7 +606,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * of our 2 potential colliders should be the mesh, and which should be the BB.
 	 */
 	public void setModelComplexity(int i) {
-		this.modelComplexity = i;
+		//this.modelComplexity = i; No longer used
 	}
 
 

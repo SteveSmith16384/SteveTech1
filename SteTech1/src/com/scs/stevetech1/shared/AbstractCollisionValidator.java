@@ -1,6 +1,6 @@
 package com.scs.stevetech1.shared;
 
-import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.IBullet;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
@@ -25,20 +25,20 @@ public class AbstractCollisionValidator {
 		}
 		
 		// Prevent bullets getting hit by the shooter
-		if (pa instanceof ILaunchable) {
-			ILaunchable aa = (ILaunchable)pa;
+		if (pa instanceof IBullet) {
+			IBullet aa = (IBullet)pa;
 			if (aa.getLauncher() == pb) {
 				return false;
 			}
 		}
-		if (pb instanceof ILaunchable) {
-			ILaunchable ab = (ILaunchable)pb;
+		if (pb instanceof IBullet) {
+			IBullet ab = (IBullet)pb;
 			if (ab.getLauncher() == pa) {
 				return false;
 			}
 		}
 
-		if (pa instanceof ILaunchable && pb instanceof ILaunchable) {
+		if (pa instanceof IBullet && pb instanceof IBullet) {
 			// Bullets don't collide with each other
 			return false;
 		}

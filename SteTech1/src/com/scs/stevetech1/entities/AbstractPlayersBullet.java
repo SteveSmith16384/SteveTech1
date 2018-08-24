@@ -5,8 +5,8 @@ import java.util.HashMap;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.IClientApp;
+import com.scs.stevetech1.components.IBullet;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
-import com.scs.stevetech1.components.IClientControlled;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.components.ILaunchable;
@@ -24,7 +24,7 @@ import com.scs.stevetech1.systems.client.LaunchData;
  * launch at (almost) the same time on the client and the server. 
  *
  */
-public abstract class AbstractPlayersBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, ICausesHarmOnContact, IClientControlled {
+public abstract class AbstractPlayersBullet extends PhysicalEntity implements IProcessByClient, ILaunchable, ICausesHarmOnContact, IBullet {
 
 	protected boolean launched = false;
 	public int playerID;
@@ -239,12 +239,12 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 		return side;
 	}
 
-
+/*
 	@Override
 	public boolean isClientControlled() {
 		return launched; // All launched bullets are under client control
 	}
-
+*/
 
 	@Override
 	public boolean hasBeenLaunched() {

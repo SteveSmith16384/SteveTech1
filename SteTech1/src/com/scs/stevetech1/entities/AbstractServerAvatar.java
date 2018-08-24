@@ -142,11 +142,6 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 		server.sendMessageToInGameClients(new EntityKilledMessage(this, killer, reason));
 
 		this.currentAnimCode = ANIM_DIED; // Send death as an anim, so it gets scheduled and is not shown straight away
-/*
-		if (killer != null && killer instanceof ICanScorePoints) {
-			ICanScorePoints csp = (ICanScorePoints)killer;
-			csp.incScore(1);
-		}*/
 	}
 
 

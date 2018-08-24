@@ -2,17 +2,17 @@ package com.scs.stevetech1.entities;
 
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.components.IBullet;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
-import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IDontCollideWithComrades;
-import com.scs.stevetech1.components.ILaunchable;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, INotifiedOfCollision, IDontCollideWithComrades, ILaunchable { 
+public abstract class AbstractAIBullet extends PhysicalEntity implements ICausesHarmOnContact, INotifiedOfCollision, IDontCollideWithComrades, IBullet { 
 
 	public IEntity shooter; // So we know who not to collide with
 	private int side;
@@ -121,7 +121,7 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 		return shooter;
 	}
 
-
+/*
 	@Override
 	public void launch(IEntity _shooter, Vector3f startPos, Vector3f dir) {
 		// Do nothing, already launched 
@@ -134,5 +134,5 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 		return true; // Always launched immed
 	}
 
-
+*/
 }

@@ -10,13 +10,14 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UASimplePlayerData;
+import com.scs.undercoveragent.UAStaticData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 import com.scs.undercoveragent.models.SnowmanModel;
 
 public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebrisTexture {
 
 	public SnowmanServerAvatar(IEntityController _module, ClientData client, IInputDevice _input, int eid) {
-		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), 2f, 0, new PersonAvatar(_module, _input, 3f, 2f));
+		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), 2f, 0, new PersonAvatar(_module, _input, UAStaticData.MOVE_SPEED, UAStaticData.JUMP_FORCE));
 	}
 
 
