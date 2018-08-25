@@ -107,11 +107,11 @@ public class BoxWarsClient extends AbstractGameClient {
 		}
 	}
 
-	
+	/*
 	@Override
 	protected Spatial getPlayersWeaponModel() {
 		return null;
 	}
-
+*/
 
 }

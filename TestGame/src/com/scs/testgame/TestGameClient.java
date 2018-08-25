@@ -51,12 +51,12 @@ public class TestGameClient extends AbstractGameClient {
 		return creator.createEntity(client, msg);
 	}
 
-
+/*
 	@Override
 	protected Spatial getPlayersWeaponModel() {
 		return null;
 	}
-
+*/
 
 	@Override
 	protected Class[] getListofMessageClasses() {

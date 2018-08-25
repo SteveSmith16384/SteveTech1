@@ -226,12 +226,12 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		}
 	}
 
-
+/*
 	@Override
 	protected Spatial getPlayersWeaponModel() {
 		return null;//new Node("Weapon node");
 	}
-
+*/
 
 	@Override
 	protected Class[] getListofMessageClasses() {
