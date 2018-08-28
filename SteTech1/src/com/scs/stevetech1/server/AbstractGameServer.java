@@ -53,7 +53,7 @@ import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.connecting.HelloMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
-import com.scs.stevetech1.netmessages.connecting.NewPlayerRequestMessage;
+import com.scs.stevetech1.netmessages.connecting.JoinGameRequestMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
 import com.scs.stevetech1.networking.IMessageServerListener;
 import com.scs.stevetech1.networking.KryonetGameServer;
@@ -123,14 +123,10 @@ ICollisionListener<PhysicalEntity> {
 		gameCode = _gameCode;
 		key = _key;
 		gameOptions = _gameOptions;
-		//tickrateMillis = _tickrateMillis;
-		//clientRenderDelayMillis = _clientRenderDelayMillis;
-		//timeoutMillis = _timeoutMillis;
 
 		Globals.showWarnings();
 
 		sendEntityUpdatesInterval = new RealtimeInterval(gameOptions.sendUpdateIntervalMillis);
-
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		collisionLogic = new ServerSideCollisionLogic(this);
 		loopTimer = new FixedLoopTime(gameOptions.tickrateMillis);
@@ -357,7 +353,7 @@ ICollisionListener<PhysicalEntity> {
 	protected void handleMessage(MyAbstractMessage message) {
 		ClientData client = message.client;
 
-		if (message instanceof NewPlayerRequestMessage) {
+		if (message instanceof JoinGameRequestMessage) {
 			this.playerRequestToJoin(client, message);
 
 		} else if (message instanceof PlayerLeftMessage) {
@@ -395,7 +391,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	protected synchronized void playerRequestToJoin(ClientData client, MyAbstractMessage message) {
-		NewPlayerRequestMessage newPlayerMessage = (NewPlayerRequestMessage) message;
+		JoinGameRequestMessage newPlayerMessage = (JoinGameRequestMessage) message;
 		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
 			return;

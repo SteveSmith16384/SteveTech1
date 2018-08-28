@@ -24,29 +24,23 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 	@Override
 	public void getReadyForGame() {
 		super.getReadyForGame();
-		
+
 		UASimplePlayerData data = (UASimplePlayerData)this.client.playerData;
 		data.score = 0;
 		//this.sendStatusUpdateMessage(false);
 	}
-	
-	
+
+
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);
 
-		if (Globals.DEBUG_UA_SINKING) {
-			Globals.p("SnowmanServerAvatar=" + this.getWorldTranslation());
-		}
-
-		if (!Globals.DEBUG_UA_SINKING) {
-			// Force player to jump if they haven't moved!
-			if (this.alive) {// && server.gameData.isInGame()) {
-				long timeSinceMove = System.currentTimeMillis() - super.avatarControl.getLastMoveTime();
-				if (timeSinceMove > 5 * 1000) {
-					//Globals.p("Forcing client to jump");
-					this.avatarControl.jump();
-				}
+		// Force player to jump if they haven't moved!
+		if (this.alive) {// && server.gameData.isInGame()) {
+			long timeSinceMove = System.currentTimeMillis() - super.avatarControl.getLastMoveTime();
+			if (timeSinceMove > 7 * 1000) {
+				//Globals.p("Forcing client to jump");
+				this.avatarControl.jump();
 			}
 		}
 	}
@@ -55,7 +49,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 	@Override
 	protected void setDied(IEntity killer, String reason) {
 		super.setDied(killer, reason);
-		
+
 		if (killer != null && killer instanceof SnowmanServerAvatar) {
 			SnowmanServerAvatar csp = (SnowmanServerAvatar)killer;
 			csp.incScore(1);
@@ -75,7 +69,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 		return "Textures/snow.jpg";
 	}
 
-	
+
 	@Override
 	public float getMinDebrisSize() {
 		return 0.001f;
@@ -90,8 +84,8 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 
 	@Override
 	public void updateClientSideHealth(int amt) {
-		
+
 	}
-	
+
 
 }

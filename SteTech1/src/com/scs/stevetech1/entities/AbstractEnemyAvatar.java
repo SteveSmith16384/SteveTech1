@@ -25,7 +25,7 @@ import com.scs.stevetech1.shared.IEntityController;
 /*
  * This is only used client-side.
  */
-public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimatedClientSide, IProcessByClient, 
+public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimatedClientSide, IProcessByClient, // todo - rename to OtherPlayerAvatar 
 ISetRotation, IDrawOnHUD, IDontCollideWithComrades { 
 
 	protected IAvatarModel anim;

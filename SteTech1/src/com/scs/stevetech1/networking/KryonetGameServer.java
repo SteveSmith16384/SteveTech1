@@ -43,7 +43,7 @@ import com.scs.stevetech1.netmessages.UnknownEntityMessage;
 import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.connecting.HelloMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
-import com.scs.stevetech1.netmessages.connecting.NewPlayerRequestMessage;
+import com.scs.stevetech1.netmessages.connecting.JoinGameRequestMessage;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.systems.client.LaunchData;
@@ -127,7 +127,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		// Messages
 		kryo.register(MyAbstractMessage.class);
 		kryo.register(PingMessage.class);
-		kryo.register(NewPlayerRequestMessage.class);
+		kryo.register(JoinGameRequestMessage.class);
 		kryo.register(GameSuccessfullyJoinedMessage.class);
 		kryo.register(PlayerInputMessage.class);
 		kryo.register(UnknownEntityMessage.class);

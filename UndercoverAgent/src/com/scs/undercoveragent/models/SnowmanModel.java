@@ -40,11 +40,6 @@ public class SnowmanModel implements IAvatarModel {
 
 		origPos = model.getLocalTranslation().clone();
 		return model;
-/*
-		Node container = new Node();
-		container.attachChild(model); // Wrap the model in a node so we can keep the models rotation and position adjustment
-		return container;
-*/
 	}
 
 

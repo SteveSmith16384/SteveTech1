@@ -37,6 +37,8 @@ public class PersonAvatar implements IAvatarControl {
 	@Override
 	public void init(PhysicalEntity pe) {
 		simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(pe, game.getPhysicsController(), pe);
+		SimpleCharacterControl<PhysicalEntity> scc = (SimpleCharacterControl<PhysicalEntity>)simpleRigidBody;
+		scc.setJumpForce(this.jumpForce);
 	}
 	
 	

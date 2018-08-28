@@ -36,7 +36,6 @@ public class UndercoverAgentHUD extends Node {
 	private List<String> logLines = new ArrayList<String>();
 	
 	private float hud_width, hud_height;
-	private Camera cam;
 	private Geometry damage_box;
 	private ColorRGBA dam_box_col = new ColorRGBA(1, 0, 0, 0.0f);
 	private boolean process_damage_box;
@@ -51,7 +50,7 @@ public class UndercoverAgentHUD extends Node {
 		game = _game;
 		hud_width = _cam.getWidth();
 		hud_height = _cam.getHeight();
-		cam = _cam;
+		//cam = _cam;
 		
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
 		//font_small = _game.getAssetManager().loadFont("Fonts/Xenotron.ttf");
@@ -70,65 +69,67 @@ public class UndercoverAgentHUD extends Node {
 			}
 		}*/
 
+		float xPos = hud_width - 150f;
 		float yPos = hud_height - LINE_SPACING;
 
 		yPos -= LINE_SPACING;
 		gameStatus = new BitmapText(font_small, false);
 		gameStatus.setColor(defaultColour);
-		gameStatus.setLocalTranslation(10, yPos, 0);
+		gameStatus.setLocalTranslation(xPos, yPos, 0);
+		gameStatus.setText("Game Status:");
 		this.attachChild(gameStatus);
 
 		yPos -= LINE_SPACING;
 		gameTime = new BitmapText(font_small, false);
 		gameTime.setColor(defaultColour);
-		gameTime.setLocalTranslation(10, yPos, 0);
+		gameTime.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(gameTime);
 
 		yPos -= LINE_SPACING;
 		abilityGun = new BitmapText(font_small, false);
 		abilityGun.setColor(defaultColour);
-		abilityGun.setLocalTranslation(10, yPos, 0);
+		abilityGun.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(abilityGun);
 
 		yPos -= LINE_SPACING;
 		abilityOther = new BitmapText(font_small, false);
 		abilityOther.setColor(defaultColour);
-		abilityOther.setLocalTranslation(10, yPos, 0);
+		abilityOther.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(abilityOther);
 
 		yPos -= LINE_SPACING;
 		healthText = new BitmapText(font_small, false);
 		healthText.setColor(defaultColour);
-		healthText.setLocalTranslation(10, yPos, 0);
+		healthText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(healthText);
 
 		yPos -= LINE_SPACING;
 		scoreText = new BitmapText(font_small, false);
 		scoreText.setColor(defaultColour);
-		scoreText.setLocalTranslation(10, yPos, 0);
+		scoreText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(scoreText);
 
 		yPos -= LINE_SPACING;
 		numPlayers = new BitmapText(font_small, false);
 		numPlayers.setColor(defaultColour);
-		numPlayers.setLocalTranslation(10, yPos, 0);
+		numPlayers.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(numPlayers);
 
 		yPos -= LINE_SPACING;
 		pingText = new BitmapText(font_small, false);
 		pingText.setColor(defaultColour);
-		pingText.setLocalTranslation(10, yPos, 0);
+		pingText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(pingText);
 
 		yPos -= LINE_SPACING;
 		debugText = new BitmapText(font_small, false);
 		debugText.setColor(defaultColour);
-		debugText.setLocalTranslation(10, yPos, 0);
+		debugText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(debugText);
 
 		log_ta = new TextArea("log", font_small, 6, "");
 		log_ta.setColor(defaultColour);
-		log_ta.setLocalTranslation(0, hud_height/2, 0);
+		log_ta.setLocalTranslation(10, hud_height/2, 0);
 		this.attachChild(log_ta);
 
 		// Damage box

@@ -36,9 +36,6 @@ public class SnowmanEnemyAvatar extends AbstractEnemyAvatar {
 	public void processByClient(IClientApp client, float tpf_secs) {
 		super.processByClient(client, tpf_secs);
 		
-		if (Globals.DEBUG_UA_SINKING) {
-			Globals.p("AbstractEnemyAvatar=" + this.getWorldTranslation());
-		}
 	}
 
 

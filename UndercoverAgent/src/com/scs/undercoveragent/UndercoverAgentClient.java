@@ -4,11 +4,11 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.ValidClientSettings;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
@@ -67,7 +67,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	private UndercoverAgentClient(String gameIpAddress, int gamePort, 
 			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,
 			float mouseSensitivity) {
-		super(UndercoverAgentServer.GAME_ID, "key", UndercoverAgentServer.NAME, null, 
+		super(new ValidClientSettings(UndercoverAgentServer.GAME_ID, "key", 1), UndercoverAgentServer.NAME, null, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity);
 		ipAddress = gameIpAddress;
 		port = gamePort;
@@ -99,7 +99,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		hud = new UndercoverAgentHUD(this, this.getCamera());
 		this.getGuiNode().attachChild(hud);
 		
-		this.connect(this, ipAddress, port, false);
+		this.connect(ipAddress, port, false);
 	}
 
 
@@ -124,8 +124,9 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			snowflakeSystem.process(tpf_secs);
 		}
 		
+		hud.processByClient(this, tpf_secs);
 		if (updateHudInterval.hitInterval()) {
-			if (this.playersList != null) {
+			if (this.playersList != null) { // todo - move to HUD class
 				for (SimplePlayerData spd : this.playersList) {
 					if (spd.id == this.playerID) {
 						UASimplePlayerData ua = (UASimplePlayerData)spd;
@@ -192,10 +193,10 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	@Override
 	protected void gameStatusChanged(int oldStatus, int newStatus) {
-		int width = this.cam.getWidth()/2;
-		int height = this.cam.getHeight()/2;
+		int width = this.cam.getWidth()/4;
+		int height = this.cam.getHeight()/4;
 		int x = (this.cam.getWidth()/2)-(width/2);
-		int y = this.cam.getHeight()/5;
+		int y = (int)(this.cam.getHeight() * 0.2f);
 		switch (newStatus) {
 		case SimpleGameData.ST_WAITING_FOR_PLAYERS:
 			removeCurrentHUDImage();
@@ -227,12 +228,6 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		}
 	}
 
-/*
-	@Override
-	protected Spatial getPlayersWeaponModel() {
-		return null;//new Node("Weapon node");
-	}
-*/
 
 	@Override
 	protected Class[] getListofMessageClasses() {
@@ -244,5 +239,32 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
 		return collisionValidator.canCollide(a, b);
 	}
+	
+	
+	/**
+	 * Override if required
+	 */
+	protected void showDamageBox() {
+		this.hud.showDamageBox();
+	}
+
+
+	/**
+	 * Override if required
+	 */
+	protected void showMessage(String msg) {
+		this.hud.appendToLog(msg);
+	}
+
+
+	/**
+	 * Override if required
+	 */
+	protected void appendToLog(String msg) {
+		this.hud.appendToLog(msg);
+	}
+
+
+
 
 }

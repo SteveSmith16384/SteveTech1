@@ -1,8 +1,8 @@
 package boxwars;
 
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.ValidClientSettings;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
@@ -35,8 +35,8 @@ public class BoxWarsClient extends AbstractGameClient {
 
 
 	private BoxWarsClient() {
-		super("BoxWars", "key", "Box Wars", null, 25, 200, 10000, 1f);
-		this.connect(this, "localhost", BoxWarsServer.PORT, false);
+		super(new ValidClientSettings("BoxWars", "key", 1), "Box Wars", null, 25, 200, 10000, 1f);
+		this.connect("localhost", BoxWarsServer.PORT, false);
 		start();
 	}
 

@@ -87,7 +87,7 @@ import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.connecting.HelloMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
-import com.scs.stevetech1.netmessages.connecting.NewPlayerRequestMessage;
+import com.scs.stevetech1.netmessages.connecting.JoinGameRequestMessage;
 import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
 import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
@@ -129,19 +129,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
-	private String gameCode; // To check the right type of client is connecting
-	private String key; // Check we're a valid client
-	private String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
+	//private String gameCode; // To check the right type of client is connecting
+	//private String key; // Check we're a valid client
+	//private String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
+	private ValidClientSettings validClientSettings;
+	
 	public IGameMessageClient networkClient;
 	public IInputDevice input;
 
 	// On-screen gun
-	//public Node playersWeaponNode;
-	//private Spatial weaponModel;
 	public IPOVWeapon povWeapon;
-	/*private float finishedReloadAt;
-	private boolean currentlyReloading = false;
-	private float gunAngle = 0;*/
 
 	public AbstractClientAvatar currentAvatar;
 	public int currentAvatarID = -1; // In case the avatar physical entity gets replaced, we can re-assign it
@@ -178,12 +175,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private ClientEntityLauncherSystem launchSystem;
 
 
-	protected AbstractGameClient(String _gameCode, String _key, String appTitle, String logoImage,   
+	protected AbstractGameClient(ValidClientSettings _validClientSettings, String appTitle, String logoImage,   
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
 		super();
 
-		gameCode = _gameCode;
-		key = _key;
+		//gameCode = _gameCode;
+		//key = _key;
+		validClientSettings = _validClientSettings;
 
 		tickrateMillis = _tickrateMillis;
 		clientRenderDelayMillis = _clientRenderDelayMillis;
@@ -279,15 +277,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	public void connect(AbstractGameClient client, String gameServerIP, int gamePort, boolean thread) {
+	public void connect(String gameServerIP, int gamePort, boolean thread) {
 		lastConnectException = null;
+		final AbstractGameClient c = this;
 
 		connectingThread = new Thread("ConnectingToServer") {
-
+			
 			@Override
 			public void run() {
 				try {
-					networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, client, timeoutMillis, getListofMessageClasses());
+					networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, c, timeoutMillis, getListofMessageClasses());
 				} catch (Exception e) {
 					lastConnectException = e;
 				}
@@ -829,10 +828,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	public void joinGame() {
+		String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
+		joinGame(playerName);
+	}
+	
+	
+	public void joinGame(String playerName) {
 		/*if (this.clientStatus < STATUS_RCVD_WELCOME) {
 			throw new RuntimeException("Trying to join game before logging in");
 		}*/
-		networkClient.sendMessageToServer(new NewPlayerRequestMessage(this.gameCode, this.playerName, this.key));
+		networkClient.sendMessageToServer(new JoinGameRequestMessage(validClientSettings.gameCode, validClientSettings.clientVersion, playerName, validClientSettings.key));
 	}
 
 
@@ -840,10 +845,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	 * Override if required
 	 */
 	protected void allEntitiesReceived() {
-		//allEntitiesReceived = true;
 		this.getRootNode().attachChild(this.gameNode); // todo - do once all actually added?
-		//this.showPlayersWeapon();
-
 	}
 
 

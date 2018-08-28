@@ -38,7 +38,7 @@ public class Globals {
 	public static final boolean DEBUG_VIEW_ANGLE = false;
 	public static final boolean TRANSPARENT_WALLS = false;
 	public static final boolean EMPTY_MAP = false;
-	public static final boolean DEBUG_UA_SINKING = false;
+	//public static final boolean DEBUG_UA_SINKING = false;
 	public static final boolean DEBUG_GAME_NOT_STARTING = false;
 	public static final boolean TEST_AI = false;
 	public static final boolean DEBUG_DELAYED_EXPLOSION = false;
