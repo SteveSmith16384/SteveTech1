@@ -78,7 +78,6 @@ public class UnitTestGameClient extends AbstractGameClient {
 		Globals.p("Game status changed to " + newStatus);
 
 	}
-	
 /*
 	@Override
 	protected Spatial getPlayersWeaponModel() {
