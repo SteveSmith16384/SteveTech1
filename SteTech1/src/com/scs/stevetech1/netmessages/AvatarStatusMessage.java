@@ -9,7 +9,6 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 	
 	public int entityID;
 	public float health;
-	//public int score;
 	public boolean damaged; // Signal to show HUD effect
 	public float moveSpeed, jumpForce; 
 	

@@ -3,6 +3,10 @@ package com.scs.stevetech1.netmessages;
 import com.jme3.network.serializing.Serializable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 
+/**
+ * Indicates that an avatar is now alive and ready to go
+ * 
+ */
 @Serializable
 public class AvatarStartedMessage extends MyAbstractMessage {
 	

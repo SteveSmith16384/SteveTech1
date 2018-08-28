@@ -97,6 +97,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		this.viewPort.addProcessor(dlsr);
 
 		hud = new UndercoverAgentHUD(this, this.getCamera());
+		this.getGuiNode().attachChild(hud);
 		
 		this.connect(this, ipAddress, port, false);
 	}
@@ -226,12 +227,12 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		}
 	}
 
-
+/*
 	@Override
 	protected Spatial getPlayersWeaponModel() {
 		return null;//new Node("Weapon node");
 	}
-
+*/
 
 	@Override
 	protected Class[] getListofMessageClasses() {

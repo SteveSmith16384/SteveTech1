@@ -4,6 +4,7 @@ import com.jme3.network.serializing.Serializable;
 import com.scs.stevetech1.systems.client.LaunchData;
 
 /**
+ * Another player has fired their weapon
  * @author stephencs
  *
  */

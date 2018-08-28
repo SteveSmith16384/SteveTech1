@@ -2,6 +2,11 @@ package com.scs.stevetech1.netmessages;
 
 import com.jme3.network.serializing.Serializable;
 
+/**
+ * Tells a player which entity is their avatar
+ * @author stephencs
+ *
+ */
 @Serializable
 public class SetAvatarMessage extends MyAbstractMessage {
 	

@@ -2,6 +2,11 @@ package com.scs.stevetech1.netmessages;
 
 import com.jme3.network.serializing.Serializable;
 
+/**
+ * Not currently used.
+ * @author stephencs
+ *
+ */
 @Serializable
 public class UnknownEntityMessage extends MyAbstractMessage {
 
