@@ -24,7 +24,7 @@ import boxwars.BoxWarsServer;
 public class Floor extends PhysicalEntity implements IProcessByClient {
 
 	private Box box1;
-	private float w, h, d;
+	//private float w, h, d;
 
 	public Floor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
 		super(_game, id, BoxWarsServer.FLOOR, "Floor", false, true, false);
@@ -36,10 +36,10 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 			creationData.put("tex", tex);
 		}
 
-		this.w = w;
+		/*this.w = w;
 		this.h = h;
 		this.d = d;
-
+*/
 		box1 = new Box(w/2, h/2, d/2);
 
 		box1.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(new float[]{

@@ -7,7 +7,7 @@ import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
-import com.scs.stevetech1.entities.AbstractEnemyAvatar;
+import com.scs.stevetech1.entities.AbstractOtherPlayersAvatar;
 import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
@@ -74,7 +74,7 @@ public class TestGameClientEntityCreator {
 				return avatar;
 			} else {
 				// Create a simple avatar since we don't control these
-				AbstractEnemyAvatar avatar = new TestGameEnemyAvatar(game, id, pos.x, pos.y, pos.z, side);
+				AbstractOtherPlayersAvatar avatar = new TestGameEnemyAvatar(game, id, pos.x, pos.y, pos.z, side);
 				return avatar;
 			}
 		}

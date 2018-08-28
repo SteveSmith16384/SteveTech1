@@ -26,7 +26,6 @@ public class BoxAvatarModel implements IAvatarModel {
 		size = new Vector3f(w, h, d);
 
 		Box box1 = new Box(w/2, h/2, d/2);
-		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		geometry = new Geometry("MovingTarget", box1);
 
 		TextureKey key3 = new TextureKey("Textures/football.jpg");
@@ -42,10 +41,12 @@ public class BoxAvatarModel implements IAvatarModel {
 
 	}
 
+	
 	@Override
 	public Spatial createAndGetModel() {
 		return geometry;
 	}
+	
 
 	@Override
 	public Spatial getModel() {
@@ -57,16 +58,19 @@ public class BoxAvatarModel implements IAvatarModel {
 		return size;
 	}
 
+	
 	@Override
 	public float getCameraHeight() {
 		return h - 0.2f;
 	}
 
+	
 	@Override
 	public float getBulletStartHeight() {
 		return h - 0.3f;
 	}
 
+	
 	@Override
 	public void setAnim(int anim) {
 		// Not animated

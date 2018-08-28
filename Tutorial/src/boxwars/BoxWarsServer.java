@@ -100,11 +100,5 @@ public class BoxWarsServer extends AbstractGameServer {
 		return 2; // Need at least two players
 	}
 
-/*
-	@Override
-	protected String getSideName(int side) {
-		return "Side " + side;
-	}
-*/
 
 }

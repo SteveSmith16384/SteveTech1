@@ -25,7 +25,7 @@ import com.scs.stevetech1.shared.IEntityController;
 /*
  * This is only used client-side.
  */
-public abstract class AbstractEnemyAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimatedClientSide, IProcessByClient, // todo - rename to OtherPlayerAvatar 
+public abstract class AbstractOtherPlayersAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimatedClientSide, IProcessByClient, 
 ISetRotation, IDrawOnHUD, IDontCollideWithComrades { 
 
 	protected IAvatarModel anim;
@@ -37,7 +37,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	protected BitmapText bmpText;
 	private static BitmapFont font_small;
 
-	public AbstractEnemyAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int _side, String _playersName) {
+	public AbstractOtherPlayersAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int _side, String _playersName) {
 		super(game, eid, type, "EnemyAvatar", true, false, true);
 
 		anim = _anim;
@@ -76,7 +76,6 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
 		// Set position and direction of avatar model, which doesn't get moved automatically
-		//this.avatarModel.setLocalTranslation(this.getWorldTranslation());
 		this.container.setLocalTranslation(this.getWorldTranslation());
 	}
 

@@ -133,7 +133,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	//private String key; // Check we're a valid client
 	//private String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
 	private ValidClientSettings validClientSettings;
-	
+
 	public IGameMessageClient networkClient;
 	public IInputDevice input;
 
@@ -282,7 +282,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		final AbstractGameClient c = this;
 
 		connectingThread = new Thread("ConnectingToServer") {
-			
+
 			@Override
 			public void run() {
 				try {
@@ -392,11 +392,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						clientStatus = STATUS_IN_GAME;
 					}
 				}*/
-/*
+				/*
 				if (currentlyReloading) {
 					this.reloading(tpfSecs, this.finishedReloadAt > 0);
 				}
-*/
+				 */
 				if (joinedGame) {
 
 					this.sendInputs();
@@ -725,7 +725,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				this.showHistory = false;
 
 				// Point camera fwds again
-				cam.lookAt(cam.getLocation().add(Vector3f.UNIT_X), Vector3f.UNIT_Y);
+				Vector3f look = cam.getLocation().add(Vector3f.UNIT_X);
+				look.y = 1f;
+				cam.lookAt(look, Vector3f.UNIT_Y);
 				cam.update();
 			}
 
@@ -832,8 +834,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
 		joinGame(playerName);
 	}
-	
-	
+
+
 	public void joinGame(String playerName) {
 		/*if (this.clientStatus < STATUS_RCVD_WELCOME) {
 			throw new RuntimeException("Trying to join game before logging in");
@@ -1230,6 +1232,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public void disconnected() {
 		Globals.p("Disconnected!");
 		joinedGame = false;
+		this.playerID = -1;
 		this.removeAllEntities();
 		//this.quit("Disconnected");
 	}
@@ -1283,7 +1286,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}
 	 */
-/*
+	/*
 	private void reloading(float tpf_secs, boolean started) {
 		if (weaponModel != null) {
 			float gunRotSpeed = 400;
@@ -1308,7 +1311,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		}
 	}
-*/
+	 */
 
 	//protected abstract Spatial getPlayersWeaponModel();
 
@@ -1476,38 +1479,39 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream) {
-		try {
-			AudioNode node = new AudioNode(this.getAssetManager(), _sound, _stream ? AudioData.DataType.Stream : AudioData.DataType.Buffer);
-			node.setLocalTranslation(_pos);
-			node.setVolume(_volume);
-			node.setLooping(false);
-			node.play();
+		if (!Globals.MUTE) {
+			try {
+				AudioNode node = new AudioNode(this.getAssetManager(), _sound, _stream ? AudioData.DataType.Stream : AudioData.DataType.Buffer);
+				node.setLocalTranslation(_pos);
+				node.setVolume(_volume);
+				node.setLooping(false);
+				node.play();
 
-			this.gameNode.attachChild(node);
+				this.gameNode.attachChild(node);
 
-			// Create thread to remove it
-			this.enqueue(new Callable<Spatial>() {
-				public Spatial call() throws Exception {
-					try {
-						Thread.sleep((long)node.getPlaybackTime() + 1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+				// Create thread to remove it
+				this.enqueue(new Callable<Spatial>() {
+					public Spatial call() throws Exception {
+						try {
+							Thread.sleep((long)node.getPlaybackTime() + 1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						node.removeFromParent();
+						return node;
 					}
-					node.removeFromParent();
-					return node;
-				}
-			});
+				});
 
-		} catch (AssetLoadException ex) {
-			//ex.printStackTrace();
-		} catch (AssetNotFoundException ex) {
-			//ex.printStackTrace();
-		} catch (IllegalStateException ex) {
-			// No sound card
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			} catch (AssetLoadException ex) {
+				//ex.printStackTrace();
+			} catch (AssetNotFoundException ex) {
+				//ex.printStackTrace();
+			} catch (IllegalStateException ex) {
+				// No sound card
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
-
 	}
 
 
@@ -1515,14 +1519,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		return this.networkClient != null && networkClient.isConnected();
 	}
 
-	
+
 	public void setPOVWeapon(IPOVWeapon weapon) {
 		if (this.povWeapon != null) {
 			this.povWeapon.hide();
 		}
 		this.povWeapon = weapon;
 	}
-	
+
 
 	protected void avatarStarted() {
 		if (povWeapon != null) {
