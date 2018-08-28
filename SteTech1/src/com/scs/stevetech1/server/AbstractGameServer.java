@@ -100,6 +100,7 @@ ICollisionListener<PhysicalEntity> {
 	private RealtimeInterval sendEntityUpdatesInterval;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
+	private double commsVersion; // Check the client is up-to-date
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
 	private boolean sendAddRemoveEntityMsgs = true;
 	private String key;
@@ -117,10 +118,11 @@ ICollisionListener<PhysicalEntity> {
 	 * @param _clientRenderDelayMillis How far in the past the client should render the game
 	 * @param _timeoutMillis How long without comms before the server disconnects the client 
 	 */
-	public AbstractGameServer(String _gameCode, String _key, GameOptions _gameOptions) { 
+	public AbstractGameServer(String _gameCode, double _commsVersion, String _key, GameOptions _gameOptions) { 
 		super();
 
 		gameCode = _gameCode;
+		commsVersion = _commsVersion;
 		key = _key;
 		gameOptions = _gameOptions;
 
@@ -395,8 +397,11 @@ ICollisionListener<PhysicalEntity> {
 		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
 			return;
+		} else if (newPlayerMessage.clientVersion < this.commsVersion) {
+			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Client too old; version " + commsVersion + " required"));
+			return;
 		} else if (!newPlayerMessage.key.equalsIgnoreCase(this.key)) {
-			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces available."));
+			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid key"));
 			return;
 		} else if (!this.doWeHaveSpaces()) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("No spaces available"));

@@ -39,7 +39,7 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	private TestGameServer() throws IOException {
-		super(GAME_ID, "Key", new GameOptions(25, 40, 200, Integer.MAX_VALUE, 10*1000, 5*60*1000, 10*1000, 
+		super(GAME_ID, 1d, "Key", new GameOptions(25, 40, 200, Integer.MAX_VALUE, 10*1000, 5*60*1000, 10*1000, 
 				TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, 
 				5, 5));
 		start(JmeContext.Type.Headless);

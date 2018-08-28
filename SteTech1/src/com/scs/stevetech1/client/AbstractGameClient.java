@@ -765,7 +765,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else if (message instanceof JoinGameFailedMessage) {
 			JoinGameFailedMessage jgfm = (JoinGameFailedMessage)message;
 			Globals.p("Join game failed: " + jgfm.reason);
-			this.quit(jgfm.reason);
+			this.showMessage("Join game failed: " + jgfm.reason);
+			//this.quit(jgfm.reason);
 
 		} else if (message instanceof SetAvatarMessage) {
 			SetAvatarMessage sam = (SetAvatarMessage)message;
