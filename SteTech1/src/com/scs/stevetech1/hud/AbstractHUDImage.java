@@ -31,11 +31,6 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 		guiNode.attachChild(this);
 		game.addEntity(this);
 		
-		if (Globals.DEBUG_MISSING_WON_MSG) {
-			Globals.p("Showing hud image " + tex);
-		}
-
-
 	}
 
 

@@ -5,20 +5,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.prefs.BackingStoreException;
 
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
-import com.jme3.asset.AssetLoadException;
-import com.jme3.asset.AssetNotFoundException;
 import com.jme3.asset.TextureKey;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
-import com.jme3.audio.AudioData;
-import com.jme3.audio.AudioNode;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -97,6 +92,7 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.client.AnimationSystem;
 import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
+import com.scs.stevetech1.systems.client.SoundSystem;
 
 import ssmith.lang.NumberFunctions;
 import ssmith.util.AverageNumberCalculator;
@@ -129,15 +125,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
-	//private String gameCode; // To check the right type of client is connecting
-	//private String key; // Check we're a valid client
-	//private String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
 	private ValidClientSettings validClientSettings;
 
 	public IGameMessageClient networkClient;
 	public IInputDevice input;
 
-	// On-screen gun
 	public IPOVWeapon povWeapon;
 
 	public AbstractClientAvatar currentAvatar;
@@ -150,6 +142,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	protected boolean joinedGame = false;
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
+	private SoundSystem soundSystem;
 	private int expectedNumEntities = -1; // So we can show "% complete"
 
 	protected Node gameNode = new Node("GameNode");
@@ -179,8 +172,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
 		super();
 
-		//gameCode = _gameCode;
-		//key = _key;
 		validClientSettings = _validClientSettings;
 
 		tickrateMillis = _tickrateMillis;
@@ -193,7 +184,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
-
+		
 		nodes = new HashMap<String, Node>();
 
 		mouseSens = _mouseSens;
@@ -205,9 +196,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			e.printStackTrace();
 		}
 		settings.setUseJoysticks(true);
-
-		//settings.setAudioRenderer(null); // Todo Avoid error with no soundcard
-		//super.audioRenderer = null;
 
 		settings.setTitle(!Globals.RELEASE_MODE ? "Client" : appTitle);// + " (v" + Settings.VERSION + ")");
 		settings.setSettingsDialogImage(logoImage);
@@ -243,6 +231,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		addDefaultKeyboardMappings();
 
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
+
+		soundSystem = new SoundSystem(this.getAssetManager(), this.getGameNode());
 
 		setUpLight();
 
@@ -385,18 +375,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							i--;
 						}
 					}
-				}/* else {
-					if (this.clientStatus == STATUS_ENTS_RCVD_NOT_ADDED) {
-						this.getRootNode().attachChild(this.gameNode);
-						this.showPlayersWeapon();
-						clientStatus = STATUS_IN_GAME;
-					}
-				}*/
-				/*
-				if (currentlyReloading) {
-					this.reloading(tpfSecs, this.finishedReloadAt > 0);
 				}
-				 */
+
 				if (joinedGame) {
 
 					this.sendInputs();
@@ -433,6 +413,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				}
 			}
+			
+			soundSystem.process();
 
 			if (Globals.STRICT) {
 				checkNodesExistInEntities();
@@ -758,7 +740,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (message instanceof PlaySoundMessage) {
 			PlaySoundMessage psm = (PlaySoundMessage)message;
-			playSound(psm);
+			this.playSound(psm.soundId, psm.entityId, psm.pos, psm.volume, psm.stream);
 
 		} else if (message instanceof ModelBoundsMessage) {
 			ModelBoundsMessage psm = (ModelBoundsMessage)message;
@@ -905,11 +887,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	protected void gameIsDrawn() {
 		// Override if required
-	}
-
-
-	private void playSound(PlaySoundMessage psm) {
-		this.playSound(psm.sound, psm.pos, psm.volume, psm.stream);
 	}
 
 
@@ -1477,39 +1454,22 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
+	/**
+	 * Override
+	 * @param id
+	 * @return
+	 */
+	protected String getSoundFileFromID(int id) {
+		return null;
+	}
+
+
 	@Override
-	public void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream) {
+	public void playSound(int soundId, int entityId, Vector3f _pos, float _volume, boolean _stream) {
 		if (!Globals.MUTE) {
-			try {
-				AudioNode node = new AudioNode(this.getAssetManager(), _sound, _stream ? AudioData.DataType.Stream : AudioData.DataType.Buffer);
-				node.setLocalTranslation(_pos);
-				node.setVolume(_volume);
-				node.setLooping(false);
-				node.play();
-
-				this.gameNode.attachChild(node);
-
-				// Create thread to remove it
-				this.enqueue(new Callable<Spatial>() {
-					public Spatial call() throws Exception {
-						/*try {
-							//todo - re-add Thread.sleep((long)node.getPlaybackTime() + 1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						node.removeFromParent();*/
-						return node;
-					}
-				});
-
-			} catch (AssetLoadException ex) {
-				//ex.printStackTrace();
-			} catch (AssetNotFoundException ex) {
-				//ex.printStackTrace();
-			} catch (IllegalStateException ex) {
-				// No sound card
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			String sound = getSoundFileFromID(soundId);
+			if (sound != null && sound.length() > 0) {
+				soundSystem.playSound(sound, entityId, _pos, _volume, _stream);
 			}
 		}
 	}

@@ -946,7 +946,7 @@ ICollisionListener<PhysicalEntity> {
 
 	public void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir, float offset) {
 		Vector3f voffset = dir.mult(offset);
-		while (pe.simpleRigidBody.checkForCollisions().isEmpty()) {
+		while (pe.simpleRigidBody.checkForCollisions(false).isEmpty()) {
 			pe.getMainNode().move(voffset);
 		}
 		pe.getMainNode().move(dir.mult(-offset)); // Move back
@@ -978,8 +978,8 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream) {
-		sendMessageToInGameClients(new PlaySoundMessage(_sound, _pos, _volume, _stream));
+	public void playSound(int _soundId, int entityId, Vector3f _pos, float _volume, boolean _stream) {
+		sendMessageToInGameClients(new PlaySoundMessage(_soundId, entityId, _pos, _volume, _stream));
 
 	}
 

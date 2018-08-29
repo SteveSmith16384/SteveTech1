@@ -90,7 +90,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 				float x = NumberFunctions.rndFloat(2, mapSize-3);
 				float z = NumberFunctions.rndFloat(2, mapSize-3);
 				avatar.setWorldTranslation(x, startHeight, z);
-			} while (avatar.simpleRigidBody.checkForCollisions().size() > 0);
+			} while (avatar.simpleRigidBody.checkForCollisions(false).size() > 0);
 		}
 		Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
@@ -170,7 +170,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		float x = NumberFunctions.rndFloat(2, mapSize-3);
 		float z = NumberFunctions.rndFloat(2, mapSize-3);
 		this.actuallyAddEntity(entity);
-		while (entity.simpleRigidBody.checkForCollisions().size() > 0) { // todo - don't try forever
+		while (entity.simpleRigidBody.checkForCollisions(false).size() > 0) { // todo - don't try forever
 			x = NumberFunctions.rndFloat(2, mapSize-3);
 			z = NumberFunctions.rndFloat(2, mapSize-3);
 			entity.setWorldTranslation(x, z); //this.entities

@@ -6,7 +6,7 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class PlaySoundMessage extends MyAbstractMessage {
 
-	public String sound;
+	public int soundId, entityId;
 	public Vector3f pos;
 	public float volume;
 	public boolean stream;
@@ -16,10 +16,11 @@ public class PlaySoundMessage extends MyAbstractMessage {
 	}
 	
 	
-	public PlaySoundMessage(String _sound, Vector3f _pos, float _volume, boolean _stream) {
+	public PlaySoundMessage(int _soundId, int _entityId, Vector3f _pos, float _volume, boolean _stream) {
 		this();
 		
-		sound = _sound;
+		soundId = _soundId;
+		entityId = _entityId;
 		pos = _pos;
 		volume = _volume;
 		stream = _stream;

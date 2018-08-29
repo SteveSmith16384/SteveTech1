@@ -41,6 +41,6 @@ public interface IEntityController {
 	
 	boolean canCollide(PhysicalEntity a, PhysicalEntity b);
 	
-	void playSound(String _sound, Vector3f _pos, float _volume, boolean _stream);
+	void playSound(int _soundId, int entityId, Vector3f _pos, float _volume, boolean _stream);
 	
 }
