@@ -8,7 +8,7 @@ import ssmith.lang.Functions;
 
 public class Globals {
 	
-	public static final boolean MUTE = true;
+	public static final boolean MUTE = false;
 	public static final boolean RECORD_VID = false;
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	//public static final boolean HIDE_BELLS_WHISTLES = false;//!RECORD_VID;
