@@ -1492,12 +1492,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				// Create thread to remove it
 				this.enqueue(new Callable<Spatial>() {
 					public Spatial call() throws Exception {
-						try {
-							Thread.sleep((long)node.getPlaybackTime() + 1000);
+						/*try {
+							//todo - re-add Thread.sleep((long)node.getPlaybackTime() + 1000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						node.removeFromParent();
+						node.removeFromParent();*/
 						return node;
 					}
 				});
