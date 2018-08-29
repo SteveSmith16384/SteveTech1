@@ -41,7 +41,6 @@ public class SimpleRigidBody<T> implements Collidable {
 	public ISimpleEntity<T> simpleEntity;
 	private boolean movedByForces = true; // Set to false to make "kinematic"
 	protected boolean isOnGround = false;
-	//private int modelComplexity = 0; // For determining which way round to check collisions.  Todo - remove this
 	public boolean canWalkUpSteps = false;
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
@@ -390,7 +389,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				if (DEBUG_STEPS_SLOPES) {
 					p("Going up step: height=" + heightDiff + ", stepForce=" + this.physicsController.getStepForce());
 				}
-				this.oneOffForce.y += Math.sqrt(heightDiff) * this.physicsController.getStepForce(); // 8f; // 10f;//14f;//16f;
+				this.oneOffForce.y += Math.sqrt(heightDiff) * this.physicsController.getStepForce();
 				return true;
 			} else {
 				if (DEBUG_STEPS_SLOPES) {
@@ -509,18 +508,6 @@ public class SimpleRigidBody<T> implements Collidable {
 					}
 
 				} else if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
-					// Both are complex meshes!  Convert one into a simple boundingvolume
-					/*if (this.modelComplexity >= e.modelComplexity) {
-						// We are the most complex
-						Node s = (Node)e.simpleEntity.getCollidable();
-						BoundingVolume bv = (BoundingVolume)s.getWorldBound();
-						res = this.collideWith(bv, tempCollisionResults);
-					} else {
-						// They are the most complex
-						Node s = (Node)this.simpleEntity.getCollidable();
-						BoundingVolume bv = (BoundingVolume)s.getWorldBound();
-						res = bv.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
-					}*/
 					res = this.meshVMesh(e, tempCollisionResults) ? 1: 0;
 					
 				} else {

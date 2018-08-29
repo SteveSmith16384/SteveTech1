@@ -47,8 +47,6 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 		server = (AbstractGameServer)_module;
 		client = _client;
 		maxHealth = _maxHealth;
-		//this.moveSpeed = _moveSpeed;
-		//this.setJumpForce(_jumpForce);
 		playerTargetPriority = _playerTargetPriority;
 	}
 
@@ -181,6 +179,11 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 	public void setHealth(float h) {
 		super.setHealth(h);
 		this.sendStatusUpdateMessage(false);
+	}
+
+
+	public float getMaxHealth() {
+		return this.maxHealth;
 	}
 
 

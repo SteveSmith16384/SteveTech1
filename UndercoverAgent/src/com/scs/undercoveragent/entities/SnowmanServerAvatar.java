@@ -17,7 +17,7 @@ import com.scs.undercoveragent.models.SnowmanModel;
 public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebrisTexture {
 
 	public SnowmanServerAvatar(IEntityController _module, ClientData client, IInputDevice _input, int eid) {
-		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), 2f, 0, new PersonAvatar(_module, _input, UAStaticData.MOVE_SPEED, UAStaticData.JUMP_FORCE));
+		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), UAStaticData.START_HEALTH, 0, new PersonAvatar(_module, _input, UAStaticData.MOVE_SPEED, UAStaticData.JUMP_FORCE));
 	}
 
 
@@ -27,7 +27,6 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 
 		UASimplePlayerData data = (UASimplePlayerData)this.client.playerData;
 		data.score = 0;
-		//this.sendStatusUpdateMessage(false);
 	}
 
 

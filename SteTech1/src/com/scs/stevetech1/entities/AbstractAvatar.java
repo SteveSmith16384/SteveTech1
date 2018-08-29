@@ -34,12 +34,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public static final int ANIM_DIED = 5;
 	public static final int ANIM_ATTACK = 6;
 
-	//private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
 	protected IInputDevice input;
-
-	//Temporary vectors used on each frame.
-	//private final Vector3f camDir = new Vector3f();
-	//private final Vector3f camLeft = new Vector3f();
 
 	public final int playerID;
 	protected Geometry bbGeom; // Non-rotating box for collisions
@@ -49,12 +44,8 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	protected boolean alive = true;
 	protected float restartTimeSecs, invulnerableTimeSecs;
-	//protected long lastMoveTime = System.currentTimeMillis() + 5000;
-	//protected boolean playerWalked; // Has the player tried to move us?
 
 	private float health;
-	//public float moveSpeed = 0f;
-	//private float jumpForce = 0;
 	public int currentAnimCode = -1;
 
 	protected IAvatarControl avatarControl;
