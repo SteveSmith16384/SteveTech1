@@ -89,13 +89,13 @@ public class SimpleNode<T> {
 	}
 	
 
-	public int getCollisions(SimpleRigidBody<T> srb, List<SimpleRigidBody<T>> crs, CollisionResults tempCollisionResults) {
+	public int getCollisions(SimpleRigidBody<T> srb, List<SimpleRigidBody<T>> crs, CollisionResults tempCollisionResults, boolean notify) {
 		int count = 0;
 		BoundingBox bb = srb.getBoundingBox();
 		if (this.intersects(bb)) { // Check we're inside the Node
 			synchronized (this.entities) {
 				for (SimpleRigidBody<T> other : this.entities) {
-					if (srb.checkSRBvSRB(other, tempCollisionResults)) {
+					if (srb.checkSRBvSRB(other, tempCollisionResults, notify)) {
 						crs.add(other);
 						count++;
 					}

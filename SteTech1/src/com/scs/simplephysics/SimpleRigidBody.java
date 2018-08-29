@@ -44,8 +44,8 @@ public class SimpleRigidBody<T> implements Collidable {
 	public boolean canWalkUpSteps = false;
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
-	private boolean collidable = true;
-
+	//private boolean collidable = true;
+	private boolean isSolid = true; // otherwise, other SRBs can pass through it
 
 	private SimpleNode<T> parent;
 
@@ -117,7 +117,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 			// Check we're not already colliding *before* we've even moved
 			boolean doBounce = true;
-			List<SimpleRigidBody<T>> crs = this.checkForCollisions();
+			List<SimpleRigidBody<T>> crs = this.checkForCollisions(false);
 			if (crs.size() != 0) {
 				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				if (AUTOMOVE_BY_FORCE) {
@@ -366,10 +366,6 @@ public class SimpleRigidBody<T> implements Collidable {
 			return false;
 		}
 
-		if (!this.isOnGround) {
-			//return false;
-		}
-
 		SimpleRigidBody<T> cr = crs.get(0);
 
 		BoundingBox ourBB = (BoundingBox)this.getBoundingBox();
@@ -438,7 +434,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	 */
 	private List<SimpleRigidBody<T>> move(Vector3f offset) {
 		this.simpleEntity.moveEntity(offset);
-		List<SimpleRigidBody<T>> crs = checkForCollisions();
+		List<SimpleRigidBody<T>> crs = checkForCollisions(true);
 		if (crs.size() > 0) {
 			this.simpleEntity.moveEntity(offset.negate()); // Move back
 		}
@@ -446,17 +442,13 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	public List<SimpleRigidBody<T>> checkForCollisions() {
+	public List<SimpleRigidBody<T>> checkForCollisions(boolean notify) {
 		List<SimpleRigidBody<T>> crs = new ArrayList<SimpleRigidBody<T>>();
-
-		if (!this.collidable ) {
-			return crs;
-		}
 
 		CollisionResults tempCollisionResults = new CollisionResults(); // Avoid creating a new one each time
 
 		for(SimpleNode<T> node : this.physicsController.nodes.values()) {
-			node.getCollisions(this, crs, tempCollisionResults);
+			node.getCollisions(this, crs, tempCollisionResults, notify);
 		}
 		// Check against moving/big entities
 		List<SimpleRigidBody<T>> entities = physicsController.movingEntities;
@@ -464,7 +456,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			// Loop through the entities
 			for (int i=0 ; i<entities.size() ; i++) {
 				SimpleRigidBody<T> e = entities.get(i);
-				if (this.checkSRBvSRB(e, tempCollisionResults)) {
+				if (this.checkSRBvSRB(e, tempCollisionResults, notify)) {
 					crs.add(e);
 				}
 			}
@@ -477,7 +469,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * @param e
 	 * @return whether the two SRB's collided.
 	 */
-	public boolean checkSRBvSRB(SimpleRigidBody<T> e, CollisionResults tempCollisionResults) {
+	public boolean checkSRBvSRB(SimpleRigidBody<T> e, CollisionResults tempCollisionResults, boolean notify) {
 		tempCollisionResults.clear();
 		if (e != this) { // Don't check ourselves
 			if (this.physicsController.getCollisionListener().canCollide(this, e)) {
@@ -503,7 +495,7 @@ public class SimpleRigidBody<T> implements Collidable {
 						if (bv.getCenter().y-bv.getYExtent() >= pos.y) {
 							return false;
 						} else {
-							p("Hit terrain");
+							//p("Hit terrain");
 						}
 					}
 
@@ -515,8 +507,12 @@ public class SimpleRigidBody<T> implements Collidable {
 
 				}
 				if (res > 0) {
-					this.physicsController.getCollisionListener().collisionOccurred(this, e);
-					return true;
+					if (notify) {
+						this.physicsController.getCollisionListener().collisionOccurred(this, e);
+					}
+					if (this.isSolid && e.isSolid) {
+						return true;
+					}
 				}
 			}
 		}
@@ -644,16 +640,20 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	public float GetCurrentGravOffset() {
+	public float getCurrentGravOffset() {
 		return this.currentGravInc;
 	}
 
 
-	public void setCollidable(boolean b) {
-		this.collidable = b;
+	/**
+	 * Non-solid SRBs will pass through other SRB's, but will still have collisions fired 
+	 * @param s
+	 */
+	public void setSolid(boolean s) {
+		this.isSolid = s;
 	}
 
-
+	
 	public void setParent(SimpleNode<T> n) {
 		if (this.parent != null) {
 			throw new RuntimeException(this + " already has a parent: " + this.parent);

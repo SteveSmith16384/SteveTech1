@@ -43,7 +43,7 @@ public class SimulateFallingBall implements ICollisionListener<String> {
 		while (time <= TOTAL_DURATION_SECS) {
 			this.physicsController.update(LOOP_INTERVAL_SECS);
 			if (time > prevReport) {
-				p("Time: " + time + "  Pos: " + ballGeometry.getWorldTranslation() + "  Gravity offset:" + srb.GetCurrentGravOffset());
+				p("Time: " + time + "  Pos: " + ballGeometry.getWorldTranslation() + "  Gravity offset:" + srb.getCurrentGravOffset());
 				prevReport += REPORT_INTERVAL_SECS;
 			}
 			time += LOOP_INTERVAL_SECS;
