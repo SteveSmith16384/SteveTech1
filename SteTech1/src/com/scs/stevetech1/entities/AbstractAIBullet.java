@@ -65,7 +65,8 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 			ray.setLimit(speed * tpf_secs);
 			RayCollisionData rcd = this.checkForRayCollisions(ray);
 			if (rcd != null) {
-				this.remove();
+				//this.remove();
+				game.markForRemoval(this.getID());
 				server.collisionOccurred(this, rcd.entityHit);
 			} else {
 				// Move spatial
@@ -85,7 +86,8 @@ public abstract class AbstractAIBullet extends PhysicalEntity implements ICauses
 			if (range > 0) {
 				float dist = this.origin.distance(this.getWorldTranslation());
 				if (dist > range) {
-					this.remove();
+					//this.remove();
+					game.markForRemoval(this.getID());
 				}
 			}
 		}

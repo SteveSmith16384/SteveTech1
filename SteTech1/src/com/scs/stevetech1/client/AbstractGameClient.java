@@ -51,6 +51,7 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
+import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.entities.ExplosionShard;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.input.IInputDevice;
@@ -90,6 +91,7 @@ import com.scs.stevetech1.networking.KryonetGameClient;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.stevetech1.systems.EntityRemovalSystem;
 import com.scs.stevetech1.systems.client.AnimationSystem;
 import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
 import com.scs.stevetech1.systems.client.SoundSystem;
@@ -115,19 +117,21 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
 	protected ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entites that we need to iterate over in game loop
 	protected LinkedList<PhysicalEntity> entitiesToAddToGame = new LinkedList<PhysicalEntity>(); // Entities to add to RootNode, as we don't add them immed
-	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>(); // Still have a list so we don't have to loop through ALL entities
+	//protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>(); // Still have a list so we don't have to loop through ALL entities
+	private EntityRemovalSystem entityRemovalSystem;
 	private ArrayList<IEntity> clientOnlyEntities = new ArrayList<>(100);
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
-	protected FixedLoopTime loopTimer;  // Keep client and server running at the same time
+	protected FixedLoopTime loopTimer; // Keep client and server running at the same time
 
-	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis;
+	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis; // todo - combine into class?
 
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
 	private ValidClientSettings validClientSettings;
 
 	public IGameMessageClient networkClient;
+	public boolean rcvdHello = false;
 	public IInputDevice input;
 
 	public IPOVWeapon povWeapon;
@@ -184,7 +188,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		animSystem = new AnimationSystem(this);
 		launchSystem = new ClientEntityLauncherSystem(this);
-		
+		this.entityRemovalSystem = new EntityRemovalSystem(this);
+
 		nodes = new HashMap<String, Node>();
 
 		mouseSens = _mouseSens;
@@ -277,6 +282,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			public void run() {
 				try {
 					networkClient = new KryonetGameClient(gameServerIP, gamePort, gamePort, c, timeoutMillis, getListofMessageClasses());
+					Globals.p("Connected");
 				} catch (Exception e) {
 					lastConnectException = e;
 				}
@@ -353,10 +359,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 
 				// Remove entities
-				while (this.entitiesToRemove.size() > 0) {
+				this.entityRemovalSystem.actuallyRemoveEntities();
+				/*while (this.entitiesToRemove.size() > 0) {
 					int i = this.entitiesToRemove.getFirst();
 					this.actuallyRemoveEntity(i);
-				}
+				}*/
 
 				// Add entities
 				if (entitiesToAddToGame.size() > 0) {
@@ -413,7 +420,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				}
 			}
-			
+
 			soundSystem.process();
 
 			if (Globals.STRICT) {
@@ -555,6 +562,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 
 		} else if (message instanceof HelloMessage) {
+			this.rcvdHello = true;
 			receivedWelcomeMessage();
 
 		} else if (message instanceof SimpleGameDataMessage) {
@@ -630,13 +638,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Rcvd msg to remove entity " + rem.entityID);
 			}
-			IEntity e = this.entities.get(rem.entityID);
-			if (e != null) {
-				e.remove();
-			} else {
-				Globals.p("Ignoring msg to remove entity " + rem.entityID + " as we have no record of it");
+			this.entityRemovalSystem.markEntityForRemoval(rem.entityID);
+			if (Globals.STRICT) {
+				IEntity e = this.entities.get(rem.entityID);
+				if (e == null) {
+					Globals.p("Ignoring msg to remove entity " + rem.entityID + " as we have no record of it");
+				}
 			}
-
 		} else if (message instanceof GeneralCommandMessage) {
 			GeneralCommandMessage msg = (GeneralCommandMessage)message;
 			//if (msg.gameID == this.getGameID()) { Might not have game id
@@ -808,20 +816,23 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	 * Override this if you don't want to join a game immediately after connecting.
 	 */
 	protected void receivedWelcomeMessage() {
-		this.joinGame();
+		this.joinGame(null);
 	}
 
-
+	/*
 	public void joinGame() {
 		String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
 		joinGame(playerName);
 	}
-
+	 */
 
 	public void joinGame(String playerName) {
-		/*if (this.clientStatus < STATUS_RCVD_WELCOME) {
-			throw new RuntimeException("Trying to join game before logging in");
-		}*/
+		if (playerName == null || playerName.length() == 0) {
+			playerName = "Player_" + NumberFunctions.rnd(1, 1000);
+		}
+		if (this.rcvdHello == false) {
+			throw new RuntimeException("Trying to join game before receiving hello");
+		}
 		networkClient.sendMessageToServer(new JoinGameRequestMessage(validClientSettings.gameCode, validClientSettings.clientVersion, playerName, validClientSettings.key));
 	}
 
@@ -1066,6 +1077,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private void removeAllEntities() {
 		Globals.p("REMOVING ALL ENTITIES...");
 		this.entitiesToAddToGame.clear();
+		/*
 		while (this.entities.size() > 0) {
 			Iterator<IEntity> it = this.entities.values().iterator();
 			IEntity e = it.next();
@@ -1073,7 +1085,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			it.remove(); //this.entitiesToRemove
 		}
 		this.entitiesForProcessing.clear();
-		this.clientOnlyEntities.clear();
+		 */
+		for (IEntity e : this.entities.values()) {
+			this.markForRemoval(e.getID());
+		}
+		this.entityRemovalSystem.actuallyRemoveEntities();
+
+		this.clientOnlyEntities.clear(); // todo - remove() these
 		this.nodes.clear();
 		this.gameNode.detachAllChildren();
 		this.gameNode.removeFromParent();
@@ -1087,27 +1105,26 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	@Override
-	public void removeEntity(int id) {
+	public void markForRemoval(int id) {
 		if (id > 0) {
+			if (Globals.STRICT) {
+				IEntity e = this.entities.get(id);
+				if (e != null) {
+					((Entity)e).markedForRemoval = true;
+				}				
+			}
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				IEntity e = this.entities.get(id);
 				if (e != null) {
+					((Entity)e).markedForRemoval = true;
 					Globals.p("Going to remove entity " + id + ":" + e);
 				} else {
 					Globals.p("Going to remove entity " + id);
 				}
 			}
-			this.entitiesToRemove.add(id);
-			//actuallyRemoveEntity(id);
+			//this.entitiesToRemove.add(id);
+			this.entityRemovalSystem.markEntityForRemoval(id);
 		} else {
-			/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-				IEntity e = this.clientOnlyEntities.get(id);
-				if (e != null) {
-					Globals.p("Going to remove CO entity " + id + ":" + e);
-				} else {
-					Globals.p("Going to remove CO entity " + id);
-				}
-			}*/
 			//this.clientOnlyEntitiesToRemove.add(id);
 			this.actuallyRemoveClientOnlyEntity(id);
 		}
@@ -1117,39 +1134,34 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	/*
 	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
 	 */
-	private void actuallyRemoveEntity(int id) {
-		this.entitiesToRemove.removeFirstOccurrence(id);
-		synchronized (entities) {
-			IEntity e = this.entities.get(id);
-			if (e != null) {
-				if (e.getType() == 7) { // Players bullet in TWIP
-					Globals.p("Removing " + e);
+	@Override
+	public void actuallyRemoveEntity(int id) {
+		IEntity e = this.entities.get(id);
+		if (e != null) {
+			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+				Globals.p("Actually removing entity " + id + ":" + e);
+			}
+			this.entities.remove(id);
+			if (e.requiresProcessing()) {
+				this.entitiesForProcessing.remove(e);
+			}
+			e.remove();
+			if (e == this.currentAvatar) {
+				if (Globals.DEBUG_AVATAR_SET) {
+					Globals.p("Avatar for player removed");
 				}
-				if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-					Globals.p("Actually removing entity " + id + ":" + e);
-				}
-				this.entities.remove(id);
-				if (e.requiresProcessing()) {
-					this.entitiesForProcessing.remove(e);
-				}
-				if (e == this.currentAvatar) {
-					if (Globals.DEBUG_AVATAR_SET) {
-						Globals.p("Avatar for player removed");
-					}
-					this.currentAvatar = null;
-				}
-				if (Globals.STRICT) {
-					if (e instanceof PhysicalEntity) {
-						PhysicalEntity pe = (PhysicalEntity)e;
-						if (pe.getMainNode().getParent() != null) {
-							Globals.pe("Entity still attached to rootNode!");
-						}
+				this.currentAvatar = null;
+			}
+			if (Globals.STRICT) {
+				if (e instanceof PhysicalEntity) {
+					PhysicalEntity pe = (PhysicalEntity)e;
+					if (pe.getMainNode().getParent() != null) {
+						Globals.pe("Entity still attached to rootNode!");
 					}
 				}
-			} else {
-				//Globals.pe("Entity id " + id + " not found for removal");
 			}
 		}
+		//}
 		if (Globals.STRICT) {
 			if (this.entities.containsKey(id)) {
 				Globals.pe("Entity still exists!");
@@ -1177,19 +1189,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	public void quit(String reason) {
 		Globals.p("quitting: " + reason);
-		if (networkClient != null && this.networkClient.isConnected()) {
+		if (this.isConnected()) {
 			if (playerID >= 0) {
 				this.networkClient.sendMessageToServer(new PlayerLeftMessage(this.playerID));
-				/*try {
-				executor.awaitTermination(1, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
 			}
 			this.networkClient.close();
 		}
 		this.stop();
-		//System.exit(0); No, since we might be running multiple!
+		//System.exit(0); No, since we might be running multiple instances (e.g. Unit Tests)!
 	}
 
 
@@ -1211,7 +1218,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		joinedGame = false;
 		this.playerID = -1;
 		this.removeAllEntities();
-		//this.quit("Disconnected");
 	}
 
 
@@ -1247,51 +1253,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public Node getGameNode() {
 		return gameNode;
 	}
-
-	/*
-	private void showPlayersWeapon() {
-		if (playersWeaponNode == null) {
-			playersWeaponNode = new Node("PlayersWeapon");
-		}
-		if (this.playersWeaponNode.getParent() == null) {
-			this.getGameNode().attachChild(playersWeaponNode);
-		}
-		playersWeaponNode.detachAllChildren();
-		weaponModel = getPlayersWeaponModel();
-		if (weaponModel != null) {
-			playersWeaponNode.attachChild(weaponModel);
-		}
-	}
-	 */
-	/*
-	private void reloading(float tpf_secs, boolean started) {
-		if (weaponModel != null) {
-			float gunRotSpeed = 400;
-			float diff = (gunRotSpeed * tpf_secs);
-
-			this.finishedReloadAt -= tpf_secs;
-			if (started) {
-				if (gunAngle < 90) {
-					gunAngle += diff;
-					weaponModel.rotate((float)Math.toRadians(-diff), 0f, 0f);
-				}
-			} else {
-				if (gunAngle > 0) {
-					gunAngle -= diff;
-					weaponModel.rotate((float)Math.toRadians(diff), 0f, 0f);
-				} else {
-					currentlyReloading = false;
-				}
-			}
-			if (Globals.DEBUG_GUN_ROTATION) {
-				Globals.p("Gun angle = " + gunAngle);
-			}
-		}
-	}
-	 */
-
-	//protected abstract Spatial getPlayersWeaponModel();
-
 
 	@Override
 	public long getRenderTime() {
@@ -1386,8 +1347,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  "e.remove()" does all the hard work.
 	 */
 	private void actuallyRemoveClientOnlyEntity(int id) {
-		IEntity e = getClientOnlyEntityById(id);//this.clientOnlyEntities.get(id);
+		IEntity e = getClientOnlyEntityById(id);
 		if (e != null) {
+			// todo - call shared remove code?
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Actually removing CO entity " + id + ":" + e);
 			}
@@ -1397,7 +1359,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		} else {
 			Globals.pe("Entity id " + id + " not found for removal");
-			//this.entitiesForProcessing.remove(id); // Just in case, otherwise we'll try and remove it foreer
 		}
 	}
 

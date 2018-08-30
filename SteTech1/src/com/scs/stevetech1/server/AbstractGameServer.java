@@ -31,6 +31,7 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
+import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.netmessages.ClientGunReloadRequestMessage;
@@ -60,6 +61,7 @@ import com.scs.stevetech1.networking.KryonetGameServer;
 import com.scs.stevetech1.server.ClientData.ClientStatus;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
+import com.scs.stevetech1.systems.EntityRemovalSystem;
 import com.scs.stevetech1.systems.server.ServerGameStatusSystem;
 import com.scs.stevetech1.systems.server.ServerPingSystem;
 
@@ -88,7 +90,8 @@ ICollisionListener<PhysicalEntity> {
 
 	protected HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities
 	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entities that we need to iterate over in game loop
-	protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
+	//protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
+	private EntityRemovalSystem entityRemovalSystem;
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer;  // Keep client and server running at the same time
@@ -132,6 +135,7 @@ ICollisionListener<PhysicalEntity> {
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		collisionLogic = new ServerSideCollisionLogic(this);
 		loopTimer = new FixedLoopTime(gameOptions.tickrateMillis);
+		this.entityRemovalSystem = new EntityRemovalSystem(this);
 
 		setShowSettings(false); // Don't show settings dialog
 		setPauseOnLostFocus(false);
@@ -144,14 +148,6 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void simpleInitApp() {
-		try {
-			gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, gameOptions.timeoutMillis, getListofMessageClasses());
-			Globals.p("Listening on port " + gameOptions.ourExternalPort);
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-
 		assetManager.registerLocator("assets/", FileLocator.class); // default
 		assetManager.registerLocator("assets/", ClasspathLocator.class);
 
@@ -163,9 +159,24 @@ ICollisionListener<PhysicalEntity> {
 
 		startNewGame(); // Even though there are no players connected, this created the gameData to avoid NPEs.
 
+		startListeningForClients(); // Don't start listening until we're ready
+		
 		loopTimer.start();
 	}
 
+	
+	private void startListeningForClients() {
+		try {
+			gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, gameOptions.timeoutMillis, getListofMessageClasses());
+			Globals.p("Listening on port " + gameOptions.ourExternalPort);
+		} catch (IOException e) {
+			e.printStackTrace();
+			//System.exit(-1);
+			this.stop();
+		}
+
+
+	}
 
 	/**
 	 *  
@@ -200,7 +211,7 @@ ICollisionListener<PhysicalEntity> {
 		if (gameNetworkServer.getNumClients() > 0) {
 			handleMessages();
 			iterateThroughClients();
-			this.actuallyRemoveEntities();
+			this.entityRemovalSystem.actuallyRemoveEntities();
 
 			checkForRewinding();
 
@@ -459,12 +470,14 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		for (IEntity e : this.entities.values()) {
-			e.remove();
+			this.markForRemoval(e.getID());
+			//e.remove();
 		}
-		this.actuallyRemoveEntities();
+		//this.actuallyRemoveEntities();
+		this.entityRemovalSystem.actuallyRemoveEntities();
 	}
 
-
+/*
 	private void actuallyRemoveEntities() {
 		for(Integer i : this.entitiesToRemove) {
 			this.actuallyRemoveEntity(i);
@@ -472,13 +485,13 @@ ICollisionListener<PhysicalEntity> {
 		this.entitiesToRemove.clear();
 
 	}
-
+*/
 
 	protected void startNewGame() {
 		if (this.entities.size() > 0) {
 			throw new RuntimeException("Outstanding entities");
 		}
-		if (this.entitiesToRemove.size() > 0) {
+		if (this.entityRemovalSystem.getNumEntities() > 0) {
 			throw new RuntimeException("Entities waiting to be removed");
 		}
 
@@ -545,7 +558,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		if (client == null) {
-			Globals.p("Client unknown so msg ignored");
+			Globals.p("Client unknown so msg '" + message.getClass().getSimpleName() + "' ignored");
 			return;
 		}
 
@@ -610,7 +623,7 @@ ICollisionListener<PhysicalEntity> {
 		ClientData client = new ClientData(id, net);
 		this.clientList.addClient(client);
 		
-		//this.gameNetworkServer.sendMessageToClient(client, new HelloMessage()); Don't send straight away since they won't be on the client list yet
+		// Don't send anything straight away since they won't be on the client list yet
 	}
 
 
@@ -628,7 +641,8 @@ ICollisionListener<PhysicalEntity> {
 		Globals.p("Removing player " + client.getPlayerID());
 		// Remove avatar
 		if (client.avatar != null) {
-			client.avatar.remove();
+			//client.avatar.remove();
+			this.entityRemovalSystem.markEntityForRemoval(client.avatar.getID());
 		}
 
 		if (client.playerData != null) {
@@ -690,16 +704,22 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void removeEntity(int id) {
-		this.entitiesToRemove.add(id);
+	public void markForRemoval(int id) {
+		if (Globals.STRICT) {
+			Entity e = (Entity)this.entities.get(id);
+			e.markedForRemoval = true;
+		}
+		this.entityRemovalSystem.markEntityForRemoval(id);
+		//this.entitiesToRemove.add(id);
 	}
 
 
 	/*
 	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
 	 */
-	private void actuallyRemoveEntity(int id) {
-		IEntity e = this.entities.get(id); // this.entitiesToAdd
+	@Override
+	public void actuallyRemoveEntity(int id) {
+		IEntity e = this.entities.get(id);
 		if (e != null) {
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Actually removing entity " + e + (this.sendAddRemoveEntityMsgs ? " ..and sending message to clients" : ""));
@@ -708,6 +728,7 @@ ICollisionListener<PhysicalEntity> {
 			if (e.requiresProcessing()) {
 				this.entitiesForProcessing.remove(e);
 			}
+			e.remove();
 		}
 		if (sendAddRemoveEntityMsgs) {
 			this.sendMessageToInGameClients(new RemoveEntityMessage(id));

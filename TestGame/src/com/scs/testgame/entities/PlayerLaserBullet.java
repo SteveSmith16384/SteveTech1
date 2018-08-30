@@ -67,14 +67,8 @@ public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifie
 
 	@Override
 	public void collided(PhysicalEntity pe) {
-		if (game.isServer()) {
-			/*if (!Globals.HIDE_EXPLOSION) {
-				ExplosionEffectEntity expl = new ExplosionEffectEntity(game, game.getNextEntityID(), this.getWorldTranslation());
-				game.addEntity(expl);
-			}*/
-
-		}
-		this.remove();
+		//this.remove();
+		game.markForRemoval(this.getID());
 	}
 
 }

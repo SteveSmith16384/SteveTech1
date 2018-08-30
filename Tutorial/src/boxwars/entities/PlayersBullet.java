@@ -53,7 +53,8 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 
 	@Override
 	public void collided(PhysicalEntity pe) {
-		this.remove();
+		//this.remove();
+		game.markForRemoval(this.getID());
 	}
 
 

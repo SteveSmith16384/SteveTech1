@@ -23,7 +23,9 @@ public interface IEntityController {
 
 	void addEntity(IEntity e);
 	
-	void removeEntity(int id);
+	void markForRemoval(int id);
+	
+	void actuallyRemoveEntity(int id);
 	
 	AssetManager getAssetManager();
 	
@@ -35,7 +37,7 @@ public interface IEntityController {
 	
 	int getNextEntityID();
 	
-	public <V> Future<V> enqueue(Callable<V> callable);
+	//public <V> Future<V> enqueue(Callable<V> callable);
 	
 	int getNumEntities();
 	

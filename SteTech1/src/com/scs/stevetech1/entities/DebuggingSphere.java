@@ -64,7 +64,8 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 		if (remove) {
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft <= 0) {
-				this.remove();
+				//this.remove();
+				game.markForRemoval(this.getID());
 			}
 		}
 	}
@@ -75,7 +76,8 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 		if (remove) {
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft <= 0) {
-				this.remove();
+				//this.remove();
+				game.markForRemoval(this.getID());
 			}
 		}
 	}

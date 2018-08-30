@@ -241,30 +241,21 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 	
 	
-	/**
-	 * Override if required
-	 */
+	@Override
 	protected void showDamageBox() {
 		this.hud.showDamageBox();
 	}
 
 
-	/**
-	 * Override if required
-	 */
+	@Override
 	protected void showMessage(String msg) {
 		this.hud.appendToLog(msg);
 	}
 
 
-	/**
-	 * Override if required
-	 */
+	@Override
 	protected void appendToLog(String msg) {
 		this.hud.appendToLog(msg);
 	}
-
-
-
 
 }

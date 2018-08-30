@@ -45,7 +45,8 @@ public class SnowballBullet extends AbstractPlayersBullet implements INotifiedOf
 				game.addEntity(ds);
 			}
 		}
-		this.remove();
+		//this.remove();
+		game.markForRemoval(this.getID());
 	}
 
 

@@ -38,7 +38,8 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		this.timeLeft -= tpf_secs;
 		if (this.timeLeft <= 0) {
-			this.remove();
+				//this.remove();
+				game.markForRemoval(this.getID());
 		}
 	}
 */
@@ -47,7 +48,8 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 	public void processByClient(IClientApp client, float tpf_secs) {
 		this.timeLeft -= tpf_secs;
 		if (this.timeLeft <= 0) {
-			this.remove();
+			//this.remove();
+			game.markForRemoval(this.getID());
 		}
 	}
 

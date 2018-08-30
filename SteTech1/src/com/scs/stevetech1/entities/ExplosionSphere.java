@@ -55,8 +55,8 @@ public class ExplosionSphere extends PhysicalEntity implements IProcessByClient 
 	public void processByClient(IClientApp client, float tpf_secs) {
 		ball_geo.scale(SIZE_INC);
 		if (ball_geo.getWorldScale().x > 5) {
-			Globals.p("Removed sphere");
-			this.remove();
+			//this.remove();
+			game.markForRemoval(this.getID());
 		}
 	}
 

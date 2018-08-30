@@ -151,7 +151,8 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 				ray.setLimit(speed * tpf_secs);
 				RayCollisionData rcd = this.checkForRayCollisions(ray);
 				if (rcd != null) {
-					this.remove();
+					//this.remove();
+					game.markForRemoval(this.getID());
 					server.collisionOccurred(this, rcd.entityHit);
 				} else {
 					// Move spatial
@@ -166,7 +167,8 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			if (range > 0) {
 				float dist = this.getDistanceTravelled();
 				if (dist > range) {
-					this.remove();
+					//this.remove();
+					game.markForRemoval(this.getID());
 				}
 			}
 		}
@@ -188,7 +190,8 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 				ray.setLimit(speed * tpf_secs);
 				RayCollisionData rcd = this.checkForRayCollisions(ray);
 				if (rcd != null) {
-					this.remove();
+					//this.remove();
+					game.markForRemoval(this.getID());
 				} else {
 					// Move spatial
 					Vector3f offset = this.dir.mult(speed * tpf_secs);
@@ -202,7 +205,8 @@ public abstract class AbstractPlayersBullet extends PhysicalEntity implements IP
 			if (range > 0) {
 				float dist = this.origin.distance(this.getWorldTranslation());
 				if (dist > range) {
-					this.remove();
+					//this.remove();
+					game.markForRemoval(this.getID());
 				}
 			}
 		}

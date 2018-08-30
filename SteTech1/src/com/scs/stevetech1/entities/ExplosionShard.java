@@ -72,12 +72,13 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 
 
 		if (timeLeft <= 0) {
-			this.remove();
-			if (Globals.STRICT) {
+			//this.remove();
+			game.markForRemoval(this.getID());
+			/*if (Globals.STRICT) {
 				if (this.getMainNode().getParent() != null) {
 					Globals.pe("Warning: still have a parent!");
 				}
-			}
+			}*/
 		}
 	}
 

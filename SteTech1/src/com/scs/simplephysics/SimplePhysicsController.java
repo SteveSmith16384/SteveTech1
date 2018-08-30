@@ -149,11 +149,11 @@ public class SimplePhysicsController<T> {
 
 
 	public void removeSimpleRigidBody(SimpleRigidBody<T> srb) {
-		synchronized (entities) { // this.entities.contains(srb);
+		synchronized (entities) {
 			this.entities.remove(srb);
 		}
 		srb.removeFromParent_INTERNAL();
-		this.movingEntities.remove(srb); //this.movingEntities.contains(srb);
+		this.movingEntities.remove(srb);
 		srb.removed = true;
 	}
 

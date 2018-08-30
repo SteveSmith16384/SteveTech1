@@ -7,6 +7,7 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class Entity implements IEntity, Savable {
@@ -18,6 +19,7 @@ public abstract class Entity implements IEntity, Savable {
 	public final String entityName;
 	public boolean removed = false;
 	private boolean requiresProcessing;
+	public boolean markedForRemoval = false;
 
 	// Server-only vars
 	protected HashMap<String, Object> creationData;
@@ -42,9 +44,17 @@ public abstract class Entity implements IEntity, Savable {
 	}
 
 
+	/**
+	 * Do not call this directly!  Should only be called by the game controller.  This method is for cleaing itself up
+	 */
 	public void remove() {
+		if (Globals.STRICT) {
+			if (!markedForRemoval) {
+				throw new RuntimeException(this.entityName + " not marked for removal!");
+			}
+		}
 		if (!removed) {
-			game.removeEntity(this.id);
+			//game.removeEntity(this.id);
 			removed = true;
 		}
 	}

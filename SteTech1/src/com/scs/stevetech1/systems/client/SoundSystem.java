@@ -12,10 +12,11 @@ import com.jme3.audio.AudioNode;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.systems.AbstractSystem;
 
 import ssmith.util.RealtimeInterval;
 
-public class SoundSystem {
+public class SoundSystem extends AbstractSystem {
 	
 	private RealtimeInterval removeNodesInterval = new RealtimeInterval(5000);
 	private AssetManager assetManager;

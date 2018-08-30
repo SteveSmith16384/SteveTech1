@@ -39,7 +39,8 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 		if (timeLeftSecs > 0) {
 			this.timeLeftSecs -= tpf;
 			if (this.timeLeftSecs <= 0) {
-				this.remove();
+				//this.remove();
+				game.markForRemoval(this.getID());
 			}
 		}
 	}
@@ -66,7 +67,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 	@Override
 	public void remove() {
 		this.removeFromParent();
-		game.removeEntity(this.getID());
+		//game.removeEntity(this.getID());
 		
 	}
 

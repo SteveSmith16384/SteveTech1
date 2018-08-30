@@ -1,6 +1,6 @@
 package com.scs.stevetech1.client;
 
-public class ValidClientSettings {
+public class ValidClientSettings { // todo - rename to ValidateClientSettings
 
 	public String gameCode; // To check the right type of client is connecting
 	public String key; // Check we're a valid client

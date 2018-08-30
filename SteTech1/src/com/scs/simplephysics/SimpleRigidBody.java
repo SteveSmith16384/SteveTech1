@@ -193,14 +193,6 @@ public class SimpleRigidBody<T> implements Collidable {
 						if (totalOffset < 0) { // Going down?
 							isOnGround = true;
 						}
-					} else {
-						// Not hit anything
-						/*if (totalOffset != 0) { 
-							this.isOnGround = true;
-						} else {
-							this.isOnGround = false;
-						}*/
-
 					}
 				}
 				if (!collided) {
