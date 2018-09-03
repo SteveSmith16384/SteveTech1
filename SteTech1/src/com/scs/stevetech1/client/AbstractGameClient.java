@@ -638,9 +638,15 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Rcvd msg to remove entity " + rem.entityID);
 			}
+			if (Globals.STRICT) {
+				Entity e = (Entity)this.entities.get(rem.entityID);
+				if (e != null) {
+					e.markedForRemoval = true;
+				}
+			}
 			this.entityRemovalSystem.markEntityForRemoval(rem.entityID);
 			if (Globals.STRICT) {
-				IEntity e = this.entities.get(rem.entityID);
+				Entity e = (Entity)this.entities.get(rem.entityID);
 				if (e == null) {
 					Globals.p("Ignoring msg to remove entity " + rem.entityID + " as we have no record of it");
 				}

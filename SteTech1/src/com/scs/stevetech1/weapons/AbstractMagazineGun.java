@@ -70,7 +70,15 @@ public abstract class AbstractMagazineGun<T> extends AbstractAbility implements 
 		return false;
 	}
 
-	protected abstract void emptyMagazine();
+	
+	public final void emptyMagazine() {
+		while (!ammoCache.isEmpty()) {
+			PlayersLaserBullet g = ammoCache.remove();
+			g.remove();
+		}
+		
+	}
+
 
 
 	@Override

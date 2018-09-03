@@ -88,7 +88,7 @@ ICollisionListener<PhysicalEntity> {
 	protected ServerGameStatusSystem gameStatusSystem;
 	private ServerPingSystem pingSystem;
 
-	protected HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities
+	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities todo - make protected
 	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entities that we need to iterate over in game loop
 	//protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 	private EntityRemovalSystem entityRemovalSystem;
@@ -642,6 +642,7 @@ ICollisionListener<PhysicalEntity> {
 		// Remove avatar
 		if (client.avatar != null) {
 			//client.avatar.remove();
+			client.avatar.markedForRemoval = true;
 			this.entityRemovalSystem.markEntityForRemoval(client.avatar.getID());
 		}
 
