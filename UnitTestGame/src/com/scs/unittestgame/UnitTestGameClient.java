@@ -3,7 +3,7 @@ package com.scs.unittestgame;
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.client.ValidClientSettings;
+import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.NewEntityData;
@@ -25,7 +25,7 @@ public class UnitTestGameClient extends AbstractGameClient {
 	
 
 	public UnitTestGameClient() {
-		super(new ValidClientSettings("UnitTest", "key", 1), "Unit Test", null, 25, 200, 10000, 1f);
+		super(new ValidateClientSettings("UnitTest", "key", 1), "Unit Test", null, 25, 200, 10000, 1f);
 
 		this.connect("localhost", UnitTestGameServer.PORT, false);
 		start(JmeContext.Type.Headless);

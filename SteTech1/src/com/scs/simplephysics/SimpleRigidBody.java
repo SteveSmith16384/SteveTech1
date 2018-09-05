@@ -117,7 +117,7 @@ public class SimpleRigidBody<T> implements Collidable {
 
 			// Check we're not already colliding *before* we've even moved
 			boolean doBounce = true;
-			List<SimpleRigidBody<T>> crs = this.checkForCollisions(false);
+			List<SimpleRigidBody<T>> crs = this.checkForCollisions(true); // We still need to notify, otherwise an entity could keep crashing against a
 			if (crs.size() != 0) {
 				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
 				if (AUTOMOVE_BY_FORCE) {

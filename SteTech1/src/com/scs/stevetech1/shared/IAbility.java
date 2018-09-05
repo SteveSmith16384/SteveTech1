@@ -8,26 +8,30 @@ import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
  */
 public interface IAbility extends IEntity {
 
+	/**
+	 * Indicates that a the server has received an AbilityActivatedMessage msg, so the ability will be activated in the game loop.
+	 */
 	void setToBeActivated(boolean b);
 	
 	boolean isGoingToBeActivated();
-	
-	
-	String getName();
 	
 	/**
 	 * Called when activated/used.  Returns whether it was successfully used.
 	 */
 	boolean activate();
 	
+	
 	String getHudText();
 	
-	//String getAvatarAnimationCode();
-	
-	void encode(AbilityUpdateMessage aum);
+	void encode(AbilityUpdateMessage aum); // todo - rename
 
-	void decode(AbilityUpdateMessage aum);
+	void decode(AbilityUpdateMessage aum); // todo - rename
 	
+	
+	/**
+	 * To check that we only use the latest update message
+	 * @return
+	 */
 	long getLastUpdateTime();
 	
 	void setLastUpdateTime(long l);

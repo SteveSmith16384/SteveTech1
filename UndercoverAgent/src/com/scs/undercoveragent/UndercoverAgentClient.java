@@ -8,7 +8,7 @@ import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.util.SkyFactory;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.client.ValidClientSettings;
+import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
@@ -67,7 +67,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	private UndercoverAgentClient(String gameIpAddress, int gamePort, 
 			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,
 			float mouseSensitivity) {
-		super(new ValidClientSettings(UndercoverAgentServer.GAME_ID, "key", 1), UndercoverAgentServer.NAME, null, 
+		super(new ValidateClientSettings(UndercoverAgentServer.GAME_ID, "key", 1), UndercoverAgentServer.NAME, null, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity);
 		ipAddress = gameIpAddress;
 		port = gamePort;

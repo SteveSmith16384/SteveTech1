@@ -1,15 +1,13 @@
 package com.scs.stevetech1.weapons;
 
-import java.util.HashMap;
-
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
@@ -18,6 +16,11 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 
+/**
+ * This is a weapon that doesn't fire projectiles, it uses hitscan.
+ * @author stephencs
+ *
+ */
 public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
 
 	private static final int MAG_SIZE = 10;
@@ -33,8 +36,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	public boolean launchBullet() {
-		bulletsInMag--;
+	protected boolean launchBullet() {
 		if (game.isServer()) {
 			// We have already calculated the hit as part of ICalcHitInPast
 			AbstractGameServer server = (AbstractGameServer)game;
@@ -116,12 +118,12 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 		return this.owner.getSide();
 	}
 
-
+/*
 	@Override
 	public HashMap<String, Object> getCreationData() {
 		return super.creationData;
 	}
-
+*/
 
 	@Override
 	public void reload(AbstractGameServer server) {
@@ -130,9 +132,9 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	
 	
 	@Override
-	protected void createBullet(AbstractGameServer server, int entityid, int playerID, IEntityContainer irac, int side) {
+	protected AbstractBullet createBullet(int entityid, int playerID, IEntity shooter, Vector3f startPos, Vector3f dir, int side) {
 		// No physical projectiles required!
-		
+		return null;
 	}
 
 
@@ -164,12 +166,12 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 		this.bulletsInMag = aum.bulletsLeftInMag;
 	}
 
-
+/*
 	@Override
 	protected void emptyMagazine() {
 		this.bulletsInMag = 0;
 		
 	}
-
+*/
 
 }

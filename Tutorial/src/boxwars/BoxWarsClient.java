@@ -2,12 +2,10 @@ package boxwars;
 
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.client.ValidClientSettings;
+import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractOtherPlayersAvatar;
-import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
@@ -35,7 +33,7 @@ public class BoxWarsClient extends AbstractGameClient {
 
 
 	private BoxWarsClient() {
-		super(new ValidClientSettings("BoxWars", "key", 1), "Box Wars", null, 25, 200, 10000, 1f);
+		super(new ValidateClientSettings("BoxWars", "key", 1), "Box Wars", null, 25, 200, 10000, 1f);
 		this.connect("localhost", BoxWarsServer.PORT, false);
 		start();
 	}
@@ -94,11 +92,13 @@ public class BoxWarsClient extends AbstractGameClient {
 
 		case BoxWarsServer.BULLET:
 		{
-			int containerID = (int) msg.data.get("containerID");
 			int playerID = (int) msg.data.get("playerID");
 			int side = (int) msg.data.get("side");
-			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			PlayersBullet snowball = new PlayersBullet(game, id, playerID, irac, side, null);
+			int shooterId =  (int) msg.data.get("shooterID");
+			IEntity shooter = game.entities.get(shooterId);
+			Vector3f startPos = (Vector3f) msg.data.get("startPos");
+			Vector3f dir = (Vector3f) msg.data.get("dir");
+			PlayersBullet snowball = new PlayersBullet(game, game.getNextEntityID(), playerID, shooter, startPos, dir, side, null); // Notice we generate our own entity id
 			return snowball;
 		}
 

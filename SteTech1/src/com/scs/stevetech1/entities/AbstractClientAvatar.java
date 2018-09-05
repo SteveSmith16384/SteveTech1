@@ -122,7 +122,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 					if (this.ability[i] != null) {
 						if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
 							if (this.ability[i].activate()) {
-								client.sendMessage(new AbilityActivatedMessage(this.getID(), this.ability[i].getID()));
+								client.sendMessage(new AbilityActivatedMessage(this, this.ability[i]));
 							}
 						}
 					}

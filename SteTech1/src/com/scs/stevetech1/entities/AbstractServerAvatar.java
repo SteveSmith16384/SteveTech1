@@ -68,11 +68,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf) {
-		if (Globals.DEBUG_SET_ALIVE) {
-			this.alive = false;
-		}
-
-		if (!this.alive) { //this.getWorldTranslation()
+		if (!this.alive) {
 			restartTimeSecs -= tpf;
 			this.currentAnimCode = ANIM_DIED;
 			if (this.restartTimeSecs <= 0) {
@@ -91,11 +87,6 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 			super.serverAndClientProcess(server, null, tpf, System.currentTimeMillis());
 
-			// Point us in the right direction
-			//Vector3f lookAtPoint = this.getMainNode().getWorldTranslation().add(input.getDirection());// camLeft.add(camDir.mult(10));
-			//lookAtPoint.y = this.getMainNode().getWorldTranslation().y; // Look horizontal!
-			//this.getMainNode().lookAt(lookAtPoint, Vector3f.UNIT_Y); // need this in order to send the avatar's rotation to other players
-			
 			if (getWorldTranslation().y < -1) {
 				// Dropped off the edge?
 				//server.console.appendText(getName() + " has fallen off the edge");

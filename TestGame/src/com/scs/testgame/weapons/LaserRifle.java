@@ -1,13 +1,8 @@
 package com.scs.testgame.weapons;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import com.scs.stevetech1.components.ICanShoot;
-import com.scs.stevetech1.components.IEntityContainer;
+import com.jme3.math.Vector3f;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractAvatar;
-import com.scs.stevetech1.entities.AbstractPlayersBullet;
-import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -15,16 +10,16 @@ import com.scs.stevetech1.weapons.AbstractMagazineGun;
 import com.scs.testgame.TestGameClientEntityCreator;
 import com.scs.testgame.entities.PlayerLaserBullet;
 
-public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implements IAbility, IEntityContainer<PlayerLaserBullet> {
+public class LaserRifle extends AbstractMagazineGun implements IAbility {
 
-	private LinkedList<PlayerLaserBullet> ammoCache = new LinkedList<PlayerLaserBullet>(); 
+	//private LinkedList<PlayerLaserBullet> ammoCache = new LinkedList<PlayerLaserBullet>(); 
 
 	public LaserRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, int abilityNum, ClientData client) {
 		super(game, id, TestGameClientEntityCreator.LASER_RIFLE, playerID, owner, avatarID, abilityNum, "Laser Rifle", .2f, 2, 2, client);
 
 	}
 
-
+/*
 	@Override
 	public boolean launchBullet() {
 		if (!ammoCache.isEmpty()) {
@@ -62,22 +57,20 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 		}
 		super.remove();
 	}
-
+*/
 
 	@Override
-	protected void createBullet(AbstractGameServer server, int entityid, int playerID, IEntityContainer<AbstractPlayersBullet> owner, int side) {
-		PlayerLaserBullet l = new PlayerLaserBullet(game, entityid, playerID, owner, side, client, null);
-		server.addEntity(l);
-
+	protected PlayerLaserBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, int side) {
+		return new PlayerLaserBullet(game, entityid, playerID, _shooter, startPos, _dir, side, client);
 	}
 	
-
+/*
 	@Override
 	public int getBulletsInMag() {
 		return this.ammoCache.size();
 	}
 
-
+/*
 	@Override
 	protected void emptyMagazine() {
 		while (!ammoCache.isEmpty()) {
@@ -87,6 +80,6 @@ public class LaserRifle extends AbstractMagazineGun<PlayerLaserBullet> implement
 		
 	}
 
-
+*/
 
 }

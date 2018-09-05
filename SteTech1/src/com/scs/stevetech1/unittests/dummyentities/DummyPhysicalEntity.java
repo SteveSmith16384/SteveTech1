@@ -55,14 +55,21 @@ public class DummyPhysicalEntity implements IPhysicalEntity {
 		return false;
 	}
 
+	
 	@Override
 	public int getGameID() {
 		return 0;
 	}
 
+	
 	@Override
-	public boolean hasNotBeenRemoved() {
-		return true;
+	public boolean isMarkedForRemoval() {
+		return false;
+	}
+
+	@Override
+	public void markForRemoval() {
+		
 	}
 
 }

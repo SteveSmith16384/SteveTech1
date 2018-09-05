@@ -3,16 +3,13 @@ package com.scs.testgame;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractOtherPlayersAvatar;
-import com.scs.stevetech1.entities.AbstractPlayersBullet;
+import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityData;
-import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.weapons.HitscanRifle;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.FlatFloor;
@@ -35,7 +32,7 @@ public class TestGameClientEntityCreator {
 	public static final int AVATAR = 1;
 	public static final int DEBUGGING_SPHERE = 2;
 	public static final int MOVING_TARGET = 3;
-	public static final int PLAYER_LASER_BULLET = 4;
+	public static final int LASER_BULLET = 4;
 	public static final int HITSCAN_RIFLE = 7;
 	public static final int LASER_RIFLE = 8;
 	public static final int CRATE = 9;
@@ -187,15 +184,20 @@ public class TestGameClientEntityCreator {
 
 		}
 
-		case PLAYER_LASER_BULLET:
+		case LASER_BULLET:
 		{
-			int containerID = (int) msg.data.get("containerID");
 			int playerID = (int) msg.data.get("playerID");
-			int side = (int) msg.data.get("side");
-			Vector3f dir = (Vector3f) msg.data.get("dir");
-			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, playerID, irac, side, null, dir);
-			return bullet;
+			if (playerID != game.getPlayerID()) {
+				int side = (int) msg.data.get("side");
+				int shooterId =  (int) msg.data.get("shooterID");
+				IEntity shooter = game.entities.get(shooterId);
+				Vector3f startPos = (Vector3f) msg.data.get("startPos");
+				Vector3f dir = (Vector3f) msg.data.get("dir");
+				PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, playerID, shooter, startPos, dir, side, null);
+				return bullet;
+			} else {
+				return null; // it's our bullet, which we've already created locally
+			}
 		}
 
 		case BULLET_TRAIL:
@@ -227,7 +229,7 @@ public class TestGameClientEntityCreator {
 		case WALL: return "WALL";
 		case DEBUGGING_SPHERE: return "DEBUGGING_SPHERE";
 		case MOVING_TARGET: return "MOVING_TARGET";
-		case PLAYER_LASER_BULLET: return "PLAYER_LASER_BULLET";
+		case LASER_BULLET: return "PLAYER_LASER_BULLET";
 		//case GRENADE: return "GRENADE";
 		//case GRENADE_LAUNCHER: return "GRENADE_LAUNCHER";
 		case LASER_RIFLE: return "LASER_RIFLE";

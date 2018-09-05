@@ -90,7 +90,6 @@ ICollisionListener<PhysicalEntity> {
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities todo - make protected
 	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entities that we need to iterate over in game loop
-	//protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>();
 	private EntityRemovalSystem entityRemovalSystem;
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
@@ -322,7 +321,7 @@ ICollisionListener<PhysicalEntity> {
 		// Loop through the entities
 		for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
 			IEntity e = this.entitiesForProcessing.get(i);
-			if (e.hasNotBeenRemoved()) {
+			if (!e.isMarkedForRemoval()) {
 				if (e instanceof IPlayerControlled) {
 					IPlayerControlled p = (IPlayerControlled)e;
 					p.resetPlayerInput();
@@ -641,9 +640,7 @@ ICollisionListener<PhysicalEntity> {
 		Globals.p("Removing player " + client.getPlayerID());
 		// Remove avatar
 		if (client.avatar != null) {
-			//client.avatar.remove();
-			client.avatar.markedForRemoval = true;
-			this.entityRemovalSystem.markEntityForRemoval(client.avatar.getID());
+			this.entityRemovalSystem.markEntityForRemoval(client.avatar);
 		}
 
 		if (client.playerData != null) {
@@ -706,12 +703,8 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void markForRemoval(int id) {
-		if (Globals.STRICT) {
-			Entity e = (Entity)this.entities.get(id);
-			e.markedForRemoval = true;
-		}
-		this.entityRemovalSystem.markEntityForRemoval(id);
-		//this.entitiesToRemove.add(id);
+		Entity e = (Entity)this.entities.get(id);
+		this.entityRemovalSystem.markEntityForRemoval(e);
 	}
 
 

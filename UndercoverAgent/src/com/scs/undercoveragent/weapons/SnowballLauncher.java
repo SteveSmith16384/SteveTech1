@@ -1,11 +1,8 @@
 package com.scs.undercoveragent.weapons;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-
+import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICanShoot;
-import com.scs.stevetech1.components.IEntityContainer;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
@@ -13,35 +10,17 @@ import com.scs.stevetech1.weapons.AbstractMagazineGun;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 import com.scs.undercoveragent.entities.SnowballBullet;
 
-public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implements IAbility, IEntityContainer<SnowballBullet> {
+public class SnowballLauncher extends AbstractMagazineGun implements IAbility {
 
 	private static final int MAG_SIZE = 6;
 
-	private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>();
+	//private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>();
 
 	public SnowballLauncher(IEntityController game, int id, int playerID, ICanShoot owner, int avatarID, int num, ClientData _client) { // ClientData is null on client!
 		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, playerID, owner, avatarID, num, "SnowballLauncher", 1, 3, MAG_SIZE, _client);
 		
 	}
-
-
-	/*
-	 * This is called when the player fires the weapon
-	 */
-	@Override
-	public boolean launchBullet() {
-		if (!ammoCache.isEmpty()) {
-			SnowballBullet g = ammoCache.remove();
-			ICanShoot ic = (ICanShoot)owner;
-			/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-				Globals.p("Manually launching entity " + g.id);
-			}*/
-			g.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
-			return true;
-		}
-		return false;
-	}
-
+/*
 
 	@Override
 	public HashMap<String, Object> getCreationData() {
@@ -59,21 +38,18 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 		super.remove();
 	}
 
-
+*/
 	@Override
-	protected void createBullet(AbstractGameServer server, int entityid, int playerID, IEntityContainer irac, int side) {
-		SnowballBullet pe = new SnowballBullet(game, entityid, playerID, irac, side, client);
-		server.addEntity(pe);
-
-
+	protected SnowballBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, int side) {
+		return new SnowballBullet(game, entityid, playerID, _shooter, startPos, _dir, side, client);
 	}
 
-
+/*
 	@Override
 	public int getBulletsInMag() {
 		return this.ammoCache.size();
 	}
-
+*//*
 
 	@Override
 	public void addToCache(SnowballBullet o) {
@@ -86,7 +62,7 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 		this.ammoCache.remove(o);
 	}
 
-
+/*
 	@Override
 	protected void emptyMagazine() {
 		while (!ammoCache.isEmpty()) {
@@ -95,7 +71,7 @@ public class SnowballLauncher extends AbstractMagazineGun<SnowballBullet> implem
 		}
 		
 	}
-
+*/
 
 }
 

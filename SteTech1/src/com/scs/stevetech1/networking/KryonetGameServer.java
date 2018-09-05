@@ -17,7 +17,6 @@ import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.ClientGunReloadRequestMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
-import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameLogMessage;
@@ -46,7 +45,6 @@ import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameRequestMessage;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.systems.client.LaunchData;
 
 import ssmith.lang.Functions;
 import ssmith.lang.NumberFunctions;
@@ -145,8 +143,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(SimpleGameData.class);
 		kryo.register(AvatarStartedMessage.class);
 		kryo.register(EntityKilledMessage.class);
-		kryo.register(EntityLaunchedMessage.class);
-		kryo.register(LaunchData.class);
+		//kryo.register(EntityLaunchedMessage.class);
 		kryo.register(AvatarStatusMessage.class);
 		kryo.register(GameOverMessage.class);
 		kryo.register(PlaySoundMessage.class);

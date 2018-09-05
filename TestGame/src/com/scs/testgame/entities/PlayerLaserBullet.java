@@ -9,9 +9,9 @@ import com.jme3.scene.Mesh;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.texture.Texture;
-import com.scs.stevetech1.components.IEntityContainer;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
-import com.scs.stevetech1.entities.AbstractPlayersBullet;
+import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.models.BeamLaserModel;
 import com.scs.stevetech1.server.ClientData;
@@ -19,16 +19,16 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 
-public class PlayerLaserBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
+public class PlayerLaserBullet extends AbstractBullet implements INotifiedOfCollision {
 
 	public static final float RANGE = 30f;
 	public static final float SPEED = 10f;
 	private static final boolean USE_CYLINDER = true;
 
-	public PlayerLaserBullet(IEntityController _game, int id, int playerId, IEntityContainer<AbstractPlayersBullet> gun, int _side, ClientData _client, Vector3f dir) {
-		super(_game, id, TestGameClientEntityCreator.PLAYER_LASER_BULLET, "LaserBullet", playerId, gun, _side, _client, dir, true, SPEED, RANGE);
+	public PlayerLaserBullet(IEntityController _game, int id, int playerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, int _side, ClientData _client) {
+		super(_game, id, TestGameClientEntityCreator.LASER_BULLET, "LaserBullet", playerId, _shooter, startPos, _dir, _side, _client, true, SPEED, RANGE);
 
-		this.getMainNode().setUserData(Globals.ENTITY, this);
+		//this.getMainNode().setUserData(Globals.ENTITY, this);
 
 	}
 

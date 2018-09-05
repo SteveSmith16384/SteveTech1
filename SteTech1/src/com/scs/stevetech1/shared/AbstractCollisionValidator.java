@@ -1,6 +1,6 @@
 package com.scs.stevetech1.shared;
 
-import com.scs.stevetech1.components.IBullet;
+import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
@@ -25,7 +25,7 @@ public class AbstractCollisionValidator {
 		}
 		
 		// Prevent bullets getting hit by the shooter
-		if (pa instanceof IBullet) {
+		/*if (pa instanceof IBullet) {
 			IBullet aa = (IBullet)pa;
 			if (aa.getLauncher() == pb) {
 				return false;
@@ -41,6 +41,16 @@ public class AbstractCollisionValidator {
 		if (pa instanceof IBullet && pb instanceof IBullet) {
 			// Bullets don't collide with each other
 			return false;
+		}*/
+		
+		// Anything with a side don't collide if on same side
+		if (pa instanceof IDontCollideWithComrades && pb instanceof IDontCollideWithComrades) {
+			// units on the same side don't collide
+			IDontCollideWithComrades aa = (IDontCollideWithComrades)pa;
+			IDontCollideWithComrades ab = (IDontCollideWithComrades)pb;
+			if (aa.getSide() == ab.getSide()) {
+				return false;
+			}
 		}
 
 		return true;

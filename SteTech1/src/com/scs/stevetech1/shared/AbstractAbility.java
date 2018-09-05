@@ -23,30 +23,19 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	private float timeUntilNextSend_secs = SEND_INT_SECS;
 	private long lastUpdateMsgTime;
 	private boolean goingToBeActivated = false;
-
+	protected float shotInterval_secs;
+	
 	/**
 	 * _owner is null on the client side.
-	 * 
-	 * @param _game
-	 * @param _id
-	 * @param type
-	 * @param _playerID
-	 * @param _owner
-	 * @param _avatarID
-	 * @param _abilityNum
-	 * @param _name
 	 */
-	public AbstractAbility(IEntityController _game, int _id, int type, int _playerID, AbstractAvatar _owner, int _avatarID, int _abilityNum, String _name) {
+	public AbstractAbility(IEntityController _game, int _id, int type, int _playerID, AbstractAvatar _owner, int _avatarID, int _abilityNum, String _name, float shotInt) {
 		super(_game, _id, type, _name, true);
-
-		/*if (_owner == null) {
-			throw new RuntimeException("No owner for ability");
-		}*/
 
 		playerID = _playerID;
 		owner = _owner;
 		avatarID = _avatarID;
 		abilityNum = _abilityNum;
+		this.shotInterval_secs = shotInt;
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();

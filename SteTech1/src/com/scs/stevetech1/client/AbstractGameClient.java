@@ -43,13 +43,13 @@ import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IKillable;
-import com.scs.stevetech1.components.ILaunchable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.entities.ExplosionShard;
@@ -60,7 +60,6 @@ import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
 import com.scs.stevetech1.netmessages.EntityKilledMessage;
-import com.scs.stevetech1.netmessages.EntityLaunchedMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateData;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameLogMessage;
@@ -93,7 +92,6 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.EntityRemovalSystem;
 import com.scs.stevetech1.systems.client.AnimationSystem;
-import com.scs.stevetech1.systems.client.ClientEntityLauncherSystem;
 import com.scs.stevetech1.systems.client.SoundSystem;
 
 import ssmith.lang.NumberFunctions;
@@ -114,10 +112,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private static AtomicInteger nextEntityID = new AtomicInteger(-1);
 
-	public HashMap<Integer, IEntity> entities = new HashMap<>(100);
+	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // All ents are added immediately, but not added to root node until the right time
 	protected ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entites that we need to iterate over in game loop
 	protected LinkedList<PhysicalEntity> entitiesToAddToGame = new LinkedList<PhysicalEntity>(); // Entities to add to RootNode, as we don't add them immed
-	//protected LinkedList<Integer> entitiesToRemove = new LinkedList<Integer>(); // Still have a list so we don't have to loop through ALL entities
 	private EntityRemovalSystem entityRemovalSystem;
 	private ArrayList<IEntity> clientOnlyEntities = new ArrayList<>(100);
 
@@ -128,7 +125,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 
-	private ValidClientSettings validClientSettings;
+	private ValidateClientSettings validClientSettings;
 
 	public IGameMessageClient networkClient;
 	public boolean rcvdHello = false;
@@ -169,10 +166,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	// Entity systems
 	private AnimationSystem animSystem;
-	private ClientEntityLauncherSystem launchSystem;
+	//private ClientEntityLauncherSystem launchSystem;
 
 
-	protected AbstractGameClient(ValidClientSettings _validClientSettings, String appTitle, String logoImage,   
+	protected AbstractGameClient(ValidateClientSettings _validClientSettings, String appTitle, String logoImage,   
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
 		super();
 
@@ -187,7 +184,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		loopTimer = new FixedLoopTime(tickrateMillis);
 		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		animSystem = new AnimationSystem(this);
-		launchSystem = new ClientEntityLauncherSystem(this);
+		//launchSystem = new ClientEntityLauncherSystem(this);
 		this.entityRemovalSystem = new EntityRemovalSystem(this);
 
 		nodes = new HashMap<String, Node>();
@@ -358,31 +355,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 				}
 
-				// Remove entities
-				this.entityRemovalSystem.actuallyRemoveEntities();
-				/*while (this.entitiesToRemove.size() > 0) {
-					int i = this.entitiesToRemove.getFirst();
-					this.actuallyRemoveEntity(i);
-				}*/
-
-				// Add entities
-				if (entitiesToAddToGame.size() > 0) {
-					for (int i=0 ; i<entitiesToAddToGame.size() ; i++) {
-						PhysicalEntity pe = entitiesToAddToGame.get(i);
-						if (pe.timeToAdd < renderTime) {
-							if (pe.getID() < 0 || this.entities.containsKey(pe.getID())) { // Check it is still in the game
-								this.addEntityToGame(pe);
-							} else {
-								Globals.p("Not adding " + pe + " to the game as it's not in it any more");
-								if (pe.getMainNode().getParent() != null) {
-									pe.getMainNode().removeFromParent();
-								}
-							}
-							entitiesToAddToGame.remove(i);
-							i--;
-						}
-					}
-				}
+				addAndRemoveEntities();
 
 				if (joinedGame) {
 
@@ -397,10 +370,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						}
 					}
 
-					// Systems
-					this.launchSystem.process(renderTime); // this.entities
-
 					if (Globals.STRICT) {
+						// Check all entities that require processing are in the correct list
 						for(IEntity e : this.entities.values()) {
 							if (e.requiresProcessing()) {
 								if (!this.entitiesForProcessing.contains(e)) {
@@ -437,6 +408,36 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
+	private void addAndRemoveEntities() {
+		// Remove entities
+		this.entityRemovalSystem.actuallyRemoveEntities();
+		/*while (this.entitiesToRemove.size() > 0) {
+			int i = this.entitiesToRemove.getFirst();
+			this.actuallyRemoveEntity(i);
+		}*/
+
+		// Add entities
+		if (entitiesToAddToGame.size() > 0) {
+			for (int i=0 ; i<entitiesToAddToGame.size() ; i++) {
+				PhysicalEntity pe = entitiesToAddToGame.get(i);
+				if (pe.timeToAdd < renderTime) {
+					if (pe.getID() < 0 || this.entities.containsKey(pe.getID())) { // Check it is still in the game
+						this.addEntityToGame(pe);
+					} else {
+						Globals.p("Not adding " + pe + " to the game as it's not in it any more");
+						if (pe.getMainNode().getParent() != null) {
+							pe.getMainNode().removeFromParent();
+						}
+					}
+					entitiesToAddToGame.remove(i);
+					i--;
+				}
+			}
+		}
+
+	}
+
+
 	private void processMessages() {
 		synchronized (unprocessedMessages) {
 			Iterator<MyAbstractMessage> mit = this.unprocessedMessages.iterator();
@@ -460,8 +461,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private void iterateThroughEntities(float tpfSecs) {
 		// Loop through each entity and process them
 		for (int i=0 ; i<this.entitiesForProcessing.size() ; i++) {
-			IEntity e = this.entitiesForProcessing.get(i); //this.rootNode;
-			if (e.hasNotBeenRemoved()) {
+			IEntity e = this.entitiesForProcessing.get(i);
+			if (!e.isMarkedForRemoval()) {
 				if (e instanceof IPlayerControlled) {
 					IPlayerControlled p = (IPlayerControlled)e;
 					p.resetPlayerInput();
@@ -473,7 +474,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					pe.processChronoData(renderTime, tpfSecs);
 
 					if (Globals.STRICT) {
-						if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false) {
+						// Check the client side object is kinemtic - almost all should be since the server controls them
+						if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof AbstractBullet == false) {
 							if (pe.simpleRigidBody != null) {
 								if (pe.simpleRigidBody.movedByForces()) {
 									Globals.pe("Warning: client-side entity " + pe + " not kinematic!");
@@ -638,16 +640,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				Globals.p("Rcvd msg to remove entity " + rem.entityID);
 			}
-			if (Globals.STRICT) {
-				Entity e = (Entity)this.entities.get(rem.entityID);
-				if (e != null) {
-					e.markedForRemoval = true;
-				}
-			}
-			this.entityRemovalSystem.markEntityForRemoval(rem.entityID);
-			if (Globals.STRICT) {
-				Entity e = (Entity)this.entities.get(rem.entityID);
-				if (e == null) {
+			Entity e = (Entity)this.entities.get(rem.entityID);
+			if (e != null) {
+				this.entityRemovalSystem.markEntityForRemoval(e);
+			} else {
+				if (Globals.STRICT) {
 					Globals.p("Ignoring msg to remove entity " + rem.entityID + " as we have no record of it");
 				}
 			}
@@ -701,14 +698,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					}
 				}
 			}
-		} else if (message instanceof EntityLaunchedMessage) {
+			/*} else if (message instanceof EntityLaunchedMessage) {
 			EntityLaunchedMessage elm = (EntityLaunchedMessage)message;
 			if (elm.playerID != this.playerID) {
-				this.launchSystem.scheduleLaunch(elm); //this.entities
+				IEntity shooter = this.entities.get(elm.shooterId);
+				AbstractBullet bullet = (AbstractBullet)this.entities.get(elm.bulletEntityID);
+				bullet.launch(shooter, elm.startPos, elm.dir);
 			} else {
-				// It was us that launched it in the first place!
+				// It was us that launched it in the first place, so we've already done the work!
 				Globals.p("Ignoring entity launched message");
-			}
+			}*/
 
 		} else if (message instanceof AvatarStartedMessage) {
 			if (Globals.DEBUG_PLAYER_RESTART) {
@@ -920,20 +919,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
 				pe.timeToAdd = timeToAdd;
-				/*if (Globals.STRICT) {
-					if (e instanceof ILaunchable) {
-						ILaunchable il = (ILaunchable)e;
-						if (pe.getMainNode().getChildren().size() > 0) {
-							throw new RuntimeException("ILaunchables must have an empty mainNode!");
-						}
-					}
-				}*/
 			}
 			this.addEntity(e);
 			//Globals.p("Finished creating entity " + data.type);
 		} else {
 			Globals.p("Not creating entity type " + data.type);
-			// It's not for this game, so ignore it
+			// It's maybe not for this game, or its for our own bullet, so ignore it
 		}
 
 		// Update % complete
@@ -1016,38 +1007,31 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	private void addEntityToGame(IEntity e) {
-		boolean add = true;
-		if (e instanceof ILaunchable) { // Don't add bullets until they are fired!
-			ILaunchable il = (ILaunchable)e;
-			add = il.hasBeenLaunched();
-		}
-		if (add) {
-			PhysicalEntity pe = (PhysicalEntity)e;
-			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
-			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
-			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
-				int x = (int)bb.getCenter().x / this.nodeSize;
-				int y = (int)bb.getCenter().y / this.nodeSize;
-				int z = (int)bb.getCenter().z / this.nodeSize;
+		PhysicalEntity pe = (PhysicalEntity)e;
+		BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
+		boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
+		if (!pe.moves && this.nodeSize > 0 && !tooBig) {
+			int x = (int)bb.getCenter().x / this.nodeSize;
+			int y = (int)bb.getCenter().y / this.nodeSize;
+			int z = (int)bb.getCenter().z / this.nodeSize;
 
-				String id = x + "_" + y + "_" + z;
-				if (!this.nodes.containsKey(id)) {
-					Node node = new Node(id);
-					this.nodes.put(id, node);
-					this.getGameNode().attachChild(node);
-				}
-				Node n = this.nodes.get(id);
-				n.attachChild(pe.getMainNode());			
-			} else {
-				this.getGameNode().attachChild(pe.getMainNode());
+			String id = x + "_" + y + "_" + z;
+			if (!this.nodes.containsKey(id)) {
+				Node node = new Node(id);
+				this.nodes.put(id, node);
+				this.getGameNode().attachChild(node);
 			}
+			Node n = this.nodes.get(id);
+			n.attachChild(pe.getMainNode());			
+		} else {
+			this.getGameNode().attachChild(pe.getMainNode());
+		}
 
-			if (pe.simpleRigidBody != null) {
-				this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
-				if (Globals.STRICT) {
-					if (this.physicsController.getNumEntities() > this.entities.size()) {
-						Globals.pe("Warning: more simple rigid bodies than entities!");
-					}
+		if (pe.simpleRigidBody != null) {
+			this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
+			if (Globals.STRICT) {
+				if (this.physicsController.getNumEntities() > this.entities.size()) {
+					Globals.pe("Warning: more simple rigid bodies than entities!");
 				}
 			}
 		}
@@ -1113,23 +1097,19 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	@Override
 	public void markForRemoval(int id) {
 		if (id > 0) {
-			if (Globals.STRICT) {
-				IEntity e = this.entities.get(id);
-				if (e != null) {
-					((Entity)e).markedForRemoval = true;
-				}				
-			}
+			IEntity e = this.entities.get(id);
+			if (e != null) {
+				((Entity)e).markForRemoval();
+			}				
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-				IEntity e = this.entities.get(id);
 				if (e != null) {
-					((Entity)e).markedForRemoval = true;
 					Globals.p("Going to remove entity " + id + ":" + e);
 				} else {
 					Globals.p("Going to remove entity " + id);
 				}
 			}
 			//this.entitiesToRemove.add(id);
-			this.entityRemovalSystem.markEntityForRemoval(id);
+			this.entityRemovalSystem.markEntityForRemoval(e);
 		} else {
 			//this.clientOnlyEntitiesToRemove.add(id);
 			this.actuallyRemoveClientOnlyEntity(id);

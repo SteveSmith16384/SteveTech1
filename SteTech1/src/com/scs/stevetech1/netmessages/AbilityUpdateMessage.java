@@ -6,7 +6,7 @@ import com.scs.stevetech1.shared.IAbility;
 @Serializable
 public class AbilityUpdateMessage extends MyAbstractMessage {
 	
-	public int bulletsLeftInMag; // Only used by Hitscan rifle
+	public int bulletsLeftInMag;
 	public float timeUntilShoot = 0;
 	
 	public int entityID;

@@ -85,8 +85,14 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 
 
 	@Override
-	public boolean hasNotBeenRemoved() {
-		return this.parent != null;
+	public boolean isMarkedForRemoval() {
+		return this.parent == null;
+	}
+
+
+	@Override
+	public void markForRemoval() {
+		this.removeFromParent();
 	}
 
 }

@@ -1,14 +1,10 @@
 package com.scs.stevetech1.shared;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.scs.simplephysics.SimplePhysicsController;
-import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
@@ -23,7 +19,7 @@ public interface IEntityController {
 
 	void addEntity(IEntity e);
 	
-	void markForRemoval(int id);
+	void markForRemoval(int id); // todo - change param to IEntity 
 	
 	void actuallyRemoveEntity(int id);
 	
@@ -36,8 +32,6 @@ public interface IEntityController {
 	Node getGameNode();
 	
 	int getNextEntityID();
-	
-	//public <V> Future<V> enqueue(Callable<V> callable);
 	
 	int getNumEntities();
 	

@@ -4,10 +4,8 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.IEntityContainer;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractOtherPlayersAvatar;
-import com.scs.stevetech1.entities.AbstractPlayersBullet;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
@@ -72,7 +70,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		}
 	}
 
-	
+
 	//@Override
 	public IEntity createEntity(AbstractGameClient game, NewEntityData msg) {
 		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
@@ -186,24 +184,30 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 			int ownerid = (int)msg.data.get("ownerid");
 			//if (game.currentAvatar != null) { // We might not have an avatar yet
 			//	if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-				//	AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
-					int num = (int)msg.data.get("num");
-					int playerID = (int)msg.data.get("playerID");
-					SnowballLauncher gl = new SnowballLauncher(game, id, playerID, null, ownerid, num, null);
-					return gl;
-				/*}
+			//	AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
+			int num = (int)msg.data.get("num");
+			int playerID = (int)msg.data.get("playerID");
+			SnowballLauncher gl = new SnowballLauncher(game, id, playerID, null, ownerid, num, null);
+			return gl;
+			/*}
 			}
 			return null;*/
 		}
 
 		case SNOWBALL_BULLET:
 		{
-			int containerID = (int) msg.data.get("containerID");
 			int playerID = (int) msg.data.get("playerID");
-			int side = (int) msg.data.get("side");
-			IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)game.entities.get(containerID);
-			SnowballBullet snowball = new SnowballBullet(game, id, playerID, irac, side, null);
-			return snowball;
+			if (playerID != game.getPlayerID()) {
+				int side = (int) msg.data.get("side");
+				int shooterId =  (int) msg.data.get("shooterID");
+				IEntity shooter = game.entities.get(shooterId);
+				Vector3f startPos = (Vector3f) msg.data.get("startPos");
+				Vector3f dir = (Vector3f) msg.data.get("dir");
+				SnowballBullet snowball = new SnowballBullet(game, game.getNextEntityID(), playerID, shooter, startPos, dir, side, null); // Notice we generate our own ID
+				return snowball;
+			} else {
+				return null; // it's our bullet, which we've already created locally
+			}
 		}
 
 		case INVISIBLE_MAP_BORDER:

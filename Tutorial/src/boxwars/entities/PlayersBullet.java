@@ -10,10 +10,9 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.IEntityContainer;
+import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
-import com.scs.stevetech1.entities.AbstractPlayersBullet;
-import com.scs.stevetech1.entities.DebuggingSphere;
+import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -21,10 +20,10 @@ import com.scs.stevetech1.shared.IEntityController;
 
 import boxwars.BoxWarsServer;
 
-public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfCollision {
+public class PlayersBullet extends AbstractBullet implements INotifiedOfCollision {
 
-	public PlayersBullet(IEntityController _game, int id, int playerOwnerId, IEntityContainer<AbstractPlayersBullet> owner, int _side, ClientData _client) {
-		super(_game, id, BoxWarsServer.BULLET, "Bullet", playerOwnerId, owner, _side, _client, null, false, 0f, 0f);
+	public PlayersBullet(IEntityController _game, int id, int playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, int _side, ClientData _client) {
+		super(_game, id, BoxWarsServer.BULLET, "Bullet", playerOwnerId, _shooter, startPos, _dir, _side, _client, false, 0f, 0f);
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
@@ -41,7 +40,7 @@ public class PlayersBullet extends AbstractPlayersBullet implements INotifiedOfC
 
 		ball_geo.setModelBound(new BoundingBox());
 		this.mainNode.attachChild(ball_geo);
-		this.getMainNode().setUserData(Globals.ENTITY, this);
+		//this.getMainNode().setUserData(Globals.ENTITY, this);
 	}
 
 

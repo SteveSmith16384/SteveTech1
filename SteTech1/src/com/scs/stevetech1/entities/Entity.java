@@ -17,9 +17,10 @@ public abstract class Entity implements IEntity, Savable {
 	public final int type;
 	protected transient IEntityController game;
 	public final String entityName;
-	public boolean removed = false;
 	private boolean requiresProcessing;
-	public boolean markedForRemoval = false;
+	
+	public boolean removed = false;
+	protected boolean markedForRemoval = false;
 
 	// Server-only vars
 	protected HashMap<String, Object> creationData;
@@ -108,8 +109,14 @@ public abstract class Entity implements IEntity, Savable {
 
 
 	@Override
-	public boolean hasNotBeenRemoved() {
-		return !this.removed;
+	public void markForRemoval() {
+		this.markedForRemoval = true;
+	}
+	
+	
+	@Override
+	public boolean isMarkedForRemoval() {
+		return this.markedForRemoval || this.removed;
 	}
 
 }

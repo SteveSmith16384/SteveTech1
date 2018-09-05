@@ -2,7 +2,7 @@ package com.scs.testgame;
 
 import com.jme3.util.SkyFactory;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.client.ValidClientSettings;
+import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.NewEntityData;
@@ -26,7 +26,7 @@ public class TestGameClient extends AbstractGameClient {
 
 
 	private TestGameClient() {
-		super(new ValidClientSettings(TestGameServer.GAME_ID, "Key", 1), "test Game", null, //TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //null, -1, 
+		super(new ValidateClientSettings(TestGameServer.GAME_ID, "Key", 1), "test Game", null, //TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //null, -1, 
 				25, 200, Integer.MAX_VALUE, 1f);
 		start();
 	}
