@@ -98,7 +98,7 @@ ICollisionListener<PhysicalEntity> {
 	public IGameMessageServer gameNetworkServer;
 	public ClientList clientList;
 
-	public ServerSideCollisionLogic collisionLogic;
+	private ServerSideCollisionLogic collisionLogic;
 	private RealtimeInterval sendEntityUpdatesInterval;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
@@ -751,15 +751,6 @@ ICollisionListener<PhysicalEntity> {
 
 
 	public void collisionOccurred(PhysicalEntity pea, PhysicalEntity peb) {
-		if (pea instanceof INotifiedOfCollision) {
-			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
-			ic.collided(peb);
-		}
-		if (peb instanceof INotifiedOfCollision) {
-			INotifiedOfCollision ic = (INotifiedOfCollision)peb;
-			ic.collided(pea);
-		}
-
 		collisionLogic.collision(pea, peb);
 	}
 
@@ -770,7 +761,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	public ITargetable getTarget(PhysicalEntity shooter, int ourSide, float range, float viewAngleRads) {
+	public ITargetable getTarget(PhysicalEntity shooter, byte ourSide, float range, float viewAngleRads) {
 		ITargetable target = null;
 		int highestPri = -1;
 		float closestDist = 9999f;
@@ -897,7 +888,6 @@ ICollisionListener<PhysicalEntity> {
 
 		NewEntityData data = new NewEntityData();
 		data.type = Globals.BULLET_TRAIL;
-
 		data.data.put("playerID", playerID);
 		data.data.put("start", start);
 		data.data.put("end", end);

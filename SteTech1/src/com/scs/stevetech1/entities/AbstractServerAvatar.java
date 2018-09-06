@@ -199,7 +199,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 
 
 	@Override
-	public boolean isValidTargetForSide(int shootersSide) {
+	public boolean isValidTargetForSide(byte shootersSide) {
 		return shootersSide != this.side;
 	}
 

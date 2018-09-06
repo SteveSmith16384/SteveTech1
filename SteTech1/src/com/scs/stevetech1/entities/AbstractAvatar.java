@@ -1,7 +1,5 @@
 package com.scs.stevetech1.entities;
 
-import java.util.HashMap;
-
 import com.jme3.collision.Collidable;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -69,9 +67,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		avatarControl.init(this);
 
 		this.simpleRigidBody = this.avatarControl.getSimpleRigidBody();
-
-		//this.getMainNode().setUserData(Globals.ENTITY, this);
-
 	}
 
 
@@ -119,19 +114,18 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	@Override
 	public Vector3f getBulletStartPos() {
 		Vector3f pos = this.getWorldTranslation().add(0, avatarModel.getBulletStartHeight(), 0);
-		return pos; //this.getWorldTranslation().add(0, avatarModel.getBulletStartHeight(), 0);
+		return pos;
 	}
 
 
 	@Override
-	public void remove() {
+	public void markForRemoval() {
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				this.game.markForRemoval(this.ability[i].getID());
-				//this.ability[i].remove();
 			}
 		}
-		super.remove();
+		super.markForRemoval();
 	}
 
 

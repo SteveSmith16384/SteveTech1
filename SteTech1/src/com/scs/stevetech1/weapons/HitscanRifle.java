@@ -5,11 +5,11 @@ import com.jme3.math.Vector3f;
 import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
+import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.BulletTrail;
-import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -43,14 +43,16 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 			if (hitThisMoment != null) {
 				//Settings.p(hitThisMoment.entity + " has been shot!");
 
-				server.collisionLogic.collision(hitThisMoment.entityHit, this);
+				//server.collisionOccurred(hitThisMoment.entityHit, this);
+				if (hitThisMoment.entityHit instanceof IDamagable) {
+					IDamagable id = (IDamagable)hitThisMoment.entityHit;
+					id.damaged(this.getDamageCaused(), null, "Hitscan rifle");
+				}
 
 				/*Vector3f pos = this.hitThisMoment.point;
 				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), debugSphereType, pos.x, pos.y, pos.z, true, true); // Show where it hit
 				game.addEntity(ds);*/
 
-				//BulletTrail bt = new BulletTrail(game, game.getNextEntityID(), trailType, this.playerID, this.owner.getBulletStartPos(), hitThisMoment.point);
-				//game.addEntity(bt);
 				server.sendBulletTrail(this.playerID, this.owner.getBulletStartPos(), hitThisMoment.point);
 
 				this.hitThisMoment = null; // Clear it ready for next loop

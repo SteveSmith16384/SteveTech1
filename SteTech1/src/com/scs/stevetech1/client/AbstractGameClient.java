@@ -136,7 +136,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public AbstractClientAvatar currentAvatar;
 	public int currentAvatarID = -1; // In case the avatar physical entity gets replaced, we can re-assign it
 	public int playerID = -1;
-	public int side = -1;
+	public byte side = -1;
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
@@ -1098,9 +1098,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public void markForRemoval(int id) {
 		//if (id > 0) {
 			IEntity e = this.entities.get(id);
-			if (e != null) {
-				((IEntity)e).markForRemoval();
-			}				
+			/*if (e != null) {
+				e.markForRemoval();
+			}*/				
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				if (e != null) {
 					Globals.p("Going to remove entity " + id + ":" + e);

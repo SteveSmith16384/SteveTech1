@@ -8,6 +8,7 @@ import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
@@ -97,7 +98,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			//EntityLaunchedMessage msg = new EntityLaunchedMessage(this.getID(), this.playerID, startPos, _dir, shooter.getID(), launchTime);
 			//server.sendMessageToInGameClients(msg);
 		}
-		
+
 		if (Globals.STRICT) {
 			if (this.useRay && this.simpleRigidBody != null) {
 				throw new RuntimeException("Bullet uses ray and SRB");
@@ -131,10 +132,12 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			}
 		}
 
-		if (range > 0) {
-			float dist = this.getDistanceTravelled();
-			if (dist > range) {
-				game.markForRemoval(this.getID());
+		if (!this.markedForRemoval) {
+			if (range > 0) {
+				float dist = this.getDistanceTravelled();
+				if (dist > range) {
+					game.markForRemoval(this.getID());
+				}
 			}
 		}
 	}
@@ -155,6 +158,11 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			RayCollisionData rcd = this.checkForRayCollisions(ray);
 			if (rcd != null) {
 				game.markForRemoval(this.getID());
+				// Since we're bypassing the physics engine, we need to handle collisions manually
+				if (this instanceof INotifiedOfCollision) {
+					INotifiedOfCollision inoc = (INotifiedOfCollision)this;
+					inoc.collided(rcd.entityHit);
+				}
 			} else {
 				// Move spatial
 				Vector3f offset = this.dir.mult(speed * tpf_secs);
@@ -164,15 +172,15 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 				}
 			}
 		}
-
-		if (range > 0) {
-			float dist = this.origin.distance(this.getWorldTranslation());
-			if (dist > range) {
-				game.markForRemoval(this.getID());
+		if (!this.markedForRemoval) {
+			if (range > 0) {
+				float dist = this.origin.distance(this.getWorldTranslation());
+				if (dist > range) {
+					game.markForRemoval(this.getID());
+				}
 			}
 		}
 	}
-
 
 	@Override
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
@@ -204,7 +212,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		return shooter;
 	}
 
-
+/*
 	@Override
 	public float getDamageCaused() {
 		//return ((RANGE-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 10;
@@ -212,6 +220,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		Globals.p(this + " damage: " + dam);
 		return dam;
 	}
-
+*/
 }
 

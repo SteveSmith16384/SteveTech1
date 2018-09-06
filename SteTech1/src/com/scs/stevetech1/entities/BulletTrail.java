@@ -27,8 +27,6 @@ public class BulletTrail extends PhysicalEntity implements IProcessByClient {
 		BeamLaserModel laserNode = BeamLaserModel.Factory(game.getAssetManager(), start, end, ColorRGBA.White, !game.isServer(), "Textures/roblox.png", 0.004f, false);
 		this.mainNode.attachChild(laserNode);
 
-		//this.getMainNode().setUserData(Globals.ENTITY, this);
-
 		this.collideable = false;
 
 	}

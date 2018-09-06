@@ -3,7 +3,9 @@ package com.scs.stevetech1.server;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.entities.PhysicalEntity;
 
 public class ServerSideCollisionLogic {
 
@@ -14,7 +16,16 @@ public class ServerSideCollisionLogic {
 	}
 
 
-	public void collision(Object a, Object b) {
+	public void collision(PhysicalEntity a, PhysicalEntity b) {
+		if (a instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)a;
+			ic.collided(a);
+		}
+		if (b instanceof INotifiedOfCollision) {
+			INotifiedOfCollision ic = (INotifiedOfCollision)b;
+			ic.collided(b);
+		}
+
 		if (a instanceof ICausesHarmOnContact && b instanceof IDamagable) {
 			ICausesHarmOnContact choc = (ICausesHarmOnContact)a;
 			IDamagable id = (IDamagable)b;

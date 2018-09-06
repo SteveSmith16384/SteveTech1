@@ -7,7 +7,7 @@ package com.scs.stevetech1.components;
  */
 public interface ITargetable {
 
-	boolean isValidTargetForSide(int shootersSide);
+	boolean isValidTargetForSide(byte shootersSide);
 	
 	boolean isAlive();
 	

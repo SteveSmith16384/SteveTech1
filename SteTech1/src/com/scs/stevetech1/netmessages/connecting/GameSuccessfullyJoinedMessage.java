@@ -6,7 +6,7 @@ import com.scs.stevetech1.netmessages.MyAbstractMessage;
 @Serializable
 public class GameSuccessfullyJoinedMessage extends MyAbstractMessage {
 
-	public int side;
+	public byte side;
 	public int playerID;
 
 	public GameSuccessfullyJoinedMessage() {
@@ -14,7 +14,7 @@ public class GameSuccessfullyJoinedMessage extends MyAbstractMessage {
 	}
 	
 	
-	public GameSuccessfullyJoinedMessage(int _playerID, int _side) {
+	public GameSuccessfullyJoinedMessage(int _playerID, byte _side) {
 		super(true, false);
 		
 		playerID = _playerID;
