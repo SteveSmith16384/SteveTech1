@@ -18,7 +18,7 @@ public class EntityUpdateData implements ITimeStamped {
 	public long timestamp;
 	public Vector3f aimDir;
 	public byte animationCode;
-	public int health;
+	public short health;
 
 	public EntityUpdateData() {
 
@@ -47,7 +47,7 @@ public class EntityUpdateData implements ITimeStamped {
 		}
 		if (pe instanceof IDamagable) {
 			IDamagable ir = (IDamagable)pe;
-			this.health = (int)ir.getHealth();
+			this.health = (short)ir.getHealth();
 		}
 	}
 

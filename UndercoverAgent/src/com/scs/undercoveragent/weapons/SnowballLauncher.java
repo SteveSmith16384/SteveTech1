@@ -16,7 +16,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility {
 
 	//private LinkedList<SnowballBullet> ammoCache = new LinkedList<SnowballBullet>();
 
-	public SnowballLauncher(IEntityController game, int id, int playerID, ICanShoot owner, int avatarID, int num, ClientData _client) { // ClientData is null on client!
+	public SnowballLauncher(IEntityController game, int id, int playerID, ICanShoot owner, int avatarID, byte num, ClientData _client) { // ClientData is null on client!
 		super(game, id, UndercoverAgentClientEntityCreator.SNOWBALL_LAUNCHER, playerID, owner, avatarID, num, "SnowballLauncher", 1, 3, MAG_SIZE, _client);
 		
 	}
@@ -40,7 +40,7 @@ public class SnowballLauncher extends AbstractMagazineGun implements IAbility {
 
 */
 	@Override
-	protected SnowballBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, int side) {
+	protected SnowballBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte side) {
 		return new SnowballBullet(game, entityid, playerID, _shooter, startPos, _dir, side, client);
 	}
 

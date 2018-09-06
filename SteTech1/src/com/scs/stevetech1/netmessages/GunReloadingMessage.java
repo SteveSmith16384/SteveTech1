@@ -8,7 +8,7 @@ import com.scs.stevetech1.shared.IAbility;
  *
  */
 @Serializable
-public class GunReloadingMessage extends MyAbstractMessage {
+public class GunReloadingMessage extends MyAbstractMessage { // todo - do we need this?
 	
 	public int abilityId;
 	public float durationSecs;

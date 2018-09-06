@@ -7,8 +7,8 @@ import com.scs.unittestgame.models.AvatarModel;
 
 public class EnemyAvatarEntity extends AbstractOtherPlayersAvatar {
 	
-	public EnemyAvatarEntity(IEntityController game, int eid, float x, float y, float z, int side) {
-		super(game, UnitTestGameServer.AVATAR_ID, eid, x, y, z, new AvatarModel(), 0, "UnitTest");
+	public EnemyAvatarEntity(IEntityController game, int eid, float x, float y, float z, byte side) {
+		super(game, UnitTestGameServer.AVATAR_ID, eid, x, y, z, new AvatarModel(), side, "UnitTest");
 	}
 
 	@Override

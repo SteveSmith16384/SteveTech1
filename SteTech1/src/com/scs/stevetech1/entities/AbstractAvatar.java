@@ -39,7 +39,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public final int playerID;
 	protected Geometry bbGeom; // Non-rotating box for collisions
 	public IAbility[] ability = new IAbility[2];
-	public int side = -1;
+	public byte side = -1;
 	protected IAvatarModel avatarModel;
 
 	protected boolean alive = true;
@@ -50,7 +50,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	protected IAvatarControl avatarControl;
 
-	public AbstractAvatar(IEntityController _game, int avatarType, int _playerID, IInputDevice _input, int eid, int _side, IAvatarModel _avatarModel, IAvatarControl _avatarControl) {
+	public AbstractAvatar(IEntityController _game, int avatarType, int _playerID, IInputDevice _input, int eid, byte _side, IAvatarModel _avatarModel, IAvatarControl _avatarControl) {
 		super(_game, eid, avatarType, "Player", true, false, true);
 
 		playerID = _playerID;
@@ -68,9 +68,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		
 		avatarControl.init(this);
 
-		this.simpleRigidBody = this.avatarControl.getSimpleRigidBody();// new SimpleCharacterControl<PhysicalEntity>(this, game.getPhysicsController(), this);
+		this.simpleRigidBody = this.avatarControl.getSimpleRigidBody();
 
-		this.getMainNode().setUserData(Globals.ENTITY, this);
+		//this.getMainNode().setUserData(Globals.ENTITY, this);
 
 	}
 
@@ -104,7 +104,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	public int getSide() {
+	public byte getSide() {
 		return side;
 	}
 

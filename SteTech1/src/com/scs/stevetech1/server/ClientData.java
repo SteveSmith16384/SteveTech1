@@ -39,7 +39,7 @@ public class ClientData {
 	}
 	
 	
-	public int getSide() {
+	public byte getSide() {
 		return this.playerData.side;
 	}
 	

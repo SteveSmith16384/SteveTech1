@@ -55,7 +55,7 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 		this.mainNode.attachChild(ball_geo);
 		this.mainNode.setLocalTranslation(x, y, z);
 
-		this.getMainNode().setUserData(Globals.ENTITY, this);
+		//this.getMainNode().setUserData(Globals.ENTITY, this);
 	}
 
 

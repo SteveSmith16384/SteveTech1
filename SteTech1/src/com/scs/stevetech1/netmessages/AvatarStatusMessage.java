@@ -8,9 +8,8 @@ import com.scs.stevetech1.server.ClientData;
 public class AvatarStatusMessage extends MyAbstractMessage {
 	
 	public int entityID;
-	public float health;
+	public short health;
 	public boolean damaged; // Signal to show HUD effect
-	public float moveSpeed, jumpForce; 
 	
 	public AvatarStatusMessage() {
 		super();
@@ -21,11 +20,9 @@ public class AvatarStatusMessage extends MyAbstractMessage {
 		super(true, true);
 		
 		this.entityID = avatar.getID();
-		this.health = avatar.getHealth();
-		//this.moveSpeed = avatar.moveSpeed;
-		//this.jumpForce = avatar.getJumpForce();
+		this.health = (short)avatar.getHealth();
 		damaged = _damaged;
-		
+	
 	}
 
 }

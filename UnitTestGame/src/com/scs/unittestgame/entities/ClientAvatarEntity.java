@@ -10,7 +10,7 @@ import com.scs.unittestgame.models.AvatarModel;
 
 public class ClientAvatarEntity extends AbstractClientAvatar {
 	
-	public ClientAvatarEntity(AbstractGameClient _client, int _playerID, int eid, float x, float y, float z, int side) {
+	public ClientAvatarEntity(AbstractGameClient _client, int _playerID, int eid, float x, float y, float z, byte side) {
 		super(_client, UnitTestGameServer.AVATAR_ID, _playerID, new UnitTestInputDevice(), new DummyCamera(), eid, x, y, z, side, new AvatarModel(), new PersonAvatar(_client, new UnitTestInputDevice(), 1f, 1f));
 		
 	}

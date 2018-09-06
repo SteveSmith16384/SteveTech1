@@ -5,7 +5,6 @@ import com.jme3.network.serializing.Serializable;
 @Serializable
 public class GameLogMessage extends MyAbstractMessage {
 
-	//public LinkedList<String> log;
 	public String logEntry;
 	
 	public GameLogMessage() {
@@ -16,7 +15,6 @@ public class GameLogMessage extends MyAbstractMessage {
 	public GameLogMessage(String _s) {
 		this();
 		
-		//log = _log;
 		logEntry = _s;
 	}
 }

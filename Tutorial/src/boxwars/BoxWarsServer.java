@@ -50,7 +50,7 @@ public class BoxWarsServer extends AbstractGameServer {
 	}
 
 	@Override
-	protected int getWinningSideAtEnd() {
+	protected byte getWinningSideAtEnd() {
 		return 0;
 	}
 
@@ -70,8 +70,8 @@ public class BoxWarsServer extends AbstractGameServer {
 	 * Just use the client id as the side, to easily ensure every player is on a different side. 
 	 */
 	@Override
-	public int getSide(ClientData client) {
-		return client.id;
+	public byte getSide(ClientData client) {
+		return (byte) client.id; // todo - check > 127
 	}
 
 	

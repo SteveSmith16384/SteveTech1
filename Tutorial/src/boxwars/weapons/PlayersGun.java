@@ -18,7 +18,7 @@ public class PlayersGun extends AbstractMagazineGun implements IAbility {
 
 	//private LinkedList<PlayersBullet> ammoCache = new LinkedList<PlayersBullet>(); 
 
-	public PlayersGun(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, int abilityNum, ClientData client) {
+	public PlayersGun(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, byte abilityNum, ClientData client) {
 		super(game, id, BoxWarsServer.GUN, playerID, owner, avatarID, abilityNum, "Laser Rifle", .2f, 2, 10, client);
 
 	}
@@ -64,7 +64,7 @@ public class PlayersGun extends AbstractMagazineGun implements IAbility {
 
 */
 	@Override
-	protected PlayersBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, int side) {
+	protected PlayersBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte side) {
 		return new PlayersBullet(game, entityid, playerID, _shooter, startPos, _dir, side, client);
 	}
 	/*

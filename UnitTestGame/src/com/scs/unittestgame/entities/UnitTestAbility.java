@@ -11,7 +11,7 @@ import com.scs.unittestgame.UnitTestGameServer;
 public class UnitTestAbility extends AbstractAbility {
 	
 	public UnitTestAbility(IEntityController _game, int _id, int _playerID, AbstractAvatar _owner, int _avatarID) {
-		super(_game, _id, UnitTestGameServer.ABILITY_ID, _playerID, _owner, _avatarID, 0, "Flange", 0);
+		super(_game, _id, UnitTestGameServer.ABILITY_ID, _playerID, _owner, _avatarID, (byte)0, "Flange", 0);
 
 		if (game.isServer()) {
 			creationData = new HashMap<String, Object>();

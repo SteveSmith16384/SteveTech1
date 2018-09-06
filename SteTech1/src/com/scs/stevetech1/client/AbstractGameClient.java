@@ -112,11 +112,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private static AtomicInteger nextEntityID = new AtomicInteger(-1);
 
-	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // All ents are added immediately, but not added to root node until the right time
-	protected ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entites that we need to iterate over in game loop
+	public HashMap<Integer, IEntity> entities = new HashMap<>(1000); // All ents are added to this immediately, but not added to root node until the right time
+	protected ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(100); // Entities that we need to iterate over in game loop
 	protected LinkedList<PhysicalEntity> entitiesToAddToGame = new LinkedList<PhysicalEntity>(); // Entities to add to RootNode, as we don't add them immed
 	private EntityRemovalSystem entityRemovalSystem;
-	private ArrayList<IEntity> clientOnlyEntities = new ArrayList<>(100);
+	//private ArrayList<IEntity> clientOnlyEntities = new ArrayList<>(100);
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer; // Keep client and server running at the same time
@@ -967,7 +967,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (e.getID() > 0 && e.getGameID() != this.getGameID()) {
 			throw new RuntimeException("Entity " + e + " is for game " + e.getGameID() + ", current game is " + this.getGameID());
 		}
-		if (e.getID() > 0) {
+		//if (e.getID() > 0) {
 			if (this.entities.containsKey(e.getID())) {
 				/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Remove entity " + e + " since it already exists");
@@ -979,12 +979,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				throw new RuntimeException("Entity " + e + " already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
 			}
 			this.entities.put(e.getID(), e);
-		} else {
+		/*} else {
 			if (this.getClientOnlyEntityById(e.getID()) != null) {
 				throw new RuntimeException("Entity " + e + " already exists (client-only)"); // Don't replace it, as entity has linked to other stuff, like Abilities
 			}
 			this.clientOnlyEntities.add(e);
-		}
+		}*/
 		if (e.requiresProcessing()) {
 			this.entitiesForProcessing.add(e);
 		}
@@ -1081,7 +1081,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 		this.entityRemovalSystem.actuallyRemoveEntities();
 
-		this.clientOnlyEntities.clear(); // todo - remove() these
+		//this.clientOnlyEntities.clear(); // todo - remove() these
 		this.nodes.clear();
 		this.gameNode.detachAllChildren();
 		this.gameNode.removeFromParent();
@@ -1096,10 +1096,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void markForRemoval(int id) {
-		if (id > 0) {
+		//if (id > 0) {
 			IEntity e = this.entities.get(id);
 			if (e != null) {
-				((Entity)e).markForRemoval();
+				((IEntity)e).markForRemoval();
 			}				
 			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 				if (e != null) {
@@ -1110,10 +1110,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			//this.entitiesToRemove.add(id);
 			this.entityRemovalSystem.markEntityForRemoval(e);
-		} else {
-			//this.clientOnlyEntitiesToRemove.add(id);
-			this.actuallyRemoveClientOnlyEntity(id);
-		}
+		/*} else {
+			//this.actuallyRemoveClientOnlyEntity(id);
+			this.clientOnlyEntities.remove(id);
+			this.actuallyRemoveEntity(id);
+		}*/
 	}
 
 
@@ -1330,9 +1331,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	/*
-	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  "e.remove()" does all the hard work.
+	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the client's knowledge of the entity.  "e.remove()" does all the hard work.
 	 */
-	private void actuallyRemoveClientOnlyEntity(int id) {
+	/*private void actuallyRemoveClientOnlyEntity(int id) {
 		IEntity e = getClientOnlyEntityById(id);
 		if (e != null) {
 			// todo - call shared remove code?
@@ -1343,12 +1344,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (e.requiresProcessing()) {
 				this.entitiesForProcessing.remove(e);
 			}
+			// todo - remove from node!
 		} else {
 			Globals.pe("Entity id " + id + " not found for removal");
 		}
-	}
+	}*/
 
-
+/*
 	private IEntity getClientOnlyEntityById(int id) {
 		for (IEntity e : this.clientOnlyEntities) {
 			if (e.getID() == id) {
@@ -1357,7 +1359,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 		return null;
 	}
-
+*/
 
 	@Override
 	public int getPlayerID() {

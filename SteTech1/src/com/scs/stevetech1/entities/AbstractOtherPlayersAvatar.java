@@ -30,14 +30,14 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 	protected IAvatarModel anim;
 	private String playersName;
-	protected int side;
+	protected byte side;
 	private Node container;
 
 	// HUD
 	protected BitmapText bmpText;
 	private static BitmapFont font_small;
 
-	public AbstractOtherPlayersAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, int _side, String _playersName) {
+	public AbstractOtherPlayersAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, byte _side, String _playersName) {
 		super(game, eid, type, "EnemyAvatar", true, false, true);
 
 		anim = _anim;
@@ -108,7 +108,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 
 	@Override
-	public int getSide() {
+	public byte getSide() {
 		return side;
 	}
 

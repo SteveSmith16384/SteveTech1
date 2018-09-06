@@ -14,7 +14,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility {
 
 	//private LinkedList<PlayerLaserBullet> ammoCache = new LinkedList<PlayerLaserBullet>(); 
 
-	public LaserRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, int abilityNum, ClientData client) {
+	public LaserRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, byte abilityNum, ClientData client) {
 		super(game, id, TestGameClientEntityCreator.LASER_RIFLE, playerID, owner, avatarID, abilityNum, "Laser Rifle", .2f, 2, 2, client);
 
 	}
@@ -60,7 +60,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility {
 */
 
 	@Override
-	protected PlayerLaserBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, int side) {
+	protected PlayerLaserBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte side) {
 		return new PlayerLaserBullet(game, entityid, playerID, _shooter, startPos, _dir, side, client);
 	}
 	

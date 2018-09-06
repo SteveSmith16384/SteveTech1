@@ -19,7 +19,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	public int playerID;
 	public int avatarID;
 	protected AbstractAvatar owner;
-	public int abilityNum;
+	public byte abilityNum;
 	private float timeUntilNextSend_secs = SEND_INT_SECS;
 	private long lastUpdateMsgTime;
 	private boolean goingToBeActivated = false;
@@ -28,7 +28,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	/**
 	 * _owner is null on the client side.
 	 */
-	public AbstractAbility(IEntityController _game, int _id, int type, int _playerID, AbstractAvatar _owner, int _avatarID, int _abilityNum, String _name, float shotInt) {
+	public AbstractAbility(IEntityController _game, int _id, int type, int _playerID, AbstractAvatar _owner, int _avatarID, byte _abilityNum, String _name, float shotInt) {
 		super(_game, _id, type, _name, true);
 
 		playerID = _playerID;

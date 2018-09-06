@@ -17,7 +17,7 @@ import com.jme3.terrain.geomipmap.TerrainQuad;
 public class SimpleRigidBody<T> implements Collidable {
 
 	private static final boolean AUTOMOVE_BY_FORCE = false; // Doesn't work since move() moves entity back to original pos on collision
-	private static final boolean DEBUG_AUTOMOVING = true;
+	private static final boolean DEBUG_AUTOMOVING = false;
 	private static final boolean DEBUG_STEPS_SLOPES = false;
 
 	private static final float AUTOMOVE_FRAC = .1f;
@@ -119,7 +119,9 @@ public class SimpleRigidBody<T> implements Collidable {
 			boolean doBounce = true;
 			List<SimpleRigidBody<T>> crs = this.checkForCollisions(true); // We still need to notify, otherwise an entity could keep crashing against a
 			if (crs.size() != 0) {
-				System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
+				if (DEBUG_AUTOMOVING) {
+					System.err.println("Warning: " + this + " has collided prior to move, with " + crs.toString());
+				}
 				if (AUTOMOVE_BY_FORCE) {
 					doBounce = false; // Don't bounce if we're being extracted from another entity
 					this.applyForceAwayFrom(crs);

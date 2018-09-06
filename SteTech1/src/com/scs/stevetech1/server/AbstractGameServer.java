@@ -88,8 +88,8 @@ ICollisionListener<PhysicalEntity> {
 	protected ServerGameStatusSystem gameStatusSystem;
 	private ServerPingSystem pingSystem;
 
-	public HashMap<Integer, IEntity> entities = new HashMap<>(100); // All entities todo - make protected
-	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(10); // Entities that we need to iterate over in game loop
+	public HashMap<Integer, IEntity> entities = new HashMap<>(1000); // All entities todo - make protected
+	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(100); // Entities that we need to iterate over in game loop
 	private EntityRemovalSystem entityRemovalSystem;
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
@@ -170,7 +170,6 @@ ICollisionListener<PhysicalEntity> {
 			Globals.p("Listening on port " + gameOptions.ourExternalPort);
 		} catch (IOException e) {
 			e.printStackTrace();
-			//System.exit(-1);
 			this.stop();
 		}
 
@@ -425,7 +424,7 @@ ICollisionListener<PhysicalEntity> {
 
 		this.sendMessageToInGameClientsExcept(client, new ShowMessageMessage("Player joined game!", true));
 
-		int side = getSide(client);
+		byte side = getSide(client);
 		client.playerData.side = side;
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
 		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
@@ -516,7 +515,7 @@ ICollisionListener<PhysicalEntity> {
 		// Create avatars and send new entities to players
 		for (ClientData client : this.clientList.getClients()) {
 			if (client.clientStatus == ClientData.ClientStatus.InGame) {
-				int side = getSide(client); // New sides
+				byte side = getSide(client); // New sides
 				client.playerData.side = side;
 				client.avatar = createPlayersAvatar(client);
 				sendAllEntitiesToClient(client);
@@ -534,7 +533,7 @@ ICollisionListener<PhysicalEntity> {
 	 * @param client
 	 * @return The side
 	 */
-	public abstract int getSide(ClientData client);
+	public abstract byte getSide(ClientData client);
 
 
 	protected abstract void createGame();
@@ -832,7 +831,7 @@ ICollisionListener<PhysicalEntity> {
 		} else if (newStatus == SimpleGameData.ST_FINISHED) {
 			this.appendToGameLog("Game Finished!");
 
-			int winningSide = this.getWinningSideAtEnd();
+			byte winningSide = this.getWinningSideAtEnd();
 			//String name = getSideName(winningSide);
 			//this.appendToGameLog(name + " has won!");
 			this.sendMessageToInGameClients(new GameOverMessage(winningSide));
@@ -840,17 +839,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	/**
-	 * Override if required
-	 * @param side
-	 * @return
-	 */
-	protected String getSideName_(int side) {
-		return "Side " + side;
-	}
-
-
-	protected abstract int getWinningSideAtEnd();
+	protected abstract byte getWinningSideAtEnd();
 
 
 	public abstract int getMinPlayersRequiredForGame();

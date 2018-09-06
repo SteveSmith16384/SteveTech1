@@ -16,7 +16,7 @@ public class TestGameServerAvatar extends AbstractServerAvatar {
 		super(_module, TestGameClientEntityCreator.AVATAR, _client, _input, eid, new CharacterModel(_module.getAssetManager()), 1f, 0, new PersonAvatar(_module, _input, 3f, 2f));
 
 		//IAbility abilityGun = new LaserRifle(_module, _module.getNextEntityID(), client.getPlayerID(), this, eid, 0, client);
-		IAbility abilityGun = new HitscanRifle(_module, _module.getNextEntityID(), TestGameClientEntityCreator.HITSCAN_RIFLE, client.getPlayerID(), this, eid, 0, client);
+		IAbility abilityGun = new HitscanRifle(_module, _module.getNextEntityID(), TestGameClientEntityCreator.HITSCAN_RIFLE, client.getPlayerID(), this, eid, (byte)0, client);
 		_module.actuallyAddEntity(abilityGun);
 		
 	}

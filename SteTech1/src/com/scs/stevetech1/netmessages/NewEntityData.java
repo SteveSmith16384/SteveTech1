@@ -9,8 +9,8 @@ import com.scs.stevetech1.components.IEntity;
 public class NewEntityData {
 
 	public int entityID;
-	public int type; // Entity code
-	public HashMap<String, Object> data = new HashMap<>();
+	public byte type; // Entity code
+	public HashMap<String, Object> data = new HashMap<>(); // todo - use codes instead of string
 	
 	public NewEntityData() {
 		
@@ -18,7 +18,7 @@ public class NewEntityData {
 
 	public NewEntityData(IEntity e) {
 		this.entityID = e.getID();
-		this.type = e.getType();
+		this.type = (byte) e.getType(); // todo - check > 127
 		this.data = e.getCreationData();
 	}
 

@@ -58,9 +58,9 @@ public class UnitTestGameClient extends AbstractGameClient {
 		case UnitTestGameServer.AVATAR_ID:
 			int playerID = (int)msg.data.get("playerID");
 			if (playerID == client.playerID) {
-				return new ClientAvatarEntity(client, playerID, id, pos.x, pos.y, pos.z, 0);
+				return new ClientAvatarEntity(client, playerID, id, pos.x, pos.y, pos.z, (byte)0);
 			} else {
-				return new EnemyAvatarEntity(client, id, pos.x, pos.y, pos.z, 0);
+				return new EnemyAvatarEntity(client, id, pos.x, pos.y, pos.z, (byte)0);
 			}
 		case UnitTestGameServer.ABILITY_ID:
 			playerID = (int)msg.data.get("playerID");

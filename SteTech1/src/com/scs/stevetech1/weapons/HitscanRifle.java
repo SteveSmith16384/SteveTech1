@@ -27,9 +27,9 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 	private static final float RANGE = 99f;
 
 	private RayCollisionData hitThisMoment = null; // Only used server-side.  Null if nothing hit
-	private int bulletsInMag = MAG_SIZE;
+	//private int bulletsInMag = MAG_SIZE;
 
-	public HitscanRifle(IEntityController game, int id, int type, int playerID, AbstractAvatar owner, int avatarID, int num, ClientData client) {
+	public HitscanRifle(IEntityController game, int id, int type, int playerID, AbstractAvatar owner, int avatarID, byte num, ClientData client) {
 		super(game, id, type, playerID, owner, avatarID, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
 		
 	}
@@ -114,7 +114,7 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 
 
 	@Override
-	public int getSide() {
+	public byte getSide() {
 		return this.owner.getSide();
 	}
 
@@ -124,32 +124,32 @@ public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast,
 		return super.creationData;
 	}
 */
-
+/*
 	@Override
-	public void reload(AbstractGameServer server) {
+	public void reload() {
 		this.bulletsInMag = this.magazineSize;
 	}
 	
-	
+	*/
 	@Override
-	protected AbstractBullet createBullet(int entityid, int playerID, IEntity shooter, Vector3f startPos, Vector3f dir, int side) {
+	protected AbstractBullet createBullet(int entityid, int playerID, IEntity shooter, Vector3f startPos, Vector3f dir, byte side) {
 		// No physical projectiles required!
 		return null;
 	}
 
-
+/*
 	@Override
 	public int getBulletsInMag() {
 		return bulletsInMag;
 	}
-
+*/
 
 	@Override
 	public IEntity getActualShooter() {
 		return owner;
 	}
 
-
+/*
 	@Override
 	public void encode(AbilityUpdateMessage aum) {
 		super.encode(aum);

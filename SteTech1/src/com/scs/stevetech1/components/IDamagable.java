@@ -4,7 +4,7 @@ public interface IDamagable {
 
 	void damaged(float amt, IEntity collider, String reason);
 	
-	int getSide(); // Prevent friendly-fire
+	byte getSide(); // Prevent friendly-fire
 	
 	float getHealth();
 	

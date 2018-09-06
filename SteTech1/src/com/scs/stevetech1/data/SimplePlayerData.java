@@ -7,7 +7,7 @@ public class SimplePlayerData { // POJO
 
 	public int id;
 	public String playerName;
-	public int side;
+	public byte side;
 	public long pingRTT;
 
 	public SimplePlayerData() {
@@ -15,7 +15,7 @@ public class SimplePlayerData { // POJO
 	}
 	
 	
-	public SimplePlayerData(int _id, String name, int _side) {
+	public SimplePlayerData(int _id, String name, byte _side) {
 		super();
 		
 		this.playerName = name;

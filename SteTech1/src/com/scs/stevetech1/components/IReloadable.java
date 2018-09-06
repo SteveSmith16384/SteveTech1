@@ -6,5 +6,5 @@ public interface IReloadable {
 
 	void setToBeReloaded();
 	
-	void reload(AbstractGameServer server);
+	void reload();
 }

@@ -110,7 +110,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 
 	@Override
-	public int getSide() {
+	public byte getSide() {
 		return 0;
 	}
 

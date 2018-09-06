@@ -61,10 +61,8 @@ public class TestGameClientEntityCreator {
 		case AVATAR:
 		{
 			int playerID = (int)msg.data.get("playerID");
-			int side = (int)msg.data.get("side");
+			byte side = (byte)msg.data.get("side");
 			Vector3f pos = (Vector3f)msg.data.get("pos");
-			//float moveSpeed = (float)msg.data.get("moveSpeed");
-			//float jumpForce = (float)msg.data.get("jumpForce");
 
 			if (playerID == game.playerID) {
 				AbstractClientAvatar avatar = new TestGameClientAvatar(game, id, game.input, game.getCamera(), id, pos.x, pos.y, pos.z, side);
@@ -89,7 +87,7 @@ public class TestGameClientEntityCreator {
 			//if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities
 			//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 			int playerID = (int)msg.data.get("playerID");
-			int num = (int)msg.data.get("num");
+			byte num = (byte)msg.data.get("num");
 			HitscanRifle gl = new HitscanRifle(game, id, HITSCAN_RIFLE, playerID, null, ownerid, num, null);
 			//owner.addAbility(gl, num);
 			return gl;
@@ -171,7 +169,7 @@ public class TestGameClientEntityCreator {
 			int ownerid = (int)msg.data.get("ownerid");
 			//if (game.currentAvatar != null && ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 			//AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
-			int num = (int)msg.data.get("num");
+			byte num = (byte)msg.data.get("num");
 			int playerID = (int)msg.data.get("playerID");
 			LaserRifle gl = new LaserRifle(game, id, playerID, null, ownerid, num, null);
 			return gl;
@@ -188,7 +186,7 @@ public class TestGameClientEntityCreator {
 		{
 			int playerID = (int) msg.data.get("playerID");
 			if (playerID != game.getPlayerID()) {
-				int side = (int) msg.data.get("side");
+				byte side = (byte) msg.data.get("side");
 				int shooterId =  (int) msg.data.get("shooterID");
 				IEntity shooter = game.entities.get(shooterId);
 				Vector3f startPos = (Vector3f) msg.data.get("startPos");

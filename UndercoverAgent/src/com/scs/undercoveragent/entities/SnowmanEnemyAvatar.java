@@ -17,7 +17,7 @@ public class SnowmanEnemyAvatar extends AbstractOtherPlayersAvatar {
 	// Animation
 	public boolean showDied = false;
 	
-	public SnowmanEnemyAvatar(IEntityController game, int eid, float x, float y, float z, int side, String playerName) {
+	public SnowmanEnemyAvatar(IEntityController game, int eid, float x, float y, float z, byte side, String playerName) {
 		super(game, UndercoverAgentClientEntityCreator.AVATAR, eid, x, y, z, new SnowmanModel(game.getAssetManager()), side, playerName);
 		
 		this.snowman = (SnowmanModel)anim;

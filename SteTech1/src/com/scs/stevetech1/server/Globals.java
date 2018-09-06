@@ -14,12 +14,12 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
+	public static final boolean SHOW_BULLET_COLLISION_POS = true;
 
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_CLICK_TO_SKIP = false;
 	public static final boolean DEBUG_CPU_HUD_TEXT = false;
-	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean DEBUG_ORPHAN_BULLETS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;

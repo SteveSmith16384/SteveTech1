@@ -37,7 +37,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	//private Vector3f defaultBulletStartPosition = new Vector3f();
 
 	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, int eid, 
-			float x, float y, float z, int side, IAvatarModel avatarModel, IAvatarControl _avatarControl) {
+			float x, float y, float z, byte side, IAvatarModel avatarModel, IAvatarControl _avatarControl) {
 		super(_client, avatarType, _playerID, _input, eid, side, avatarModel, _avatarControl);
 
 		cam = _cam;

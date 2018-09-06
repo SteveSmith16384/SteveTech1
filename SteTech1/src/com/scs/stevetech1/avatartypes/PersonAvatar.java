@@ -91,8 +91,6 @@ public class PersonAvatar implements IAvatarControl {
 			playerWalked = true;
 		}
 		//}
-
-		
 	}
 	
 	

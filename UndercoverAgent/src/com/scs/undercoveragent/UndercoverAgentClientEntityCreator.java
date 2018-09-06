@@ -82,7 +82,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		case AVATAR:
 		{
 			int playerID = (int)msg.data.get("playerID");
-			int side = (int)msg.data.get("side");
+			byte side = (byte)msg.data.get("side");
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 			//float moveSpeed = (float)msg.data.get("moveSpeed");
 			//float jumpForce = (float)msg.data.get("jumpForce");
@@ -185,7 +185,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 			//if (game.currentAvatar != null) { // We might not have an avatar yet
 			//	if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
 			//	AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
-			int num = (int)msg.data.get("num");
+			byte num = (byte)msg.data.get("num");
 			int playerID = (int)msg.data.get("playerID");
 			SnowballLauncher gl = new SnowballLauncher(game, id, playerID, null, ownerid, num, null);
 			return gl;
@@ -198,7 +198,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		{
 			int playerID = (int) msg.data.get("playerID");
 			if (playerID != game.getPlayerID()) {
-				int side = (int) msg.data.get("side");
+				byte side = (byte) msg.data.get("side");
 				int shooterId =  (int) msg.data.get("shooterID");
 				IEntity shooter = game.entities.get(shooterId);
 				Vector3f startPos = (Vector3f) msg.data.get("startPos");

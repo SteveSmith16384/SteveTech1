@@ -1,6 +1,7 @@
 package com.scs.stevetech1.weapons;
 
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IEntity;
@@ -9,7 +10,6 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.ClientGunReloadRequestMessage;
-import com.scs.stevetech1.netmessages.GunReloadingMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -27,7 +27,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	private boolean toBeReloaded = true;
 	private int bulletsInMag;
 
-	public AbstractMagazineGun(IEntityController _game, int id, int type, int playerID, ICanShoot owner, int avatarID, int abilityNum, String _name, 
+	public AbstractMagazineGun(IEntityController _game, int id, int type, int playerID, ICanShoot owner, int avatarID, byte abilityNum, String _name, 
 			float shotInt, float reloadInt, int magSize, ClientData _client) { 
 		super(_game, id, type, playerID, (AbstractAvatar)owner, avatarID, abilityNum, _name, shotInt);
 
@@ -35,20 +35,11 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 		this.reloadInterval_secs = reloadInt;
 		this.magazineSize = magSize;
 		this.client = _client;
-		
+
 		bulletsInMag = this.magazineSize;
 	}
 
-/*
-	public void addToCache(T o) {
-		this.ammoCache.add(o);
-	}
 
-
-	public void removeFromCache(T o) {
-		this.ammoCache.remove(o);
-	}
-*/
 	protected boolean launchBullet() {
 		if (bulletsInMag > 0) {
 			ICanShoot ic = (ICanShoot)owner;
@@ -62,13 +53,13 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	}
 
 
-	protected abstract AbstractBullet createBullet(int entityid, int playerID, IEntity shooter, Vector3f startPos, Vector3f dir, int side);
+	protected abstract AbstractBullet createBullet(int entityid, int playerID, IEntity shooter, Vector3f startPos, Vector3f dir, byte side);
 
-	public int getBulletsInMag() {
+	private int getBulletsInMag() {
 		return bulletsInMag;
 	}
 
-	
+
 	@Override
 	public final boolean activate() {
 		if (this.timeUntilShoot_secs <= 0 && getBulletsInMag() > 0) {
@@ -100,16 +91,18 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			PlayersLaserBullet g = ammoCache.remove();
 			g.remove();
 		}
-		
+
 	}
-*/
+	 */
 
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		super.processByServer(server, tpf_secs);
 
+		this.sharedProcess(tpf_secs);
 
+		/*
 		if (toBeReloaded) {
 			toBeReloaded = false;
 			// Reload
@@ -121,24 +114,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 
 		timeUntilShoot_secs -= tpf_secs;
 		timeSinceLastReload += tpf_secs;
-	}
-
-
-	@Override
-	public void reload(AbstractGameServer server) {
-		if (timeSinceLastReload > 5) {
-			server.gameNetworkServer.sendMessageToClient(client, new GunReloadingMessage(this, reloadInterval_secs));
-			Globals.p("Reloading " + this);
-			//this.emptyMagazine(); // Remove any existing bullets
-			/*IEntityContainer<AbstractPlayersBullet> irac = (IEntityContainer<AbstractPlayersBullet>)this;
-			while (this.getBulletsInMag() < this.magazineSize) {
-				createBullet(server, server.getNextEntityID(), playerID, irac, this.owner.side);
-			}*/
-			this.bulletsInMag = this.magazineSize;
-			this.timeUntilShoot_secs = this.reloadInterval_secs;
-			timeSinceLastReload = 0;
-			server.gameNetworkServer.sendMessageToClient(client, new AbilityUpdateMessage(true, this));
-		}
+		 */
 	}
 
 
@@ -146,12 +122,50 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	public void processByClient(IClientApp client, float tpf_secs) {
 		super.processByClient(client, tpf_secs);
 
+		this.sharedProcess(tpf_secs);
+		/*
 		timeUntilShoot_secs -= tpf_secs;
 
 		if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
-			client.sendMessage(new ClientGunReloadRequestMessage(this.getID()));
+			client.sendMessage(new ClientGunReloadRequestMessage(this.getID())); // Auto-reload
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			//Globals.p("Sending ClientReloadingMessage");
+		}
+		 */
+	}
+
+
+	private void sharedProcess(float tpf_secs) {
+		timeUntilShoot_secs -= tpf_secs;
+		timeSinceLastReload += tpf_secs;
+
+		if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
+			if (!game.isServer()) {
+				AbstractGameClient client = (AbstractGameClient)game;
+				client.sendMessage(new ClientGunReloadRequestMessage(this.getID())); // Auto-reload
+			}
+			toBeReloaded = true;
+		}
+
+		if (toBeReloaded) {
+			toBeReloaded = false;
+			reload();
+		}
+
+
+	}
+
+	@Override
+	public void reload() {
+		if (timeSinceLastReload > 5) {
+			Globals.p("Reloading " + this);
+			this.bulletsInMag = this.magazineSize;
+			this.timeUntilShoot_secs = this.reloadInterval_secs;
+			if (game.isServer()) {
+				AbstractGameServer server = (AbstractGameServer)game;
+				//server.gameNetworkServer.sendMessageToClient(client, new GunReloadingMessage(this, reloadInterval_secs));
+				server.gameNetworkServer.sendMessageToClient(client, new AbilityUpdateMessage(true, this));
+			}
 		}
 	}
 
@@ -168,6 +182,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 
 	@Override
 	public void encode(AbilityUpdateMessage aum) {
+		aum.bulletsLeftInMag = this.bulletsInMag;
 		aum.timeUntilShoot = timeUntilShoot_secs;
 
 	}
@@ -175,13 +190,16 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 
 	@Override
 	public void decode(AbilityUpdateMessage aum) {
+		this.bulletsInMag = aum.bulletsLeftInMag;
 		timeUntilShoot_secs = aum.timeUntilShoot;
 	}
 
 
 	@Override
 	public void setToBeReloaded() {
-		toBeReloaded = true;
+		if (this.bulletsInMag < this.magazineSize) {
+			toBeReloaded = true;
+		}
 	}
 
 }

@@ -25,7 +25,7 @@ public class PlayerLaserBullet extends AbstractBullet implements INotifiedOfColl
 	public static final float SPEED = 10f;
 	private static final boolean USE_CYLINDER = true;
 
-	public PlayerLaserBullet(IEntityController _game, int id, int playerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, int _side, ClientData _client) {
+	public PlayerLaserBullet(IEntityController _game, int id, int playerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client) {
 		super(_game, id, TestGameClientEntityCreator.LASER_BULLET, "LaserBullet", playerId, _shooter, startPos, _dir, _side, _client, true, SPEED, RANGE);
 
 		//this.getMainNode().setUserData(Globals.ENTITY, this);

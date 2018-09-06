@@ -57,12 +57,15 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		moves = _moves;
 
 		mainNode = new Node(entityName + "_MainNode_" + id);
+		//this.getMainNode().setUserData(Globals.ENTITY, this);
 
 		if (moves) {
 			historicalPositionData = new PositionCalculator(Globals.HISTORY_DURATION);
 		}
 		// Always create this as Computer's need health history
 		chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(Globals.HISTORY_DURATION);
+		
+
 	}
 
 

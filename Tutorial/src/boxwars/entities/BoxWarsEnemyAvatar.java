@@ -8,7 +8,7 @@ import boxwars.models.BoxAvatarModel;
 
 public class BoxWarsEnemyAvatar extends AbstractOtherPlayersAvatar {
 
-	public BoxWarsEnemyAvatar(IEntityController game, int eid, float x, float y, float z, int side) {
+	public BoxWarsEnemyAvatar(IEntityController game, int eid, float x, float y, float z, byte side) {
 		super(game, BoxWarsServer.AVATAR, eid, x, y, z, new BoxAvatarModel(game.getAssetManager()), side, "TestGame");
 		
 	}

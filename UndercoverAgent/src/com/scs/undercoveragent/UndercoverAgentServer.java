@@ -185,7 +185,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		SnowmanServerAvatar avatar = new SnowmanServerAvatar(this, client, client.remoteInput, entityid);
 		//avatar.getMainNode().lookAt(new Vector3f(15, avatar.avatarModel.getCameraHeight(), 15), Vector3f.UNIT_Y); // Look towards the centre
 
-		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), client.getPlayerID(), avatar, entityid, 0, client);
+		IAbility abilityGun = new SnowballLauncher(this, getNextEntityID(), client.getPlayerID(), avatar, entityid, (byte)0, client);
 		this.actuallyAddEntity(abilityGun);
 
 		return avatar;
@@ -207,9 +207,9 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	protected int getWinningSideAtEnd() {
+	protected byte getWinningSideAtEnd() {
 		int highestScore = -1;
-		int winningSide = -1;
+		byte winningSide = -1;
 		boolean draw = false;
 		for(ClientData c : this.clientList.getClients()) {
 			UASimplePlayerData spd = (UASimplePlayerData)c.playerData;
@@ -235,8 +235,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	public int getSide(ClientData client) {
-		return client.id; // Everyone is on a different side
+	public byte getSide(ClientData client) {
+		return (byte) client.id; // Everyone is on a different side.  Todo - check  > 127
 	}
 
 

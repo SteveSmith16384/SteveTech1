@@ -72,7 +72,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 			restartTimeSecs -= tpf;
 			this.currentAnimCode = ANIM_DIED;
 			if (this.restartTimeSecs <= 0) {
-				Globals.p("Resurrecting avatar");
+				Globals.p("Respawning avatar");
 				this.startAgain();
 
 				// Send position update

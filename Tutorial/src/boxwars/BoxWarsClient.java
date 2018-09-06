@@ -59,7 +59,7 @@ public class BoxWarsClient extends AbstractGameClient {
 		case BoxWarsServer.AVATAR:
 		{
 			int playerID = (int)msg.data.get("playerID");
-			int side = (int)msg.data.get("side");
+			byte side = (byte)msg.data.get("side");
 			Vector3f pos = (Vector3f)msg.data.get("pos");
 
 			if (playerID == game.playerID) {
@@ -84,7 +84,7 @@ public class BoxWarsClient extends AbstractGameClient {
 		case BoxWarsServer.GUN:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			int num = (int)msg.data.get("num");
+			byte num = (byte)msg.data.get("num");
 			int playerID = (int)msg.data.get("playerID");
 			PlayersGun gl = new PlayersGun(game, id, playerID, null, ownerid, num, null);
 			return gl;
@@ -93,7 +93,7 @@ public class BoxWarsClient extends AbstractGameClient {
 		case BoxWarsServer.BULLET:
 		{
 			int playerID = (int) msg.data.get("playerID");
-			int side = (int) msg.data.get("side");
+			byte side = (byte) msg.data.get("side");
 			int shooterId =  (int) msg.data.get("shooterID");
 			IEntity shooter = game.entities.get(shooterId);
 			Vector3f startPos = (Vector3f) msg.data.get("startPos");

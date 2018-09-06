@@ -20,28 +20,11 @@ public class EntityRemovalSystem extends AbstractSystem {
 
 
 	public void markEntityForRemoval(IEntity e) {
-		//Entity e = (Entity)this.entities.get(rem.entityID);
 		if (e != null) {
 			e.markForRemoval();
-			//}
-			entitiesToRemove.add(e.getID());
-			/*if (Globals.STRICT) {
-			if (entityController instanceof AbstractGameServer) {
-				AbstractGameServer s = (AbstractGameServer)this.entityController;
-				Entity e = (Entity)s.entities.get(id);
-				if (e != null && !e.markedForRemoval) {
-					throw new RuntimeException("Todo");
-				}
-			} else if (entityController instanceof AbstractGameClient) {
-				AbstractGameClient s = (AbstractGameClient)this.entityController;
-				Entity e = (Entity)s.entities.get(id);
-				if (e != null && !e.markedForRemoval) {
-					throw new RuntimeException("Todo");
-				}
+			synchronized (entitiesToRemove) {
+				entitiesToRemove.add(e.getID());
 			}
-		}*/
-		} else {
-
 		}
 	}
 
@@ -55,9 +38,11 @@ public class EntityRemovalSystem extends AbstractSystem {
 		// Remove entities
 		while (this.entitiesToRemove.size() > 0) { // Do it this way since removing some entities my cause more entities to be added to this list, e.g. avatar's weapons
 			//for(int id : entitiesToRemove) {
-			int id = this.entitiesToRemove.getFirst();
-			entityController.actuallyRemoveEntity(id);
-			this.entitiesToRemove.removeFirst();
+			synchronized (entitiesToRemove) {
+				int id = this.entitiesToRemove.getFirst();
+				entityController.actuallyRemoveEntity(id);
+				this.entitiesToRemove.removeFirst();
+			}
 		}
 		entitiesToRemove.clear();
 	}

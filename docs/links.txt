@@ -6,3 +6,6 @@ https://www.gamasutra.com/blogs/NeemaTeymory/20160906/280377/Why_Making_Multipla
 
 https://www.onlineconverter.com/avi-to-gif
 
+https://forums.unrealengine.com/development-discussion/c-gameplay-programming/55318-many-bullets-and-multiplayer
+https://forums.unrealengine.com/development-discussion/c-gameplay-programming/81522-physics-bullet-client-side-prediction
+https://forums.unrealengine.com/development-discussion/c-gameplay-programming/69925-how-would-lag-compensation-shooting-be-implemented

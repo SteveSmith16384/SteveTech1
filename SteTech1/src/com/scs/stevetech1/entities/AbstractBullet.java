@@ -19,7 +19,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 	public int playerID;
 	public IEntity shooter; // So we know who not to collide with
-	private int side;
+	private byte side;
 
 	private ClientData client; // Only used server-side
 	protected Vector3f origin;
@@ -29,7 +29,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	protected float speed;
 	private float range;
 
-	public AbstractBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, int _side, ClientData _client, boolean _useRay, float _speed, float _range) {
+	public AbstractBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client, boolean _useRay, float _speed, float _range) {
 		super(_game, entityId, type, name, true, false, true);
 
 		playerID = _playerOwnerId;
@@ -58,17 +58,14 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			creationData.put("startPos", startPos);
 			creationData.put("dir", dir);
 		}		
-		this.getMainNode().setUserData(Globals.ENTITY, this);
+		//this.getMainNode().setUserData(Globals.ENTITY, this);
 
 		origin = startPos.clone(); // todo - don't create each time
 
 		this.createModelAndSimpleRigidBody(dir);
 
-		//game.getGameNode().attachChild(this.mainNode); // Need this for client side
 		this.setWorldTranslation(startPos);
 		this.mainNode.updateGeometricState();
-
-		//this.collideable = true;
 
 		if (game.isServer() && playerID > 0) { // Don't ffwd AI bullets
 			if (Globals.DEBUG_DELAYED_EXPLOSION) {
@@ -99,6 +96,12 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			//long launchTime = System.currentTimeMillis() - server.gameOptions.clientRenderDelayMillis; // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
 			//EntityLaunchedMessage msg = new EntityLaunchedMessage(this.getID(), this.playerID, startPos, _dir, shooter.getID(), launchTime);
 			//server.sendMessageToInGameClients(msg);
+		}
+		
+		if (Globals.STRICT) {
+			if (this.useRay && this.simpleRigidBody != null) {
+				throw new RuntimeException("Bullet uses ray and SRB");
+			}
 		}
 
 	}
@@ -151,7 +154,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			ray.setLimit(speed * tpf_secs);
 			RayCollisionData rcd = this.checkForRayCollisions(ray);
 			if (rcd != null) {
-				//this.remove();
 				game.markForRemoval(this.getID());
 			} else {
 				// Move spatial
@@ -166,7 +168,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		if (range > 0) {
 			float dist = this.origin.distance(this.getWorldTranslation());
 			if (dist > range) {
-				//this.remove();
 				game.markForRemoval(this.getID());
 			}
 		}
@@ -193,16 +194,10 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 
 	@Override
-	public int getSide() {
+	public byte getSide() {
 		return side;
 	}
 
-	/*
-	@Override
-	public boolean isClientControlled() {
-		return launched; // All launched bullets are under client control
-	}
-	 */
 
 	@Override
 	public IEntity getActualShooter() {
@@ -217,14 +212,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		Globals.p(this + " damage: " + dam);
 		return dam;
 	}
-
-	/*
-	@Override
-	public void remove() {
-		this.container.removeFromCache(this);
-		super.remove();
-	}
-	 */
 
 }
 

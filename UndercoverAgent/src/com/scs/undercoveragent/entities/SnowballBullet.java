@@ -22,10 +22,8 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 public class SnowballBullet extends AbstractBullet implements INotifiedOfCollision {
 
-	public SnowballBullet(IEntityController _game, int id, int playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, int _side, ClientData _client) {
+	public SnowballBullet(IEntityController _game, int id, int playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client) {
 		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", playerOwnerId, _shooter, startPos, _dir, _side, _client, false, 0f, 0f);
-
-		//this.getMainNode().setUserData(Globals.ENTITY, this);
 	}
 
 
