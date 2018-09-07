@@ -2,10 +2,6 @@ Avatars
 * If removed, all the owned abilities are removed.
 
 
-Guns/Abilities
-* If removed, all the owned (unshot) bullets are removed.
-
-
 Players Bullets
 * See other doc
 

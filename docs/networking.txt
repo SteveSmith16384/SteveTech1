@@ -4,7 +4,7 @@ Render others from history - ~100ms ago, lerp between historical positions
 
 
 SERVER
-Receive player inputs and pass the to avatar (if later than prev)
+Receive player input msgs and passes them to avatar (if later than prev)
 Run game loop every ~25ms
 Send entity positions for changed entities
 
@@ -21,10 +21,3 @@ Player shooting (hitscan)
 	Server moves players to correct position and checks the client has hit
 	 
 	
-PLAYER SHOOTING
-Players gets sent "unshot" bullets/grenades
-If player shoots, client "shoots" the bullets immediately
-The shooting client keeps it's own track of bullets, they are not syncd.  It also removes them when required
-The other clients also launch the bullets themselves and only remove them themselves
-If the server sends a "remove" message though, the client will remvoe them.
-

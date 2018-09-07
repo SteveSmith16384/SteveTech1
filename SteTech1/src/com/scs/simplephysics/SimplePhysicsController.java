@@ -11,12 +11,14 @@ import com.jme3.math.Vector3f;
 
 public class SimplePhysicsController<T> {
 
-	public static final boolean DEBUG = false; // todo - make param
+	public static boolean DEBUG = false; // todo - make param
 
 	public static final float MIN_MOVE_DIST = 0.001f;
 	public static final float DEFAULT_AERODYNAMICNESS = 0.99f; // Prevent things moving forever
 	public static final float DEFAULT_GRAVITY = -10f;//-5f;
-	private static final float GRAVITY_WARNING = -15f;
+	public static float MAX_STEP_HEIGHT = 0.2f;//0.25f; // todo - make config
+
+	//private static final float GRAVITY_WARNING = -15f;
 
 	private ArrayList<SimpleRigidBody<T>> entities = new ArrayList<>(); // ALL entities
 	// Efficiency nodes
@@ -136,15 +138,6 @@ public class SimplePhysicsController<T> {
 		}
 
 		srb.removed = false;
-		//srb.setCurrentGravInc = 0;
-
-		if (srb.movedByForces()) {
-			// Check to see if they're not already colliding
-			/*SimpleRigidBody<T> tmpWasCollision = srb.checkForCollisions();
-			if (tmpWasCollision != null) {
-				System.err.println("Warning: " + this + " has collided immediately with " + tmpWasCollision.userObject);
-			}*/
-		}
 	}
 
 

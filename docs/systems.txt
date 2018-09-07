@@ -1,0 +1,4 @@
+Collisions:
+	Raised by the physics engine (or, in the case of Rays, manually).
+	
+	

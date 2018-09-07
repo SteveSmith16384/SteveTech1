@@ -71,7 +71,7 @@ public class DefaultPOVWeapon implements IPOVWeapon {
 	
 
 	@Override
-	public void reload(float durationSecs) {
+	public void startReloading(float durationSecs) {
 		this.finishedReloadAt = durationSecs;
 		this.currentlyReloading = true;
 		

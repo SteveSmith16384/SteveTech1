@@ -5,10 +5,10 @@ import java.util.HashMap;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.IClientApp;
+import com.scs.stevetech1.components.IAddedImmediately;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
@@ -16,7 +16,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades {
+public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately {
 
 	public int playerID;
 	public IEntity shooter; // So we know who not to collide with, and who fired the killing shot
@@ -29,8 +29,9 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	private Vector3f dir;
 	protected float speed;
 	private float range;
-
-	public AbstractBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client, boolean _useRay, float _speed, float _range) {
+	protected boolean clientShouldAddImmed;
+	
+	public AbstractBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client, boolean _useRay, float _speed, float _range, boolean _addImmed) {
 		super(_game, entityId, type, name, true, false, true);
 
 		playerID = _playerOwnerId;
@@ -41,8 +42,12 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		side = _side;
 		shooter = _shooter;
 		dir = _dir;
-
+		clientShouldAddImmed = _addImmed;
+		
 		if (Globals.STRICT) {
+			if (speed <= 0) {
+				throw new RuntimeException("Invalid speed: " + speed);
+			}
 			if (side <= 0) {
 				throw new RuntimeException("Invalid side: " + side);
 			}
@@ -59,7 +64,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			creationData.put("startPos", startPos);
 			creationData.put("dir", dir);
 		}		
-		//this.getMainNode().setUserData(Globals.ENTITY, this);
 
 		origin = startPos.clone(); // todo - don't create each time
 
@@ -244,5 +248,12 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		return dam;
 	}
 	 */
+
+
+	@Override
+	public boolean shouldClientAddItImmediately() {
+		return clientShouldAddImmed;
+	}
+
 }
 

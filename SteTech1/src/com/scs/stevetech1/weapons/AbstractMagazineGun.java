@@ -45,7 +45,6 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			ICanShoot ic = (ICanShoot)owner;
 			AbstractBullet bullet = createBullet(game.getNextEntityID(), playerID, super.owner, ic.getBulletStartPos(), ic.getShootDir(), this.owner.side);
 			game.addEntity(bullet);
-			//bullet.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
 			//todo game.playSound(MASounds.SFX_AI_BULLET_FIRED, owner.getID(), bullet.getWorldTranslation(), Globals.DEF_VOL, false);
 			return true;
 		}
@@ -53,6 +52,16 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	}
 
 
+	/**
+	 * Only called either by a client when their own player shoots, or by the server.
+	 * @param entityid
+	 * @param playerID
+	 * @param shooter
+	 * @param startPos
+	 * @param dir
+	 * @param side
+	 * @return
+	 */
 	protected abstract AbstractBullet createBullet(int entityid, int playerID, IEntity shooter, Vector3f startPos, Vector3f dir, byte side);
 
 	private int getBulletsInMag() {
@@ -67,34 +76,10 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			bulletsInMag--;
 			timeUntilShoot_secs = this.shotInterval_secs;
 			return true;
-		}/* else {
-			if (timeUntilShoot_secs > 0) {
-				//Globals.p("Shooting too soon - wait for " + timeUntilShoot_secs + " secs");
-			} else if (getBulletsInMag() <= 0) {
-				if (game.isServer()) {
-					// If activation failed, clear out bullets to force a reload, since they must be out of sync
-					//Globals.p("Forcing empty of magazine");
-					//this.emptyMagazine();
-				} else {
-					/*AbstractGameClient client = (AbstractGameClient) game;
-					client.sendMessage(new ClientReloadingMessage(this.getID()));
-					this.timeUntilShoot_secs = this.reloadInterval_secs;
-				}
-			}
-		}*/
-		return false;
-	}
-
-	/*
-	public final void emptyMagazine() {
-		while (!ammoCache.isEmpty()) {
-			PlayersLaserBullet g = ammoCache.remove();
-			g.remove();
 		}
 
+		return false;
 	}
-	 */
-
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
@@ -140,10 +125,6 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 		timeSinceLastReload += tpf_secs;
 
 		if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
-			/*if (!game.isServer()) {
-				AbstractGameClient client = (AbstractGameClient)game;
-				client.sendMessage(new ClientReloadRequestMessage(this.getID())); // Auto-reload
-			}*/
 			toBeReloaded = true;
 		}
 
@@ -165,6 +146,9 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 				AbstractGameServer server = (AbstractGameServer)game;
 				//server.gameNetworkServer.sendMessageToClient(client, new GunReloadingMessage(this, reloadInterval_secs));
 				server.gameNetworkServer.sendMessageToClient(client, new AbilityUpdateMessage(true, this));
+			} else {
+				AbstractGameClient client = (AbstractGameClient)game;
+				client.povWeapon.startReloading(reloadInterval_secs);
 			}
 		}
 	}

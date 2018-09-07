@@ -115,7 +115,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	protected ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(100); // Entities that we need to iterate over in game loop
 	protected LinkedList<PhysicalEntity> entitiesToAddToGame = new LinkedList<PhysicalEntity>(); // Entities to add to RootNode, as we don't add them immed
 	private EntityRemovalSystem entityRemovalSystem;
-	//private ArrayList<IEntity> clientOnlyEntities = new ArrayList<>(100);
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer; // Keep client and server running at the same time
@@ -330,7 +329,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 
 		if (Globals.STRICT) {
-			if (this.physicsController.getNumEntities() > this.entities.size()) {
+			if (this.physicsController.getNumEntities() > this.entities.size()) { //this.rootNode
 				Globals.pe("Warning: more simple rigid bodies than entities!");
 			}
 		}
@@ -374,18 +373,18 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						for(IEntity e : this.entities.values()) {
 							if (e.requiresProcessing()) {
 								if (!this.entitiesForProcessing.contains(e)) {
-									Globals.pe("Warning: Processed entity " + e + " not in process list!");
+									throw new RuntimeException("Processed entity " + e + " not in process list!");
 								}
 							}
 						}
+						// Check all nodes have an entity in the list
+						// todo
 					}
 
 					iterateThroughEntities(tpfSecs);
 
 					if (this.povWeapon != null) {
 						this.povWeapon.update(tpfSecs);
-						//playersWeaponNode.setLocalTranslation(cam.getLocation());
-						//playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
 					}
 
 				}
@@ -408,12 +407,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	private void addAndRemoveEntities() {
-		// Remove entities
 		this.entityRemovalSystem.actuallyRemoveEntities();
-		/*while (this.entitiesToRemove.size() > 0) {
-			int i = this.entitiesToRemove.getFirst();
-			this.actuallyRemoveEntity(i);
-		}*/
 
 		// Add entities
 		if (entitiesToAddToGame.size() > 0) {
@@ -433,7 +427,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			}
 		}
-
 	}
 
 
@@ -916,7 +909,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (e != null) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
-				if (data.addImed) {
+				if (data.clientShouldAddImmed) {
 					pe.timeToAdd = -1;
 				} else {
 					pe.timeToAdd = timeToAdd;
@@ -969,24 +962,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (e.getID() > 0 && e.getGameID() != this.getGameID()) {
 			throw new RuntimeException("Entity " + e + " is for game " + e.getGameID() + ", current game is " + this.getGameID());
 		}
-		//if (e.getID() > 0) {
 		if (this.entities.containsKey(e.getID())) {
-			/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-					Globals.p("Remove entity " + e + " since it already exists");
-				}
-				// Replace it, since it might be an existing entity but its position has changed
-				IEntity e2 = this.entities.get(e.getID());
-				e2.remove();
-				this.actuallyRemoveEntity(e2.getID());*/
 			throw new RuntimeException("Entity " + e + " already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
 		}
 		this.entities.put(e.getID(), e);
-		/*} else {
-			if (this.getClientOnlyEntityById(e.getID()) != null) {
-				throw new RuntimeException("Entity " + e + " already exists (client-only)"); // Don't replace it, as entity has linked to other stuff, like Abilities
-			}
-			this.clientOnlyEntities.add(e);
-		}*/
 		if (e.requiresProcessing()) {
 			this.entitiesForProcessing.add(e);
 		}
@@ -1002,7 +981,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				PhysicalEntity pe = (PhysicalEntity)e;
 				Globals.p("Created " + pe + " at " + pe.getWorldTranslation());
 			} else {
-				Globals.p("Created " + e); //((PhysicalEntity)e).getMainNode().getChild(0).getLocalRotation();
+				Globals.p("Created " + e);
 			}
 		}
 	}
@@ -1098,11 +1077,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void markForRemoval(int id) {
-		//if (id > 0) {
 		IEntity e = this.entities.get(id);
-		/*if (e != null) {
-				e.markForRemoval();
-			}*/				
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 			if (e != null) {
 				Globals.p("Going to remove entity " + id + ":" + e);
@@ -1110,13 +1085,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				Globals.p("Going to remove entity " + id);
 			}
 		}
-		//this.entitiesToRemove.add(id);
 		this.entityRemovalSystem.markEntityForRemoval(e);
-		/*} else {
-			//this.actuallyRemoveClientOnlyEntity(id);
-			this.clientOnlyEntities.remove(id);
-			this.actuallyRemoveEntity(id);
-		}*/
+		if (Globals.STRICT) {
+			if (this.entitiesToAddToGame.contains(e)) {
+				Globals.p("Removing entity that hasn't been added yet!");
+			}
+		}
 	}
 
 
@@ -1135,6 +1109,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				this.entitiesForProcessing.remove(e);
 			}
 			e.remove();
+			if (entitiesToAddToGame.contains(e)) {
+				entitiesToAddToGame.remove(e); // todo - why do we need this?
+			}
 			if (e == this.currentAvatar) {
 				if (Globals.DEBUG_AVATAR_SET) {
 					Globals.p("Avatar for player removed");
@@ -1165,7 +1142,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (value) {
 				quit("User quit.");
 			}
-			//} else if (name.equalsIgnoreCase(RELOAD)) {
 
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {

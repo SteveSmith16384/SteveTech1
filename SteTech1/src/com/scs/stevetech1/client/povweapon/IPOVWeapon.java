@@ -7,7 +7,7 @@ public interface IPOVWeapon {
 
 	void update(float tpfSecs);
 	
-	void reload(float durationSecs); // todo - rename to startReloading()
+	void startReloading(float durationSecs);
 	
 	void show(Node node);
 	

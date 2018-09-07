@@ -61,7 +61,7 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility {
 
 	@Override
 	protected PlayerLaserBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte side) {
-		return new PlayerLaserBullet(game, entityid, playerID, _shooter, startPos, _dir, side, client);
+		return new PlayerLaserBullet(game, entityid, playerID, _shooter, startPos, _dir, side, client, true);
 	}
 	
 /*

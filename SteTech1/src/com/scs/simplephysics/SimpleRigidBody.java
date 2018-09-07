@@ -21,7 +21,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	private static final boolean DEBUG_STEPS_SLOPES = false;
 
 	private static final float AUTOMOVE_FRAC = .1f;
-	private static final float MAX_STEP_HEIGHT = 0.3f;//0.25f; // todo - make config
+	//private static final float MAX_STEP_HEIGHT = 0.3f;//0.25f; // todo - make config
 	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
 
 	private SimplePhysicsController<T> physicsController;
@@ -44,7 +44,6 @@ public class SimpleRigidBody<T> implements Collidable {
 	public boolean canWalkUpSteps = false;
 	public boolean removed = false;
 	private boolean neverMoves = false; // More efficient if true
-	//private boolean collidable = true;
 	private boolean isSolid = true; // otherwise, other SRBs can pass through it
 
 	private SimpleNode<T> parent;
@@ -375,7 +374,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			float nextHeight = theirBB.getCenter().y + (theirBB.getYExtent());
 			float heightDiff = nextHeight - ourHeight;
 
-			if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT) {
+			if (heightDiff > 0 && heightDiff <= SimplePhysicsController.MAX_STEP_HEIGHT) {
 				if (DEBUG_STEPS_SLOPES) {
 					p("Going up step: height=" + heightDiff + ", stepForce=" + this.physicsController.getStepForce());
 				}
@@ -404,7 +403,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				float nextHeight = rayCRs.getClosestCollision().getContactPoint().y;
 				float heightDiff = nextHeight - ourHeight;
 				float ratio = heightDiff / DEF_EXTENT; // <1 = 45 degrees or walkable
-				if (heightDiff > 0 && heightDiff <= MAX_STEP_HEIGHT && ratio <= 1f) { // todo - make ratio limit a config
+				if (heightDiff > 0 && heightDiff <= SimplePhysicsController.MAX_STEP_HEIGHT && ratio <= 1f) { // todo - make ratio limit a config
 					if (DEBUG_STEPS_SLOPES) {
 						p("Walking up ramp! heightDiff=" + heightDiff + "; ratio= " + ratio);
 					}

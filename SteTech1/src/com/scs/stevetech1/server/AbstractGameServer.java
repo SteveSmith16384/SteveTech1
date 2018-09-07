@@ -475,15 +475,6 @@ ICollisionListener<PhysicalEntity> {
 		this.entityRemovalSystem.actuallyRemoveEntities();
 	}
 
-/*
-	private void actuallyRemoveEntities() {
-		for(Integer i : this.entitiesToRemove) {
-			this.actuallyRemoveEntity(i);
-		}
-		this.entitiesToRemove.clear();
-
-	}
-*/
 
 	protected void startNewGame() {
 		if (this.entities.size() > 0) {

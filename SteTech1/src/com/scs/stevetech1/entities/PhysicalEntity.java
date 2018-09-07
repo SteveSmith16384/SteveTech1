@@ -145,7 +145,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				}
 			}
 
-			if (this.mainNode.getParent() != null) { // Unlaunched bullets have no parent
+			if (this.mainNode.getParent() != null) {
 				this.mainNode.removeFromParent();
 			}
 
