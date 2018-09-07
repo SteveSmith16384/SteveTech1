@@ -7,8 +7,18 @@ import com.jme3.scene.Spatial;
 
 import ssmith.lang.NumberFunctions;
 
+/**
+ * Static helper functions for JME.
+ * @author stephencs
+ *
+ */
 public class JMEAngleFunctions {
 
+	private JMEAngleFunctions() {
+		
+	}
+	
+	
 	public static void turnTowards_Gentle(Spatial spatial, Vector3f target, float frac) {
 		if (frac <= 0) {
 			return; //throw new RuntimeException("Invalid pcent: " + pcent);

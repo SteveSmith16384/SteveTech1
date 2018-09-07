@@ -373,57 +373,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return true;
 	}
 
-	/*
-	public boolean canSee(PhysicalEntity pe, float range, float maxAngleRads) {
-		return canSee(pe.getMainNode().getWorldBound().getCenter(), range, maxAngleRads);
-	}
-	 */
-	/*
-	public boolean canSee(Vector3f pos, float range) {
-		Vector3f ourPos = this.getMainNode().getWorldBound().getCenter(); // Note: Test the ray from the middle of the entity
-		Vector3f theirPos = pos; //target.getMainNode().getWorldBound().getCenter();
-
-		if (theirPos.distance(ourPos) > range) {
-			return false;
-		}
-
-		Ray r = new Ray(ourPos, theirPos.subtract(ourPos).normalizeLocal());
-		r.setLimit(range);
-		CollisionResults res = new CollisionResults();
-		int c = game.getGameNode().collideWith(r, res);
-		if (c == 0) {
-			return true;
-		}
-		Iterator<CollisionResult> it = res.iterator();
-		while (it.hasNext()) {
-			CollisionResult col = it.next();
-			if (col.getDistance() > range) {
-				return true;
-			}
-			Spatial s = col.getGeometry();
-			while (s.getUserData(Globals.ENTITY) == null) {
-				s = s.getParent();
-				if (s == null) {
-					break;
-				}
-			}
-			if (s != null && s.getUserData(Globals.ENTITY) != null) {
-				PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
-				//Globals.p("Ray collided with " + pe + " at " + col.getContactPoint());
-				if (pe == this) {
-					continue; // Don't block by ourselves
-				}
-				if (pe.blocksView) {
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
-	 */
-
-
+	
 	@Override
 	public Collidable getCollidable() {
 		return this.mainNode.getWorldBound(); // Return simple boundingbox by default, to avoid mesh v mesh collisions

@@ -4,5 +4,4 @@ public interface IReloadable {
 
 	void setToBeReloaded();
 	
-	//void reload();
 }

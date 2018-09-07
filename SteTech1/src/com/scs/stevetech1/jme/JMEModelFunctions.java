@@ -25,6 +25,11 @@ import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.scs.stevetech1.server.Globals;
 
+/**
+ * Static helper functions for JME.
+ * @author stephencs
+ *
+ */
 public class JMEModelFunctions {
 
 	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);

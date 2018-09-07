@@ -5,7 +5,7 @@ package com.scs.stevetech1.components;
  * @author stephencs
  *
  */
-public interface ITargetable {
+public interface ITargetableByAI {
 
 	boolean isValidTargetForSide(byte shootersSide);
 	

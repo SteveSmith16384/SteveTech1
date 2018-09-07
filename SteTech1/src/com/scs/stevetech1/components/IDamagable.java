@@ -1,5 +1,10 @@
 package com.scs.stevetech1.components;
 
+/**
+ * An entity that has health, and can be damaged.
+ * @author stephencs
+ *
+ */
 public interface IDamagable {
 
 	void damaged(float amt, IEntity collider, String reason);

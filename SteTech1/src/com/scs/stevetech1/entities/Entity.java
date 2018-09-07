@@ -116,7 +116,7 @@ public abstract class Entity implements IEntity, Savable {
 	
 	@Override
 	public boolean isMarkedForRemoval() {
-		return this.markedForRemoval || this.removed;
+		return this.markedForRemoval;
 	}
 
 }

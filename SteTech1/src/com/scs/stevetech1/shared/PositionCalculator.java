@@ -11,15 +11,11 @@ public final class PositionCalculator {
 	private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // Newest entry is at the start
 	private LinkedList<EntityPositionData> oldPositionData = new LinkedList<>(); // Keep a cache of objects to re-use
 
-	//private int maxEntries;
-	//private boolean cleardown;
 	private long historyLength;
 
 	public PositionCalculator(long _historyLength) {//boolean _cleardown) {//, int _maxEntries) {
 		super();
 
-		//maxEntries = _maxEntries;
-		//cleardown = _cleardown;
 		historyLength = _historyLength;
 	}
 

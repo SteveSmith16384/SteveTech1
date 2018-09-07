@@ -973,7 +973,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			entitiesToAddToGame.add((PhysicalEntity)e);
 		}
 		if (e.getID() == currentAvatarID && e != this.currentAvatar) {
-			// Avatar has been replaced
 			this.setAvatar(e);
 		}
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
@@ -1086,11 +1085,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		}
 		this.entityRemovalSystem.markEntityForRemoval(e);
-		if (Globals.STRICT) {
+		/*if (Globals.STRICT) {
 			if (this.entitiesToAddToGame.contains(e)) {
 				Globals.p("Removing entity that hasn't been added yet!");
 			}
-		}
+		}*/
 	}
 
 

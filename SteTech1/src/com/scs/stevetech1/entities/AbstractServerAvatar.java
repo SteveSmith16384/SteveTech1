@@ -12,7 +12,7 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.IGetRotation;
 import com.scs.stevetech1.components.IRewindable;
-import com.scs.stevetech1.components.ITargetable;
+import com.scs.stevetech1.components.ITargetableByAI;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
@@ -25,7 +25,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class AbstractServerAvatar extends AbstractAvatar implements IDamagable, IRewindable, IGetReadyForGame,  
-IGetRotation, IAnimatedServerSide, ITargetable {
+IGetRotation, IAnimatedServerSide, ITargetableByAI {
 
 	private AbstractGameServer server;
 	public ClientData client;

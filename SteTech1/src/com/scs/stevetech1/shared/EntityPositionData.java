@@ -12,15 +12,6 @@ public class EntityPositionData {
 		super();
 	}
 
-/*
-	private EntityPositionData(Vector3f pos, Quaternion rot, long time) {
-		this();
-
-		this.position = pos;
-		this.rotation = rot;
-		this.serverTimestamp = time;
-	}
-*/
 
 	public EntityPositionData getInterpol(EntityPositionData other, long time) {
 		// interpolate between timestamps

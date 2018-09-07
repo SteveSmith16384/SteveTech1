@@ -24,25 +24,6 @@ public class AbstractCollisionValidator {
 			}
 		}
 		
-		// Prevent bullets getting hit by the shooter
-		/*if (pa instanceof IBullet) {
-			IBullet aa = (IBullet)pa;
-			if (aa.getLauncher() == pb) {
-				return false;
-			}
-		}
-		if (pb instanceof IBullet) {
-			IBullet ab = (IBullet)pb;
-			if (ab.getLauncher() == pa) {
-				return false;
-			}
-		}
-
-		if (pa instanceof IBullet && pb instanceof IBullet) {
-			// Bullets don't collide with each other
-			return false;
-		}*/
-		
 		// Anything with a side don't collide if on same side
 		if (pa instanceof IDontCollideWithComrades && pb instanceof IDontCollideWithComrades) {
 			// units on the same side don't collide

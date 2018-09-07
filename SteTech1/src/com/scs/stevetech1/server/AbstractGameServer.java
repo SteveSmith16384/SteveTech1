@@ -24,7 +24,7 @@ import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IReloadable;
 import com.scs.stevetech1.components.IRewindable;
-import com.scs.stevetech1.components.ITargetable;
+import com.scs.stevetech1.components.ITargetableByAI;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
@@ -173,9 +173,8 @@ ICollisionListener<PhysicalEntity> {
 			e.printStackTrace();
 			this.stop();
 		}
-
-
 	}
+	
 
 	/**
 	 *  
@@ -190,7 +189,7 @@ ICollisionListener<PhysicalEntity> {
 			tpfSecs = 1;
 		}
 
-		consoleInput.checkConsoleInput(); // this.entitiesForProcessing;
+		consoleInput.checkConsoleInput();
 
 		if (Globals.STRICT) {
 			if (this.physicsController.getNumEntities() > this.entities.size()) {
@@ -231,7 +230,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	private void handleMessages() {
-		// Process all messages
+		// Process all messages in the game thread
 		synchronized (unprocessedMessages) {
 			while (!this.unprocessedMessages.isEmpty()) {
 				MyAbstractMessage message = this.unprocessedMessages.remove(0);
@@ -334,7 +333,6 @@ ICollisionListener<PhysicalEntity> {
 
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity physicalEntity = (PhysicalEntity)e;
-					//strDebug.append(e.getID() + ": " + e.getName() + " Pos: " + physicalEntity.getWorldTranslation() + "\n");
 					if (sendUpdates) {
 
 						if (Globals.DEBUG_CPU_HUD_TEXT) {
@@ -371,7 +369,7 @@ ICollisionListener<PhysicalEntity> {
 		} else if (message instanceof PlayerLeftMessage) {
 			this.connectionRemoved(client.getPlayerID());
 
-		} else if (message instanceof PlayerInputMessage) { // Process these here so the inputs don't change values mid-thread
+		} else if (message instanceof PlayerInputMessage) {
 			PlayerInputMessage pim = (PlayerInputMessage)message;
 			if (pim.timestamp > client.latestInputTimestamp) {
 				client.remoteInput.decodeMessage(pim);
@@ -666,7 +664,7 @@ ICollisionListener<PhysicalEntity> {
 		if (e instanceof PhysicalEntity) {
 			PhysicalEntity pe = (PhysicalEntity)e;
 			if (pe.getMainNode().getParent() != null) {
-				throw new RuntimeException("Entity already has a node");
+				throw new RuntimeException("Entity already has a node!");
 			}
 			this.getGameNode().attachChild(pe.getMainNode());
 			if (pe.simpleRigidBody != null) {
@@ -699,7 +697,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	/*
-	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
+	 * Note that an entity is responsible for clearing up it's own data.  This method should only remove the server's knowledge of the entity.  e.remove() does all the hard work.
 	 */
 	@Override
 	public void actuallyRemoveEntity(int id) {
@@ -755,15 +753,15 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	public ITargetable getTarget(PhysicalEntity shooter, byte ourSide, float range, float viewAngleRads) {
-		ITargetable target = null;
+	public ITargetableByAI getTarget(PhysicalEntity shooter, byte ourSide, float range, float viewAngleRads) {
+		ITargetableByAI target = null;
 		int highestPri = -1;
 		float closestDist = 9999f;
 
 		for (IEntity e : entitiesForProcessing) {
 			if (e != shooter) {
-				if (e instanceof ITargetable) {
-					ITargetable t = (ITargetable)e;
+				if (e instanceof ITargetableByAI) {
+					ITargetableByAI t = (ITargetableByAI)e;
 					if (t.getTargetPriority() >= highestPri) {
 						if (t.isAlive() && t.isValidTargetForSide(ourSide)) {
 							PhysicalEntity pe = (PhysicalEntity)e;
@@ -891,6 +889,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
+	// Todo - Move to explosion system
 	public void sendExplosion(Vector3f pos, int num, float minForce, float maxForce, float minSize, float maxSize, String tex) {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
@@ -913,6 +912,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
+	// Todo - Move to explosion system
 	public void sendExpandingSphere(Vector3f pos) {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
@@ -946,6 +946,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
+	// Todo - Move to explosion system
 	public void damageSurroundingEntities(PhysicalEntity exploder, float range, float damage) {
 		Vector3f pos = exploder.getMainNode().getWorldBound().getCenter();
 		List<SimpleRigidBody<PhysicalEntity>> list = this.physicsController.getSRBsWithinRange(pos, range);
