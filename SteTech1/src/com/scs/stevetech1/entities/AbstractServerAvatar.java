@@ -40,7 +40,7 @@ IGetRotation, IAnimatedServerSide, ITargetable {
 			creationData = new HashMap<String, Object>();
 			creationData.put("id", eid); this.getID();
 			creationData.put("playerID", _client.getPlayerID());
-			creationData.put("side", _client.getSide());
+			creationData.put("side", side);
 			creationData.put("playersName", _client.playerData.playerName);
 		}
 

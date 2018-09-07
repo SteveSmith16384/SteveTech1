@@ -7,16 +7,16 @@ import com.jme3.network.serializing.Serializable;
  *
  */
 @Serializable
-public class ClientGunReloadRequestMessage extends MyAbstractMessage {
+public class ClientReloadRequestMessage extends MyAbstractMessage {
 	
 	public int abilityId;
 	
-	public ClientGunReloadRequestMessage() {
+	public ClientReloadRequestMessage() {
 		super();
 	}
 
 
-	public ClientGunReloadRequestMessage(int _abilityId) {
+	public ClientReloadRequestMessage(int _abilityId) {
 		super(true, false);
 		
 		abilityId = _abilityId;

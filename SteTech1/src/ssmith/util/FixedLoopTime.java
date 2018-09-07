@@ -17,7 +17,11 @@ public class FixedLoopTime {
 	}
 
 
-	public void waitForFinish() {
+	/**
+	 * 
+	 * @return Returns whether the process had time to wait.  False means things are running slowly.
+	 */
+	public boolean waitForFinish() {
 		if (startTime < 0) {
 			throw new RuntimeException("Start time not set");
 		}
@@ -30,10 +34,12 @@ public class FixedLoopTime {
 			} catch (InterruptedException e) {
 				//e.printStackTrace();
 			}
+			return true;
 		} else {
 			if (Globals.SHOW_IF_SYSTEM_TOO_SLOW) {
-			Globals.p("Too slow! " + diff);
+				Globals.p("Too slow! " + diff);
 			}
+			return false;
 		}
 	}
 

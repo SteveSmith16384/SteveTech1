@@ -11,6 +11,7 @@ public class NewEntityData {
 	public int entityID;
 	public byte type; // Entity code
 	public HashMap<String, Object> data = new HashMap<>(); // todo - use codes instead of string
+	public boolean addImed = false; // e.g. for players bullets, create them immediately
 	
 	public NewEntityData() {
 		

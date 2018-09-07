@@ -20,5 +20,5 @@ public interface IInputDevice {
 
 	boolean isAbilityPressed(int i);
 	
-	//boolean isReloadPressed(int i);
+	boolean isReloadPressed();
 }

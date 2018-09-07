@@ -20,7 +20,6 @@ import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
-import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IReloadable;
@@ -30,11 +29,12 @@ import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
+import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
-import com.scs.stevetech1.netmessages.ClientGunReloadRequestMessage;
+import com.scs.stevetech1.netmessages.ClientReloadRequestMessage;
 import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
@@ -106,6 +106,7 @@ ICollisionListener<PhysicalEntity> {
 	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
 	private boolean sendAddRemoveEntityMsgs = true;
 	private String key;
+	public boolean runningSlow = false;
 
 	protected SimpleGameData gameData = new SimpleGameData();
 	private ConsoleInputHandler consoleInput;
@@ -224,7 +225,7 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 
-		loopTimer.waitForFinish(); // Keep clients and server running at same speed
+		this.runningSlow = loopTimer.waitForFinish() == false; // Keep clients and server running at same speed
 		loopTimer.start();
 	}
 
@@ -387,12 +388,11 @@ ICollisionListener<PhysicalEntity> {
 				Globals.p("Null shooter!");
 			}
 
-		} else if (message instanceof ClientGunReloadRequestMessage) {
-			//Globals.p("Rcvd ClientReloadingMessage");
-			ClientGunReloadRequestMessage crm = (ClientGunReloadRequestMessage)message;
+		} else if (message instanceof ClientReloadRequestMessage) {
+			ClientReloadRequestMessage crm = (ClientReloadRequestMessage)message;
 			IReloadable e = (IReloadable)this.entities.get(crm.abilityId);
 			if (e != null) {
-				e.setToBeReloaded(); //reload(this);
+				e.setToBeReloaded();
 			}
 
 		} else {
@@ -401,7 +401,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	protected synchronized void playerRequestToJoin(ClientData client, MyAbstractMessage message) {
+	protected void playerRequestToJoin(ClientData client, MyAbstractMessage message) {
 		JoinGameRequestMessage newPlayerMessage = (JoinGameRequestMessage) message;
 		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
@@ -724,7 +724,9 @@ ICollisionListener<PhysicalEntity> {
 			e.remove();
 		}
 		if (sendAddRemoveEntityMsgs) {
-			this.sendMessageToInGameClients(new RemoveEntityMessage(id));
+			if (e instanceof AbstractBullet == false) { // Don't send remove for these as the client takes care of it
+				this.sendMessageToInGameClients(new RemoveEntityMessage(id));
+			}
 		}
 	}
 

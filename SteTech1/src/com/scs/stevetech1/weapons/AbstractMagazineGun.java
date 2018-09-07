@@ -9,7 +9,7 @@ import com.scs.stevetech1.components.IReloadable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
-import com.scs.stevetech1.netmessages.ClientGunReloadRequestMessage;
+import com.scs.stevetech1.netmessages.ClientReloadRequestMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -140,10 +140,10 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 		timeSinceLastReload += tpf_secs;
 
 		if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
-			if (!game.isServer()) {
+			/*if (!game.isServer()) {
 				AbstractGameClient client = (AbstractGameClient)game;
-				client.sendMessage(new ClientGunReloadRequestMessage(this.getID())); // Auto-reload
-			}
+				client.sendMessage(new ClientReloadRequestMessage(this.getID())); // Auto-reload
+			}*/
 			toBeReloaded = true;
 		}
 
@@ -155,8 +155,8 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 
 	}
 
-	@Override
-	public void reload() {
+
+	private void reload() {
 		if (timeSinceLastReload > 5) {
 			Globals.p("Reloading " + this);
 			this.bulletsInMag = this.magazineSize;

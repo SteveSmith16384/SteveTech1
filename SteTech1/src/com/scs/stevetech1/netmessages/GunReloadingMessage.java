@@ -7,6 +7,7 @@ import com.scs.stevetech1.shared.IAbility;
  * Server says that the weapon is being reloaded
  *
  */
+/*
 @Serializable
 public class GunReloadingMessage extends MyAbstractMessage { // todo - do we need this?
 	
@@ -27,3 +28,4 @@ public class GunReloadingMessage extends MyAbstractMessage { // todo - do we nee
 
 }
 
+*/

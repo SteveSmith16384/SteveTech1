@@ -19,7 +19,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades {
 
 	public int playerID;
-	public IEntity shooter; // So we know who not to collide with
+	public IEntity shooter; // So we know who not to collide with, and who fired the killing shot
 	private byte side;
 
 	private ClientData client; // Only used server-side

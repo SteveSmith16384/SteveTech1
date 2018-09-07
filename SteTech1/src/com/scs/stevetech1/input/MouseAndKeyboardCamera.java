@@ -16,7 +16,7 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 
 	//public static final String INPUT_MAPPING_EXIT = "SIMPLEAPP_Exit";
 
-	private boolean left = false, right = false, up = false, down = false, jump = false, ability0 = false, ability1 = false;//, escape = false;
+	private boolean left = false, right = false, up = false, down = false, jump = false, ability0 = false, ability1 = false, reload= false;
 	private float mouseSens;
 
 	public MouseAndKeyboardCamera(Camera cam, InputManager _inputManager, float _mouseSens) {
@@ -45,6 +45,8 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		inputManager.addListener(this, "Ability1");
 		inputManager.addMapping("Ability2", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
 		inputManager.addListener(this, "Ability2");
+		inputManager.addMapping("Reload", new KeyTrigger(KeyInput.KEY_R));
+		inputManager.addListener(this, "Reload");
 		//inputManager.addMapping("CycleAbility", new KeyTrigger(KeyInput.KEY_C));
 		//inputManager.addListener(this, "CycleAbility");
 
@@ -137,14 +139,18 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 			jump = isPressed;
 		} else if (binding.equals("Ability1")) {
 			ability0 = isPressed;
-			if (Globals.DEBUG_CLICK_TO_SKIP) {
+			/*if (Globals.DEBUG_CLICK_TO_SKIP) {
 				Globals.p("ability0=" + ability0);
-			}
+			}*/
 		} else if (binding.equals("Ability2")) {
 			ability1 = isPressed;
-			if (Globals.DEBUG_CLICK_TO_SKIP) {
+			/*if (Globals.DEBUG_CLICK_TO_SKIP) {
 				Globals.p("ability1=" + ability1);
-			}
+			}*/
+			/*} else if (binding.equals(INPUT_MAPPING_EXIT)) {
+			escape = isPressed;*/
+		} else if (binding.equals("Reload")) {
+			reload = isPressed;
 			/*} else if (binding.equals(INPUT_MAPPING_EXIT)) {
 			escape = isPressed;*/
 		}		
@@ -189,6 +195,12 @@ public class MouseAndKeyboardCamera extends FlyByCamera implements ActionListene
 		default: throw new IllegalArgumentException("Invalid ability: " + i);
 		}
 	}        
+
+
+	@Override
+	public boolean isReloadPressed() {
+		return reload;
+	}
 
 
 	@Override

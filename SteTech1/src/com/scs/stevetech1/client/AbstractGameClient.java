@@ -65,7 +65,6 @@ import com.scs.stevetech1.netmessages.EntityUpdateMessage;
 import com.scs.stevetech1.netmessages.GameLogMessage;
 import com.scs.stevetech1.netmessages.GameOverMessage;
 import com.scs.stevetech1.netmessages.GeneralCommandMessage;
-import com.scs.stevetech1.netmessages.GunReloadingMessage;
 import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
@@ -721,7 +720,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				// Point camera fwds again
 				Vector3f look = cam.getLocation().add(Vector3f.UNIT_X);
-				look.y = 1f;
+				look.y = .7f; // todo - don't hard-code this
 				cam.lookAt(look, Vector3f.UNIT_Y);
 				cam.update();
 			}
@@ -774,13 +773,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			GameLogMessage glm = (GameLogMessage)message;
 			this.appendToLog(glm.logEntry);
 
-		} else if (message instanceof GunReloadingMessage) {
+			/*} else if (message instanceof GunReloadingMessage) {
 			GunReloadingMessage grm = (GunReloadingMessage)message;
 			//this.finishedReloadAt = grm.duration_secs;
 			//this.currentlyReloading = true;
 			if (this.povWeapon != null) {
 				povWeapon.reload(grm.durationSecs);	
-			}
+			}*/
 
 		} else if (message instanceof NumEntitiesMessage) {
 			NumEntitiesMessage nem = (NumEntitiesMessage)message;
@@ -857,7 +856,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				if (Globals.DEBUG_AVATAR_SET) {
 					Globals.p("Avatar for player is now " + currentAvatar);
 				} // scs
-				Vector3f look = new Vector3f(-15f, .7f, -15f);
+				Vector3f look = new Vector3f(-15f, .7f, -15f); // todo - don't hard-code .7
 				getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
 			} else {
 				throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);
@@ -917,7 +916,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (e != null) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
-				pe.timeToAdd = timeToAdd;
+				if (data.addImed) {
+					pe.timeToAdd = -1;
+				} else {
+					pe.timeToAdd = timeToAdd;
+				}
 			}
 			this.addEntity(e);
 			//Globals.p("Finished creating entity " + data.type);
@@ -967,17 +970,17 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			throw new RuntimeException("Entity " + e + " is for game " + e.getGameID() + ", current game is " + this.getGameID());
 		}
 		//if (e.getID() > 0) {
-			if (this.entities.containsKey(e.getID())) {
-				/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+		if (this.entities.containsKey(e.getID())) {
+			/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
 					Globals.p("Remove entity " + e + " since it already exists");
 				}
 				// Replace it, since it might be an existing entity but its position has changed
 				IEntity e2 = this.entities.get(e.getID());
 				e2.remove();
 				this.actuallyRemoveEntity(e2.getID());*/
-				throw new RuntimeException("Entity " + e + " already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
-			}
-			this.entities.put(e.getID(), e);
+			throw new RuntimeException("Entity " + e + " already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
+		}
+		this.entities.put(e.getID(), e);
 		/*} else {
 			if (this.getClientOnlyEntityById(e.getID()) != null) {
 				throw new RuntimeException("Entity " + e + " already exists (client-only)"); // Don't replace it, as entity has linked to other stuff, like Abilities
@@ -1096,19 +1099,19 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	@Override
 	public void markForRemoval(int id) {
 		//if (id > 0) {
-			IEntity e = this.entities.get(id);
-			/*if (e != null) {
+		IEntity e = this.entities.get(id);
+		/*if (e != null) {
 				e.markForRemoval();
 			}*/				
-			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-				if (e != null) {
-					Globals.p("Going to remove entity " + id + ":" + e);
-				} else {
-					Globals.p("Going to remove entity " + id);
-				}
+		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
+			if (e != null) {
+				Globals.p("Going to remove entity " + id + ":" + e);
+			} else {
+				Globals.p("Going to remove entity " + id);
 			}
-			//this.entitiesToRemove.add(id);
-			this.entityRemovalSystem.markEntityForRemoval(e);
+		}
+		//this.entitiesToRemove.add(id);
+		this.entityRemovalSystem.markEntityForRemoval(e);
 		/*} else {
 			//this.actuallyRemoveClientOnlyEntity(id);
 			this.clientOnlyEntities.remove(id);
@@ -1356,7 +1359,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 	}*/
 
-/*
+	/*
 	private IEntity getClientOnlyEntityById(int id) {
 		for (IEntity e : this.clientOnlyEntities) {
 			if (e.getID() == id) {
@@ -1365,7 +1368,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 		return null;
 	}
-*/
+	 */
 
 	@Override
 	public int getPlayerID() {

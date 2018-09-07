@@ -17,9 +17,11 @@ import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IKillable;
 import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.components.IReloadable;
 import com.scs.stevetech1.components.IShowOnHUD;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
+import com.scs.stevetech1.netmessages.ClientReloadRequestMessage;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.EntityPositionData;
 import com.scs.stevetech1.shared.PositionCalculator;
@@ -34,7 +36,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public PositionCalculator clientAvatarPositionData = new PositionCalculator(Globals.HISTORY_DURATION); // So we know where we were in the past to compare against where the server says we should have been
 	private Spatial debugNode;
 	public PhysicalEntity killer;
-	//private Vector3f defaultBulletStartPosition = new Vector3f();
 
 	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, int eid, 
 			float x, float y, float z, byte side, IAvatarModel avatarModel, IAvatarControl _avatarControl) {
@@ -76,8 +77,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			this.killer = null;
 		}
 	}
-	
-	
+
+
 	@Override
 	public void remove() {
 		super.remove();
@@ -116,8 +117,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		} else {
 			final long serverTime = client.getServerTime();
 
-			// Check for any abilities/guns being fired
 			if (this.input != null) {
+				// Check for any abilities/guns being fired
 				for (int i=0 ; i<this.ability.length ; i++) {
 					if (this.ability[i] != null) {
 						if (input.isAbilityPressed(i)) { // Must be before we set the walkDirection & moveSpeed, as this method may affect it
@@ -125,6 +126,14 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 								client.sendMessage(new AbilityActivatedMessage(this, this.ability[i]));
 							}
 						}
+					}
+				}
+				// Check for reload
+				if (input.isReloadPressed()) {
+					if (this.ability[0] instanceof IReloadable) {
+						IReloadable ir = (IReloadable)ability[0];
+						client.sendMessage(new ClientReloadRequestMessage(this.ability[0].getID())); // Auto-reload
+						ir.setToBeReloaded();
 					}
 				}
 			}
@@ -140,11 +149,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			cam.getLocation().z = vec.z;
 			cam.update();
 		}
-/*
+		/*
 		if (hud != null) {
 			hud.processByClient((AbstractGameClient)client, tpf_secs);
 		}
-*/
+		 */
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			EntityPositionData epd = historicalPositionData.calcPosition(System.currentTimeMillis(), false);
 			if (epd != null) {
@@ -216,15 +225,15 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public Vector3f getBulletStartPos() {
 		AbstractGameClient client = (AbstractGameClient)game;
-		
+
 		Vector3f pos = null;
 		if (client.povWeapon == null) {
 			pos = client.getCamera().getLocation().clone(); // todo - don't create each time
 		} else {
 			pos = client.povWeapon.getPOVBulletStartPos().clone(); // todo - don't create each time
 		}
-		
-/*		
+
+		/*		
 
 		Spatial s = client.playersWeaponNode;
 		if (client.playersWeaponNode.getChildren().size() > 0) {
@@ -235,8 +244,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		pos.y += 0.1f;
 		return pos;
 	}
-	
-	
+
+
 	/**
 	 * Default to shooting from the centre of the screen.  Override if required.
 	 * @return
