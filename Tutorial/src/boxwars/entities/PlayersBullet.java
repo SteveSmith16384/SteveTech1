@@ -51,7 +51,7 @@ public class PlayersBullet extends AbstractBullet implements INotifiedOfCollisio
 
 
 	@Override
-	public void collided(PhysicalEntity pe) {
+	public void notifiedOfCollision(PhysicalEntity pe) {
 		//this.remove();
 		game.markForRemoval(this.getID());
 	}

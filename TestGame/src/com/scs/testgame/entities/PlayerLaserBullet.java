@@ -66,7 +66,7 @@ public class PlayerLaserBullet extends AbstractBullet implements INotifiedOfColl
 
 
 	@Override
-	public void collided(PhysicalEntity pe) {
+	public void notifiedOfCollision(PhysicalEntity pe) {
 		//this.remove();
 		game.markForRemoval(this.getID());
 	}

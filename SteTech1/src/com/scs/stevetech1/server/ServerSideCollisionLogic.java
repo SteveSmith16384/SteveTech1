@@ -19,11 +19,11 @@ public class ServerSideCollisionLogic {
 	public void collision(PhysicalEntity a, PhysicalEntity b) {
 		if (a instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)a;
-			ic.collided(a);
+			ic.notifiedOfCollision(a);
 		}
 		if (b instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)b;
-			ic.collided(b);
+			ic.notifiedOfCollision(b);
 		}
 
 		if (a instanceof ICausesHarmOnContact && b instanceof IDamagable) {

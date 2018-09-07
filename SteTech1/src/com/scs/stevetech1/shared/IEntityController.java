@@ -39,5 +39,5 @@ public interface IEntityController {
 	
 	void playSound(int _soundId, int entityId, Vector3f _pos, float _volume, boolean _stream);
 	
-	//void collisionOccurred(PhysicalEntity pea, PhysicalEntity peb);
+	void collisionOccurred(PhysicalEntity pea, PhysicalEntity peb);
 }

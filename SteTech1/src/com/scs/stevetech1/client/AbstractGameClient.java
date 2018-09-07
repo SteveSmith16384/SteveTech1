@@ -856,9 +856,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				this.currentAvatar = (AbstractClientAvatar)e;
 				if (Globals.DEBUG_AVATAR_SET) {
 					Globals.p("Avatar for player is now " + currentAvatar);
-				}
-
-				Vector3f look = new Vector3f(15f, 1f, 15f);
+				} // scs
+				Vector3f look = new Vector3f(-15f, .7f, -15f);
 				getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
 			} else {
 				throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);
@@ -1219,13 +1218,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
 
+		this.collisionOccurred(pea, peb);
+	}
+
+
+	@Override
+	public void collisionOccurred(PhysicalEntity pea, PhysicalEntity peb) {
+		// Only do the simple stuff; the server handles anything more complex
 		if (pea instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)pea;
-			ic.collided(peb);
+			ic.notifiedOfCollision(peb);
 		}
 		if (peb instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)peb;
-			ic.collided(pea);
+			ic.notifiedOfCollision(pea);
 		}
 	}
 

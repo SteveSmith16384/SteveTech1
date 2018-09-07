@@ -110,7 +110,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 
 
 	@Override
-	public void collided(PhysicalEntity pe) {
+	public void notifiedOfCollision(PhysicalEntity pe) {
 		/*if (pe instanceof Floor == false) {
 			Globals.p("Zombie has hit " + pe);
 		}*/

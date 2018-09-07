@@ -4,5 +4,5 @@ import com.scs.stevetech1.entities.PhysicalEntity;
 
 public interface INotifiedOfCollision {
 
-	public void collided(PhysicalEntity pe);
+	public void notifiedOfCollision(PhysicalEntity pe);
 }

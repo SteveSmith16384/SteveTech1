@@ -116,12 +116,15 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		if (!useRay) {
 			super.processByServer(server, tpf_secs);
 		} else {
+			this.moveByRay(tpf_secs);
+		}
+		/*
 			Ray ray = new Ray(this.getWorldTranslation(), dir);
 			ray.setLimit(speed * tpf_secs);
 			RayCollisionData rcd = this.checkForRayCollisions(ray);
 			if (rcd != null) {
 				game.markForRemoval(this.getID());
-				server.collisionOccurred(this, rcd.entityHit);
+				game.collisionOccurred(this, rcd.entityHit);
 			} else {
 				// Move spatial
 				Vector3f offset = this.dir.mult(speed * tpf_secs);
@@ -130,7 +133,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 					Globals.p("Server," + System.currentTimeMillis() + ",Pos," + this.getWorldTranslation());
 				}
 			}
-		}
+		}*/
 
 		if (!this.markedForRemoval) {
 			if (range > 0) {
@@ -143,17 +146,12 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	}
 
 
-	public float getDistanceTravelled() {
-		return this.origin.distance(this.getWorldTranslation());
-	}
-
-
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
 		if (!useRay) {
 			simpleRigidBody.process(tpf_secs);
 		} else {
-			Ray ray = new Ray(this.getWorldTranslation(), dir);
+			/*Ray ray = new Ray(this.getWorldTranslation(), dir);
 			ray.setLimit(speed * tpf_secs);
 			RayCollisionData rcd = this.checkForRayCollisions(ray);
 			if (rcd != null) {
@@ -170,7 +168,8 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 				if (Globals.DEBUG_DELAYED_EXPLOSION) {
 					Globals.p("Client," + System.currentTimeMillis() + ",Pos," + this.getWorldTranslation());
 				}
-			}
+			}*/
+			this.moveByRay(tpf_secs);
 		}
 		if (!this.markedForRemoval) {
 			if (range > 0) {
@@ -181,6 +180,30 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			}
 		}
 	}
+
+
+	private void moveByRay(float tpf_secs) {
+		Ray ray = new Ray(this.getWorldTranslation(), dir);
+		ray.setLimit(speed * tpf_secs);
+		RayCollisionData rcd = this.checkForRayCollisions(ray);
+		if (rcd != null) {
+			game.markForRemoval(this.getID());
+			game.collisionOccurred(this, rcd.entityHit);
+		} else {
+			// Move spatial
+			Vector3f offset = this.dir.mult(speed * tpf_secs);
+			this.adjustWorldTranslation(offset);
+			if (Globals.DEBUG_DELAYED_EXPLOSION) {
+				Globals.p("Server," + System.currentTimeMillis() + ",Pos," + this.getWorldTranslation());
+			}
+		}
+	}
+
+
+	public float getDistanceTravelled() {
+		return this.origin.distance(this.getWorldTranslation());
+	}
+
 
 	@Override
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
@@ -212,7 +235,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		return shooter;
 	}
 
-/*
+	/*
 	@Override
 	public float getDamageCaused() {
 		//return ((RANGE-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 10;
@@ -220,6 +243,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		Globals.p(this + " damage: " + dam);
 		return dam;
 	}
-*/
+	 */
 }
 

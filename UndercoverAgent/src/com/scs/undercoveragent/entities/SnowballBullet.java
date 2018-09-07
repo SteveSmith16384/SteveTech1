@@ -34,7 +34,7 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 
 
 	@Override
-	public void collided(PhysicalEntity pe) {
+	public void notifiedOfCollision(PhysicalEntity pe) {
 		if (Globals.SHOW_BULLET_COLLISION_POS) {
 			if (game.isServer()) {
 				// Create debugging sphere
