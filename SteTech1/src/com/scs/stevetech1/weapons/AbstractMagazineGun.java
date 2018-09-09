@@ -148,7 +148,9 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 				server.gameNetworkServer.sendMessageToClient(client, new AbilityUpdateMessage(true, this));
 			} else {
 				AbstractGameClient client = (AbstractGameClient)game;
-				client.povWeapon.startReloading(reloadInterval_secs);
+				if (client.povWeapon != null) {
+					client.povWeapon.startReloading(reloadInterval_secs);
+				}
 			}
 		}
 	}
@@ -156,7 +158,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 
 	@Override
 	public String getHudText() {
-		if (this.getBulletsInMag() == this.magazineSize && this.timeUntilShoot_secs > shotInterval_secs) {
+		if (this.getBulletsInMag() == this.magazineSize && this.timeUntilShoot_secs > 0) {//shotInterval_secs) {
 			return entityName + " RELOADING";
 		} else {
 			return entityName + " (" + this.getBulletsInMag() + "/" + this.magazineSize  +")";
