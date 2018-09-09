@@ -148,7 +148,9 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 				server.gameNetworkServer.sendMessageToClient(client, new AbilityUpdateMessage(true, this));
 			} else {
 				AbstractGameClient client = (AbstractGameClient)game;
-				client.povWeapon.startReloading(reloadInterval_secs);
+				if (client.povWeapon != null) {
+					client.povWeapon.startReloading(reloadInterval_secs);
+				}
 			}
 		}
 	}

@@ -44,10 +44,10 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		dir = _dir;
 		clientShouldAddImmed = _addImmed;
 		
-		if (Globals.STRICT) {
-			if (speed <= 0) {
-				throw new RuntimeException("Invalid speed: " + speed);
-			}
+		if (Globals.STRICT) {			
+			/*if (speed <= 0) {
+				throw new RuntimeException("Invalid speed: " + speed);  Snowballs have zero speed - todo - onbly check non SRBs
+			}*/
 			if (side <= 0) {
 				throw new RuntimeException("Invalid side: " + side);
 			}
