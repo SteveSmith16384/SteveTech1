@@ -56,10 +56,12 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 	}
 
 
-	public void incScore(int i) {
+	private void incScore(int i) {
 		UASimplePlayerData data = (UASimplePlayerData)this.client.playerData;
 		data.score += i;
-		this.sendStatusUpdateMessage(false);
+		//this.sendAvatarStatusUpdateMessage(false);
+		AbstractGameServer server = (AbstractGameServer)game;
+		server.sendGameStatusMessage();
 	}
 
 

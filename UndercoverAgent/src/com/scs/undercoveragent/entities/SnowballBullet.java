@@ -23,27 +23,13 @@ import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 public class SnowballBullet extends AbstractBullet implements INotifiedOfCollision {
 
 	public SnowballBullet(IEntityController _game, int id, int playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client) {
-		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", playerOwnerId, _shooter, startPos, _dir, _side, _client, false, 0f, 0f, true);
+		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", playerOwnerId, _shooter, startPos, _dir, _side, _client, false, 0f, 0f);
 	}
 
 
 	@Override
 	public float getDamageCaused() {
 		return 1;
-	}
-
-
-	@Override
-	public void notifiedOfCollision(PhysicalEntity pe) {
-		if (Globals.SHOW_BULLET_COLLISION_POS) {
-			if (game.isServer()) {
-				// Create debugging sphere
-				Vector3f pos = this.getWorldTranslation();
-				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, false);
-				game.addEntity(ds);
-			}
-		}
-		game.markForRemoval(this.getID());
 	}
 
 
@@ -70,5 +56,20 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));
 
 	}
+
+
+	@Override
+	public void notifiedOfCollision(PhysicalEntity pe) {
+		if (Globals.SHOW_BULLET_COLLISION_POS) {
+			if (game.isServer()) {
+				// Create debugging sphere
+				Vector3f pos = this.getWorldTranslation();
+				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, false);
+				game.addEntity(ds);
+			}
+		}
+		game.markForRemoval(this.getID());
+	}
+
 
 }

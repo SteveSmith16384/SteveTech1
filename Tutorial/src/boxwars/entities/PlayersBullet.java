@@ -23,7 +23,7 @@ import boxwars.BoxWarsServer;
 public class PlayersBullet extends AbstractBullet implements INotifiedOfCollision {
 
 	public PlayersBullet(IEntityController _game, int id, int playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client) {
-		super(_game, id, BoxWarsServer.BULLET, "Bullet", playerOwnerId, _shooter, startPos, _dir, _side, _client, false, 0f, 0f, true);
+		super(_game, id, BoxWarsServer.BULLET, "Bullet", playerOwnerId, _shooter, startPos, _dir, _side, _client, false, 0f, 0f);
 
 		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
 		sphere.setTextureMode(TextureMode.Projected);

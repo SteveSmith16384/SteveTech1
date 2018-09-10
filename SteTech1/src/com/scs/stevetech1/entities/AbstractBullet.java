@@ -18,7 +18,7 @@ import com.scs.stevetech1.shared.IEntityController;
 
 public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately {
 
-	public int playerID;
+	public int playerID; // -1 if AI
 	public IEntity shooter; // So we know who not to collide with, and who fired the killing shot
 	private byte side;
 
@@ -29,9 +29,8 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	private Vector3f dir;
 	protected float speed;
 	private float range;
-	protected boolean clientShouldAddImmed;
 	
-	public AbstractBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client, boolean _useRay, float _speed, float _range, boolean _addImmed) {
+	public AbstractBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client, boolean _useRay, float _speed, float _range) {
 		super(_game, entityId, type, name, true, false, true);
 
 		playerID = _playerOwnerId;
@@ -42,12 +41,8 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		side = _side;
 		shooter = _shooter;
 		dir = _dir;
-		clientShouldAddImmed = _addImmed;
 		
 		if (Globals.STRICT) {			
-			/*if (speed <= 0) {
-				throw new RuntimeException("Invalid speed: " + speed);  Snowballs have zero speed - todo - onbly check non SRBs
-			}*/
 			if (side <= 0) {
 				throw new RuntimeException("Invalid side: " + side);
 			}
@@ -69,6 +64,12 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 		this.createModelAndSimpleRigidBody(dir);
 
+		if (Globals.STRICT) {			
+			if (this.simpleRigidBody == null && speed <= 0) {
+				throw new RuntimeException("Invalid speed: " + speed);
+			}
+		}
+		
 		this.setWorldTranslation(startPos);
 		this.mainNode.updateGeometricState();
 
@@ -176,6 +177,11 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			this.moveByRay(tpf_secs);
 		}
 		if (!this.markedForRemoval) {
+			if (Globals.DEBUG_BULLET_START_POS) {
+				Vector3f pos = this.getWorldTranslation();
+				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, false);
+				game.addEntity(ds);
+			}
 			if (range > 0) {
 				float dist = this.origin.distance(this.getWorldTranslation());
 				if (dist > range) {
@@ -252,7 +258,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 	@Override
 	public boolean shouldClientAddItImmediately() {
-		return clientShouldAddImmed;
+		return this.playerID >= 0;
 	}
 
 }

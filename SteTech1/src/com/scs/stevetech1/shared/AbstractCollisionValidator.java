@@ -14,7 +14,7 @@ public class AbstractCollisionValidator {
 		if (!pa.collideable || !pb.collideable) {
 			return false;
 		}
-
+/*
 		if (pa instanceof AbstractAvatar && pb instanceof AbstractAvatar) {
 			// Avatars on the same side don't collide
 			AbstractAvatar aa = (AbstractAvatar)pa;
@@ -23,6 +23,7 @@ public class AbstractCollisionValidator {
 				return false;
 			}
 		}
+		*/
 		
 		// Anything with a side don't collide if on same side
 		if (pa instanceof IDontCollideWithComrades && pb instanceof IDontCollideWithComrades) {

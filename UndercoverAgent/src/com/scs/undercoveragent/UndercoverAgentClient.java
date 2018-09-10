@@ -45,7 +45,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 				props = new MyProperties();
 				Globals.p("Warning: No config file specified");
 			}
-			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "192.168.1.217");
+			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");//"192.168.1.217");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
 
 			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
@@ -258,4 +258,10 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		this.hud.appendToLog(msg);
 	}
 
+
+	@Override
+	public void disconnected() {
+		this.appendToLog("DISCONNECTED");
+	}
+	
 }

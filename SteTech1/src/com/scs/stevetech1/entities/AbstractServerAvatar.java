@@ -31,7 +31,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 	public ClientData client;
 	private float maxHealth;
 	private int playerTargetPriority;
-	
+
 	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, 
 			float _maxHealth, int _playerTargetPriority, IAvatarControl _avatarControl) {
 		super(_module, avatarType, _client.getPlayerID(), _input, eid, _client.getSide(), anim, _avatarControl);
@@ -59,6 +59,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 		server.moveAvatarToStartPosition(this); // this also sends the update message to tell the client about the new move speed values etc...
 
 		server.sendMessageToInGameClients(new AvatarStartedMessage(this));
+		this.sendAvatarStatusUpdateMessage(false);
 		if (Globals.DEBUG_PLAYER_RESTART) {
 			Globals.p("Sent AvatarStartedMessage");
 		}
@@ -152,7 +153,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 	@Override
 	public void getReadyForGame() {
 		//this.startAgain();  Don't call startAgain() since that moves the avatar
-		
+
 		this.setAlive(true);
 		this.setHealth(maxHealth);
 		this.invulnerableTimeSecs = 5;
@@ -160,7 +161,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 	}
 
 
-	protected void sendStatusUpdateMessage(boolean damaged) {
+	protected void sendAvatarStatusUpdateMessage(boolean damaged) {
 		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client, damaged));
 
 	}
@@ -168,8 +169,10 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 
 	@Override
 	public void setHealth(float h) {
-		super.setHealth(h);
-		this.sendStatusUpdateMessage(false);
+		if (this.getHealth() != h) {
+			super.setHealth(h);
+			this.sendAvatarStatusUpdateMessage(false);
+		}
 	}
 
 
@@ -181,7 +184,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 	@Override
 	public void decHealth(float h) {
 		super.decHealth(h);
-		this.sendStatusUpdateMessage(true);
+		this.sendAvatarStatusUpdateMessage(true);
 	}
 
 

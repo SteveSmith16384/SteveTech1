@@ -39,6 +39,7 @@ import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.povweapon.IPOVWeapon;
+import com.scs.stevetech1.components.IAddedImmediately;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IDrawOnHUD;
 import com.scs.stevetech1.components.IEntity;
@@ -563,9 +564,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			SimpleGameData oldGameData = this.gameData;
 			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 			this.gameData = gsm.gameData;
-			if (oldGameData == null || oldGameData.gameID != gsm.gameData.gameID) {
+			/*if (oldGameData == null || oldGameData.gameID != gsm.gameData.gameID) {
 				Globals.p("Client Game id is now " + gameData.gameID);
-			}
+			}*/
 			this.playersList = gsm.players;
 			if (oldGameData == null) {
 				this.gameStatusChanged(-1, this.gameData.getGameStatus());
@@ -909,7 +910,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (e != null) {
 			if (e instanceof PhysicalEntity) {
 				PhysicalEntity pe = (PhysicalEntity)e;
-				if (data.clientShouldAddImmed) {
+				boolean addImmed = false;
+				if (pe instanceof IAddedImmediately) {
+					IAddedImmediately ab = (IAddedImmediately)pe;
+					addImmed = ab.shouldClientAddItImmediately(); // e.g. Bullet was fired by another player
+				}
+				if (addImmed) {
 					pe.timeToAdd = -1;
 				} else {
 					pe.timeToAdd = timeToAdd;

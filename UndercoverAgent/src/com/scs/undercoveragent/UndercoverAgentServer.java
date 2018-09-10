@@ -197,9 +197,9 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		PhysicalEntity pea = a.userObject;
 		PhysicalEntity peb = b.userObject;
 
-		if (pea instanceof SnowFloor == false && peb instanceof SnowFloor == false) {
+		/*if (pea instanceof SnowFloor == false && peb instanceof SnowFloor == false) {
 			Globals.p("Collision between " + pea + " and " + peb);
-		}
+		}*/
 
 		super.collisionOccurred(a, b);
 
@@ -258,15 +258,11 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	}
 
 
+	@Override
 	protected SimplePlayerData createSimplePlayerData() {
 		return new UASimplePlayerData();
 	}
 
-/*
-	@Override
-	protected String getSideName(int side) {
-		return this.clientList.getClient(side).playerData.playerName;
-	}
-*/
+
 }
 

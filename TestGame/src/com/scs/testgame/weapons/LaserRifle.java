@@ -19,67 +19,10 @@ public class LaserRifle extends AbstractMagazineGun implements IAbility {
 
 	}
 
-/*
-	@Override
-	public boolean launchBullet() {
-		if (!ammoCache.isEmpty()) {
-			PlayerLaserBullet bullet = ammoCache.remove();
-			ICanShoot ic = (ICanShoot)owner;
-			bullet.launch(owner, ic.getBulletStartPos(), ic.getShootDir());
-			return true;
-		}
-		return false;
-	}
-
-
-	@Override
-	public HashMap<String, Object> getCreationData() {
-		return super.creationData;
-	}
-
-
-	@Override
-	public void addToCache(PlayerLaserBullet o) {
-		this.ammoCache.add(o);
-	}
-
-
-	@Override
-	public void removeFromCache(PlayerLaserBullet o) {
-		this.ammoCache.remove(o);
-	}
-
-
-	public void remove() {
-		while (!ammoCache.isEmpty()) {
-			PlayerLaserBullet g = ammoCache.remove();
-			g.remove();
-		}
-		super.remove();
-	}
-*/
-
 	@Override
 	protected PlayerLaserBullet createBullet(int entityid, int playerID, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte side) {
-		return new PlayerLaserBullet(game, entityid, playerID, _shooter, startPos, _dir, side, client, true);
+		return new PlayerLaserBullet(game, entityid, playerID, _shooter, startPos, _dir, side, client);
 	}
 	
-/*
-	@Override
-	public int getBulletsInMag() {
-		return this.ammoCache.size();
-	}
-
-/*
-	@Override
-	protected void emptyMagazine() {
-		while (!ammoCache.isEmpty()) {
-			PlayerLaserBullet g = ammoCache.remove();
-			g.remove();
-		}
-		
-	}
-
-*/
 
 }

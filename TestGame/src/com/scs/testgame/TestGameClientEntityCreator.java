@@ -191,7 +191,7 @@ public class TestGameClientEntityCreator {
 				IEntity shooter = game.entities.get(shooterId);
 				Vector3f startPos = (Vector3f) msg.data.get("startPos");
 				Vector3f dir = (Vector3f) msg.data.get("dir");
-				PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, playerID, shooter, startPos, dir, side, null, msg.clientShouldAddImmed);
+				PlayerLaserBullet bullet = new PlayerLaserBullet(game, id, playerID, shooter, startPos, dir, side, null);
 				return bullet;
 			} else {
 				return null; // it's our bullet, which we've already created locally

@@ -54,8 +54,6 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 
 		this.mainNode.attachChild(ball_geo);
 		this.mainNode.setLocalTranslation(x, y, z);
-
-		//this.getMainNode().setUserData(Globals.ENTITY, this);
 	}
 
 
@@ -64,7 +62,6 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 		if (remove) {
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft <= 0) {
-				//this.remove();
 				game.markForRemoval(this.getID());
 			}
 		}
@@ -76,7 +73,6 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 		if (remove) {
 			this.timeLeft -= tpf_secs;
 			if (this.timeLeft <= 0) {
-				//this.remove();
 				game.markForRemoval(this.getID());
 			}
 		}
