@@ -20,7 +20,6 @@ public class Igloo extends PhysicalEntity {
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("q", q);
 		}
 
 		Spatial model = game.getAssetManager().loadModel("Models/Holiday/Igloo.blend");
@@ -37,8 +36,6 @@ public class Igloo extends PhysicalEntity {
 		simpleRigidBody.setNeverMoves(true);
 
 		model.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
-
 	}
 
 	

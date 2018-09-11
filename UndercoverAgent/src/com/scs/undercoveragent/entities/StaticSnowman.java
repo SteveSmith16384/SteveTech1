@@ -3,9 +3,11 @@ package com.scs.undercoveragent.entities;
 import java.util.HashMap;
 
 import com.jme3.collision.Collidable;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.scene.Spatial;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.Globals;
@@ -26,9 +28,9 @@ public class StaticSnowman extends PhysicalEntity {
 		Spatial model = m.createAndGetModel();
 
 		this.mainNode.attachChild(model);
-		
+
 		mainNode.setLocalRotation(q);
-		
+
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
@@ -36,7 +38,15 @@ public class StaticSnowman extends PhysicalEntity {
 		simpleRigidBody.setNeverMoves(true);
 
 		model.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
+/*
+		if (Globals.TEST_OUTLINE_SHADER) {
+			if (!_game.isServer()) {
+				AbstractGameClient client = (AbstractGameClient)game;
+				client.showOutlineEffect(model, 10, ColorRGBA.Red);
+				model.updateGeometricState();
+			}
+		}
+*/
 	}
 
 

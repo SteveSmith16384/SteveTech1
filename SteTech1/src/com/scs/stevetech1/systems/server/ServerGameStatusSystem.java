@@ -83,7 +83,7 @@ public class ServerGameStatusSystem {
 			default:
 				throw new RuntimeException("Invalid status: " + status);
 			}
-			server.sendGameStatusMessage();
+			server.sendSimpleGameDataToClients();
 
 			if (oldStatus != gameData.getGameStatus()) {
 				server.gameStatusChanged(gameData.getGameStatus());

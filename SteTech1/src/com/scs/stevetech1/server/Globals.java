@@ -19,6 +19,7 @@ public class Globals {
 	public static final boolean DEBUG_BULLET_POSITIONS = true;
 
 	// Lots of consts for specific debugging output
+	public static final boolean TEST_OUTLINE_SHADER = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_CPU_HUD_TEXT = false;

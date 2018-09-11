@@ -34,13 +34,24 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 	public void processByServer(AbstractGameServer server, float tpf) {
 		super.processByServer(server, tpf);
 
-		// Force player to jump if they haven't moved!
+		// Force player to jump if they haven't moved
 		if (this.alive) {// && server.gameData.isInGame()) {
 			long timeSinceMove = System.currentTimeMillis() - super.avatarControl.getLastMoveTime();
-			if (timeSinceMove > 7 * 1000) {
-				//Globals.p("Forcing client to jump");
+			if (timeSinceMove > UAStaticData.AUTO_JUMP_INTERVAL_SECS * 1000) {
 				this.avatarControl.jump();
 			}
+		}
+	}
+
+
+	@Override
+	public void damaged(float amt, IEntity collider, String reason) {
+		super.damaged(amt, collider, reason);
+
+		if (collider instanceof SnowballBullet) {
+			SnowballBullet sb = (SnowballBullet)collider;
+			AbstractGameServer server = (AbstractGameServer)game;
+			server.sendExplosionShards(sb.getWorldTranslation(), 12, .8f, 1.2f, .005f, .02f, "Textures/snow.jpg");
 		}
 	}
 
@@ -61,7 +72,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 		data.score += i;
 		//this.sendAvatarStatusUpdateMessage(false);
 		AbstractGameServer server = (AbstractGameServer)game;
-		server.sendGameStatusMessage();
+		server.sendSimpleGameDataToClients();
 	}
 
 

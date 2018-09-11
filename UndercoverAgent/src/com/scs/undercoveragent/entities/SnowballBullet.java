@@ -15,6 +15,7 @@ import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
@@ -41,7 +42,7 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 
 		if (!game.isServer()) {
 			ball_geo.setShadowMode(ShadowMode.CastAndReceive);
-			TextureKey key3 = new TextureKey( "Textures/snow.jpg");
+			TextureKey key3 = new TextureKey("Textures/snow.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
 			floor_mat.setTexture("DiffuseMap", tex3);
@@ -53,13 +54,18 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		this.simpleRigidBody.setBounciness(0f);
-		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(10));
+		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(20));
 
 	}
 
 
 	@Override
 	public void notifiedOfCollision(PhysicalEntity pe) {
+/*		if (pe instanceof SnowmanServerAvatar) {
+			AbstractGameServer server = (AbstractGameServer)game;
+			server.sendExplosion(this.getWorldTranslation(), 4, .8f, 1.2f, .005f, .02f, tex);
+		}
+	*/	
 		if (Globals.SHOW_BULLET_COLLISION_POS) {
 			if (game.isServer()) {
 				// Create debugging sphere

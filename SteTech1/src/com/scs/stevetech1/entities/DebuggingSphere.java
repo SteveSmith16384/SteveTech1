@@ -35,9 +35,9 @@ public class DebuggingSphere extends PhysicalEntity implements IProcessByClient 
 
 		Mesh sphere = null;
 		if (server) {
-			sphere = new Sphere(8, 8, .05f, true, false);
+			sphere = new Sphere(8, 8, .02f, true, false);
 		} else {
-			sphere = new Box(0.2f, 0.2f, 0.2f);
+			sphere = new Box(0.02f, 0.02f, 0.02f);
 		}
 		Geometry ball_geo = new Geometry("DebuggingSphere", sphere);
 		ball_geo.setShadowMode(ShadowMode.CastAndReceive);

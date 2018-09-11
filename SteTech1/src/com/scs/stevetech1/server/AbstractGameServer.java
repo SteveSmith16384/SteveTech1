@@ -425,7 +425,7 @@ ICollisionListener<PhysicalEntity> {
 		byte side = getSide(client);
 		client.playerData.side = side;
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
-		sendGameStatusMessage(); // So they have a game ID, required when receiving ents
+		sendSimpleGameDataToClients(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
 		sendAllEntitiesToClient(client);
 		this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
@@ -444,7 +444,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	public void sendGameStatusMessage() {
+	public void sendSimpleGameDataToClients() {
 		ArrayList<SimplePlayerData> players = new ArrayList<SimplePlayerData>();
 		for(ClientData client : this.clientList.getClients()) {
 			if (client.clientStatus == ClientStatus.InGame) {
@@ -490,7 +490,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		this.gameData.gameID = nextGameID.getAndAdd(1);
-		sendGameStatusMessage(); // To send the new game ID
+		sendSimpleGameDataToClients(); // To send the new game ID
 
 		Globals.p("------------------------------");
 		Globals.p("Starting new game ID " + gameData.gameID);
@@ -634,7 +634,7 @@ ICollisionListener<PhysicalEntity> {
 		} else {
 			Globals.pe("Client playerData is null!");
 		}
-		this.sendGameStatusMessage();
+		this.sendSimpleGameDataToClients();
 		gameStatusSystem.checkGameStatus(true);
 	}
 
@@ -888,7 +888,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	// Todo - Move to explosion system
-	public void sendExplosion(Vector3f pos, int num, float minForce, float maxForce, float minSize, float maxSize, String tex) {
+	public void sendExplosionShards(Vector3f pos, int num, float minForce, float maxForce, float minSize, float maxSize, String tex) {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 
 		for (int i=0 ; i<num ; i++) {
@@ -926,7 +926,7 @@ ICollisionListener<PhysicalEntity> {
 
 	public void moveEntityUntilItHitsSomething(PhysicalEntity pe, Vector3f dir) {
 		this.moveEntityUntilItHitsSomething(pe, dir, 1f);
-		this.moveEntityUntilItHitsSomething(pe, dir, 0.01f); // Was 0.1f, but spacecrates were floating
+		this.moveEntityUntilItHitsSomething(pe, dir, 0.01f);
 	}
 
 

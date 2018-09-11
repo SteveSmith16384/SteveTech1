@@ -285,6 +285,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				if (pe != this) {
 					if (game.canCollide(this, pe)) {
 						//Settings.p("Ray collided with " + s + " at " + col.getContactPoint());
+						//game.canCollide(this, pe); // todo - delete
 						return new RayCollisionData(pe, col.getContactPoint(), col.getDistance());
 					}
 				}

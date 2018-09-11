@@ -7,6 +7,7 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractOtherPlayersAvatar;
 import com.scs.stevetech1.entities.DebuggingSphere;
+import com.scs.stevetech1.entities.ExplosionShard;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.undercoveragent.entities.BigTreeWithLeaves;
@@ -78,14 +79,13 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		}*/
 		int id = msg.entityID;
 
+		Vector3f pos = (Vector3f)msg.data.get("pos");
+
 		switch (msg.type) {
 		case AVATAR:
 		{
 			int playerID = (int)msg.data.get("playerID");
 			byte side = (byte)msg.data.get("side");
-			Vector3f pos = (Vector3f)msg.data.get("pos");
-			//float moveSpeed = (float)msg.data.get("moveSpeed");
-			//float jumpForce = (float)msg.data.get("jumpForce");
 			String playersName = (String)msg.data.get("playersName");
 
 			if (playerID == game.playerID) {
@@ -100,7 +100,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case FLOOR:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f size = (Vector3f)msg.data.get("size");
 			String tex = (String)msg.data.get("tex");
 			SnowFloor floor = new SnowFloor(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex);
@@ -109,7 +108,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case IGLOO:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			Igloo igloo = new Igloo(game, id, pos.x, pos.y, pos.z, q);
 			return igloo;  //crate.getMainNode().getWorldTranslation();
@@ -117,7 +115,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case SNOW_HILL_1:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowHill1 hill = new SnowHill1(game, id, pos.x, pos.y, pos.z, q);
 			return hill;  //crate.getMainNode().getWorldTranslation();
@@ -125,7 +122,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case SNOW_HILL_2:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowHill2 hill = new SnowHill2(game, id, pos.x, pos.y, pos.z, q);
 			return hill;  //crate.getMainNode().getWorldTranslation();
@@ -133,7 +129,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case SNOW_HILL_3:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowHill3 hill = new SnowHill3(game, id, pos.x, pos.y, pos.z, q);
 			return hill;  //crate.getMainNode().getWorldTranslation();
@@ -141,7 +136,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case SNOW_HILL_4:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowHill4 hill = new SnowHill4(game, id, pos.x, pos.y, pos.z, q);
 			return hill;  //crate.getMainNode().getWorldTranslation();
@@ -149,7 +143,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case STATIC_SNOWMAN:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			StaticSnowman snowman = new StaticSnowman(game, id, pos.x, pos.y, pos.z, q);
 			return snowman;  //crate.getMainNode().getWorldTranslation();
@@ -157,7 +150,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case SNOW_TREE_1:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowTree1 tree = new SnowTree1(game, id, pos.x, pos.y, pos.z, q);
 			return tree;
@@ -165,7 +157,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case SNOW_TREE_2:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowTree2 tree = new SnowTree2(game, id, pos.x, pos.y, pos.z, q);
 			return tree;
@@ -173,7 +164,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case BIG_TREE_WITH_LEAVES:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			BigTreeWithLeaves tree = new BigTreeWithLeaves(game, id, pos.x, pos.y, pos.z, q);
 			return tree;  //crate.getMainNode().getWorldTranslation();
@@ -212,7 +202,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case INVISIBLE_MAP_BORDER:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f dir = (Vector3f)msg.data.get("dir");
 			float size = (float)msg.data.get("size");
 			InvisibleMapBorder hill = new InvisibleMapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
@@ -221,7 +210,6 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case MOUNTAIN_MAP_BORDER:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			Vector3f dir = (Vector3f)msg.data.get("dir");
 			float size = (float)msg.data.get("size");
 			MountainMapBorder hill = new MountainMapBorder(game, id, pos.x, pos.y, pos.z, size, dir);
@@ -230,9 +218,17 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 
 		case Globals.DEBUGGING_SPHERE:
 		{
-			Vector3f pos = (Vector3f)msg.data.get("pos");
 			DebuggingSphere hill = new DebuggingSphere(game, id, pos.x, pos.y, pos.z, true, false);
 			return hill;
+		}
+
+		case Globals.EXPLOSION_SHARD:
+		{
+			Vector3f forceDirection = (Vector3f) msg.data.get("forceDirection");
+			float size = (float) msg.data.get("size");
+			String tex = (String) msg.data.get("tex");
+			ExplosionShard expl = new ExplosionShard(game, pos.x, pos.y, pos.z, size, forceDirection, tex);
+			return expl;
 		}
 
 		default:

@@ -120,11 +120,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (!useRay) {
 			super.processByServer(server, tpf_secs);
-			if (Globals.DEBUG_BULLET_POSITIONS) {
-				Vector3f pos = this.getWorldTranslation();
-				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, true);
-				game.addEntity(ds);
-			}
 		} else {
 			this.moveByRay(tpf_secs);
 		}
@@ -146,6 +141,11 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		}*/
 
 		if (!this.markedForRemoval) {
+			if (Globals.DEBUG_BULLET_POSITIONS) {
+				Vector3f pos = this.getWorldTranslation();
+				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, true);
+				game.addEntity(ds);
+			}
 			if (range > 0) {
 				float dist = this.getDistanceTravelled();
 				if (dist > range) {
@@ -265,6 +265,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	public boolean shouldClientAddItImmediately() {
 		return this.playerID >= 0;
 	}
+
 
 }
 

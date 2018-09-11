@@ -3,11 +3,12 @@ package com.scs.undercoveragent.models;
 import com.jme3.asset.AssetManager;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.jme.JMEModelFunctions;
+import com.scs.stevetech1.server.Globals;
 
 /**
  * This class, and classes like this (i.e. a class for a model), are designed to keep all the model-specific settings in one place.
@@ -39,6 +40,7 @@ public class SnowmanModel implements IAvatarModel {
 		JMEAngleFunctions.rotateToWorldDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 
 		origPos = model.getLocalTranslation().clone();
+		
 		return model;
 	}
 
@@ -60,7 +62,7 @@ public class SnowmanModel implements IAvatarModel {
 			Globals.p("Snowman sinking...");
 		}*/
 		try {
-			if (model != null) { //this.model.getLocalTranslation();
+			if (model != null) {
 				this.model.move(0, -tpf_secs/7, 0);
 			}
 		} catch (NullPointerException ex) {
@@ -72,8 +74,6 @@ public class SnowmanModel implements IAvatarModel {
 
 
 	public void showAlive(float tpf_secs) {
-		//model.getLocalTranslation();
-		//model.getParent().getLocalTranslation();
 		if (!showingDied) {
 			return;
 		} 

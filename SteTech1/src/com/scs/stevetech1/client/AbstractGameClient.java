@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.prefs.BackingStoreException;
 
+import com.ding.effect.outline.filter.OutlinePreFilter;
+import com.ding.effect.outline.filter.OutlineProFilter;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
@@ -26,7 +28,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
-import com.jme3.renderer.Caps;
+import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
@@ -115,7 +117,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public HashMap<Integer, IEntity> entities = new HashMap<>(1000); // All ents are added to this immediately, but not added to root node until the right time
 	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(100); // Entities that we need to iterate over in game loop
 	protected LinkedList<PhysicalEntity> entitiesToAddToGame = new LinkedList<PhysicalEntity>(); // Entities to add to RootNode, as we don't add them immed
-	private EntityRemovalSystem entityRemovalSystem;
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer; // Keep client and server running at the same time
@@ -161,7 +162,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	// Entity systems
 	private AnimationSystem animSystem;
-	//private ClientEntityLauncherSystem launchSystem;
+	private EntityRemovalSystem entityRemovalSystem;
 
 
 	protected AbstractGameClient(ValidateClientSettings _validClientSettings, String appTitle, String logoImage,   
@@ -247,6 +248,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		setDisplayFps(false);
 		setDisplayStatView(false);
 
+		fpp = new FilterPostProcessor(assetManager);
+		viewPort.addProcessor(fpp);
+
 		new TextConsole(this);
 
 		loopTimer.start();
@@ -292,13 +296,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 
 	}
+	
 
 	public boolean isConnecting() {
 		return connectingThread != null && connectingThread.isAlive();
 	}
+	
 
 	protected abstract Class[] getListofMessageClasses();
 
+	
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;
 	}
@@ -822,8 +829,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}*/
 		networkClient.sendMessageToServer(new JoinGameRequestMessage(validClientSettings.gameCode, validClientSettings.clientVersion, getPlayerName(), validClientSettings.key));
 	}
-	
-	
+
+
 	/**
 	 * Override if required.
 	 * @return
@@ -1019,6 +1026,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			}
 		}
+/*
+		if (Globals.TEST_OUTLINE_SHADER) {
+			//if (pe instanceof StaticSnowman) {
+				showOutlineEffect(pe.getMainNode(), 3, ColorRGBA.Red);
+				pe.getMainNode().updateGeometricState();
+			//}
+		}
+*/
 	}
 
 
@@ -1353,7 +1368,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		return canCollide(pa, pb);
 	}
 
-
+	/*
 	protected void setupFilters() {
 		renderManager.setAlphaToCoverage(true);
 		if (renderer.getCaps().contains(Caps.GLSL100)){
@@ -1364,16 +1379,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				fpp.setNumSamples(numSamples); 
 			}
 
-			/*CartoonEdgeFilter toon=new CartoonEdgeFilter();
-			toon.setEdgeColor(ColorRGBA.Yellow);
-			toon.setEdgeWidth(0.5f);
-			toon.setEdgeIntensity(1.0f);
-			toon.setNormalThreshold(0.8f);
-			fpp.addFilter(toon);*/
 			viewPort.addProcessor(fpp);
 		}
 	}
-
+	 */
 
 	@Override
 	public SimpleGameData getGameData() {
@@ -1431,6 +1440,37 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (Globals.DEBUG_GUN_NOT_SHOWING) {
 				Globals.p("Hiding gun");
 			}
+		}
+	}
+
+
+	public void showOutlineEffect(Spatial model, int width, ColorRGBA color) {
+		OutlineProFilter outlineFilter = model.getUserData("OutlineProFilter");
+		if (outlineFilter == null) {
+			ViewPort outlineViewport = renderManager.createPreView("outlineViewport", cam);
+			FilterPostProcessor outlinefpp = new FilterPostProcessor(assetManager);
+			OutlinePreFilter outlinePreFilter = new OutlinePreFilter();
+			outlinefpp.addFilter(outlinePreFilter);
+			outlineViewport.attachScene(model);
+			outlineViewport.addProcessor(outlinefpp);
+
+			outlineFilter = new OutlineProFilter(outlinePreFilter);
+			model.setUserData("OutlineProFilter", outlineFilter);
+			outlineFilter.setOutlineColor(color);
+			outlineFilter.setOutlineWidth(width);
+			fpp.addFilter(outlineFilter);
+		} else {
+			outlineFilter.setEnabled(true);
+			outlineFilter.getOutlinePreFilter().setEnabled(true);
+		}
+	}
+
+
+	public void hideOutlineEffect(Spatial model) {
+		OutlineProFilter outlineFilter = model.getUserData("OutlineProFilter");
+		if (outlineFilter != null) {
+			outlineFilter.setEnabled(false);
+			outlineFilter.getOutlinePreFilter().setEnabled(false);
 		}
 	}
 
