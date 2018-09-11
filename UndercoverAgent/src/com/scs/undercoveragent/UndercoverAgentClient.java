@@ -35,6 +35,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	private RealtimeInterval updateHudInterval = new RealtimeInterval(3000);
 	private String ipAddress;
 	private int port;
+	private String playerName;
 
 	public static void main(String[] args) {
 		try {
@@ -42,21 +43,22 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			if (args.length > 0) {
 				props = new MyProperties(args[0]);
 			} else {
-				props = new MyProperties();
-				Globals.p("Warning: No config file specified");
+				props = new MyProperties("playerConfig.txt");
+				//Globals.p("Warning: No config file specified");
 			}
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");//"192.168.1.217");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
 
-			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
-			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
-			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
+			//int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
+			//int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
+			//int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 			
 			float mouseSensitivity = props.getPropertyAsFloat("mouseSensitivity", 1f);
-
-			new UndercoverAgentClient(gameIpAddress, gamePort, //null, -1,
-					tickrateMillis, clientRenderDelayMillis, timeoutMillis, //gravity, aerodynamicness,
-					mouseSensitivity);
+			String name = props.getPropertyAsString("playerName", "");
+			
+			new UndercoverAgentClient(gameIpAddress, gamePort,
+					Globals.DEFAULT_TICKRATE, Globals.DEFAULT_RENDER_DELAY, Globals.DEFAULT_NETWORK_TIMEOUT,
+					mouseSensitivity, name);
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
 			e.printStackTrace();
@@ -66,11 +68,12 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	private UndercoverAgentClient(String gameIpAddress, int gamePort, 
 			int tickrateMillis, int clientRenderDelayMillis, int timeoutMillis,
-			float mouseSensitivity) {
+			float mouseSensitivity, String _playerName) {
 		super(new ValidateClientSettings(UndercoverAgentServer.GAME_ID, "key", 1), UndercoverAgentServer.NAME, null, 
 				tickrateMillis, clientRenderDelayMillis, timeoutMillis, mouseSensitivity);
 		ipAddress = gameIpAddress;
 		port = gamePort;
+		playerName = _playerName;
 		
 		start();
 		
@@ -137,6 +140,11 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		}
 	}
 
+	
+	@Override
+	protected String getPlayerName() {
+		return playerName.length() > 0 ? this.playerName : super.getPlayerName();
+	}
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {

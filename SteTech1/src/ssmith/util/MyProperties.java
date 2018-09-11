@@ -32,7 +32,6 @@ public class MyProperties {
 	private void loadProperties() throws IOException {
 		String filepath = filename;
 		File propsFile = new File(filepath);
-		//properties = new Properties();
 		if (propsFile.canRead()) {
 			properties.load(new FileInputStream(new File(filepath)));
 		}

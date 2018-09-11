@@ -50,19 +50,20 @@ public class SoundSystem extends AbstractSystem {
 	}
 	
 	
-	public void playSound(String sound, int entityId, Vector3f _pos, float _volume, boolean _stream) {
+	public void playSound(String sound, int entityId, Vector3f pos, float volume, boolean stream) {
 		if (!Globals.MUTE) {
 			if (sound != null && sound.length() > 0) {
 				try {
 					AudioNode node = null;
-					/*if (entityId > 0) {
-						PhysicalEntity pe = (PhysicalEntity)this.entities.get(entityId);
-						
-					}*/
 					if (node == null) {
-						node = new AudioNode(this.assetManager, sound, _stream ? AudioData.DataType.Stream : AudioData.DataType.Buffer);
-						node.setLocalTranslation(_pos);
-						node.setVolume(_volume);
+						node = new AudioNode(this.assetManager, sound, stream ? AudioData.DataType.Stream : AudioData.DataType.Buffer);
+						if (pos != null) {
+							node.setPositional(true);
+							node.setLocalTranslation(pos);
+						} else {
+							node.setPositional(false);
+						}
+						node.setVolume(volume);
 						node.setLooping(false);
 					}
 
@@ -81,6 +82,7 @@ public class SoundSystem extends AbstractSystem {
 					//ex.printStackTrace();
 				} catch (IllegalStateException ex) {
 					// No sound card
+					Globals.pe("Error playing " + sound + ": " + ex.getMessage());
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

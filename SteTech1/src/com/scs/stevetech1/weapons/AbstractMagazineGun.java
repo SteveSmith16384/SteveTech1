@@ -44,7 +44,6 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			ICanShoot ic = (ICanShoot)owner;
 			AbstractBullet bullet = createBullet(game.getNextEntityID(), playerID, super.owner, ic.getBulletStartPos(), ic.getShootDir(), this.owner.side);
 			game.addEntity(bullet);
-			//todo game.playSound(MASounds.SFX_AI_BULLET_FIRED, owner.getID(), bullet.getWorldTranslation(), Globals.DEF_VOL, false);
 			return true;
 		}
 		return false;

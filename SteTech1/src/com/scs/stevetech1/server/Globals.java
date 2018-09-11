@@ -13,8 +13,9 @@ public class Globals {
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
-	public static final boolean DEBUG_UNCOLLECTED_MEDIKIT = true;
-	public static final boolean DEBUG_BULLET_START_POS = true;
+	public static final boolean NO_AI_UNITS = true;
+	public static final boolean DEBUG_GUN_NOT_SHOWING = true;
+	public static final boolean DEBUG_BULLET_START_POS = false;
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
 
 	// Lots of consts for specific debugging output
@@ -29,11 +30,9 @@ public class Globals {
 	public static final boolean DEBUG_PLAYER_START_POS = false;
 	public static final boolean DEBUG_GUN_ROTATION = false;	
 	public static final boolean DEBUG_GAME_STATUS_CHECK = false;
-	public static final boolean NO_AI_UNITS = false;
 	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
 	public static final boolean TURN_OFF_FOG = false;
-	public static final boolean SHOW_ALL_UNITS_ON_HUD = false;
 	public static final boolean AI_IGNORE_PLAYER = false;
 	public static final boolean DEBUG_VIEW_ANGLE = false;
 	public static final boolean TRANSPARENT_WALLS = false;
@@ -80,6 +79,10 @@ public class Globals {
 	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;//50; //0;
 	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0;//100;
 	//----
+	
+	public static final int DEFAULT_TICKRATE = 25;
+	public static final int DEFAULT_RENDER_DELAY = 200;
+	public static final int DEFAULT_NETWORK_TIMEOUT = 100000;
 	
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
 	public static final int SUBNODE_SIZE = 15;

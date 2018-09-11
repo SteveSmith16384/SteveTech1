@@ -42,7 +42,7 @@ public class DefaultPOVWeapon implements IPOVWeapon {
 	public void update(float tpfSecs) {
 		Camera cam = client.getCamera();
 		
-		playersWeaponNode.setLocalTranslation(cam.getLocation());
+		playersWeaponNode.setLocalTranslation(cam.getLocation()); //playersWeaponNode.getWorldTranslation();
 		playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
 		
 		if (currentlyReloading) {

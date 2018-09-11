@@ -900,7 +900,7 @@ ICollisionListener<PhysicalEntity> {
 
 			NewEntityData data = new NewEntityData();
 			data.type = Globals.EXPLOSION_SHARD;
-			data.data.put("pos", pos);//this.getWorldTranslation());
+			data.data.put("pos", pos);
 			data.data.put("forceDirection", forceDirection);
 			data.data.put("size", size);
 			data.data.put("tex", tex);

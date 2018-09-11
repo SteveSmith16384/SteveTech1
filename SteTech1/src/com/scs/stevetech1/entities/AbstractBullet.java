@@ -23,7 +23,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	private byte side;
 
 	private ClientData client; // Only used server-side
-	protected Vector3f origin;
+	protected Vector3f origin = new Vector3f();
 
 	protected boolean useRay; // Use ray for CCD?
 	private Vector3f dir;
@@ -60,7 +60,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			creationData.put("dir", dir);
 		}		
 
-		origin = startPos.clone(); // todo - don't create each time
+		origin.set(startPos);
 
 		this.createModelAndSimpleRigidBody(dir);
 
@@ -179,7 +179,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		if (!this.markedForRemoval) {
 			if (Globals.DEBUG_BULLET_START_POS) {
 				Vector3f pos = this.getWorldTranslation();
-				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, false);
+				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, false, true);
 				game.addEntity(ds);
 			}
 			if (range > 0) {

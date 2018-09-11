@@ -1,0 +1,3 @@
+gameIpAddress=localhost
+gamePort=6143
+playerName=Ben

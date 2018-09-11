@@ -121,15 +121,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	protected FixedLoopTime loopTimer; // Keep client and server running at the same time
 
 	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis; // todo - combine into class?
-
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
-
 	private ValidateClientSettings validClientSettings;
-
 	public IGameMessageClient networkClient;
 	public boolean rcvdHello = false;
 	public IInputDevice input;
-
 	public IPOVWeapon povWeapon;
 
 	public AbstractClientAvatar currentAvatar;
@@ -653,7 +649,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				this.removeAllEntities();
 			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) {
 				this.appendToLog("Game restarting...");
-				// todo - remove gun and gameNode?
 			} else {
 				throw new RuntimeException("Unknown command:" + msg.command);
 			}
@@ -714,7 +709,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				// Point camera fwds again
 				Vector3f look = cam.getLocation().add(Vector3f.UNIT_X);
-				look.y = .7f; // todo - don't hard-code this
+				look.y = .6f; // todo - don't hard-code this
 				cam.lookAt(look, Vector3f.UNIT_Y);
 				cam.update();
 			}
@@ -814,24 +809,27 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	 * Override this if you don't want to join a game immediately after connecting.
 	 */
 	protected void receivedWelcomeMessage() {
-		this.joinGame(null);
+		this.joinGame();
 	}
 
-	/*
+
 	public void joinGame() {
-		String playerName = "Player_" + NumberFunctions.rnd(1, 1000);
-		joinGame(playerName);
-	}
-	 */
-
-	public void joinGame(String playerName) {
-		if (playerName == null || playerName.length() == 0) {
+		/*if (playerName == null || playerName.length() == 0) {
 			playerName = "Player_" + NumberFunctions.rnd(1, 1000);
 		}
 		if (this.rcvdHello == false) {
 			throw new RuntimeException("Trying to join game before receiving hello");
-		}
-		networkClient.sendMessageToServer(new JoinGameRequestMessage(validClientSettings.gameCode, validClientSettings.clientVersion, playerName, validClientSettings.key));
+		}*/
+		networkClient.sendMessageToServer(new JoinGameRequestMessage(validClientSettings.gameCode, validClientSettings.clientVersion, getPlayerName(), validClientSettings.key));
+	}
+	
+	
+	/**
+	 * Override if required.
+	 * @return
+	 */
+	protected String getPlayerName() {
+		return "Player_" + NumberFunctions.rnd(1, 1000);
 	}
 
 
@@ -843,14 +841,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	private void setAvatar(IEntity e) {
+	protected void setAvatar(IEntity e) {
 		if (e != null) {
 			if (e instanceof AbstractClientAvatar) {
 				this.currentAvatar = (AbstractClientAvatar)e;
 				if (Globals.DEBUG_AVATAR_SET) {
 					Globals.p("Avatar for player is now " + currentAvatar);
-				} // scs
-				Vector3f look = new Vector3f(-15f, .7f, -15f); // todo - don't hard-code .7
+				}
+				Vector3f look = new Vector3f(-15f, .6f, -15f); // todo - don't hard-code .6
 				getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
 			} else {
 				throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);
@@ -932,7 +930,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (this.expectedNumEntities > 0) {
 			float frac = (this.entities.size()) / (float)this.expectedNumEntities;
 			int fracPC = (int)(frac * 100);
-			Globals.p("Entities: " + fracPC + "%");
+			//Globals.p("Entities: " + fracPC + "%");
 			this.showMessage("Loading entities: " + fracPC + "%");
 		}
 
@@ -1115,7 +1113,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 			e.remove();
 			if (entitiesToAddToGame.contains(e)) {
-				entitiesToAddToGame.remove(e); // todo - why do we need this?
+				entitiesToAddToGame.remove(e); 
 			}
 			if (e == this.currentAvatar) {
 				if (Globals.DEBUG_AVATAR_SET) {
@@ -1429,20 +1427,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	protected void avatarStarted() {
 		if (povWeapon != null) {
+			if (Globals.DEBUG_GUN_NOT_SHOWING) {
+				Globals.p("Showing gun");
+			}
 			povWeapon.show(this.getGameNode());
 		}
-		//todo Node n = this.ge
-		/*if (playersWeaponNode != null) {
-			this.playersWeaponNode
-			playersWeaponNode.setLocalTranslation(cam.getLocation());
-			playersWeaponNode.lookAt(cam.getLocation().add(cam.getDirection()), Vector3f.UNIT_Y);
-		}*/
 	}
 
 
 	protected void avatarKilled() {
 		if (povWeapon != null) {
 			povWeapon.hide();
+			if (Globals.DEBUG_GUN_NOT_SHOWING) {
+				Globals.p("Hiding gun");
+			}
 		}
 	}
 
