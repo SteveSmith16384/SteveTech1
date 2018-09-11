@@ -85,7 +85,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			while (totalTimeToFFwd_Ms > 0) {
 				totalTimeToFFwd_Ms -= server.gameOptions.tickrateMillis;
 				this.processByServer(server, tpf_secs);
-				if (this.removed) {
+				if (this.markedForRemoval ||  this.removed) {
 					if (Globals.DEBUG_DELAYED_EXPLOSION) {
 						Globals.p("Bullet removed in mid ffwd");
 					}

@@ -10,20 +10,21 @@ import com.scs.stevetech1.entities.PhysicalEntity;
  */
 public class AbstractCollisionValidator {
 
+	/**
+	 * Should always return true unless they can't collide
+	 * @param pa
+	 * @param pb
+	 * @return
+	 */
 	public boolean canCollide(PhysicalEntity pa, PhysicalEntity pb) {
+		if (pa.isMarkedForRemoval() || pb.isMarkedForRemoval()) {
+			return false;
+		}
+		
 		if (!pa.collideable || !pb.collideable) {
 			return false;
 		}
-/*
-		if (pa instanceof AbstractAvatar && pb instanceof AbstractAvatar) {
-			// Avatars on the same side don't collide
-			AbstractAvatar aa = (AbstractAvatar)pa;
-			AbstractAvatar ab = (AbstractAvatar)pb;
-			if (aa.side == ab.side) {
-				return false;
-			}
-		}
-		*/
+
 		
 		// Anything with a side don't collide if on same side
 		if (pa instanceof IDontCollideWithComrades && pb instanceof IDontCollideWithComrades) {

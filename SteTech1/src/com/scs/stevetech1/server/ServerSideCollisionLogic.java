@@ -17,6 +17,10 @@ public class ServerSideCollisionLogic {
 
 
 	public void collision(PhysicalEntity a, PhysicalEntity b) {
+		if (a.isMarkedForRemoval() || b.isMarkedForRemoval()) {
+			return;
+		}
+		
 		if (a instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)a;
 			ic.notifiedOfCollision(b);
