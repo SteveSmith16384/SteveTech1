@@ -120,6 +120,11 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (!useRay) {
 			super.processByServer(server, tpf_secs);
+			if (Globals.DEBUG_BULLET_POSITIONS) {
+				Vector3f pos = this.getWorldTranslation();
+				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, true);
+				game.addEntity(ds);
+			}
 		} else {
 			this.moveByRay(tpf_secs);
 		}
@@ -144,7 +149,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			if (range > 0) {
 				float dist = this.getDistanceTravelled();
 				if (dist > range) {
-					game.markForRemoval(this.getID());
+					game.markForRemoval(this);
 				}
 			}
 		}
@@ -177,7 +182,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			this.moveByRay(tpf_secs);
 		}
 		if (!this.markedForRemoval) {
-			if (Globals.DEBUG_BULLET_START_POS) {
+			if (Globals.DEBUG_BULLET_POSITIONS) {
 				Vector3f pos = this.getWorldTranslation();
 				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, false, true);
 				game.addEntity(ds);
@@ -185,7 +190,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			if (range > 0) {
 				float dist = this.origin.distance(this.getWorldTranslation());
 				if (dist > range) {
-					game.markForRemoval(this.getID());
+					game.markForRemoval(this);
 				}
 			}
 		}
@@ -197,7 +202,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		ray.setLimit(speed * tpf_secs);
 		RayCollisionData rcd = this.checkForRayCollisions(ray);
 		if (rcd != null) {
-			game.markForRemoval(this.getID());
+			game.markForRemoval(this);
 			game.collisionOccurred(this, rcd.entityHit);
 		} else {
 			// Move spatial

@@ -19,7 +19,7 @@ public interface IEntityController {
 
 	void addEntity(IEntity e);
 	
-	void markForRemoval(int id); // todo - change param to IEntity 
+	void markForRemoval(IEntity e); 
 	
 	void actuallyRemoveEntity(int id);
 	

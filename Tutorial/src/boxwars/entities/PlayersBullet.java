@@ -40,7 +40,6 @@ public class PlayersBullet extends AbstractBullet implements INotifiedOfCollisio
 
 		ball_geo.setModelBound(new BoundingBox());
 		this.mainNode.attachChild(ball_geo);
-		//this.getMainNode().setUserData(Globals.ENTITY, this);
 	}
 
 
@@ -52,8 +51,7 @@ public class PlayersBullet extends AbstractBullet implements INotifiedOfCollisio
 
 	@Override
 	public void notifiedOfCollision(PhysicalEntity pe) {
-		//this.remove();
-		game.markForRemoval(this.getID());
+		game.markForRemoval(this);
 	}
 
 

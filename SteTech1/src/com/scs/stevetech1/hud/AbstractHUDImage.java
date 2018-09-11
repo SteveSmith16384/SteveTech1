@@ -8,7 +8,6 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.server.Globals;
 
 public class AbstractHUDImage extends Picture implements IEntity, IProcessByClient {
 
@@ -30,7 +29,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 
 		guiNode.attachChild(this);
 		game.addEntity(this);
-		
+
 	}
 
 
@@ -39,8 +38,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 		if (timeLeftSecs > 0) {
 			this.timeLeftSecs -= tpf;
 			if (this.timeLeftSecs <= 0) {
-				//this.remove();
-				game.markForRemoval(this.getID());
+				game.markForRemoval(this);
 			}
 		}
 	}
@@ -68,7 +66,7 @@ public class AbstractHUDImage extends Picture implements IEntity, IProcessByClie
 	public void remove() {
 		this.removeFromParent();
 		//game.removeEntity(this.getID());
-		
+
 	}
 
 

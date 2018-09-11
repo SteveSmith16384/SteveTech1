@@ -113,7 +113,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private static AtomicInteger nextEntityID = new AtomicInteger(-1);
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(1000); // All ents are added to this immediately, but not added to root node until the right time
-	protected ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(100); // Entities that we need to iterate over in game loop
+	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(100); // Entities that we need to iterate over in game loop
 	protected LinkedList<PhysicalEntity> entitiesToAddToGame = new LinkedList<PhysicalEntity>(); // Entities to add to RootNode, as we don't add them immed
 	private EntityRemovalSystem entityRemovalSystem;
 
@@ -1061,7 +1061,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		this.entitiesForProcessing.clear();
 		 */
 		for (IEntity e : this.entities.values()) {
-			this.markForRemoval(e.getID());
+			this.markForRemoval(e);
 		}
 		this.entityRemovalSystem.actuallyRemoveEntities();
 
@@ -1079,21 +1079,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	@Override
-	public void markForRemoval(int id) {
-		IEntity e = this.entities.get(id);
+	public void markForRemoval(IEntity e) {
 		if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-			if (e != null) {
-				Globals.p("Going to remove entity " + id + ":" + e);
-			} else {
-				Globals.p("Going to remove entity " + id);
-			}
+			Globals.p("Going to remove entity " + e.getID() + ":" + e);
 		}
 		this.entityRemovalSystem.markEntityForRemoval(e);
-		/*if (Globals.STRICT) {
-			if (this.entitiesToAddToGame.contains(e)) {
-				Globals.p("Removing entity that hasn't been added yet!");
-			}
-		}*/
 	}
 
 

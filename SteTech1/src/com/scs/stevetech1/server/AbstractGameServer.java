@@ -160,11 +160,11 @@ ICollisionListener<PhysicalEntity> {
 		startNewGame(); // Even though there are no players connected, this created the gameData to avoid NPEs.
 
 		startListeningForClients(); // Don't start listening until we're ready
-		
+
 		loopTimer.start();
 	}
 
-	
+
 	private void startListeningForClients() {
 		try {
 			gameNetworkServer = new KryonetGameServer(gameOptions.ourExternalPort, gameOptions.ourExternalPort, this, gameOptions.timeoutMillis, getListofMessageClasses());
@@ -174,7 +174,7 @@ ICollisionListener<PhysicalEntity> {
 			this.stop();
 		}
 	}
-	
+
 
 	/**
 	 *  
@@ -249,8 +249,8 @@ ICollisionListener<PhysicalEntity> {
 			}
 		}
 	}
-	
-	
+
+
 	private void checkForRewinding() {
 		// If any avatars are shooting a gun the requires "rewinding time", rewind all rewindable entities and calc the hits all together to save time
 		boolean areAnyPlayersShooting = false;
@@ -466,10 +466,8 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		for (IEntity e : this.entities.values()) {
-			this.markForRemoval(e.getID());
-			//e.remove();
+			this.markForRemoval(e);
 		}
-		//this.actuallyRemoveEntities();
 		this.entityRemovalSystem.actuallyRemoveEntities();
 	}
 
@@ -609,7 +607,7 @@ ICollisionListener<PhysicalEntity> {
 		Globals.p("Client connected!");
 		ClientData client = new ClientData(id, net);
 		this.clientList.addClient(client);
-		
+
 		// Don't send anything straight away since they won't be on the client list yet
 	}
 
@@ -690,8 +688,8 @@ ICollisionListener<PhysicalEntity> {
 
 
 	@Override
-	public void markForRemoval(int id) {
-		Entity e = (Entity)this.entities.get(id);
+	public void markForRemoval(IEntity e) {
+		//Entity e = (Entity)this.entities.get(id);
 		this.entityRemovalSystem.markEntityForRemoval(e);
 	}
 
@@ -952,12 +950,14 @@ ICollisionListener<PhysicalEntity> {
 		List<SimpleRigidBody<PhysicalEntity>> list = this.physicsController.getSRBsWithinRange(pos, range);
 		for (SimpleRigidBody<PhysicalEntity> srb : list) {
 			PhysicalEntity pe = (PhysicalEntity)srb.simpleEntity;
-			if (pe != exploder) { // DOn't damage ourselves (we'll get caught in a loopprobably)
-				if (pe instanceof IDamagable) {
-					if (pe.canSee(exploder, range, -1f)) {
-						IDamagable id = (IDamagable)pe;
-						id.damaged(damage, null, "Explosion");
-						Globals.p(pe + " was damaged " + damage + " by explosion");
+			if (!pe.isMarkedForRemoval()) {
+				if (pe != exploder) { // DOn't damage ourselves (we'll get caught in a loopprobably)
+					if (pe instanceof IDamagable) {
+						if (pe.canSee(exploder, range, -1f)) {
+							IDamagable id = (IDamagable)pe;
+							id.damaged(damage, null, "Explosion");
+							Globals.p(pe + " was damaged " + damage + " by explosion");
+						}
 					}
 				}
 			}

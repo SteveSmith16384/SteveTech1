@@ -68,7 +68,7 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 				game.addEntity(ds);
 			}
 		}
-		game.markForRemoval(this.getID());
+		game.markForRemoval(this);
 	}
 
 

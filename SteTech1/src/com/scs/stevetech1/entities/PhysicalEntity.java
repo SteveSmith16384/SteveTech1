@@ -256,7 +256,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public void fallenOffEdge() {
 		// Override for avatars
 		//this.remove();
-		game.markForRemoval(this.getID());
+		game.markForRemoval(this);
 	}
 
 

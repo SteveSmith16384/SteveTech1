@@ -122,7 +122,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public void markForRemoval() {
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
-				this.game.markForRemoval(this.ability[i].getID());
+				this.game.markForRemoval(this.ability[i]);
 			}
 		}
 		super.markForRemoval();

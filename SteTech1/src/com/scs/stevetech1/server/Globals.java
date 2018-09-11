@@ -15,8 +15,8 @@ public class Globals {
 
 	public static final boolean NO_AI_UNITS = true;
 	public static final boolean DEBUG_GUN_NOT_SHOWING = true;
-	public static final boolean DEBUG_BULLET_START_POS = false;
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
+	public static final boolean DEBUG_BULLET_POSITIONS = true;
 
 	// Lots of consts for specific debugging output
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
