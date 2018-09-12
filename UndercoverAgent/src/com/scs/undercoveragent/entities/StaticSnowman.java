@@ -42,11 +42,13 @@ public class StaticSnowman extends PhysicalEntity {
 		if (Globals.TEST_OUTLINE_SHADER) {
 			if (!_game.isServer()) {
 				AbstractGameClient client = (AbstractGameClient)game;
-				client.showOutlineEffect(model, 10, ColorRGBA.Red);
+				client.showOutlineEffect(model, 4, ColorRGBA.Red);
+				model.updateModelBound();
+				model.forceRefresh(true, false, true);
 				model.updateGeometricState();
 			}
 		}
-*/
+		*/
 	}
 
 

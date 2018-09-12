@@ -1026,14 +1026,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			}
 		}
-/*
-		if (Globals.TEST_OUTLINE_SHADER) {
-			//if (pe instanceof StaticSnowman) {
-				showOutlineEffect(pe.getMainNode(), 3, ColorRGBA.Red);
-				pe.getMainNode().updateGeometricState();
-			//}
-		}
-*/
+
 	}
 
 
@@ -1454,6 +1447,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			outlineViewport.attachScene(model);
 			outlineViewport.addProcessor(outlinefpp);
 
+			outlineViewport.setClearFlags(true, false, false);
+			outlineViewport.setBackgroundColor(new ColorRGBA(0f, 0f, 0f, 0f));
+			
 			outlineFilter = new OutlineProFilter(outlinePreFilter);
 			model.setUserData("OutlineProFilter", outlineFilter);
 			outlineFilter.setOutlineColor(color);

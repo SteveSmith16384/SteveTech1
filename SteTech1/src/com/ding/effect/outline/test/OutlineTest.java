@@ -20,7 +20,6 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- * 纯色的外描边
  * @author DING
  *
  */
@@ -36,6 +35,8 @@ public class OutlineTest extends SimpleApplication implements ActionListener {
 
 	@Override
 	public void simpleInitApp() {
+		super.getViewPort().setBackgroundColor(new ColorRGBA(0f, 0f, 0f, 0f));
+
 		flyCam.setMoveSpeed(5f);
 		// light
 		AmbientLight al = new AmbientLight();
@@ -58,6 +59,7 @@ public class OutlineTest extends SimpleApplication implements ActionListener {
 		inputManager.addMapping("1", new KeyTrigger(KeyInput.KEY_1));
 		inputManager.addMapping("2", new KeyTrigger(KeyInput.KEY_2));
 		inputManager.addListener(this, "1", "2");
+		
 	}
 
 	private void hideOutlineEffect(Spatial model) {
@@ -79,6 +81,9 @@ public class OutlineTest extends SimpleApplication implements ActionListener {
 			outlineViewport.attachScene(model);
 			outlineViewport.addProcessor(outlinefpp);
 
+			outlineViewport.setClearFlags(true, false, false);
+			outlineViewport.setBackgroundColor(new ColorRGBA(0f, 0f, 0f, 0f));
+			
 			outlineFilter = new OutlineFilter(outlinePreFilter);
 			model.setUserData("OutlineFilter", outlineFilter);
 			outlineFilter.setOutlineColor(color);

@@ -11,7 +11,6 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.texture.FrameBuffer;
 
 /**
- * 渐变外描边
  * @author DING
  */
 public class OutlineProFilter extends Filter {
@@ -37,7 +36,9 @@ public class OutlineProFilter extends Filter {
 	@Override
 	protected void preFrame(float tpf) {
 		super.preFrame(tpf);
-		material.setTexture("OutlineDepthTexture", outlinePreFilter.getOutlineTexture());
+		if (outlinePreFilter != null) {
+			material.setTexture("OutlineDepthTexture", outlinePreFilter.getOutlineTexture());
+		}
 //		System.out.println("OutlineFilter.preFrame()");
 	}
 
