@@ -12,7 +12,6 @@ import com.jme3.texture.Image.Format;
 import com.jme3.texture.Texture;
 
 /**
- * 描边预处理filter
  * @author DING
  */
 public class OutlinePreFilter extends Filter {

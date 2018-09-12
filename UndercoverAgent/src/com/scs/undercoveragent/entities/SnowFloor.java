@@ -72,45 +72,12 @@ public class SnowFloor extends PhysicalEntity implements IProcessByClient {
 		simpleRigidBody.setNeverMoves(true);
 
 		geometry.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
 	}
 
 
 	@Override
 	public void processByClient(IClientApp client, float tpf) {
-		/*if (texScroll != null) {
-			float diff = tpf*1f;
-			thisScroll.addLocal(diff, diff, diff);
-			thisScroll.multLocal(this.texScroll);
 
-			while (this.thisScroll.x > 1) {
-				this.thisScroll.x--;
-			}
-
-			while (this.thisScroll.y > 1) {
-				this.thisScroll.y--;
-			}
-
-			while (this.thisScroll.z > 1) {
-				this.thisScroll.z--;
-			}
-
-			float offx = this.thisScroll.x;
-			float offy = this.thisScroll.y;
-			float offz = this.thisScroll.z;
-
-			//Settings.p("thisScroll=" + thisScroll);
-
-			box1.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(new float[]{
-					offx, h+offy, w+offx, h+offy, w+offx, offy, offx, offy, // back
-					offz, h+offy, d+offz, h+offy, d+offz, offy, offz, offy, // right
-					offx, h+offy, w+offx, h+offy, w+offx, offy, offx, offy, // front
-					offz, h+offy, d+offz, h+offy, d+offz, offy, offz, offy, // left
-					w+offx, offz, w+offx, d+offz, offx, d+offz, offx, offz, // top
-					w+offx, offz, w+offx, d+offz, offx, d+offz, offx, offz  // bottom
-			}));
-
-		}*/
 	}
 
 

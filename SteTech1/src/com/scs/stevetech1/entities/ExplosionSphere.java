@@ -45,9 +45,6 @@ public class ExplosionSphere extends PhysicalEntity implements IProcessByClient 
 		
 		ball_geo.setQueueBucket(Bucket.Transparent);
 		floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-
-		mainNode.setUserData(Globals.ENTITY, this);
-
 	}
 
 

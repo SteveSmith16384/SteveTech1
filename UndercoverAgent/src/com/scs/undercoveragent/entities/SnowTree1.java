@@ -37,8 +37,6 @@ public class SnowTree1 extends PhysicalEntity {
 		simpleRigidBody.setNeverMoves(true);
 
 		model.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
-
 	}
 
 

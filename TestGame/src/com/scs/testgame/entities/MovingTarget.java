@@ -62,8 +62,6 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 
 		geometry.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
-
 	}
 
 

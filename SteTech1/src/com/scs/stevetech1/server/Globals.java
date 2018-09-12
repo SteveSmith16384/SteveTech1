@@ -13,13 +13,13 @@ public class Globals {
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
-	public static final boolean NO_AI_UNITS = true;
 	public static final boolean DEBUG_GUN_NOT_SHOWING = true;
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
 
 	// Lots of consts for specific debugging output
-	public static final boolean DEBUG_BULLET_POSITIONS = false;
+	public static final boolean NO_AI_UNITS = false;
 	public static final boolean TEST_OUTLINE_SHADER = false;
+	public static final boolean DEBUG_BULLET_POSITIONS = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_CPU_HUD_TEXT = false;

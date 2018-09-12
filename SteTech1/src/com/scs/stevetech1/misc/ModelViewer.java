@@ -75,7 +75,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		fpp = new FilterPostProcessor(assetManager);
 		viewPort.addProcessor(fpp);
 
-		this.showOutlineEffect(model, 3, ColorRGBA.Red);
+		this.showOutlineEffect(model, 3, ColorRGBA.Red);//, this.getViewPort());
 
 	}
 

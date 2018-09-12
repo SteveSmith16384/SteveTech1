@@ -58,8 +58,6 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 		simpleRigidBody.setNeverMoves(true);
 
 		geometry.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
-
 	}
 
 

@@ -52,6 +52,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 			SnowballBullet sb = (SnowballBullet)collider;
 			AbstractGameServer server = (AbstractGameServer)game;
 			server.sendExplosionShards(sb.getWorldTranslation(), 12, .8f, 1.2f, .005f, .02f, "Textures/snow.jpg");
+			this.avatarControl.jump(); // Also make them jump
 		}
 	}
 
@@ -70,7 +71,6 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 	private void incScore(int i) {
 		UASimplePlayerData data = (UASimplePlayerData)this.client.playerData;
 		data.score += i;
-		//this.sendAvatarStatusUpdateMessage(false);
 		AbstractGameServer server = (AbstractGameServer)game;
 		server.sendSimpleGameDataToClients();
 	}

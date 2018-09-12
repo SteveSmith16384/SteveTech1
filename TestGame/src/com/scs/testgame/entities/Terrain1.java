@@ -94,8 +94,6 @@ public class Terrain1 extends PhysicalEntity {
 		simpleRigidBody.setNeverMoves(true);
 
 		terrain.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
-
 	}
 
 

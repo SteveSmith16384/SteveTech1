@@ -49,7 +49,6 @@ public class ExplosionShard extends PhysicalEntity implements IProcessByClient {
 		mainNode.setLocalTranslation(x, y, z);
 
 		geometry.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), true, this);
 		simpleRigidBody.setBounciness(0.5f);

@@ -35,15 +35,13 @@ public class Fence extends PhysicalEntity {
 		Geometry geometry = new Geometry("Fence", box1);
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
-
 			key3.setGenerateMips(true);
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
 
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-				floor_mat.setTexture("DiffuseMap", tex3);
-			geometry.setMaterial(floor_mat);
+			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			mat.setTexture("DiffuseMap", tex3);
+			geometry.setMaterial(mat);
 			// Uncomment if tex is transparent
 			//floor_mat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
 			//geometry.setQueueBucket(Bucket.Transparent);
@@ -56,8 +54,6 @@ public class Fence extends PhysicalEntity {
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, (SimplePhysicsController)game, false, this);
 		//this.simpleRigidBody.setMovable(false);
-
-		//game.getRootNode().attachChild(this.mainNode);
 
 		geometry.setUserData(Globals.ENTITY, this);
 

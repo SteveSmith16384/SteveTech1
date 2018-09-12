@@ -52,7 +52,6 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		this.mainNode.attachChild(bbGeom);
 
 		bbGeom.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
 
 		// Create model to look good
 		Spatial avatarModel = anim.createAndGetModel();

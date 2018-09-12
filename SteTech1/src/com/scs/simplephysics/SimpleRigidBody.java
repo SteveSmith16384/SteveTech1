@@ -615,6 +615,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
+	/**
+	 * Makes collisions more efficient.
+	 * @param b
+	 */
 	public void setNeverMoves(boolean b) {
 		this.neverMoves = b;
 	}

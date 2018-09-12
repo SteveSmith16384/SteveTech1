@@ -202,8 +202,8 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		ray.setLimit(speed * tpf_secs);
 		RayCollisionData rcd = this.checkForRayCollisions(ray);
 		if (rcd != null) {
-			game.markForRemoval(this);
 			game.collisionOccurred(this, rcd.entityHit);
+			game.markForRemoval(this); // Don't mark for removal until collision processed!
 		} else {
 			// Move spatial
 			Vector3f offset = this.dir.mult(speed * tpf_secs);

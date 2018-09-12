@@ -71,8 +71,6 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 		simpleRigidBody.setNeverMoves(true);
 
 		geometry.setUserData(Globals.ENTITY, this);
-		mainNode.setUserData(Globals.ENTITY, this);
-
 	}
 
 
