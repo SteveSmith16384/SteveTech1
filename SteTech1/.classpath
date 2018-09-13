@@ -1,45 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <classpath>
-
 	<classpathentry kind="src" path="src"/>
-
 	<classpathentry kind="src" path="libs/kryonet"/>
-
 	<classpathentry kind="src" path="assets"/>
-
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-
 	<classpathentry kind="lib" path="libs/kryonet/minlog-1.3.0.jar"/>
-
 	<classpathentry kind="lib" path="libs/kryonet/objenesis-2.6.jar"/>
-
 	<classpathentry kind="lib" path="libs/kryonet/jsonbeans-0.5.jar"/>
-
 	<classpathentry kind="lib" path="libs/kryonet/reflectasm-1.11.6.jar"/>
-
 	<classpathentry kind="lib" path="libs/mp3/jl1.0.jar"/>
-
 	<classpathentry kind="lib" path="libs/mp3/mp3spi1.9.4.jar"/>
-
 	<classpathentry kind="lib" path="libs/mp3/tritonus_share.jar"/>
-
+	<classpathentry kind="lib" path="libs/jttf/jME-TTF-v2.12.jar"/>
+	<classpathentry kind="lib" path="libs/jttf/sfntly.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-core"/>
-
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-lwjgl3"/>
-
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-networking"/>
-
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-terrain"/>
-
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-effects"/>
-
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-desktop"/>
-
 	<classpathentry combineaccessrules="false" kind="src" path="/jme3-blender"/>
-
 	<classpathentry kind="output" path="bin"/>
-
 </classpath>

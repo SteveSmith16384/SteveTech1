@@ -3,6 +3,13 @@ package com.scs.undercoveragent;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.atr.jme.font.TrueTypeFont;
+import com.atr.jme.font.TrueTypeMesh;
+import com.atr.jme.font.asset.TrueTypeKeyMesh;
+import com.atr.jme.font.asset.TrueTypeLoader;
+import com.atr.jme.font.shape.TrueTypeContainer;
+import com.atr.jme.font.util.StringContainer;
+import com.atr.jme.font.util.Style;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
@@ -40,9 +47,12 @@ public class UndercoverAgentHUD extends Node {
 	private ColorRGBA dam_box_col = new ColorRGBA(1, 0, 0, 0.0f);
 	private boolean process_damage_box;
 	private AbstractGameClient game;
-	private static BitmapFont font_small;
-
-	private BitmapText abilityGun, abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
+	
+	private BitmapFont font_small;
+	private TrueTypeFont ttf;
+	
+	private BitmapText abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
+	private TrueTypeContainer abilityGun;
 
 	public UndercoverAgentHUD(AbstractGameClient _game, Camera _cam) { // BitmapFont font_small, 
 		super("HUD");
@@ -52,7 +62,11 @@ public class UndercoverAgentHUD extends Node {
 		hud_height = _cam.getHeight();
 		
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-		//font_small = _game.getAssetManager().loadFont("Fonts/Xenotron.ttf");
+		
+		_game.getAssetManager().registerLoader(TrueTypeLoader.class, "ttf");
+
+		TrueTypeKeyMesh ttk = new TrueTypeKeyMesh("Fonts/Xenotron.ttf", Style.Plain, 16);
+		ttf = (TrueTypeMesh)_game.getAssetManager().loadAsset(ttk);
 
 		super.setLocalTranslation(0, 0, 0);
 
@@ -85,8 +99,9 @@ public class UndercoverAgentHUD extends Node {
 		this.attachChild(gameTime);
 
 		yPos -= LINE_SPACING;
-		abilityGun = new BitmapText(font_small, false);
-		abilityGun.setColor(defaultColour);
+		//abilityGun = new BitmapText(font_small, false);
+		abilityGun = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
+		///abilityGun.setColor(defaultColour);
 		abilityGun.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(abilityGun);
 
