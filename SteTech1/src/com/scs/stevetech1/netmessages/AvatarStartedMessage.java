@@ -4,7 +4,7 @@ import com.jme3.network.serializing.Serializable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 
 /**
- * Indicates that an avatar is now alive and ready to go
+ * Indicates that an avatar is now alive and ready to go in the game
  * 
  */
 @Serializable

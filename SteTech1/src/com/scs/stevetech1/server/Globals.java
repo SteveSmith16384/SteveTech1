@@ -64,14 +64,14 @@ public class Globals {
 	public static final boolean LOG_MOVING_TARGET_POS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
 
-	// Generic entity codes
+	// Generic entity codes - all should be negative to avoid collision with custom entity types, which should all be positive.
 	public static final int DEBUGGING_SPHERE = -1;
 	public static final int BULLET_TRAIL = -2;
 	public static final int EXPLOSION_SHARD = -3;
 	public static final int EXPLOSION_SPHERE = -4;
 
 	// Effects
-	public static final boolean TOONISH = false; // Outlines
+	//public static final boolean TOONISH = false; // Outlines
 	public static final boolean BULLETS_CONES = true;
 	public static final boolean SHOW_VIEW_FROM_KILLER_ON_DEATH = false;
 
@@ -87,8 +87,7 @@ public class Globals {
 	
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
 	public static final int SUBNODE_SIZE = 15;
-	public static final int DEF_VOL = 1;
-	public static final boolean REMOVE_DEAD_SOLDIERS = true;
+	public static final int DEFAULT_VOLUME = 1;
 	public static final long HISTORY_DURATION = 5000; // todo - make same as avatar restart time
 
 	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*7;
@@ -104,9 +103,6 @@ public class Globals {
 	public static final String ENTITY = "Entity";
 
 	public static final Random rnd = new Random();
-
-	private static final long GAME_START_TIME = System.currentTimeMillis();
-	
 
 	public static void showWarnings() {
 		if (RELEASE_MODE == false) {
@@ -128,7 +124,7 @@ public class Globals {
 	public static void HandleError(Exception ex) {
 		ex.printStackTrace();
 		
-		String filename = "Errors_" + GAME_START_TIME + ".log";
+		String filename = "Errors_" + System.currentTimeMillis() + ".log";
 		IOFunctions.appendToFile(filename, Functions.Exception2String(ex));
 		
 	}

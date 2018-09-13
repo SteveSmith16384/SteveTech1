@@ -54,9 +54,9 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 	public void startAgain() {
 		this.setAlive(true);
 		this.setHealth(maxHealth);
-		this.simpleRigidBody.resetForces();//.currentGravInc = 0; // In case they fell off the edge
+		this.simpleRigidBody.resetForces(); // In case they fell off the edge, stop them falling after restarting
 		this.invulnerableTimeSecs = 5; // todo - config
-		server.moveAvatarToStartPosition(this); // this also sends the update message to tell the client about the new move speed values etc...
+		server.moveAvatarToStartPosition(this);
 
 		server.sendMessageToInGameClients(new AvatarStartedMessage(this));
 		this.sendAvatarStatusUpdateMessage(false);

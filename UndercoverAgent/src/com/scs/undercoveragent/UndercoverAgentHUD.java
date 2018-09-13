@@ -50,10 +50,9 @@ public class UndercoverAgentHUD extends Node {
 		game = _game;
 		hud_width = _cam.getWidth();
 		hud_height = _cam.getHeight();
-		//cam = _cam;
 		
 		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-		//font_small = _game.getAssetManager().loadFont("Fonts/Xenotron.ttf");
+		font_small = _game.getAssetManager().loadFont("Fonts/Xenotron.ttf");
 
 		super.setLocalTranslation(0, 0, 0);
 

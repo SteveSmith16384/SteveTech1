@@ -420,7 +420,7 @@ ICollisionListener<PhysicalEntity> {
 		client.playerData.id = client.id;
 		client.playerData.playerName = newPlayerMessage.playerName;
 
-		this.sendMessageToInGameClientsExcept(client, new ShowMessageMessage("Player joined game!", true));
+		this.sendMessageToInGameClientsExcept(client, new ShowMessageMessage("Player joining game!", true));
 
 		byte side = getSide(client);
 		client.playerData.side = side;
@@ -502,11 +502,12 @@ ICollisionListener<PhysicalEntity> {
 		// Create avatars and send new entities to players
 		for (ClientData client : this.clientList.getClients()) {
 			if (client.clientStatus == ClientData.ClientStatus.InGame) {
-				byte side = getSide(client); // New sides
+				byte side = getSide(client); // New sides!
 				client.playerData.side = side;
 				client.avatar = createPlayersAvatar(client);
 				sendAllEntitiesToClient(client);
 				this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
+				client.avatar.startAgain(); // scs new
 			}
 		}
 
@@ -565,7 +566,8 @@ ICollisionListener<PhysicalEntity> {
 	private AbstractServerAvatar createPlayersAvatar(ClientData client) {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id);
-		avatar.startAgain(); // Must be before we add it, since that needs a position!
+		//avatar.startAgain(); // Must be before we add it, since that needs a position!  // scs new
+		this.moveAvatarToStartPosition(avatar); // scs new
 		this.actuallyAddEntity(avatar);
 		return avatar;
 	}

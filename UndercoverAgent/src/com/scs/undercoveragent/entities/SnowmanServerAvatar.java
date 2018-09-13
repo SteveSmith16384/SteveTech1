@@ -10,6 +10,7 @@ import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.undercoveragent.UASimplePlayerData;
+import com.scs.undercoveragent.UASounds;
 import com.scs.undercoveragent.UAStaticData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 import com.scs.undercoveragent.models.SnowmanModel;
@@ -53,6 +54,9 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 			AbstractGameServer server = (AbstractGameServer)game;
 			server.sendExplosionShards(sb.getWorldTranslation(), 12, .8f, 1.2f, .005f, .02f, "Textures/snow.jpg");
 			this.avatarControl.jump(); // Also make them jump
+
+			game.playSound(UASounds.SPLAT, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
+
 		}
 	}
 
@@ -65,6 +69,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 			SnowmanServerAvatar csp = (SnowmanServerAvatar)killer;
 			csp.incScore(1);
 		}
+		game.playSound(UASounds.DIED, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
 	}
 
 

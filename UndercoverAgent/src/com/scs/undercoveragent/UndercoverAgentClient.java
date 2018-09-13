@@ -174,6 +174,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		int x = (this.cam.getWidth()/2)-(width/2);
 		int y = this.cam.getHeight()/5;
 		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/victory.png", x, y, width, height, 5);
+		playSound(UASounds.WINNER, -1, null, Globals.DEFAULT_VOLUME, false);
 	}
 
 
@@ -185,6 +186,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		int x = (this.cam.getWidth()/2)-(width/2);
 		int y = this.cam.getHeight()/5;
 		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/defeat.png", x, y, width, height, 5);
+		playSound(UASounds.LOSER, -1, null, Globals.DEFAULT_VOLUME, false);
 	}
 
 
@@ -196,6 +198,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		int x = (this.cam.getWidth()/2)-(width/2);
 		int y = this.cam.getHeight()/5;
 		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/defeat.png", x, y, width, height, 5);
+		playSound(UASounds.WINNER, -1, null, Globals.DEFAULT_VOLUME, false);
 	}
 
 
@@ -236,7 +239,14 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		}
 	}
 
+	
+	@Override
+	protected void avatarStarted() {
+		super.avatarStarted();
+		playSound(UASounds.START, -1, null, Globals.DEFAULT_VOLUME, false);
 
+	}
+	
 	@Override
 	protected Class[] getListofMessageClasses() {
 		return new Class[] {UASimplePlayerData.class};
