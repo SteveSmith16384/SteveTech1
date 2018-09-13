@@ -510,6 +510,7 @@ ICollisionListener<PhysicalEntity> {
 				client.avatar.startAgain(); // scs new
 			}
 		}
+		sendSimpleGameDataToClients(); // To send the new scores
 
 		this.gameStatusSystem.checkGameStatus(true); // Sets game status to "Deploying" if there's enough players
 

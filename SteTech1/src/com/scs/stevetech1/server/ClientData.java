@@ -17,7 +17,7 @@ public class ClientData {
 	public AbstractServerAvatar avatar;
 	public RemoteInput remoteInput = new RemoteInput(); // For storing message that are translated into input
 	public long serverToClientDiffTime = 0; // Add to current time to get client time
-	public SimplePlayerData playerData; // Class is probably extended for extra data
+	public SimplePlayerData playerData; // Class is probably extended for extra data, e.g. score
 	public ClientStatus clientStatus = ClientStatus.Connected;
 	public boolean sentHello = false;
 

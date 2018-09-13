@@ -7,7 +7,7 @@ import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
-public class ServerSideCollisionLogic {
+public final class ServerSideCollisionLogic {
 
 	private AbstractGameServer server;
 
@@ -17,9 +17,9 @@ public class ServerSideCollisionLogic {
 
 
 	public void collision(PhysicalEntity a, PhysicalEntity b) {
-		if (a.isMarkedForRemoval() || b.isMarkedForRemoval()) {
+		/*if (a.isMarkedForRemoval() || b.isMarkedForRemoval()) {
 			return;
-		}
+		}*/
 		
 		if (a instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)a;

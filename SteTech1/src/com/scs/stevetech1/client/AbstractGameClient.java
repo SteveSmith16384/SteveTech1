@@ -716,7 +716,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				// Point camera fwds again
 				Vector3f look = cam.getLocation().add(Vector3f.UNIT_X);
-				look.y = .6f; // todo - don't hard-code this
+				look.y = cam.getLocation().y;
 				cam.lookAt(look, Vector3f.UNIT_Y);
 				cam.update();
 			}
@@ -855,7 +855,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				if (Globals.DEBUG_AVATAR_SET) {
 					Globals.p("Avatar for player is now " + currentAvatar);
 				}
-				Vector3f look = new Vector3f(-15f, .6f, -15f); // todo - don't hard-code .6
+				Vector3f look = new Vector3f(-15f, getCamera().getLocation().y, -15f); // todo - don't hard-code .6
 				getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
 			} else {
 				throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);

@@ -67,7 +67,6 @@ public class JMEAngleFunctions {
 	public static void rotateToWorldDirection(Spatial s, Vector3f dir) {
 		Vector3f v = s.getLocalTranslation();
 		s.lookAt(v.add(dir), Vector3f.UNIT_Y);
-		//s.lookAt(dir.addLocal(v), Vector3f.UNIT_Y); // scs new
 	}
 
 
