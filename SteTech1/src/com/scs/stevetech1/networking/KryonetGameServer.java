@@ -52,7 +52,7 @@ public class KryonetGameServer implements IGameMessageServer {
 	private Server server;
 	private int timeout;
 
-	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener, int _timeout, Class[] msgClasses) throws IOException {
+	public KryonetGameServer(int tcpport, int udpport, IMessageServerListener _listener, int _timeout, Class<? extends MyAbstractMessage>[] msgClasses) throws IOException {
 		super();
 
 		server = new Server(Globals.KRYO_WRITE_BUFFER_SIZE, Globals.KRYO_OBJECT_BUFFER_SIZE);
@@ -62,7 +62,7 @@ public class KryonetGameServer implements IGameMessageServer {
 
 		registerMessages(server.getKryo());
 		if (msgClasses != null) {
-			for(Class c : msgClasses) {
+			for(Class<? extends MyAbstractMessage> c : msgClasses) {
 				server.getKryo().register(c);
 			}
 		}
@@ -76,7 +76,6 @@ public class KryonetGameServer implements IGameMessageServer {
 
 
 	public void setListener(IMessageServerListener listener) {
-		//listener = _listener;
 
 		server.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
@@ -152,9 +151,9 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(NewEntityData.class);
 		kryo.register(ClientReloadRequestMessage.class);
 		kryo.register(GameLogMessage.class);
-		//kryo.register(GunReloadingMessage.class);
 		kryo.register(NumEntitiesMessage.class);
 		kryo.register(HelloMessage.class);
+		//kryo.register(ClientRegisteredHitMessage.class);
 	}
 
 

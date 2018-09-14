@@ -1,4 +1,4 @@
-** This is unimplemented at thw time of writing **
+** This is unimplemented at the time of writing **
 
 GAME SERVERS
 Game server periodically connect to lobby server indicating their existence and status

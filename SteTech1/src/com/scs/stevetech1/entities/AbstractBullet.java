@@ -10,13 +10,14 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 
-public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately {
+public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately, IRewindable {
 
 	public int playerID; // -1 if AI
 	public IEntity shooter; // So we know who not to collide with, and who fired the killing shot
@@ -29,6 +30,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	private Vector3f dir;
 	protected float speed;
 	private float range;
+	//protected int serverEntityId; // So the client can tell the server which entity it is
 	
 	public AbstractBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client, boolean _useRay, float _speed, float _range) {
 		super(_game, entityId, type, name, true, false, true);
@@ -41,6 +43,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		side = _side;
 		shooter = _shooter;
 		dir = _dir;
+		//serverEntityId = _serverEntityId;
 		
 		if (Globals.STRICT) {			
 			if (side <= 0) {
@@ -73,7 +76,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		this.setWorldTranslation(startPos);
 		this.mainNode.updateGeometricState();
 
-		if (game.isServer() && playerID > 0) { // Don't ffwd AI bullets
+		if (game.isServer() && isPlayersBullet()) { // Don't ffwd AI bullets
 			if (Globals.DEBUG_DELAYED_EXPLOSION) {
 				Globals.p("Start of ffwding -------------------------");
 			}
@@ -85,7 +88,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			while (totalTimeToFFwd_Ms > 0) {
 				totalTimeToFFwd_Ms -= server.gameOptions.tickrateMillis;
 				this.processByServer(server, tpf_secs);
-				if (this.markedForRemoval ||  this.removed) {
+				if (this.markedForRemoval || this.removed) {
 					if (Globals.DEBUG_DELAYED_EXPLOSION) {
 						Globals.p("Bullet removed in mid ffwd");
 					}
@@ -97,11 +100,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 				Globals.p("End of ffwding -------------------------");
 			}
 
-			// If server, send messages to clients to tell them it has been launched
-			//LaunchData ld = new LaunchData(startPos, dir, shooter.getID(), System.currentTimeMillis() - server.gameOptions.clientRenderDelayMillis);
-			//long launchTime = System.currentTimeMillis() - server.gameOptions.clientRenderDelayMillis; // "-Globals.CLIENT_RENDER_DELAY" so they render it immed.
-			//EntityLaunchedMessage msg = new EntityLaunchedMessage(this.getID(), this.playerID, startPos, _dir, shooter.getID(), launchTime);
-			//server.sendMessageToInGameClients(msg);
 		}
 
 		if (Globals.STRICT) {
@@ -123,36 +121,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		} else {
 			this.moveByRay(tpf_secs);
 		}
-		/*
-			Ray ray = new Ray(this.getWorldTranslation(), dir);
-			ray.setLimit(speed * tpf_secs);
-			RayCollisionData rcd = this.checkForRayCollisions(ray);
-			if (rcd != null) {
-				game.markForRemoval(this.getID());
-				game.collisionOccurred(this, rcd.entityHit);
-			} else {
-				// Move spatial
-				Vector3f offset = this.dir.mult(speed * tpf_secs);
-				this.adjustWorldTranslation(offset);
-				if (Globals.DEBUG_DELAYED_EXPLOSION) {
-					Globals.p("Server," + System.currentTimeMillis() + ",Pos," + this.getWorldTranslation());
-				}
-			}
-		}*/
-
-		if (!this.markedForRemoval) {
-			if (Globals.DEBUG_BULLET_POSITIONS) {
-				Vector3f pos = this.getWorldTranslation();
-				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, true);
-				game.addEntity(ds);
-			}
-			if (range > 0) {
-				float dist = this.getDistanceTravelled();
-				if (dist > range) {
-					game.markForRemoval(this);
-				}
-			}
-		}
+		this.finalProcessing();
 	}
 
 
@@ -161,26 +130,31 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		if (!useRay) {
 			simpleRigidBody.process(tpf_secs);
 		} else {
-			/*Ray ray = new Ray(this.getWorldTranslation(), dir);
-			ray.setLimit(speed * tpf_secs);
-			RayCollisionData rcd = this.checkForRayCollisions(ray);
-			if (rcd != null) {
-				game.markForRemoval(this.getID());
-				// Since we're bypassing the physics engine, we need to handle collisions manually
-				if (this instanceof INotifiedOfCollision) {
-					INotifiedOfCollision inoc = (INotifiedOfCollision)this;
-					inoc.collided(rcd.entityHit);
-				}
-			} else {
-				// Move spatial
-				Vector3f offset = this.dir.mult(speed * tpf_secs);
-				this.adjustWorldTranslation(offset);
-				if (Globals.DEBUG_DELAYED_EXPLOSION) {
-					Globals.p("Client," + System.currentTimeMillis() + ",Pos," + this.getWorldTranslation());
-				}
-			}*/
 			this.moveByRay(tpf_secs);
 		}
+		this.finalProcessing();
+	}
+	
+	
+	private void moveByRay(float tpf_secs) {
+		Ray ray = new Ray(this.getWorldTranslation(), dir);
+		ray.setLimit(speed * tpf_secs);
+		RayCollisionData rcd = this.checkForRayCollisions(ray);
+		if (rcd != null) {
+			game.collisionOccurred(this, rcd.entityHit);
+			game.markForRemoval(this);
+		} else {
+			// Move spatial
+			Vector3f offset = this.dir.mult(speed * tpf_secs);
+			this.adjustWorldTranslation(offset);
+			if (Globals.DEBUG_DELAYED_EXPLOSION) {
+				Globals.p("Server," + System.currentTimeMillis() + ",Pos," + this.getWorldTranslation());
+			}
+		}
+	}
+
+
+	private void finalProcessing() {
 		if (!this.markedForRemoval) {
 			if (Globals.DEBUG_BULLET_POSITIONS) {
 				Vector3f pos = this.getWorldTranslation();
@@ -194,24 +168,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 				}
 			}
 		}
-	}
-
-
-	private void moveByRay(float tpf_secs) {
-		Ray ray = new Ray(this.getWorldTranslation(), dir);
-		ray.setLimit(speed * tpf_secs);
-		RayCollisionData rcd = this.checkForRayCollisions(ray);
-		if (rcd != null) {
-			game.collisionOccurred(this, rcd.entityHit);
-			game.markForRemoval(this); // Don't mark for removal until collision processed!
-		} else {
-			// Move spatial
-			Vector3f offset = this.dir.mult(speed * tpf_secs);
-			this.adjustWorldTranslation(offset);
-			if (Globals.DEBUG_DELAYED_EXPLOSION) {
-				Globals.p("Server," + System.currentTimeMillis() + ",Pos," + this.getWorldTranslation());
-			}
-		}
+		
 	}
 
 
@@ -250,22 +207,15 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		return shooter;
 	}
 
-	/*
-	@Override
-	public float getDamageCaused() {
-		//return ((RANGE-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 10;
-		float dam = (((range-this.getDistanceTravelled()) / this.getDistanceTravelled()) * 5)+5;
-		Globals.p(this + " damage: " + dam);
-		return dam;
-	}
-	 */
-
 
 	@Override
 	public boolean shouldClientAddItImmediately() {
-		return this.playerID >= 0;
+		return isPlayersBullet();
 	}
 
 
+	public boolean isPlayersBullet() {
+		return this.playerID >= 0;
+	}
 }
 

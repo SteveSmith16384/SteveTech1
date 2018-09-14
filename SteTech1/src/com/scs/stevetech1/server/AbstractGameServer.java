@@ -16,10 +16,10 @@ import com.jme3.scene.Node;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.ICalcHitInPast;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
+import com.scs.stevetech1.components.IHitscanWeapon;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByServer;
 import com.scs.stevetech1.components.IReloadable;
@@ -31,7 +31,6 @@ import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
-import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.netmessages.ClientReloadRequestMessage;
@@ -110,6 +109,8 @@ ICollisionListener<PhysicalEntity> {
 
 	protected SimpleGameData gameData = new SimpleGameData();
 	private ConsoleInputHandler consoleInput;
+
+	//private List<ClientRegisteredHitMessage> clientHits = new LinkedList<>();
 
 	/**
 	 * 
@@ -252,23 +253,28 @@ ICollisionListener<PhysicalEntity> {
 
 
 	private void checkForRewinding() {
-		// If any avatars are shooting a gun the requires "rewinding time", rewind all rewindable entities and calc the hits all together to save time
-		boolean areAnyPlayersShooting = false;
-		for (ClientData c : this.clientList.getClients()) {
-			AbstractServerAvatar avatar = c.avatar;
-			if (avatar != null && avatar.getAnyAbilitiesShootingInPast() != null) { //.isShooting() && avatar.abilityGun instanceof ICalcHitInPast) {
-				areAnyPlayersShooting = true;
-				break;
+		// If any avatars are shooting a gun that requires "rewinding time", rewind all rewindable entities and calc the hits all together to save time
+		boolean areAnyPlayersShooting = false; //this.clientHits.size() > 0;
+		if (!areAnyPlayersShooting) {
+			for (ClientData c : this.clientList.getClients()) {
+				AbstractServerAvatar avatar = c.avatar;
+				if (avatar != null && avatar.getAnyAbilitiesShootingInPast() != null) {
+					areAnyPlayersShooting = true;
+					break;
+				}
 			}
 		}
+
 		if (areAnyPlayersShooting) {
 			long timeTo = System.currentTimeMillis() - gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
 			this.rewindEntities(timeTo);
 			this.rootNode.updateGeometricState();
+
+			// Check for hitscan weapons
 			for (ClientData c : this.clientList.getClients()) {
 				AbstractServerAvatar avatar = c.avatar;
 				if (avatar != null) {
-					ICalcHitInPast chip = avatar.getAnyAbilitiesShootingInPast();
+					IHitscanWeapon chip = avatar.getAnyAbilitiesShootingInPast();
 					if (chip != null) {
 						Vector3f from = avatar.getBulletStartPos();
 						if (Globals.DEBUG_SHOOTING_POS) {
@@ -276,7 +282,7 @@ ICollisionListener<PhysicalEntity> {
 						}
 						Ray ray = new Ray(from, avatar.getShootDir());
 						ray.setLimit(chip.getRange());
-						RayCollisionData rcd = avatar.checkForRayCollisions(ray);//, chip.getRange());
+						RayCollisionData rcd = avatar.checkForRayCollisions(ray);
 						if (rcd != null) {
 							rcd.timestamp = timeTo; // For debugging
 						}
@@ -284,9 +290,17 @@ ICollisionListener<PhysicalEntity> {
 					}
 				}
 			}
+/*
+			for (ClientRegisteredHitMessage crhm : this.clientHits) {
+				PhysicalEntity bullet = (PhysicalEntity) this.entities.get(crhm.bulletEntityID);
+				PhysicalEntity target = (PhysicalEntity) this.entities.get(crhm.targetEntityID);
+
+				CollisionResults tempCollisionResults = new CollisionResults();
+				bullet.simpleRigidBody.checkSRBvSRB(target.simpleRigidBody, tempCollisionResults, true); // todo - what about bullets that use Rays?
+			}
+*/
 			this.restoreEntityPositions();
 		}
-
 	}
 
 
@@ -392,7 +406,11 @@ ICollisionListener<PhysicalEntity> {
 			if (e != null) {
 				e.setToBeReloaded();
 			}
-
+/*
+		} else if (message instanceof ClientRegisteredHitMessage) {
+			ClientRegisteredHitMessage crhm = (ClientRegisteredHitMessage)message;
+			this.clientHits.add(crhm);
+*/
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}

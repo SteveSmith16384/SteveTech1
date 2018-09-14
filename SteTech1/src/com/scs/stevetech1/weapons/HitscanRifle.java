@@ -2,7 +2,7 @@ package com.scs.stevetech1.weapons;
 
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
-import com.scs.stevetech1.components.ICalcHitInPast;
+import com.scs.stevetech1.components.IHitscanWeapon;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
@@ -21,7 +21,7 @@ import com.scs.stevetech1.shared.IEntityController;
  * @author stephencs
  *
  */
-public class HitscanRifle extends AbstractMagazineGun implements ICalcHitInPast, ICausesHarmOnContact {
+public class HitscanRifle extends AbstractMagazineGun implements IHitscanWeapon, ICausesHarmOnContact {
 
 	private static final int MAG_SIZE = 10;
 	private static final float RANGE = 99f;

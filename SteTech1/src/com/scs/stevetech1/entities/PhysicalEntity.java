@@ -98,8 +98,18 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 */
 	protected void addPositionData() {
 		// Store the position for use when rewinding.
+		//this.historicalPositionData.addPositionData(this.getWorldTranslation(), System.currentTimeMillis());
+		this.addPositionData(System.currentTimeMillis());
+	}
+
+
+	/*
+	 * Called by the server 
+	 */
+	protected void addPositionData(long time) {
+		// Store the position for use when rewinding.
 		//EntityPositionData epd = new EntityPositionData(this.getWorldTranslation().clone(), this.getWorldRotation(), System.currentTimeMillis());
-		this.historicalPositionData.addPositionData(this.getWorldTranslation(), System.currentTimeMillis());
+		this.historicalPositionData.addPositionData(this.getWorldTranslation(), time);
 	}
 
 

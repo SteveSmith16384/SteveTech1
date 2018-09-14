@@ -587,11 +587,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							createEntity(data, newEntityMessage.timestamp);
 						} else {
 							// We already know about it. -  NO! Replace the entity!  NO NO! Don't replace it as the original has links to other entities!
-							Globals.p("Ignoring new entity " + e + " as we already know about it");
+							//Globals.p("Ignoring new entity " + e + " as we already know about it");
 						}
 					}
 				} else {
-					Globals.p("Ignoring NewEntityMessage for game " + newEntityMessage.gameId);
+					//Globals.p("Ignoring NewEntityMessage for game " + newEntityMessage.gameId);
 					// It's not for this game, so ignore it
 				}
 			} else {

@@ -10,7 +10,7 @@ import com.scs.stevetech1.avatartypes.IAvatarControl;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAvatarModel;
-import com.scs.stevetech1.components.ICalcHitInPast;
+import com.scs.stevetech1.components.IHitscanWeapon;
 import com.scs.stevetech1.components.ICanShoot;
 import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IPlayerControlled;
@@ -129,12 +129,12 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	public ICalcHitInPast getAnyAbilitiesShootingInPast() {
+	public IHitscanWeapon getAnyAbilitiesShootingInPast() {
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
-				if (this.ability[i] instanceof ICalcHitInPast) {
+				if (this.ability[i] instanceof IHitscanWeapon) {
 					if (this.ability[i].isGoingToBeActivated()) {
-						return (ICalcHitInPast)this.ability[i];
+						return (IHitscanWeapon)this.ability[i];
 					}
 				}
 			}

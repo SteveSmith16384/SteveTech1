@@ -5,4 +5,6 @@ public interface IRewindable {
 	void rewindPositionTo(long time);
 	
 	void restorePosition();
+	
+	//void addPositionData(long time);
 }

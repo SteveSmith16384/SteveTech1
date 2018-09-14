@@ -23,7 +23,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
 /*
- * This is only used client-side.
+ * This is only used client-side, and represents another player's avatar.
  */
 public abstract class AbstractOtherPlayersAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimatedClientSide, IProcessByClient, 
 ISetRotation, IDrawOnHUD, IDontCollideWithComrades { 

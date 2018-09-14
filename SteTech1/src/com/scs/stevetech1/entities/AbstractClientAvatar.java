@@ -184,9 +184,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				}
 				if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
 					// They're so far out, just move them
-					Globals.p("Server and client avatars very far apart, forcing move: " + diff);
 					Vector3f pos = historicalPositionData.getMostRecent().position;
-					Globals.p("Moving client to " + pos);
+					if (Globals.DEBUG_ADJ_AVATAR_POS) {
+						Globals.p("Server and client avatars very far apart, forcing move: " + diff);
+						Globals.p("Moving client to " + pos);
+					}
 					this.setWorldTranslation(pos);
 					this.simpleRigidBody.resetForces(); // Prevent from keeping falling
 				} else {

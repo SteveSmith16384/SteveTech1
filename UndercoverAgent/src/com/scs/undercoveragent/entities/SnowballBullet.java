@@ -73,6 +73,22 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 				game.addEntity(ds);
 			}
 		}
+
+		// todo - move code to AbstractBullet
+		/*if (Globals.USE_BULLET_REWINDING) {
+			if (!game.isServer()) { 
+				if (pe instanceof AbstractOtherPlayersAvatar) { // Only send when we've hit something important
+					AbstractGameClient client = (AbstractGameClient)game;
+					if (Globals.DEBUG_BULLET_REWINDING) {
+						Globals.p("Snowball owned by " + this.playerID + " has hit " + pe + " on client " + client.playerID);
+					}
+					if (this.playerID == client.playerID) { // Only send collisions for our bullets
+						ClientRegisteredHitMessage crhm = new ClientRegisteredHitMessage(this.serverEntityId, pe.getID());//, client.getServerTime());
+						client.sendMessage(crhm);
+					}
+				}
+			}
+		}*/
 		game.markForRemoval(this);
 	}
 
