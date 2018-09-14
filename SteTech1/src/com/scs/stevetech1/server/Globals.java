@@ -88,7 +88,7 @@ public class Globals {
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
 	public static final int SUBNODE_SIZE = 15;
 	public static final int DEFAULT_VOLUME = 1;
-	public static final long HISTORY_DURATION = 5000; // todo - make same as avatar restart time
+	public static final long HISTORY_DURATION_MILLIS = 5000; // todo - make same as avatar restart time
 
 	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*7;
 	public static final int KRYO_OBJECT_BUFFER_SIZE = 4096*3*24;

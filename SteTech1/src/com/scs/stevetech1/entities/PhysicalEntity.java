@@ -43,11 +43,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public boolean blocksView; // Primarily used for canSee() ray checks, since that doesn't use the physics engine
 	public long timeToAdd; // Client side only; when to add the entity to the game
 
-	// Rewind settings
 	private Vector3f tmpRayPos = new Vector3f();
 
 	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
 	public boolean moves;
+	private boolean isRewound = false; // Prevent storing historical positions when we've rewound the position
 
 	public PhysicalEntity(IEntityController _game, int id, int type, String _name, boolean _requiresProcessing, boolean _blocksView, boolean _moves) {
 		super(_game, id, type, _name, _requiresProcessing);
@@ -59,10 +59,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		this.getMainNode().setUserData(Globals.ENTITY, this);
 
 		if (moves) {
-			historicalPositionData = new PositionCalculator(Globals.HISTORY_DURATION);
+			historicalPositionData = new PositionCalculator(Globals.HISTORY_DURATION_MILLIS, this.getName());
 		}
 		// Always create this (e.g. even Computer's need a health history)
-		chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(Globals.HISTORY_DURATION);
+		chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(Globals.HISTORY_DURATION_MILLIS);
 	}
 
 
@@ -80,7 +80,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				throw new RuntimeException("processing entity but not added to game!");
 			}
 		}*/
-		
+
 		if (simpleRigidBody != null) {
 			simpleRigidBody.process(tpf_secs);
 
@@ -102,10 +102,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	/*
 	 * Called by the server 
 	 */
-	protected void addPositionData() {
-		// Store the position for use when rewinding.
-		//this.historicalPositionData.addPositionData(this.getWorldTranslation(), System.currentTimeMillis());
-		this.addPositionData(System.currentTimeMillis());
+	public void addPositionData() {
+		if (!this.isRewound) {
+			// Store the position for use when rewinding.
+			this.addPositionData(System.currentTimeMillis());
+		}
 	}
 
 
@@ -113,9 +114,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 * Called by the server 
 	 */
 	protected void addPositionData(long time) {
-		// Store the position for use when rewinding.
-		//EntityPositionData epd = new EntityPositionData(this.getWorldTranslation().clone(), this.getWorldRotation(), System.currentTimeMillis());
-		this.historicalPositionData.addPositionData(this.getWorldTranslation(), time);
+		if (!this.isRewound) {
+			// Store the position for use when rewinding.
+			this.historicalPositionData.addPositionData(this.getWorldTranslation(), time);
+		}
 	}
 
 
@@ -123,8 +125,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 * Called by the client 
 	 */
 	public void addPositionData(Vector3f pos, long time) {
-		if (historicalPositionData != null) {
-			this.historicalPositionData.addPositionData(pos, time);
+		if (!this.isRewound) {
+			if (historicalPositionData != null) {
+				this.historicalPositionData.addPositionData(pos, time);
+			}
 		}
 	}
 
@@ -135,7 +139,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			EntityPositionData epd = historicalPositionData.calcPosition(serverTimeToUse, false);
 			if (epd != null) {
 				this.setWorldTranslation(epd.position);
-				//this.setWorldRotation(epd.rotation);
 			} else {
 				//Settings.p("No position data for " + this);
 			}
@@ -234,18 +237,12 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return this.sendUpdate;
 	}
 
-/*
-	@Override
-	public String toString() {
-		return super.toString();
-	}
-*/
 
 	public void rewindPositionTo(long serverTimeToUse) {
 		EntityPositionData shooterEPD = this.historicalPositionData.calcPosition(serverTimeToUse, true);
 		if (shooterEPD != null) {
-			//this.originalPos.set(this.getWorldTranslation());
 			this.setWorldTranslation(shooterEPD.position);
+			this.isRewound = true;
 		} else {
 			Globals.p("Unable to rewind position: no data");
 		}
@@ -253,9 +250,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void restorePosition() {
-		//this.setWorldTranslation(this.originalPos);
-		//this.mainNode.updateGeometricState();
 		this.rewindPositionTo(System.currentTimeMillis());
+		this.mainNode.updateGeometricState();
+		this.isRewound = false;
 	}
 
 
@@ -269,7 +266,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	public void fallenOffEdge() {
 		// Override for avatars
-		//this.remove();
 		game.markForRemoval(this);
 	}
 
@@ -388,7 +384,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return true;
 	}
 
-	
+
 	@Override
 	public Collidable getCollidable() {
 		this.mainNode.updateModelBound(); // Need this!
@@ -469,6 +465,5 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			}
 		}
 	}
-
 
 }

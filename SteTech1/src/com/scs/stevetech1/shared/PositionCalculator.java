@@ -11,12 +11,14 @@ public final class PositionCalculator {
 	private LinkedList<EntityPositionData> positionData = new LinkedList<>(); // Newest entry is at the start
 	private LinkedList<EntityPositionData> oldPositionData = new LinkedList<>(); // Keep a cache of objects to re-use
 
-	private long historyLength;
+	private long historyLengthMillis;
+	private String entityName;
 
-	public PositionCalculator(long _historyLength) {//boolean _cleardown) {//, int _maxEntries) {
+	public PositionCalculator(long _historyLengthMillis, String _entityName) {
 		super();
 
-		historyLength = _historyLength;
+		historyLengthMillis = _historyLengthMillis;
+		entityName = _entityName;
 	}
 
 
@@ -37,10 +39,10 @@ public final class PositionCalculator {
 		} else {
 			newData = new EntityPositionData();
 		}
+		
 		newData.position.set(pos);
 		newData.serverTimestamp = time;
 
-		//synchronized (positionData) {
 		boolean added = false;
 		for(int i=0 ; i<this.positionData.size() ; i++) { // Goes backwards in time, number gets smaller
 			EntityPositionData epd = this.positionData.get(i);
@@ -57,7 +59,6 @@ public final class PositionCalculator {
 			positionData.add(newData);
 		}
 		this.cleardown(time);
-		//}
 	}
 
 
@@ -88,32 +89,27 @@ public final class PositionCalculator {
 					if (warn) {
 						//long diff = System.currentTimeMillis() - serverTimeToUse;
 						long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
-						//Globals.p("Warning: Requested time is " + startDiff + " too soon");
-						Globals.p(startDiff + " too recent for ..!\n" + this.toString(serverTimeToUse)); // todo - say which entity
+						Globals.p("Warning: Requested time is " + startDiff + " too soon for " + this.entityName);
+						//Globals.p("History data starts " + startDiff + " after requested time for " + this.entityName);// too recent for ..!\n" + this.toString(serverTimeToUse));
 					}
-					return this.positionData.getFirst(); // Our selected time is too soon!
+					return this.positionData.getFirst(); // Our selected time is too soon, so return soonest we have
 				} else if (this.positionData.getLast().serverTimestamp > serverTimeToUse) {
 					if (warn) {
 						//Globals.p(this.toString(serverTimeToUse));
 						long diff = this.positionData.getLast().serverTimestamp - serverTimeToUse;
-						//Globals.p("Warning: Requested time is too late by " + diff);
+						Globals.p("Warning: History data starts " + diff + " after requested time for " + this.entityName);
 					}
 					return this.positionData.getLast(); // Our selected time is too late!
 				}
 
 				EntityPositionData firstEPD = null;
-				int pos = 0;
 				for(EntityPositionData secondEPD : this.positionData) { // Time gets earlier, number goes down
 					if (firstEPD != null) {
 						if (firstEPD.serverTimestamp >= serverTimeToUse && secondEPD.serverTimestamp <= serverTimeToUse) {
-							/*if (cleardown) {
-								this.cleardown(pos+4);
-							}*/
 							return firstEPD.getInterpol(secondEPD, serverTimeToUse);
 						}
 					}
 					firstEPD = secondEPD;
-					pos++;
 				}
 				//throw new RuntimeException("Should not get here!");
 			}
@@ -123,12 +119,8 @@ public final class PositionCalculator {
 	}
 
 
-	private void cleardown(long currentTime) {
-		/*while (this.positionData.size() > num) {
-				EntityPositionData epd = this.positionData.removeLast();
-				this.oldPositionData.add(epd);
-			}*/
-		long thresh = currentTime - this.historyLength;
+	private void cleardown(long timeOfEntryAdded) {
+		long thresh = timeOfEntryAdded - this.historyLengthMillis;
 		while (this.positionData.size() > 100) { // Keep at least X amount
 			EntityPositionData epd = this.positionData.getLast();
 			if (epd.serverTimestamp < thresh) {
@@ -143,9 +135,7 @@ public final class PositionCalculator {
 
 	public void clear() {
 		this.oldPositionData.addAll(this.positionData);
-		//synchronized (positionData) {
 		positionData.clear();
-		//}
 	}
 
 

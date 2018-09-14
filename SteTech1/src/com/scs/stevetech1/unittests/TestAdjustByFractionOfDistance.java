@@ -21,8 +21,8 @@ public class TestAdjustByFractionOfDistance {
 		IPhysicalEntity serverEntity = new DummyPhysicalEntity();
 		IPhysicalEntity clientEntity = new DummyPhysicalEntity();
 
-		PositionCalculator serverPositionData = new PositionCalculator(10000);
-		PositionCalculator clientAvatarPositionData = new PositionCalculator(10000);
+		PositionCalculator serverPositionData = new PositionCalculator(10000, "");
+		PositionCalculator clientAvatarPositionData = new PositionCalculator(10000, "");
 /*
 		ICorrectClientEntityPosition ipa = new AdjustByFractionOfDistance();
 

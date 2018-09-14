@@ -33,7 +33,7 @@ import com.scs.stevetech1.shared.PositionCalculator;
 public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient, IKillable {
 
 	public Camera cam;
-	public PositionCalculator clientAvatarPositionData = new PositionCalculator(Globals.HISTORY_DURATION); // So we know where we were in the past to compare against where the server says we should have been
+	public PositionCalculator clientAvatarPositionData;// = new PositionCalculator(Globals.HISTORY_DURATION, ""); // So we know where we were in the past to compare against where the server says we should have been
 	private Spatial debugNode;
 	public PhysicalEntity killer;
 
@@ -41,6 +41,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			float x, float y, float z, byte side, IAvatarModel avatarModel, IAvatarControl _avatarControl) {
 		super(_client, avatarType, _playerID, _input, eid, side, avatarModel, _avatarControl);
 
+		clientAvatarPositionData = new PositionCalculator(Globals.HISTORY_DURATION_MILLIS, "AbstractClientAvatar_Player"+_playerID);
 		cam = _cam;
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
@@ -226,19 +227,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		Vector3f pos = null;
 		if (client.povWeapon == null) {
-			pos = client.getCamera().getLocation().clone(); // todo - don't create each time
+			pos = client.getCamera().getLocation().clone();
 		} else {
-			pos = client.povWeapon.getPOVBulletStartPos().clone(); // todo - don't create each time
+			pos = client.povWeapon.getPOVBulletStartPos().clone();
 		}
 
-		/*		
-
-		Spatial s = client.playersWeaponNode;
-		if (client.playersWeaponNode.getChildren().size() > 0) {
-			s = client.playersWeaponNode.getChild(0);
-		}*/
-		//Vector3f pos = s.getWorldTranslation().clone();
-		//Vector3f pos = this.getPOVBulletStartPosition().clone();
 		pos.y += 0.1f;
 		return pos;
 	}

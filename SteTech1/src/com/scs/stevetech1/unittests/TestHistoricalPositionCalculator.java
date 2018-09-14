@@ -17,8 +17,8 @@ public class TestHistoricalPositionCalculator {
 	@Test
 	private void basicPositionCalc1() {
 		// Players moves at 1f per 100ms
-		PositionCalculator serverPositions = new PositionCalculator(10000);
-		PositionCalculator clientPositions = new PositionCalculator(10000);
+		PositionCalculator serverPositions = new PositionCalculator(10000, "");
+		PositionCalculator clientPositions = new PositionCalculator(10000, "");
 		for (int i=0 ; i<10 ; i++) {
 			serverPositions.addPositionData(new Vector3f(i, 0, 0), i*100);
 			// Client is 1f ahead

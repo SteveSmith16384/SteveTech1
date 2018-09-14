@@ -115,17 +115,16 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	public void fastForward() {
 		// Here we go... We need to rewind all rewindable entities, and play the game through to get the server ahead of the clients (as it should be),
 		// and also properly check for collisions.
-		if (Globals.DEBUG_DELAYED_EXPLOSION) {
+		if (Globals.TEST_BULLET_REWINDING) {
 			Globals.p("Start of ffwding -------------------------");
 		}
 		AbstractGameServer server = (AbstractGameServer)game;
 
-		// Rewind entities
 		long toTime = System.currentTimeMillis() - server.gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
 		float totalTimeToFFwd_Ms = server.gameOptions.clientRenderDelayMillis; // + (client.playerData.pingRTT/2);
 		final float tpfSecs = (float)server.gameOptions.tickrateMillis / 1000f;
 		while (totalTimeToFFwd_Ms > 0) {
-			server.rewindEntities(toTime);
+			server.rewindEntities(toTime, this); // Rewind all entities except the bullet, which has only just appeared!
 			server.getRootNode().updateGeometricState();
 
 			this.processByServer(server, tpfSecs); 
@@ -137,7 +136,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		}
 		server.restoreEntityPositions();
 
-		if (Globals.DEBUG_DELAYED_EXPLOSION) {
+		if (Globals.TEST_BULLET_REWINDING) {
 			Globals.p("End of ffwding -------------------------");
 		}
 	}

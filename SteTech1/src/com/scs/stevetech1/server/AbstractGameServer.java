@@ -267,7 +267,7 @@ ICollisionListener<PhysicalEntity> {
 
 		if (areAnyPlayersShootingHitscanWeapons) {
 			long toTime = System.currentTimeMillis() - gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
-			this.rewindEntities(toTime);
+			this.rewindEntities(toTime, null);
 			this.rootNode.updateGeometricState();
 
 			// Check for hitscan weapons
@@ -290,7 +290,7 @@ ICollisionListener<PhysicalEntity> {
 					}
 				}
 			}
-/*
+			/*
 			for (ClientRegisteredHitMessage crhm : this.clientHits) {
 				PhysicalEntity bullet = (PhysicalEntity) this.entities.get(crhm.bulletEntityID);
 				PhysicalEntity target = (PhysicalEntity) this.entities.get(crhm.targetEntityID);
@@ -298,17 +298,19 @@ ICollisionListener<PhysicalEntity> {
 				CollisionResults tempCollisionResults = new CollisionResults();
 				bullet.simpleRigidBody.checkSRBvSRB(target.simpleRigidBody, tempCollisionResults, true); // todo - what about bullets that use Rays?
 			}
-*/
+			 */
 			this.restoreEntityPositions();
 		}
 	}
 
 
-	public void rewindEntities(long toTime) {
+	public void rewindEntities(long toTime, IEntity except) {
 		for (IEntity e : this.entitiesForProcessing) {
-			if (e instanceof IRewindable) {
-				IRewindable r = (IRewindable)e;
-				r.rewindPositionTo(toTime);
+			if (e != except) {
+				if (e instanceof IRewindable) {
+					IRewindable r = (IRewindable)e;
+					r.rewindPositionTo(toTime);
+				}
 			}
 		}
 	}
@@ -406,11 +408,11 @@ ICollisionListener<PhysicalEntity> {
 			if (e != null) {
 				e.setToBeReloaded();
 			}
-/*
+			/*
 		} else if (message instanceof ClientRegisteredHitMessage) {
 			ClientRegisteredHitMessage crhm = (ClientRegisteredHitMessage)message;
 			this.clientHits.add(crhm);
-*/
+			 */
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}

@@ -84,20 +84,6 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 		super.processByServer(server, tpf_secs);
 
 		this.sharedProcess(tpf_secs);
-
-		/*
-		if (toBeReloaded) {
-			toBeReloaded = false;
-			// Reload
-			//Globals.p("Reloading");
-			reload(server);// Only server can reload
-			this.timeUntilShoot_secs = this.reloadInterval_secs;
-			server.sendMessageToInGameClients(new AbilityUpdateMessage(true, this));
-		}
-
-		timeUntilShoot_secs -= tpf_secs;
-		timeSinceLastReload += tpf_secs;
-		 */
 	}
 
 
@@ -106,15 +92,6 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 		super.processByClient(client, tpf_secs);
 
 		this.sharedProcess(tpf_secs);
-		/*
-		timeUntilShoot_secs -= tpf_secs;
-
-		if (getBulletsInMag() <= 0 && timeUntilShoot_secs <= 0) {
-			client.sendMessage(new ClientGunReloadRequestMessage(this.getID())); // Auto-reload
-			this.timeUntilShoot_secs = this.reloadInterval_secs;
-			//Globals.p("Sending ClientReloadingMessage");
-		}
-		 */
 	}
 
 
@@ -130,8 +107,6 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			toBeReloaded = false;
 			reload();
 		}
-
-
 	}
 
 

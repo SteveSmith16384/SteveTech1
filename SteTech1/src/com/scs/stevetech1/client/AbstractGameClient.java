@@ -344,7 +344,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (!this.showHistory) {
 				renderTime = serverTime - clientRenderDelayMillis; // Render from history
 			} else {
-				renderTime = serverTime - Globals.HISTORY_DURATION;
+				renderTime = serverTime - Globals.HISTORY_DURATION_MILLIS;
 			}
 
 			if (networkClient != null && networkClient.isConnected()) {
