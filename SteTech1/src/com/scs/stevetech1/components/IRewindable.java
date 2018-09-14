@@ -6,5 +6,4 @@ public interface IRewindable {
 	
 	void restorePosition();
 	
-	//void addPositionData(long time);
 }

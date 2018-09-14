@@ -254,20 +254,20 @@ ICollisionListener<PhysicalEntity> {
 
 	private void checkForRewinding() {
 		// If any avatars are shooting a gun that requires "rewinding time", rewind all rewindable entities and calc the hits all together to save time
-		boolean areAnyPlayersShooting = false; //this.clientHits.size() > 0;
-		if (!areAnyPlayersShooting) {
+		boolean areAnyPlayersShootingHitscanWeapons = false; //this.clientHits.size() > 0;
+		if (!areAnyPlayersShootingHitscanWeapons) {
 			for (ClientData c : this.clientList.getClients()) {
 				AbstractServerAvatar avatar = c.avatar;
 				if (avatar != null && avatar.getAnyAbilitiesShootingInPast() != null) {
-					areAnyPlayersShooting = true;
+					areAnyPlayersShootingHitscanWeapons = true;
 					break;
 				}
 			}
 		}
 
-		if (areAnyPlayersShooting) {
-			long timeTo = System.currentTimeMillis() - gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
-			this.rewindEntities(timeTo);
+		if (areAnyPlayersShootingHitscanWeapons) {
+			long toTime = System.currentTimeMillis() - gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
+			this.rewindEntities(toTime);
 			this.rootNode.updateGeometricState();
 
 			// Check for hitscan weapons
@@ -284,7 +284,7 @@ ICollisionListener<PhysicalEntity> {
 						ray.setLimit(chip.getRange());
 						RayCollisionData rcd = avatar.checkForRayCollisions(ray);
 						if (rcd != null) {
-							rcd.timestamp = timeTo; // For debugging
+							rcd.timestamp = toTime; // For debugging
 						}
 						chip.setTarget(rcd); // Damage etc.. is calculated later
 					}
@@ -304,7 +304,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	private void rewindEntities(long toTime) {
+	public void rewindEntities(long toTime) {
 		for (IEntity e : this.entitiesForProcessing) {
 			if (e instanceof IRewindable) {
 				IRewindable r = (IRewindable)e;
@@ -314,7 +314,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	private void restoreEntityPositions() {
+	public void restoreEntityPositions() {
 		for (IEntity e : entitiesForProcessing) {
 			if (e instanceof IRewindable) {
 				IRewindable r = (IRewindable)e;

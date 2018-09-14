@@ -51,7 +51,7 @@ public class SoundSystem extends AbstractSystem {
 	
 	
 	public void playSound(String sound, int entityId, Vector3f pos, float volume, boolean stream) {
-		if (!Globals.MUTE) {
+		//if (!Globals.MUTE) {
 			if (sound != null && sound.length() > 0) {
 				try {
 					AudioNode node = null;
@@ -87,7 +87,7 @@ public class SoundSystem extends AbstractSystem {
 					ex.printStackTrace();
 				}
 			}
-		}
+		//}
 	}
 
 

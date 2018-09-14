@@ -22,6 +22,7 @@ import com.scs.undercoveragent.entities.MountainMapBorder;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowTree1;
 import com.scs.undercoveragent.entities.SnowTree2;
+import com.scs.undercoveragent.entities.MovingTargetSnowman;
 import com.scs.undercoveragent.entities.SnowmanServerAvatar;
 import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
@@ -67,8 +68,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	private UndercoverAgentServer(int _mapSize, 
-			String gameIpAddress, int gamePort, //String lobbyIpAddress, int lobbyPort, 
-			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException { // , float gravity, float aerodynamicness
+			String gameIpAddress, int gamePort, 
+			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
 		super(GAME_ID, 1d, "key", new GameOptions(tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, 10*1000, 5*60*1000, 10*1000, 
 				gameIpAddress, gamePort, 
 				10, 5));
@@ -161,6 +162,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		this.actuallyAddEntity(mborderBack);
 		MountainMapBorder mborderFront = new MountainMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, mapSize, Vector3f.UNIT_X);
 		this.actuallyAddEntity(mborderFront);
+		
+		if (Globals.TEST_BULLET_REWINDING) {
+			MovingTargetSnowman snowman = new MovingTargetSnowman(this, getNextEntityID(), mapSize/2, 0.01f, mapSize/2, JMEAngleFunctions.getYAxisRotation(-1, 0));
+			this.addEntityToRandomPosition(snowman);
+
+		}
 	}
 
 
@@ -168,10 +175,14 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		float x = NumberFunctions.rndFloat(2, mapSize-3);
 		float z = NumberFunctions.rndFloat(2, mapSize-3);
 		this.actuallyAddEntity(entity);
-		while (entity.simpleRigidBody.checkForCollisions(false).size() > 0) { // todo - don't try forever
+		long start = System.currentTimeMillis();
+		while (entity.simpleRigidBody.checkForCollisions(false).size() > 0) {
+			if (System.currentTimeMillis() - start > 5000) {
+				throw new RuntimeException("Taking too long to place an entity");
+			}
 			x = NumberFunctions.rndFloat(2, mapSize-3);
 			z = NumberFunctions.rndFloat(2, mapSize-3);
-			entity.setWorldTranslation(x, z); //this.entities
+			entity.setWorldTranslation(x, z);
 		}
 		// randomly rotate
 		JMEAngleFunctions.rotateToWorldDirectionYAxis(entity.getMainNode(), NumberFunctions.rnd(0,  359));
@@ -191,8 +202,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
-		PhysicalEntity pea = a.userObject;
-		PhysicalEntity peb = b.userObject;
+		/*PhysicalEntity pea = a.userObject;
+		//PhysicalEntity peb = b.userObject;
 
 		/*if (pea instanceof SnowFloor == false && peb instanceof SnowFloor == false) {
 			Globals.p("Collision between " + pea + " and " + peb);

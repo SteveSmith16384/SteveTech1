@@ -2,6 +2,7 @@ package com.scs.stevetech1.entities;
 
 import java.util.HashMap;
 
+import com.jme3.bounding.BoundingVolume;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.IClientApp;
@@ -17,6 +18,14 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.shared.IEntityController;
 
+/**
+ * AbstractBullet is a special kind of entity.
+ * - Time gets rewound when a bullet gets created by a player
+ * - They can use Rays for collision
+ * 
+ * @author stephencs
+ *
+ */
 public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately, IRewindable {
 
 	public int playerID; // -1 if AI
@@ -30,8 +39,24 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	private Vector3f dir;
 	protected float speed;
 	private float range;
-	//protected int serverEntityId; // So the client can tell the server which entity it is
-	
+	private boolean needsFastForwarding = false;
+
+	/**
+	 * 
+	 * @param _game
+	 * @param entityId
+	 * @param type
+	 * @param name
+	 * @param _playerOwnerId
+	 * @param _shooter
+	 * @param startPos
+	 * @param _dir
+	 * @param _side
+	 * @param _client
+	 * @param _useRay Have CCD by using Rays
+	 * @param _speed
+	 * @param _range
+	 */
 	public AbstractBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client, boolean _useRay, float _speed, float _range) {
 		super(_game, entityId, type, name, true, false, true);
 
@@ -43,8 +68,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		side = _side;
 		shooter = _shooter;
 		dir = _dir;
-		//serverEntityId = _serverEntityId;
-		
+
 		if (Globals.STRICT) {			
 			if (side <= 0) {
 				throw new RuntimeException("Invalid side: " + side);
@@ -72,35 +96,11 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 				throw new RuntimeException("Invalid speed: " + speed);
 			}
 		}
-		
+
 		this.setWorldTranslation(startPos);
 		this.mainNode.updateGeometricState();
-
-		if (game.isServer() && isPlayersBullet()) { // Don't ffwd AI bullets
-			if (Globals.DEBUG_DELAYED_EXPLOSION) {
-				Globals.p("Start of ffwding -------------------------");
-			}
-			AbstractGameServer server = (AbstractGameServer)game;
-
-			// fast forward it!
-			float totalTimeToFFwd_Ms = server.gameOptions.clientRenderDelayMillis + (client.playerData.pingRTT/2);
-			float tpf_secs = (float)server.gameOptions.tickrateMillis / 1000f;
-			while (totalTimeToFFwd_Ms > 0) {
-				totalTimeToFFwd_Ms -= server.gameOptions.tickrateMillis;
-				this.processByServer(server, tpf_secs);
-				if (this.markedForRemoval || this.removed) {
-					if (Globals.DEBUG_DELAYED_EXPLOSION) {
-						Globals.p("Bullet removed in mid ffwd");
-					}
-					break;
-				}
-			}
-
-			if (Globals.DEBUG_DELAYED_EXPLOSION) {
-				Globals.p("End of ffwding -------------------------");
-			}
-
-		}
+		//this.game.addEntity(this);
+		//this.mainNode.updateModelBound();
 
 		if (Globals.STRICT) {
 			if (this.useRay && this.simpleRigidBody != null) {
@@ -108,6 +108,38 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 			}
 		}
 
+		this.needsFastForwarding = game.isServer() && isPlayersBullet(); // Don't ffwd AI bullets
+	}
+
+
+	public void fastForward() {
+		// Here we go... We need to rewind all rewindable entities, and play the game through to get the server ahead of the clients (as it should be),
+		// and also properly check for collisions.
+		if (Globals.DEBUG_DELAYED_EXPLOSION) {
+			Globals.p("Start of ffwding -------------------------");
+		}
+		AbstractGameServer server = (AbstractGameServer)game;
+
+		// Rewind entities
+		long toTime = System.currentTimeMillis() - server.gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
+		float totalTimeToFFwd_Ms = server.gameOptions.clientRenderDelayMillis; // + (client.playerData.pingRTT/2);
+		final float tpfSecs = (float)server.gameOptions.tickrateMillis / 1000f;
+		while (totalTimeToFFwd_Ms > 0) {
+			server.rewindEntities(toTime);
+			server.getRootNode().updateGeometricState();
+
+			this.processByServer(server, tpfSecs); 
+			if (this.markedForRemoval || this.removed) {
+				break;
+			}
+			totalTimeToFFwd_Ms -= server.gameOptions.tickrateMillis;
+			toTime += server.gameOptions.tickrateMillis;
+		}
+		server.restoreEntityPositions();
+
+		if (Globals.DEBUG_DELAYED_EXPLOSION) {
+			Globals.p("End of ffwding -------------------------");
+		}
 	}
 
 
@@ -116,6 +148,11 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
+		if (this.needsFastForwarding && this.getMainNode().getParent() != null) { // Needs adding to rootNode in order to get the model bounds, needed for collisions!
+			//this.getMainNode().updateModelBound(); // todo - remove?
+			this.needsFastForwarding = false;
+			this.fastForward();
+		}
 		if (!useRay) {
 			super.processByServer(server, tpf_secs);
 		} else {
@@ -127,15 +164,17 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
+		// todo - check we've been added to the rootNode
+		//if (this.getCollidable().
 		if (!useRay) {
-			simpleRigidBody.process(tpf_secs);
+			this.simpleRigidBody.process(tpf_secs);
 		} else {
 			this.moveByRay(tpf_secs);
 		}
 		this.finalProcessing();
 	}
-	
-	
+
+
 	private void moveByRay(float tpf_secs) {
 		Ray ray = new Ray(this.getWorldTranslation(), dir);
 		ray.setLimit(speed * tpf_secs);
@@ -168,7 +207,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 				}
 			}
 		}
-		
+
 	}
 
 

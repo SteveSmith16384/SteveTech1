@@ -41,7 +41,6 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 		}
 
 		Box box1 = new Box(w/2, h/2, d/2);
-		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("MovingTarget", box1);
 		if (!_game.isServer()) { // Not running in server
 			TextureKey key3 = new TextureKey(tex);
@@ -49,9 +48,9 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
 
-			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			floor_mat.setTexture("DiffuseMap", tex3);
-			geometry.setMaterial(floor_mat);
+			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			mat.setTexture("DiffuseMap", tex3);
+			geometry.setMaterial(mat);
 		}
 		geometry.setLocalTranslation(0, h, 0); // Origin is at the bottom
 		this.mainNode.attachChild(geometry);
@@ -66,16 +65,16 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
-		this.timeUntilTurn -= tpf_secs;
+	public void processByServer(AbstractGameServer server, float tpfSecs) {
+		this.timeUntilTurn -= tpfSecs;
 		if (this.timeUntilTurn <= 0) {
 			this.timeUntilTurn = DURATION;
 			this.currDir.multLocal(-1);
 		}
 
-		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED)); // this.getMainNode();
+		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
 
-		super.processByServer(server, tpf_secs);
+		super.processByServer(server, tpfSecs);
 
 		if (Globals.LOG_MOVING_TARGET_POS) {
 			IOFunctions.appendToFile("ServerMovingtarget.csv", "ServerMovingTarget," + System.currentTimeMillis() + "," + this.getWorldTranslation());
@@ -103,7 +102,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 	@Override
 	public void damaged(float amt, IEntity collider, String reason) {
-		//this.respawn();
+		// Do nothing
 	}
 
 
@@ -126,7 +125,7 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 
 	@Override
 	public float getHealth() {
-		return 0;
+		return 1;
 	}
 
 

@@ -116,7 +116,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	public HashMap<Integer, IEntity> entities = new HashMap<>(1000); // All ents are added to this immediately, but not added to root node until the right time
 	public ArrayList<IEntity> entitiesForProcessing = new ArrayList<>(100); // Entities that we need to iterate over in game loop
-	protected LinkedList<PhysicalEntity> entitiesToAddToGame = new LinkedList<PhysicalEntity>(); // Entities to add to RootNode, as we don't add them immed
+	protected LinkedList<PhysicalEntity> entitiesToAddToRootNode = new LinkedList<PhysicalEntity>(); // Entities to add to RootNode, as we don't add them immed
 
 	protected SimplePhysicsController<PhysicalEntity> physicsController; // Checks all collisions
 	protected FixedLoopTime loopTimer; // Keep client and server running at the same time
@@ -414,9 +414,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		this.entityRemovalSystem.actuallyRemoveEntities();
 
 		// Add entities
-		if (entitiesToAddToGame.size() > 0) {
-			for (int i=0 ; i<entitiesToAddToGame.size() ; i++) {
-				PhysicalEntity pe = entitiesToAddToGame.get(i);
+		if (entitiesToAddToRootNode.size() > 0) {
+			for (int i=0 ; i<entitiesToAddToRootNode.size() ; i++) {
+				PhysicalEntity pe = entitiesToAddToRootNode.get(i);
 				if (pe.timeToAdd < renderTime) {
 					if (pe.getID() < 0 || this.entities.containsKey(pe.getID())) { // Check it is still in the game
 						this.addEntityToGame(pe);
@@ -426,7 +426,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							pe.getMainNode().removeFromParent();
 						}
 					}
-					entitiesToAddToGame.remove(i);
+					entitiesToAddToRootNode.remove(i);
 					i--;
 				}
 			}
@@ -614,7 +614,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 						}
 					}								
 					PhysicalEntity pe = (PhysicalEntity)e;
-					pe.storePositionData(eud, mainmsg.timestamp);
+					pe.addPositionData(eud, mainmsg.timestamp);
 					if (pe.chronoUpdateData != null) {
 						pe.chronoUpdateData.addData(eud);
 					}
@@ -855,7 +855,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				if (Globals.DEBUG_AVATAR_SET) {
 					Globals.p("Avatar for player is now " + currentAvatar);
 				}
-				Vector3f look = new Vector3f(-15f, getCamera().getLocation().y, -15f); // todo - don't hard-code .6
+				Vector3f look = new Vector3f(-15f, getCamera().getLocation().y, -15f);
 				getCamera().lookAt(look, Vector3f.UNIT_Y); // Look somewhere
 			} else {
 				throw new RuntimeException("Player's avatar must be a subclass of " + AbstractClientAvatar.class.getSimpleName() + ".  This is a " + e);
@@ -929,8 +929,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.addEntity(e);
 			//Globals.p("Finished creating entity " + data.type);
 		} else {
-			Globals.p("Not creating entity type " + data.type);
 			// It's maybe not for this game, or its for our own bullet, so ignore it
+			//Globals.p("Not creating entity type " + data.type);
 		}
 
 		// Update % complete
@@ -981,7 +981,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.entitiesForProcessing.add(e);
 		}
 		if (e instanceof PhysicalEntity) {
-			entitiesToAddToGame.add((PhysicalEntity)e);
+			entitiesToAddToRootNode.add((PhysicalEntity)e);
 		}
 		if (e.getID() == currentAvatarID && e != this.currentAvatar) {
 			this.setAvatar(e);
@@ -1017,7 +1017,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else {
 			this.getGameNode().attachChild(pe.getMainNode());
 		}
-
+		pe.getMainNode().updateModelBound();
+		
 		if (pe.simpleRigidBody != null) {
 			this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
 			if (Globals.STRICT) {
@@ -1058,7 +1059,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private void removeAllEntities() {
 		Globals.p("REMOVING ALL ENTITIES...");
-		this.entitiesToAddToGame.clear();
+		this.entitiesToAddToRootNode.clear();
 		/*
 		while (this.entities.size() > 0) {
 			Iterator<IEntity> it = this.entities.values().iterator();
@@ -1110,8 +1111,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				this.entitiesForProcessing.remove(e);
 			}
 			e.remove();
-			if (entitiesToAddToGame.contains(e)) {
-				entitiesToAddToGame.remove(e); 
+			if (entitiesToAddToRootNode.contains(e)) {
+				entitiesToAddToRootNode.remove(e); 
 			}
 			if (e == this.currentAvatar) {
 				if (Globals.DEBUG_AVATAR_SET) {
@@ -1316,37 +1317,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	/*
-	 * Note that an entity is responsible for clearing up it's own data!  This method should only remove the client's knowledge of the entity.  "e.remove()" does all the hard work.
-	 */
-	/*private void actuallyRemoveClientOnlyEntity(int id) {
-		IEntity e = getClientOnlyEntityById(id);
-		if (e != null) {
-			// todo - call shared remove code?
-			if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-				Globals.p("Actually removing CO entity " + id + ":" + e);
-			}
-			this.clientOnlyEntities.remove(e);
-			if (e.requiresProcessing()) {
-				this.entitiesForProcessing.remove(e);
-			}
-			// todo - remove from node!
-		} else {
-			Globals.pe("Entity id " + id + " not found for removal");
-		}
-	}*/
-
-	/*
-	private IEntity getClientOnlyEntityById(int id) {
-		for (IEntity e : this.clientOnlyEntities) {
-			if (e.getID() == id) {
-				return e;
-			}
-		}
-		return null;
-	}
-	 */
-
 	@Override
 	public int getPlayerID() {
 		return playerID;
@@ -1395,12 +1365,12 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	@Override
 	public void playSound(int soundId, int entityId, Vector3f _pos, float _volume, boolean _stream) {
-		if (!Globals.MUTE) {
+		//if (!Globals.MUTE) {
 			String sound = getSoundFileFromID(soundId);
 			if (sound != null && sound.length() > 0) {
 				soundSystem.playSound(sound, entityId, _pos, _volume, _stream);
 			}
-		}
+		//}
 	}
 
 

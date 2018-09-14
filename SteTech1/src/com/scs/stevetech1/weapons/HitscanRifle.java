@@ -27,7 +27,6 @@ public class HitscanRifle extends AbstractMagazineGun implements IHitscanWeapon,
 	private static final float RANGE = 99f;
 
 	private RayCollisionData hitThisMoment = null; // Only used server-side.  Null if nothing hit
-	//private int bulletsInMag = MAG_SIZE;
 
 	public HitscanRifle(IEntityController game, int id, int type, int playerID, AbstractAvatar owner, int avatarID, byte num, ClientData client) {
 		super(game, id, type, playerID, owner, avatarID, num, "Hitscan Rifle", .2f, 1f, MAG_SIZE, client);
@@ -43,7 +42,6 @@ public class HitscanRifle extends AbstractMagazineGun implements IHitscanWeapon,
 			if (hitThisMoment != null) {
 				//Settings.p(hitThisMoment.entity + " has been shot!");
 
-				//server.collisionOccurred(hitThisMoment.entityHit, this);
 				if (hitThisMoment.entityHit instanceof IDamagable) {
 					IDamagable id = (IDamagable)hitThisMoment.entityHit;
 					id.damaged(this.getDamageCaused(), null, "Hitscan rifle");
@@ -59,8 +57,6 @@ public class HitscanRifle extends AbstractMagazineGun implements IHitscanWeapon,
 			} else {
 				// Bullet trail into the sky
 				Vector3f endPos = this.owner.getBulletStartPos().add(this.owner.getShootDir().mult(RANGE));
-				/*BulletTrail bt = new BulletTrail(game, this.playerID, this.owner.getBulletStartPos(), endPos);
-				game.addEntity(bt);*/
 				server.sendBulletTrail(this.playerID, this.owner.getBulletStartPos(), endPos);
 
 			}
@@ -120,60 +116,18 @@ public class HitscanRifle extends AbstractMagazineGun implements IHitscanWeapon,
 		return this.owner.getSide();
 	}
 
-/*
-	@Override
-	public HashMap<String, Object> getCreationData() {
-		return super.creationData;
-	}
-*/
-/*
-	@Override
-	public void reload() {
-		this.bulletsInMag = this.magazineSize;
-	}
-	
-	*/
+
 	@Override
 	protected AbstractBullet createBullet(int entityid, int playerID, IEntity shooter, Vector3f startPos, Vector3f dir, byte side) {
 		// No physical projectiles required!
 		return null;
 	}
 
-/*
-	@Override
-	public int getBulletsInMag() {
-		return bulletsInMag;
-	}
-*/
 
 	@Override
 	public IEntity getActualShooter() {
 		return owner;
 	}
 
-/*
-	@Override
-	public void encode(AbilityUpdateMessage aum) {
-		super.encode(aum);
-		
-		aum.bulletsLeftInMag = this.getBulletsInMag();
-
-	}
-
-
-	@Override
-	public void decode(AbilityUpdateMessage aum) {
-		super.decode(aum);
-		
-		this.bulletsInMag = aum.bulletsLeftInMag;
-	}
-
-/*
-	@Override
-	protected void emptyMagazine() {
-		this.bulletsInMag = 0;
-		
-	}
-*/
 
 }

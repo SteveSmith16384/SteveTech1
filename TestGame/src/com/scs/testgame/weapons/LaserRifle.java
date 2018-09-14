@@ -12,8 +12,6 @@ import com.scs.testgame.entities.PlayerLaserBullet;
 
 public class LaserRifle extends AbstractMagazineGun implements IAbility {
 
-	//private LinkedList<PlayerLaserBullet> ammoCache = new LinkedList<PlayerLaserBullet>(); 
-
 	public LaserRifle(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, byte abilityNum, ClientData client) {
 		super(game, id, TestGameClientEntityCreator.LASER_RIFLE, playerID, owner, avatarID, abilityNum, "Laser Rifle", .2f, 2, 2, client);
 

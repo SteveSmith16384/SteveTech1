@@ -8,22 +8,22 @@ import ssmith.lang.Functions;
 
 public class Globals {
 	
-	public static final boolean MUTE = false;
+	//public static final boolean MUTE = false;
 	public static final boolean RECORD_VID = false;
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
-	public static final boolean USE_BULLET_REWINDING = true;
-	public static final boolean DEBUG_BULLET_REWINDING = true;
+	public static final boolean SHOW_BULLET_COLLISION_POS = true;
+	public static final boolean TEST_BULLET_REWINDING = true;
 	public static final boolean EMPTY_MAP = true;
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
 
 	// Lots of consts for specific debugging output
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean DEBUG_GUN_NOT_SHOWING = false;
 	public static final boolean NO_AI_UNITS = false;
 	public static final boolean TEST_OUTLINE_SHADER = false;
 	public static final boolean DEBUG_BULLET_POSITIONS = false;
-	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_CPU_HUD_TEXT = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
@@ -50,8 +50,6 @@ public class Globals {
 	public static final boolean DEBUG_AVATAR_SET = false;
 	public static final boolean DEBUG_SLIDING_DOORS = false;
 	public static final boolean DEBUG_CLIENT_SERVER_FAR_APART = false;
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
-	public static final boolean SHOW_AVATAR_POS = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;
 	public static final boolean TURN_OFF_CLIENT_POS_ADJ = false;

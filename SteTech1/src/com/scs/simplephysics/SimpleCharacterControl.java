@@ -23,7 +23,7 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
 	public boolean jump() {
 		if (isOnGround) {
-			if (System.currentTimeMillis() - this.lastJumpTime > 1000) { // Prevent jumping again too soon
+			if (System.currentTimeMillis() - this.lastJumpTime > 1000) { // Prevent jumping again too soon.  Todo - make config
 				//System.out.println("Jump!");
 				this.oneOffForce.y += jumpForce;
 				lastJumpTime = System.currentTimeMillis();

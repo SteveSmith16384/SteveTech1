@@ -1,0 +1,15 @@
+PLAYER JOINS GAME:
+Server creates Avatar
+Server sends all entities to client
+Server sends SetAvatarMessage
+Server sends AvatarStartedMessage
+
+
+
+GAME RESTARTS:
+All entities removed
+New game entities created
+New avatar entities created
+Server sends all entities to client
+Server sends SetAvatarMessage
+Server sends AvatarStartedMessage

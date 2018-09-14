@@ -79,10 +79,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 		this.avatarControl.process();
 
-		if (Globals.SHOW_AVATAR_POS) {
-			Globals.p("pos=" + this.bbGeom.getWorldTranslation() + "  time=" + serverTime);
-		}
-
 		simpleRigidBody.process(tpf_secs);
 
 		if (!this.isAlive()) {
@@ -129,7 +125,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	}
 
 
-	public IHitscanWeapon getAnyAbilitiesShootingInPast() {
+	public IHitscanWeapon getAnyAbilitiesShootingInPast() { // todo - rename to AreHitScan
 		for (int i=0 ; i< this.ability.length ; i++) {
 			if (this.ability[i] != null) {
 				if (this.ability[i] instanceof IHitscanWeapon) {

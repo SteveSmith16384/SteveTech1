@@ -26,11 +26,9 @@ public class StaticSnowman extends PhysicalEntity {
 
 		SnowmanModel m = new SnowmanModel(game.getAssetManager());
 		Spatial model = m.createAndGetModel();
-
 		this.mainNode.attachChild(model);
 
 		mainNode.setLocalRotation(q);
-
 		mainNode.setLocalTranslation(x, y, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);

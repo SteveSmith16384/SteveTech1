@@ -1,15 +1,3 @@
-Avatars
-* If removed, all the owned abilities are removed.
-
-
-Players Bullets
-* See other doc
-
-
-AI Bullets
-* Treated like normal entities
-
-
 Client-only entities
 * These are identified with a negative id
 

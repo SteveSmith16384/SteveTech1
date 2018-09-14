@@ -24,6 +24,7 @@ import com.scs.undercoveragent.entities.SnowTree2;
 import com.scs.undercoveragent.entities.SnowballBullet;
 import com.scs.undercoveragent.entities.SnowmanClientAvatar;
 import com.scs.undercoveragent.entities.SnowmanEnemyAvatar;
+import com.scs.undercoveragent.entities.MovingTargetSnowman;
 import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
 
@@ -44,6 +45,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 	public static final int SNOW_HILL_2 = 13;
 	public static final int SNOW_HILL_3 = 14;
 	public static final int SNOW_HILL_4 = 15;
+	public static final int MOVING_TARGET_SNOWMAN = 16;
 
 	public UndercoverAgentClientEntityCreator() {
 		super();
@@ -110,42 +112,49 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		{
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			Igloo igloo = new Igloo(game, id, pos.x, pos.y, pos.z, q);
-			return igloo;  //crate.getMainNode().getWorldTranslation();
+			return igloo;
 		}
 
 		case SNOW_HILL_1:
 		{
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowHill1 hill = new SnowHill1(game, id, pos.x, pos.y, pos.z, q);
-			return hill;  //crate.getMainNode().getWorldTranslation();
+			return hill;
 		}
 
 		case SNOW_HILL_2:
 		{
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowHill2 hill = new SnowHill2(game, id, pos.x, pos.y, pos.z, q);
-			return hill;  //crate.getMainNode().getWorldTranslation();
+			return hill;
 		}
 
 		case SNOW_HILL_3:
 		{
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowHill3 hill = new SnowHill3(game, id, pos.x, pos.y, pos.z, q);
-			return hill;  //crate.getMainNode().getWorldTranslation();
+			return hill;
 		}
 
 		case SNOW_HILL_4:
 		{
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			SnowHill4 hill = new SnowHill4(game, id, pos.x, pos.y, pos.z, q);
-			return hill;  //crate.getMainNode().getWorldTranslation();
+			return hill;
 		}
 
 		case STATIC_SNOWMAN:
 		{
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			StaticSnowman snowman = new StaticSnowman(game, id, pos.x, pos.y, pos.z, q);
-			return snowman;  //crate.getMainNode().getWorldTranslation();
+			return snowman;
+		}
+
+		case MOVING_TARGET_SNOWMAN:
+		{
+			Quaternion q = (Quaternion)msg.data.get("quat");
+			MovingTargetSnowman snowman = new MovingTargetSnowman(game, id, pos.x, pos.y, pos.z, q);
+			return snowman;
 		}
 
 		case SNOW_TREE_1:
@@ -166,7 +175,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		{
 			Quaternion q = (Quaternion)msg.data.get("quat");
 			BigTreeWithLeaves tree = new BigTreeWithLeaves(game, id, pos.x, pos.y, pos.z, q);
-			return tree;  //crate.getMainNode().getWorldTranslation();
+			return tree;
 		}
 
 		case SNOWBALL_LAUNCHER: 

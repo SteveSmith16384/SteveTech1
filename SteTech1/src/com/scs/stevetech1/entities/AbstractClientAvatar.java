@@ -149,11 +149,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			cam.getLocation().z = vec.z;
 			cam.update();
 		}
-		/*
-		if (hud != null) {
-			hud.processByClient((AbstractGameClient)client, tpf_secs);
-		}
-		 */
+
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			EntityPositionData epd = historicalPositionData.calcPosition(System.currentTimeMillis(), false);
 			if (epd != null) {

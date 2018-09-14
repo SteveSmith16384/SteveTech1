@@ -44,7 +44,6 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	public long timeToAdd; // Client side only; when to add the entity to the game
 
 	// Rewind settings
-	private Vector3f originalPos = new Vector3f();
 	private Vector3f tmpRayPos = new Vector3f();
 
 	public boolean sendUpdate = true; // Send first time.  Don't forget to set to true if any data changes that is included in the EntityUpdateMessage
@@ -62,10 +61,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		if (moves) {
 			historicalPositionData = new PositionCalculator(Globals.HISTORY_DURATION);
 		}
-		// Always create this as Computer's need health history
+		// Always create this (e.g. even Computer's need a health history)
 		chronoUpdateData = new ChronologicalLookup<EntityUpdateData>(Globals.HISTORY_DURATION);
-		
-
 	}
 
 
@@ -75,6 +72,15 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			throw new RuntimeException("Do not call this for avatars!");
 		}
 
+		/*if (Globals.STRICT) {
+			if (this.getMainNode().getParent() == null) {
+				throw new RuntimeException("processing entity but not added to rootNode!");
+			}
+			if (!server.entities.containsKey(this.getID())) {
+				throw new RuntimeException("processing entity but not added to game!");
+			}
+		}*/
+		
 		if (simpleRigidBody != null) {
 			simpleRigidBody.process(tpf_secs);
 
@@ -228,20 +234,18 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		return this.sendUpdate;
 	}
 
-
+/*
 	@Override
 	public String toString() {
 		return super.toString();
 	}
-
+*/
 
 	public void rewindPositionTo(long serverTimeToUse) {
 		EntityPositionData shooterEPD = this.historicalPositionData.calcPosition(serverTimeToUse, true);
 		if (shooterEPD != null) {
-			this.originalPos.set(this.getWorldTranslation());
-			//this.originalRot.set(this.getWorldRotation());
+			//this.originalPos.set(this.getWorldTranslation());
 			this.setWorldTranslation(shooterEPD.position);
-			//this.setWorldRotation(shooterEPD.rotation);
 		} else {
 			Globals.p("Unable to rewind position: no data");
 		}
@@ -249,9 +253,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void restorePosition() {
-		this.setWorldTranslation(this.originalPos);
-		//this.setWorldRotation(this.originalRot);
-		this.mainNode.updateGeometricState();
+		//this.setWorldTranslation(this.originalPos);
+		//this.mainNode.updateGeometricState();
+		this.rewindPositionTo(System.currentTimeMillis());
 	}
 
 
@@ -387,6 +391,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	
 	@Override
 	public Collidable getCollidable() {
+		this.mainNode.updateModelBound(); // Need this!
+		if (this.mainNode.getWorldBound().getVolume() == 0) {
+			Globals.pe("Warning: " + this + " has zero volume!  Probably not addded to rootNode");
+		}
 		return this.mainNode.getWorldBound(); // Return simple boundingbox by default, to avoid mesh v mesh collisions
 	}
 
@@ -403,7 +411,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 	 * @param eum
 	 * @param time
 	 */
-	public void storePositionData(EntityUpdateData eum, long time) {
+	public void addPositionData(EntityUpdateData eum, long time) {
 		this.addPositionData(eum.pos, time); // Store the position for use later
 	}
 

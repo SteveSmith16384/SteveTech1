@@ -22,6 +22,8 @@ import com.scs.undercoveragent.UASounds;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 public class SnowballBullet extends AbstractBullet implements INotifiedOfCollision {
+	
+	private static final float RAD = 0.1f;
 
 	public SnowballBullet(IEntityController _game, int id, int playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client) {
 		super(_game, id, UndercoverAgentClientEntityCreator.SNOWBALL_BULLET, "Snowball", playerOwnerId, _shooter, startPos, _dir, _side, _client, false, 0f, 0f);
@@ -36,7 +38,7 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 
 	@Override
 	protected void createModelAndSimpleRigidBody(Vector3f dir) {
-		Sphere sphere = new Sphere(8, 8, 0.1f, true, false);
+		Sphere sphere = new Sphere(8, 8, RAD, true, false);
 		sphere.setTextureMode(TextureMode.Projected);
 		Geometry ball_geo = new Geometry("snowball_geom", sphere);
 
@@ -44,9 +46,9 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 			ball_geo.setShadowMode(ShadowMode.CastAndReceive);
 			TextureKey key3 = new TextureKey("Textures/snow.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-			floor_mat.setTexture("DiffuseMap", tex3);
-			ball_geo.setMaterial(floor_mat);
+			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			mat.setTexture("DiffuseMap", tex3);
+			ball_geo.setMaterial(mat);
 		}
 
 		ball_geo.setModelBound(new BoundingBox());
@@ -72,6 +74,9 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, false);
 				game.addEntity(ds);
 			}
+		}
+		if (Globals.TEST_BULLET_REWINDING) {
+			Globals.p(this.getName() + " has hit " + pe);
 		}
 
 		// todo - move code to AbstractBullet

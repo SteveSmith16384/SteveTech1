@@ -43,10 +43,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	protected boolean isOnGround = false;
 	public boolean canWalkUpSteps = false;
 	public boolean removed = false;
-	private boolean neverMoves = false; // More efficient if true
+	private boolean neverMoves = false; // More efficient if true - todo - reverse the logic!
 	private boolean isSolid = true; // otherwise, other SRBs can pass through it
 
-	private SimpleNode<T> parent;
+	private SimpleNode<T> parentNode;
 
 	// Temp caches
 	private Vector3f tmpPrevPos = new Vector3f();
@@ -91,6 +91,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
+	/**
+	 * if false, the entity is kinemtic, ie. only moved manually, not by forces.
+	 * @param b
+	 */
 	public void setMovedByForces(boolean b) {
 		this.movedByForces = b;
 	}
@@ -523,7 +527,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		BoundingVolume bv2 = (BoundingVolume)s2.getWorldBound();
 		int res2 = bv2.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
 
-		return res1>0 && res2>0; // Only collide if both collisions fire
+		return res1 > 0 && res2 > 0; // Only collide if both collisions fire
 		
 	}
 
@@ -599,12 +603,12 @@ public class SimpleRigidBody<T> implements Collidable {
 	 * This should only be called from SimplePhysicsController.
 	 */
 	public void removeFromParent_INTERNAL() {
-		if (this.parent != null) {
-			this.parent.remove(this);
-			if (this.parent.getNumChildren() == 0) {
-				this.physicsController.nodes.remove(this.parent.id);
+		if (this.parentNode != null) {
+			this.parentNode.remove(this);
+			if (this.parentNode.getNumChildren() == 0) {
+				this.physicsController.nodes.remove(this.parentNode.id);
 			} else {
-				this.parent.recalcBounds();
+				this.parentNode.recalcBounds();
 			}
 		}
 	}
@@ -652,10 +656,10 @@ public class SimpleRigidBody<T> implements Collidable {
 
 	
 	public void setParent(SimpleNode<T> n) {
-		if (this.parent != null) {
-			throw new RuntimeException(this + " already has a parent: " + this.parent);
+		if (this.parentNode != null) {
+			throw new RuntimeException(this + " already has a parent: " + this.parentNode);
 		}
-		this.parent = n;
+		this.parentNode = n;
 	}
 }
 

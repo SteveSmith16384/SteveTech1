@@ -41,7 +41,7 @@ public abstract class Entity implements IEntity, Savable {
 
 	@Override
 	public String toString() {
-		return "E_" + entityName + "_" + id;
+		return "Entity_" + entityName + "_" + id;
 	}
 
 

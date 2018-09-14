@@ -443,10 +443,6 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		// Position the camera
 		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
 		
-		// todo - remove balls that fall off edge
-
-		//--------------------------------------------
-
 		try {
 			Thread.sleep(5); // If the FPS is waaayyy to high (i.e. > 1000 FPS), things get a bit crazy, caused by floating point rounding
 		} catch (InterruptedException e) {
