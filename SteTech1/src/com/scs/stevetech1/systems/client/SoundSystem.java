@@ -77,9 +77,9 @@ public class SoundSystem extends AbstractSystem {
 					this.nodesToRemove.add(data);
 
 				} catch (AssetLoadException ex) {
-					//ex.printStackTrace();
+					Globals.pe("Error playing " + sound + ": " + ex.getMessage());
 				} catch (AssetNotFoundException ex) {
-					//ex.printStackTrace();
+					Globals.pe("Error playing " + sound + ": " + ex.getMessage());
 				} catch (IllegalStateException ex) {
 					// No sound card
 					Globals.pe("Error playing " + sound + ": " + ex.getMessage());

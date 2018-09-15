@@ -282,4 +282,12 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		this.appendToLog("DISCONNECTED");
 	}
 	
+	
+	@Override
+	protected String getSoundFileFromID(int id) {
+		return UASounds.getSoundFile(id);
+	}
+
+
+
 }

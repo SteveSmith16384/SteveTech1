@@ -20,7 +20,7 @@ public class UASounds {
 		case DIED: return "Sounds/died.wav";
 		case FALL: return "Sounds/fallfar.wav";
 		case FOOTSTEPS: return "Sounds/footstep.wav";
-		case START: return "Sounds/teleport.mp3";
+		case START: return "Sounds/teleport.wav";
 		case WINNER: return "Sounds/winner.wav";
 		case LOSER: return "Sounds/loser.wav";
 		default:
