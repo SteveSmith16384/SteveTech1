@@ -89,7 +89,6 @@ public final class PositionCalculator {
 					if (warn) {
 						//long diff = System.currentTimeMillis() - serverTimeToUse;
 						long startDiff = serverTimeToUse - positionData.getFirst().serverTimestamp;
-						Globals.p("Warning: Requested time is " + startDiff + " too soon for " + this.entityName);
 						//Globals.p("History data starts " + startDiff + " after requested time for " + this.entityName);// too recent for ..!\n" + this.toString(serverTimeToUse));
 					}
 					return this.positionData.getFirst(); // Our selected time is too soon, so return soonest we have
@@ -97,7 +96,7 @@ public final class PositionCalculator {
 					if (warn) {
 						//Globals.p(this.toString(serverTimeToUse));
 						long diff = this.positionData.getLast().serverTimestamp - serverTimeToUse;
-						Globals.p("Warning: History data starts " + diff + " after requested time for " + this.entityName);
+						//Globals.p("Warning: History data starts " + diff + " after requested time for " + this.entityName);
 					}
 					return this.positionData.getLast(); // Our selected time is too late!
 				}

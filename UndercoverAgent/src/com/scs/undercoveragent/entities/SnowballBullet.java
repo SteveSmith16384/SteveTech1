@@ -75,9 +75,9 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 				game.addEntity(ds);
 			}
 		}
-		if (Globals.TEST_BULLET_REWINDING) {
+		//if (Globals.TEST_BULLET_REWINDING) {
 			Globals.p(this.getName() + " has hit " + pe);
-		}
+		//}
 
 		// todo - move code to AbstractBullet
 		/*if (Globals.USE_BULLET_REWINDING) {

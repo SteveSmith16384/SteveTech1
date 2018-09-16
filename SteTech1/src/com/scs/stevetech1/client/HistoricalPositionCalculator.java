@@ -25,13 +25,6 @@ public class HistoricalPositionCalculator {
 					// check where we should be based on where we were X ms ago
 					EntityPositionData clientEPD = clientPositionData.calcPosition(clientTimeToUse, true);
 					if (clientEPD != null) {
-						// Is there a difference
-						/*float diff = serverEPD.position.distance(clientEPD.position);
-					if (diff > 0.2) {
-						// There should be no difference!
-						//Globals.p("Server " + serverPositionData.toString(serverTimeToUse));
-						//Globals.p("Client " + clientAvatarPositionData.toString(clientTimeToUse));
-					}*/
 						Vector3f vdiff = serverEPD.position.subtract(clientEPD.position); 
 						return vdiff;
 					}
