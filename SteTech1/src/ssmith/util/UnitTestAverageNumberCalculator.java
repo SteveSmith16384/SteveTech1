@@ -9,7 +9,7 @@ public class UnitTestAverageNumberCalculator {
 
 
 	@Test
-	private void basicTest1() {
+	public void basicTest1() {
 		AverageNumberCalculator apt = new AverageNumberCalculator(4);
 		apt.add(100);
 		apt.add(150);

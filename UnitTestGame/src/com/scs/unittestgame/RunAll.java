@@ -14,25 +14,26 @@ public class RunAll {
 
 	public static void main(String[] args) {
 		try {
-			RunAll();
-			ConnDisconn();
+			RunAll runAll = new RunAll();
+			runAll.runServerAndClients();
+			runAll.connDisconn();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 
-	public static void RunAll() throws IOException {
+	public void runServerAndClients() throws IOException {
 		UnitTestGameServer server = new UnitTestGameServer();
 
-		ArrayList<SimpleApplication> instances = new ArrayList<>();
+		ArrayList<SimpleApplication> clientInstances = new ArrayList<>();
 		for (int i=0 ; i<1 ; i++) {
-			instances.add(new UnitTestGameClient());
+			clientInstances.add(new UnitTestGameClient());
 		}
 
 		Functions.sleep(10 * 1000);
 
-		for(SimpleApplication app : instances) {
+		for(SimpleApplication app : clientInstances) {
 			UnitTestGameClient client = (UnitTestGameClient)app;
 			Globals.p("Num ents on client: " + client.entities.size());
 			if (client.entities.size() != server.getNumEntities()) {
@@ -41,7 +42,7 @@ public class RunAll {
 		}
 
 		// Close clients
-		for(SimpleApplication app : instances) {
+		for(SimpleApplication app : clientInstances) {
 			UnitTestGameClient client = (UnitTestGameClient)app;
 			client.quit("Manual");
 		}
@@ -51,7 +52,7 @@ public class RunAll {
 	}
 
 
-	public static void ConnDisconn() throws IOException {
+	public void connDisconn() throws IOException {
 		UnitTestGameServer server = new UnitTestGameServer();
 
 		for (int i=0 ; i<30 ; i++) {

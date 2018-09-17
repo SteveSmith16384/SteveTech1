@@ -13,7 +13,7 @@ public class TestPositionCalculator {
 
 
 	@Test
-	private void basicPositionCalc1() {
+	public void basicPositionCalc1() {
 		PositionCalculator posCalc = new PositionCalculator(10000, "");
 		for (int i=0 ; i<10 ; i++) {
 			posCalc.addPositionData(new Vector3f(i, 0, 0), i*100);
@@ -28,7 +28,7 @@ public class TestPositionCalculator {
 
 
 	@Test
-	private void basicPositionCalc2_AddInReverse() {
+	public void basicPositionCalc2_AddInReverse() {
 		PositionCalculator posCalc = new PositionCalculator(10000, "");
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new Vector3f(i, 0, 0), i*100);
@@ -43,7 +43,7 @@ public class TestPositionCalculator {
 
 
 	@Test
-	private void basicPositionCalc2_EarlyInSegment() {
+	public void basicPositionCalc2_EarlyInSegment() {
 		PositionCalculator posCalc = new PositionCalculator(10000, "");
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new Vector3f(i, 0, 0), i*100);
@@ -58,7 +58,7 @@ public class TestPositionCalculator {
 	
 
 	@Test
-	private void basicPositionCalc2_LateInSegment() {
+	public void basicPositionCalc2_LateInSegment() {
 		PositionCalculator posCalc = new PositionCalculator(10000, "");
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new Vector3f(i, 0, 0), i*100);
@@ -73,7 +73,7 @@ public class TestPositionCalculator {
 
 
 	@Test
-	private void basicPositionCalc_TooEarly() {
+	public void basicPositionCalc_TooEarly() {
 		PositionCalculator posCalc = new PositionCalculator(10000, "");
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new Vector3f(i, 0, 0), 100+(i*100));
@@ -91,7 +91,7 @@ public class TestPositionCalculator {
 
 
 	@Test
-	private void basicPositionCalc_TooLate() {
+	public void basicPositionCalc_TooLate() {
 		PositionCalculator posCalc = new PositionCalculator(10000, "");
 		for (int i=10 ; i>0 ; i--) {
 			posCalc.addPositionData(new Vector3f(i, 0, 0), 100+(i*100));
