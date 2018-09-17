@@ -26,7 +26,7 @@ import com.scs.stevetech1.shared.IEntityController;
  * @author stephencs
  *
  */
-public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately, IRewindable {
+public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately {//, IRewindable {
 
 	public int playerID; // -1 if AI
 	public IEntity shooter; // So we know who not to collide with, and who fired the killing shot
@@ -124,7 +124,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		float totalTimeToFFwd_Ms = server.gameOptions.clientRenderDelayMillis; // + (client.playerData.pingRTT/2);
 		final float tpfSecs = (float)server.gameOptions.tickrateMillis / 1000f;
 		while (totalTimeToFFwd_Ms > 0) {
-			server.rewindEntities(toTime, this); // Rewind all entities except the bullet, which has only just appeared!
+			server.rewindEntities(toTime);//, this); // Rewind all entities except the bullet, which has only just appeared!
 			server.getRootNode().updateGeometricState();
 
 			this.processByServer(server, tpfSecs); 

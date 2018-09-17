@@ -43,8 +43,8 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			if (args.length > 0) {
 				props = new MyProperties(args[0]);
 			} else {
-				props = new MyProperties("playerConfig.txt");
-				//Globals.p("Warning: No config file specified");
+				props = new MyProperties();
+				Globals.p("Warning: No config file specified; using defaults");
 			}
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");//"192.168.1.217");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);

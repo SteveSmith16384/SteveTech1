@@ -267,7 +267,7 @@ ICollisionListener<PhysicalEntity> {
 
 		if (areAnyPlayersShootingHitscanWeapons) {
 			long toTime = System.currentTimeMillis() - gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
-			this.rewindEntities(toTime, null);
+			this.rewindEntities(toTime);//, null);
 			this.rootNode.updateGeometricState();
 
 			// Check for hitscan weapons
@@ -304,14 +304,14 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	public void rewindEntities(long toTime, IEntity except) {
+	public void rewindEntities(long toTime) {//, IEntity except) {
 		for (IEntity e : this.entitiesForProcessing) {
-			if (e != except) {
+			//if (e != except) {
 				if (e instanceof IRewindable) {
 					IRewindable r = (IRewindable)e;
 					r.rewindPositionTo(toTime);
 				}
-			}
+			//}
 		}
 	}
 

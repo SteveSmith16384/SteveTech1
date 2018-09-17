@@ -94,7 +94,7 @@ public class MovingTargetSnowman extends PhysicalEntity implements IRewindable, 
 			this.currDir.multLocal(-1);
 		}
 
-		//todo - re-add this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
+		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
 
 		super.processByServer(server, tpfSecs);
 	}

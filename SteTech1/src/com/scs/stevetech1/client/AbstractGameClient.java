@@ -1093,6 +1093,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			Globals.p("Going to remove entity " + e.getID() + ":" + e);
 		}
 		this.entityRemovalSystem.markEntityForRemoval(e);
+		// Remove physical entities from visuals immediately
+		if (e instanceof PhysicalEntity) {
+			PhysicalEntity pe = (PhysicalEntity)e;
+			pe.getMainNode().removeFromParent();
+		}
 	}
 
 

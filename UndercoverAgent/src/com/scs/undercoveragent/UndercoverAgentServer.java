@@ -35,6 +35,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	public static final String NAME = "Undercover Agent";
 	public static final String GAME_ID = "Undercover Agent";
 
+	private static long deployDurationSecs, gameDurationSecs, restartDurationSecs;
+
 	private int mapSize;
 	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
@@ -45,22 +47,25 @@ public class UndercoverAgentServer extends AbstractGameServer {
 				props = new MyProperties(args[0]);
 			} else {
 				props = new MyProperties();
-				Globals.p("Warning: No config file specified");
+				Globals.p("Warning: No config file specified; using defaults");
 			}
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
 
-			int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
-			int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
-			int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
-			int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
+			//int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
+			//int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
+			//int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
+			//int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
+			deployDurationSecs = props.getPropertyAsInt("deployDurationSecs", 10);
+			gameDurationSecs = props.getPropertyAsInt("gameDurationSecs", 240);
+			restartDurationSecs = props.getPropertyAsInt("restartDurationSecs", 10);
 
 			// Game specific
 			int mapSize = props.getPropertyAsInt("mapSize", 20);
 
 			new UndercoverAgentServer(mapSize, 
 					gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
-					tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis);//, gravity, aerodynamicness);
+					Globals.DEFAULT_TICKRATE, Globals.DEFAULT_SEND_UPDATES_INTERVAL, Globals.DEFAULT_RENDER_DELAY, Globals.DEFAULT_NETWORK_TIMEOUT);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -70,7 +75,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	private UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
-		super(GAME_ID, 1d, "key", new GameOptions(tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, 10*1000, 5*60*1000, 10*1000, 
+		super(GAME_ID, 1d, "key", new GameOptions(tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, 
+				deployDurationSecs*1000, gameDurationSecs*1000, restartDurationSecs*1000, 
 				gameIpAddress, gamePort, 
 				10, 5));
 

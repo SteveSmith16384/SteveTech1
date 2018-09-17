@@ -68,6 +68,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
+		if (isRewound) {
+			throw new RuntimeException("Trying to process rewound object: " + this);
+		}
+		
 		if (this instanceof AbstractAvatar) {
 			throw new RuntimeException("Do not call this for avatars!");
 		}
