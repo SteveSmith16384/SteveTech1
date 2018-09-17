@@ -47,6 +47,7 @@ All the basic features are complete but not thoroughly stress-tested yet.  All a
 * Designed and developed by Stephen Carlyle-Smith (http://twitter.com/stephencsmith, stephen.carlylesmith@googlemail.com)
 * Uses JMonkeyEngine for the 3D
 * Uses Kryonet for networking.
+* TTF font loader by Adam T. Ryder (https://1337atr.weebly.com/jttf.html)
 * For model credits, see the relevant folder containing the model.
 
 

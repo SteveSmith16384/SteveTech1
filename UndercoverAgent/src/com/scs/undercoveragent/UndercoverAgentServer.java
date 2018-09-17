@@ -168,11 +168,13 @@ public class UndercoverAgentServer extends AbstractGameServer {
 		this.actuallyAddEntity(mborderBack);
 		MountainMapBorder mborderFront = new MountainMapBorder(this, getNextEntityID(), 0, 0, -InvisibleMapBorder.BORDER_WIDTH, mapSize, Vector3f.UNIT_X);
 		this.actuallyAddEntity(mborderFront);
-		
-		if (Globals.TEST_BULLET_REWINDING) {
-			MovingTargetSnowman snowman = new MovingTargetSnowman(this, getNextEntityID(), mapSize/2, 0.01f, mapSize/2, JMEAngleFunctions.getYAxisRotation(-1, 0));
-			this.addEntityToRandomPosition(snowman);
 
+		if (Globals.TEST_BULLET_REWINDING) {
+			for (int i=0 ; i<10 ; i++) {
+				Vector3f dir = JMEAngleFunctions.getRandomDirection_8();
+				MovingTargetSnowman snowmanTarget = new MovingTargetSnowman(this, getNextEntityID(), mapSize/2, 0.01f, mapSize/2, JMEAngleFunctions.getYAxisRotation(-1, 0), dir);
+				this.addEntityToRandomPosition(snowmanTarget);
+			}
 		}
 	}
 

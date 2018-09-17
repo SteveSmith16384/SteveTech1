@@ -123,6 +123,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis; // todo - combine into class?
 	private RealtimeInterval sendPingInterval = new RealtimeInterval(Globals.PING_INTERVAL_MS);
+	private RealtimeInterval sendInputsInterval;// = new RealtimeInterval(Globals.PING_INTERVAL_MS);
 	private ValidateClientSettings validClientSettings;
 	public IGameMessageClient networkClient;
 	public boolean rcvdHello = false;
@@ -177,14 +178,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		Globals.showWarnings();
 
-		loopTimer = new FixedLoopTime(tickrateMillis);
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
-		animSystem = new AnimationSystem(this);
-		//launchSystem = new ClientEntityLauncherSystem(this);
-		this.entityRemovalSystem = new EntityRemovalSystem(this);
-
-		nodes = new HashMap<String, Node>();
-
 		mouseSens = _mouseSens;
 
 		settings = new AppSettings(true);
@@ -212,6 +205,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (state != null) {
 			this.stateManager.detach(state);
 		}
+
+		this.loopTimer = new FixedLoopTime(tickrateMillis);
+		this.physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
+		this.animSystem = new AnimationSystem(this);
+		this.entityRemovalSystem = new EntityRemovalSystem(this);
+		this.sendInputsInterval = new RealtimeInterval(tickrateMillis);
+		nodes = new HashMap<String, Node>();
 
 	}
 
@@ -244,9 +244,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			stateManager.attach(video_recorder);
 		}
 
-		// Turn off stats
-		setDisplayFps(false);
-		setDisplayStatView(false);
+		if (!Globals.SHOW_FPS_STATS) {
+			// Turn off stats
+			setDisplayFps(false);
+			setDisplayStatView(false);
+		}
 
 		fpp = new FilterPostProcessor(assetManager);
 		viewPort.addProcessor(fpp);
@@ -361,7 +363,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				if (joinedGame) {
 
-					this.sendInputs();
+					if (Globals.FORCE_CLIENT_SLOWDOWN || sendInputsInterval.hitInterval()) {
+						this.sendInputs();
+					}
 
 					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
 						try {
@@ -400,8 +404,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				checkNodesExistInEntities();
 			}
 
-			loopTimer.waitForFinish(); // Keep clients and server running at same speed
-			loopTimer.start();
+			if (Globals.FORCE_CLIENT_SLOWDOWN) {
+				loopTimer.waitForFinish(); // Keep clients and server running at same speed
+				loopTimer.start();
+			}
 
 		} catch (Exception ex) {
 			Globals.HandleError(ex);
@@ -527,8 +533,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			}
 		}
-
-
 	}
 
 
@@ -567,9 +571,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			SimpleGameData oldGameData = this.gameData;
 			SimpleGameDataMessage gsm = (SimpleGameDataMessage)message;
 			this.gameData = gsm.gameData;
-			/*if (oldGameData == null || oldGameData.gameID != gsm.gameData.gameID) {
-				Globals.p("Client Game id is now " + gameData.gameID);
-			}*/
 			this.playersList = gsm.players;
 			if (oldGameData == null) {
 				this.gameStatusChanged(-1, this.gameData.getGameStatus());

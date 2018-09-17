@@ -16,6 +16,7 @@ import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -31,24 +32,30 @@ import com.scs.undercoveragent.models.SnowmanModel;
  * @author stephencs
  *
  */
-public class MovingTargetSnowman extends PhysicalEntity implements IRewindable, IDamagable, IProcessByClient {
+public class MovingTargetSnowman extends PhysicalEntity implements IRewindable, IDamagable, IProcessByClient, INotifiedOfCollision {
 
 	private static final float DURATION = 3;
 	private static final float SPEED = 5;
 
-	private Vector3f currDir = new Vector3f(1f, 0, 0);
-	private float timeUntilTurn = DURATION;
+	private Spatial model;
 	private Spatial debugNode;
 
-	public MovingTargetSnowman(IEntityController _game, int id, float x, float y, float z, Quaternion q) {
+	// Only used by server
+	private boolean moving = true;
+	private Vector3f currDir;
+	private float timeUntilTurn = DURATION;
+
+	public MovingTargetSnowman(IEntityController _game, int id, float x, float y, float z, Quaternion q, Vector3f dir) {
 		super(_game, id, UndercoverAgentClientEntityCreator.MOVING_TARGET_SNOWMAN, "SnowmanMovingTarget", true, true, true);
 
+
 		if (_game.isServer()) {
+			currDir = dir;
 			creationData = new HashMap<String, Object>();
 		}
 
 		SnowmanModel m = new SnowmanModel(game.getAssetManager());
-		Spatial model = m.createAndGetModel();
+		model = m.createAndGetModel();
 		this.mainNode.attachChild(model);
 
 		mainNode.setLocalRotation(q);
@@ -59,7 +66,7 @@ public class MovingTargetSnowman extends PhysicalEntity implements IRewindable, 
 		simpleRigidBody.setNeverMoves(false);
 
 		model.setUserData(Globals.ENTITY, this);
-		
+
 		if (Globals.TEST_BULLET_REWINDING) {
 			createDebugBox();
 		}
@@ -88,13 +95,15 @@ public class MovingTargetSnowman extends PhysicalEntity implements IRewindable, 
 
 	@Override
 	public void processByServer(AbstractGameServer server, float tpfSecs) {
-		this.timeUntilTurn -= tpfSecs;
-		if (this.timeUntilTurn <= 0) {
-			this.timeUntilTurn = DURATION;
-			this.currDir.multLocal(-1);
-		}
+		if (moving) {
+			this.timeUntilTurn -= tpfSecs;
+			if (this.timeUntilTurn <= 0) {
+				this.timeUntilTurn = DURATION;
+				this.currDir.multLocal(-1);
+			}
 
-		this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
+			this.simpleRigidBody.setAdditionalForce(this.currDir.mult(SPEED));
+		}
 
 		super.processByServer(server, tpfSecs);
 	}
@@ -102,7 +111,7 @@ public class MovingTargetSnowman extends PhysicalEntity implements IRewindable, 
 
 	@Override
 	public Collidable getCollidable() {
-		return this.mainNode;
+		return this.getMainNode();// this.model;
 	}
 
 
@@ -121,10 +130,10 @@ public class MovingTargetSnowman extends PhysicalEntity implements IRewindable, 
 	@Override
 	public void updateClientSideHealth(int amt) {
 		// Do nothing
-		
+
 	}
-	
-	
+
+
 	@Override
 	public void damaged(float amt, IEntity collider, String reason) {
 		// Do nothing
@@ -152,6 +161,16 @@ public class MovingTargetSnowman extends PhysicalEntity implements IRewindable, 
 	}
 
 
+	@Override
+	public void notifiedOfCollision(PhysicalEntity pe) {
+		if (pe instanceof SnowballBullet) {
+			this.moving = false;
+			this.simpleRigidBody.resetForces();
+		}
 
-	
+	}
+
+
+
+
 }

@@ -11,9 +11,11 @@ import com.scs.stevetech1.entities.ExplosionShard;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.undercoveragent.entities.BigTreeWithLeaves;
+import com.scs.undercoveragent.entities.HealthPack;
 import com.scs.undercoveragent.entities.Igloo;
 import com.scs.undercoveragent.entities.InvisibleMapBorder;
 import com.scs.undercoveragent.entities.MountainMapBorder;
+import com.scs.undercoveragent.entities.MovingTargetSnowman;
 import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.entities.SnowHill1;
 import com.scs.undercoveragent.entities.SnowHill2;
@@ -24,7 +26,6 @@ import com.scs.undercoveragent.entities.SnowTree2;
 import com.scs.undercoveragent.entities.SnowballBullet;
 import com.scs.undercoveragent.entities.SnowmanClientAvatar;
 import com.scs.undercoveragent.entities.SnowmanEnemyAvatar;
-import com.scs.undercoveragent.entities.MovingTargetSnowman;
 import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
 
@@ -46,6 +47,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 	public static final int SNOW_HILL_3 = 14;
 	public static final int SNOW_HILL_4 = 15;
 	public static final int MOVING_TARGET_SNOWMAN = 16;
+	public static final int HEALTHPACK = 17;
 
 	public UndercoverAgentClientEntityCreator() {
 		super();
@@ -153,7 +155,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 		case MOVING_TARGET_SNOWMAN:
 		{
 			Quaternion q = (Quaternion)msg.data.get("quat");
-			MovingTargetSnowman snowman = new MovingTargetSnowman(game, id, pos.x, pos.y, pos.z, q);
+			MovingTargetSnowman snowman = new MovingTargetSnowman(game, id, pos.x, pos.y, pos.z, q, null);
 			return snowman;
 		}
 
@@ -238,6 +240,12 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 			String tex = (String) msg.data.get("tex");
 			ExplosionShard expl = new ExplosionShard(game, pos.x, pos.y, pos.z, size, forceDirection, tex);
 			return expl;
+		}
+
+		case HEALTHPACK:
+		{
+			HealthPack healthPack = new HealthPack(game, id, pos.x, pos.y, pos.z);
+			return healthPack;
 		}
 
 		default:

@@ -51,8 +51,8 @@ public class UndercoverAgentHUD extends Node {
 	private BitmapFont font_small;
 	private TrueTypeFont ttf;
 	
-	private BitmapText abilityOther, debugText, gameStatus, gameTime, pingText, healthText, scoreText, numPlayers;
-	private TrueTypeContainer abilityGun;
+	//private BitmapText abilityGun, abilityOther, debugText, ;
+	private TrueTypeContainer gameStatus, gameTime, healthText, scoreText, pingText, numPlayers;
 
 	public UndercoverAgentHUD(AbstractGameClient _game, Camera _cam) { // BitmapFont font_small, 
 		super("HUD");
@@ -86,61 +86,60 @@ public class UndercoverAgentHUD extends Node {
 		float yPos = hud_height - LINE_SPACING;
 
 		yPos -= LINE_SPACING;
-		gameStatus = new BitmapText(font_small, false);
-		gameStatus.setColor(defaultColour);
+		gameStatus = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
+		//gameStatus.setColor(defaultColour);
 		gameStatus.setLocalTranslation(xPos, yPos, 0);
 		gameStatus.setText("Game Status:");
 		this.attachChild(gameStatus);
 
 		yPos -= LINE_SPACING;
-		gameTime = new BitmapText(font_small, false);
-		gameTime.setColor(defaultColour);
+		gameTime = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
+		//gameTime.setColor(defaultColour);
 		gameTime.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(gameTime);
-
+/*
 		yPos -= LINE_SPACING;
-		//abilityGun = new BitmapText(font_small, false);
 		abilityGun = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
 		///abilityGun.setColor(defaultColour);
 		abilityGun.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(abilityGun);
-
+*//*
 		yPos -= LINE_SPACING;
 		abilityOther = new BitmapText(font_small, false);
 		abilityOther.setColor(defaultColour);
 		abilityOther.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(abilityOther);
-
+*/
 		yPos -= LINE_SPACING;
-		healthText = new BitmapText(font_small, false);
-		healthText.setColor(defaultColour);
+		healthText = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
+		//healthText.setColor(defaultColour);
 		healthText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(healthText);
 
 		yPos -= LINE_SPACING;
-		scoreText = new BitmapText(font_small, false);
-		scoreText.setColor(defaultColour);
+		scoreText = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
+		//scoreText.setColor(defaultColour);
 		scoreText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(scoreText);
 
 		yPos -= LINE_SPACING;
-		numPlayers = new BitmapText(font_small, false);
-		numPlayers.setColor(defaultColour);
+		numPlayers = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
+		//numPlayers.setColor(defaultColour);
 		numPlayers.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(numPlayers);
 
 		yPos -= LINE_SPACING;
-		pingText = new BitmapText(font_small, false);
-		pingText.setColor(defaultColour);
+		pingText = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
+		//pingText.setColor(defaultColour);
 		pingText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(pingText);
-
+/*
 		yPos -= LINE_SPACING;
 		debugText = new BitmapText(font_small, false);
 		debugText.setColor(defaultColour);
 		debugText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(debugText);
-
+*/
 		log_ta = new TextArea("log", font_small, 6, "");
 		log_ta.setColor(defaultColour);
 		log_ta.setLocalTranslation(10, hud_height/2, 0);
@@ -210,12 +209,12 @@ public class UndercoverAgentHUD extends Node {
 		if (client.currentAvatar != null) {
 			this.setHealthText((int)client.currentAvatar.getHealth());
 			// These must be after we might use them, so the hud is correct
-			if (client.currentAvatar.ability[0] != null) {
+			/*if (client.currentAvatar.ability[0] != null) {
 				setAbilityGunText(client.currentAvatar.ability[0].getHudText());
 			}
 			if (client.currentAvatar.ability[1] != null) {
 				setAbilityOtherText(client.currentAvatar.ability[1].getHudText());
-			}
+			}*/
 		}
 
 		if (process_damage_box) {
@@ -241,11 +240,11 @@ public class UndercoverAgentHUD extends Node {
 		this.log_ta.setText(str.toString());
 	}
 
-
+/*
 	public void setDebugText(String s) {
 		this.debugText.setText(s);
 	}
-
+*/
 
 	public void setGameStatus(String s) {
 		this.gameStatus.setText("Game Status: " + s);
@@ -256,7 +255,7 @@ public class UndercoverAgentHUD extends Node {
 		this.gameTime.setText(s);
 	}
 
-
+/*
 	public void setAbilityGunText(String s) {
 		this.abilityGun.setText(s);
 	}
@@ -265,7 +264,7 @@ public class UndercoverAgentHUD extends Node {
 	public void setAbilityOtherText(String s) {
 		this.abilityOther.setText(s);
 	}
-
+*/
 
 	public void setHealthText(int s) {
 		this.healthText.setText("Health: " + s);

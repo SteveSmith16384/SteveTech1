@@ -22,7 +22,7 @@ import com.scs.undercoveragent.UASounds;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 
 public class SnowballBullet extends AbstractBullet implements INotifiedOfCollision {
-	
+
 	private static final float RAD = 0.1f;
 
 	public SnowballBullet(IEntityController _game, int id, int playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client) {
@@ -67,33 +67,17 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 
 	@Override
 	public void notifiedOfCollision(PhysicalEntity pe) {
-		if (Globals.SHOW_BULLET_COLLISION_POS) {
-			if (game.isServer()) {
+		if (game.isServer()) {
+			if (Globals.SHOW_BULLET_COLLISION_POS) {
 				// Create debugging sphere
 				Vector3f pos = this.getWorldTranslation();
 				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, true, false);
 				game.addEntity(ds);
 			}
+			//if (Globals.TEST_BULLET_REWINDING) {
+			Globals.p("Server: " + this.getName() + " has hit " + pe);
+			//}
 		}
-		//if (Globals.TEST_BULLET_REWINDING) {
-			Globals.p(this.getName() + " has hit " + pe);
-		//}
-
-		// todo - move code to AbstractBullet
-		/*if (Globals.USE_BULLET_REWINDING) {
-			if (!game.isServer()) { 
-				if (pe instanceof AbstractOtherPlayersAvatar) { // Only send when we've hit something important
-					AbstractGameClient client = (AbstractGameClient)game;
-					if (Globals.DEBUG_BULLET_REWINDING) {
-						Globals.p("Snowball owned by " + this.playerID + " has hit " + pe + " on client " + client.playerID);
-					}
-					if (this.playerID == client.playerID) { // Only send collisions for our bullets
-						ClientRegisteredHitMessage crhm = new ClientRegisteredHitMessage(this.serverEntityId, pe.getID());//, client.getServerTime());
-						client.sendMessage(crhm);
-					}
-				}
-			}
-		}*/
 		game.markForRemoval(this);
 	}
 
