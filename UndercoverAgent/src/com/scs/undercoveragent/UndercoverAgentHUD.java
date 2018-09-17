@@ -32,159 +32,106 @@ import ssmith.util.RealtimeInterval;
  */
 public class UndercoverAgentHUD extends Node {
 
-	private static final float LINE_SPACING = 10;
+	private static float LINE_SPACING;// = 10;
 	private static final int MAX_LINES = 5;
 
 	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
 
 	private static ColorRGBA defaultColour = ColorRGBA.Black;
 
-	private TextArea log_ta;
 	private List<String> logLines = new ArrayList<String>();
-	
-	private float hud_width, hud_height;
+
+	private Camera cam;
 	private Geometry damage_box;
 	private ColorRGBA dam_box_col = new ColorRGBA(1, 0, 0, 0.0f);
 	private boolean process_damage_box;
 	private AbstractGameClient game;
-	
-	private BitmapFont font_small;
-	private TrueTypeFont ttf;
-	
-	//private BitmapText abilityGun, abilityOther, debugText, ;
-	private TrueTypeContainer gameStatus, gameTime, healthText, scoreText, pingText, numPlayers;
 
-	public UndercoverAgentHUD(AbstractGameClient _game, Camera _cam) { // BitmapFont font_small, 
+	//private BitmapFont font_small;
+	private TrueTypeFont ttfSmall;
+
+	//private BitmapText abilityGun, abilityOther, debugText, ;
+	private TrueTypeContainer gameStatus, gameTime, healthText, scoreText, pingText, numPlayers, logText;
+
+	public UndercoverAgentHUD(AbstractGameClient _game, Camera _cam) { 
 		super("HUD");
 
 		game = _game;
-		hud_width = _cam.getWidth();
-		hud_height = _cam.getHeight();
-		
-		font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
-		
-		_game.getAssetManager().registerLoader(TrueTypeLoader.class, "ttf");
+		cam = _cam;
 
-		TrueTypeKeyMesh ttk = new TrueTypeKeyMesh("Fonts/Xenotron.ttf", Style.Plain, 16);
-		ttf = (TrueTypeMesh)_game.getAssetManager().loadAsset(ttk);
+		//font_small = _game.getAssetManager().loadFont("Interface/Fonts/Console.fnt");
+		_game.getAssetManager().registerLoader(TrueTypeLoader.class, "ttf");
+		float fontSize = cam.getWidth() / 30; 
+		TrueTypeKeyMesh ttk = new TrueTypeKeyMesh("Fonts/Xenotron.ttf", Style.Plain, (int)fontSize);
+		ttfSmall = (TrueTypeMesh)_game.getAssetManager().loadAsset(ttk);
+
+		LINE_SPACING = cam.getHeight() / 20;
 
 		super.setLocalTranslation(0, 0, 0);
 
 		//this.addTargetter();
 
-		/*if (Globals.DEBUG_HUD) {
-			for (int i=0; i<100 ; i+=10) {
-				BitmapText deleteme = new BitmapText(font_small, false);
-				deleteme.setColor(ColorRGBA.White);
-				deleteme.setLocalTranslation(i, i, 0);
-				this.attachChild(deleteme);
-				deleteme.setText("x" + i);
-			}
-		}*/
-
-		float xPos = hud_width - 150f;
-		float yPos = hud_height - LINE_SPACING;
+		float xPos = cam.getWidth() - 150f;
+		float yPos = cam.getHeight() - LINE_SPACING;
 
 		yPos -= LINE_SPACING;
-		gameStatus = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
-		//gameStatus.setColor(defaultColour);
+		gameStatus = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
 		gameStatus.setLocalTranslation(xPos, yPos, 0);
 		gameStatus.setText("Game Status:");
+		gameStatus.updateGeometry();
 		this.attachChild(gameStatus);
 
 		yPos -= LINE_SPACING;
-		gameTime = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
-		//gameTime.setColor(defaultColour);
+		gameTime = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
 		gameTime.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(gameTime);
-/*
+		/*
 		yPos -= LINE_SPACING;
 		abilityGun = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
 		///abilityGun.setColor(defaultColour);
 		abilityGun.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(abilityGun);
-*//*
+		 *//*
 		yPos -= LINE_SPACING;
 		abilityOther = new BitmapText(font_small, false);
 		abilityOther.setColor(defaultColour);
 		abilityOther.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(abilityOther);
-*/
+		  */
 		yPos -= LINE_SPACING;
-		healthText = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
-		//healthText.setColor(defaultColour);
+		healthText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
 		healthText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(healthText);
 
 		yPos -= LINE_SPACING;
-		scoreText = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
-		//scoreText.setColor(defaultColour);
+		scoreText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
 		scoreText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(scoreText);
 
 		yPos -= LINE_SPACING;
-		numPlayers = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
-		//numPlayers.setColor(defaultColour);
+		numPlayers = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
 		numPlayers.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(numPlayers);
 
 		yPos -= LINE_SPACING;
-		pingText = ttf.getFormattedText(new StringContainer(ttf, "Hello World"), ColorRGBA.Green);
-		//pingText.setColor(defaultColour);
+		pingText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
 		pingText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(pingText);
-/*
-		yPos -= LINE_SPACING;
-		debugText = new BitmapText(font_small, false);
-		debugText.setColor(defaultColour);
-		debugText.setLocalTranslation(xPos, yPos, 0);
-		this.attachChild(debugText);
-*/
-		log_ta = new TextArea("log", font_small, 6, "");
-		log_ta.setColor(defaultColour);
-		log_ta.setLocalTranslation(10, hud_height/2, 0);
-		this.attachChild(log_ta);
+
+		logText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);// = new TextArea("log", font_small, 6, "");
+		logText.setLocalTranslation(10, cam.getHeight()/2, 0);
+		this.attachChild(logText);
 
 		// Damage box
 		{
 			Material mat = new Material(game.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 			mat.setColor("Color", this.dam_box_col);
 			mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-			damage_box = new Geometry("damagebox", new Quad(hud_width, hud_height));
+			damage_box = new Geometry("damagebox", new Quad(cam.getWidth(), cam.getHeight()));
 			damage_box.move(0, 0, 0);
 			damage_box.setMaterial(mat);
 			this.attachChild(damage_box);
 		}
-
-		/*if (Settings.DEBUG_HUD) {
-			Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-			mat.setColor("Color", new ColorRGBA(1, 1, 0, 0.5f));
-			mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-			Geometry testBox = new Geometry("testBox", new Quad(w/2, h/2));
-			testBox.move(10, 10, 0);
-			testBox.setMaterial(mat);
-			this.attachChild(testBox);
-
-			/*Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			//mat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-			Texture t = game.getAssetManager().loadTexture("Textures/text/hit.png");
-			//t.setWrap(WrapMode.Repeat);
-			mat.setTexture("DiffuseMap", t);
-			Geometry geom = new Geometry("Billboard", new Quad(w, h));
-			geom.setMaterial(mat);
-			geom.move(0, 0, 0);
-			//geom.setQueueBucket(Bucket.Transparent);
-			//geom.setLocalTranslation(-w/2, -h/2, 0);
-			this.attachChild(geom);*/
-		/*
-			Picture pic = new Picture("HUD Picture");
-			pic.setImage(game.getAssetManager(), "Textures/text/hit.png", true);
-			pic.setWidth(w);
-			pic.setHeight(h);
-			//pic.setPosition(settings.getWidth()/4, settings.getHeight()/4);
-			this.attachChild(pic);
-		}*/
-
 
 		this.updateGeometricState();
 
@@ -204,17 +151,10 @@ public class UndercoverAgentHUD extends Node {
 				}
 			}
 			this.setPing(client.pingRTT);
-		}
 
-		if (client.currentAvatar != null) {
-			this.setHealthText((int)client.currentAvatar.getHealth());
-			// These must be after we might use them, so the hud is correct
-			/*if (client.currentAvatar.ability[0] != null) {
-				setAbilityGunText(client.currentAvatar.ability[0].getHudText());
+			if (client.currentAvatar != null) {
+				this.setHealthText((int)client.currentAvatar.getHealth());
 			}
-			if (client.currentAvatar.ability[1] != null) {
-				setAbilityOtherText(client.currentAvatar.ability[1].getHudText());
-			}*/
 		}
 
 		if (process_damage_box) {
@@ -237,25 +177,28 @@ public class UndercoverAgentHUD extends Node {
 		for(String line : this.logLines) {
 			str.append(line + "\n");
 		}
-		this.log_ta.setText(str.toString());
+		this.logText.setText(str.toString());
+		this.logText.updateGeometry();
 	}
 
-/*
+	/*
 	public void setDebugText(String s) {
 		this.debugText.setText(s);
 	}
-*/
+	 */
 
 	public void setGameStatus(String s) {
 		this.gameStatus.setText("Game Status: " + s);
+		this.gameStatus.updateGeometry();
 	}
 
 
 	public void setGameTime(String s) {
 		this.gameTime.setText(s);
+		this.gameTime.updateGeometry();
 	}
 
-/*
+	/*
 	public void setAbilityGunText(String s) {
 		this.abilityGun.setText(s);
 	}
@@ -264,25 +207,29 @@ public class UndercoverAgentHUD extends Node {
 	public void setAbilityOtherText(String s) {
 		this.abilityOther.setText(s);
 	}
-*/
+	 */
 
 	public void setHealthText(int s) {
 		this.healthText.setText("Health: " + s);
+		this.healthText.updateGeometry();
 	}
 
 
 	public void setScoreText(int s) {
 		this.scoreText.setText("Score: " + s);
+		this.scoreText.updateGeometry();
 	}
 
 
 	public void setPing(long i) {
 		this.pingText.setText("Ping: " + i);
+		this.pingText.updateGeometry();
 	}
 
 
 	public void setNumPlayers(int i) {
 		this.numPlayers.setText("Num Players: " + i);
+		this.numPlayers.updateGeometry();
 	}
 
 
@@ -303,33 +250,5 @@ public class UndercoverAgentHUD extends Node {
 		this.dam_box_col.b = 1f;
 	}
 
-/*
-	@Override
-	public Node getRootNode() {
-		return this;
-	}
 
-
-	@Override
-	public void showMessage(String s) {
-		this.appendToLog(s);
-	}
-
-
-	@Override
-	public void addChild(Node n) {
-		this.attachChild(n);
-	}
-
-/*
-	@Override
-	public void setLog(LinkedList<String> gameLog) {
-		StringBuilder str = new StringBuilder();
-		for(String line : gameLog) {
-			str.append(line + "\n");
-		}
-		this.log_ta.setText(str.toString());
-	}
-*/
-	
 }
