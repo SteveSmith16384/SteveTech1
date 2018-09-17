@@ -298,16 +298,16 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		}
 
 	}
-	
+
 
 	public boolean isConnecting() {
 		return connectingThread != null && connectingThread.isAlive();
 	}
-	
+
 
 	protected abstract Class[] getListofMessageClasses();
 
-	
+
 	public long getServerTime() {
 		return System.currentTimeMillis() + clientToServerDiffTime;
 	}
@@ -537,11 +537,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	protected boolean handleMessage(MyAbstractMessage message) {
-		if (message instanceof PingMessage) {
+		/*if (message instanceof PingMessage) {
 			PingMessage pingMessage = (PingMessage) message;
 			if (!pingMessage.s2c) {
-				long p2 = System.currentTimeMillis() - pingMessage.originalSentTime;
-				this.pingRTT = this.pingCalc.add(p2);
+				long rtt = System.currentTimeMillis() - pingMessage.originalSentTime;
+				this.pingRTT = this.pingCalc.add(rtt);
 				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (pingRTT/2); // If running on the same server, this should be 0! (or close enough)
 
 			} else {
@@ -549,7 +549,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				networkClient.sendMessageToServer(message); // Send it straight back
 			}
 
-		} else if (message instanceof ShowMessageMessage) {
+		} else */if (message instanceof ShowMessageMessage) {
 			ShowMessageMessage gsm = (ShowMessageMessage)message;
 			this.showMessage(gsm.msg);
 
@@ -954,10 +954,21 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			Globals.p("Rcvd " + message.getClass().getSimpleName());
 		}
 
-		synchronized (unprocessedMessages) {
-			unprocessedMessages.add(message);
+		if (message instanceof PingMessage) {
+			PingMessage pingMessage = (PingMessage) message;
+			if (!pingMessage.s2c) {
+				long rtt = System.currentTimeMillis() - pingMessage.originalSentTime;
+				this.pingRTT = this.pingCalc.add(rtt);
+				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (pingRTT/2); // If running on the same server, this should be 0! (or close enough)
+			} else {
+				pingMessage.responseSentTime = System.currentTimeMillis();
+				networkClient.sendMessageToServer(message); // Send it straight back
+			}
+		} else {
+			synchronized (unprocessedMessages) {
+				unprocessedMessages.add(message);
+			}
 		}
-
 	}
 
 
@@ -1019,7 +1030,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.getGameNode().attachChild(pe.getMainNode());
 		}
 		pe.getMainNode().updateModelBound();
-		
+
 		if (pe.simpleRigidBody != null) {
 			this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
 			if (Globals.STRICT) {
@@ -1372,10 +1383,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	@Override
 	public void playSound(int soundId, int entityId, Vector3f _pos, float _volume, boolean _stream) {
 		//if (!Globals.MUTE) {
-			String sound = getSoundFileFromID(soundId);
-			if (sound != null && sound.length() > 0) {
-				soundSystem.playSound(sound, entityId, _pos, _volume, _stream);
-			}
+		String sound = getSoundFileFromID(soundId);
+		if (sound != null && sound.length() > 0) {
+			soundSystem.playSound(sound, entityId, _pos, _volume, _stream);
+		}
 		//}
 	}
 
@@ -1425,7 +1436,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 			outlineViewport.setClearFlags(true, false, false);
 			outlineViewport.setBackgroundColor(new ColorRGBA(0f, 0f, 0f, 0f));
-			
+
 			outlineFilter = new OutlineProFilter(outlinePreFilter);
 			model.setUserData("OutlineProFilter", outlineFilter);
 			outlineFilter.setOutlineColor(color);
