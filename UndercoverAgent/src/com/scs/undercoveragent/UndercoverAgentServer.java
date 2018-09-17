@@ -97,9 +97,9 @@ public class UndercoverAgentServer extends AbstractGameServer {
 				float x = NumberFunctions.rndFloat(2, mapSize-3);
 				float z = NumberFunctions.rndFloat(2, mapSize-3);
 				avatar.setWorldTranslation(x, startHeight, z);
-			} while (avatar.simpleRigidBody.checkForCollisions(false).size() > 0);
+			} while (avatar.simpleRigidBody.checkForCollisions(false).size() > 0); // todo - don't try forever
 		}
-		Globals.p("Player starting at " + avatar.getWorldTranslation());
+		//Globals.p("Player starting at " + avatar.getWorldTranslation());
 	}
 
 

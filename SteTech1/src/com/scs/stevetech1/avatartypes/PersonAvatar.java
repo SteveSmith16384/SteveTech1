@@ -13,14 +13,14 @@ public class PersonAvatar implements IAvatarControl {
 
 	protected IEntityController game;
 	private IInputDevice input;
-	private final Vector3f walkDirection = new Vector3f(); // Need sep walkDir as we set y=0 on this one, but not the one in RigidBody
+	private final Vector3f walkDirection = new Vector3f(); // Need separate walkDir as we set y=0 on this one, but not the one in RigidBody
 
 	//Temporary vectors used on each frame.
 	private final Vector3f camDir = new Vector3f();
 	private final Vector3f camLeft = new Vector3f();
 
 	protected long lastMoveTime = System.currentTimeMillis() + 5000;
-	protected boolean playerWalked; // Has the player tried to move us?
+	public boolean playerWalked; // Has the player tried to move us?
 	public float moveSpeed = 0f;
 	private float jumpForce = 0;
 	private int newAnimCode;
@@ -57,9 +57,8 @@ public class PersonAvatar implements IAvatarControl {
 		camDir.set(input.getDirection()).multLocal(moveSpeed, 0.0f, moveSpeed); // Y=0, so speed is constant regardless of direction
 		camLeft.set(input.getLeft()).multLocal(moveSpeed);
 
-		//if (this.isAlive()) {
 		if (input.getFwdValue()) {
-			walkDirection.addLocal(camDir);  //this.getMainNode().getWorldTranslation();
+			walkDirection.addLocal(camDir);
 			newAnimCode = AbstractAvatar.ANIM_RUNNING;
 			lastMoveTime = System.currentTimeMillis();
 		} else if (input.getBackValue()) {
@@ -90,7 +89,6 @@ public class PersonAvatar implements IAvatarControl {
 			}
 			playerWalked = true;
 		}
-		//}
 	}
 	
 	

@@ -90,7 +90,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 
 	@Override
-	public void processByClient(IClientApp client, float tpf_secs) {
+	public void processByClient(IClientApp client, float tpfSecs) {
 		if (Globals.DEBUG_SET_ALIVE) {
 			this.alive = false;
 		}
@@ -116,8 +116,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			cam.update();
 
 		} else {
-			final long serverTime = client.getServerTime();
-
 			if (this.input != null) {
 				// Check for any abilities/guns being fired
 				for (int i=0 ; i<this.ability.length ; i++) {
@@ -139,8 +137,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				}
 			}
 
-			super.serverAndClientProcess(null, client, tpf_secs, serverTime);
+			final long serverTime = client.getServerTime();
 
+			super.serverAndClientProcess(null, client, tpfSecs, serverTime);
+			
 			storeAvatarPosition(serverTime);
 
 			// Position camera at node

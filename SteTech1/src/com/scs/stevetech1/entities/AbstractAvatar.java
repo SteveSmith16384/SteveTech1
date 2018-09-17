@@ -45,7 +45,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 	private float health;
 	public int currentAnimCode = -1;
-
 	protected IAvatarControl avatarControl;
 
 	public AbstractAvatar(IEntityController _game, int avatarType, int _playerID, IInputDevice _input, int eid, byte _side, IAvatarModel _avatarModel, IAvatarControl _avatarControl) {
