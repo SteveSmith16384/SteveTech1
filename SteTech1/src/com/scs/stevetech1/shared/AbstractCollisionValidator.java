@@ -1,6 +1,7 @@
 package com.scs.stevetech1.shared;
 
 import com.scs.stevetech1.components.IDontCollideWithComrades;
+import com.scs.stevetech1.components.IPlayerCollectable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
@@ -21,14 +22,15 @@ public class AbstractCollisionValidator {
 			return false;
 		}
 		
+		// Don't collide if one or both entities are not collidable
 		if (!pa.collideable || !pb.collideable) {
 			return false;
 		}
 
 		
-		// Anything with a side don't collide if on same side
+		// Anything with a side don't collide if on same side.
+		// This prevents bullets colliding with their shooter, or units of the same side blocking each other.
 		if (pa instanceof IDontCollideWithComrades && pb instanceof IDontCollideWithComrades) {
-			// units on the same side don't collide
 			IDontCollideWithComrades aa = (IDontCollideWithComrades)pa;
 			IDontCollideWithComrades ab = (IDontCollideWithComrades)pb;
 			if (aa.getSide() == ab.getSide()) {
@@ -36,6 +38,11 @@ public class AbstractCollisionValidator {
 			}
 		}
 
+		// Medipacks only collide with players
+		if ((pa instanceof IPlayerCollectable && pb instanceof AbstractAvatar) || pa instanceof AbstractAvatar && pb instanceof IPlayerCollectable) {
+			return false;
+		}
+		
 		return true;
 	}
 

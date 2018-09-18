@@ -29,7 +29,7 @@ public class BoxWarsServer extends AbstractGameServer {
 
 	public static void main(String[] args) {
 		try {
-			AbstractGameServer app = new BoxWarsServer();
+			new BoxWarsServer();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -56,7 +56,7 @@ public class BoxWarsServer extends AbstractGameServer {
 
 	@Override
 	protected Class[] getListofMessageClasses() {
-		return null; // No custom data in messages (yet?)
+		return null; // No custom data in messages
 	}
 
 
@@ -97,7 +97,7 @@ public class BoxWarsServer extends AbstractGameServer {
 
 	@Override
 	public int getMinPlayersRequiredForGame() {
-		return 2; // Need at least two players
+		return 2; // Need at least two players to start a game
 	}
 
 

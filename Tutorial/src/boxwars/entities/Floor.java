@@ -24,22 +24,16 @@ import boxwars.BoxWarsServer;
 public class Floor extends PhysicalEntity implements IProcessByClient {
 
 	private Box box1;
-	//private float w, h, d;
 
 	public Floor(IEntityController _game, int id, float x, float yTop, float z, float w, float h, float d, String tex, Vector3f _texScroll) {
 		super(_game, id, BoxWarsServer.FLOOR, "Floor", false, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("pos", new Vector3f(x, yTop, z));
 			creationData.put("size", new Vector3f(w, h, d));
 			creationData.put("tex", tex);
 		}
 
-		/*this.w = w;
-		this.h = h;
-		this.d = d;
-*/
 		box1 = new Box(w/2, h/2, d/2);
 
 		box1.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(new float[]{
@@ -58,16 +52,15 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
 
-			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-			floor_mat.setTexture("DiffuseMap", tex3);
-			geometry.setMaterial(floor_mat);
+			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			mat.setTexture("DiffuseMap", tex3);
+			geometry.setMaterial(mat);
 		}
 		this.mainNode.attachChild(geometry);
 		geometry.setLocalTranslation((w/2), -(h/2), (d/2)); // Move it into position
 		mainNode.setLocalTranslation(x, yTop, z); // Move it into position
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
-		//this.simpleRigidBody.setMovable(false);
 		simpleRigidBody.setNeverMoves(true);
 
 		geometry.setUserData(Globals.ENTITY, this);

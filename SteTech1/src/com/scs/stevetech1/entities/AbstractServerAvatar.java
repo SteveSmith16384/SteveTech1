@@ -90,8 +90,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 			super.serverAndClientProcess(server, null, tpf, System.currentTimeMillis());
 
 			if (getWorldTranslation().y < -1) {
-				// Dropped off the edge?
-				//server.console.appendText(getName() + " has fallen off the edge");
+				// Dropped off the edge
 				fallenOffEdge();
 			}
 

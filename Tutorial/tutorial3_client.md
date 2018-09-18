@@ -6,8 +6,8 @@
 
 The client is created by subclassing AbstractGameClient.  As with the server, the constructor will need some settings passing to it, and a few methods will need overriding.
 
-Probably the only method of note is "actuallyCreateEntity(AbstractGameClient game, NewEntityData msg)", which is called whenever the server sends a "create entity" message to the client.  This method needs to instanciate the relevant entity based on the data in NewEntityData.  This is relatively straightforward; however, bear in mind that when creating an avatar, you need to check if the playerID matches our own playerID, and if so, create a subclass of AbstractClientAvatar, otherwise create a subclass of AbstractEnemyAvatar.  See the source code of BoxWarsClient.java to see this in practise.
+Probably the only method of note is "actuallyCreateEntity(AbstractGameClient game, NewEntityData data)", which is called whenever the server sends a "create entity" message to the client.  This method needs to instanciate the relevant entity based on the data in NewEntityData.  This is relatively straightforward; however, bear in mind that when creating an avatar, you need to check if the playerID matches our own playerID, and if so, create a subclass of AbstractClientAvatar, otherwise create a subclass of AbstractEnemyAvatar.  See the source code of BoxWarsClient.java to see this in practise.
 
 
 ### Models
-Obviously any game would be boring if it was just boxes fighting boxes, so at some point you'll want to add a model.
+Obviously any game would be boring if it was just boxes fighting boxes, so at some point you'll want to add a model.  Since SteveTech2 uses JME, you can use all the facilities that it has for loading models, including Blender.

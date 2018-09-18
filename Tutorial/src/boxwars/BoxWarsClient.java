@@ -12,7 +12,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 import boxwars.entities.BoxWarsClientAvatar;
-import boxwars.entities.BoxWarsEnemyAvatar;
+import boxwars.entities.BoxWarsOtherPlayersAvatar;
 import boxwars.entities.Floor;
 import boxwars.entities.PlayersBullet;
 import boxwars.weapons.PlayersGun;
@@ -66,8 +66,8 @@ public class BoxWarsClient extends AbstractGameClient {
 				AbstractClientAvatar avatar = new BoxWarsClientAvatar(game, id, game.input, game.getCamera(), id, pos.x, pos.y, pos.z, side);
 				return avatar;
 			} else {
-				// Create a simple avatar since we don't control these
-				AbstractOtherPlayersAvatar avatar = new BoxWarsEnemyAvatar(game, id, pos.x, pos.y, pos.z, side);
+				// Create an avatar for another player, since we don't control this one
+				AbstractOtherPlayersAvatar avatar = new BoxWarsOtherPlayersAvatar(game, id, pos.x, pos.y, pos.z, side);
 				return avatar;
 			}
 		}

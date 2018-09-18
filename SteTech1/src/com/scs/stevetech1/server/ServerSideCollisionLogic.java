@@ -4,7 +4,9 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
+import com.scs.stevetech1.components.IPlayerCollectable;
 import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 
 public final class ServerSideCollisionLogic {
@@ -17,10 +19,6 @@ public final class ServerSideCollisionLogic {
 
 
 	public void collision(PhysicalEntity a, PhysicalEntity b) {
-		/*if (a.isMarkedForRemoval() || b.isMarkedForRemoval()) {
-			return;
-		}*/
-
 		if (a instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)a;
 			ic.notifiedOfCollision(b);
@@ -40,7 +38,17 @@ public final class ServerSideCollisionLogic {
 			IDamagable id = (IDamagable)a;
 			checkForDamage(choc, id);
 		}
-	}
+
+		if (a instanceof IPlayerCollectable && b instanceof AbstractServerAvatar) {
+			IPlayerCollectable ic = (IPlayerCollectable)a;
+			ic.collected((AbstractServerAvatar)b);
+		}
+		if (b instanceof IPlayerCollectable && a instanceof AbstractServerAvatar) {
+			IPlayerCollectable ic = (IPlayerCollectable)b;
+			ic.collected((AbstractServerAvatar)a);
+		}
+
+}
 
 
 	private void checkForDamage(ICausesHarmOnContact choc, IDamagable id) {

@@ -33,9 +33,9 @@ public class BoxAvatarModel implements IAvatarModel {
 		Texture tex3 = assetManager.loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
 
-		Material floor_mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-		floor_mat.setTexture("DiffuseMap", tex3);
-		geometry.setMaterial(floor_mat);
+		Material mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+		mat.setTexture("DiffuseMap", tex3);
+		geometry.setMaterial(mat);
 
 		geometry.setLocalTranslation(0, h/2, 0); // Origin is at the bottom
 
@@ -67,7 +67,7 @@ public class BoxAvatarModel implements IAvatarModel {
 	
 	@Override
 	public float getBulletStartHeight() {
-		return h - 0.3f;
+		return h - 0.3f; // Shoot from slightly lower than the camera
 	}
 
 	

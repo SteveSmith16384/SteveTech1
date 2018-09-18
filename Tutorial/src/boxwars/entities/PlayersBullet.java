@@ -33,9 +33,9 @@ public class PlayersBullet extends AbstractBullet implements INotifiedOfCollisio
 			ball_geo.setShadowMode(ShadowMode.CastAndReceive);
 			TextureKey key3 = new TextureKey( "Textures/sun.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
-			Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
-			floor_mat.setTexture("DiffuseMap", tex3);
-			ball_geo.setMaterial(floor_mat);
+			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");
+			mat.setTexture("DiffuseMap", tex3);
+			ball_geo.setMaterial(mat);
 		}
 
 		ball_geo.setModelBound(new BoundingBox());
@@ -51,7 +51,7 @@ public class PlayersBullet extends AbstractBullet implements INotifiedOfCollisio
 
 	@Override
 	public void notifiedOfCollision(PhysicalEntity pe) {
-		game.markForRemoval(this);
+		game.markForRemoval(this); // If we hit anything, remove us.
 	}
 
 
