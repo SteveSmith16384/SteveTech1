@@ -110,9 +110,9 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 
-	public void process(float tpf_secs) {
-		if (tpf_secs > 0.1f) {
-			tpf_secs = 0.1f; // Prevent stepping too far
+	public void process(float tpfSecs) {
+		if (tpfSecs > 0.1f) {
+			tpfSecs = 0.1f; // Prevent stepping too far
 		}
 
 		if (this.movedByForces) {
@@ -138,7 +138,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			{
 				float totalOffset = oneOffForce.x + additionalForce.x + this.automoveForce.x;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
-					this.tmpMoveDir.set(totalOffset * tpf_secs, 0, 0);
+					this.tmpMoveDir.set(totalOffset * tpfSecs, 0, 0);
 					tmpPrevPos.set(this.getBoundingBox().getCenter());
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
@@ -157,7 +157,7 @@ public class SimpleRigidBody<T> implements Collidable {
 			{
 				float totalOffset = oneOffForce.z + additionalForce.z + this.automoveForce.z;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
-					this.tmpMoveDir.set(0, 0, totalOffset * tpf_secs);
+					this.tmpMoveDir.set(0, 0, totalOffset * tpfSecs);
 					tmpPrevPos.set(this.getBoundingBox().getCenter());
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
@@ -180,7 +180,7 @@ public class SimpleRigidBody<T> implements Collidable {
 				boolean collided = false;
 				if (Math.abs(totalOffset) > SimplePhysicsController.MIN_MOVE_DIST) {
 					isOnGround = false;
-					this.tmpMoveDir.set(0, totalOffset * tpf_secs, 0);
+					this.tmpMoveDir.set(0, totalOffset * tpfSecs, 0);
 					List<SimpleRigidBody<T>> crs2 = this.move(tmpMoveDir);
 					if (crs2.size() > 0) {
 						collided = true;
@@ -201,7 +201,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					}
 				}
 				if (!collided) {
-					currentGravInc = currentGravInc + (gravInc * tpf_secs); // Fall faster
+					currentGravInc = currentGravInc + (gravInc * tpfSecs); // Fall faster
 				}
 				this.oneOffForce.y = oneOffForce.y * aerodynamicness; // Slow down
 			}
@@ -655,7 +655,7 @@ public class SimpleRigidBody<T> implements Collidable {
 	}
 
 	
-	public void setParent(SimpleNode<T> n) {
+	public void setParentNode(SimpleNode<T> n) {
 		if (this.parentNode != null) {
 			throw new RuntimeException(this + " already has a parent: " + this.parentNode);
 		}

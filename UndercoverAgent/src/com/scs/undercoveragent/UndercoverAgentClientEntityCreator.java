@@ -29,7 +29,7 @@ import com.scs.undercoveragent.entities.SnowmanEnemyAvatar;
 import com.scs.undercoveragent.entities.StaticSnowman;
 import com.scs.undercoveragent.weapons.SnowballLauncher;
 
-public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntityCreator {
+public class UndercoverAgentClientEntityCreator {
 
 	public static final int AVATAR = 1;
 	public static final int FLOOR = 2;
@@ -48,6 +48,7 @@ public class UndercoverAgentClientEntityCreator { //extends AbstractClientEntity
 	public static final int SNOW_HILL_4 = 15;
 	public static final int MOVING_TARGET_SNOWMAN = 16;
 	public static final int HEALTHPACK = 17;
+	public static final int FALLING_SNOWFLAKE = 18;
 
 	public UndercoverAgentClientEntityCreator() {
 		super();

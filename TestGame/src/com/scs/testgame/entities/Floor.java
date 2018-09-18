@@ -61,10 +61,9 @@ public class Floor extends PhysicalEntity implements IProcessByClient {
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
 
-			Material floor_mat = null;
-				floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-				floor_mat.setTexture("DiffuseMap", tex3);
-			geometry.setMaterial(floor_mat);
+			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+			mat.setTexture("DiffuseMap", tex3);
+			geometry.setMaterial(mat);
 		}
 		this.mainNode.attachChild(geometry);
 		geometry.setLocalTranslation((w/2), -(h/2), (d/2)); // Move it into position

@@ -4,6 +4,6 @@ import com.scs.stevetech1.client.IClientApp;
 
 public interface IProcessByClient {
 
-	void processByClient(IClientApp client, float tpf_secs);
+	void processByClient(IClientApp client, float tpfSecs);
 
 }

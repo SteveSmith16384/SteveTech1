@@ -132,7 +132,7 @@ public class SimplePhysicsController<T> {
 			}
 			SimpleNode<T> n = this.nodes.get(id);
 			n.add(srb);
-			srb.setParent(n);
+			srb.setParentNode(n);
 		} else {
 			movingEntities.add(srb);
 		}

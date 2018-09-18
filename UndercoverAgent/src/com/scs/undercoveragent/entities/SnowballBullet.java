@@ -43,7 +43,7 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 		Geometry ball_geo = new Geometry("snowball_geom", sphere);
 
 		if (!game.isServer()) {
-			ball_geo.setShadowMode(ShadowMode.CastAndReceive);
+			ball_geo.setShadowMode(ShadowMode.Cast);
 			TextureKey key3 = new TextureKey("Textures/snow.jpg");
 			Texture tex3 = game.getAssetManager().loadTexture(key3);
 			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");

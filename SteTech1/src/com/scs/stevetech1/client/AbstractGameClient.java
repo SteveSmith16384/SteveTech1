@@ -137,7 +137,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
-	protected boolean joinedGame = false;
+	protected boolean joinedGame = false; // Have we been accepted by the server
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
 	private SoundSystem soundSystem;
@@ -474,7 +474,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 					pe.calcPosition(renderTime, tpfSecs); // Must be before we process physics as this calcs additionalForce
 					pe.processChronoData(renderTime, tpfSecs);
-
+/*
 					if (Globals.STRICT) {
 						// Check the client side object is kinemtic - almost all should be since the server controls them
 						if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof AbstractBullet == false) {
@@ -485,7 +485,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							}
 						}
 					}
-
+*/
 				}
 
 				if (e instanceof IProcessByClient) {
@@ -988,6 +988,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		if (this.entities.containsKey(e.getID())) {
 			throw new RuntimeException("Entity " + e + " already exists"); // Don't replace it, as entity has linked to other stuff, like Abilities
 		}
+
 		this.entities.put(e.getID(), e);
 		if (e.requiresProcessing()) {
 			this.entitiesForProcessing.add(e);
@@ -1017,7 +1018,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			int x = (int)bb.getCenter().x / this.nodeSize;
 			int y = (int)bb.getCenter().y / this.nodeSize;
 			int z = (int)bb.getCenter().z / this.nodeSize;
-
 			String id = x + "_" + y + "_" + z;
 			if (!this.nodes.containsKey(id)) {
 				Node node = new Node(id);
@@ -1043,32 +1043,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	// Messing about with filters
-	private void makeToonish(Spatial spatial) {
-		try {
-			if (spatial instanceof Node){
-				Node n = (Node) spatial;
-				for (Spatial child : n.getChildren()) {
-					makeToonish(child);
-				}
-			} else if (spatial instanceof Geometry){
-				Geometry g = (Geometry) spatial;
-				Material m = g.getMaterial();
-				//if (m.getMaterialDef().getMaterialParam("UseMaterialColors") != null) {
-				Texture t = assetManager.loadTexture("Textures/toon.png");
-				m.setTexture("ColorRamp", t);
-				m.setBoolean("UseMaterialColors", true);
-				m.setColor("Specular", ColorRGBA.Black);
-				m.setColor("Diffuse", ColorRGBA.White);
-				m.setBoolean("VertexLighting", true);
-				//}
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-
 	private void removeAllEntities() {
 		Globals.p("REMOVING ALL ENTITIES...");
 		this.entitiesToAddToRootNode.clear();
@@ -1085,8 +1059,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.markForRemoval(e);
 		}
 		this.entityRemovalSystem.actuallyRemoveEntities();
-
-		//this.clientOnlyEntities.clear(); // todo - remove() these
 		this.nodes.clear();
 		this.gameNode.detachAllChildren();
 		this.gameNode.removeFromParent();
@@ -1146,7 +1118,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			}
 		}
-		//}
+
 		if (Globals.STRICT) {
 			if (this.entities.containsKey(id)) {
 				Globals.pe("Entity still exists!");

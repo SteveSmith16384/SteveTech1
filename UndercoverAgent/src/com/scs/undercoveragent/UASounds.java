@@ -13,9 +13,9 @@ public class UASounds {
 	public static final int WINNER = 7;
 	public static final int LOSER = 8;
 
-	public static final int HAHA = 9; // todo - when hit invincible: must be server side
+	public static final int HAHA = 9;
 	public static final int JUMP = 10;
-	public static final int NOTMOVE = 11; // todo
+	public static final int NOTMOVE = 11;
 	public static final int OOH_HEY = 12; // todo - collect health
 	public static final int SMALL_SPLAT = 13;
 
@@ -29,7 +29,6 @@ public class UASounds {
 		case START: return "Sounds/teleport.wav";
 		case WINNER: return "Sounds/winner.wav";
 		case LOSER: return "Sounds/loser.wav";
-
 		case HAHA: return "Sounds/haha.wav";
 		case JUMP: return "Sounds/jump.wav";
 		case NOTMOVE: return "Sounds/notmoving.wav";

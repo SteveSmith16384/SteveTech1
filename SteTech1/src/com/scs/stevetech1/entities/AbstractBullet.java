@@ -69,7 +69,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		shooter = _shooter;
 		dir = _dir;
 
-		if (Globals.STRICT) {			
+		if (Globals.STRICT) {
 			if (side <= 0) {
 				throw new RuntimeException("Invalid side: " + side);
 			}
@@ -124,7 +124,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		float totalTimeToFFwd_Ms = server.gameOptions.clientRenderDelayMillis; // + (client.playerData.pingRTT/2);
 		final float tpfSecs = (float)server.gameOptions.tickrateMillis / 1000f;
 		while (totalTimeToFFwd_Ms > 0) {
-			server.rewindEntities(toTime);//, this); // Rewind all entities except the bullet, which has only just appeared!
+			server.rewindEntities(toTime, this); // Rewind all entities except the bullet, which has only just appeared!
 			server.getRootNode().updateGeometricState();
 
 			this.processByServer(server, tpfSecs); 

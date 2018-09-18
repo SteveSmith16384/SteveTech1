@@ -42,6 +42,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements INotifi
 		if (this.alive) {// && server.gameData.isInGame()) {
 			long timeSinceMove = System.currentTimeMillis() - super.avatarControl.getLastMoveTime();
 			if (timeSinceMove > UAStaticData.AUTO_JUMP_INTERVAL_SECS * 1000) {
+				game.playSound(UASounds.NOTMOVE, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
 				this.avatarControl.jump();
 			}
 		}
@@ -109,13 +110,13 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements INotifi
 
 	@Override
 	public void notifiedOfCollision(PhysicalEntity pe) {
-		/*if (!game.isServer()) {
+		if (game.isServer()) {
 			if (pe instanceof AbstractBullet) {
 				if (!this.canBeDamaged()) {
-					//game.playSound(UASounds.HAHA, this.getID(), this.getw, _volume, _stream);
+					game.playSound(UASounds.HAHA, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
 				}
 			}
-		}*/
+		}
 	}
 
 
