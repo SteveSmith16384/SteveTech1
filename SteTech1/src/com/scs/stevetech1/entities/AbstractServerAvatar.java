@@ -31,6 +31,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 	public ClientData client;
 	private float maxHealth;
 	private int playerTargetPriority;
+	protected float restartTimeSecs, invulnerableTimeSecs;
 
 	public AbstractServerAvatar(IEntityController _module, int avatarType, ClientData _client, IInputDevice _input, int eid, IAvatarModel anim, 
 			float _maxHealth, int _playerTargetPriority, IAvatarControl _avatarControl) {
@@ -102,24 +103,26 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 
 
 	@Override
+	public boolean canBeDamaged() {
+		return (this.alive && invulnerableTimeSecs < 0 && this.getHealth() > 0);
+	}
+
+
+	@Override
 	public void damaged(float amt, IEntity collider, String reason) {
-		if (server.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
-			if (this.alive && invulnerableTimeSecs < 0 && this.getHealth() > 0) {
-				this.decHealth(amt);
-				if (this.getHealth() <= 0) {
-					IEntity killer = collider;
-					if (collider instanceof ICausesHarmOnContact) {
-						ICausesHarmOnContact choc = (ICausesHarmOnContact)collider;
-						killer = choc.getActualShooter();
-						if (killer == null) {
-							killer = collider;
-						}
-					}
-					setDied(killer, reason);
-				} else {
-					Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);
+		this.decHealth(amt);
+		if (this.getHealth() <= 0) {
+			IEntity killer = collider;
+			if (collider instanceof ICausesHarmOnContact) {
+				ICausesHarmOnContact choc = (ICausesHarmOnContact)collider;
+				killer = choc.getActualShooter();
+				if (killer == null) {
+					killer = collider;
 				}
 			}
+			setDied(killer, reason);
+		} else {
+			Globals.p("Player " + this.getID() + " wounded " + amt + ": " + reason);
 		}
 	}
 

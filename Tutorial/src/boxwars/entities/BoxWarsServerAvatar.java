@@ -26,6 +26,6 @@ public class BoxWarsServerAvatar extends AbstractServerAvatar {
 		// Do nothing
 		
 	}
-	
+
 
 }

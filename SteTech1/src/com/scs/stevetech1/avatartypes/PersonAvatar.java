@@ -20,7 +20,7 @@ public class PersonAvatar implements IAvatarControl {
 	private final Vector3f camLeft = new Vector3f();
 
 	protected long lastMoveTime = System.currentTimeMillis() + 5000;
-	public boolean playerWalked; // Has the player tried to move us?
+	public boolean playerWalked, playerJumped; // Has the player tried to move us?
 	public float moveSpeed = 0f;
 	private float jumpForce = 0;
 	private int newAnimCode;
@@ -75,9 +75,11 @@ public class PersonAvatar implements IAvatarControl {
 			newAnimCode = AbstractAvatar.ANIM_RUNNING;
 			lastMoveTime = System.currentTimeMillis();
 		}
+		playerJumped = false;
 		if (input.isJumpPressed()) {
 			if (this.jump()) {
 				newAnimCode = AbstractAvatar.ANIM_JUMP;
+				playerJumped = true;
 			}
 		}
 

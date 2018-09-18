@@ -77,6 +77,8 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 			//if (Globals.TEST_BULLET_REWINDING) {
 			Globals.p("Server: " + this.getName() + " has hit " + pe);
 			//}
+		} else {
+			game.playSound(UASounds.SMALL_SPLAT, -1, this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
 		}
 		game.markForRemoval(this);
 	}

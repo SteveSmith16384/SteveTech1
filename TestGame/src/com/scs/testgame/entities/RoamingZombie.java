@@ -32,7 +32,6 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 	private ZombieModel zm;
 	
 	private Vector3f currDir = new Vector3f(1f, 0, 0);
-	//private ChronologicalLookup<HistoricalAnimationData> animList = new ChronologicalLookup<HistoricalAnimationData>(true, -1);
 
 	public RoamingZombie(IEntityController _game, int id, float x, float y, float z) {
 		super(_game, id, TestGameClientEntityCreator.ZOMBIE, "Zombie", true, false, true);
@@ -112,45 +111,7 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		// turn around?		
 	}
 
-/*
-	@Override
-	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
-		return animList;
-	}
 
-/*
-	@Override
-	public void setCurrentAnim(Object s) {
-		
-	}
-
-/*
-	@Override
-	public void setCurrentAnim(String s) {
-		this.currentAnim = s;
-		this.zm.channel.setAnim(s);
-	}
-*/
-/*
-	@Override
-	public void processByClient(AbstractGameClient client, float tpf_secs) {
-		HistoricalAnimationData had = this.animList.get(client.renderTime, true);
-		if (had != null) {
-			if (!had.animation.equals(this.currentAnim)) {
-				this.currentAnim = had.animation;
-				this.zm.channel.setAnim(had.animation);
-			}
-		}		
-	}
-*/
-/*
-	@Override
-	public void addAnim(HistoricalAnimationData had) {
-		this.animList.addData(had);
-		
-	}
-*/
-	
 	@Override
 	public float getHealth() {
 		return 0;
@@ -162,5 +123,11 @@ public class RoamingZombie extends PhysicalEntity implements IAffectedByPhysics,
 		
 	}
 	
+
+	@Override
+	public boolean canBeDamaged() {
+		return true;
+	}
+
 
 }

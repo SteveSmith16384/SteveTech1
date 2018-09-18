@@ -32,6 +32,11 @@ public class SnowmanClientAvatar extends AbstractClientAvatar {
 		if (person.playerWalked && walkSfxInterval.hitInterval()) {
 			game.playSound(UASounds.FOOTSTEPS, -1, null, Globals.DEFAULT_VOLUME, false);
 		}
-	}
+
+		// Play jump?
+		if (person.playerJumped) {
+			game.playSound(UASounds.JUMP, -1, null, Globals.DEFAULT_VOLUME, false);
+		}
+}
 	
 }

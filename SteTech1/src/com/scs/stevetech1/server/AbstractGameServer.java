@@ -974,12 +974,14 @@ ICollisionListener<PhysicalEntity> {
 		for (SimpleRigidBody<PhysicalEntity> srb : list) {
 			PhysicalEntity pe = (PhysicalEntity)srb.simpleEntity;
 			if (!pe.isMarkedForRemoval()) {
-				if (pe != exploder) { // DOn't damage ourselves (we'll get caught in a loopprobably)
+				if (pe != exploder) { // DOn't damage ourselves (we'll get caught in a loop, probably)
 					if (pe instanceof IDamagable) {
 						if (pe.canSee(exploder, range, -1f)) {
 							IDamagable id = (IDamagable)pe;
-							id.damaged(damage, null, "Explosion");
-							Globals.p(pe + " was damaged " + damage + " by explosion");
+							if (id.canBeDamaged()) {
+								id.damaged(damage, null, "Explosion");
+								Globals.p(pe + " was damaged " + damage + " by explosion");
+							}
 						}
 					}
 				}

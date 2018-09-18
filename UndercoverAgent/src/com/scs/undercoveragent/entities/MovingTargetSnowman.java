@@ -171,6 +171,10 @@ public class MovingTargetSnowman extends PhysicalEntity implements IRewindable, 
 	}
 
 
+	@Override
+	public boolean canBeDamaged() {
+		return true;
+	}
 
 
 }

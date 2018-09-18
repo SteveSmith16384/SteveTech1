@@ -3,7 +3,10 @@ package com.scs.undercoveragent.entities;
 import com.scs.stevetech1.avatartypes.PersonAvatar;
 import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.components.IEntity;
+import com.scs.stevetech1.components.INotifiedOfCollision;
+import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
@@ -15,7 +18,7 @@ import com.scs.undercoveragent.UAStaticData;
 import com.scs.undercoveragent.UndercoverAgentClientEntityCreator;
 import com.scs.undercoveragent.models.SnowmanModel;
 
-public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebrisTexture {
+public class SnowmanServerAvatar extends AbstractServerAvatar implements INotifiedOfCollision, IDebrisTexture {
 
 	public SnowmanServerAvatar(IEntityController _module, ClientData client, IInputDevice _input, int eid) {
 		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), UAStaticData.START_HEALTH, 0, new PersonAvatar(_module, _input, UAStaticData.MOVE_SPEED, UAStaticData.JUMP_FORCE));
@@ -55,8 +58,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 			server.sendExplosionShards(sb.getWorldTranslation(), 12, .8f, 1.2f, .005f, .02f, "Textures/snow.jpg");
 			this.avatarControl.jump(); // Also make them jump
 
-			game.playSound(UASounds.SPLAT, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
-
+			game.playSound(UASounds.BIG_SPLAT, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
 		}
 	}
 
@@ -102,6 +104,18 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements IDebris
 	@Override
 	public void updateClientSideHealth(int amt) {
 
+	}
+
+
+	@Override
+	public void notifiedOfCollision(PhysicalEntity pe) {
+		/*if (!game.isServer()) {
+			if (pe instanceof AbstractBullet) {
+				if (!this.canBeDamaged()) {
+					//game.playSound(UASounds.HAHA, this.getID(), this.getw, _volume, _stream);
+				}
+			}
+		}*/
 	}
 
 

@@ -7,6 +7,8 @@ package com.scs.stevetech1.components;
  */
 public interface IDamagable {
 
+	boolean canBeDamaged(); // e.g. invulnerable
+	
 	void damaged(float amt, IEntity collider, String reason);
 	
 	byte getSide(); // Prevent friendly-fire

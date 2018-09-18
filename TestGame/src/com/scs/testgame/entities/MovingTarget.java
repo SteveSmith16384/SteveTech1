@@ -136,4 +136,10 @@ public class MovingTarget extends PhysicalEntity implements IAffectedByPhysics, 
 	}
 	
 
+	@Override
+	public boolean canBeDamaged() {
+		return true;
+	}
+
+
 }

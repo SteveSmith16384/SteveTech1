@@ -41,8 +41,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected IAvatarModel avatarModel;
 
 	protected boolean alive = true;
-	protected float restartTimeSecs, invulnerableTimeSecs;
-
 	private float health;
 	public int currentAnimCode = -1;
 	protected IAvatarControl avatarControl;

@@ -52,17 +52,27 @@ public class UndercoverAgentHUD extends Node {
 		cam = _cam;
 
 		_game.getAssetManager().registerLoader(TrueTypeLoader.class, "ttf");
-		float fontSize = cam.getWidth() / 30; 
-		TrueTypeKeyMesh ttk = new TrueTypeKeyMesh("Fonts/Xenotron.ttf", Style.Plain, (int)fontSize);
-		TrueTypeFont ttfSmall = (TrueTypeMesh)_game.getAssetManager().loadAsset(ttk);
-		float lineSpacing = cam.getHeight() / 20;
+		float fontSize = cam.getWidth() / 40; 
+		TrueTypeKeyMesh ttkSmall = new TrueTypeKeyMesh("Fonts/Xenotron.ttf", Style.Plain, (int)fontSize);
+		TrueTypeFont ttfSmall = (TrueTypeMesh)_game.getAssetManager().loadAsset(ttkSmall);
+		TrueTypeKeyMesh ttkLarge = new TrueTypeKeyMesh("Fonts/Xenotron.ttf", Style.Plain, (int)fontSize*2);
+		TrueTypeFont ttfLarge = (TrueTypeMesh)_game.getAssetManager().loadAsset(ttkLarge);
+		float lineSpacing = cam.getHeight() / 30;
 
 		super.setLocalTranslation(0, 0, 0);
 
 		//this.addTargetter();
 
-		float xPos = cam.getWidth() - 150f;
-		float yPos = cam.getHeight() - lineSpacing;
+		healthText = ttfLarge.getFormattedText(new StringContainer(ttfLarge, "Hello World"), ColorRGBA.Green);
+		healthText.setLocalTranslation(10, this.cam.getHeight()-20, 0);
+		this.attachChild(healthText);
+
+		scoreText = ttfLarge.getFormattedText(new StringContainer(ttfLarge, "Hello World"), ColorRGBA.Green);
+		scoreText.setLocalTranslation(10, this.cam.getHeight()-45, 0);
+		this.attachChild(scoreText);
+
+		float xPos = cam.getWidth() - 350f;
+		float yPos = cam.getHeight() - 20;//lineSpacing;
 
 		yPos -= lineSpacing;
 		gameStatus = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
@@ -89,16 +99,6 @@ public class UndercoverAgentHUD extends Node {
 		this.attachChild(abilityOther);
 		  */
 		yPos -= lineSpacing;
-		healthText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
-		healthText.setLocalTranslation(xPos, yPos, 0);
-		this.attachChild(healthText);
-
-		yPos -= lineSpacing;
-		scoreText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
-		scoreText.setLocalTranslation(xPos, yPos, 0);
-		this.attachChild(scoreText);
-
-		yPos -= lineSpacing;
 		numPlayers = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
 		numPlayers.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(numPlayers);
@@ -108,8 +108,8 @@ public class UndercoverAgentHUD extends Node {
 		pingText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(pingText);
 
-		logText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);// = new TextArea("log", font_small, 6, "");
-		logText.setLocalTranslation(10, cam.getHeight()/2, 0);
+		logText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
+		logText.setLocalTranslation(10, cam.getHeight() * 0.2f, 0);
 		this.attachChild(logText);
 
 		// Damage box
@@ -178,7 +178,7 @@ public class UndercoverAgentHUD extends Node {
 	 */
 
 	public void setGameStatus(String s) {
-		this.gameStatus.setText("Game Status: " + s);
+		this.gameStatus.setText(s);
 		this.gameStatus.updateGeometry();
 	}
 

@@ -20,7 +20,7 @@ public final class ServerSideCollisionLogic {
 		/*if (a.isMarkedForRemoval() || b.isMarkedForRemoval()) {
 			return;
 		}*/
-		
+
 		if (a instanceof INotifiedOfCollision) {
 			INotifiedOfCollision ic = (INotifiedOfCollision)a;
 			ic.notifiedOfCollision(b);
@@ -46,8 +46,10 @@ public final class ServerSideCollisionLogic {
 	private void checkForDamage(ICausesHarmOnContact choc, IDamagable id) {
 		if (server.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
 			if (choc.getSide() != id.getSide()) {
-				float damage = Math.max(0,  choc.getDamageCaused());
-				id.damaged(damage, (IEntity)choc, "Hit by " + choc);
+				if (id.canBeDamaged()) {
+					float damage = Math.max(0,  choc.getDamageCaused());
+					id.damaged(damage, (IEntity)choc, "Hit by " + choc);
+				}
 			}
 		}
 	}
