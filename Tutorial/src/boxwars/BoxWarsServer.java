@@ -71,7 +71,7 @@ public class BoxWarsServer extends AbstractGameServer {
 	 */
 	@Override
 	public byte getSideForPlayer(ClientData client) {
-		return (byte) client.id; // todo - check > 127
+		return (byte) client.getPlayerID(); // todo - check > 127
 	}
 
 	

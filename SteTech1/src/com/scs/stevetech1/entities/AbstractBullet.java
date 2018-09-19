@@ -39,7 +39,10 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	private Vector3f dir; // If its a Ray
 	protected float speed;  // If its a Ray
 	private float range;
+	
 	private boolean needsFastForwarding = false;
+	private boolean currentlyRewinding = false;
+	private long currentRewindTime = -1;
 
 	/**
 	 * 
@@ -119,10 +122,11 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		AbstractGameServer server = (AbstractGameServer)game;
 
 		long totalTimeToFFwd_Ms = server.gameOptions.clientRenderDelayMillis + (client.playerData.pingRTT/2);
-		long toTime = System.currentTimeMillis() - totalTimeToFFwd_Ms;//server.gameOptions.clientRenderDelayMillis + (client.playerData.pingRTT/2);; // Should this be by their ping time?
+		currentRewindTime = System.currentTimeMillis() - totalTimeToFFwd_Ms;//server.gameOptions.clientRenderDelayMillis + (client.playerData.pingRTT/2);; // Should this be by their ping time?
 		final float tpfSecs = (float)server.gameOptions.tickrateMillis / 1000f;
+		currentlyRewinding = true;
 		while (totalTimeToFFwd_Ms > 0) {
-			server.rewindEntitiesTo(toTime, this); // Rewind all entities except the bullet, which has only just appeared!
+			server.rewindEntitiesTo(currentRewindTime, this); // Rewind all entities except the bullet, which has only just appeared!
 			server.getRootNode().updateGeometricState();
 
 			this.processByServer(server, tpfSecs); 
@@ -130,12 +134,27 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 				break;
 			}
 			totalTimeToFFwd_Ms -= server.gameOptions.tickrateMillis;
-			toTime += server.gameOptions.tickrateMillis;
+			currentRewindTime += server.gameOptions.tickrateMillis;
 		}
+		currentlyRewinding = false;
 		server.restoreEntityPositions();
 
 		if (Globals.TEST_BULLET_REWINDING) {
 			Globals.p("End of ffwding -------------------------");
+		}
+	}
+
+
+	/**
+	 * Need to override this, since if we're currently in rewind mode, this entity isn't rewound, and so otherwise it will store
+	 * data for the current time, not the rewound time. 	
+	 */
+	@Override
+	public void addPositionData() {
+		if (this.currentlyRewinding) {
+			this.addPositionData(this.currentRewindTime);
+		} else {
+			super.addPositionData();
 		}
 	}
 
@@ -160,7 +179,9 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
-		// todo - check we've been added to the rootNode
+		/*if (this.getMainNode().getParent() == null) {
+			throw new RuntimeException(this + " not added to rootNode");
+		}*/
 		if (!useRay) {
 			this.simpleRigidBody.process(tpf_secs);
 		} else {

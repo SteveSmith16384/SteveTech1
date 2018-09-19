@@ -10,7 +10,7 @@ import ssmith.util.RealtimeInterval;
 public class FallingSnowflakeSystem {
 
 	private AbstractGameClient client;
-	private RealtimeInterval snowflakeInt = new RealtimeInterval(50);
+	private RealtimeInterval snowflakeInt = new RealtimeInterval(150);
 
 	public FallingSnowflakeSystem(AbstractGameClient _client) {
 		super();

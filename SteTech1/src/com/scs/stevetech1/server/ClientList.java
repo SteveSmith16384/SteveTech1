@@ -53,7 +53,7 @@ public class ClientList {
 		synchronized (clientsToAdd) {
 			while (this.clientsToAdd.size() > 0) {
 				ClientData client = this.clientsToAdd.remove();
-				this.clients.put(client.id, client);
+				this.clients.put(client.getPlayerID(), client);
 				//server.gameNetworkServer.sendMessageToClient(client, new WelcomeClientMessage());
 				//Globals.p("Actually added client " + client.id);
 			}

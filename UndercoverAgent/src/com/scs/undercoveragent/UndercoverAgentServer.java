@@ -252,7 +252,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 	@Override
 	public byte getSideForPlayer(ClientData client) {
-		return (byte) client.id; // Everyone is on a different side.  Todo - check  > 127
+		return (byte) client.getPlayerID(); // Everyone is on a different side.  Todo - check  > 127
 	}
 
 

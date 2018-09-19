@@ -610,11 +610,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					if (Globals.DEBUG_NO_UPDATE_MSGS) {
 						Globals.p("Received EntityUpdateMessage for " + e);
 					}
-					if (Globals.DEBUG_CPU_HUD_TEXT) {
-						if (e.getName().equalsIgnoreCase("computer")) {
-							Globals.p("Sending computer update");
-						}
-					}								
 					PhysicalEntity pe = (PhysicalEntity)e;
 					pe.addPositionData(eud, mainmsg.timestamp);
 					if (pe.chronoUpdateData != null) {

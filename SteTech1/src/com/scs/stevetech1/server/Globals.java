@@ -13,7 +13,6 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
-	//public static final boolean DEBUG_BROKEN_BULLETS = true;
 
 	// Lots of consts for specific debugging output
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
@@ -27,9 +26,7 @@ public class Globals {
 	public static final boolean NO_AI_UNITS = false;
 	public static final boolean TEST_OUTLINE_SHADER = false;
 	public static final boolean DEBUG_MSGS = false;
-	public static final boolean DEBUG_CPU_HUD_TEXT = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
-	public static final boolean DEBUG_ORPHAN_BULLETS = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_SET_ALIVE = false;
@@ -38,9 +35,7 @@ public class Globals {
 	public static final boolean DEBUG_GAME_STATUS_CHECK = false;
 	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
-	public static final boolean TURN_OFF_FOG = false;
 	public static final boolean AI_IGNORE_PLAYER = false;
-	public static final boolean DEBUG_VIEW_ANGLE = false;
 	public static final boolean TRANSPARENT_WALLS = false;
 	public static final boolean DEBUG_GAME_NOT_STARTING = false;
 	public static final boolean TEST_AI = false;
@@ -55,7 +50,6 @@ public class Globals {
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;
 	public static final boolean TURN_OFF_CLIENT_POS_ADJ = false;
-	public static final boolean PROFILE_SERVER = false;
 	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;
 	public static final boolean SHOW_NUM_ENT_UPDATES_SENT = false;
 	public static final boolean DEBUG_PLAYER_RESTART = false;

@@ -173,7 +173,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		if (Globals.DEBUG_MSGS) {
 			Globals.p("Sending to client: " + msg);
 		}
-		this.sendMessage(client.id, msg);
+		this.sendMessage(client.getPlayerID(), msg);
 	}
 
 

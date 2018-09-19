@@ -76,11 +76,6 @@ public class PlayersBullet extends AbstractBullet implements INotifiedOfCollisio
 	@Override
 	public void finalProcessing() {
 		super.finalProcessing();
-/*		
-		if (Globals.DEBUG_BROKEN_BULLETS) {
-			//Globals.pe("Tpf=" + tpfSecs);
-			Globals.p("Bullet at " + this.getWorldTranslation());
-		}*/
 	}
 
 }

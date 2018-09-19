@@ -11,7 +11,7 @@ public class ClientData {
 	public enum ClientStatus { Connected, InGame, Spectator };
 
 	public Object networkObj;
-	public int id;
+	private int id;
 	public AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long latestInputTimestamp; // We ignore any messages sent earlier
 	public AbstractServerAvatar avatar;

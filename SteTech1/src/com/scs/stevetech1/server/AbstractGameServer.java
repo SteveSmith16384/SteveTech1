@@ -341,13 +341,6 @@ ICollisionListener<PhysicalEntity> {
 				if (e instanceof PhysicalEntity) {
 					PhysicalEntity physicalEntity = (PhysicalEntity)e;
 					if (sendUpdates) {
-
-						if (Globals.DEBUG_CPU_HUD_TEXT) {
-							if (e.getName().equalsIgnoreCase("computer")) {
-								Globals.p("Sending computer update");
-							}
-						}								
-
 						if (physicalEntity.sendUpdates()) { // Don't send if not moved (unless player's Avatar)
 							eum.addEntityData(physicalEntity, false, physicalEntity.createEntityUpdateDataRecord());
 							physicalEntity.sendUpdate = false;
@@ -428,10 +421,10 @@ ICollisionListener<PhysicalEntity> {
 
 		client.clientStatus = ClientData.ClientStatus.InGame;
 		client.playerData = this.createSimplePlayerData();
-		client.playerData.id = client.id;
+		client.playerData.id = client.getPlayerID();
 		client.playerData.playerName = newPlayerMessage.playerName;
 
-		this.sendMessageToInGameClientsExcept(client, new ShowMessageMessage("Player joining game!", true));
+		this.sendMessageToInGameClientsExcept(client.getPlayerID(), new ShowMessageMessage("Player joining game!", true));
 
 		byte side = getSideForPlayer(client);
 		client.playerData.side = side;
@@ -692,18 +685,14 @@ ICollisionListener<PhysicalEntity> {
 		if (sendAddRemoveEntityMsgs) {
 			NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 			nem.add(e);
-			ClientData except = null;
+			//ClientData except = null;
+			int exceptId = -1;
 			if (e instanceof AbstractBullet) {
 				// Don't send bullets to the client that fired them
 				AbstractBullet bullet = (AbstractBullet)e;
-				except = clientList.getClient(bullet.playerID);
+				exceptId = bullet.playerID;
 			}
-			this.sendMessageToInGameClientsExcept(except, nem);
-			/*for (ClientData client : this.clientList.getClients()) {
-				if (client.clientStatus == ClientStatus.InGame) {
-					gameNetworkServer.sendMessageToClient(client, nem);
-				}
-			}*/
+			this.sendMessageToInGameClientsExcept(exceptId, nem);
 		}
 	}
 
@@ -997,7 +986,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	public void sendMessageToInGameClients(MyAbstractMessage msg) {
-		this.sendMessageToInGameClientsExcept(null, msg);
+		this.sendMessageToInGameClientsExcept(-1, msg);
 	}
 
 
@@ -1012,9 +1001,9 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	public void sendMessageToInGameClientsExcept(ClientData ex, MyAbstractMessage msg) {
+	public void sendMessageToInGameClientsExcept(int playerId, MyAbstractMessage msg) {
 		for(ClientData client : this.clientList.getClients()) {
-			if (client != ex) {
+			if (client.getPlayerID() != playerId) {
 				if (client.clientStatus == ClientStatus.InGame) {
 					this.gameNetworkServer.sendMessageToClient(client, msg);
 				}
