@@ -206,7 +206,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			this.stateManager.detach(state);
 		}
 
-		this.loopTimer = new FixedLoopTime(tickrateMillis);
+		if (Globals.FORCE_CLIENT_SLOWDOWN || Globals.RECORD_VID) {
+			this.loopTimer = new FixedLoopTime(tickrateMillis);
+		} else {
+			this.loopTimer = new FixedLoopTime(5); // Don't run too fast otherwise the physics goes strange!
+		}
 		this.physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
 		this.animSystem = new AnimationSystem(this);
 		this.entityRemovalSystem = new EntityRemovalSystem(this);
@@ -404,10 +408,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				checkNodesExistInEntities();
 			}
 
-			if (Globals.FORCE_CLIENT_SLOWDOWN) {
-				loopTimer.waitForFinish(); // Keep clients and server running at same speed
-				loopTimer.start();
-			}
+			loopTimer.waitForFinish();
+			loopTimer.start();
 
 		} catch (Exception ex) {
 			Globals.HandleError(ex);
@@ -474,7 +476,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 					pe.calcPosition(renderTime, tpfSecs); // Must be before we process physics as this calcs additionalForce
 					pe.processChronoData(renderTime, tpfSecs);
-/*
+					/*
 					if (Globals.STRICT) {
 						// Check the client side object is kinemtic - almost all should be since the server controls them
 						if (e instanceof AbstractClientAvatar == false && e instanceof ExplosionShard == false && e instanceof AbstractBullet == false) {
@@ -485,7 +487,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 							}
 						}
 					}
-*/
+					 */
 				}
 
 				if (e instanceof IProcessByClient) {
@@ -508,8 +510,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
-	/**
-	 * Override if required
+	/**d
 	 */
 	public Node getHudNode() {
 		return this.getGuiNode();
@@ -915,6 +916,14 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		IEntity e = actuallyCreateEntity(this, data);
 		if (e != null) {
 			if (e instanceof PhysicalEntity) {
+				if (Globals.STRICT) {
+					if (e instanceof AbstractBullet) {
+						AbstractBullet bullet = (AbstractBullet)e;
+						if (bullet.playerID == this.playerID) {
+							throw new RuntimeException("Received new entity message for our own bullet");
+						}
+					}
+				}
 				PhysicalEntity pe = (PhysicalEntity)e;
 				boolean addImmed = false;
 				if (pe instanceof IAddedImmediately) {
@@ -928,7 +937,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				}
 			}
 			this.addEntity(e);
-			//Globals.p("Finished creating entity " + data.type);
 		} else {
 			// It's maybe not for this game, or its for our own bullet, so ignore it
 			//Globals.p("Not creating entity type " + data.type);
@@ -1046,15 +1054,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private void removeAllEntities() {
 		Globals.p("REMOVING ALL ENTITIES...");
 		this.entitiesToAddToRootNode.clear();
-		/*
-		while (this.entities.size() > 0) {
-			Iterator<IEntity> it = this.entities.values().iterator();
-			IEntity e = it.next();
-			e.remove();
-			it.remove(); //this.entitiesToRemove
-		}
-		this.entitiesForProcessing.clear();
-		 */
 		for (IEntity e : this.entities.values()) {
 			this.markForRemoval(e);
 		}

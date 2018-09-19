@@ -2,7 +2,6 @@ package com.scs.stevetech1.entities;
 
 import java.util.HashMap;
 
-import com.jme3.bounding.BoundingVolume;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.IClientApp;
@@ -22,11 +21,12 @@ import com.scs.stevetech1.shared.IEntityController;
  * AbstractBullet is a special kind of entity.
  * - Time gets rewound when a bullet gets created by a player
  * - They can use Rays for collision
+ * - The client that fired it doesn't get told about the server-side bullet
  * 
  * @author stephencs
  *
  */
-public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately {//, IRewindable {
+public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately, IRewindable {
 
 	public int playerID; // -1 if AI
 	public IEntity shooter; // So we know who not to collide with, and who fired the killing shot
@@ -36,8 +36,8 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	protected Vector3f origin = new Vector3f();
 
 	protected boolean useRay; // Use ray for CCD?
-	private Vector3f dir;
-	protected float speed;
+	private Vector3f dir; // If its a Ray
+	protected float speed;  // If its a Ray
 	private float range;
 	private boolean needsFastForwarding = false;
 
@@ -99,8 +99,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 
 		this.setWorldTranslation(startPos);
 		this.mainNode.updateGeometricState();
-		//this.game.addEntity(this);
-		//this.mainNode.updateModelBound();
 
 		if (Globals.STRICT) {
 			if (this.useRay && this.simpleRigidBody != null) {
@@ -112,7 +110,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	}
 
 
-	public void fastForward() {
+	private void fastForward() { // todo - do this in the server code
 		// Here we go... We need to rewind all rewindable entities, and play the game through to get the server ahead of the clients (as it should be),
 		// and also properly check for collisions.
 		if (Globals.TEST_BULLET_REWINDING) {
@@ -120,11 +118,11 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		}
 		AbstractGameServer server = (AbstractGameServer)game;
 
-		long toTime = System.currentTimeMillis() - server.gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
-		float totalTimeToFFwd_Ms = server.gameOptions.clientRenderDelayMillis; // + (client.playerData.pingRTT/2);
+		long totalTimeToFFwd_Ms = server.gameOptions.clientRenderDelayMillis + (client.playerData.pingRTT/2);
+		long toTime = System.currentTimeMillis() - totalTimeToFFwd_Ms;//server.gameOptions.clientRenderDelayMillis + (client.playerData.pingRTT/2);; // Should this be by their ping time?
 		final float tpfSecs = (float)server.gameOptions.tickrateMillis / 1000f;
 		while (totalTimeToFFwd_Ms > 0) {
-			server.rewindEntities(toTime, this); // Rewind all entities except the bullet, which has only just appeared!
+			server.rewindEntitiesTo(toTime, this); // Rewind all entities except the bullet, which has only just appeared!
 			server.getRootNode().updateGeometricState();
 
 			this.processByServer(server, tpfSecs); 
@@ -148,7 +146,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	@Override
 	public void processByServer(AbstractGameServer server, float tpf_secs) {
 		if (this.needsFastForwarding && this.getMainNode().getParent() != null) { // Needs adding to rootNode in order to get the model bounds, needed for collisions!
-			//this.getMainNode().updateModelBound(); // todo - remove?
 			this.needsFastForwarding = false;
 			this.fastForward();
 		}
@@ -164,7 +161,6 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
 		// todo - check we've been added to the rootNode
-		//if (this.getCollidable().
 		if (!useRay) {
 			this.simpleRigidBody.process(tpf_secs);
 		} else {
@@ -192,9 +188,9 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	}
 
 
-	private void finalProcessing() {
+	protected void finalProcessing() {
 		if (!this.markedForRemoval) {
-			if (Globals.DEBUG_BULLET_POSITIONS) {
+			if (Globals.SHOW_BULLET_POSITIONS) {
 				Vector3f pos = this.getWorldTranslation();
 				DebuggingSphere ds = new DebuggingSphere(game, game.getNextEntityID(), pos.x, pos.y, pos.z, false, true);
 				game.addEntity(ds);

@@ -267,7 +267,7 @@ ICollisionListener<PhysicalEntity> {
 
 		if (areAnyPlayersShootingHitscanWeapons) {
 			long toTime = System.currentTimeMillis() - gameOptions.clientRenderDelayMillis; // Should this be by their ping time?
-			this.rewindEntities(toTime, null);
+			this.rewindEntitiesTo(toTime, null);
 			this.rootNode.updateGeometricState();
 
 			// Check for hitscan weapons
@@ -290,21 +290,12 @@ ICollisionListener<PhysicalEntity> {
 					}
 				}
 			}
-			/*
-			for (ClientRegisteredHitMessage crhm : this.clientHits) {
-				PhysicalEntity bullet = (PhysicalEntity) this.entities.get(crhm.bulletEntityID);
-				PhysicalEntity target = (PhysicalEntity) this.entities.get(crhm.targetEntityID);
-
-				CollisionResults tempCollisionResults = new CollisionResults();
-				bullet.simpleRigidBody.checkSRBvSRB(target.simpleRigidBody, tempCollisionResults, true); // todo - what about bullets that use Rays?
-			}
-			 */
 			this.restoreEntityPositions();
 		}
 	}
 
 
-	public void rewindEntities(long toTime, IEntity except) {
+	public void rewindEntitiesTo(long toTime, IEntity except) {
 		for (IEntity e : this.entitiesForProcessing) {
 			if (e != except) {
 				if (e instanceof IRewindable) {
@@ -442,7 +433,7 @@ ICollisionListener<PhysicalEntity> {
 
 		this.sendMessageToInGameClientsExcept(client, new ShowMessageMessage("Player joining game!", true));
 
-		byte side = getSide(client);
+		byte side = getSideForPlayer(client);
 		client.playerData.side = side;
 		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
 		sendSimpleGameDataToClients(); // So they have a game ID, required when receiving ents
@@ -522,7 +513,7 @@ ICollisionListener<PhysicalEntity> {
 		// Create avatars and send new entities to players
 		for (ClientData client : this.clientList.getClients()) {
 			if (client.clientStatus == ClientData.ClientStatus.InGame) {
-				byte side = getSide(client); // New sides!
+				byte side = getSideForPlayer(client); // New sides!
 				client.playerData.side = side;
 				client.avatar = createPlayersAvatar(client);
 				sendAllEntitiesToClient(client);
@@ -542,7 +533,7 @@ ICollisionListener<PhysicalEntity> {
 	 * @param client
 	 * @return The side
 	 */
-	public abstract byte getSide(ClientData client);
+	public abstract byte getSideForPlayer(ClientData client);
 
 
 	protected abstract void createGame();
@@ -565,7 +556,7 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		if (client == null) {
-			Globals.p("Client unknown so msg '" + message.getClass().getSimpleName() + "' ignored");
+			Globals.p("Client unknown, so msg '" + message.getClass().getSimpleName() + "' ignored");
 			return;
 		}
 
@@ -573,6 +564,7 @@ ICollisionListener<PhysicalEntity> {
 		msg.client = client;
 
 		if (message instanceof PingMessage) {
+			// Respond to ping immediately
 			PingMessage pingMessage = (PingMessage) message;
 			this.pingSystem.handleMessage(pingMessage, client);
 		} else {
@@ -587,8 +579,7 @@ ICollisionListener<PhysicalEntity> {
 	private AbstractServerAvatar createPlayersAvatar(ClientData client) {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id);
-		//avatar.startAgain(); // Must be before we add it, since that needs a position!  // scs new
-		this.moveAvatarToStartPosition(avatar); // scs new
+		this.moveAvatarToStartPosition(avatar);
 		this.actuallyAddEntity(avatar);
 		return avatar;
 	}
@@ -701,11 +692,18 @@ ICollisionListener<PhysicalEntity> {
 		if (sendAddRemoveEntityMsgs) {
 			NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 			nem.add(e);
-			for (ClientData client : this.clientList.getClients()) {
+			ClientData except = null;
+			if (e instanceof AbstractBullet) {
+				// Don't send bullets to the client that fired them
+				AbstractBullet bullet = (AbstractBullet)e;
+				except = clientList.getClient(bullet.playerID);
+			}
+			this.sendMessageToInGameClientsExcept(except, nem);
+			/*for (ClientData client : this.clientList.getClients()) {
 				if (client.clientStatus == ClientStatus.InGame) {
 					gameNetworkServer.sendMessageToClient(client, nem);
 				}
-			}
+			}*/
 		}
 	}
 

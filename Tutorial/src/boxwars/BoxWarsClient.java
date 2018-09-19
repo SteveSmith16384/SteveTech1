@@ -44,13 +44,20 @@ public class BoxWarsClient extends AbstractGameClient {
 		return collisionValidator.canCollide(a, b);
 	}
 
-	
+
 	@Override
 	protected Class[] getListofMessageClasses() {
 		return null;
 	}
 
 
+	@Override
+	public void disconnected() {
+		super.disconnected();
+		System.exit(0);
+	}
+	
+	
 	@Override
 	protected IEntity actuallyCreateEntity(AbstractGameClient game, NewEntityData msg) {
 		int id = msg.entityID;
@@ -80,7 +87,7 @@ public class BoxWarsClient extends AbstractGameClient {
 			Floor floor = new Floor(game, id, pos.x, pos.y, pos.z, size.x, size.y, size.z, tex, null);
 			return floor;
 		}
-		
+
 		case BoxWarsServer.GUN:
 		{
 			int ownerid = (int)msg.data.get("ownerid");
@@ -93,13 +100,17 @@ public class BoxWarsClient extends AbstractGameClient {
 		case BoxWarsServer.BULLET:
 		{
 			int playerID = (int) msg.data.get("playerID");
-			byte side = (byte) msg.data.get("side");
-			int shooterId =  (int) msg.data.get("shooterID");
-			IEntity shooter = game.entities.get(shooterId);
-			Vector3f startPos = (Vector3f) msg.data.get("startPos");
-			Vector3f dir = (Vector3f) msg.data.get("dir");
-			PlayersBullet snowball = new PlayersBullet(game, game.getNextEntityID(), playerID, shooter, startPos, dir, side, null); // Notice we generate our own entity id
-			return snowball;
+			if (playerID != game.getPlayerID()) {
+				byte side = (byte) msg.data.get("side");
+				int shooterId =  (int) msg.data.get("shooterID");
+				IEntity shooter = game.entities.get(shooterId);
+				Vector3f startPos = (Vector3f) msg.data.get("startPos");
+				Vector3f dir = (Vector3f) msg.data.get("dir");
+				PlayersBullet snowball = new PlayersBullet(game, game.getNextEntityID(), playerID, shooter, startPos, dir, side, null); // Notice we generate our own entity id
+				return snowball;
+			} else {
+				return null;
+			}
 		}
 
 		default:

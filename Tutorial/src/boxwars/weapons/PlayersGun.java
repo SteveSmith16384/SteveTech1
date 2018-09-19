@@ -17,7 +17,7 @@ import boxwars.entities.PlayersBullet;
 public class PlayersGun extends AbstractMagazineGun implements IAbility {
 
 	public PlayersGun(IEntityController game, int id, int playerID, AbstractAvatar owner, int avatarID, byte abilityNum, ClientData client) {
-		super(game, id, BoxWarsServer.GUN, playerID, owner, avatarID, abilityNum, "Laser Rifle", .2f, 2, 10, client);
+		super(game, id, BoxWarsServer.GUN, playerID, owner, avatarID, abilityNum, "Gun", .5f, 2, 999, client);
 
 	}
 

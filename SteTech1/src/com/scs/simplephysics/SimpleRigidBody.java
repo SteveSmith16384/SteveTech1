@@ -13,6 +13,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
@@ -21,7 +22,6 @@ public class SimpleRigidBody<T> implements Collidable {
 	private static final boolean DEBUG_STEPS_SLOPES = false;
 
 	private static final float AUTOMOVE_FRAC = .1f;
-	//private static final float MAX_STEP_HEIGHT = 0.3f;//0.25f; // todo - make config
 	private static final Vector3f DOWN_VEC = new Vector3f(0, -1, 0);
 
 	private SimplePhysicsController<T> physicsController;
@@ -113,8 +113,10 @@ public class SimpleRigidBody<T> implements Collidable {
 	public void process(float tpfSecs) {
 		if (tpfSecs > 0.1f) {
 			tpfSecs = 0.1f; // Prevent stepping too far
+		} else if (tpfSecs < 0.0001f) {
+			System.err.println("Warning: delta is too small; you will get rounding errors!");
 		}
-
+		
 		if (this.movedByForces) {
 			automoveForce.set(0, 0, 0);
 

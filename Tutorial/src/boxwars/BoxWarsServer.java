@@ -70,7 +70,7 @@ public class BoxWarsServer extends AbstractGameServer {
 	 * Just use the client id as the side, to easily ensure every player is on a different side. 
 	 */
 	@Override
-	public byte getSide(ClientData client) {
+	public byte getSideForPlayer(ClientData client) {
 		return (byte) client.id; // todo - check > 127
 	}
 

@@ -60,7 +60,7 @@ public class UnitTestGameServer extends AbstractGameServer {
 	}
 
 	@Override
-	public byte getSide(ClientData client) {
+	public byte getSideForPlayer(ClientData client) {
 		return 0;
 	}
 

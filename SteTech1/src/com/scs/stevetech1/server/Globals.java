@@ -13,18 +13,19 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
+	//public static final boolean DEBUG_BROKEN_BULLETS = true;
 
 	// Lots of consts for specific debugging output
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
+	public static final boolean SHOW_BULLET_POSITIONS = false;
+	public static final boolean FORCE_CLIENT_SLOWDOWN = false;
 	public static final boolean TEST_BULLET_REWINDING = false;
 	public static final boolean EMPTY_MAP = false;
 	public static final boolean SHOW_FPS_STATS = false;
-	public static final boolean FORCE_CLIENT_SLOWDOWN = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean DEBUG_GUN_NOT_SHOWING = false;
 	public static final boolean NO_AI_UNITS = false;
 	public static final boolean TEST_OUTLINE_SHADER = false;
-	public static final boolean DEBUG_BULLET_POSITIONS = false;
 	public static final boolean DEBUG_MSGS = false;
 	public static final boolean DEBUG_CPU_HUD_TEXT = false;
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
