@@ -20,6 +20,17 @@ All the basic features are complete but not thoroughly stress-tested yet.  All a
 * Open source
 
 
+### GAMES MADE WITH STEVETECH1
+I'm currently working on two games:
+
+* Moonbase Assault (https://bitbucket.org/SteveSmith16384/moonbaseassault/src/master/)
+* Two Weeks in the Pub (https://bitbucket.org/SteveSmith16384/twoweeksinthepub/src/master/)
+
+Here's a video of Moonbase Assault:-
+
+[![Moonbase Assault Gameplay](http://img.youtube.com/vi/E38SdsO-nEI/0.jpg)](http://www.youtube.com/watch?v=E38SdsO-nEI)
+
+
 ## GETTING STARTED
 * This engine only requires JMonkeyEngine (https://github.com/jMonkeyEngine/sdk/releases).  All other required libraries are included.
 * You are advised to look at the example game Undercover Agent to see how to create your own multiplayer FPS game using SteveTech1.  Feel free to contact me (probably via Twitter, though I may set up a forum if it becomes popular enough) with questions.
