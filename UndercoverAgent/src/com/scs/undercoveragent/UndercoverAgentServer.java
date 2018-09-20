@@ -52,10 +52,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
 
-			//int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
-			//int sendUpdateIntervalMillis = props.getPropertyAsInt("sendUpdateIntervalMillis", 40);
-			//int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
-			//int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
 			deployDurationSecs = props.getPropertyAsInt("deployDurationSecs", 10);
 			gameDurationSecs = props.getPropertyAsInt("gameDurationSecs", 240);
 			restartDurationSecs = props.getPropertyAsInt("restartDurationSecs", 10);
@@ -64,7 +60,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 			int mapSize = props.getPropertyAsInt("mapSize", 20);
 
 			new UndercoverAgentServer(mapSize, 
-					gameIpAddress, gamePort, //lobbyIpAddress, lobbyPort, 
+					gameIpAddress, gamePort, 
 					Globals.DEFAULT_TICKRATE, Globals.DEFAULT_SEND_UPDATES_INTERVAL, Globals.DEFAULT_RENDER_DELAY, Globals.DEFAULT_NETWORK_TIMEOUT);
 		} catch (Exception e) {
 			e.printStackTrace();

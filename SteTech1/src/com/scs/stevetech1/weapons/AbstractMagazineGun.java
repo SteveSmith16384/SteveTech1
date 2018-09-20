@@ -104,34 +104,47 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 		}
 
 		if (toBeReloaded) {
-			toBeReloaded = false;
-			reload();
+			if (reload()) {
+				toBeReloaded = false;
+			}
 		}
 	}
 
 
-	private void reload() {
+	private boolean reload() {
 		if (timeSinceLastReload > 5) {
-			Globals.p("Reloading " + this);
+			if (Globals.DEBUG_RELOAD_PROBLEM) {
+				Globals.p("Reloading " + this);
+			}			
 			this.bulletsInMag = this.magazineSize;
+			if (Globals.DEBUG_RELOAD_PROBLEM) {
+				Globals.p("Gun now has " + this.getBulletsInMag() + " bullets (after reload)");
+			}			
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			if (game.isServer()) {
 				AbstractGameServer server = (AbstractGameServer)game;
-				//server.gameNetworkServer.sendMessageToClient(client, new GunReloadingMessage(this, reloadInterval_secs));
 				server.gameNetworkServer.sendMessageToClient(client, new AbilityUpdateMessage(true, this));
+				if (Globals.DEBUG_RELOAD_PROBLEM) {
+					Globals.p("Sent AbilityUpdateMessage");
+				}			
 			} else {
 				AbstractGameClient client = (AbstractGameClient)game;
 				if (client.povWeapon != null) {
 					client.povWeapon.startReloading(reloadInterval_secs);
 				}
 			}
+			return true;
 		}
+		return false;
 	}
 
 
+	/**
+	 * Override this if required.
+	 */
 	@Override
 	public String getHudText() {
-		if (this.getBulletsInMag() == this.magazineSize && this.timeUntilShoot_secs > 0) {//shotInterval_secs) {
+		if (this.getBulletsInMag() == this.magazineSize && this.timeUntilShoot_secs > 0) {
 			return entityName + " RELOADING";
 		} else {
 			return entityName + " (" + this.getBulletsInMag() + "/" + this.magazineSize  +")";
@@ -151,7 +164,11 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	public void decode(AbilityUpdateMessage aum) {
 		this.bulletsInMag = aum.bulletsLeftInMag;
 		timeUntilShoot_secs = aum.timeUntilShoot;
-	}
+
+		if (Globals.DEBUG_RELOAD_PROBLEM) {
+			Globals.p("Gun now has " + this.getBulletsInMag() + " bullets (from server)");
+		}			
+}
 
 
 	@Override

@@ -55,7 +55,6 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.Entity;
-import com.scs.stevetech1.entities.ExplosionShard;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
@@ -765,14 +764,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		} else if (message instanceof GameLogMessage) {
 			GameLogMessage glm = (GameLogMessage)message;
 			this.appendToLog(glm.logEntry);
-
-			/*} else if (message instanceof GunReloadingMessage) {
-			GunReloadingMessage grm = (GunReloadingMessage)message;
-			//this.finishedReloadAt = grm.duration_secs;
-			//this.currentlyReloading = true;
-			if (this.povWeapon != null) {
-				povWeapon.reload(grm.durationSecs);	
-			}*/
 
 		} else if (message instanceof NumEntitiesMessage) {
 			NumEntitiesMessage nem = (NumEntitiesMessage)message;

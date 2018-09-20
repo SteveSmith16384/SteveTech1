@@ -30,6 +30,8 @@ Here's a video of Moonbase Assault:-
 
 [![Moonbase Assault Gameplay](http://img.youtube.com/vi/E38SdsO-nEI/0.jpg)](http://www.youtube.com/watch?v=E38SdsO-nEI)
 
+Or check out this channel of other vidoes of stuff I've done with this engine: https://www.youtube.com/watch?v=NVcFt4ehz4o&list=PLbGkfhhJ5G3_pH9tp2lH1zeAJ9Y35rQnm
+
 
 ## GETTING STARTED
 * This engine only requires JMonkeyEngine (https://github.com/jMonkeyEngine/sdk/releases).  All other required libraries are included.

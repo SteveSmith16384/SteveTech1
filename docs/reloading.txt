@@ -1,0 +1,3 @@
+* Both client and server reload independantly, although since they should be consistent with the number of bullets, they should do this at the same time.
+
+* The client can manually reload, which sends a ClientReloadRequestMessage to the server to say it is reloading.

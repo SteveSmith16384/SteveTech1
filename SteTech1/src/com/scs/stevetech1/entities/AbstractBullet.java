@@ -26,7 +26,7 @@ import com.scs.stevetech1.shared.IEntityController;
  * @author stephencs
  *
  */
-public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately, IRewindable {
+public abstract class AbstractBullet extends PhysicalEntity implements IProcessByClient, ICausesHarmOnContact, IDontCollideWithComrades, IAddedImmediately { //, IRewindable { Don't make bullet rewindable since there could be loads
 
 	public int playerID; // -1 if AI
 	public IEntity shooter; // So we know who not to collide with, and who fired the killing shot

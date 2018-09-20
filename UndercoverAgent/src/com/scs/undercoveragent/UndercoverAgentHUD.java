@@ -132,7 +132,7 @@ public class UndercoverAgentHUD extends Node {
 		if (showGameTimeInterval.hitInterval()) {
 			if (client.gameData != null) {
 				this.setGameStatus(SimpleGameData.getStatusDesc(client.gameData.getGameStatus()));
-				if (client.gameData.getGameStatus() != SimpleGameData.ST_WAITING_FOR_PLAYERS) {
+				if (client.gameData.isInGame()) {
 					this.setGameTime(client.gameData.getTime(client.serverTime));
 				} else {
 					this.setGameTime("");
@@ -178,13 +178,13 @@ public class UndercoverAgentHUD extends Node {
 	}
 	 */
 
-	public void setGameStatus(String s) {
+	private void setGameStatus(String s) {
 		this.gameStatus.setText(s);
 		this.gameStatus.updateGeometry();
 	}
 
 
-	public void setGameTime(String s) {
+	private void setGameTime(String s) {
 		this.gameTime.setText(s);
 		this.gameTime.updateGeometry();
 	}
@@ -200,7 +200,7 @@ public class UndercoverAgentHUD extends Node {
 	}
 	 */
 
-	public void setHealthText(int s) {
+	private void setHealthText(int s) {
 		this.healthText.setText("Health: " + s);
 		this.healthText.updateGeometry();
 	}
@@ -212,7 +212,7 @@ public class UndercoverAgentHUD extends Node {
 	}
 
 
-	public void setPing(long i) {
+	private void setPing(long i) {
 		this.pingText.setText("Ping: " + i);
 		this.pingText.updateGeometry();
 	}

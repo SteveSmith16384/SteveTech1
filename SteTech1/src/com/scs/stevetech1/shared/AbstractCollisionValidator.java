@@ -39,7 +39,7 @@ public class AbstractCollisionValidator {
 		}
 
 		// Medipacks only collide with players
-		if ((pa instanceof IPlayerCollectable && pb instanceof AbstractAvatar) || pa instanceof AbstractAvatar && pb instanceof IPlayerCollectable) {
+		if ((pa instanceof IPlayerCollectable && pb instanceof AbstractAvatar == false) || pa instanceof AbstractAvatar == false && pb instanceof IPlayerCollectable) {
 			return false;
 		}
 		

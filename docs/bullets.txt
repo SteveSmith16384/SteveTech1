@@ -9,7 +9,7 @@ Fired by a client, that client (and every other client and the server) has contr
 * The other clients then create and launch their own projectiles, and are again responsible for its position, movement and removal.  No updates are sent by the server for it.
 
 AI:
-These use the same bullet entities as players!
+These use the same bullet entities as players, but are not fast-forwarded
 
 Notes:
 * Bullets are created as required!
