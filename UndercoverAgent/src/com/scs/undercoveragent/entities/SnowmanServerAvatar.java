@@ -1,6 +1,7 @@
 package com.scs.undercoveragent.entities;
 
 import com.scs.stevetech1.avatartypes.PersonAvatar;
+import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
@@ -42,8 +43,9 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements INotifi
 		if (this.alive) {// && server.gameData.isInGame()) {
 			long timeSinceMove = System.currentTimeMillis() - super.avatarControl.getLastMoveTime();
 			if (timeSinceMove > UAStaticData.AUTO_JUMP_INTERVAL_SECS * 1000) {
-				game.playSound(UASounds.NOTMOVE, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
-				this.avatarControl.jump();
+				if (this.avatarControl.jump()) { // Sto sound getting repeated if we can't jump for whatever reason
+					server.playSound(this.playerID, UASounds.NOTMOVE, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
+				}
 			}
 		}
 	}
@@ -59,7 +61,7 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements INotifi
 			server.sendExplosionShards(sb.getWorldTranslation(), 12, .8f, 1.2f, .005f, .02f, "Textures/snow.jpg");
 			this.avatarControl.jump(); // Also make them jump
 
-			game.playSound(UASounds.BIG_SPLAT, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
+			server.playSound(-1, UASounds.BIG_SPLAT, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
 		}
 	}
 
@@ -72,7 +74,9 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements INotifi
 			SnowmanServerAvatar csp = (SnowmanServerAvatar)killer;
 			csp.incScore(1);
 		}
-		game.playSound(UASounds.DIED, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
+		
+		AbstractGameServer server = (AbstractGameServer)game;
+		server.playSound(-1, UASounds.DIED, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
 	}
 
 
@@ -113,7 +117,9 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements INotifi
 		if (game.isServer()) {
 			if (pe instanceof AbstractBullet) {
 				if (!this.canBeDamaged()) {
-					game.playSound(UASounds.HAHA, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
+					AbstractGameServer server = (AbstractGameServer)game;
+					AbstractBullet bullet = (AbstractBullet)pe;
+					server.playSound(bullet.playerID, UASounds.HAHA, this.getID(), this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
 				}
 			}
 		}

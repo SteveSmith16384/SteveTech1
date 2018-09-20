@@ -94,8 +94,10 @@ public class DefaultPOVWeapon implements IPOVWeapon {
 
 
 	@Override
-	public Vector3f getPOVBulletStartPos() {
-		return weaponModel.getWorldTranslation();
+	public Vector3f getPOVBulletStartPos_Clone() {
+		Vector3f pos = weaponModel.getWorldTranslation().clone();
+		pos.y += 0.1f;
+		return pos;
 	}
 	
 }

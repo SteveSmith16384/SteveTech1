@@ -719,10 +719,10 @@ ICollisionListener<PhysicalEntity> {
 				this.entitiesForProcessing.remove(e);
 			}
 			e.remove();
-		}
-		if (sendAddRemoveEntityMsgs) {
-			if (e instanceof AbstractBullet == false) { // Don't send remove for these as the client takes care of it
-				this.sendMessageToInGameClients(new RemoveEntityMessage(id));
+			if (sendAddRemoveEntityMsgs) {
+				if (e instanceof AbstractBullet == false) { // Don't send remove for these as the client takes care of it
+					this.sendMessageToInGameClients(new RemoveEntityMessage(id));
+				}
 			}
 		}
 	}
@@ -978,9 +978,18 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	@Override
-	public void playSound(int _soundId, int entityId, Vector3f _pos, float _volume, boolean _stream) {
-		sendMessageToInGameClients(new PlaySoundMessage(_soundId, entityId, _pos, _volume, _stream));
+
+	/**
+	 * 
+	 * @param clientId or -1 for all clients
+	 * @param _soundId
+	 * @param entityId
+	 * @param _pos
+	 * @param _volume
+	 * @param _stream
+	 */
+	public void playSound(int clientId, int _soundId, int entityId, Vector3f _pos, float _volume, boolean _stream) {
+		sendMessageToInGameClientsExcept(clientId, new PlaySoundMessage(_soundId, entityId, _pos, _volume, _stream));
 
 	}
 

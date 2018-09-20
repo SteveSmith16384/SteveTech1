@@ -66,7 +66,7 @@ public class UndercoverAgentHUD extends Node {
 		this.attachChild(healthText);
 
 		scoreText = ttfLarge.getFormattedText(new StringContainer(ttfLarge, "Score:"), ColorRGBA.Green);
-		scoreText.setLocalTranslation(10, this.cam.getHeight()-45, 0);
+		scoreText.setLocalTranslation(10, this.cam.getHeight()-(ttfLarge.getScaledLineHeightInt()*2), 0);
 		this.attachChild(scoreText);
 
 		float xPos = cam.getWidth() * .6f;
@@ -106,7 +106,7 @@ public class UndercoverAgentHUD extends Node {
 		this.attachChild(pingText);
 
 		logText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
-		logText.setLocalTranslation(10, cam.getHeight() * 0.2f, 0);
+		logText.setLocalTranslation(10, cam.getHeight() * 0.25f, 0);
 		this.attachChild(logText);
 
 		// Damage box
@@ -132,7 +132,11 @@ public class UndercoverAgentHUD extends Node {
 		if (showGameTimeInterval.hitInterval()) {
 			if (client.gameData != null) {
 				this.setGameStatus(SimpleGameData.getStatusDesc(client.gameData.getGameStatus()));
-				this.setGameTime(client.gameData.getTime(client.serverTime));
+				if (client.gameData.getGameStatus() != SimpleGameData.ST_WAITING_FOR_PLAYERS) {
+					this.setGameTime(client.gameData.getTime(client.serverTime));
+				} else {
+					this.setGameTime("");
+				}
 				if (client.playersList != null) {
 					this.setNumPlayers(client.playersList.size());
 				}

@@ -213,7 +213,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	@Override
 	public void handleKilledOnClientSide(PhysicalEntity killer) {
 		Globals.p("You have been killed by " + killer);
-		//this.setAlive(false);
 		this.killer = killer;
 	}
 
@@ -228,11 +227,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		Vector3f pos = null;
 		if (client.povWeapon == null) {
 			pos = client.getCamera().getLocation().clone();
+			pos.y -= 0.1f;
 		} else {
-			pos = client.povWeapon.getPOVBulletStartPos().clone();
+			pos = client.povWeapon.getPOVBulletStartPos_Clone();
+			//pos.y += 0.1f; scs new
 		}
-
-		pos.y += 0.1f;
 		return pos;
 	}
 

@@ -12,7 +12,6 @@ public class UASounds {
 	public static final int START = 6;
 	public static final int WINNER = 7;
 	public static final int LOSER = 8;
-
 	public static final int HAHA = 9;
 	public static final int JUMP = 10;
 	public static final int NOTMOVE = 11;

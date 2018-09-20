@@ -16,7 +16,7 @@ import ssmith.util.RealtimeInterval;
 
 public class SnowmanClientAvatar extends AbstractClientAvatar {
 	
-	private RealtimeInterval walkSfxInterval = new RealtimeInterval(2000);
+	private RealtimeInterval walkSfxInterval = new RealtimeInterval(1000);
 	
 	public SnowmanClientAvatar(AbstractGameClient _module, int _playerID, IInputDevice _input, Camera _cam, int eid, float x, float y, float z, byte side) {
 		super(_module, UndercoverAgentClientEntityCreator.AVATAR, _playerID, _input, _cam, eid, x, y, z, side, new SnowmanModel(_module.getAssetManager()), new PersonAvatar(_module, _input, UAStaticData.MOVE_SPEED, UAStaticData.JUMP_FORCE));
@@ -30,12 +30,12 @@ public class SnowmanClientAvatar extends AbstractClientAvatar {
 		// Play footstep sfx?
 		PersonAvatar person = (PersonAvatar)super.avatarControl;
 		if (person.playerWalked && walkSfxInterval.hitInterval()) {
-			game.playSound(UASounds.FOOTSTEPS, -1, null, Globals.DEFAULT_VOLUME, false);
+			client.playSound(UASounds.FOOTSTEPS, -1, null, Globals.DEFAULT_VOLUME, false);
 		}
 
 		// Play jump?
 		if (person.playerJumped) {
-			game.playSound(UASounds.JUMP, -1, null, Globals.DEFAULT_VOLUME, false);
+			client.playSound(UASounds.JUMP, -1, null, Globals.DEFAULT_VOLUME, false);
 		}
 }
 	

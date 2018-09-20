@@ -71,7 +71,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		if (isRewound) {
 			throw new RuntimeException("Trying to process rewound object: " + this);
 		}
-		
+
 		if (this instanceof AbstractAvatar) {
 			throw new RuntimeException("Do not call this for avatars!");
 		}
@@ -254,9 +254,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void restorePosition() {
-		this.rewindPositionTo(System.currentTimeMillis());
-		this.mainNode.updateGeometricState();
-		this.isRewound = false;
+		if (this.isRewound) {
+			this.rewindPositionTo(System.currentTimeMillis());
+			this.mainNode.updateGeometricState();
+			this.isRewound = false;
+		}
 	}
 
 

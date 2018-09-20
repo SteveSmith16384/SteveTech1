@@ -13,5 +13,5 @@ public interface IPOVWeapon {
 	
 	void hide();
 	
-	Vector3f getPOVBulletStartPos();
+	Vector3f getPOVBulletStartPos_Clone();
 }

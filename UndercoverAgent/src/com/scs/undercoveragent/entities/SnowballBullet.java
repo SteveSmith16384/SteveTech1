@@ -10,6 +10,7 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.scene.shape.Sphere.TextureMode;
 import com.jme3.texture.Texture;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.entities.AbstractBullet;
@@ -59,7 +60,8 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 		this.simpleRigidBody.setLinearVelocity(dir.normalize().mult(20));
 
 		if (!game.isServer()) {
-			game.playSound(UASounds.THROW, this.getID(), this.origin, Globals.DEFAULT_VOLUME, false);
+			AbstractGameClient client = (AbstractGameClient)game;
+			client.playSound(UASounds.THROW, this.getID(), this.origin, Globals.DEFAULT_VOLUME, false);
 		}
 
 	}
@@ -78,7 +80,8 @@ public class SnowballBullet extends AbstractBullet implements INotifiedOfCollisi
 			Globals.p("Server: " + this.getName() + " has hit " + pe);
 			//}
 		} else {
-			game.playSound(UASounds.SMALL_SPLAT, -1, this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
+			AbstractGameClient client = (AbstractGameClient)game;
+			client.playSound(UASounds.SMALL_SPLAT, -1, this.getWorldTranslation(), Globals.DEFAULT_VOLUME, false);
 		}
 		game.markForRemoval(this);
 	}

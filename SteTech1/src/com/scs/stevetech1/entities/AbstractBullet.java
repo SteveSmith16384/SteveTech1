@@ -73,7 +73,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 		dir = _dir;
 
 		if (Globals.STRICT) {
-			if (side <= 0) {
+			if (side < 0) {
 				throw new RuntimeException("Invalid side: " + side);
 			}
 			if (!game.isServer() && this.getID() > 0) {
