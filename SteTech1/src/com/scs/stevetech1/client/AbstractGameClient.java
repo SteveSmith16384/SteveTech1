@@ -723,6 +723,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 				if (asm.damaged) {
 					showDamageBox();
 				}
+				if (asm.collectedPickup) {
+					showCollectedPickup();
+				}
 			}
 
 		} else if (message instanceof GameOverMessage) {
@@ -777,6 +780,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	 * Override if required
 	 */
 	protected void showDamageBox() {
+	}
+
+
+	/**
+	 * Override if required
+	 */
+	protected void showCollectedPickup() {
 	}
 
 

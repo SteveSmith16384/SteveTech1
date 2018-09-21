@@ -60,7 +60,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 		server.moveAvatarToStartPosition(this);
 
 		server.sendMessageToInGameClients(new AvatarStartedMessage(this));
-		this.sendAvatarStatusUpdateMessage(false);
+		this.sendAvatarStatusUpdateMessage(false, false);
 		if (Globals.DEBUG_PLAYER_RESTART) {
 			Globals.p("Sent AvatarStartedMessage");
 		}
@@ -163,8 +163,8 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 	}
 
 
-	protected void sendAvatarStatusUpdateMessage(boolean damaged) {
-		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client, damaged));
+	public void sendAvatarStatusUpdateMessage(boolean damaged, boolean collectedPickup) {
+		this.server.gameNetworkServer.sendMessageToClient(client, new AvatarStatusMessage(this, client, damaged, collectedPickup));
 
 	}
 
@@ -173,7 +173,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 	public void setHealth(float h) {
 		if (this.getHealth() != h) {
 			super.setHealth(h);
-			this.sendAvatarStatusUpdateMessage(false);
+			this.sendAvatarStatusUpdateMessage(false, false);
 		}
 	}
 
@@ -186,7 +186,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 	@Override
 	public void decHealth(float h) {
 		super.decHealth(h);
-		this.sendAvatarStatusUpdateMessage(true);
+		this.sendAvatarStatusUpdateMessage(true, false);
 	}
 
 
