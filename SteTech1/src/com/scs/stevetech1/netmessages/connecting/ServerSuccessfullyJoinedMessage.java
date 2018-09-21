@@ -4,21 +4,19 @@ import com.jme3.network.serializing.Serializable;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 
 @Serializable
-public class GameSuccessfullyJoinedMessage extends MyAbstractMessage {
+public class ServerSuccessfullyJoinedMessage extends MyAbstractMessage {
 
-	public byte side;
 	public int playerID;
 
-	public GameSuccessfullyJoinedMessage() {
+	public ServerSuccessfullyJoinedMessage() {
 		super(true, false);
 	}
 	
 	
-	public GameSuccessfullyJoinedMessage(int _playerID, byte _side) {
+	public ServerSuccessfullyJoinedMessage(int _playerID) {
 		super(true, false);
 		
 		playerID = _playerID;
-		side =_side;
 	}
 
 }

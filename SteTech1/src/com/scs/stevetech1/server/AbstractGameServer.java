@@ -41,6 +41,7 @@ import com.scs.stevetech1.netmessages.GeneralCommandMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.netmessages.NewGameMessage;
 import com.scs.stevetech1.netmessages.NumEntitiesMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlaySoundMessage;
@@ -50,10 +51,10 @@ import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
-import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.connecting.HelloMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameRequestMessage;
+import com.scs.stevetech1.netmessages.connecting.ServerSuccessfullyJoinedMessage;
 import com.scs.stevetech1.networking.IGameMessageServer;
 import com.scs.stevetech1.networking.IMessageServerListener;
 import com.scs.stevetech1.networking.KryonetGameServer;
@@ -425,10 +426,11 @@ ICollisionListener<PhysicalEntity> {
 		client.playerData.playerName = newPlayerMessage.playerName;
 
 		this.sendMessageToInGameClientsExcept(client.getPlayerID(), new ShowMessageMessage("Player joining game!", true));
+		gameNetworkServer.sendMessageToClient(client, new ServerSuccessfullyJoinedMessage(client.getPlayerID())); // Must be before we send the avatar so they know it's their avatar
 
 		byte side = getSideForPlayer(client);
 		client.playerData.side = side;
-		gameNetworkServer.sendMessageToClient(client, new GameSuccessfullyJoinedMessage(client.getPlayerID(), side)); // Must be before we send the avatar so they know it's their avatar
+		gameNetworkServer.sendMessageToClient(client, new NewGameMessage(side));
 		sendSimpleGameDataToClients(); // So they have a game ID, required when receiving ents
 		client.avatar = createPlayersAvatar(client);
 		sendAllEntitiesToClient(client);
@@ -508,13 +510,14 @@ ICollisionListener<PhysicalEntity> {
 			if (client.clientStatus == ClientData.ClientStatus.InGame) {
 				byte side = getSideForPlayer(client); // New sides!
 				client.playerData.side = side;
+				gameNetworkServer.sendMessageToClient(client, new NewGameMessage(side)); // Must be before we send the avatar so they know it's their avatar
 				client.avatar = createPlayersAvatar(client);
 				sendAllEntitiesToClient(client);
 				this.gameNetworkServer.sendMessageToClient(client, new SetAvatarMessage(client.getPlayerID(), client.avatar.getID()));
-				client.avatar.startAgain(); // scs new
+				client.avatar.startAgain();
 			}
 		}
-		sendSimpleGameDataToClients(); // To send the new scores
+		sendSimpleGameDataToClients(); // To send the new scores etc...
 
 		this.gameStatusSystem.checkGameStatus(true); // Sets game status to "Deploying" if there's enough players
 

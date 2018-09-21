@@ -1,6 +1,6 @@
 package com.scs.undercoveragent.entities;
 
-import com.scs.stevetech1.avatartypes.PersonAvatar;
+import com.scs.stevetech1.avatartypes.PersonAvatarControl;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IDebrisTexture;
 import com.scs.stevetech1.components.IEntity;
@@ -22,7 +22,7 @@ import com.scs.undercoveragent.models.SnowmanModel;
 public class SnowmanServerAvatar extends AbstractServerAvatar implements INotifiedOfCollision, IDebrisTexture {
 
 	public SnowmanServerAvatar(IEntityController _module, ClientData client, IInputDevice _input, int eid) {
-		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), UAStaticData.START_HEALTH, 0, new PersonAvatar(_module, _input, UAStaticData.MOVE_SPEED, UAStaticData.JUMP_FORCE));
+		super(_module, UndercoverAgentClientEntityCreator.AVATAR, client, _input, eid, new SnowmanModel(_module.getAssetManager()), UAStaticData.START_HEALTH, 0, new PersonAvatarControl(_module, _input, UAStaticData.MOVE_SPEED, UAStaticData.JUMP_FORCE));
 	}
 
 

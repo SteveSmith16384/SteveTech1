@@ -73,6 +73,7 @@ import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.netmessages.NewGameMessage;
 import com.scs.stevetech1.netmessages.NumEntitiesMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlaySoundMessage;
@@ -82,10 +83,10 @@ import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
-import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.connecting.HelloMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameRequestMessage;
+import com.scs.stevetech1.netmessages.connecting.ServerSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.lobby.ListOfGameServersMessage;
 import com.scs.stevetech1.networking.IGameMessageClient;
 import com.scs.stevetech1.networking.IMessageClientListener;
@@ -138,7 +139,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
-	protected boolean joinedGame = false; // Have we been accepted by the server
+	protected boolean joinedGame = false; // Have we been accepted by the server - todo - rename to joinedServer
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
 	private SoundSystem soundSystem;
@@ -368,16 +369,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				if (joinedGame) {
 
-					if (Globals.FORCE_CLIENT_SLOWDOWN || sendInputsInterval.hitInterval()) {
-						this.sendInputs();
-					}
-
-					if (Globals.SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP) {
-						try {
-							long timeDiff = this.currentAvatar.historicalPositionData.getMostRecent().serverTimestamp - renderTime;
-							//this.hud.setDebugText("Latest Data is " + timeDiff + " newer than we need");
-						} catch (Exception ex) {
-							// do nothing, no data yet
+					if (!this.showHistory) {
+						if (Globals.FORCE_CLIENT_SLOWDOWN || sendInputsInterval.hitInterval()) {
+							this.sendInputs();
 						}
 					}
 
@@ -491,9 +485,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					 */
 				}
 
-				if (e instanceof IProcessByClient) {
-					IProcessByClient pbc = (IProcessByClient)e;
-					pbc.processByClient(this, tpfSecs); // Mainly to process client-side movement of the avatar
+				if (!this.showHistory) {
+					if (e instanceof IProcessByClient) {
+						IProcessByClient pbc = (IProcessByClient)e;
+						pbc.processByClient(this, tpfSecs); // Mainly to process client-side movement of the avatar
+					}
 				}
 
 				if (e instanceof IAnimatedClientSide) {
@@ -539,31 +535,22 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	protected boolean handleMessage(MyAbstractMessage message) {
-		/*if (message instanceof PingMessage) {
-			PingMessage pingMessage = (PingMessage) message;
-			if (!pingMessage.s2c) {
-				long rtt = System.currentTimeMillis() - pingMessage.originalSentTime;
-				this.pingRTT = this.pingCalc.add(rtt);
-				clientToServerDiffTime = pingMessage.responseSentTime - pingMessage.originalSentTime - (pingRTT/2); // If running on the same server, this should be 0! (or close enough)
-
-			} else {
-				pingMessage.responseSentTime = System.currentTimeMillis();
-				networkClient.sendMessageToServer(message); // Send it straight back
-			}
-
-		} else */if (message instanceof ShowMessageMessage) {
+		if (message instanceof ShowMessageMessage) {
 			ShowMessageMessage gsm = (ShowMessageMessage)message;
 			this.showMessage(gsm.msg);
 
-		} else if (message instanceof GameSuccessfullyJoinedMessage) {
-			GameSuccessfullyJoinedMessage npcm = (GameSuccessfullyJoinedMessage)message;
+		} else if (message instanceof ServerSuccessfullyJoinedMessage) {
+			ServerSuccessfullyJoinedMessage npcm = (ServerSuccessfullyJoinedMessage)message;
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
-				this.side = npcm.side;
 				joinedGame = true;
 			} else {
 				throw new RuntimeException("Already received GameSuccessfullyJoinedMessage");
 			}
+
+		} else if (message instanceof NewGameMessage) {
+			NewGameMessage npcm = (NewGameMessage)message;
+			this.side = npcm.side;
 
 		} else if (message instanceof HelloMessage) {
 			this.rcvdHello = true;
@@ -694,7 +681,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					this.currentAvatar.setAlive(false);
 					this.avatarKilled();
 					if (Globals.SHOW_VIEW_FROM_KILLER_ON_DEATH) {
-						this.showHistory = true;
+						this.startShowingHistory();
 					}
 				}
 			}
@@ -841,7 +828,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	 * Override if required
 	 */
 	protected void allEntitiesReceived() {
-		this.getRootNode().attachChild(this.gameNode); // todo - do once all actually added?
+		this.getRootNode().attachChild(this.gameNode); // todo - do once all actually added
 	}
 
 
@@ -1130,8 +1117,11 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
-				//new AbstractHUDImage(this, this.getNextEntityID(), this.hud, "Textures/text/winner.png", this.cam.getWidth(), this.cam.getHeight(), 5);
-				//this.avatar.setWorldTranslation(new Vector3f(10, 10, 10));
+				if (!this.showHistory) {
+					this.startShowingHistory();
+				} else {
+					this.stopShowingHistory();
+				}
 			}
 		}
 	}
@@ -1264,7 +1254,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 	private void showStats() {
 		Globals.p("Num Entities: " + this.entities.size());
-		Globals.p("Num Entities for proc: " + this.entitiesForProcessing.size());
+		Globals.p("Num Entities for processing: " + this.entitiesForProcessing.size());
 	}
 
 
@@ -1314,21 +1304,6 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 		return canCollide(pa, pb);
 	}
 
-	/*
-	protected void setupFilters() {
-		renderManager.setAlphaToCoverage(true);
-		if (renderer.getCaps().contains(Caps.GLSL100)){
-			fpp = new FilterPostProcessor(assetManager);
-			//fpp.setNumSamples(4);
-			int numSamples = getContext().getSettings().getSamples();
-			if( numSamples > 0 ) {
-				fpp.setNumSamples(numSamples); 
-			}
-
-			viewPort.addProcessor(fpp);
-		}
-	}
-	 */
 
 	@Override
 	public SimpleGameData getGameData() {
@@ -1390,6 +1365,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
+	/**
+	 * This currently causes an error.
+	 * 
+	 * @param model
+	 * @param width
+	 * @param color
+	 */
 	public void showOutlineEffect(Spatial model, int width, ColorRGBA color) {
 		OutlineProFilter outlineFilter = model.getUserData("OutlineProFilter");
 		if (outlineFilter == null) {
@@ -1421,6 +1403,18 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			outlineFilter.setEnabled(false);
 			outlineFilter.getOutlinePreFilter().setEnabled(false);
 		}
+	}
+
+
+	public void startShowingHistory() {
+		this.showHistory = true;
+		this.showMessage("SHOWING HISTORY");
+	}
+
+
+	public void stopShowingHistory() {
+		this.showHistory = false;
+		this.showMessage("No longer showing history");
 	}
 
 }

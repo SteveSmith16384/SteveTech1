@@ -9,7 +9,7 @@ import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 
-public class PersonAvatar implements IAvatarControl {
+public class PersonAvatarControl implements IAvatarControl {
 
 	protected IEntityController game;
 	private IInputDevice input;
@@ -26,7 +26,7 @@ public class PersonAvatar implements IAvatarControl {
 	private int newAnimCode;
 	private SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 
-	public PersonAvatar(IEntityController _game, IInputDevice _input, float _moveSpeed, float _jumpForce) {
+	public PersonAvatarControl(IEntityController _game, IInputDevice _input, float _moveSpeed, float _jumpForce) {
 		game = _game;
 		input = _input;
 		this.moveSpeed = _moveSpeed;

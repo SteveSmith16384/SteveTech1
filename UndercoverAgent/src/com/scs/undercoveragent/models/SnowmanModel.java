@@ -40,7 +40,7 @@ public class SnowmanModel implements IAvatarModel {
 		JMEAngleFunctions.rotateToWorldDirection(model, new Vector3f(-1, 0, 0)); // Point model fwds
 
 		origPos = model.getLocalTranslation().clone();
-		
+
 		return model;
 	}
 
@@ -58,15 +58,8 @@ public class SnowmanModel implements IAvatarModel {
 
 
 	public void showDied(float tpf_secs) {
-		/*if (Globals.DEBUG_ANIM) {
-			Globals.p("Snowman sinking...");
-		}*/
-		try {
-			if (model != null) {
-				this.model.move(0, -tpf_secs/7, 0);
-			}
-		} catch (NullPointerException ex) {
-			ex.printStackTrace();
+		if (model != null) {
+			this.model.move(0, -tpf_secs/7, 0);
 		}
 		showingDied = true;
 
@@ -99,7 +92,7 @@ public class SnowmanModel implements IAvatarModel {
 	@Override
 	public void setAnim(int anim) {
 		// Do nothing
-		
+
 	}
 
 }

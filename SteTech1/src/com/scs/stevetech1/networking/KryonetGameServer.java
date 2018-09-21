@@ -28,6 +28,7 @@ import com.scs.stevetech1.netmessages.ModelBoundsMessage;
 import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.netmessages.NewEntityMessage;
+import com.scs.stevetech1.netmessages.NewGameMessage;
 import com.scs.stevetech1.netmessages.NumEntitiesMessage;
 import com.scs.stevetech1.netmessages.PingMessage;
 import com.scs.stevetech1.netmessages.PlaySoundMessage;
@@ -38,10 +39,10 @@ import com.scs.stevetech1.netmessages.SetAvatarMessage;
 import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.TestMessage;
-import com.scs.stevetech1.netmessages.connecting.GameSuccessfullyJoinedMessage;
 import com.scs.stevetech1.netmessages.connecting.HelloMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameFailedMessage;
 import com.scs.stevetech1.netmessages.connecting.JoinGameRequestMessage;
+import com.scs.stevetech1.netmessages.connecting.ServerSuccessfullyJoinedMessage;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
 
@@ -124,7 +125,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(MyAbstractMessage.class);
 		kryo.register(PingMessage.class);
 		kryo.register(JoinGameRequestMessage.class);
-		kryo.register(GameSuccessfullyJoinedMessage.class);
+		kryo.register(ServerSuccessfullyJoinedMessage.class);
 		kryo.register(PlayerInputMessage.class);
 		kryo.register(NewEntityMessage.class);
 		kryo.register(EntityUpdateMessage.class);
@@ -154,6 +155,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(NumEntitiesMessage.class);
 		kryo.register(HelloMessage.class);
 		kryo.register(AbilityReloadingMessage.class);
+		kryo.register(NewGameMessage.class);
 	}
 
 

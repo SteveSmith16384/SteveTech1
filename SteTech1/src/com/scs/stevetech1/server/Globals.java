@@ -55,7 +55,6 @@ public class Globals {
 	public static final boolean DEBUG_PLAYER_RESTART = false;
 	public static final boolean STOP_SERVER_AVATAR_MOVING = false;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
-	public static final boolean SHOW_LATEST_AVATAR_POS_DATA_TIMESTAMP = false;
 	public static final boolean DEBUG_REWIND_POS1 = false;
 	public static final boolean LOG_MOVING_TARGET_POS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
@@ -92,7 +91,7 @@ public class Globals {
 	
 	// Our movement speed
 	public static final float SMALLEST_MOVE_DIST = 0.001f;
-	public static final float MAX_MOVE_DIST = 2f; // was 1f
+	public static final float MAX_MOVE_DIST = 1f; // Don't change to 2, makes movement wibbly
 
 	public static final float CAM_VIEW_DIST = 150f;
 

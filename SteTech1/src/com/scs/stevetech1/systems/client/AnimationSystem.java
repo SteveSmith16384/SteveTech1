@@ -21,19 +21,14 @@ public class AnimationSystem extends AbstractSystem {
 
 
 	public void process(IAnimatedClientSide anim, float tpf_secs) {
-		//HistoricalAnimationData had = anim.getAnimList().get(client.renderTime, true);
 		PhysicalEntity pe = (PhysicalEntity)anim;
 		EntityUpdateData had = pe.chronoUpdateData.get(client.getRenderTime(), true);
 		if (had != null) {
-			//if (had.animationCode != .equals(anim.getCurrentAnimCode())) { // Has the animation changed?
-				try {
-					anim.setAnimCode_ClientSide(had.animationCode);
-				} catch (IllegalArgumentException ex) {
-					Globals.pe(ex.getMessage());
-				}
-			//}
-		} else {
-			//Globals.p("No anim data for " + pe);  Might be dead
+			try {
+				anim.setAnimCode_ClientSide(had.animationCode);
+			} catch (IllegalArgumentException ex) {
+				Globals.pe(ex.getMessage());
+			}
 		}
 		anim.processManualAnimation_ClientSide(tpf_secs);
 	}

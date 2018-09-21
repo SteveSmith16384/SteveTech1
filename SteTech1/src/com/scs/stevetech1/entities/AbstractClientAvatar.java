@@ -132,7 +132,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 					}
 				}
 			}
-
+			
 			final long serverTime = client.getServerTime();
 
 			super.serverAndClientProcess(null, client, tpfSecs, serverTime);
