@@ -14,9 +14,9 @@ public class Globals {
 
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
 	public static final boolean DEBUG_RELOAD_PROBLEM = true;
-	public static final boolean SHOW_BULLET_COLLISION_POS = true;
 
 	// Lots of consts for specific debugging output
+	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean SHOW_BULLET_POSITIONS = false;
 	public static final boolean FORCE_CLIENT_SLOWDOWN = false;
 	public static final boolean TEST_BULLET_REWINDING = false;
@@ -30,7 +30,6 @@ public class Globals {
 	public static final boolean DEBUG_ENTITY_ADD_REMOVE = false;
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
-	public static final boolean DEBUG_SET_ALIVE = false;
 	public static final boolean DEBUG_PLAYER_START_POS = false;
 	public static final boolean DEBUG_GUN_ROTATION = false;	
 	public static final boolean DEBUG_GAME_STATUS_CHECK = false;
@@ -93,7 +92,7 @@ public class Globals {
 	
 	// Our movement speed
 	public static final float SMALLEST_MOVE_DIST = 0.001f;
-	public static final float MAX_MOVE_DIST = 1f;
+	public static final float MAX_MOVE_DIST = 2f; // was 1f
 
 	public static final float CAM_VIEW_DIST = 150f;
 

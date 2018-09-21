@@ -33,7 +33,7 @@ import com.scs.stevetech1.shared.PositionCalculator;
 public abstract class AbstractClientAvatar extends AbstractAvatar implements IShowOnHUD, IProcessByClient, IKillable {
 
 	public Camera cam;
-	public PositionCalculator clientAvatarPositionData;// = new PositionCalculator(Globals.HISTORY_DURATION, ""); // So we know where we were in the past to compare against where the server says we should have been
+	public PositionCalculator clientAvatarPositionData; // So we know where we were in the past to compare against where the server says we should have been
 	private Spatial debugNode;
 	public PhysicalEntity killer;
 
@@ -60,9 +60,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		Texture tex3 = game.getAssetManager().loadTexture(key3);
 		tex3.setWrap(WrapMode.Repeat);
 
-		Material floor_mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
-		floor_mat.setTexture("DiffuseMap", tex3);
-		debugNode.setMaterial(floor_mat);
+		Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
+		mat.setTexture("DiffuseMap", tex3);
+		debugNode.setMaterial(mat);
 
 		debugNode.setLocalTranslation(0, box1.yExtent/2, 0); // Origin is at the bottom
 
@@ -91,10 +91,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	@Override
 	public void processByClient(IClientApp client, float tpfSecs) {
-		if (Globals.DEBUG_SET_ALIVE) {
-			this.alive = false;
-		}
-
 		if (!this.alive) {
 			if (Globals.SHOW_VIEW_FROM_KILLER_ON_DEATH && this.killer != null) {
 				Vector3f vec = killer.getWorldTranslation();
@@ -130,9 +126,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				// Check for reload
 				if (input.isReloadPressed()) {
 					if (this.ability[0] instanceof IReloadable) {
-						IReloadable ir = (IReloadable)ability[0];
 						client.sendMessage(new ClientReloadRequestMessage(this.ability[0].getID())); // Auto-reload
-						ir.setToBeReloaded();
+						//IReloadable ir = (IReloadable)ability[0];
+						//ir.setToBeReloaded();
 					}
 				}
 			}

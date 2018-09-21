@@ -49,6 +49,7 @@ import com.scs.stevetech1.components.IKillable;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IPlayerControlled;
 import com.scs.stevetech1.components.IProcessByClient;
+import com.scs.stevetech1.components.IReloadable;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -58,6 +59,7 @@ import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
+import com.scs.stevetech1.netmessages.AbilityReloadingMessage;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
@@ -664,6 +666,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					a.decode(aum);
 					a.setLastUpdateTime(aum.timestamp);
 				}
+			}
+
+		} else if (message instanceof AbilityReloadingMessage) {
+			AbilityReloadingMessage aum = (AbilityReloadingMessage) message;
+			IReloadable a = (IReloadable)entities.get(aum.abilityID);
+			if (a != null) {
+				a.setToBeReloaded();
 			}
 
 		} else if (message instanceof EntityKilledMessage) {

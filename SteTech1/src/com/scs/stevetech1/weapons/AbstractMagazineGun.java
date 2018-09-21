@@ -8,6 +8,7 @@ import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IReloadable;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractBullet;
+import com.scs.stevetech1.netmessages.AbilityReloadingMessage;
 import com.scs.stevetech1.netmessages.AbilityUpdateMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
@@ -44,6 +45,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			ICanShoot ic = (ICanShoot)owner;
 			AbstractBullet bullet = createBullet(game.getNextEntityID(), playerID, super.owner, ic.getBulletStartPos(), ic.getShootDir(), this.owner.side);
 			game.addEntity(bullet);
+			timeUntilNextUpdateSend_secs = 0; // So we send an update
 			return true;
 		}
 		return false;
@@ -123,6 +125,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 			this.timeUntilShoot_secs = this.reloadInterval_secs;
 			if (game.isServer()) {
 				AbstractGameServer server = (AbstractGameServer)game;
+				server.gameNetworkServer.sendMessageToClient(client, new AbilityReloadingMessage(this));
 				server.gameNetworkServer.sendMessageToClient(client, new AbilityUpdateMessage(true, this));
 				if (Globals.DEBUG_RELOAD_PROBLEM) {
 					Globals.p("Sent AbilityUpdateMessage");

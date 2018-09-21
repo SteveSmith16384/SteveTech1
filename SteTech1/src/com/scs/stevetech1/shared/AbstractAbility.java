@@ -20,7 +20,7 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 	public int avatarID;
 	protected AbstractAvatar owner;
 	public byte abilityNum;
-	private float timeUntilNextSend_secs = SEND_INT_SECS;
+	protected float timeUntilNextUpdateSend_secs = SEND_INT_SECS;
 	private long lastUpdateMsgTime;
 	private boolean goingToBeActivated = false;
 	protected float shotInterval_secs;
@@ -57,10 +57,10 @@ public abstract class AbstractAbility extends Entity implements IAbility, IProce
 			}
 			this.goingToBeActivated = false;
 		}
-		timeUntilNextSend_secs -= tpf_secs;
-		if (timeUntilNextSend_secs <= 0) {
+		timeUntilNextUpdateSend_secs -= tpf_secs;
+		if (timeUntilNextUpdateSend_secs <= 0) {
 			server.sendMessageToInGameClients(new AbilityUpdateMessage(false, this));
-			timeUntilNextSend_secs = SEND_INT_SECS;
+			timeUntilNextUpdateSend_secs = SEND_INT_SECS;
 		}
 	}
 

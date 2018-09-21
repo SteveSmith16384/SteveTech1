@@ -139,9 +139,6 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	public void setAlive(boolean a) {
 		if (this.alive != a) {
 			this.alive = a;
-			if (Globals.DEBUG_SET_ALIVE) {
-				Globals.p("Avatar now alive=" + this.alive);
-			}
 			// Note that the client has been told they have died, but the player shouldn't know until the client render time has caught up!
 		}
 	}
