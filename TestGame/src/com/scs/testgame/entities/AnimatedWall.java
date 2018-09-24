@@ -1,46 +1,57 @@
 package com.scs.testgame.entities;
 
+import java.io.IOException;
 import java.util.HashMap;
 
-import com.jme3.asset.TextureKey;
 import com.jme3.material.Material;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
-import com.jme3.system.JmeContext;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
+import com.jme3.texture.Texture2D;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
+import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.jme.AnimatedTexture;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 
-public class Wall extends PhysicalEntity implements IAffectedByPhysics {
+public class AnimatedWall extends PhysicalEntity implements IAffectedByPhysics, IProcessByClient {
 
-	public Wall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, String tex, float rotDegrees) {
-		super(_game, id, TestGameClientEntityCreator.WALL, "Wall", false, true, false);
+	private AnimatedTexture animatedTex;
+	private Texture tex3;
+	
+	public AnimatedWall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, float rotDegrees) {
+		super(_game, id, TestGameClientEntityCreator.ANIMATED_WALL, "AnimatedWall", true, true, false);
 
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
-			//creationData.put("pos", new Vector3f(x, yBottom, z));
 			creationData.put("w", w);
 			creationData.put("h", h);
-			creationData.put("tex", tex);
+			//creationData.put("tex", tex);
 			creationData.put("rot", rotDegrees);
+		} else {
+			this.animatedTex = new AnimatedTexture();
+			try {
+				this.animatedTex.loadImages("assets/Textures/ManicMiner2.gif");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		float d = 0.1f;
 
 		Box box1 = new Box(w/2, h/2, d/2);
-		//box1.scaleTextureCoordinates(new Vector2f(WIDTH, HEIGHT));
 		Geometry geometry = new Geometry("Wall", box1);
 		if (!_game.isServer()) { // Not running in server
-			TextureKey key3 = new TextureKey(tex);
-			key3.setGenerateMips(true);
-			Texture tex3 = game.getAssetManager().loadTexture(key3);
+			//TextureKey key3 = new TextureKey(tex);
+			//key3.setGenerateMips(true);
+			tex3 = new Texture2D(animatedTex.getNextImage());// game.getAssetManager().loadTexture(key3);
 			tex3.setWrap(WrapMode.Repeat);
-
 			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 			mat.setTexture("DiffuseMap", tex3);
 			geometry.setMaterial(mat);
@@ -57,6 +68,12 @@ public class Wall extends PhysicalEntity implements IAffectedByPhysics {
 		simpleRigidBody.setNeverMoves(true);
 
 		geometry.setUserData(Globals.ENTITY, this);
+	}
+	
+
+	@Override
+	public void processByClient(IClientApp client, float tpfSecs) {
+		tex3.setImage(animatedTex.getNextImage());
 	}
 
 

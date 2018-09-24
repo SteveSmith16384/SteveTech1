@@ -5,19 +5,15 @@ import java.io.IOException;
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.data.GameOptions;
-import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
-import com.scs.testgame.entities.Crate;
+import com.scs.testgame.entities.AnimatedWall;
 import com.scs.testgame.entities.Floor;
-import com.scs.testgame.entities.House;
-import com.scs.testgame.entities.Terrain1;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
 
@@ -71,13 +67,13 @@ public class TestGameServer extends AbstractGameServer {
 		c = new Crate(this, getNextEntityID(), 6, 30, 6, 1, 1, 1f, "Textures/crate.png", 65);
 		this.actuallyAddEntity(c);*/
 		
-		Wall w1 = new Wall(this, getNextEntityID(), 0, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
+		AnimatedWall w1 = new AnimatedWall(this, getNextEntityID(), 0, 0, 0, 10, 10, 0);
 		this.actuallyAddEntity(w1);
 		Wall w2 = new Wall(this, getNextEntityID(), 10, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 		this.actuallyAddEntity(w2);
 		Wall w3 = new Wall(this, getNextEntityID(), 20, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 0);
 		this.actuallyAddEntity(w3);
-		Wall w4 = new Wall(this, getNextEntityID(), 30, 0, 0, 10, 10, "Textures/seamless_bricks/bricks2.png", 270);
+		AnimatedWall w4 = new AnimatedWall(this, getNextEntityID(), 30, 0, 0, 10, 10, 270);
 		this.actuallyAddEntity(w4);
 
 		//new MovingTarget(this, getNextEntityID(), 2, 2, 10, 1, 1, 1, "Textures/seamless_bricks/bricks2.png", 0);

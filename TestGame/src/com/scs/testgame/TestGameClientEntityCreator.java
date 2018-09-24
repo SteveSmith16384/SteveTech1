@@ -6,11 +6,11 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.AbstractOtherPlayersAvatar;
-import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.BulletTrail;
 import com.scs.stevetech1.entities.DebuggingSphere;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.weapons.HitscanRifle;
+import com.scs.testgame.entities.AnimatedWall;
 import com.scs.testgame.entities.Crate;
 import com.scs.testgame.entities.FlatFloor;
 import com.scs.testgame.entities.Floor;
@@ -44,7 +44,7 @@ public class TestGameClientEntityCreator {
 	public static final int HOUSE = 15;
 	public static final int TERRAIN1 = 16;
 	public static final int BULLET_TRAIL = 17;
-
+	public static final int ANIMATED_WALL = 18;
 
 	public TestGameClientEntityCreator() {
 		super();
@@ -209,7 +209,16 @@ public class TestGameClientEntityCreator {
 			} else {
 				return null; // We create our own bullet trails, so ignore this
 			}
+		}
 
+		case ANIMATED_WALL:
+		{
+			Vector3f pos = (Vector3f)msg.data.get("pos");
+			float w = (float)msg.data.get("w");
+			float h = (float)msg.data.get("h");
+			float rot = (Float)msg.data.get("rot");
+			AnimatedWall wall = new AnimatedWall(game, id, pos.x, pos.y, pos.z, w, h, rot);
+			return wall;
 		}
 
 		default:
