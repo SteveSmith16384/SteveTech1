@@ -19,11 +19,14 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.testgame.TestGameClientEntityCreator;
 
+import ssmith.util.RealtimeInterval;
+
 public class AnimatedWall extends PhysicalEntity implements IAffectedByPhysics, IProcessByClient {
 
 	private AnimatedTexture animatedTex;
 	private Texture tex3;
-	
+	private RealtimeInterval interval = new RealtimeInterval(100);
+
 	public AnimatedWall(IEntityController _game, int id, float x, float yBottom, float z, float w, float h, float rotDegrees) {
 		super(_game, id, TestGameClientEntityCreator.ANIMATED_WALL, "AnimatedWall", true, true, false);
 
@@ -31,14 +34,12 @@ public class AnimatedWall extends PhysicalEntity implements IAffectedByPhysics, 
 			creationData = new HashMap<String, Object>();
 			creationData.put("w", w);
 			creationData.put("h", h);
-			//creationData.put("tex", tex);
 			creationData.put("rot", rotDegrees);
 		} else {
 			this.animatedTex = new AnimatedTexture();
 			try {
 				this.animatedTex.loadImages("assets/Textures/ManicMiner2.gif");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -48,9 +49,7 @@ public class AnimatedWall extends PhysicalEntity implements IAffectedByPhysics, 
 		Box box1 = new Box(w/2, h/2, d/2);
 		Geometry geometry = new Geometry("Wall", box1);
 		if (!_game.isServer()) { // Not running in server
-			//TextureKey key3 = new TextureKey(tex);
-			//key3.setGenerateMips(true);
-			tex3 = new Texture2D(animatedTex.getNextImage());// game.getAssetManager().loadTexture(key3);
+			tex3 = new Texture2D(animatedTex.getNextImage());
 			tex3.setWrap(WrapMode.Repeat);
 			Material mat = new Material(game.getAssetManager(),"Common/MatDefs/Light/Lighting.j3md");  // create a simple material
 			mat.setTexture("DiffuseMap", tex3);
@@ -61,19 +60,21 @@ public class AnimatedWall extends PhysicalEntity implements IAffectedByPhysics, 
 			float rads = (float)Math.toRadians(rotDegrees);
 			mainNode.rotate(0, rads, 0);
 		}
-		geometry.setLocalTranslation(w/2, h/2, d/2); // Never change position of mainNode (unless the whole object is moving)
-		mainNode.setLocalTranslation(x, yBottom, z); // Never change position of mainNode (unless the whole object is moving)
+		geometry.setLocalTranslation(w/2, h/2, d/2);
+		mainNode.setLocalTranslation(x, yBottom, z);
 
 		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
 		simpleRigidBody.setNeverMoves(true);
 
 		geometry.setUserData(Globals.ENTITY, this);
 	}
-	
+
 
 	@Override
 	public void processByClient(IClientApp client, float tpfSecs) {
-		tex3.setImage(animatedTex.getNextImage());
+		if (interval.hitInterval()) {
+			tex3.setImage(animatedTex.getNextImage());
+		}
 	}
 
 
