@@ -278,7 +278,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 
 	@Override
-	public void disconnected() {
+	public void disconnectedCode() {
 		this.appendToLog("DISCONNECTED");
 	}
 	

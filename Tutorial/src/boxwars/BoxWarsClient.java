@@ -52,8 +52,7 @@ public class BoxWarsClient extends AbstractGameClient {
 
 
 	@Override
-	public void disconnected() {
-		super.disconnected();
+	public void disconnectedCode() {
 		System.exit(0);
 	}
 	

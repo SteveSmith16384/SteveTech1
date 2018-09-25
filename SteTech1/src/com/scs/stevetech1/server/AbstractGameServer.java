@@ -624,7 +624,7 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void connectionRemoved(int id) {
-		Globals.p("connectionRemoved()");
+		//Globals.p("connectionRemoved()");
 		this.clientList.removeClient(id);
 	}
 
@@ -903,6 +903,10 @@ ICollisionListener<PhysicalEntity> {
 	// Todo - Move to explosion system
 	public void sendExplosionShards(Vector3f pos, int num, float minForce, float maxForce, float minSize, float maxSize, String tex) {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
+		
+		if (tex == null) {
+			throw new RuntimeException("Tex is null");
+		}
 
 		for (int i=0 ; i<num ; i++) {
 			Vector3f forceDirection = new Vector3f(NumberFunctions.rndFloat(-1, 1), NumberFunctions.rndFloat(1, 1.1f), NumberFunctions.rndFloat(-1, 1));

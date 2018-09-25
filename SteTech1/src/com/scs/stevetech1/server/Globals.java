@@ -13,9 +13,11 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
-	public static final boolean DEBUG_RELOAD_PROBLEM = true;
+	public static final boolean DEBUG_NO_JUMP_ANIM = true;
+	public static final boolean DEBUG_OTHER_PLAYER_COLOURS = true;
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_RELOAD_PROBLEM = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false;
 	public static final boolean SHOW_BULLET_POSITIONS = false;
 	public static final boolean FORCE_CLIENT_SLOWDOWN = false;

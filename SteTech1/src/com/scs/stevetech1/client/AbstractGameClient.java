@@ -106,7 +106,10 @@ import ssmith.util.RealtimeInterval;
 import ssmith.util.TextConsole;
 
 public abstract class AbstractGameClient extends SimpleApplication implements IClientApp, IEntityController, 
-ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, ConsoleInputListener { 
+ActionListener, // For user input
+IMessageClientListener, // To listen for messages from the server 
+ICollisionListener<PhysicalEntity>, 
+ConsoleInputListener { 
 
 	private static final String JME_SETTINGS_NAME = "jme_client_settings.txt";
 
@@ -144,7 +147,8 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public ArrayList<SimplePlayerData> playersList;
 	private SoundSystem soundSystem;
 	private int expectedNumEntities = -1; // So we can show "% complete"
-
+	private boolean runDisconnectedCode = false;
+	
 	protected Node gameNode = new Node("GameNode");
 	protected Node debugNode = new Node("DebugNode");
 	protected FilterPostProcessor fpp;
@@ -154,8 +158,10 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	public long serverTime, renderTime;
 	private float mouseSens;
 	private String consoleInput;
-	private boolean showHistory = false; // SHowing history cam (feature in progress)
-
+	private boolean showingHistory = false; // Showing history cam (feature in progress)
+	//private boolean isShowHistory = false; // Showing history cam (feature in progress)
+	private boolean quitting = false;
+	
 	protected Thread connectingThread;
 	public Exception lastConnectException;
 
@@ -346,10 +352,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			}
 		}
 		checkConsoleInput();
+		
+		if (quitting) {
+			quit("User quit.");
+			return;
+		}
+		
+		if (runDisconnectedCode) {
+			this.disconnectedCode();
+			runDisconnectedCode = false;
+		}
 
 		try {
 			serverTime = System.currentTimeMillis() + this.clientToServerDiffTime;
-			if (!this.showHistory) {
+			if (!this.showingHistory) {
 				renderTime = serverTime - clientRenderDelayMillis; // Render from history
 			} else {
 				renderTime = serverTime - Globals.HISTORY_DURATION_MILLIS;
@@ -369,7 +385,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 				if (joinedGame) {
 
-					if (!this.showHistory) {
+					if (!this.showingHistory) {
 						if (Globals.FORCE_CLIENT_SLOWDOWN || sendInputsInterval.hitInterval()) {
 							this.sendInputs();
 						}
@@ -485,7 +501,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 					 */
 				}
 
-				if (!this.showHistory) {
+				if (!this.showingHistory) {
 					if (e instanceof IProcessByClient) {
 						IProcessByClient pbc = (IProcessByClient)e;
 						pbc.processByClient(this, tpfSecs); // Mainly to process client-side movement of the avatar
@@ -704,7 +720,7 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 			if (this.currentAvatar != null && asm.entityID == this.currentAvatar.getID()) {
 				currentAvatar.setAlive(true);
 				this.avatarStarted();
-				this.showHistory = false;
+				this.showingHistory = false;
 
 				// Point camera fwds again
 				Vector3f look = cam.getLocation().add(Vector3f.UNIT_X);
@@ -1118,16 +1134,20 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
+	/**
+	 * Don't run any major code in here since it runs in the UI thread!
+	 */
 	@Override
 	public void onAction(String name, boolean value, float tpf) {
 		if (name.equalsIgnoreCase(QUIT)) {
 			if (value) {
-				quit("User quit.");
+				//quit("User quit.");
+				quitting = true;
 			}
 
 		} else if (name.equalsIgnoreCase(TEST)) {
 			if (value) {
-				if (!this.showHistory) {
+				if (!this.showingHistory) {
 					this.startShowingHistory();
 				} else {
 					this.stopShowingHistory();
@@ -1156,17 +1176,29 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
+	/**
+	 * Do not do any major code here, since it will run in a different thread to the main game loop.
+	 */
 	@Override
 	public void connected() {
 		Globals.p("Connected!");
 	}
 
 
+	/**
+	 * Do not do any major code here, since it will run in a different thread to the main game loop.
+	 * To run any code when disconnected, put it in disconnectedCode()
+	 */
 	@Override
-	public void disconnected() {
+	public final void disconnected() {
 		Globals.p("Disconnected!");
 		joinedGame = false;
 		this.playerID = -1;
+		this.runDisconnectedCode = true;
+	}
+	
+	
+	protected void disconnectedCode() {
 		this.removeAllEntities();
 	}
 
@@ -1235,6 +1267,9 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 	}
 
 
+	/**
+	 * Any code run in jere will run in the UI thread!
+	 */
 	@Override
 	public void processConsoleInput(String s) {
 		this.consoleInput = s;
@@ -1417,13 +1452,13 @@ ActionListener, IMessageClientListener, ICollisionListener<PhysicalEntity>, Cons
 
 
 	public void startShowingHistory() {
-		this.showHistory = true;
+		this.showingHistory = true;
 		this.showMessage("SHOWING HISTORY");
 	}
 
 
 	public void stopShowingHistory() {
-		this.showHistory = false;
+		this.showingHistory = false;
 		this.showMessage("No longer showing history");
 	}
 
