@@ -52,7 +52,7 @@ public class BoxWarsClient extends AbstractGameClient {
 
 
 	@Override
-	public void disconnectedCode() {
+	public void runWhenDisconnected() {
 		System.exit(0);
 	}
 	
@@ -105,8 +105,8 @@ public class BoxWarsClient extends AbstractGameClient {
 				IEntity shooter = game.entities.get(shooterId);
 				Vector3f startPos = (Vector3f) msg.data.get("startPos");
 				Vector3f dir = (Vector3f) msg.data.get("dir");
-				PlayersBullet snowball = new PlayersBullet(game, game.getNextEntityID(), playerID, shooter, startPos, dir, side, null); // Notice we generate our own entity id
-				return snowball;
+				PlayersBullet bullet = new PlayersBullet(game, game.getNextEntityID(), playerID, shooter, startPos, dir, side, null); // Notice we generate our own entity id
+				return bullet;
 			} else {
 				return null;
 			}

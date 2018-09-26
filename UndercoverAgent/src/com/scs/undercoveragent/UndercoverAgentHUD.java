@@ -22,6 +22,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.data.SimpleGameData;
+import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.gui.TextArea;
 
 import ssmith.util.RealtimeInterval;
@@ -35,6 +36,7 @@ public class UndercoverAgentHUD extends Node {
 	private static final int MAX_LINES = 5;
 
 	private RealtimeInterval showGameTimeInterval = new RealtimeInterval(1000);
+	private RealtimeInterval updateHudInterval = new RealtimeInterval(3000);
 
 	private List<String> logLines = new ArrayList<String>();
 
@@ -137,15 +139,25 @@ public class UndercoverAgentHUD extends Node {
 				} else {
 					this.setGameTime("");
 				}
-				if (client.playersList != null) {
-					this.setNumPlayers(client.playersList.size());
+			}
+			if (client.currentAvatar != null) {
+				this.setHealthText((int)client.currentAvatar.getHealth());
+			}
+		}
+		if (updateHudInterval.hitInterval()) {
+			if (client.playersList != null) {
+				this.setNumPlayers(client.playersList.size());
+			}
+			if (client.playersList != null) {
+				for (SimplePlayerData spd : client.playersList) {
+					if (spd.id == client.playerID) {
+						UASimplePlayerData ua = (UASimplePlayerData)spd;
+						setScoreText(ua.score);
+					}
 				}
 			}
 			this.setPing(client.pingRTT);
 
-			if (client.currentAvatar != null) {
-				this.setHealthText((int)client.currentAvatar.getHealth());
-			}
 		}
 
 		if (process_damage_box) {
@@ -172,12 +184,6 @@ public class UndercoverAgentHUD extends Node {
 		this.logText.updateGeometry();
 	}
 
-	/*
-	public void setDebugText(String s) {
-		this.debugText.setText(s);
-	}
-	 */
-
 	private void setGameStatus(String s) {
 		this.gameStatus.setText(s);
 		this.gameStatus.updateGeometry();
@@ -194,10 +200,6 @@ public class UndercoverAgentHUD extends Node {
 		this.abilityGun.setText(s);
 	}
 
-
-	public void setAbilityOtherText(String s) {
-		this.abilityOther.setText(s);
-	}
 	 */
 
 	private void setHealthText(int s) {

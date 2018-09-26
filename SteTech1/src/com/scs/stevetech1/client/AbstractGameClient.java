@@ -160,7 +160,7 @@ ConsoleInputListener {
 	private String consoleInput;
 	private boolean showingHistory = false; // Showing history cam (feature in progress)
 	//private boolean isShowHistory = false; // Showing history cam (feature in progress)
-	private boolean quitting = false;
+	private volatile boolean quitting = false;
 	
 	protected Thread connectingThread;
 	public Exception lastConnectException;
@@ -359,7 +359,7 @@ ConsoleInputListener {
 		}
 		
 		if (runDisconnectedCode) {
-			this.disconnectedCode();
+			this.runWhenDisconnected();
 			runDisconnectedCode = false;
 		}
 
@@ -746,17 +746,8 @@ ConsoleInputListener {
 
 		} else if (message instanceof GameOverMessage) {
 			GameOverMessage gom = (GameOverMessage)message;
-			if (gom.winningSide == -1) {
-				showMessage("The game is a draw!");
-				this.gameIsDrawn();
-			} else if (gom.winningSide == this.side) {
-				showMessage("You have won!");
-				this.playerHasWon();
-			} else {
-				showMessage("You have won!");
-				this.playerHasLost();
-			}
-
+			this.gameOver(gom.winningSide);
+			
 		} else if (message instanceof PlaySoundMessage) {
 			PlaySoundMessage psm = (PlaySoundMessage)message;
 			this.playSound(psm.soundId, psm.entityId, psm.pos, psm.volume, psm.stream);
@@ -898,18 +889,19 @@ ConsoleInputListener {
 	}
 
 
-	protected void playerHasWon() {
+	/**
+	 * Override if required
+	 * @param winningSide
+	 */
+	protected void gameOver(int winningSide) {
 		// Override if required
-	}
-
-
-	protected void playerHasLost() {
-		// Override if required
-	}
-
-
-	protected void gameIsDrawn() {
-		// Override if required
+		if (winningSide == -1) {
+			showMessage("The game is a draw!");
+		} else if (winningSide == this.side) {
+			showMessage("You have won!");
+		} else {
+			showMessage("You have won!");
+		}
 	}
 
 
@@ -1192,13 +1184,13 @@ ConsoleInputListener {
 	@Override
 	public final void disconnected() {
 		Globals.p("Disconnected!");
-		joinedGame = false;
-		this.playerID = -1;
 		this.runDisconnectedCode = true;
 	}
 	
 	
-	protected void disconnectedCode() {
+	protected void runWhenDisconnected() {
+		joinedGame = false;
+		this.playerID = -1;
 		this.removeAllEntities();
 	}
 

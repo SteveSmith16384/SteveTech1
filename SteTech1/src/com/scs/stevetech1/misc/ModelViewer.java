@@ -36,7 +36,10 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 	@Override
 	public void simpleInitApp() {
 		assetManager.registerLocator("assets/", FileLocator.class); // default
-		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class); // default
+		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
+		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
+		assetManager.registerLocator("../TestGame/assets/", FileLocator.class);
+		assetManager.registerLocator("../../multiplayertowerdefence/assets/", FileLocator.class);
 
 		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
 
@@ -44,17 +47,23 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-		Spatial model = assetManager.loadModel("Models/Holiday/Snowman.obj");
-		//Spatial model = (Node)assetManager.loadModel("test.blend");
-		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, SoldierTexture.getTexture());
+		Spatial model = (Node)assetManager.loadModel("Models/wyvern/Wyvern.blend");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/wyvern/Wyvern_red_col5.png");
+		String animNode = null;
+		String animToUse = "Walk";
 
 		if (model instanceof Node) {
-			control = this.getNodeWithControls((Node)model);
+			listAllAnimations((Node)model);
+			control = this.getNodeWithControls(animNode, (Node)model);
 			if (control != null) {
 				control.addListener(this);
-				Globals.p("Animations: " + control.getAnimationNames());
+				//Globals.p("Control Animations: " + control.getAnimationNames());
 				AnimChannel channel = control.createChannel();
-				channel.setAnim("run");
+				try {
+					channel.setAnim(animToUse);
+				} catch (IllegalArgumentException ex) {
+					Globals.pe("Try running the right anim code!");
+				}
 			} else {
 				Globals.p("No animation control");
 			}
@@ -71,28 +80,48 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		Globals.p("Model w/h/d: " + (bb.getXExtent()*2) + "/" + (bb.getYExtent()*2) + "/" + (bb.getZExtent()*2));
 
 		this.flyCam.setMoveSpeed(12f);
-		
+
 		fpp = new FilterPostProcessor(assetManager);
 		viewPort.addProcessor(fpp);
 
-		this.showOutlineEffect(model, 3, ColorRGBA.Red);//, this.getViewPort());
+		//this.showOutlineEffect(model, 3, ColorRGBA.Red);
 
 	}
 
 
-	private AnimControl getNodeWithControls(Node s) {
+	private void listAllAnimations(Node s) {
 		int ch = s.getChildren().size();
 		for (int i=0 ; i<ch ; i++) {
 			Spatial sp = s.getChild(i);
 			if (sp instanceof Node) {
 				Node n2 = (Node)sp;
+				listAllAnimations(n2);
 				if (n2.getNumControls() > 0) {
 					control = n2.getControl(AnimControl.class);
 					if (control != null) {
-						return control;
+						Globals.p("Anims on " + n2 + ": " + control.getAnimationNames());
 					}
-				} else {
-					return this.getNodeWithControls((Node)sp);
+				}
+			}
+		}
+	}
+
+
+	private AnimControl getNodeWithControls(String name, Node s) {
+		int ch = s.getChildren().size();
+		for (int i=0 ; i<ch ; i++) {
+			Spatial sp = s.getChild(i);
+			if (sp.getNumControls() > 0) {
+				if (name == null || name.equals(sp.toString()))
+					control = sp.getControl(AnimControl.class);
+				if (control != null) {
+					return control;
+				}
+			} else if (sp instanceof Node) {
+				// Iterate through children
+				control = this.getNodeWithControls(name, (Node)sp);
+				if (control != null) {
+					return control;
 				}
 			}
 		}
@@ -153,7 +182,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 			outlineViewport.setClearFlags(true, false, false);
 			outlineViewport.setBackgroundColor(new ColorRGBA(0f, 0f, 0f, 0f));
-			
+
 			outlineFilter = new OutlineProFilter(outlinePreFilter);
 			model.setUserData("OutlineProFilter", outlineFilter);
 			outlineFilter.setOutlineColor(color);

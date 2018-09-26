@@ -32,7 +32,6 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	private AbstractCollisionValidator collisionValidator;
 	
 	private UndercoverAgentHUD hud;
-	private RealtimeInterval updateHudInterval = new RealtimeInterval(3000);
 	private String ipAddress;
 	private int port;
 	private String playerName;
@@ -128,16 +127,6 @@ public class UndercoverAgentClient extends AbstractGameClient {
 		}
 		
 		hud.processByClient(this, tpf_secs);
-		if (updateHudInterval.hitInterval()) {
-			if (this.playersList != null) { // todo - move to HUD class
-				for (SimplePlayerData spd : this.playersList) {
-					if (spd.id == this.playerID) {
-						UASimplePlayerData ua = (UASimplePlayerData)spd;
-						this.hud.setScoreText(ua.score);
-					}
-				}
-			}
-		}
 	}
 
 	
@@ -167,38 +156,22 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 
 	@Override
-	protected void playerHasWon() {
+	protected void gameOver(int winningSide) {
 		removeCurrentHUDImage();
 		int width = this.cam.getWidth()/2;
 		int height = this.cam.getHeight()/2;
 		int x = (this.cam.getWidth()/2)-(width/2);
-		int y = this.cam.getHeight()/5;
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/victory.png", x, y, width, height, 5);
-		playSound(UASounds.WINNER, -1, null, Globals.DEFAULT_VOLUME, false);
-	}
-
-
-	@Override
-	protected void playerHasLost() {
-		removeCurrentHUDImage();
-		int width = this.cam.getWidth()/2;
-		int height = this.cam.getHeight()/2;
-		int x = (this.cam.getWidth()/2)-(width/2);
-		int y = this.cam.getHeight()/5;
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/defeat.png", x, y, width, height, 5);
-		playSound(UASounds.LOSER, -1, null, Globals.DEFAULT_VOLUME, false);
-	}
-
-
-	@Override
-	protected void gameIsDrawn() {
-		removeCurrentHUDImage();
-		int width = this.cam.getWidth()/2;
-		int height = this.cam.getHeight()/2;
-		int x = (this.cam.getWidth()/2)-(width/2);
-		int y = this.cam.getHeight()/5;
-		currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/defeat.png", x, y, width, height, 5);
-		playSound(UASounds.WINNER, -1, null, Globals.DEFAULT_VOLUME, false);
+		int y = (int)(this.cam.getHeight() * 0.5f);
+		if (winningSide == this.side) {
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/victory.png", x, y, width, height, 5);
+			playSound(UASounds.WINNER, -1, null, Globals.DEFAULT_VOLUME, false);
+		} else if (winningSide <= 0) {
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/gamedrawn.png", x, y, width, height, 5);
+			playSound(UASounds.WINNER, -1, null, Globals.DEFAULT_VOLUME, false);
+		} else {
+			currentHUDImage = new AbstractHUDImage(this, this.getNextEntityID(), this.getGuiNode(), "Textures/text/defeat.png", x, y, width, height, 5);
+			playSound(UASounds.LOSER, -1, null, Globals.DEFAULT_VOLUME, false);
+		}
 	}
 
 
@@ -278,7 +251,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 
 	@Override
-	public void disconnectedCode() {
+	public void runWhenDisconnected() {
 		this.appendToLog("DISCONNECTED");
 	}
 	

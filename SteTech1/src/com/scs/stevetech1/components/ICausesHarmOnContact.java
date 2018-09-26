@@ -12,6 +12,6 @@ public interface ICausesHarmOnContact {
 	
 	byte getSide(); // Prevent friendly-fire
 	
-	IEntity getActualShooter(); // We might be a snowball, but it's the avatar holding the gun that we want
+	IEntity getActualShooter(); // We might be a bullet, but it's the avatar holding the gun that we want
 	
 }

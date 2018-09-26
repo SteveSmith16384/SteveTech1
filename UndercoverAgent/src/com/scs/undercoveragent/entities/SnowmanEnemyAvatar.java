@@ -14,7 +14,7 @@ public class SnowmanEnemyAvatar extends AbstractOtherPlayersAvatar {
 	
 	private SnowmanModel snowman;
 
-	// Animation
+	// Manual animation
 	public boolean showDied = false;
 	
 	public SnowmanEnemyAvatar(IEntityController game, int eid, float x, float y, float z, byte side, String playerName) {
@@ -22,7 +22,6 @@ public class SnowmanEnemyAvatar extends AbstractOtherPlayersAvatar {
 		
 		this.snowman = (SnowmanModel)anim;
 		
-		//this.hudNode.setText(""); // Don't show anything!
 	}
 	
 	
@@ -33,14 +32,8 @@ public class SnowmanEnemyAvatar extends AbstractOtherPlayersAvatar {
 	
 
 	@Override
-	public void processByClient(IClientApp client, float tpf_secs) {
-		super.processByClient(client, tpf_secs);
-		
-	}
-
-
-	@Override
 	public void setAnimCode_ClientSide(int s) {
+		// The model has no animations, so we do our own.
 		if (s == AbstractAvatar.ANIM_DIED) {
 			this.showDied = true;
 		} else {
@@ -51,6 +44,7 @@ public class SnowmanEnemyAvatar extends AbstractOtherPlayersAvatar {
 
 	@Override
 	public void processManualAnimation_ClientSide(float tpf_secs) {
+		// The model has no animations, so we do our own.
 		if (this.showDied) {
 			this.snowman.showDied(tpf_secs);
 		} else {

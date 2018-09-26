@@ -34,7 +34,7 @@ import com.scs.stevetech1.shared.PositionCalculator;
 
 public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, IProcessByServer, ISimpleEntity<PhysicalEntity> {
 
-	protected Node mainNode;
+	protected Node mainNode; // All spatials/models hang off the mainNode
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
 	public PositionCalculator historicalPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
