@@ -25,7 +25,7 @@ public class UnitTestGameClient extends AbstractGameClient {
 	
 
 	public UnitTestGameClient() {
-		super(new ValidateClientSettings("UnitTest", "key", 1), "Unit Test", null, 25, 200, 10000, 1f);
+		super(new ValidateClientSettings("UnitTest", 1, "key"), "Unit Test", null, 25, 200, 10000, 1f);
 
 		this.connect("localhost", UnitTestGameServer.PORT, false);
 		start(JmeContext.Type.Headless);

@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -34,7 +35,7 @@ public class UnitTestGameServer extends AbstractGameServer {
 
 
 	public UnitTestGameServer() throws IOException {
-		super("UnitTest", 1d, "key", 
+		super(new ValidateClientSettings("UnitTest", 1d, "key"), 
 				new GameOptions(25, 50, 200, Integer.MAX_VALUE, 10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5));
 
 		super.physicsController.setGravity(0); // stop things falling
@@ -54,10 +55,6 @@ public class UnitTestGameServer extends AbstractGameServer {
 		return null;
 	}
 
-	@Override
-	public boolean doWeHaveSpaces() {
-		return true;
-	}
 
 	@Override
 	public byte getSideForPlayer(ClientData client) {

@@ -16,6 +16,7 @@ import com.jme3.scene.Node;
 import com.scs.simplephysics.ICollisionListener;
 import com.scs.simplephysics.SimplePhysicsController;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetReadyForGame;
@@ -102,16 +103,13 @@ ICollisionListener<PhysicalEntity> {
 	private RealtimeInterval sendEntityUpdatesInterval;
 	private List<MyAbstractMessage> unprocessedMessages = new LinkedList<>();
 	public GameOptions gameOptions;
-	private double commsVersion; // Check the client is up-to-date
-	private String gameCode; // To prevent the wrong type of client connecting to the wrong type of server
+	private ValidateClientSettings clientValidationSettings;
 	private boolean sendAddRemoveEntityMsgs = true;
-	private String key;
+	
 	public boolean runningSlow = false;
 
 	protected SimpleGameData gameData = new SimpleGameData();
 	private ConsoleInputHandler consoleInput;
-
-	//private List<ClientRegisteredHitMessage> clientHits = new LinkedList<>();
 
 	/**
 	 * 
@@ -123,12 +121,13 @@ ICollisionListener<PhysicalEntity> {
 	 * @param _clientRenderDelayMillis How far in the past the client should render the game
 	 * @param _timeoutMillis How long without comms before the server disconnects the client 
 	 */
-	public AbstractGameServer(String _gameCode, double _commsVersion, String _key, GameOptions _gameOptions) { 
+	public AbstractGameServer(ValidateClientSettings _clientValidationSettings, GameOptions _gameOptions) { 
 		super();
 
-		gameCode = _gameCode;
-		commsVersion = _commsVersion;
-		key = _key;
+		//gameCode = _gameCode;
+		//commsVersion = _commsVersion;
+		//key = _key;
+		clientValidationSettings = _clientValidationSettings;
 		gameOptions = _gameOptions;
 
 		Globals.showWarnings();
@@ -406,13 +405,13 @@ ICollisionListener<PhysicalEntity> {
 
 	protected void playerRequestToJoin(ClientData client, MyAbstractMessage message) {
 		JoinGameRequestMessage newPlayerMessage = (JoinGameRequestMessage) message;
-		if (!newPlayerMessage.gameCode.equalsIgnoreCase(gameCode)) {
+		if (!newPlayerMessage.gameCode.equalsIgnoreCase(clientValidationSettings.gameCode)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
 			return;
-		} else if (newPlayerMessage.clientVersion < this.commsVersion) {
-			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Client too old; version " + commsVersion + " required"));
+		} else if (newPlayerMessage.clientVersion < this.clientValidationSettings.clientVersion) {
+			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Client too old; version " + clientValidationSettings.clientVersion + " required"));
 			return;
-		} else if (!newPlayerMessage.key.equalsIgnoreCase(this.key)) {
+		} else if (!newPlayerMessage.key.equalsIgnoreCase(this.clientValidationSettings.key)) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid key"));
 			return;
 		} else if (!this.doWeHaveSpaces()) {
@@ -463,7 +462,13 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	public abstract boolean doWeHaveSpaces();
+	/**
+	 * Override to restrict the number of players
+	 * @return
+	 */
+	public boolean doWeHaveSpaces() {
+		return true;
+	}
 
 
 	protected void removeOldGame() {

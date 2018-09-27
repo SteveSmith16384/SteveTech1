@@ -13,7 +13,7 @@ public class GameOptions {
 	public GameOptions(int _tickrateMillis, int _sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, 
 			long _deployDuration, long _gameDuration, long _finishedDuration,
 			String _ourExternalIP, int _ourExternalPort,
-			float _restartTime, float _invulnDuration) {
+			float _avatarRestartTimeSecs, float _invulnDuration) {
 		
 		tickrateMillis = _tickrateMillis;
 		sendUpdateIntervalMillis =_sendUpdateIntervalMillis;
@@ -27,7 +27,7 @@ public class GameOptions {
 		ourExternalIP = _ourExternalIP;
 		ourExternalPort = _ourExternalPort;
 		
-		avatarRestartTimeSecs = _restartTime;
+		avatarRestartTimeSecs = _avatarRestartTimeSecs;
 		avatarInvulnDurationSecs = _invulnDuration;
 	}
 	

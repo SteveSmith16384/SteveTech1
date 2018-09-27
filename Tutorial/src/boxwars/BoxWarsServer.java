@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
+import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -37,7 +38,7 @@ public class BoxWarsServer extends AbstractGameServer {
 
 
 	private BoxWarsServer() throws IOException {
-		super("BoxWars", 1d, "key",
+		super(new ValidateClientSettings("BoxWars", 1d, "key"),
 				new GameOptions(25, 50, 200, 10000, 10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5));
 		start(JmeContext.Type.Headless);
 
@@ -60,12 +61,6 @@ public class BoxWarsServer extends AbstractGameServer {
 	}
 
 
-	@Override
-	public boolean doWeHaveSpaces() {
-		return true; // Always room for one more!
-	}
-
-	
 	/*
 	 * Just use the client id as the side, to easily ensure every player is on a different side. 
 	 */

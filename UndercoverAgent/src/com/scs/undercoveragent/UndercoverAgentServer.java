@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.AbstractAvatar;
@@ -71,7 +72,8 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	private UndercoverAgentServer(int _mapSize, 
 			String gameIpAddress, int gamePort, 
 			int tickrateMillis, int sendUpdateIntervalMillis, int clientRenderDelayMillis, int timeoutMillis) throws IOException {
-		super(GAME_ID, 1d, "key", new GameOptions(tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, 
+		super(new ValidateClientSettings(GAME_ID, 1d, "key"), 
+				new GameOptions(tickrateMillis, sendUpdateIntervalMillis, clientRenderDelayMillis, timeoutMillis, 
 				deployDurationSecs*1000, gameDurationSecs*1000, restartDurationSecs*1000, 
 				gameIpAddress, gamePort, 
 				10, 5));
@@ -249,12 +251,6 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	public byte getSideForPlayer(ClientData client) {
 		return (byte) client.getPlayerID(); // Everyone is on a different side.  Todo - check  > 127
-	}
-
-
-	@Override
-	public boolean doWeHaveSpaces() {
-		return true; // Always!
 	}
 
 

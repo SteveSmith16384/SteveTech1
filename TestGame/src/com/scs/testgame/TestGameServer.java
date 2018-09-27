@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
@@ -35,7 +36,8 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	private TestGameServer() throws IOException {
-		super(GAME_ID, 1d, "Key", new GameOptions(25, 40, 200, Integer.MAX_VALUE, 10*1000, 5*60*1000, 10*1000, 
+		super(new ValidateClientSettings(GAME_ID, 1d, "Key"), 
+				new GameOptions(25, 40, 200, Integer.MAX_VALUE, 10*1000, 5*60*1000, 10*1000, 
 				TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, 
 				5, 5));
 		start(JmeContext.Type.Headless);
@@ -105,12 +107,6 @@ public class TestGameServer extends AbstractGameServer {
 	@Override
 	public byte getSideForPlayer(ClientData client) {
 		return 1;
-	}
-
-
-	@Override
-	public boolean doWeHaveSpaces() {
-		return true;
 	}
 
 

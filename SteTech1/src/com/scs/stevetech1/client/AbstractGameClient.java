@@ -159,7 +159,6 @@ ConsoleInputListener {
 	private float mouseSens;
 	private String consoleInput;
 	private boolean showingHistory = false; // Showing history cam (feature in progress)
-	//private boolean isShowHistory = false; // Showing history cam (feature in progress)
 	private volatile boolean quitting = false;
 	
 	protected Thread connectingThread;

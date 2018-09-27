@@ -26,7 +26,7 @@ public class TestGameClient extends AbstractGameClient {
 
 
 	private TestGameClient() {
-		super(new ValidateClientSettings(TestGameServer.GAME_ID, "Key", 1), "test Game", null, //TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //null, -1, 
+		super(new ValidateClientSettings(TestGameServer.GAME_ID, 1, "Key"), "test Game", null, //TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //null, -1, 
 				25, 200, Integer.MAX_VALUE, 1f);
 		start();
 	}

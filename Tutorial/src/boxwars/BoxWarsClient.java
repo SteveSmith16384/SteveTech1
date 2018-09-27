@@ -33,7 +33,7 @@ public class BoxWarsClient extends AbstractGameClient {
 
 
 	private BoxWarsClient() {
-		super(new ValidateClientSettings("BoxWars", "key", 1), "Box Wars", null, 25, 200, 10000, 1f);
+		super(new ValidateClientSettings("BoxWars", 1d, "key"), "Box Wars", null, 25, 200, 10000, 1f);
 		this.connect("localhost", BoxWarsServer.PORT, false);
 		start();
 	}

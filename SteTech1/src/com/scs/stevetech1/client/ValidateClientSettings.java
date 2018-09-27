@@ -6,10 +6,12 @@ public class ValidateClientSettings {
 	public String key; // Check we're a valid client
 	public double clientVersion; // Check we're up to date enough
 	
-	public ValidateClientSettings(String _gameCode, String _key, double _clientVersion) {
+	public ValidateClientSettings(String _gameCode, double _clientVersion, String _key) {
+		super();
+		
 		gameCode =_gameCode;
-		key = _key;
 		clientVersion = _clientVersion;
+		key = _key;
 	}
 
 }
