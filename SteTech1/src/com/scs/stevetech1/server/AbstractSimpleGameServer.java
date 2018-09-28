@@ -1,14 +1,17 @@
 package com.scs.stevetech1.server;
 
-import com.jme3.system.JmeContext;
 import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.data.GameOptions;
+import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 public abstract class AbstractSimpleGameServer extends AbstractGameServer {
-	
+
 	public static final double VERSION = 1d;
 	public static final String GAME_CODE = "gamecode";
 	public static final String KEY = "key";
+
+	protected AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
 	public AbstractSimpleGameServer(int port) {
 		super(
@@ -18,8 +21,6 @@ public abstract class AbstractSimpleGameServer extends AbstractGameServer {
 						"localhost", port, 
 						10, 5)
 				);
-
-		//start(JmeContext.Type.Headless);
 	}
 
 
@@ -34,7 +35,7 @@ public abstract class AbstractSimpleGameServer extends AbstractGameServer {
 		return null;
 	}
 
-	
+
 	/*
 	 * Just use the client id as the side, to easily ensure every player is on a different side. 
 	 */
@@ -42,12 +43,19 @@ public abstract class AbstractSimpleGameServer extends AbstractGameServer {
 	public byte getSideForPlayer(ClientData client) {
 		return (byte)client.getPlayerID(); // todo - check not  > 127
 	}
-	
+
 
 
 	@Override
 	public int getMinSidesRequiredForGame() {
 		return 1;
+	}
+
+
+
+	@Override
+	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
+		return collisionValidator.canCollide(a, b);
 	}
 
 }
