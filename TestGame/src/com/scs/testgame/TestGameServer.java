@@ -1,16 +1,12 @@
 package com.scs.testgame;
 
-import java.io.IOException;
-
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.simplephysics.SimpleRigidBody;
-import com.scs.stevetech1.client.ValidateClientSettings;
-import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.AbstractSimpleGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
 import com.scs.testgame.entities.AnimatedWall;
@@ -18,29 +14,27 @@ import com.scs.testgame.entities.Floor;
 import com.scs.testgame.entities.TestGameServerAvatar;
 import com.scs.testgame.entities.Wall;
 
-public class TestGameServer extends AbstractGameServer {
+public class TestGameServer extends AbstractSimpleGameServer {
 
+	public static final int GAME_PORT = 6143;
 	public static final String GAME_ID = "Test Game";
 	
 	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
 	public static void main(String[] args) {
 		try {
-			AbstractGameServer app = new TestGameServer();
-			//app.setPauseOnLostFocus(false);
-			//app.start(JmeContext.Type.Headless);
+			new TestGameServer();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 
-	private TestGameServer() throws IOException {
-		super(new ValidateClientSettings(GAME_ID, 1d, "Key"), 
-				new GameOptions(25, 40, 200, Integer.MAX_VALUE, 10*1000, 5*60*1000, 10*1000, 
-				TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, 
-				5, 5));
+	private TestGameServer() {
+		super(GAME_PORT);
+
 		start(JmeContext.Type.Headless);
+
 	}
 
 
@@ -99,18 +93,6 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	protected Class[] getListofMessageClasses() {
-		return null;
-	}
-
-
-	@Override
-	public byte getSideForPlayer(ClientData client) {
-		return 1;
-	}
-
-
-	@Override
 	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
 		return collisionValidator.canCollide(a, b);
 	}
@@ -131,14 +113,9 @@ public class TestGameServer extends AbstractGameServer {
 
 
 	@Override
-	public int getMinPlayersRequiredForGame() {
+	public int getMinSidesRequiredForGame() {
 		return 1;
 	}
 
-/*
-	@Override
-	protected String getSideName(int side) {
-		return "Test Game";
-	}
-*/
+
 }

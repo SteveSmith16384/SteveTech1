@@ -2,6 +2,7 @@ package boxwars;
 
 import com.jme3.math.Vector3f;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.AbstractSimpleGameClient;
 import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
@@ -17,13 +18,13 @@ import boxwars.entities.Floor;
 import boxwars.entities.PlayersBullet;
 import boxwars.weapons.PlayersGun;
 
-public class BoxWarsClient extends AbstractGameClient {
+public class BoxWarsClient extends AbstractSimpleGameClient {
 
 	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
 	public static void main(String[] args) {
 		try {
-			AbstractGameClient app = new BoxWarsClient();
+			new BoxWarsClient();
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
 			e.printStackTrace();
@@ -33,8 +34,8 @@ public class BoxWarsClient extends AbstractGameClient {
 
 
 	private BoxWarsClient() {
-		super(new ValidateClientSettings("BoxWars", 1d, "key"), "Box Wars", null, 25, 200, 10000, 1f);
-		this.connect("localhost", BoxWarsServer.PORT, false);
+		super("Box Wars", "localhost", BoxWarsServer.PORT, null);
+
 		start();
 	}
 
@@ -45,18 +46,6 @@ public class BoxWarsClient extends AbstractGameClient {
 	}
 
 
-	@Override
-	protected Class[] getListofMessageClasses() {
-		return null;
-	}
-
-
-	@Override
-	public void runWhenDisconnected() {
-		System.exit(0);
-	}
-	
-	
 	@Override
 	protected IEntity actuallyCreateEntity(AbstractGameClient game, NewEntityData msg) {
 		int id = msg.entityID;

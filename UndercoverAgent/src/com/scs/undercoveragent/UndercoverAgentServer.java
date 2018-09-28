@@ -261,7 +261,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	public int getMinPlayersRequiredForGame() {
+	public int getMinSidesRequiredForGame() {
 		return 2;
 	}
 
@@ -269,6 +269,12 @@ public class UndercoverAgentServer extends AbstractGameServer {
 	@Override
 	protected SimplePlayerData createSimplePlayerData() {
 		return new UASimplePlayerData();
+	}
+
+
+	@Override
+	public boolean doWeHaveSpaces() {
+		return true;
 	}
 
 

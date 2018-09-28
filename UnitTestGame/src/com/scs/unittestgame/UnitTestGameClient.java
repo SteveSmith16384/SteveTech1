@@ -3,6 +3,7 @@ package com.scs.unittestgame;
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
 import com.scs.stevetech1.client.AbstractGameClient;
+import com.scs.stevetech1.client.AbstractSimpleGameClient;
 import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
@@ -13,7 +14,7 @@ import com.scs.unittestgame.entities.EnemyAvatarEntity;
 import com.scs.unittestgame.entities.McGuffinEntity;
 import com.scs.unittestgame.entities.UnitTestAbility;
 
-public class UnitTestGameClient extends AbstractGameClient {
+public class UnitTestGameClient extends AbstractSimpleGameClient {
 
 	public static void main(String[] args) {
 		try {
@@ -25,22 +26,15 @@ public class UnitTestGameClient extends AbstractGameClient {
 	
 
 	public UnitTestGameClient() {
-		super(new ValidateClientSettings("UnitTest", 1, "key"), "Unit Test", null, 25, 200, 10000, 1f);
+		super("Unit Test", "localhost", UnitTestGameServer.PORT, "Unit Test");
 
-		this.connect("localhost", UnitTestGameServer.PORT, false);
 		start(JmeContext.Type.Headless);
-
 	}
 
 
 	@Override
 	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
 		return false;
-	}
-
-	@Override
-	protected Class[] getListofMessageClasses() {
-		return null;
 	}
 
 

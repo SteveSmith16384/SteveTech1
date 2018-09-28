@@ -12,10 +12,17 @@ public interface IAvatarModel {
 
 	Spatial createAndGetModel(); // Only called client-side, since only the client uses full models.
 	
-	Spatial getModel();
+	Spatial getModel(); // Only called client-side, since only the client uses full models.
 	
+	/**
+	 * @return The size of the model for collision purposes.
+	 */
 	Vector3f getSize();
 	
+	/**
+	 * 
+	 * @return The height of the camera from the bottom of the model.
+	 */
 	float getCameraHeight();
 	
 	float getBulletStartHeight(); // todo - change to bulletStartOffset.  Or remove this and use ICanShoot.bulletStartPos!

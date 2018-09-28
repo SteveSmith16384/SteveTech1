@@ -4,19 +4,17 @@ import java.io.IOException;
 
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
-import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.data.GameOptions;
-import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.AbstractSimpleGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.unittestgame.entities.McGuffinEntity;
 import com.scs.unittestgame.entities.ServerAvatarEntity;
 
-public class UnitTestGameServer extends AbstractGameServer {
+public class UnitTestGameServer extends AbstractSimpleGameServer {
 
 	public static final int PORT = 16384;
 
@@ -35,8 +33,7 @@ public class UnitTestGameServer extends AbstractGameServer {
 
 
 	public UnitTestGameServer() throws IOException {
-		super(new ValidateClientSettings("UnitTest", 1d, "key"), 
-				new GameOptions(25, 50, 200, Integer.MAX_VALUE, 10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5));
+		super(PORT);
 
 		super.physicsController.setGravity(0); // stop things falling
 
@@ -92,7 +89,7 @@ public class UnitTestGameServer extends AbstractGameServer {
 
 
 	@Override
-	public int getMinPlayersRequiredForGame() {
+	public int getMinSidesRequiredForGame() {
 		return 1;
 	}
 

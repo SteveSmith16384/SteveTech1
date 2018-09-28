@@ -28,7 +28,7 @@ public class ServerGameStatusSystem {
 		SimpleGameData gameData = server.getGameData();
 
 		if (playersChanged) {
-			boolean enoughPlayers = areThereEnoughPlayers();
+			boolean enoughPlayers = areThereEnoughSides();
 			if (Globals.DEBUG_GAME_NOT_STARTING) {
 				Globals.p("Checking game status.  enoughPlayers=" + enoughPlayers);
 			}
@@ -92,16 +92,16 @@ public class ServerGameStatusSystem {
 		}
 	}
 
-	private boolean areThereEnoughPlayers() {
-		ArrayList<Byte> map = new ArrayList<Byte>();
+	private boolean areThereEnoughSides() {
+		ArrayList<Byte> sides = new ArrayList<Byte>();
 		for (ClientData client : server.clientList.getClients()) {
 			if (client.avatar != null) {
-				if (!map.contains(client.getSide())) {
-					map.add(client.getSide());
+				if (!sides.contains(client.getSide())) {
+					sides.add(client.getSide());
 				}
 			}
 		}
-		return map.size() >= server.getMinPlayersRequiredForGame();
+		return sides.size() >= server.getMinSidesRequiredForGame();
 	}
 
 

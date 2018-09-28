@@ -124,18 +124,15 @@ ICollisionListener<PhysicalEntity> {
 	public AbstractGameServer(ValidateClientSettings _clientValidationSettings, GameOptions _gameOptions) { 
 		super();
 
-		//gameCode = _gameCode;
-		//commsVersion = _commsVersion;
-		//key = _key;
-		clientValidationSettings = _clientValidationSettings;
-		gameOptions = _gameOptions;
+		this.clientValidationSettings = _clientValidationSettings;
+		this.gameOptions = _gameOptions;
 
 		Globals.showWarnings();
 
-		sendEntityUpdatesInterval = new RealtimeInterval(gameOptions.sendUpdateIntervalMillis);
-		physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
-		collisionLogic = new ServerSideCollisionLogic(this);
-		loopTimer = new FixedLoopTime(gameOptions.tickrateMillis);
+		this.sendEntityUpdatesInterval = new RealtimeInterval(gameOptions.sendUpdateIntervalMillis);
+		this.physicsController = new SimplePhysicsController<PhysicalEntity>(this, Globals.SUBNODE_SIZE);
+		this.collisionLogic = new ServerSideCollisionLogic(this);
+		this.loopTimer = new FixedLoopTime(gameOptions.tickrateMillis);
 		this.entityRemovalSystem = new EntityRemovalSystem(this);
 
 		setShowSettings(false); // Don't show settings dialog
@@ -392,11 +389,7 @@ ICollisionListener<PhysicalEntity> {
 			if (e != null) {
 				e.setToBeReloaded();
 			}
-			/*
-		} else if (message instanceof ClientRegisteredHitMessage) {
-			ClientRegisteredHitMessage crhm = (ClientRegisteredHitMessage)message;
-			this.clientHits.add(crhm);
-			 */
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
@@ -406,7 +399,7 @@ ICollisionListener<PhysicalEntity> {
 	protected void playerRequestToJoin(ClientData client, MyAbstractMessage message) {
 		JoinGameRequestMessage newPlayerMessage = (JoinGameRequestMessage) message;
 		if (!newPlayerMessage.gameCode.equalsIgnoreCase(clientValidationSettings.gameCode)) {
-			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game code"));
+			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Invalid Game!"));
 			return;
 		} else if (newPlayerMessage.clientVersion < this.clientValidationSettings.clientVersion) {
 			this.gameNetworkServer.sendMessageToClient(client, new JoinGameFailedMessage("Client too old; version " + clientValidationSettings.clientVersion + " required"));
@@ -466,9 +459,7 @@ ICollisionListener<PhysicalEntity> {
 	 * Override to restrict the number of players
 	 * @return
 	 */
-	public boolean doWeHaveSpaces() {
-		return true;
-	}
+	public abstract boolean doWeHaveSpaces();
 
 
 	protected void removeOldGame() {
@@ -530,7 +521,7 @@ ICollisionListener<PhysicalEntity> {
 
 
 	/**
-	 * Determine the side for a player
+	 * Determine the side for a player.  Players on the same side won't harm each other, or collide.
 	 * @param client
 	 * @return The side
 	 */
@@ -577,7 +568,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	private AbstractServerAvatar createPlayersAvatar(ClientData client) {
+	private AbstractServerAvatar createPlayersAvatar(ClientData client) { // todo - rename
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id);
 		this.moveAvatarToStartPosition(avatar);
@@ -828,11 +819,8 @@ ICollisionListener<PhysicalEntity> {
 			this.appendToGameLog("Game Started!");
 
 		} else if (newStatus == SimpleGameData.ST_FINISHED) {
-			this.appendToGameLog("Game Finished!");
-
+			this.appendToGameLog("Game Over!");
 			byte winningSide = this.getWinningSideAtEnd();
-			//String name = getSideName(winningSide);
-			//this.appendToGameLog(name + " has won!");
 			this.sendMessageToInGameClients(new GameOverMessage(winningSide));
 		}
 	}
@@ -841,7 +829,11 @@ ICollisionListener<PhysicalEntity> {
 	protected abstract byte getWinningSideAtEnd();
 
 
-	public abstract int getMinPlayersRequiredForGame();
+	/**
+	 * 
+	 * @return The number of sides required to start a game, a side being a group of players working together.
+	 */
+	public abstract int getMinSidesRequiredForGame();
 
 
 	@Override

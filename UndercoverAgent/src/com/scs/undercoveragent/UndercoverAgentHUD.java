@@ -63,7 +63,7 @@ public class UndercoverAgentHUD extends Node {
 
 		super.setLocalTranslation(0, 0, 0);
 
-		healthText = ttfLarge.getFormattedText(new StringContainer(ttfLarge, "Hello World"), ColorRGBA.Green);
+		healthText = ttfLarge.getFormattedText(new StringContainer(ttfLarge, ""), ColorRGBA.Green);
 		healthText.setLocalTranslation(10, this.cam.getHeight()-20, 0);
 		this.attachChild(healthText);
 
@@ -81,7 +81,7 @@ public class UndercoverAgentHUD extends Node {
 		this.attachChild(gameStatus);
 
 		yPos -= lineSpacing;
-		gameTime = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
+		gameTime = ttfSmall.getFormattedText(new StringContainer(ttfSmall, ""), ColorRGBA.Green);
 		gameTime.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(gameTime);
 		/*
@@ -98,16 +98,16 @@ public class UndercoverAgentHUD extends Node {
 		this.attachChild(abilityOther);
 		  */
 		yPos -= lineSpacing;
-		numPlayers = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
+		numPlayers = ttfSmall.getFormattedText(new StringContainer(ttfSmall, ""), ColorRGBA.Green);
 		numPlayers.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(numPlayers);
 
 		yPos -= lineSpacing;
-		pingText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
+		pingText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, ""), ColorRGBA.Green);
 		pingText.setLocalTranslation(xPos, yPos, 0);
 		this.attachChild(pingText);
 
-		logText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, "Hello World"), ColorRGBA.Green);
+		logText = ttfSmall.getFormattedText(new StringContainer(ttfSmall, ""), ColorRGBA.Green);
 		logText.setLocalTranslation(10, cam.getHeight() * 0.25f, 0);
 		this.attachChild(logText);
 

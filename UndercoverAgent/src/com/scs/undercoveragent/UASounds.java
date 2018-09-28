@@ -15,7 +15,7 @@ public class UASounds {
 	public static final int HAHA = 9;
 	public static final int JUMP = 10;
 	public static final int NOTMOVE = 11;
-	public static final int OOH_HEY = 12; // todo - collect health
+	public static final int OOH_HEY = 12; // collect health
 	public static final int SMALL_SPLAT = 13;
 
 	public static String getSoundFile(int id) {

@@ -56,7 +56,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 		this.setAlive(true);
 		this.setHealth(maxHealth);
 		this.simpleRigidBody.resetForces(); // In case they fell off the edge, stop them falling after restarting
-		this.invulnerableTimeSecs = 5; // todo - config
+		this.invulnerableTimeSecs = server.gameOptions.avatarInvulnDurationSecs;
 		server.moveAvatarToStartPosition(this);
 
 		server.sendMessageToInGameClients(new AvatarStartedMessage(this));

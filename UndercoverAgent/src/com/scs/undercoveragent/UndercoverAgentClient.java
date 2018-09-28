@@ -122,7 +122,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	public void simpleUpdate(float tpf_secs) {
 		super.simpleUpdate(tpf_secs);
 
-		if (this.joinedGame) {
+		if (this.joinedServer) {
 			snowflakeSystem.process(tpf_secs);
 		}
 		
@@ -133,19 +133,6 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	@Override
 	protected String getPlayerName() {
 		return playerName.length() > 0 ? this.playerName : super.getPlayerName();
-	}
-
-	@Override
-	public void collisionOccurred(SimpleRigidBody<PhysicalEntity> a, SimpleRigidBody<PhysicalEntity> b) {
-		PhysicalEntity pea = a.userObject;
-		PhysicalEntity peb = b.userObject;
-
-		if (pea instanceof SnowFloor == false && peb instanceof SnowFloor == false) {
-			//Globals.p("Collision between " + pea + " and " + peb);
-		}
-
-		super.collisionOccurred(a, b);
-
 	}
 
 
@@ -250,12 +237,6 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 
 
-	@Override
-	public void runWhenDisconnected() {
-		this.appendToLog("DISCONNECTED");
-	}
-	
-	
 	@Override
 	protected String getSoundFileFromID(int id) {
 		return UASounds.getSoundFile(id);

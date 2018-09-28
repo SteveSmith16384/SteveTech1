@@ -10,6 +10,21 @@ public class GameOptions {
 	public float avatarRestartTimeSecs, avatarInvulnDurationSecs;
 	public int tickrateMillis, clientRenderDelayMillis, timeoutMillis, sendUpdateIntervalMillis;
 
+	
+	/**
+	 * 
+	 * @param _tickrateMillis
+	 * @param _sendUpdateIntervalMillis
+	 * @param _clientRenderDelayMillis
+	 * @param _timeoutMillis
+	 * @param _deployDuration
+	 * @param _gameDuration
+	 * @param _finishedDuration
+	 * @param _ourExternalIP
+	 * @param _ourExternalPort
+	 * @param _avatarRestartTimeSecs
+	 * @param _invulnDuration
+	 */
 	public GameOptions(int _tickrateMillis, int _sendUpdateIntervalMillis, int _clientRenderDelayMillis, int _timeoutMillis, 
 			long _deployDuration, long _gameDuration, long _finishedDuration,
 			String _ourExternalIP, int _ourExternalPort,

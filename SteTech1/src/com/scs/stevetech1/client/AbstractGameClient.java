@@ -142,7 +142,7 @@ ConsoleInputListener {
 	private AverageNumberCalculator pingCalc = new AverageNumberCalculator(4);
 	public long pingRTT;
 	private long clientToServerDiffTime; // Add to current time to get server time
-	protected boolean joinedGame = false; // Have we been accepted by the server - todo - rename to joinedServer
+	protected boolean joinedServer = false; // Have we been accepted by the server
 	public SimpleGameData gameData;
 	public ArrayList<SimplePlayerData> playersList;
 	private SoundSystem soundSystem;
@@ -382,7 +382,7 @@ ConsoleInputListener {
 
 				addAndRemoveEntities();
 
-				if (joinedGame) {
+				if (joinedServer) {
 
 					if (!this.showingHistory) {
 						if (Globals.FORCE_CLIENT_SLOWDOWN || sendInputsInterval.hitInterval()) {
@@ -558,7 +558,7 @@ ConsoleInputListener {
 			ServerSuccessfullyJoinedMessage npcm = (ServerSuccessfullyJoinedMessage)message;
 			if (this.playerID <= 0) {
 				this.playerID = npcm.playerID;
-				joinedGame = true;
+				joinedServer = true;
 			} else {
 				throw new RuntimeException("Already received GameSuccessfullyJoinedMessage");
 			}
@@ -1188,7 +1188,8 @@ ConsoleInputListener {
 	
 	
 	protected void runWhenDisconnected() {
-		joinedGame = false;
+		this.appendToLog("DISCONNECTED");
+		joinedServer = false;
 		this.playerID = -1;
 		this.removeAllEntities();
 	}

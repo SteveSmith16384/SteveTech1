@@ -2,21 +2,21 @@ package com.scs.testgame;
 
 import com.jme3.util.SkyFactory;
 import com.scs.stevetech1.client.AbstractGameClient;
-import com.scs.stevetech1.client.ValidateClientSettings;
+import com.scs.stevetech1.client.AbstractSimpleGameClient;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
-public class TestGameClient extends AbstractGameClient {
+public class TestGameClient extends AbstractSimpleGameClient {
 
 	private TestGameClientEntityCreator creator;
 	private AbstractCollisionValidator collisionValidator;
 
 	public static void main(String[] args) {
 		try {
-			AbstractGameClient app = new TestGameClient();
+			new TestGameClient();
 		} catch (Exception e) {
 			Globals.p("Error: " + e);
 			e.printStackTrace();
@@ -26,8 +26,7 @@ public class TestGameClient extends AbstractGameClient {
 
 
 	private TestGameClient() {
-		super(new ValidateClientSettings(TestGameServer.GAME_ID, 1, "Key"), "test Game", null, //TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, //null, -1, 
-				25, 200, Integer.MAX_VALUE, 1f);
+		super("Test Game", "localhost", TestGameServer.GAME_PORT, "My Name");
 		start();
 	}
 
@@ -41,26 +40,12 @@ public class TestGameClient extends AbstractGameClient {
 
 		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 		
-		this.connect(TestGameStaticData.GAME_IP_ADDRESS, TestGameStaticData.GAME_PORT, false);
-
 	}
 	
 
 	@Override
 	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg) {
 		return creator.createEntity(client, msg);
-	}
-
-/*
-	@Override
-	protected Spatial getPlayersWeaponModel() {
-		return null;
-	}
-*/
-
-	@Override
-	protected Class[] getListofMessageClasses() {
-		return null;
 	}
 
 

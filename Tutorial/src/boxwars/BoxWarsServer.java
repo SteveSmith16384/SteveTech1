@@ -1,22 +1,20 @@
 package boxwars;
 
-import java.io.IOException;
-
 import com.jme3.math.Vector3f;
 import com.jme3.system.JmeContext;
-import com.scs.stevetech1.client.ValidateClientSettings;
-import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.server.AbstractGameServer;
+import com.scs.stevetech1.server.AbstractSimpleGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 import boxwars.entities.BoxWarsServerAvatar;
 import boxwars.entities.Floor;
 
-public class BoxWarsServer extends AbstractGameServer {
+public class BoxWarsServer extends AbstractSimpleGameServer {
+
+	public static final int PORT = 16384;
 
 	// Entity codes
 	public static final int AVATAR = 1;
@@ -24,8 +22,6 @@ public class BoxWarsServer extends AbstractGameServer {
 	public static final int GUN = 3;
 	public static final int BULLET = 4;
 
-	public static final int PORT = 16384;
-	
 	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
 	public static void main(String[] args) {
@@ -37,9 +33,9 @@ public class BoxWarsServer extends AbstractGameServer {
 	}
 
 
-	private BoxWarsServer() throws IOException {
-		super(new ValidateClientSettings("BoxWars", 1d, "key"),
-				new GameOptions(25, 50, 200, 10000, 10*1000, 60*1000, 10*1000, "localhost", PORT, 10, 5));
+	private BoxWarsServer() {
+		super(PORT);
+
 		start(JmeContext.Type.Headless);
 
 	}
@@ -50,26 +46,14 @@ public class BoxWarsServer extends AbstractGameServer {
 		return collisionValidator.canCollide(a, b);
 	}
 
+
 	@Override
 	protected byte getWinningSideAtEnd() {
 		return 0;
 	}
 
-	@Override
-	protected Class[] getListofMessageClasses() {
-		return null; // No custom data in messages
-	}
 
 
-	/*
-	 * Just use the client id as the side, to easily ensure every player is on a different side. 
-	 */
-	@Override
-	public byte getSideForPlayer(ClientData client) {
-		return (byte) client.getPlayerID(); // todo - check > 127
-	}
-
-	
 	@Override
 	protected void createGame() {
 		// Just a floor.
@@ -91,7 +75,7 @@ public class BoxWarsServer extends AbstractGameServer {
 
 
 	@Override
-	public int getMinPlayersRequiredForGame() {
+	public int getMinSidesRequiredForGame() {
 		return 2; // Need at least two players to start a game
 	}
 
