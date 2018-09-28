@@ -16,29 +16,5 @@ public class TestGameEnemyAvatar extends AbstractOtherPlayersAvatar {
 		model = (CharacterModel)super.anim;
 	}
 
-/*
-	@Override
-	public ChronologicalLookup<HistoricalAnimationData> getAnimList() {
-		return animList;
-	}
-*/
-/*
-	@Override
-	public int getCurrentAnimCode() {
-		return -1;
-	}
-*/
-
-	@Override
-	public void setAnimCode_ClientSide(int s) {
-		
-	}
-
-	
-	@Override
-	public void processManualAnimation_ClientSide(float tpf_secs) {
-		
-	}
-
 
 }

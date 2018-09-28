@@ -17,7 +17,7 @@ public interface IAvatarModel {
 	/**
 	 * @return The size of the model for collision purposes.
 	 */
-	Vector3f getSize();
+	Vector3f getCollisionBoxSize();
 	
 	/**
 	 * 

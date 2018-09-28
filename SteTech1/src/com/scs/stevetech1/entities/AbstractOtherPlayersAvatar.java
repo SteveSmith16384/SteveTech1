@@ -45,9 +45,9 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		side = _side;
 
 		// Create box for collisions
-		Box box = new Box(anim.getSize().x/2, anim.getSize().y/2, anim.getSize().z/2);
+		Box box = new Box(anim.getCollisionBoxSize().x/2, anim.getCollisionBoxSize().y/2, anim.getCollisionBoxSize().z/2);
 		Geometry bbGeom = new Geometry("bbGeom_" + entityName, box);
-		bbGeom.setLocalTranslation(0, anim.getSize().y/2, 0); // origin is centre!
+		bbGeom.setLocalTranslation(0, box.getYExtent(), 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw the collision box
 		this.mainNode.attachChild(bbGeom);
 
@@ -102,7 +102,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 	@Override
 	public void drawOnHud(Node hud, Camera cam) {
-		super.checkHUDNode(hud, bmpText, cam, 2f, anim.getSize().y);
+		super.checkHUDNode(hud, bmpText, cam, 2f, anim.getCollisionBoxSize().y);
 	}
 
 
@@ -110,5 +110,17 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	public byte getSide() {
 		return side;
 	}
+
+
+	@Override
+	public void setAnimCode_ClientSide(int s) {
+	}
+
+
+	@Override
+	public void processManualAnimation_ClientSide(float tpf_secs) {
+
+	}
+
 
 }

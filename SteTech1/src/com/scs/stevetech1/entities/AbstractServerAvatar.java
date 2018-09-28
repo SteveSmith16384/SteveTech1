@@ -197,7 +197,7 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 
 
 	@Override
-	public int getCurrentAnimCode() {
+	public int getCurrentAnimCode_ServerSide() {
 		return this.currentAnimCode;
 	}
 
@@ -214,5 +214,10 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 		return playerTargetPriority;
 	}
 
+
+	@Override
+	public final void updateClientSideHealth(int amt) {
+		// Do nothing - we're running on the server
+	}
 
 }

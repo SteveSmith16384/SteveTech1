@@ -11,14 +11,4 @@ public class EnemyAvatarEntity extends AbstractOtherPlayersAvatar {
 		super(game, UnitTestGameServer.AVATAR_ID, eid, x, y, z, new AvatarModel(), side, "UnitTest");
 	}
 
-	@Override
-	public void setAnimCode_ClientSide(int animCode) {
-		
-	}
-
-	@Override
-	public void processManualAnimation_ClientSide(float tpf_secs) {
-		
-	}
-
 }

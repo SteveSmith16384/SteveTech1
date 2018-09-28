@@ -54,9 +54,9 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 		avatarModel = _avatarModel;
 		avatarControl = _avatarControl;
 
-		Box box = new Box(avatarModel.getSize().x/2, avatarModel.getSize().y/2, avatarModel.getSize().z/2);
+		Box box = new Box(avatarModel.getCollisionBoxSize().x/2, avatarModel.getCollisionBoxSize().y/2, avatarModel.getCollisionBoxSize().z/2);
 		bbGeom = new Geometry("bbGeom_" + entityName, box);
-		bbGeom.setLocalTranslation(0, avatarModel.getSize().y/2, 0); // origin is centre!
+		bbGeom.setLocalTranslation(0, box.getYExtent(), 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw ourselves
 
 		this.getMainNode().attachChild(bbGeom);

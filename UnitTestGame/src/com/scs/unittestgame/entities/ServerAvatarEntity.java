@@ -18,10 +18,4 @@ public class ServerAvatarEntity extends AbstractServerAvatar {
 	}
 
 
-	@Override
-	public void updateClientSideHealth(int amt) {
-		
-	}
-	
-
 }

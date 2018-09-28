@@ -13,16 +13,6 @@ public class BoxWarsOtherPlayersAvatar extends AbstractOtherPlayersAvatar {
 		
 	}
 
-	@Override
-	public void setAnimCode_ClientSide(int s) {
-		// Not animated
-	}
-
-	
-	@Override
-	public void processManualAnimation_ClientSide(float tpf_secs) {
-		// Not animated
-	}
 
 
 }

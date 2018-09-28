@@ -107,12 +107,6 @@ public class SnowmanServerAvatar extends AbstractServerAvatar implements INotifi
 
 
 	@Override
-	public void updateClientSideHealth(int amt) {
-
-	}
-
-
-	@Override
 	public void notifiedOfCollision(PhysicalEntity pe) {
 		if (game.isServer()) {
 			if (pe instanceof AbstractBullet) {

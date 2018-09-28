@@ -82,7 +82,7 @@ public class ZombieModel implements IAvatarModel {
 
 
 	@Override
-	public Vector3f getSize() {
+	public Vector3f getCollisionBoxSize() {
 		return new Vector3f(ZOMBIE_MODEL_WIDTH, ZOMBIE_MODEL_HEIGHT, ZOMBIE_MODEL_DEPTH);
 	}
 

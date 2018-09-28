@@ -54,7 +54,7 @@ public class BoxAvatarModel implements IAvatarModel {
 	}
 
 	@Override
-	public Vector3f getSize() {
+	public Vector3f getCollisionBoxSize() {
 		return size;
 	}
 

@@ -21,11 +21,4 @@ public class BoxWarsServerAvatar extends AbstractServerAvatar {
 	}
 
 
-	@Override
-	public void updateClientSideHealth(int amt) {
-		// Do nothing
-		
-	}
-
-
 }

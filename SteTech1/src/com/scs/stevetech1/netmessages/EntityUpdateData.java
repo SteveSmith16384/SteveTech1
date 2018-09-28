@@ -34,7 +34,7 @@ public class EntityUpdateData implements ITimeStamped {
 
 		if (pe instanceof IAnimatedServerSide) {
 			IAnimatedServerSide csa = (IAnimatedServerSide)pe;
-			this.animationCode = (byte)csa.getCurrentAnimCode();
+			this.animationCode = (byte)csa.getCurrentAnimCode_ServerSide();
 			if (Globals.DEBUG_DIE_ANIM) {
 				if (this.animationCode == AbstractAvatar.ANIM_DIED) {
 					Globals.p("Sending die anim for " + pe);
