@@ -1,11 +1,14 @@
 package com.scs.stevetech1.client;
 
 import com.jme3.math.ColorRGBA;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractSimpleGameServer;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 public abstract class AbstractSimpleGameClient extends AbstractGameClient {
 	
+	private AbstractCollisionValidator collisionValidator;
 	private String ipAddress;
 	private int port;
 	private String playerName;
@@ -32,10 +35,18 @@ public abstract class AbstractSimpleGameClient extends AbstractGameClient {
 
 		this.getViewPort().setBackgroundColor(ColorRGBA.Black);
 
+		collisionValidator = new AbstractCollisionValidator();
+
 		this.connect(ipAddress, port, false);
 	}
 
 
+	@Override
+	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
+		return collisionValidator.canCollide(a, b);
+	}
+	
+	
 	@Override
 	protected Class[] getListofMessageClasses() {
 		// TODO Auto-generated method stub

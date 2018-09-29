@@ -12,7 +12,6 @@ import com.scs.stevetech1.shared.AbstractCollisionValidator;
 public class TestGameClient extends AbstractSimpleGameClient {
 
 	private TestGameClientEntityCreator creator;
-	private AbstractCollisionValidator collisionValidator;
 
 	public static void main(String[] args) {
 		try {
@@ -36,7 +35,6 @@ public class TestGameClient extends AbstractSimpleGameClient {
 		super.simpleInitApp();
 
 		creator = new TestGameClientEntityCreator();
-		collisionValidator = new AbstractCollisionValidator();
 
 		getGameNode().attachChild(SkyFactory.createSky(getAssetManager(), "Textures/BrightSky.dds", SkyFactory.EnvMapType.CubeMap));
 		
@@ -46,12 +44,6 @@ public class TestGameClient extends AbstractSimpleGameClient {
 	@Override
 	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg) {
 		return creator.createEntity(client, msg);
-	}
-
-
-	@Override
-	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		return collisionValidator.canCollide(a, b);
 	}
 
 
