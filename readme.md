@@ -8,9 +8,6 @@ Designed and Developed by Stephen Carlyle-Smith (stephen.carlylesmith@googlemail
 SteveTech1 is a 3D multiplayer FPS framework and engine, designed to help you create games such as Team Fortress 2, Overwatch, PUBG etc.. in Java.  It includes almost all the code you'll need to create your own multiplayer FPS, and uses JMonkeyEngine for the 3D.  It is designed to be easily modifiable and extendable (as the example games will show).  It is intended to be the Java equivalent of something like the Source engine.  You will need to provide your own assets of course.
 
 
-## CURRENT STATUS
-All the basic features are complete but not thoroughly stress-tested yet.  All aspects are subject to change.
-
 
 ### FEATURES:
 * Client prediction & lag-compensation
@@ -24,7 +21,7 @@ All the basic features are complete but not thoroughly stress-tested yet.  All a
 I'm currently working on two games:
 
 * Moonbase Assault (https://bitbucket.org/SteveSmith16384/moonbaseassault/src/master/)
-* Two Weeks in the Pub (https://bitbucket.org/SteveSmith16384/twoweeksinthepub/src/master/)
+* Two Weeks in the Pub (Fortnite clone) (https://bitbucket.org/SteveSmith16384/twoweeksinthepub/src/master/)
 
 Here's a video of Moonbase Assault:-
 
@@ -35,7 +32,7 @@ Or check out this channel of other vidoes of stuff I've done with this engine: h
 
 ## GETTING STARTED
 * You are advised to look at the example game Tutorial to see how to create your own simple multiplayer FPS game using SteveTech1.  There is also the game Undercover Agent included, which contains more advanced features.
-* See the SteveTech1 Tutorial at https://bitbucket.org/SteveSmith16384/stetech1/src/master/Tutorial/
+* See the SteveTech1 Tutorial at https://multiplayertowerdefence.blogspot.com/p/home.html
 * If you've never used JMonkeyEngine before, the excellent documentation can be found here: https://jmonkeyengine.github.io/wiki/jme3.html#tutorials-for-beginners 
 
 

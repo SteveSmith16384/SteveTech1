@@ -12,6 +12,7 @@ import com.scs.stevetech1.entities.AbstractAvatar;
 import com.scs.stevetech1.entities.AbstractServerAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.jme.JMEAngleFunctions;
+import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -243,7 +244,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	protected Class[] getListofMessageClasses() {
+	protected Class<? extends MyAbstractMessage>[] getListofMessageClasses() {
 		return new Class[] {UASimplePlayerData.class};
 	}
 

@@ -2,6 +2,7 @@ package com.scs.stevetech1.client;
 
 import com.jme3.math.ColorRGBA;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.server.AbstractSimpleGameServer;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
@@ -50,8 +51,7 @@ public abstract class AbstractSimpleGameClient extends AbstractGameClient {
 	
 	
 	@Override
-	protected Class[] getListofMessageClasses() {
-		// TODO Auto-generated method stub
+	protected Class<? extends MyAbstractMessage>[] getListofMessageClasses() {
 		return null;
 	}
 

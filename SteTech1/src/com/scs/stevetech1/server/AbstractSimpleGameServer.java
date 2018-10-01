@@ -3,6 +3,7 @@ package com.scs.stevetech1.server;
 import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.data.GameOptions;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 public abstract class AbstractSimpleGameServer extends AbstractGameServer {
@@ -31,7 +32,7 @@ public abstract class AbstractSimpleGameServer extends AbstractGameServer {
 
 
 	@Override
-	protected Class[] getListofMessageClasses() {
+	protected Class<? extends MyAbstractMessage>[] getListofMessageClasses() {
 		return null;
 	}
 

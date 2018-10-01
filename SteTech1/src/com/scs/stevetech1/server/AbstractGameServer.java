@@ -178,7 +178,7 @@ ICollisionListener<PhysicalEntity> {
 	 *  
 	 * @return a list of classes that must be registered in order to be sent from client to server or vice-versa.
 	 */
-	protected abstract Class[] getListofMessageClasses();
+	protected abstract Class<? extends MyAbstractMessage>[] getListofMessageClasses();
 
 
 	@Override

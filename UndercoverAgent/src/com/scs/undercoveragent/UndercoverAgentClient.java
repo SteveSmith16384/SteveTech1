@@ -14,6 +14,7 @@ import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.AbstractHUDImage;
+import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
@@ -208,7 +209,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	}
 	
 	@Override
-	protected Class[] getListofMessageClasses() {
+	protected Class<? extends MyAbstractMessage>[] getListofMessageClasses() {
 		return new Class[] {UASimplePlayerData.class};
 	}
 

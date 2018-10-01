@@ -68,11 +68,11 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 
 
 	protected void serverAndClientProcess(AbstractGameServer server, IClientApp client, float tpf_secs, long serverTime) {
-		if (Globals.STRICT) {
+		/*if (Globals.STRICT) {
 			if (ability[0] == null) {
 				Globals.p("Warning - no ability0!");
 			}
-		}
+		}*/
 
 		this.avatarControl.process();
 

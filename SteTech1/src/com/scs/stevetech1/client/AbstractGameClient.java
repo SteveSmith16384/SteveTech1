@@ -316,7 +316,7 @@ ConsoleInputListener {
 	}
 
 
-	protected abstract Class[] getListofMessageClasses();
+	protected abstract Class<? extends MyAbstractMessage>[] getListofMessageClasses();
 
 
 	public long getServerTime() {
