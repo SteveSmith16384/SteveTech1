@@ -47,10 +47,10 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-		Spatial model = (Node)assetManager.loadModel("Models/wyvern/Wyvern.blend");
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/wyvern/Wyvern_red_col5.png");
+		Spatial model = (Node)assetManager.loadModel("Models/golem/golem_clean.blend");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Textures/yellowsun.jpg");
 		String animNode = null;
-		String animToUse = "Walk";
+		String animToUse = "walk";
 
 		if (model instanceof Node) {
 			listAllAnimations((Node)model);

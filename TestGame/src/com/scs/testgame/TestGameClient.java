@@ -4,10 +4,8 @@ import com.jme3.util.SkyFactory;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.AbstractSimpleGameClient;
 import com.scs.stevetech1.components.IEntity;
-import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 public class TestGameClient extends AbstractSimpleGameClient {
 

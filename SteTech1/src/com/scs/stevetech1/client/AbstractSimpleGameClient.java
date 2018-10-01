@@ -37,20 +37,23 @@ public abstract class AbstractSimpleGameClient extends AbstractGameClient {
 
 		this.getViewPort().setBackgroundColor(ColorRGBA.Black);
 
+		collisionValidator = new AbstractCollisionValidator();
+
 		this.connect(ipAddress, port, false);
 	}
 
 
+	@Override
+	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
+		return collisionValidator.canCollide(a, b);
+	}
+	
+	
 	@Override
 	protected Class[] getListofMessageClasses() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
-	@Override
-	public final boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		return collisionValidator.canCollide(a, b);
-	}
 
 }
