@@ -54,7 +54,7 @@ public abstract class AbstractSimpleGameServer extends AbstractGameServer {
 
 
 	@Override
-	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
+	public final boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
 		return collisionValidator.canCollide(a, b);
 	}
 

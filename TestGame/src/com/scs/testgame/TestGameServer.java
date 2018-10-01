@@ -19,8 +19,6 @@ public class TestGameServer extends AbstractSimpleGameServer {
 	public static final int GAME_PORT = 6143;
 	public static final String GAME_ID = "Test Game";
 	
-	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
-
 	public static void main(String[] args) {
 		try {
 			new TestGameServer();
@@ -89,12 +87,6 @@ public class TestGameServer extends AbstractSimpleGameServer {
 	@Override
 	protected byte getWinningSideAtEnd() {
 		return 0;
-	}
-
-
-	@Override
-	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		return collisionValidator.canCollide(a, b);
 	}
 
 

@@ -33,12 +33,6 @@ public class UnitTestGameClient extends AbstractSimpleGameClient {
 
 
 	@Override
-	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		return false;
-	}
-
-
-	@Override
 	protected IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg) {
 		int id = msg.entityID;
 		Vector3f pos = null;

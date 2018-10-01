@@ -1,14 +1,19 @@
 package com.scs.stevetech1.client;
 
 import com.jme3.math.ColorRGBA;
+import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.AbstractSimpleGameServer;
 import com.scs.stevetech1.server.Globals;
+import com.scs.stevetech1.shared.AbstractCollisionValidator;
 
 public abstract class AbstractSimpleGameClient extends AbstractGameClient {
 	
 	private String ipAddress;
 	private int port;
 	private String playerName;
+	
+	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
+
 
 	public AbstractSimpleGameClient(String title, String serverIp, int gamePort, String _playerName) {
 		super(new ValidateClientSettings(AbstractSimpleGameServer.GAME_CODE, AbstractSimpleGameServer.VERSION, AbstractSimpleGameServer.KEY), title, null, 
@@ -42,5 +47,10 @@ public abstract class AbstractSimpleGameClient extends AbstractGameClient {
 		return null;
 	}
 
+
+	@Override
+	public final boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
+		return collisionValidator.canCollide(a, b);
+	}
 
 }

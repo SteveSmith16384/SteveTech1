@@ -22,8 +22,6 @@ public class BoxWarsServer extends AbstractSimpleGameServer {
 	public static final int GUN = 3;
 	public static final int BULLET = 4;
 
-	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
-
 	public static void main(String[] args) {
 		try {
 			new BoxWarsServer();
@@ -38,12 +36,6 @@ public class BoxWarsServer extends AbstractSimpleGameServer {
 
 		start(JmeContext.Type.Headless);
 
-	}
-
-
-	@Override
-	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		return collisionValidator.canCollide(a, b);
 	}
 
 

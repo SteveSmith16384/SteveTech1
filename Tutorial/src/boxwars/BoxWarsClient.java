@@ -20,8 +20,6 @@ import boxwars.weapons.PlayersGun;
 
 public class BoxWarsClient extends AbstractSimpleGameClient {
 
-	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
-
 	public static void main(String[] args) {
 		try {
 			new BoxWarsClient();
@@ -37,12 +35,6 @@ public class BoxWarsClient extends AbstractSimpleGameClient {
 		super("Box Wars", "localhost", BoxWarsServer.PORT, null);
 
 		start();
-	}
-
-
-	@Override
-	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		return collisionValidator.canCollide(a, b);
 	}
 
 

@@ -43,25 +43,12 @@ public class UnitTestGameServer extends AbstractSimpleGameServer {
 
 
 	@Override
-	public boolean canCollide(PhysicalEntity a, PhysicalEntity b) {
-		return false;
-	}
-
-	@Override
-	protected Class[] getListofMessageClasses() {
-		return null;
-	}
-
-
-	@Override
 	public byte getSideForPlayer(ClientData client) {
 		return 0;
 	}
 
 	@Override
 	protected void createGame() {
-		//this.gameData = new SimpleGameData(nextGameID.getAndAdd(1));
-
 		for (int i=0 ; i<RunAll.NUM_ENTITIES ; i++) {
 			McGuffinEntity e = new McGuffinEntity(this, this.getNextEntityID());
 			this.actuallyAddEntity(e);
@@ -88,16 +75,5 @@ public class UnitTestGameServer extends AbstractSimpleGameServer {
 	}
 
 
-	@Override
-	public int getMinSidesRequiredForGame() {
-		return 1;
-	}
-
-/*
-	@Override
-	protected String getSideName(int side) {
-		return "Unit Test";
-	}
-	*/
 }
 
