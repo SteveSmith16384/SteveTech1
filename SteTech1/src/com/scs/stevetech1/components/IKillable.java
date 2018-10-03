@@ -11,3 +11,4 @@ public interface IKillable {
 	void handleKilledOnClientSide(PhysicalEntity killer);
 	
 }
+

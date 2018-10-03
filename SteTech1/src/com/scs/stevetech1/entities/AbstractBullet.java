@@ -50,14 +50,14 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	 * @param entityId
 	 * @param type
 	 * @param name
-	 * @param _playerOwnerId
+	 * @param _playerOwnerId -1 if fired by an AI
 	 * @param _shooter
 	 * @param startPos
 	 * @param _dir
 	 * @param _side
 	 * @param _client
 	 * @param _useRay Have CCD by using Rays
-	 * @param _speed
+	 * @param _speed Only used if the bullet uses Rays for collision, otherwise speed is handled by the physics engine.
 	 * @param _range
 	 */
 	public AbstractBullet(IEntityController _game, int entityId, int type, String name, int _playerOwnerId, IEntity _shooter, Vector3f startPos, Vector3f _dir, byte _side, ClientData _client, boolean _useRay, float _speed, float _range) {

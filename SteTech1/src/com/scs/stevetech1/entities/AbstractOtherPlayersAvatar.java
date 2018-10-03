@@ -28,7 +28,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractOtherPlayersAvatar extends PhysicalEntity implements IAffectedByPhysics, IAnimatedClientSide, IProcessByClient, 
 ISetRotation, IDrawOnHUD, IDontCollideWithComrades { 
 
-	protected IAvatarModel anim;
+	protected IAvatarModel model;
 	private String playersName;
 	protected byte side;
 	private Node container;
@@ -37,15 +37,15 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 	protected BitmapText bmpText;
 	private static BitmapFont font_small;
 
-	public AbstractOtherPlayersAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _anim, byte _side, String _playersName) {
+	public AbstractOtherPlayersAvatar(IEntityController game, int type, int eid, float x, float y, float z, IAvatarModel _model, byte _side, String _playersName) {
 		super(game, eid, type, "EnemyAvatar", true, false, true);
 
-		anim = _anim;
+		model = _model;
 		playersName = _playersName;
 		side = _side;
 
 		// Create box for collisions
-		Box box = new Box(anim.getCollisionBoxSize().x/2, anim.getCollisionBoxSize().y/2, anim.getCollisionBoxSize().z/2);
+		Box box = new Box(model.getCollisionBoxSize().x/2, model.getCollisionBoxSize().y/2, model.getCollisionBoxSize().z/2);
 		Geometry bbGeom = new Geometry("bbGeom_" + entityName, box);
 		bbGeom.setLocalTranslation(0, box.getYExtent(), 0); // origin is centre!
 		bbGeom.setCullHint(CullHint.Always); // Don't draw the collision box
@@ -54,7 +54,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 		bbGeom.setUserData(Globals.ENTITY, this);
 
 		// Create model to look good
-		Spatial avatarModel = anim.createAndGetModel();
+		Spatial avatarModel = model.createAndGetModel();
 
 		// Contain model in a separate node so we can rotate it without losing the models own rotation
 		container = new Node();
@@ -102,7 +102,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 	@Override
 	public void drawOnHud(Node hud, Camera cam) {
-		super.checkHUDNode(hud, bmpText, cam, 2f, anim.getCollisionBoxSize().y);
+		super.checkHUDNode(hud, bmpText, cam, 2f, model.getCollisionBoxSize().y);
 	}
 
 
@@ -113,7 +113,7 @@ ISetRotation, IDrawOnHUD, IDontCollideWithComrades {
 
 
 	@Override
-	public void setAnimCode_ClientSide(int s) {
+	public void setAnimCode_ClientSide(int animCode) {
 	}
 
 

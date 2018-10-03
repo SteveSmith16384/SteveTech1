@@ -47,14 +47,17 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-		Spatial model = (Node)assetManager.loadModel("Models/golem/golem_clean.blend");
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Textures/yellowsun.jpg");
+		//Spatial model = (Node)assetManager.loadModel("Models/golem/golem_clean.blend");
+		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Textures/yellowsun.jpg");
+
+		Spatial model = (Node)assetManager.loadModel("Models/mage/mage.blend");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/mage/mage.png");
 		String animNode = null;
-		String animToUse = "walk";
+		String animToUse = "idle";
 
 		if (model instanceof Node) {
-			listAllAnimations((Node)model);
-			control = this.getNodeWithControls(animNode, (Node)model);
+			JMEModelFunctions.listAllAnimations((Node)model);
+			control = JMEModelFunctions.getNodeWithControls(animNode, (Node)model);
 			if (control != null) {
 				control.addListener(this);
 				//Globals.p("Control Animations: " + control.getAnimationNames());
@@ -88,7 +91,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 	}
 
-
+/*
 	private void listAllAnimations(Node s) {
 		int ch = s.getChildren().size();
 		for (int i=0 ; i<ch ; i++) {
@@ -106,16 +109,17 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		}
 	}
 
-
+/*
 	private AnimControl getNodeWithControls(String name, Node s) {
 		int ch = s.getChildren().size();
 		for (int i=0 ; i<ch ; i++) {
 			Spatial sp = s.getChild(i);
 			if (sp.getNumControls() > 0) {
-				if (name == null || name.equals(sp.toString()))
+				if (name == null || name.equals(sp.toString())) {
 					control = sp.getControl(AnimControl.class);
-				if (control != null) {
-					return control;
+					if (control != null) {
+						return control;
+					}
 				}
 			} else if (sp instanceof Node) {
 				// Iterate through children
@@ -127,7 +131,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		}
 		return null;
 	}
-
+*/
 
 	private void setupLight() {
 		// Remove existing lights

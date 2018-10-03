@@ -146,7 +146,7 @@ public class JMEModelFunctions {
 
 	}
 
-
+	/*
 	public static AnimControl getNodeWithControls(Node s) {
 		AnimControl control = null;
 		int ch = s.getChildren().size();
@@ -166,6 +166,56 @@ public class JMEModelFunctions {
 		}
 		return null;
 	}
+	 */
+
+
+	public static void listAllAnimations(Node s) {
+		int ch = s.getChildren().size();
+		for (int i=0 ; i<ch ; i++) {
+			Spatial sp = s.getChild(i);
+			if (sp instanceof Node) {
+				listAllAnimations((Node)sp);
+			}
+			if (sp.getNumControls() > 0) {
+				AnimControl control = sp.getControl(AnimControl.class);
+				if (control != null) {
+					Globals.p("Anims on " + sp + ": " + control.getAnimationNames());
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * 
+	 * @param name Null, or a specific node name
+	 * @param s The start node to search
+	 * @return
+	 */
+	public static AnimControl getNodeWithControls(String name, Node s) {
+		int numChildren = s.getChildren().size();
+		for (int idx=0 ; idx<numChildren ; idx++) {
+			Spatial sp = s.getChild(idx);
+			if (sp.getNumControls() > 0) {
+				if (name == null || name.equals(sp.toString())) {
+					AnimControl control = sp.getControl(AnimControl.class);
+					if (control != null) {
+						return control;
+					}
+				}
+			} 
+			if (sp instanceof Node) {
+				// Iterate through children
+				AnimControl control = getNodeWithControls(name, (Node)sp);
+				if (control != null) {
+					return control;
+				}
+			}
+		}
+		return null;
+	}
+
+
 
 
 	public static void printNodeTree(Spatial s) {
@@ -237,5 +287,5 @@ public class JMEModelFunctions {
 		return res;
 	}
 
-	
+
 }

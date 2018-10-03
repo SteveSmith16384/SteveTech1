@@ -11,7 +11,3 @@ https://forums.unrealengine.com/development-discussion/c-gameplay-programming/81
 https://forums.unrealengine.com/development-discussion/c-gameplay-programming/69925-how-would-lag-compensation-shooting-be-implemented
 
 
-TOOL LINKS
-
-https://www.onlineconverter.com/avi-to-gif
-

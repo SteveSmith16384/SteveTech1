@@ -27,6 +27,21 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 	private boolean toBeReloaded = true;
 	private int bulletsInMag;
 
+	/**
+	 * 
+	 * @param _game
+	 * @param id
+	 * @param type
+	 * @param playerID
+	 * @param owner
+	 * @param avatarID
+	 * @param abilityNum Which ability this will be in the client, typically an int beginning with 0 for the first ability.
+	 * @param _name
+	 * @param shotInt How much delay between shots, in milliseconds.
+	 * @param reloadInt How long it takes to reload, in milliseconds.
+	 * @param magSize
+	 * @param _client Only used by the server.
+	 */
 	public AbstractMagazineGun(IEntityController _game, int id, int type, int playerID, ICanShoot owner, int avatarID, byte abilityNum, String _name, 
 			float shotInt, float reloadInt, int magSize, ClientData _client) { 
 		super(_game, id, type, playerID, (AbstractAvatar)owner, avatarID, abilityNum, _name, shotInt);
