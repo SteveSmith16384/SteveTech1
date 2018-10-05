@@ -33,7 +33,7 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 		return false;
 	}
 
-	
+	/*
 	@Override
 	public void process(float tpf_secs) {
 		super.process(tpf_secs);

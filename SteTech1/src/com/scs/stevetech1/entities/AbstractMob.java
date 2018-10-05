@@ -29,10 +29,12 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.IArtificialIntelligence;
 import com.scs.stevetech1.shared.IEntityController;
 
+// IDontCollideWithComrades removed so that mobs do collide with each other
 public abstract class AbstractMob extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
-IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRotation, ISetRotation, IKillable, IDontCollideWithComrades {
+IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRotation, ISetRotation, IKillable {//, IDontCollideWithComrades {
 
 	private IAvatarModel model; // Need this to animate the model
+	//private Geometry bbGeom; // For rotation server-side
 	private float health;
 	public byte side;
 	protected IArtificialIntelligence ai;
@@ -40,7 +42,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 	private long timeKilled;
 
 	public AbstractMob(IEntityController _game, int id, int type, float x, float y, float z, byte _side, 
-			IAvatarModel _model, String name, float _health) {
+			IAvatarModel _model, String name, float _health, int startAnimCode) {
 		super(_game, id, type, name, true, false, true);
 
 		side = _side;
@@ -52,7 +54,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 			creationData.put("side", side);
 		} else {
 			game.getGameNode().attachChild(this.model.createAndGetModel());
-			this.setAnimCode_ClientSide(AbstractAvatar.ANIM_IDLE);
+			this.setAnimCode_ClientSide(startAnimCode); // Need this since they may be dead, so we don't want to default to (say) idle
 		}
 
 		// Create box for collisions
@@ -111,6 +113,12 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 	public void processByClient(IClientApp client, float tpf_secs) {
 		// Set position and direction of avatar model, which doesn't get moved automatically
 		this.model.getModel().setLocalTranslation(this.getWorldTranslation());
+	}
+
+
+	@Override
+	public Vector3f getRotation() {
+		return this.getMainNode().getLocalRotation().getRotationColumn(2);
 	}
 
 
@@ -201,16 +209,16 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 
 	@Override
 	public void setRotation(Vector3f dir) {
-		Vector3f newdir = new Vector3f(dir.x, 0, dir.z); // Keep horizontal
+		Vector3f newdir = new Vector3f(dir.x, 0, dir.z); // Keep looking horizontal
 		JMEAngleFunctions.rotateToWorldDirection(this.model.getModel(), newdir);
 	}
 
-
+/*
 	@Override
 	public Vector3f getRotation() {
-		return ai.getDirection();
+		//return ai.getDirection();
 	}
-
+*/
 
 	@Override
 	public void handleKilledOnClientSide(PhysicalEntity killer) {
@@ -232,6 +240,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 
 	@Override
 	public void updateClientSideHealth(int amt) {
+		// Override if required
 	}
 
 }

@@ -9,7 +9,7 @@ public interface IArtificialIntelligence {
 
 	void process(AbstractGameServer server, float tpf_secs);
 	
-	Vector3f getDirection(); // Current dir to point entity the right way
+	//Vector3f getDirection(); // Current dir to point entity the right way
 	
 	ITargetableByAI getCurrentTarget();
 	

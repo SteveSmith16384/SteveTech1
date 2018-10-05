@@ -186,7 +186,7 @@ public abstract class AbstractMagazineGun extends AbstractAbility implements IAb
 		if (Globals.DEBUG_RELOAD_PROBLEM) {
 			Globals.p("Gun now has " + this.getBulletsInMag() + " bullets (from server)");
 		}			
-}
+	}
 
 
 	@Override

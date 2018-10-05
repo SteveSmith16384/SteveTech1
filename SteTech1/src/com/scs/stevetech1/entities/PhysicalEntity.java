@@ -67,7 +67,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	@Override
-	public void processByServer(AbstractGameServer server, float tpf_secs) {
+	public void processByServer(AbstractGameServer server, float tpfSecs) {
 		if (isRewound) {
 			throw new RuntimeException("Trying to process rewound object: " + this);
 		}
@@ -86,7 +86,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 		}*/
 
 		if (simpleRigidBody != null) {
-			simpleRigidBody.process(tpf_secs);
+			simpleRigidBody.process(tpfSecs);
 
 			if (this.simpleRigidBody.movedByForces()) {
 				if (getWorldTranslation().y < -1) {
@@ -469,6 +469,11 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				hudItem.removeFromParent();
 			}
 		}
+	}
+	
+	
+	public SimpleRigidBody<PhysicalEntity> GetSimpleRigidBody() {
+		return this.simpleRigidBody;
 	}
 
 }

@@ -55,33 +55,7 @@ public class UndercoverAgentClientEntityCreator {
 	}
 
 
-	public static String TypeToString(int type) {
-		switch (type) {
-		case AVATAR: return "Avatar";
-		case FLOOR: return "FLOOR";
-		case IGLOO: return "IGLOO";
-		case SNOW_HILL_1: return "SNOW_HILL_1";
-		case STATIC_SNOWMAN: return "STATIC_SNOWMAN";
-		case SNOW_TREE_1: return "SNOW_TREE_1";
-		case SNOW_TREE_2: return "SNOW_TREE_2";
-		case BIG_TREE_WITH_LEAVES: return "BIG_TREE_WITH_LEAVES";
-		case SNOWBALL_LAUNCHER: return "SNOWBALL_LAUNCHER";
-		case SNOWBALL_BULLET: return "SNOWBALL_BULLET";
-		case INVISIBLE_MAP_BORDER: return "MAP_BORDER";
-		case SNOW_HILL_2: return "SNOW_HILL_2";
-		case SNOW_HILL_3: return "SNOW_HILL_3";
-		case SNOW_HILL_4: return "SNOW_HILL_4";
-		//case DEBUGGING_SPHERE: return "DEBUGGING_SPHERE";
-		default: return "Unknown (" + type + ")";
-		}
-	}
-
-
-	//@Override
 	public IEntity createEntity(AbstractGameClient game, NewEntityData msg) {
-		/*if (Globals.DEBUG_ENTITY_ADD_REMOVE) {
-			Globals.p("Creating " + TypeToString(msg.type));
-		}*/
 		int id = msg.entityID;
 
 		Vector3f pos = (Vector3f)msg.data.get("pos");
@@ -184,16 +158,10 @@ public class UndercoverAgentClientEntityCreator {
 		case SNOWBALL_LAUNCHER: 
 		{
 			int ownerid = (int)msg.data.get("ownerid");
-			//if (game.currentAvatar != null) { // We might not have an avatar yet
-			//	if (ownerid == game.currentAvatar.id) { // Don't care about other's abilities?
-			//	AbstractAvatar owner = (AbstractAvatar)game.entities.get(ownerid);
 			byte num = (byte)msg.data.get("num");
 			int playerID = (int)msg.data.get("playerID");
 			SnowballLauncher gl = new SnowballLauncher(game, id, playerID, null, ownerid, num, null);
 			return gl;
-			/*}
-			}
-			return null;*/
 		}
 
 		case SNOWBALL_BULLET:
