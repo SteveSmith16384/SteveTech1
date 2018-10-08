@@ -13,7 +13,7 @@ public abstract class AbstractSimpleGameClient extends AbstractGameClient {
 	private int port;
 	private String playerName;
 	
-	private AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
+	protected AbstractCollisionValidator collisionValidator = new AbstractCollisionValidator();
 
 
 	public AbstractSimpleGameClient(String title, String serverIp, int gamePort, String _playerName) {
@@ -51,7 +51,7 @@ public abstract class AbstractSimpleGameClient extends AbstractGameClient {
 	
 	
 	@Override
-	protected Class<? extends MyAbstractMessage>[] getListofMessageClasses() {
+	protected Class<? extends Object>[] getListofMessageClasses() {
 		return null;
 	}
 

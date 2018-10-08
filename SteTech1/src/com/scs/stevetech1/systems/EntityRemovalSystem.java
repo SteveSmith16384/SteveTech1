@@ -22,9 +22,7 @@ public class EntityRemovalSystem extends AbstractSystem {
 	public void markEntityForRemoval(IEntity e) {
 		if (e != null) {
 			e.markForRemoval();
-			//synchronized (entitiesToRemove) {
-				entitiesToRemove.add(e.getID());
-			//}
+			entitiesToRemove.add(e.getID());
 		}
 	}
 
@@ -36,14 +34,12 @@ public class EntityRemovalSystem extends AbstractSystem {
 
 	public void actuallyRemoveEntities() {
 		// Remove entities
-		//synchronized (entitiesToRemove) {
-			while (this.entitiesToRemove.size() > 0) { // Do it this way since removing some entities my cause more entities to be added to this list, e.g. avatar's weapons
-				int id = this.entitiesToRemove.getFirst();
-				entityController.actuallyRemoveEntity(id);
-				this.entitiesToRemove.removeFirst();
-			}
-			entitiesToRemove.clear();
-		//}
+		while (this.entitiesToRemove.size() > 0) { // Do it this way since removing some entities my cause more entities to be added to this list, e.g. avatar's weapons
+			int id = this.entitiesToRemove.getFirst();
+			entityController.actuallyRemoveEntity(id);
+			this.entitiesToRemove.removeFirst();
+		}
+		entitiesToRemove.clear();
 	}
 
 

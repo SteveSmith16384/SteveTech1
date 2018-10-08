@@ -208,8 +208,9 @@ public class UndercoverAgentClient extends AbstractGameClient {
 
 	}
 	
+	
 	@Override
-	protected Class<? extends MyAbstractMessage>[] getListofMessageClasses() {
+	protected Class<? extends Object>[] getListofMessageClasses() {
 		return new Class[] {UASimplePlayerData.class};
 	}
 

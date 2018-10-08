@@ -244,7 +244,7 @@ public class UndercoverAgentServer extends AbstractGameServer {
 
 
 	@Override
-	protected Class<? extends MyAbstractMessage>[] getListofMessageClasses() {
+	protected Class<? extends Object>[] getListofMessageClasses() {
 		return new Class[] {UASimplePlayerData.class};
 	}
 
