@@ -1273,11 +1273,13 @@ ConsoleInputListener {
 		try {
 			if (this.consoleInput != null) {
 				if (this.consoleInput.equalsIgnoreCase("help") || this.consoleInput.equalsIgnoreCase("?")) {
-					Globals.p("stats, entities");
+					Globals.p("stats, entities, timediff");
 				} else if (this.consoleInput.equalsIgnoreCase("stats")) {
 					showStats();
 				} else if (this.consoleInput.equalsIgnoreCase("entities") || this.consoleInput.equalsIgnoreCase("e")) {
 					listEntities();
+				} else if (this.consoleInput.equalsIgnoreCase("timediff")) {
+					Globals.p("Server is " + this.clientToServerDiffTime + " millis ahead");
 				} else {
 					Globals.p("Unknown command: " + this.consoleInput);
 				}
@@ -1349,9 +1351,9 @@ ConsoleInputListener {
 
 
 	/**
-	 * Override
+	 * Override if you have sfx
 	 * @param id
-	 * @return
+	 * @return The path to the sound file.
 	 */
 	protected String getSoundFileFromID(int id) {
 		return null;

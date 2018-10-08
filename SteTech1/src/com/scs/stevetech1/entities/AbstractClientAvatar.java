@@ -45,6 +45,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		cam = _cam;
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
+		
+		simpleRigidBody.setGravity(0); // So they move exactly where we want, even when client jumps
+
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			createDebugBox();
@@ -162,7 +165,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	}
 
 
-	// Client Avatars have their own special position calculator
+	/**
+	 *  Client Avatars have their own special position calculator
+	 */
 	@Override
 	public void calcPosition(long serverTimeToUse, float tpf_secs) {
 		if (this.isAlive()) {
@@ -185,6 +190,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 					this.setWorldTranslation(pos);
 					this.simpleRigidBody.resetForces(); // Prevent from keeping falling
 				} else {
+					// Push the client avatar towards where the server says they are
 					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
 					simplePlayerControl.getAdditionalForce().addLocal(offset.mult(.8f));
 				}

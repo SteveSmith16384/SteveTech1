@@ -106,10 +106,11 @@ ICollisionListener<PhysicalEntity> {
 	private ValidateClientSettings clientValidationSettings;
 	private boolean sendAddRemoveEntityMsgs = true;
 	
-	public boolean runningSlow = false;
-
 	protected SimpleGameData gameData = new SimpleGameData();
 	private ConsoleInputHandler consoleInput;
+	
+	private boolean runningSlow = false;
+	private int slowCount = 0;
 
 	/**
 	 * 
@@ -223,6 +224,15 @@ ICollisionListener<PhysicalEntity> {
 		}
 
 		this.runningSlow = loopTimer.waitForFinish() == false; // Keep clients and server running at same speed
+		if (runningSlow) {
+			this.slowCount++;
+			if (slowCount > 10) {
+				Globals.pe("Server running slowly");
+				this.slowCount = 0;
+			}
+		} else {
+			this.slowCount = 0;
+		}
 		loopTimer.start();
 	}
 
