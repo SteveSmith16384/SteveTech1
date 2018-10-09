@@ -270,7 +270,7 @@ ConsoleInputListener {
 	}
 
 
-	private void addDefaultKeyboardMappings() {
+	protected void addDefaultKeyboardMappings() {
 		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
 		getInputManager().addListener(this, QUIT);            
 

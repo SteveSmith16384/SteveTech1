@@ -7,14 +7,12 @@ import ssmith.lang.Functions;
 
 
 public class Globals {
-	
+
 	public static final boolean RECORD_VID = false;
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
-	public static final boolean DEBUG_NO_JUMP_ANIM = true;
-	public static final boolean DEBUG_OTHER_PLAYER_COLOURS = true;
 
 	// Lots of consts for specific debugging output
 	public static final boolean DEBUG_RELOAD_PROBLEM = false;
@@ -33,11 +31,9 @@ public class Globals {
 	public static final boolean DEBUG_DIE_ANIM = false;
 	public static final boolean PLAYERS_START_IN_CORNER = false;
 	public static final boolean DEBUG_PLAYER_START_POS = false;
-	public static final boolean DEBUG_GUN_ROTATION = false;	
 	public static final boolean DEBUG_GAME_STATUS_CHECK = false;
 	public static final boolean FEW_MODELS = false;
 	public static final boolean DEBUG_NO_UPDATE_MSGS = false;
-	public static final boolean AI_IGNORE_PLAYER = false;
 	public static final boolean TRANSPARENT_WALLS = false;
 	public static final boolean DEBUG_GAME_NOT_STARTING = false;
 	public static final boolean TEST_AI = false;
@@ -45,9 +41,7 @@ public class Globals {
 	public static final boolean DEBUG_AI_BULLET_POS = false;
 	public static final boolean DEBUG_BULLET_HIT = false;
 	public static final boolean DEBUG_AI_TARGETTING = false;
-	public static final boolean DEBUG_HUD = false;
 	public static final boolean DEBUG_AVATAR_SET = false;
-	public static final boolean DEBUG_SLIDING_DOORS = false;
 	public static final boolean DEBUG_CLIENT_SERVER_FAR_APART = false;
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;
@@ -57,7 +51,6 @@ public class Globals {
 	public static final boolean DEBUG_PLAYER_RESTART = false;
 	public static final boolean STOP_SERVER_AVATAR_MOVING = false;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
-	public static final boolean DEBUG_REWIND_POS1 = false;
 	public static final boolean LOG_MOVING_TARGET_POS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
 
@@ -77,12 +70,12 @@ public class Globals {
 	public static final int MIN_ARTIFICIAL_COMMS_DELAY = 0;//50; //0;
 	public static final int MAX_ARTIFICIAL_COMMS_DELAY = 0;//100;
 	//----
-	
+
 	public static final int DEFAULT_TICKRATE = 25;
 	public static final int DEFAULT_SEND_UPDATES_INTERVAL = 40;
 	public static final int DEFAULT_RENDER_DELAY = 200;
 	public static final int DEFAULT_NETWORK_TIMEOUT = 100000;
-	
+
 	public static final int PING_INTERVAL_MS = 5 * 1000; // How often server sends pings
 	public static final int SUBNODE_SIZE = 15;
 	public static final int DEFAULT_VOLUME = 1;
@@ -90,7 +83,7 @@ public class Globals {
 
 	public static final int KRYO_WRITE_BUFFER_SIZE = 16384*7;
 	public static final int KRYO_OBJECT_BUFFER_SIZE = 4096*3*24;
-	
+
 	// Our movement speed
 	public static final float SMALLEST_MOVE_DIST = 0.001f;
 	public static final float MAX_MOVE_DIST = 1f; // Don't change to 2, makes movement wibbly
@@ -107,8 +100,8 @@ public class Globals {
 			p("WARNING: Game NOT in release mode");
 		}
 	}
-	
-	
+
+
 	public static void p(String s) {
 		System.out.println(System.currentTimeMillis() + ": " + s);
 	}
@@ -118,13 +111,13 @@ public class Globals {
 		System.err.println(System.currentTimeMillis() + ": " + s);
 	}
 
-	
+
 	public static void HandleError(Exception ex) {
 		ex.printStackTrace();
-		
+
 		String filename = "Errors_" + System.currentTimeMillis() + ".log";
 		IOFunctions.appendToFile(filename, Functions.Exception2String(ex));
-		
+
 	}
-	
+
 }

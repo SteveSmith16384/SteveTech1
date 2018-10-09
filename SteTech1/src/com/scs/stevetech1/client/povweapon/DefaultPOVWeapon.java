@@ -63,9 +63,6 @@ public class DefaultPOVWeapon implements IPOVWeapon {
 					currentlyReloading = false;
 				}
 			}
-			if (Globals.DEBUG_GUN_ROTATION) {
-				Globals.p("Gun angle = " + gunAngle);
-			}
 		}
 	}
 	
