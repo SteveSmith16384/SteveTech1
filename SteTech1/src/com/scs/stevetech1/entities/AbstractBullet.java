@@ -113,7 +113,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	}
 
 
-	private void fastForward() { // todo - do this in the server code
+	private void fastForward() { // todo - do this in the server code?
 		// Here we go... We need to rewind all rewindable entities, and play the game through to get the server ahead of the clients (as it should be),
 		// and also properly check for collisions.
 		if (Globals.TEST_BULLET_REWINDING) {

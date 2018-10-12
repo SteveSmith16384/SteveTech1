@@ -46,9 +46,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		this.setWorldTranslation(new Vector3f(x, y, z));
 		
-		simpleRigidBody.setGravity(0); // So they move exactly where we want, even when client jumps
-
-
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			createDebugBox();
 		}

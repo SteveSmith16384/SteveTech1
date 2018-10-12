@@ -243,9 +243,9 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 
 	public void rewindPositionTo(long serverTimeToUse) {
-		EntityPositionData shooterEPD = this.historicalPositionData.calcPosition(serverTimeToUse, true);
-		if (shooterEPD != null) {
-			this.setWorldTranslation(shooterEPD.position);
+		EntityPositionData epd = this.historicalPositionData.calcPosition(serverTimeToUse, true);
+		if (epd != null) {
+			this.setWorldTranslation(epd.position);
 			this.isRewound = true;
 		} else {
 			Globals.p("Unable to rewind position: no data");
