@@ -20,7 +20,7 @@ public class AnimationSystem extends AbstractSystem {
 	}
 
 
-	public void process(IAnimatedClientSide anim, float tpf_secs) {
+	public void process(IAnimatedClientSide anim, float tpfSecs) {
 		PhysicalEntity pe = (PhysicalEntity)anim;
 		EntityUpdateData had = pe.chronoUpdateData.get(client.getRenderTime(), true);
 		if (had != null) {
@@ -30,7 +30,7 @@ public class AnimationSystem extends AbstractSystem {
 				Globals.pe(ex.getMessage());
 			}
 		}
-		anim.processManualAnimation_ClientSide(tpf_secs);
+		anim.processManualAnimation_ClientSide(tpfSecs);
 	}
 
 

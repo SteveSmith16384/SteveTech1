@@ -148,7 +148,7 @@ ConsoleInputListener {
 	private SoundSystem soundSystem;
 	private int expectedNumEntities = -1; // So we can show "% complete"
 	private boolean runDisconnectedCode = false;
-	
+
 	protected Node gameNode = new Node("GameNode");
 	protected Node debugNode = new Node("DebugNode");
 	protected FilterPostProcessor fpp;
@@ -160,7 +160,7 @@ ConsoleInputListener {
 	private String consoleInput;
 	private boolean showingHistory = false; // Showing history cam (feature in progress)
 	private volatile boolean quitting = false;
-	
+
 	protected Thread connectingThread;
 	public Exception lastConnectException;
 
@@ -351,12 +351,12 @@ ConsoleInputListener {
 			}
 		}
 		checkConsoleInput();
-		
+
 		if (quitting) {
 			quit("User quit.");
 			return;
 		}
-		
+
 		if (runDisconnectedCode) {
 			this.runWhenDisconnected();
 			runDisconnectedCode = false;
@@ -367,7 +367,7 @@ ConsoleInputListener {
 			if (!this.showingHistory) {
 				renderTime = serverTime - clientRenderDelayMillis; // Render from history
 			} else {
-				renderTime = serverTime - Globals.HISTORY_DURATION_MILLIS;
+				renderTime = serverTime - clientRenderDelayMillis - Globals.HISTORY_DURATION_MILLIS;
 			}
 
 			if (networkClient != null && networkClient.isConnected()) {
@@ -380,8 +380,11 @@ ConsoleInputListener {
 					}
 				}
 
-				addAndRemoveEntities();
 
+				if (!this.showingHistory) {
+					addAndRemoveEntities();
+				}
+				
 				if (joinedServer) {
 
 					if (!this.showingHistory) {
@@ -399,8 +402,7 @@ ConsoleInputListener {
 								}
 							}
 						}
-						// Check all nodes have an entity in the list
-						// todo
+						// Todo - Check all nodes have an entity in the list
 					}
 
 					iterateThroughEntities(tpfSecs);
@@ -746,7 +748,7 @@ ConsoleInputListener {
 		} else if (message instanceof GameOverMessage) {
 			GameOverMessage gom = (GameOverMessage)message;
 			this.gameOver(gom.winningSide);
-			
+
 		} else if (message instanceof PlaySoundMessage) {
 			PlaySoundMessage psm = (PlaySoundMessage)message;
 			this.playSound(psm.soundId, psm.entityId, psm.pos, psm.volume, psm.stream);
@@ -1185,8 +1187,8 @@ ConsoleInputListener {
 		Globals.p("Disconnected!");
 		this.runDisconnectedCode = true;
 	}
-	
-	
+
+
 	protected void runWhenDisconnected() {
 		this.appendToLog("DISCONNECTED");
 		joinedServer = false;

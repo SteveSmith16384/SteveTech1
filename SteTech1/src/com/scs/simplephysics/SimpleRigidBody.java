@@ -13,7 +13,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
-import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable {
 
@@ -499,7 +498,7 @@ public class SimpleRigidBody<T> implements Collidable {
 					}
 
 				} else if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
-					res = this.meshVMesh(e, tempCollisionResults) ? 1: 0;
+					res = this.meshVMesh(e, tempCollisionResults) ? 1 : 0;
 					
 				} else {
 					res = this.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
