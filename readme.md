@@ -31,8 +31,8 @@ Or check out this channel of other vidoes of stuff I've done with this engine: h
 
 
 ## GETTING STARTED
-* You are advised to look at the example game Tutorial to see how to create your own simple multiplayer FPS game using SteveTech1.  There is also the game Undercover Agent included, which contains more advanced features.
-* See the SteveTech1 Tutorial at https://multiplayertowerdefence.blogspot.com/p/home.html
+* You are advised to look at the example game in the Tutorial project to see how to create your own simple multiplayer FPS game using SteveTech1.  There is also the game Undercover Agent included, which contains more advanced features.
+* See the SteveTech1 Tutorial at https://multiplayerfpstutorial.blogspot.com/ for an actual tutorial
 * If you've never used JMonkeyEngine before, the excellent documentation can be found here: https://jmonkeyengine.github.io/wiki/jme3.html#tutorials-for-beginners 
 
 
