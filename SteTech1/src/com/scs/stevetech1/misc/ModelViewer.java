@@ -40,7 +40,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
 		assetManager.registerLocator("../TestGame/assets/", FileLocator.class);
 		assetManager.registerLocator("../../multiplayertowerdefence/assets/", FileLocator.class);
-		assetManager.registerLocator("../../multiplayerscp/assets/", FileLocator.class);
+		//assetManager.registerLocator("../../multiplayerscp/assets/", FileLocator.class);
 
 		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
 
@@ -48,10 +48,10 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-		Spatial model = (Node)assetManager.loadModel("Models/Slendy/animateslendy.blend");
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/Slendy/slender_d.jpg");
-		String animNode = null;
-		String animToUse = "idle";
+		Spatial model = (Node)assetManager.loadModel("Models/walking.blend");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/side_green.png");
+		String animNode = "Alpha_Surface (Node)";
+		String animToUse = "ArmatureAction";
 
 		if (model instanceof Node) {
 			JMEModelFunctions.listAllAnimations((Node)model);
