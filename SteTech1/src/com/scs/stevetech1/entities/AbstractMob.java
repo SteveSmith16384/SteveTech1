@@ -34,7 +34,6 @@ public abstract class AbstractMob extends PhysicalEntity implements IAffectedByP
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRotation, ISetRotation, IKillable {//, IDontCollideWithComrades {
 
 	private IAvatarModel model; // Need this to animate the model
-	//private Geometry bbGeom; // For rotation server-side
 	private float health;
 	public byte side;
 	protected IArtificialIntelligence ai;
@@ -48,7 +47,7 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 		side = _side;
 		model = _model; // Need it for dimensions for bb
 		health = _health;
-
+		
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
@@ -213,12 +212,6 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 		JMEAngleFunctions.rotateToWorldDirection(this.model.getModel(), newdir);
 	}
 
-/*
-	@Override
-	public Vector3f getRotation() {
-		//return ai.getDirection();
-	}
-*/
 
 	@Override
 	public void handleKilledOnClientSide(PhysicalEntity killer) {

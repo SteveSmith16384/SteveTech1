@@ -39,7 +39,7 @@ public class JMEModelFunctions {
 
 
 	public static Spatial loadModel(AssetManager assetManager, String path) {
-		boolean LOAD_JME_VERSION = true;
+		boolean LOAD_JME_VERSION = false;
 
 		Spatial ship = null;
 		String j30_path = path.substring(path.lastIndexOf("/")+1) + ".j3o";
@@ -71,7 +71,7 @@ public class JMEModelFunctions {
 		Geometry g = new Geometry("wireframe grid", new Grid(size, size, 1f) );
 		Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
 		mat.getAdditionalRenderState().setWireframe(true);
-		mat.setColor("Color", ColorRGBA.White);
+		mat.setColor("Color", ColorRGBA.Green);
 		g.setMaterial(mat);
 
 		// Move to middle  NO!
@@ -179,7 +179,7 @@ public class JMEModelFunctions {
 			if (sp.getNumControls() > 0) {
 				AnimControl control = sp.getControl(AnimControl.class);
 				if (control != null) {
-					Globals.p("Anims on " + sp + ": " + control.getAnimationNames());
+					Globals.p("Anims on '" + sp + "': " + control.getAnimationNames());
 				}
 			}
 		}

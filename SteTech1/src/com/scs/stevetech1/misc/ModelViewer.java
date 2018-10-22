@@ -48,13 +48,18 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-		Spatial model = (Node)assetManager.loadModel("Models/Slendy/animateslendy.blend");
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/Slendy/slender_d.jpg");
-		String animNode = null;
-		String animToUse = "idle";
+		Spatial model = (Node)assetManager.loadModel("Models/robot_ph_2.blend");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/texture_color_map_lp.png");
+		String animNode = "Cube (Node)";
+		String animToUse = "ArmatureAction";
+		
+		model.scale(.2f);
 
 		if (model instanceof Node) {
+			Globals.p("Listing anims:");
 			JMEModelFunctions.listAllAnimations((Node)model);
+			Globals.p("Finished listing anims");
+			
 			control = JMEModelFunctions.getNodeWithControls(animNode, (Node)model);
 			if (control != null) {
 				control.addListener(this);
@@ -62,11 +67,12 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 				AnimChannel channel = control.createChannel();
 				try {
 					channel.setAnim(animToUse);
+					Globals.p("Running anim '" + animToUse + "'");
 				} catch (IllegalArgumentException ex) {
 					Globals.pe("Try running the right anim code!");
 				}
 			} else {
-				Globals.p("No animation control");
+				Globals.p("No animation control on selected node '" + animNode + "'");
 			}
 		}
 
@@ -89,47 +95,6 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 	}
 
-/*
-	private void listAllAnimations(Node s) {
-		int ch = s.getChildren().size();
-		for (int i=0 ; i<ch ; i++) {
-			Spatial sp = s.getChild(i);
-			if (sp instanceof Node) {
-				Node n2 = (Node)sp;
-				listAllAnimations(n2);
-				if (n2.getNumControls() > 0) {
-					control = n2.getControl(AnimControl.class);
-					if (control != null) {
-						Globals.p("Anims on " + n2 + ": " + control.getAnimationNames());
-					}
-				}
-			}
-		}
-	}
-
-/*
-	private AnimControl getNodeWithControls(String name, Node s) {
-		int ch = s.getChildren().size();
-		for (int i=0 ; i<ch ; i++) {
-			Spatial sp = s.getChild(i);
-			if (sp.getNumControls() > 0) {
-				if (name == null || name.equals(sp.toString())) {
-					control = sp.getControl(AnimControl.class);
-					if (control != null) {
-						return control;
-					}
-				}
-			} else if (sp instanceof Node) {
-				// Iterate through children
-				control = this.getNodeWithControls(name, (Node)sp);
-				if (control != null) {
-					return control;
-				}
-			}
-		}
-		return null;
-	}
-*/
 
 	private void setupLight() {
 		// Remove existing lights
