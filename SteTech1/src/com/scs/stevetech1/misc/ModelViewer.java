@@ -40,7 +40,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
 		assetManager.registerLocator("../TestGame/assets/", FileLocator.class);
 		assetManager.registerLocator("../../multiplayertowerdefence/assets/", FileLocator.class);
-		assetManager.registerLocator("../../multiplayerscp/assets/", FileLocator.class);
+		//assetManager.registerLocator("../../multiplayerscp/assets/", FileLocator.class);
 
 		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
 
@@ -48,12 +48,10 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		setupLight();
 
-		Spatial model = (Node)assetManager.loadModel("Models/robot_ph_2.blend");
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/texture_color_map_lp.png");
-		String animNode = "Cube (Node)";
+		Spatial model = (Node)assetManager.loadModel("Models/walking.blend");
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/side_green.png");
+		String animNode = "Alpha_Surface (Node)";
 		String animToUse = "ArmatureAction";
-		
-		model.scale(.2f);
 
 		if (model instanceof Node) {
 			Globals.p("Listing anims:");
