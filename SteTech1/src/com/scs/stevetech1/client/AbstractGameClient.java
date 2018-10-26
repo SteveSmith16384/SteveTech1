@@ -1019,7 +1019,7 @@ ConsoleInputListener {
 	}
 
 
-	private void addEntityToGame(IEntity e) {
+	protected void addEntityToGame(IEntity e) {
 		PhysicalEntity pe = (PhysicalEntity)e;
 		BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
 		boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
@@ -1052,7 +1052,7 @@ ConsoleInputListener {
 	}
 
 
-	private void removeAllEntities() {
+	protected void removeAllEntities() {
 		Globals.p("REMOVING ALL ENTITIES...");
 		this.entitiesToAddToRootNode.clear();
 		for (IEntity e : this.entities.values()) {

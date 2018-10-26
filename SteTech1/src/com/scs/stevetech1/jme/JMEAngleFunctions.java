@@ -125,13 +125,13 @@ public class JMEAngleFunctions {
 		rotateToWorldDirection(s, dir);
 	}
 
-
-	public static void rotateYAxisBy(Spatial s, int angdeg) {
-		double ang = Math.toRadians(angdeg);
-		Quaternion q = getYAxisRotation((float)Math.cos(ang), (float)Math.sin(ang));
+/*
+	public static void rotateYAxisBy(Spatial s, double angdeg) {
+		double rads = Math.toRadians(angdeg);
+		Quaternion q = getYAxisRotation((float)Math.cos(rads), (float)Math.sin(rads));
 		s.rotate(q);
 	}
-
+*/
 
 	public static Vector3f getRandomDirection_All() {
 		float x = NumberFunctions.rndFloat(-1, 1);
@@ -170,25 +170,16 @@ public class JMEAngleFunctions {
 	}
 
 
-	// This function hasn't been tested
-	public static void turnLeft(Spatial spatial){
-		//Vector3f direction = new Vector3f(0, 0, 1);
-		Quaternion rotateLeft = new Quaternion().fromAngleAxis(FastMath.HALF_PI, Vector3f.UNIT_Y);
+	public static void turnOnYAxis(Spatial spatial, float rads){
+		Quaternion rotateLeft = new Quaternion().fromAngleAxis(rads, Vector3f.UNIT_Y);
 		spatial.rotate(rotateLeft);
-		//rotateLeft.mult(direction, direction);
-		//system
-		//System.out.println("direction: " + direction);
 	}
 
 
 	// This function hasn't been tested
-	public static void turnUp(Spatial spatial){
-		//Vector3f direction = new Vector3f(0, 0, 1);
-		Quaternion rotateLeft = new Quaternion().fromAngleAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
+	public static void turnOnXAxis(Spatial spatial, float rads){
+		Quaternion rotateLeft = new Quaternion().fromAngleAxis(rads, Vector3f.UNIT_X);
 		spatial.rotate(rotateLeft);
-		//rotateLeft.mult(direction, direction);
-		//system
-		//System.out.println("direction: " + direction);
 	}
 
 

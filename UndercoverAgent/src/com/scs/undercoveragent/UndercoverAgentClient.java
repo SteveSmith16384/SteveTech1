@@ -49,10 +49,6 @@ public class UndercoverAgentClient extends AbstractGameClient {
 			String gameIpAddress = props.getPropertyAsString("gameIpAddress", "localhost");//"192.168.1.217");
 			int gamePort = props.getPropertyAsInt("gamePort", 6143);
 
-			//int tickrateMillis = props.getPropertyAsInt("tickrateMillis", 25);
-			//int clientRenderDelayMillis = props.getPropertyAsInt("clientRenderDelayMillis", 200);
-			//int timeoutMillis = props.getPropertyAsInt("timeoutMillis", 100000);
-			
 			float mouseSensitivity = props.getPropertyAsFloat("mouseSensitivity", 1f);
 			String name = props.getPropertyAsString("playerName", "");
 			

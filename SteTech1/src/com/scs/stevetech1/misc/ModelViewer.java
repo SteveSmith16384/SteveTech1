@@ -44,14 +44,18 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
 
-		super.getViewPort().setBackgroundColor(ColorRGBA.Black);
+		super.getViewPort().setBackgroundColor(ColorRGBA.White);
 
-		setupLight();
+		Node model = (Node)assetManager.loadModel("Models/voxelito.blend");
+		Node sub = (Node)model.getChild(0);
+		sub.getChild(1).removeFromParent();
+		sub.getChild(1).removeFromParent();
+		model = sub;
 
-		Spatial model = (Node)assetManager.loadModel("Models/walking.blend");
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/side_green.png");
-		String animNode = "Alpha_Surface (Node)";
-		String animToUse = "ArmatureAction";
+		JMEModelFunctions.scaleModelToHeight(model, 2f);
+		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/lik_glavni_color_mapa.png");
+		String animNode = "Boy (Node)";
+		String animToUse = "Walking";
 
 		if (model instanceof Node) {
 			Globals.p("Listing anims:");
@@ -83,11 +87,14 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		model.updateModelBound();
 		BoundingBox bb = (BoundingBox)model.getWorldBound();
 		Globals.p("Model w/h/d: " + (bb.getXExtent()*2) + "/" + (bb.getYExtent()*2) + "/" + (bb.getZExtent()*2));
+		Globals.p("Centre at : " + bb.getCenter());
 
 		this.flyCam.setMoveSpeed(12f);
 
 		fpp = new FilterPostProcessor(assetManager);
 		viewPort.addProcessor(fpp);
+		
+		setupLight();
 
 		//this.showOutlineEffect(model, 3, ColorRGBA.Red);
 
@@ -108,7 +115,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 		rootNode.addLight(al);
 
 		DirectionalLight dirlight = new DirectionalLight(); // FSR need this for textures to show
-		dirlight.setColor(ColorRGBA.White.mult(1.5f));
+		dirlight.setColor(ColorRGBA.White.mult(1f));
 		rootNode.addLight(dirlight);
 
 	}

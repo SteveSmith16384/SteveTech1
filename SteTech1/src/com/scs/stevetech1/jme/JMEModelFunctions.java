@@ -179,7 +179,7 @@ public class JMEModelFunctions {
 			if (sp.getNumControls() > 0) {
 				AnimControl control = sp.getControl(AnimControl.class);
 				if (control != null) {
-					Globals.p("Anims on '" + sp + "': " + control.getAnimationNames());
+					System.out.println("Anims on '" + sp + "': " + control.getAnimationNames());
 				}
 			}
 		}

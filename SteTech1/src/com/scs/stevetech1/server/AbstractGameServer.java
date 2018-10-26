@@ -105,10 +105,10 @@ ICollisionListener<PhysicalEntity> {
 	public GameOptions gameOptions;
 	private ValidateClientSettings clientValidationSettings;
 	private boolean sendAddRemoveEntityMsgs = true;
-	
+
 	protected SimpleGameData gameData = new SimpleGameData();
 	private ConsoleInputHandler consoleInput;
-	
+
 	private boolean runningSlow = false;
 	private int slowCount = 0;
 
@@ -665,16 +665,16 @@ ICollisionListener<PhysicalEntity> {
 
 
 	public void actuallyAddEntity(IEntity e) {
-		synchronized (entities) {
-			//Settings.p("Trying to add " + e + " (id " + e.getID() + ")");
-			if (this.entities.containsKey(e.getID())) {
-				throw new RuntimeException("Entity id " + e.getID() + " already exists: " + e);
-			}
-			this.entities.put(e.getID(), e);
-			if (e.requiresProcessing()) {
-				this.entitiesForProcessing.add(e);
-			}
+		//synchronized (entities) {
+		//Settings.p("Trying to add " + e + " (id " + e.getID() + ")");
+		if (this.entities.containsKey(e.getID())) {
+			throw new RuntimeException("Entity id " + e.getID() + " already exists: " + e);
 		}
+		this.entities.put(e.getID(), e);
+		if (e.requiresProcessing()) {
+			this.entitiesForProcessing.add(e);
+		}
+		//}
 		if (e instanceof PhysicalEntity) {
 			PhysicalEntity pe = (PhysicalEntity)e;
 			if (pe.getMainNode().getParent() != null) {
@@ -694,7 +694,6 @@ ICollisionListener<PhysicalEntity> {
 		if (sendAddRemoveEntityMsgs) {
 			NewEntityMessage nem = new NewEntityMessage(this.getGameID());
 			nem.add(e);
-			//ClientData except = null;
 			int exceptId = -1;
 			if (e instanceof AbstractBullet) {
 				// Don't send bullets to the client that fired them
@@ -910,7 +909,7 @@ ICollisionListener<PhysicalEntity> {
 	// Todo - Move to explosion system
 	public void sendExplosionShards(Vector3f pos, int num, float minForce, float maxForce, float minSize, float maxSize, String tex) {
 		NewEntityMessage nem = new NewEntityMessage(this.getGameID());
-		
+
 		if (tex == null) {
 			throw new RuntimeException("Tex is null");
 		}

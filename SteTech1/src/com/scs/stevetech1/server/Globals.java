@@ -12,6 +12,7 @@ public class Globals {
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
+	public static final boolean SHOW_FPS_STATS = true;
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
 
 	// Lots of consts for specific debugging output
@@ -21,7 +22,6 @@ public class Globals {
 	public static final boolean FORCE_CLIENT_SLOWDOWN = false;
 	public static final boolean TEST_BULLET_REWINDING = false;
 	public static final boolean EMPTY_MAP = false;
-	public static final boolean SHOW_FPS_STATS = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean DEBUG_GUN_NOT_SHOWING = false;
 	public static final boolean NO_AI_UNITS = false;
