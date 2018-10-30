@@ -5,7 +5,7 @@ package com.scs.simplephysics;
  */
 public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 
-	private float jumpForce = 7f;//5f;
+	private float jumpForce = 7f;
 	private long lastJumpTime = 0;
 
 	public SimpleCharacterControl(ISimpleEntity<T> s, SimplePhysicsController<T> _controller, T _tag) {

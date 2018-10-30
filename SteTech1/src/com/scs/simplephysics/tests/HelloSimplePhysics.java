@@ -89,13 +89,11 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		rootNode.attachChild(playerModel);
 		
 		ISimpleEntity<Spatial> iePlayer = new SimpleEntityHelper<Spatial>(playerModel);
+		player = new SimpleCharacterControl<Spatial>(iePlayer, this.physicsController, this.playerModel);
+		this.physicsController.addSimpleRigidBody(player);
 
 		// Setup the scene
 		setUpLight();
-
-		player = new SimpleCharacterControl<Spatial>(iePlayer, this.physicsController, this.playerModel);
-		this.physicsController.addSimpleRigidBody(player);
-		playerModel.setLocalTranslation(new Vector3f(1f, 4f, 1f)); 
 
 		this.addFloor();
 		this.addWall();
@@ -444,7 +442,7 @@ public class HelloSimplePhysics extends SimpleApplication implements ActionListe
 		cam.setLocation(new Vector3f(playerModel.getLocalTranslation().x, playerModel.getLocalTranslation().y + headHeight, playerModel.getLocalTranslation().z));
 		
 		try {
-			Thread.sleep(5); // If the FPS is waaayyy to high (i.e. > 1000 FPS), things get a bit crazy, caused by floating point rounding
+			Thread.sleep(5); // If the FPS is waaayyy too high (i.e. > 1000 FPS), things get a bit crazy, caused by floating point rounding
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

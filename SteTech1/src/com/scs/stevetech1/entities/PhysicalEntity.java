@@ -36,6 +36,7 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 
 	protected Node mainNode; // All spatials/models hang off the mainNode
 	public SimpleRigidBody<PhysicalEntity> simpleRigidBody;
+	//public List<SimpleRigidBody<PhysicalEntity>> simpleRigidBodies = new ArrayList<>();
 	public PositionCalculator historicalPositionData; // Used client side for all entities (for position interpolation), and server side for Avatars, for rewinding position
 	public ChronologicalLookup<EntityUpdateData> chronoUpdateData; // Used client-side for extra update data, e.g. current animation, current direction
 
@@ -162,8 +163,10 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 				this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
 				// simpleRigidBody = null;  Don't set it to null as it might be removed in mid-function
 				if (Globals.STRICT) {
+					if (!Globals.VOXEL_HACKS) {
 					if (this.game.getPhysicsController().getNumEntities() > game.getNumEntities()) {
 						Globals.pe("Warning: more simple rigid bodies than entities!");
+					}
 					}
 				}
 			}

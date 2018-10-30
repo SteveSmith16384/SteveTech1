@@ -1,5 +1,6 @@
 package com.scs.simplephysics;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,13 +9,18 @@ import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.Collidable;
 import com.jme3.collision.CollisionResults;
 import com.jme3.collision.UnsupportedCollisionException;
+import com.jme3.export.JmeExporter;
+import com.jme3.export.JmeImporter;
+import com.jme3.export.Savable;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
+import com.scs.stevetech1.entities.VoxelTerrainEntity;
+import com.scs.stevetech1.server.Globals;
 
-public class SimpleRigidBody<T> implements Collidable {
+public class SimpleRigidBody<T> implements Collidable, Savable { // Implementing Savable is a hack so we can use this class as UserData
 
 	private static final boolean AUTOMOVE_BY_FORCE = false; // Doesn't work since move() moves entity back to original pos on collision
 	private static final boolean DEBUG_AUTOMOVING = false;
@@ -115,7 +121,7 @@ public class SimpleRigidBody<T> implements Collidable {
 		} else if (tpfSecs < 0.0001f) {
 			System.err.println("Warning: delta is too small; you will get rounding errors!");
 		}
-		
+
 		if (this.movedByForces) {
 			automoveForce.set(0, 0, 0);
 
@@ -497,9 +503,35 @@ public class SimpleRigidBody<T> implements Collidable {
 						}
 					}
 
+				} else if (this.simpleEntity.getCollidable() instanceof VoxelTerrainEntity || e.simpleEntity.getCollidable() instanceof VoxelTerrainEntity) {
+					VoxelTerrainEntity tq = null;
+					BoundingBox bv = null;
+					if (this.simpleEntity.getCollidable() instanceof VoxelTerrainEntity) {
+						tq = (VoxelTerrainEntity)this.simpleEntity.getCollidable();
+						bv = e.getBoundingBox();
+					} else {
+						tq = (VoxelTerrainEntity)e.simpleEntity.getCollidable();
+						bv = this.getBoundingBox();
+					}
+					/*
+					Vector3f start = bv.getCenter().clone();
+					start.y = 255f;
+					Ray ray = new Ray(start, DOWN_VEC);
+					res = tq.collideWith(ray, tempCollisionResults);
+					if (res > 0) {
+						// Compare positions
+						Vector3f pos = tempCollisionResults.getClosestCollision().getContactPoint();
+						if (bv.getCenter().y-bv.getYExtent() >= pos.y) {
+							return false;
+						} else {
+							//p("Hit terrain");
+						}
+					}
+					*/
+
 				} else if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
 					res = this.meshVMesh(e, tempCollisionResults) ? 1 : 0;
-					
+
 				} else {
 					res = this.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
 
@@ -529,10 +561,10 @@ public class SimpleRigidBody<T> implements Collidable {
 		int res2 = bv2.collideWith(e.simpleEntity.getCollidable(), tempCollisionResults);
 
 		return res1 > 0 && res2 > 0; // Only collide if both collisions fire
-		
+
 	}
 
-	
+
 	/**
 	 * If you get UnsupportedCollisionException, it means you're trying to collide a mesh with a mesh.
 	 */
@@ -655,12 +687,26 @@ public class SimpleRigidBody<T> implements Collidable {
 		this.isSolid = s;
 	}
 
-	
+
 	public void setParentNode(SimpleNode<T> n) {
 		if (this.parentNode != null) {
 			throw new RuntimeException(this + " already has a parent: " + this.parentNode);
 		}
 		this.parentNode = n;
+	}
+
+
+	@Override
+	public void write(JmeExporter ex) throws IOException {
+		// Do nothing
+		
+	}
+
+
+	@Override
+	public void read(JmeImporter im) throws IOException {
+		// Do nothing
+		
 	}
 }
 

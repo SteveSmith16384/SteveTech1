@@ -350,7 +350,7 @@ public class HelloTerrain extends SimpleApplication implements ActionListener, I
 		//--------------------------------------------
 
 		try {
-			Thread.sleep(5); // If the FPS is waaayyy to high (i.e. > 1000 FPS), things get a bit crazy, caused by floating point rounding
+			Thread.sleep(5); // If the FPS is waaayyy too high (i.e. > 1000 FPS), things get a bit crazy, caused by floating point rounding
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

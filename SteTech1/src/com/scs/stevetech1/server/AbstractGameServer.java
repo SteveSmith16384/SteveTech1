@@ -191,8 +191,10 @@ ICollisionListener<PhysicalEntity> {
 		consoleInput.checkConsoleInput();
 
 		if (Globals.STRICT) {
+			if (!Globals.VOXEL_HACKS) {
 			if (this.physicsController.getNumEntities() > this.entities.size()) {
 				Globals.pe("Warning: more simple rigid bodies than entities!");
+			}
 			}
 			for(IEntity e : this.entities.values()) {
 				if (e.requiresProcessing()) {
@@ -665,8 +667,6 @@ ICollisionListener<PhysicalEntity> {
 
 
 	public void actuallyAddEntity(IEntity e) {
-		//synchronized (entities) {
-		//Settings.p("Trying to add " + e + " (id " + e.getID() + ")");
 		if (this.entities.containsKey(e.getID())) {
 			throw new RuntimeException("Entity id " + e.getID() + " already exists: " + e);
 		}
@@ -674,7 +674,7 @@ ICollisionListener<PhysicalEntity> {
 		if (e.requiresProcessing()) {
 			this.entitiesForProcessing.add(e);
 		}
-		//}
+
 		if (e instanceof PhysicalEntity) {
 			PhysicalEntity pe = (PhysicalEntity)e;
 			if (pe.getMainNode().getParent() != null) {

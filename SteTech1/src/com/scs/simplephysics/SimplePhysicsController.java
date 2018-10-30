@@ -6,8 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.jme3.bounding.BoundingBox;
-import com.jme3.collision.Collidable;
 import com.jme3.math.Vector3f;
+import com.scs.stevetech1.entities.VoxelTerrainEntity;
+import com.scs.stevetech1.server.Globals;
 
 public class SimplePhysicsController<T> {
 
@@ -118,6 +119,16 @@ public class SimplePhysicsController<T> {
 			this.entities.add(srb);
 		}
 
+		srb.removed = false;
+
+		if (Globals.VOXEL_HACKS) {
+			if (srb.simpleEntity instanceof VoxelTerrainEntity) {
+				movingEntities.add(srb);
+				return;
+			}
+		} 
+		
+
 		BoundingBox bb = srb.getBoundingBox();
 		boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
 		if (srb.getNeverMoves() && this.nodeSize > 0 && !tooBig) {
@@ -137,7 +148,6 @@ public class SimplePhysicsController<T> {
 			movingEntities.add(srb);
 		}
 
-		srb.removed = false;
 	}
 
 

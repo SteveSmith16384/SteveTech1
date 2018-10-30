@@ -57,6 +57,7 @@ import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.entities.PhysicalEntity;
+import com.scs.stevetech1.entities.VoxelTerrainEntity;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
 import com.scs.stevetech1.netmessages.AbilityReloadingMessage;
@@ -346,8 +347,10 @@ ConsoleInputListener {
 		}
 
 		if (Globals.STRICT) {
-			if (this.physicsController.getNumEntities() > this.entities.size()) { //this.rootNode
-				Globals.pe("Warning: more simple rigid bodies than entities!");
+			if (!Globals.VOXEL_HACKS) {
+				if (this.physicsController.getNumEntities() > this.entities.size()) {
+					Globals.pe("Warning: more simple rigid bodies than entities!");
+				}
 			}
 		}
 		checkConsoleInput();
@@ -384,7 +387,7 @@ ConsoleInputListener {
 				if (!this.showingHistory) {
 					addAndRemoveEntities();
 				}
-				
+
 				if (joinedServer) {
 
 					if (!this.showingHistory) {
@@ -1021,30 +1024,40 @@ ConsoleInputListener {
 
 	protected void addEntityToGame(IEntity e) {
 		PhysicalEntity pe = (PhysicalEntity)e;
-		BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
-		boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
-		if (!pe.moves && this.nodeSize > 0 && !tooBig) {
-			int x = (int)bb.getCenter().x / this.nodeSize;
-			int y = (int)bb.getCenter().y / this.nodeSize;
-			int z = (int)bb.getCenter().z / this.nodeSize;
-			String id = x + "_" + y + "_" + z;
-			if (!this.nodes.containsKey(id)) {
-				Node node = new Node(id);
-				this.nodes.put(id, node);
-				this.getGameNode().attachChild(node);
+
+		if (e instanceof VoxelTerrainEntity) {
+			if (Globals.VOXEL_HACKS) {
+				this.getGameNode().attachChild(pe.getMainNode());
 			}
-			Node n = this.nodes.get(id);
-			n.attachChild(pe.getMainNode());			
 		} else {
-			this.getGameNode().attachChild(pe.getMainNode());
+
+			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
+			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
+			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
+				int x = (int)bb.getCenter().x / this.nodeSize;
+				int y = (int)bb.getCenter().y / this.nodeSize;
+				int z = (int)bb.getCenter().z / this.nodeSize;
+				String id = x + "_" + y + "_" + z;
+				if (!this.nodes.containsKey(id)) {
+					Node node = new Node(id);
+					this.nodes.put(id, node);
+					this.getGameNode().attachChild(node);
+				}
+				Node n = this.nodes.get(id);
+				n.attachChild(pe.getMainNode());			
+			} else {
+				this.getGameNode().attachChild(pe.getMainNode());
+			}
+			pe.getMainNode().updateModelBound();
 		}
-		pe.getMainNode().updateModelBound();
 
 		if (pe.simpleRigidBody != null) {
 			this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
 			if (Globals.STRICT) {
-				if (this.physicsController.getNumEntities() > this.entities.size()) {
-					Globals.pe("Warning: more simple rigid bodies than entities!");
+				if (!Globals.VOXEL_HACKS) {
+					if (this.physicsController.getNumEntities() > this.entities.size()) {
+						Globals.pe("Warning: more simple rigid bodies than entities!");
+					}
 				}
 			}
 		}
@@ -1064,8 +1077,10 @@ ConsoleInputListener {
 		this.gameNode.removeFromParent();
 
 		if (Globals.STRICT) {
-			if (this.physicsController.getNumEntities() > this.entities.size()) {
-				Globals.pe("Warning: more simple rigid bodies than entities!");
+			if (!Globals.VOXEL_HACKS) {
+				if (this.physicsController.getNumEntities() > this.entities.size()) {
+					Globals.pe("Warning: more simple rigid bodies than entities!");
+				}
 			}
 		}
 	}
