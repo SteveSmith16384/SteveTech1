@@ -1,5 +1,5 @@
 package com.scs.stevetech1.entities;
-
+/*
 import java.util.HashMap;
 
 import com.jme3.collision.Collidable;
@@ -71,6 +71,5 @@ public class VoxelTerrainEntity extends PhysicalEntity {
 	}
 
 
-
-
 }
+*/

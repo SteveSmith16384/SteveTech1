@@ -57,7 +57,6 @@ import com.scs.stevetech1.entities.AbstractBullet;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.Entity;
 import com.scs.stevetech1.entities.PhysicalEntity;
-import com.scs.stevetech1.entities.VoxelTerrainEntity;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.input.MouseAndKeyboardCamera;
 import com.scs.stevetech1.netmessages.AbilityReloadingMessage;
@@ -1024,13 +1023,14 @@ ConsoleInputListener {
 
 	protected void addEntityToGame(IEntity e) {
 		PhysicalEntity pe = (PhysicalEntity)e;
-
+		/*
 		if (e instanceof VoxelTerrainEntity) {
 			if (Globals.VOXEL_HACKS) {
 				this.getGameNode().attachChild(pe.getMainNode());
 			}
 		} else {
-
+		 */
+		try {
 			BoundingBox bb = (BoundingBox)pe.getMainNode().getWorldBound();
 			boolean tooBig = bb.getXExtent() > nodeSize || bb.getYExtent() > nodeSize || bb.getZExtent() > nodeSize;
 			if (!pe.moves && this.nodeSize > 0 && !tooBig) {
@@ -1049,7 +1049,12 @@ ConsoleInputListener {
 				this.getGameNode().attachChild(pe.getMainNode());
 			}
 			pe.getMainNode().updateModelBound();
+		} catch (NullPointerException ex) { // todo -handle this better
+			// Voxel map
+			this.getGameNode().attachChild(pe.getMainNode());
+
 		}
+		//	}
 
 		if (pe.simpleRigidBody != null) {
 			this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
