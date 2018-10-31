@@ -17,8 +17,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.terrain.geomipmap.TerrainQuad;
-import com.scs.stevetech1.entities.VoxelTerrainEntity;
-import com.scs.stevetech1.server.Globals;
 
 public class SimpleRigidBody<T> implements Collidable, Savable { // Implementing Savable is a hack so we can use this class as UserData
 
@@ -503,32 +501,6 @@ public class SimpleRigidBody<T> implements Collidable, Savable { // Implementing
 						}
 					}
 
-				} else if (this.simpleEntity.getCollidable() instanceof VoxelTerrainEntity || e.simpleEntity.getCollidable() instanceof VoxelTerrainEntity) {
-					VoxelTerrainEntity tq = null;
-					BoundingBox bv = null;
-					if (this.simpleEntity.getCollidable() instanceof VoxelTerrainEntity) {
-						tq = (VoxelTerrainEntity)this.simpleEntity.getCollidable();
-						bv = e.getBoundingBox();
-					} else {
-						tq = (VoxelTerrainEntity)e.simpleEntity.getCollidable();
-						bv = this.getBoundingBox();
-					}
-					/*
-					Vector3f start = bv.getCenter().clone();
-					start.y = 255f;
-					Ray ray = new Ray(start, DOWN_VEC);
-					res = tq.collideWith(ray, tempCollisionResults);
-					if (res > 0) {
-						// Compare positions
-						Vector3f pos = tempCollisionResults.getClosestCollision().getContactPoint();
-						if (bv.getCenter().y-bv.getYExtent() >= pos.y) {
-							return false;
-						} else {
-							//p("Hit terrain");
-						}
-					}
-					*/
-
 				} else if (this.simpleEntity.getCollidable() instanceof BoundingVolume == false && e.simpleEntity.getCollidable() instanceof BoundingVolume == false) {
 					res = this.meshVMesh(e, tempCollisionResults) ? 1 : 0;
 
@@ -699,14 +671,14 @@ public class SimpleRigidBody<T> implements Collidable, Savable { // Implementing
 	@Override
 	public void write(JmeExporter ex) throws IOException {
 		// Do nothing
-		
+
 	}
 
 
 	@Override
 	public void read(JmeImporter im) throws IOException {
 		// Do nothing
-		
+
 	}
 }
 

@@ -61,11 +61,7 @@ public class VoxelTerrainEntity extends PhysicalEntity {
 		});
 
 
-		//this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), false, this);
-		//simpleRigidBody.setNeverMoves(true);
-
 		this.mainNode.attachChild(blocks.getSpatial());
-		//this.getMainNode().setModelBound(new BoundingBox());
 	}
 
 	

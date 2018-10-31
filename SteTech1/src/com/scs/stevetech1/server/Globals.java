@@ -12,7 +12,7 @@ public class Globals {
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
-	public static final boolean VOXEL_HACKS = true;
+	public static final boolean VOXEL_HACKS = false;
 	public static final boolean SHOW_FPS_STATS = true;
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
 

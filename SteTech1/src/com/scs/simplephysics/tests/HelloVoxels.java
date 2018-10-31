@@ -1,7 +1,5 @@
 package com.scs.simplephysics.tests;
 
-import java.util.Collection;
-
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
@@ -39,6 +37,8 @@ import mygame.util.Vector3Int;
 
 public class HelloVoxels extends SimpleApplication implements ActionListener, ICollisionListener<Spatial> {
 
+	private static final boolean FLYING = false;
+	
 	private static final String SRB_KEY = "srb";
 	
 	private SimplePhysicsController<Spatial> physicsController;
@@ -88,7 +88,9 @@ public class HelloVoxels extends SimpleApplication implements ActionListener, IC
 		
 		ISimpleEntity<Spatial> iePlayer = new SimpleEntityHelper<Spatial>(playerModel);
 		player = new SimpleCharacterControl<Spatial>(iePlayer, this.physicsController, this.playerModel);
-		player.setGravity(0f);
+		if (FLYING) {
+			player.setGravity(0f);
+		}
 		this.physicsController.addSimpleRigidBody(player);
 
 
@@ -138,6 +140,7 @@ public class HelloVoxels extends SimpleApplication implements ActionListener, IC
 
 					srb = new SimpleRigidBody(entity, controller, false, geom);
 					geom.setUserData(SRB_KEY, srb);
+					controller.addSimpleRigidBody(srb);
 				}
 			}
 
@@ -232,7 +235,8 @@ public class HelloVoxels extends SimpleApplication implements ActionListener, IC
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		camDir.set(cam.getDirection()).multLocal(playerSpeed, 0.0f, playerSpeed);
+		//camDir.set(cam.getDirection()).multLocal(playerSpeed, 0.0f, playerSpeed); todo - re-add
+		camDir.set(cam.getDirection()).multLocal(playerSpeed, playerSpeed, playerSpeed);
 		camLeft.set(cam.getLeft()).multLocal(playerSpeed);
 		walkDirection.set(0, 0, 0);
 		if (left) {
@@ -250,7 +254,9 @@ public class HelloVoxels extends SimpleApplication implements ActionListener, IC
 		if (jump) {
 			player.jump();
 		}
+		if (!FLYING) {
 		walkDirection.y = 0; // Prevent us walking up or down
+		}
 		player.getAdditionalForce().set(walkDirection);
 		//p("Walk dir:" + walkDirection);
 
