@@ -956,7 +956,7 @@ ConsoleInputListener {
 	}
 
 
-	protected abstract IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg);
+	protected abstract IEntity actuallyCreateEntity(AbstractGameClient client, NewEntityData msg); // todo - remove client param, it's this!
 
 
 	@Override
