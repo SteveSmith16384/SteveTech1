@@ -1,5 +1,9 @@
 package com.scs.simplephysics.tests;
 
+// THIS CLASS DOES WORK - But requires the Blocky voxel library.  
+// However, so does any project which uses voxels and SteveTech, which creates a circular reference.
+
+/*
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ClasspathLocator;
 import com.jme3.asset.plugins.FileLocator;
@@ -205,8 +209,6 @@ public class HelloVoxels extends SimpleApplication implements ActionListener, IC
 	}
 
 
-	/** These are our custom actions triggered by key presses.
-	 * We do not walk yet, we just keep track of the direction the user pressed. */
 	public void onAction(String binding, boolean isPressed, float tpf) {
 		if (binding.equals("Left")) {
 			left = isPressed;
@@ -291,3 +293,4 @@ public class HelloVoxels extends SimpleApplication implements ActionListener, IC
 
 
 }
+*/
