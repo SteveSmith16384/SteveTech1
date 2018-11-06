@@ -10,7 +10,7 @@ public class NumberFunctions {
 		return Math.max(a, b);
 	}
 
-	
+
 	public static int rnd(int a, int b) {
 		try {
 			int var = b + 1 - a;
@@ -20,24 +20,24 @@ public class NumberFunctions {
 		}
 	}
 
-	
+
 	public static byte rndByte(int a, int b) {
 		assert a <= 127 && b <= 127;
 		int var = b + 1 - a;
 		return (byte)(random.nextInt(var) + a);
 	}
 
-	
+
 	public static float rndFloat(float a, float b) {
 		return (random.nextFloat() * (b - a)) + a;
 	}
 
-	
+
 	public static double rndDouble(double a, double b) {
 		return (random.nextDouble() * (b - a)) + a;
 	}
 
-	
+
 	public static int sign(int a) {
 		if (a == 0) {
 			return 0;
@@ -50,7 +50,7 @@ public class NumberFunctions {
 		}
 	}
 
-	
+
 	public static int sign(float a) {
 		if (a == 0) {
 			return 0;
@@ -63,7 +63,7 @@ public class NumberFunctions {
 		}
 	}
 
-	
+
 	public static int sign(double a) {
 		if (a == 0) {
 			return 0;
@@ -76,7 +76,7 @@ public class NumberFunctions {
 		}
 	}
 
-	
+
 	public static float MakeSameSignAs(float num, float s) {
 		if (sign(num) != sign(s)) {
 			return num * -1;
@@ -85,7 +85,7 @@ public class NumberFunctions {
 		}
 	}
 
-	
+
 	/*public static int mod(int x) {
 		if (x >= 0) {
 			return x;
@@ -95,7 +95,7 @@ public class NumberFunctions {
 		}
 	}*/
 
-	
+
 	public static float mod(float x) {
 		if (x >= 0) {
 			return x;
@@ -105,7 +105,7 @@ public class NumberFunctions {
 		}
 	}
 
-	
+
 	public static double mod(double x) {
 		if (x >= 0) {
 			return x;
@@ -115,7 +115,7 @@ public class NumberFunctions {
 		}
 	}
 
-	
+
 	public int remainder(int a, int d) {
 		int r = (int) Math.IEEEremainder( (double) a, (double) d);
 		if (r < 0) {
@@ -124,12 +124,12 @@ public class NumberFunctions {
 		return r;
 	}
 
-	
+
 	public static int ParseInt(String s) {
 		return ParseInt(s, true);
 	}
-	
-	
+
+
 	public static int ParseInt(String s, boolean error) {
 		try {
 			if (s == null && error == false) {
@@ -146,13 +146,13 @@ public class NumberFunctions {
 			}
 		}
 	}
-	
-	
+
+
 	public static byte ParseByte(String s) {
 		return ParseByte(s, true);
 	}
-	
-	
+
+
 	public static byte ParseByte(String s, boolean error) {
 		try {
 			if (s == null && error == false) {
@@ -169,13 +169,13 @@ public class NumberFunctions {
 			}
 		}
 	}
-	
-	
+
+
 	public static short ParseShort(String s) {
 		return ParseShort(s, true);
 	}
-	
-	
+
+
 	public static short ParseShort(String s, boolean error) {
 		try {
 			if (s == null && error == false) {
@@ -192,7 +192,7 @@ public class NumberFunctions {
 			}
 		}
 	}
-	
+
 
 	public static boolean IsNumeric(String s) {
 		try {
@@ -203,5 +203,22 @@ public class NumberFunctions {
 		}
 	}
 
-	
+
+	public static int fibonacciIterative(int n) {
+		if (n == 0) return 0;
+		if (n == 1) return 1;
+
+		int prevPrev = 0;
+		int prev = 1;
+		int result = 0;
+
+		for (int i = 2; i <= n; i++)
+		{
+			result = prev + prevPrev;
+			prevPrev = prev;
+			prev = result;
+		}
+		return result;
+	}
+
 }
