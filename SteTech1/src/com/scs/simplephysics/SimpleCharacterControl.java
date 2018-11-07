@@ -33,20 +33,4 @@ public class SimpleCharacterControl<T> extends SimpleRigidBody<T> {
 		return false;
 	}
 
-	/*
-	@Override
-	public void process(float tpf_secs) {
-		super.process(tpf_secs);
-		
-		//p("Is on ground = " + this.isOnGround);
-	}
-	
-	
-/*
-	@Override
-	public Vector3f getAdditionalForce() {
-		return walkingDir; // Set this to be the direction to move in.
-	}
-*/
-
 }

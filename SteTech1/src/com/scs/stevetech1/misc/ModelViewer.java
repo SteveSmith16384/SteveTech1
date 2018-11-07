@@ -33,19 +33,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 	}
 
 
-	@Override
-	public void simpleInitApp() {
-		assetManager.registerLocator("assets/", FileLocator.class); // default
-		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
-		assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
-		assetManager.registerLocator("../TestGame/assets/", FileLocator.class);
-		assetManager.registerLocator("../../multiplayertowerdefence/assets/", FileLocator.class);
-		//assetManager.registerLocator("../../multiplayerscp/assets/", FileLocator.class);
-
-		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
-
-		super.getViewPort().setBackgroundColor(ColorRGBA.White);
-
+	public Spatial getModel() {
 		Node model = (Node)assetManager.loadModel("Models/voxelito.blend");
 		Node sub = (Node)model.getChild(0);
 		sub.getChild(1).removeFromParent();
@@ -54,27 +42,51 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 		JMEModelFunctions.scaleModelToHeight(model, 2f);
 		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/lik_glavni_color_mapa.png");
-		String animNode = "Boy (Node)";
-		String animToUse = "Walking";
+		return model;
+	}
+	
+	
+	public String getAnimNode() {
+		return "todo";
+	}
+	
+
+	public String getAnimToShow() {
+		return "todo";
+	}
+	
+
+	@Override
+	public void simpleInitApp() {
+		assetManager.registerLocator("assets/", FileLocator.class); // default
+		//assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
+		//assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
+		//assetManager.registerLocator("../TestGame/assets/", FileLocator.class);
+
+		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
+
+		super.getViewPort().setBackgroundColor(ColorRGBA.Black);
+		
+		Spatial model = this.getModel();
 
 		if (model instanceof Node) {
 			Globals.p("Listing anims:");
 			JMEModelFunctions.listAllAnimations((Node)model);
 			Globals.p("Finished listing anims");
 			
-			control = JMEModelFunctions.getNodeWithControls(animNode, (Node)model);
+			control = JMEModelFunctions.getNodeWithControls(getAnimNode(), (Node)model);
 			if (control != null) {
 				control.addListener(this);
 				//Globals.p("Control Animations: " + control.getAnimationNames());
 				AnimChannel channel = control.createChannel();
 				try {
-					channel.setAnim(animToUse);
-					Globals.p("Running anim '" + animToUse + "'");
+					channel.setAnim(getAnimToShow());
+					Globals.p("Running anim '" + getAnimToShow() + "'");
 				} catch (IllegalArgumentException ex) {
 					Globals.pe("Try running the right anim code!");
 				}
 			} else {
-				Globals.p("No animation control on selected node '" + animNode + "'");
+				Globals.p("No animation control on selected node '" + getAnimNode() + "'");
 			}
 		}
 
