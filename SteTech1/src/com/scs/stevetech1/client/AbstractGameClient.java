@@ -243,7 +243,7 @@ ConsoleInputListener {
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
 
 		soundSystem = new SoundSystem(this.getAssetManager(), this.getGameNode());
-		cameraSystem = new CameraSystem(Globals.FOLLOW_CAM);
+		cameraSystem = new CameraSystem(this, Globals.FOLLOW_CAM);
 
 		setUpLight();
 
