@@ -38,7 +38,7 @@ public abstract class AbstractAvatar extends PhysicalEntity implements IPlayerCo
 	protected Geometry bbGeom; // Non-rotating box for collisions
 	public IAbility[] ability = new IAbility[2];
 	public byte side = -1;
-	protected IAvatarModel avatarModel;
+	public IAvatarModel avatarModel;
 
 	protected boolean alive = true;
 	private float health;

@@ -12,18 +12,19 @@ public class Globals {
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
+	public static final boolean FOLLOW_CAM = false; // In dev
 	public static final boolean VOXEL_HACKS = true; // todo - remove
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true;
 
 	// Lots of consts for specific debugging output
-	public static final boolean SHOW_BULLET_COLLISION_POS = false;
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false; // Show where the server thinks the client avatars are
+	public static final boolean SHOW_BULLET_COLLISION_POS = false; // Show on the client where the server thinks the bullet hit.
 	public static final boolean SHOW_FPS_STATS = false;
 	public static final boolean DEBUG_RELOAD_PROBLEM = false;
-	public static final boolean SHOW_BULLET_POSITIONS = false;
+	public static final boolean SHOW_BULLET_POSITIONS = false; // Show where the bullet it on each frame
 	public static final boolean FORCE_CLIENT_SLOWDOWN = false;
 	public static final boolean TEST_BULLET_REWINDING = false;
 	public static final boolean EMPTY_MAP = false;
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false;
 	public static final boolean DEBUG_GUN_NOT_SHOWING = false;
 	public static final boolean NO_AI_UNITS = false;
 	public static final boolean TEST_OUTLINE_SHADER = false;

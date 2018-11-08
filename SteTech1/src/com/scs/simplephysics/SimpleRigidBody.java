@@ -116,11 +116,11 @@ public class SimpleRigidBody<T> implements Collidable, Savable { // Implementing
 	public void process(float tpfSecs) {
 		if (tpfSecs > 0.1f) {
 			tpfSecs = 0.1f; // Prevent stepping too far
-		} else if (tpfSecs < 0.0001f) {
-			System.err.println("Warning: delta is too small; you will get rounding errors!");
+		} else if (tpfSecs < 0.001f) {
+			System.err.println("Warning: delta is too small; you will get rounding errors and things will go crazy!  Slow down your game.");
 		}
 
-		if (this.movedByForces) {
+		if (this.movedByForces && !this.neverMoves) {
 			automoveForce.set(0, 0, 0);
 
 			// Check we're not already colliding *before* we've even moved
@@ -210,10 +210,6 @@ public class SimpleRigidBody<T> implements Collidable, Savable { // Implementing
 				}
 				this.oneOffForce.y = oneOffForce.y * aerodynamicness; // Slow down
 			}
-
-			/*if (this.currentGravInc < GRAVITY_WARNING) {
-				p("Warning - high gravity offset: " + this.currentGravInc);
-			}*/
 		}
 	}
 

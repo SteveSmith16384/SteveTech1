@@ -96,6 +96,7 @@ import com.scs.stevetech1.shared.IAbility;
 import com.scs.stevetech1.shared.IEntityController;
 import com.scs.stevetech1.systems.EntityRemovalSystem;
 import com.scs.stevetech1.systems.client.AnimationSystem;
+import com.scs.stevetech1.systems.client.CameraSystem;
 import com.scs.stevetech1.systems.client.SoundSystem;
 
 import ssmith.lang.NumberFunctions;
@@ -171,7 +172,7 @@ ConsoleInputListener {
 	// Entity systems
 	private AnimationSystem animSystem;
 	private EntityRemovalSystem entityRemovalSystem;
-
+	private CameraSystem cameraSystem;
 
 	protected AbstractGameClient(ValidateClientSettings _validClientSettings, String appTitle, String logoImage,   
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
@@ -242,6 +243,7 @@ ConsoleInputListener {
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
 
 		soundSystem = new SoundSystem(this.getAssetManager(), this.getGameNode());
+		cameraSystem = new CameraSystem(Globals.FOLLOW_CAM);
 
 		setUpLight();
 
@@ -417,7 +419,8 @@ ConsoleInputListener {
 			}
 
 			soundSystem.process();
-
+			cameraSystem.process(cam, this.currentAvatar);
+			
 			if (Globals.STRICT) {
 				checkNodesExistInEntities();
 			}

@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
 import com.scs.simplephysics.SimpleRigidBody;
@@ -13,10 +14,10 @@ import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IAnimatedServerSide;
 import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IDamagable;
-import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetRotation;
 import com.scs.stevetech1.components.IKillable;
+import com.scs.stevetech1.components.IMobModel;
 import com.scs.stevetech1.components.INotifiedOfCollision;
 import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IRewindable;
@@ -33,7 +34,7 @@ import com.scs.stevetech1.shared.IEntityController;
 public abstract class AbstractMob extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRotation, ISetRotation, IKillable {//, IDontCollideWithComrades {
 
-	private IAvatarModel model; // Need this to animate the model
+	private IMobModel model; // Need this to animate the model
 	private float health;
 	public byte side;
 	protected IArtificialIntelligence ai;
@@ -41,26 +42,31 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 	private long timeKilled;
 
 	public AbstractMob(IEntityController _game, int id, int type, float x, float y, float z, byte _side, 
-			IAvatarModel _model, String name, float _health, int startAnimCode) {
+			IMobModel _model, String name, float _health, int startAnimCode) {
 		super(_game, id, type, name, true, false, true);
 
 		side = _side;
 		model = _model; // Need it for dimensions for bb
 		health = _health;
-		
+
 		if (_game.isServer()) {
 			creationData = new HashMap<String, Object>();
 			creationData.put("side", side);
 		} else {
-			game.getGameNode().attachChild(this.model.createAndGetModel());
+			Spatial s = this.model.createAndGetModel();
+			
+			game.getGameNode().attachChild(s); //((Node)s).getChild(0).getWorldTranslation() 
 			this.setAnimCode_ClientSide(startAnimCode); // Need this since they may be dead, so we don't want to default to (say) idle
 		}
 
 		// Create box for collisions
 		Box box = new Box(model.getCollisionBoxSize().x/2, model.getCollisionBoxSize().y/2, model.getCollisionBoxSize().z/2);
-		Geometry bbGeom = new Geometry("bbGeom_" + name, box);
+		Geometry bbGeom = new Geometry("bbGeom_" + name, box);		
 		bbGeom.setLocalTranslation(0, box.getYExtent(), 0); // origin is centre!
+
 		bbGeom.setCullHint(CullHint.Always); // Don't draw the collision box
+		//JMEModelFunctions.setTextureOnSpatial(game.getAssetManager(), bbGeom, "Textures/yellowsun.jpg");
+
 		bbGeom.setUserData(Globals.ENTITY, this);
 
 		this.mainNode.attachChild(bbGeom);
@@ -88,8 +94,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 		if (health > 0) {
 			if (server.getGameData().getGameStatus() == SimpleGameData.ST_STARTED) {
 				if (ai != null) {
-				ai.process(server, tpf_secs);
-				this.serverSideCurrentAnimCode = ai.getAnimCode();
+					ai.process(server, tpf_secs);
+					this.serverSideCurrentAnimCode = ai.getAnimCode();
 				}
 			} else {
 				this.simpleRigidBody.setAdditionalForce(Vector3f.ZERO); // Stop moving

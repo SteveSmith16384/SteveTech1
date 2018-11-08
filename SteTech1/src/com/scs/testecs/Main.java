@@ -9,7 +9,7 @@ import com.scs.testecs.systems.MovementSystem;
  * Simple stand-alone project to test out an Entity Component System.
  * 
  */
-public class Main {
+public class Main { // todo - delete this
 
 	public Main() {
 		TestEntity e = new TestEntity();

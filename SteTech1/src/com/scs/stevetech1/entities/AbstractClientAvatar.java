@@ -5,6 +5,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.texture.Texture;
@@ -37,6 +38,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	private Spatial debugNode;
 	public PhysicalEntity killer;
 
+	private Node container;
+
 	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, int eid, 
 			float x, float y, float z, byte side, IAvatarModel avatarModel, IAvatarControl _avatarControl) {
 		super(_client, avatarType, _playerID, _input, eid, side, avatarModel, _avatarControl);
@@ -44,8 +47,18 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		clientAvatarPositionData = new PositionCalculator(Globals.HISTORY_DURATION_MILLIS, "AbstractClientAvatar_Player"+_playerID);
 		cam = _cam;
 
+		if (Globals.FOLLOW_CAM) {
+			// Create model to look good
+			Spatial amodel = avatarModel.createAndGetModel();
+
+			// Contain model in a separate node so we can rotate it without losing the models own rotation
+			container = new Node();
+			container.attachChild(amodel); 
+			game.getGameNode().attachChild(container);
+		}
+
 		this.setWorldTranslation(new Vector3f(x, y, z));
-		
+
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
 			createDebugBox();
 		}
@@ -132,19 +145,26 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 					}
 				}
 			}
-			
+
 			final long serverTime = client.getServerTime();
 
 			super.serverAndClientProcess(null, client, tpfSecs, serverTime);
-			
+
 			storeAvatarPosition(serverTime);
 
+			if (Globals.FOLLOW_CAM) {
+				// Set position and direction of avatar model, which doesn't get moved automatically
+				this.container.setLocalTranslation(this.getWorldTranslation());
+			}
+
+			/*
 			// Position camera at node
 			Vector3f vec = this.getWorldTranslation();
 			cam.getLocation().x = vec.x;
 			cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
 			cam.getLocation().z = vec.z;
 			cam.update();
+			 */
 		}
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
@@ -171,6 +191,11 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			if (Globals.TURN_OFF_CLIENT_POS_ADJ) {
 				return;
 			}
+			/*
+			if (jumping && Globals.DONT_SYNC_WHEN_JUMPING) {
+				return;
+			}*/
+
 			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(historicalPositionData, clientAvatarPositionData, serverTimeToUse);
 			if (offset != null) {
 				float diff = offset.length();
