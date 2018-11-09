@@ -17,7 +17,7 @@ import com.scs.stevetech1.systems.AbstractSystem;
 
 public class CameraSystem extends AbstractSystem {
 
-	private static final float MAX_FOLLOW = 3f;
+	private static final float MAX_FOLLOW = 1.5f;
 	private boolean followCam;
 
 	private AbstractGameClient game;
@@ -46,44 +46,18 @@ public class CameraSystem extends AbstractSystem {
 			cam.update();
 
 		} else {
-			/*Vector3f targetpos = avatar.getWorldTranslation().clone();
-			targetpos.y +=  + avatar.avatarModel.getCameraHeight();
-			if (camPositions.size() == 0) {
-				camPositions.add(targetpos);
-			} else {
-				// Add to list?
-				Vector3f latestPos = this.camPositions.getLast();
-				if (latestPos.distance(targetpos) > 0.1f) {
-					camPositions.add(targetpos);
-				}
-			}
-
-			float dist = targetpos.distance(cam.getLocation());
-			if (dist > MAX_FOLLOW && this.camPositions.size() > 1) {
-				this.camPositions.remove(0);
-				cam.setLocation(this.camPositions.getFirst());
-				dist = targetpos.distance(cam.getLocation());
-			}
-			//cam.lookAt(targetpos, Vector3f.UNIT_Y);
-			 */
-
-			Ray r = new Ray(avatar.getWorldTranslation(), cam.getDirection());
+			Vector3f avatarPos = avatar.getWorldTranslation().clone(); // todo - don't create each time
+			avatarPos.y += avatar.avatarModel.getCameraHeight();
+			Ray r = new Ray(avatarPos, cam.getDirection());
 			r.setLimit(MAX_FOLLOW);
 			CollisionResults res = new CollisionResults();
 			int c = game.getGameNode().collideWith(r, res);
 			boolean found = false;
-			if (c == 0) {
-				//Vector3f add = cam.getLocation().normalize().mult(MAX_FOLLOW);
-				//cam.setLocation(avatar.getWorldTranslation().add(add));
-				//Globals.p("No Ray collisions");
-			} else {
-				//cam.setLocation(res.getClosestCollision().getContactPoint());
+			if (c > 0) {
 				Iterator<CollisionResult> it = res.iterator();
 				while (it.hasNext()) {
 					CollisionResult col = it.next();
-					if (col.getDistance() > r.getLimit()) { // Keep this in! collideWith() seems to ignore it  
-						//Vector3f add = cam.getLocation().normalize().mult(MAX_FOLLOW);
-						//cam.setLocation(avatar.getWorldTranslation().add(add));
+					if (col.getDistance() > r.getLimit()) { // Keep this in! collideWith() seems to ignore it.
 						break;
 					}
 					Spatial s = col.getGeometry();
@@ -96,17 +70,22 @@ public class CameraSystem extends AbstractSystem {
 					if (s != null && s.getUserData(Globals.ENTITY) != null) {
 						PhysicalEntity pe = (PhysicalEntity)s.getUserData(Globals.ENTITY);
 						if (pe != avatar) {
-							Vector3f add = cam.getDirection().normalize().mult(MAX_FOLLOW);
-							cam.setLocation(avatar.getWorldTranslation().add(add));
+							float dist = col.getDistance();
+							if (dist > 0.1f) {
+								dist -= 0.1f;
+							}
+							Vector3f add = cam.getDirection().normalize().multLocal(-1).multLocal(dist);
+							cam.setLocation(avatarPos.add(add));
 							found = true;
+							break;
 						}
 					}
 				}
 			}
 
 			if (!found) {
-				Vector3f add = cam.getLocation().normalize().mult(MAX_FOLLOW);
-				cam.setLocation(avatar.getWorldTranslation().add(add));
+				Vector3f add = cam.getDirection().normalize().multLocal(-1).multLocal(MAX_FOLLOW);
+				cam.setLocation(avatarPos.add(add));
 			}
 
 			cam.update();

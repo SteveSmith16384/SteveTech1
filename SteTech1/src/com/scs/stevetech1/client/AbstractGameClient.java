@@ -420,7 +420,7 @@ ConsoleInputListener {
 
 			soundSystem.process();
 			cameraSystem.process(cam, this.currentAvatar);
-			
+
 			if (Globals.STRICT) {
 				checkNodesExistInEntities();
 			}
@@ -1402,10 +1402,12 @@ ConsoleInputListener {
 
 
 	public void setPOVWeapon(IPOVWeapon weapon) {
-		if (this.povWeapon != null) {
-			this.povWeapon.hide();
+		if (!Globals.FOLLOW_CAM) {
+			if (this.povWeapon != null) {
+				this.povWeapon.hide();
+			}
+			this.povWeapon = weapon;
 		}
-		this.povWeapon = weapon;
 	}
 
 

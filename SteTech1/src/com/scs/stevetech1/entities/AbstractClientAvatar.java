@@ -21,6 +21,7 @@ import com.scs.stevetech1.components.IProcessByClient;
 import com.scs.stevetech1.components.IReloadable;
 import com.scs.stevetech1.components.IShowOnHUD;
 import com.scs.stevetech1.input.IInputDevice;
+import com.scs.stevetech1.jme.JMEAngleFunctions;
 import com.scs.stevetech1.netmessages.AbilityActivatedMessage;
 import com.scs.stevetech1.netmessages.ClientReloadRequestMessage;
 import com.scs.stevetech1.server.Globals;
@@ -155,16 +156,12 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			if (Globals.FOLLOW_CAM) {
 				// Set position and direction of avatar model, which doesn't get moved automatically
 				this.container.setLocalTranslation(this.getWorldTranslation());
+				Vector3f dir = this.cam.getDirection().clone(); // todo - don't create each time
+				dir.y = 0;
+				JMEAngleFunctions.rotateToWorldDirection(this.container, dir);
+				// scs todo - point
+				this.avatarModel.setAnim(super.currentAnimCode);
 			}
-
-			/*
-			// Position camera at node
-			Vector3f vec = this.getWorldTranslation();
-			cam.getLocation().x = vec.x;
-			cam.getLocation().y = vec.y + avatarModel.getCameraHeight();
-			cam.getLocation().z = vec.z;
-			cam.update();
-			 */
 		}
 
 		if (Globals.SHOW_SERVER_AVATAR_ON_CLIENT) {
