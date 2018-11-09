@@ -12,12 +12,15 @@ public class Globals {
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
-	public static final boolean FOLLOW_CAM = true; // In dev
+	public static final boolean DEBUG_JUMPSYNC_PROBLEM = true;
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true; // Show where the server thinks the client avatars are
+	
+	public static final boolean FOLLOW_CAM = true;
 	public static final boolean VOXEL_HACKS = true; // todo - remove
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true; // Avoid buffer overflows
 
 	// Lots of consts for specific debugging output
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false; // Show where the server thinks the client avatars are
+	public static final boolean DEBUG_JUMP_ANIM = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false; // Show on the client where the server thinks the bullet hit.
 	public static final boolean SHOW_FPS_STATS = false;
 	public static final boolean DEBUG_RELOAD_PROBLEM = false;

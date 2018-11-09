@@ -141,8 +141,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				if (input.isReloadPressed()) {
 					if (this.ability[0] instanceof IReloadable) {
 						client.sendMessage(new ClientReloadRequestMessage(this.ability[0].getID())); // Auto-reload
-						//IReloadable ir = (IReloadable)ability[0];
-						//ir.setToBeReloaded();
 					}
 				}
 			}
@@ -159,7 +157,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				Vector3f dir = this.cam.getDirection().clone(); // todo - don't create each time
 				dir.y = 0;
 				JMEAngleFunctions.rotateToWorldDirection(this.container, dir);
-				// scs todo - point
 				this.avatarModel.setAnim(super.currentAnimCode);
 			}
 		}

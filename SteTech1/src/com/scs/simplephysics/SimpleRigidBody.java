@@ -113,6 +113,11 @@ public class SimpleRigidBody<T> implements Collidable, Savable { // Implementing
 	}
 
 
+	public float getGravity() {
+		return this.gravInc;
+	}
+
+
 	public void process(float tpfSecs) {
 		if (tpfSecs > 0.1f) {
 			tpfSecs = 0.1f; // Prevent stepping too far
