@@ -48,7 +48,7 @@ public class CameraSystem extends AbstractSystem {
 		} else {
 			Vector3f avatarPos = avatar.getWorldTranslation().clone(); // todo - don't create each time
 			avatarPos.y += avatar.avatarModel.getCameraHeight();
-			Ray r = new Ray(avatarPos, cam.getDirection());
+			Ray r = new Ray(avatarPos, cam.getDirection().mult(-1));
 			r.setLimit(MAX_FOLLOW);
 			CollisionResults res = new CollisionResults();
 			int c = game.getGameNode().collideWith(r, res);

@@ -19,7 +19,7 @@ public class JMEAngleFunctions {
 
 	}
 
-/*
+	/*
 	public static void turnTowards_Const1(Spatial spatial, Vector3f target, float turnSpeed) {
 		float angle = getAngleBetween(spatial, target);
 		//Globals.p("Angle: " + angle);
@@ -30,10 +30,10 @@ public class JMEAngleFunctions {
 		} else {
 			rotQ.fromAngleAxis(turnSpeed * -1, Vector3f.UNIT_Y);
 		}
-		
+
 		spatial.getLocalRotation().multLocal(rotQ);
 	}
-*/
+	 */
 
 	/*
 	 * Angle	Frac
@@ -125,13 +125,13 @@ public class JMEAngleFunctions {
 		rotateToWorldDirection(s, dir);
 	}
 
-/*
+	/*
 	public static void rotateYAxisBy(Spatial s, double angdeg) {
 		double rads = Math.toRadians(angdeg);
 		Quaternion q = getYAxisRotation((float)Math.cos(rads), (float)Math.sin(rads));
 		s.rotate(q);
 	}
-*/
+	 */
 
 	public static Vector3f getRandomDirection_All() {
 		float x = NumberFunctions.rndFloat(-1, 1);
@@ -161,10 +161,10 @@ public class JMEAngleFunctions {
 		case 3: return new Vector3f(0f, 0, -1f);
 
 		// Diagonals
-		case 4: return new Vector3f(1f, 0, 1f);
-		case 5: return new Vector3f(-1f, 0, -1f);
-		case 6: return new Vector3f(-1f, 0, 1f);
-		case 7: return new Vector3f(1f, 0, -1f);
+		case 4: return new Vector3f(1f, 0, 1f).normalizeLocal();
+		case 5: return new Vector3f(-1f, 0, -1f).normalizeLocal();
+		case 6: return new Vector3f(-1f, 0, 1f).normalizeLocal();
+		case 7: return new Vector3f(1f, 0, -1f).normalizeLocal();
 		}
 		throw new RuntimeException("Invalid direction: " + i);
 	}

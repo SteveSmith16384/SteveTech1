@@ -7,12 +7,11 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Box;
-import com.scs.simplephysics.SimpleRigidBody;
+import com.scs.simplephysics.SimpleCharacterControl;
 import com.scs.stevetech1.client.IClientApp;
 import com.scs.stevetech1.components.IAffectedByPhysics;
 import com.scs.stevetech1.components.IAnimatedClientSide;
 import com.scs.stevetech1.components.IAnimatedServerSide;
-import com.scs.stevetech1.components.IAvatarModel;
 import com.scs.stevetech1.components.IDamagable;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IGetRotation;
@@ -72,7 +71,8 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 		this.mainNode.attachChild(bbGeom);
 		mainNode.setLocalTranslation(x, y, z);
 
-		this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);
+		//this.simpleRigidBody = new SimpleRigidBody<PhysicalEntity>(this, game.getPhysicsController(), game.isServer(), this);
+		this.simpleRigidBody = new SimpleCharacterControl<PhysicalEntity>(this, game.getPhysicsController(), this);
 		simpleRigidBody.canWalkUpSteps = true;
 		simpleRigidBody.setBounciness(0);
 

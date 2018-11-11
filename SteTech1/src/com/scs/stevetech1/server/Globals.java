@@ -14,7 +14,8 @@ public class Globals {
 
 	public static final boolean DEBUG_JUMPSYNC_PROBLEM = true;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true; // Show where the server thinks the client avatars are
-	
+	public static final boolean DEBUG_ADJ_AVATAR_POS = true;
+
 	public static final boolean FOLLOW_CAM = true;
 	public static final boolean VOXEL_HACKS = true; // todo - remove
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true; // Avoid buffer overflows
@@ -55,7 +56,6 @@ public class Globals {
 	public static final boolean SHOW_NUM_ENT_UPDATES_SENT = false;
 	public static final boolean DEBUG_PLAYER_RESTART = false;
 	public static final boolean STOP_SERVER_AVATAR_MOVING = false;
-	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
 	public static final boolean LOG_MOVING_TARGET_POS = false;
 	public static final boolean DEBUG_SHOOTING_POS = false;
 
