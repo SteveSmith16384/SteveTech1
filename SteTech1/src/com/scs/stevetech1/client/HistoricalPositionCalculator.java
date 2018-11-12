@@ -25,15 +25,16 @@ public class HistoricalPositionCalculator {
 					// check where we should be based on where we were X ms ago
 					EntityPositionData clientEPD = clientPositionData.calcPosition(clientTimeToUse, true);
 					if (clientEPD != null) {
+						
+						// Don't to vertical into account - scs new
+						clientEPD.position.y = serverEPD.position.y;
+						
 						Vector3f vdiff = serverEPD.position.subtract(clientEPD.position); 
 						return vdiff;
 					}
 				}
-			} else {
-				
 			}
 		}
-		//return null;
 		if (serverPositionData.hasAnyData()) {
 			return serverPositionData.getMostRecent().position;
 		}

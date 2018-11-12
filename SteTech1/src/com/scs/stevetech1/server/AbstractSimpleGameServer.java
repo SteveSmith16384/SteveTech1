@@ -20,7 +20,7 @@ public abstract class AbstractSimpleGameServer extends AbstractGameServer {
 				new GameOptions(Globals.DEFAULT_TICKRATE, Globals.DEFAULT_SEND_UPDATES_INTERVAL, Globals.DEFAULT_RENDER_DELAY, Globals.DEFAULT_NETWORK_TIMEOUT, 
 						10*1000, 240*1000, 10*1000, 
 						"localhost", port, 
-						10, 5)
+						4, 4)
 				);
 	}
 

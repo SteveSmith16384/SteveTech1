@@ -21,14 +21,10 @@ public class CameraSystem extends AbstractSystem {
 	private boolean followCam;
 
 	private AbstractGameClient game;
-	//private LinkedList<Vector3f> camPositions;
 
 	public CameraSystem(AbstractGameClient _game, boolean _followCam) {
 		game = _game;
 		followCam = _followCam;
-		if (followCam) {
-			//camPositions = new LinkedList<>();
-		}
 	}
 
 
