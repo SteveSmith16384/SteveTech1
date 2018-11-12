@@ -36,6 +36,7 @@ import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
+import com.scs.stevetech1.netmessages.SetBackgroundColourMessage;
 import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.TestMessage;
@@ -156,6 +157,7 @@ public class KryonetGameServer implements IGameMessageServer {
 		kryo.register(HelloMessage.class);
 		kryo.register(AbilityReloadingMessage.class);
 		kryo.register(NewGameMessage.class);
+		kryo.register(SetBackgroundColourMessage.class);
 	}
 
 

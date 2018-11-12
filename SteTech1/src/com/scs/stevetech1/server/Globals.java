@@ -13,7 +13,7 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
 	public static final boolean DEBUG_JUMPSYNC_PROBLEM = true;
-	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = true; // Show where the server thinks the client avatars are
+	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false; // Show where the server thinks the client avatars are
 	public static final boolean DEBUG_ADJ_AVATAR_POS = true;
 
 	public static final boolean FOLLOW_CAM = true;
@@ -90,7 +90,7 @@ public class Globals {
 	public static final int KRYO_OBJECT_BUFFER_SIZE = 4096*3*24;
 
 	// Our movement speed
-	public static final float SMALLEST_MOVE_DIST = 0.001f;
+	//public static final float SMALLEST_MOVE_DIST = 0.001f;
 	public static final float MAX_MOVE_DIST = 1f; // Don't change to 2, makes movement wibbly
 
 	public static final float CAM_VIEW_DIST = 150f;

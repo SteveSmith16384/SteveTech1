@@ -81,6 +81,7 @@ import com.scs.stevetech1.netmessages.PlayerInputMessage;
 import com.scs.stevetech1.netmessages.PlayerLeftMessage;
 import com.scs.stevetech1.netmessages.RemoveEntityMessage;
 import com.scs.stevetech1.netmessages.SetAvatarMessage;
+import com.scs.stevetech1.netmessages.SetBackgroundColourMessage;
 import com.scs.stevetech1.netmessages.ShowMessageMessage;
 import com.scs.stevetech1.netmessages.SimpleGameDataMessage;
 import com.scs.stevetech1.netmessages.connecting.HelloMessage;
@@ -781,6 +782,10 @@ ConsoleInputListener {
 			NumEntitiesMessage nem = (NumEntitiesMessage)message;
 			expectedNumEntities = nem.num;
 
+		} else if (message instanceof SetBackgroundColourMessage) {
+			SetBackgroundColourMessage nem = (SetBackgroundColourMessage)message;
+			this.getViewPort().setBackgroundColor(new ColorRGBA(nem.r, nem.g, nem.b, nem.a));
+
 		} else {
 			throw new RuntimeException("Unknown message type: " + message);
 		}
@@ -1428,15 +1433,14 @@ ConsoleInputListener {
 				Globals.p("Hiding gun");
 			}
 		}
+		if (Globals.FOLLOW_CAM) {
+			this.currentAvatar.avatarModel.setAnim(AbstractAvatar.ANIM_DIED);
+		}
 	}
 
 
 	/**
 	 * This currently causes an error.
-	 * 
-	 * @param model
-	 * @param width
-	 * @param color
 	 */
 	public void showOutlineEffect(Spatial model, int width, ColorRGBA color) {
 		OutlineProFilter outlineFilter = model.getUserData("OutlineProFilter");

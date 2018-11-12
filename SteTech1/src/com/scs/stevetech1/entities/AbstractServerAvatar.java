@@ -13,7 +13,6 @@ import com.scs.stevetech1.components.IGetReadyForGame;
 import com.scs.stevetech1.components.IGetRotation;
 import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.components.ITargetableByAI;
-import com.scs.stevetech1.data.SimpleGameData;
 import com.scs.stevetech1.input.IInputDevice;
 import com.scs.stevetech1.netmessages.AvatarStartedMessage;
 import com.scs.stevetech1.netmessages.AvatarStatusMessage;
@@ -154,8 +153,6 @@ IGetRotation, IAnimatedServerSide, ITargetableByAI {
 
 	@Override
 	public void getReadyForGame() {
-		//this.startAgain();  Don't call startAgain() since that moves the avatar
-
 		this.setAlive(true);
 		this.setHealth(maxHealth);
 		this.invulnerableTimeSecs = 5;

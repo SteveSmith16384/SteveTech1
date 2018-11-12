@@ -10,7 +10,6 @@ import com.scs.stevetech1.components.ICausesHarmOnContact;
 import com.scs.stevetech1.components.IDontCollideWithComrades;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.components.IProcessByClient;
-import com.scs.stevetech1.components.IRewindable;
 import com.scs.stevetech1.server.AbstractGameServer;
 import com.scs.stevetech1.server.ClientData;
 import com.scs.stevetech1.server.Globals;
@@ -39,7 +38,7 @@ public abstract class AbstractBullet extends PhysicalEntity implements IProcessB
 	private Vector3f dir; // If its a Ray
 	protected float speed;  // If its a Ray
 	private float range;
-	
+
 	private boolean needsFastForwarding = false;
 	private boolean currentlyRewinding = false;
 	private long currentRewindTime = -1;

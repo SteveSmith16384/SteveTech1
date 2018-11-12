@@ -185,10 +185,6 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			if (Globals.TURN_OFF_CLIENT_POS_ADJ) {
 				return;
 			}
-			/*
-			if (jumping && Globals.DONT_SYNC_WHEN_JUMPING) {
-				return;
-			}*/
 
 			Vector3f offset = HistoricalPositionCalculator.calcHistoricalPositionOffset(historicalPositionData, clientAvatarPositionData, serverTimeToUse);
 			if (offset != null) {
@@ -197,8 +193,14 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 					Globals.p("Server and client avatars dist: " + diff);
 				}
 				if (Float.isNaN(diff) || diff > Globals.MAX_MOVE_DIST) {
-					// They're so far out, just move them
-					Vector3f pos = historicalPositionData.getMostRecent().position;
+					// They're so far out, just move them to where server thinks they should be
+					EntityPositionData epd = historicalPositionData.calcPosition(serverTimeToUse, false);
+					Vector3f pos = null;///. 
+					if (epd != null) {
+						pos = epd.position;
+					} else {
+						pos = historicalPositionData.getMostRecent().position;
+					}
 					if (Globals.DEBUG_ADJ_AVATAR_POS) {
 						Globals.p("Server and client avatars very far apart, forcing move: " + diff);
 						Globals.p("Moving client to " + pos);
@@ -244,11 +246,10 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 		Vector3f pos = null;
 		if (client.povWeapon == null) {
-			pos = client.getCamera().getLocation().clone();
-			pos.y -= 0.1f;
+			pos = this.getWorldTranslation().clone();
+			pos.y += 0.5f;
 		} else {
 			pos = client.povWeapon.getPOVBulletStartPos_Clone();
-			//pos.y += 0.1f; scs new
 		}
 		return pos;
 	}
