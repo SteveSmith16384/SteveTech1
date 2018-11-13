@@ -174,7 +174,7 @@ ConsoleInputListener {
 	// Entity systems
 	private AnimationSystem animSystem;
 	private EntityRemovalSystem entityRemovalSystem;
-	private CameraSystem cameraSystem;
+	protected CameraSystem cameraSystem;
 
 	protected AbstractGameClient(ValidateClientSettings _validClientSettings, String appTitle, String logoImage,   
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
@@ -227,6 +227,8 @@ ConsoleInputListener {
 		this.sendInputsInterval = new RealtimeInterval(tickrateMillis);
 		nodes = new HashMap<String, Node>();
 
+		cameraSystem = new CameraSystem(this, Globals.FOLLOW_CAM);
+
 	}
 
 
@@ -245,7 +247,6 @@ ConsoleInputListener {
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
 
 		soundSystem = new SoundSystem(this.getAssetManager(), this.getGameNode());
-		cameraSystem = new CameraSystem(this, Globals.FOLLOW_CAM);
 
 		setUpLight();
 

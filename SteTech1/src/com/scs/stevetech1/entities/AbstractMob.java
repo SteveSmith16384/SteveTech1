@@ -29,7 +29,7 @@ import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.server.IArtificialIntelligence;
 import com.scs.stevetech1.shared.IEntityController;
 
-// IDontCollideWithComrades removed so that mobs do collide with each other
+// Todo - rename to AbstractLandMob
 public abstract class AbstractMob extends PhysicalEntity implements IAffectedByPhysics, IDamagable, INotifiedOfCollision,
 IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRotation, ISetRotation, IKillable {//, IDontCollideWithComrades {
 
@@ -39,6 +39,9 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 	protected IArtificialIntelligence ai;
 	private int serverSideCurrentAnimCode; // Server-side
 	private long timeKilled;
+	protected Vector3f direction = new Vector3f(1, 0, 0);
+
+	private Vector3f tmpMove = new Vector3f();
 
 	public AbstractMob(IEntityController _game, int id, int type, float x, float y, float z, byte _side, 
 			IMobModel _model, String name, float _health, int startAnimCode) {
@@ -116,14 +119,14 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 
 	@Override
 	public void processByClient(IClientApp client, float tpf_secs) {
-		// Set position and direction of avatar model, which doesn't get moved automatically
+		// Set position of avatar model, which doesn't get moved automatically
 		this.model.getModel().setLocalTranslation(this.getWorldTranslation());
 	}
 
 
 	@Override
 	public Vector3f getRotation() {
-		return this.getMainNode().getLocalRotation().getRotationColumn(2);
+		return this.direction; //.getMainNode().getLocalRotation().getRotationColumn(2);
 	}
 
 
@@ -214,8 +217,10 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 
 	@Override
 	public void setRotation(Vector3f dir) {
-		Vector3f newdir = new Vector3f(dir.x, 0, dir.z); // Keep looking horizontal
-		JMEAngleFunctions.rotateToWorldDirection(this.model.getModel(), newdir);
+		//Vector3f newdir = new Vector3f(dir.x, 0, dir.z); // Keep looking horizontal
+		this.direction.set(dir.x, 0, dir.y);
+		// Set rotation of model, which doesn't get moved automatically
+		JMEAngleFunctions.rotateToWorldDirection(this.model.getModel(), direction);
 	}
 
 
@@ -240,6 +245,22 @@ IRewindable, IAnimatedClientSide, IAnimatedServerSide, IProcessByClient, IGetRot
 	@Override
 	public void updateClientSideHealth(int amt) {
 		// Override if required
+	}
+	
+	
+	public void setDirection_Logical(Vector3f dir) {
+		setDirection_Logical(dir.x, dir.z);
+	}
+	
+	
+	public void setDirection_Logical(float x, float z) {
+		this.direction.set(x, 0, z);
+		//this.model.l
+	}
+	
+	
+	public void walkForwards(float speed) {
+		this.simpleRigidBody.setAdditionalForce(this.direction.mult(speed, tmpMove));
 	}
 
 }

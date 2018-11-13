@@ -17,14 +17,21 @@ import com.scs.stevetech1.systems.AbstractSystem;
 
 public class CameraSystem extends AbstractSystem {
 
-	private static final float MAX_FOLLOW = .8f; // todo - make param
+	//private static final float MAX_FOLLOW = .8f; // todo - make param
 	private boolean followCam;
-
+	private float followDist = 1f;
+	private float shoulderAngle = 0f;
 	private AbstractGameClient game;
 
 	public CameraSystem(AbstractGameClient _game, boolean _followCam) {
 		game = _game;
 		followCam = _followCam;
+	}
+
+
+	public void setupFollowCam(float dist, float angle) {
+		this.followDist = dist;
+		shoulderAngle = angle;
 	}
 
 
@@ -44,14 +51,15 @@ public class CameraSystem extends AbstractSystem {
 		} else {
 			Vector3f avatarPos = avatar.getWorldTranslation().clone(); // todo - don't create each time
 			avatarPos.y += avatar.avatarModel.getCameraHeight() + .1f;
-			
+
 			Vector3f dir = cam.getDirection().mult(-1);
-			Quaternion rotQ = new Quaternion();
-			rotQ.fromAngleAxis(.2f, Vector3f.UNIT_Y);
-			rotQ.multLocal(dir).normalizeLocal();
-			
+			if (shoulderAngle != 0) {
+				Quaternion rotQ = new Quaternion();
+				rotQ.fromAngleAxis(shoulderAngle, Vector3f.UNIT_Y);
+				rotQ.multLocal(dir).normalizeLocal();
+			}
 			Ray r = new Ray(avatarPos, dir);
-			r.setLimit(MAX_FOLLOW);
+			r.setLimit(followDist);
 			CollisionResults res = new CollisionResults();
 			int c = game.getGameNode().collideWith(r, res);
 			boolean found = false;
@@ -86,7 +94,7 @@ public class CameraSystem extends AbstractSystem {
 			}
 
 			if (!found) {
-				Vector3f add = dir.multLocal(MAX_FOLLOW);
+				Vector3f add = dir.multLocal(followDist);
 				cam.setLocation(avatarPos.add(add));
 			}
 
