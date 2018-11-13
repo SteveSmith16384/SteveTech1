@@ -162,6 +162,7 @@ ConsoleInputListener {
 	private String consoleInput;
 	private boolean showingHistory = false; // Showing history cam (feature in progress)
 	private volatile boolean quitting = false;
+	private boolean allEntitiesRcvd = false;
 
 	protected Thread connectingThread;
 	public Exception lastConnectException;
@@ -173,7 +174,7 @@ ConsoleInputListener {
 	// Entity systems
 	private AnimationSystem animSystem;
 	private EntityRemovalSystem entityRemovalSystem;
-	private CameraSystem cameraSystem;
+	protected CameraSystem cameraSystem;
 
 	protected AbstractGameClient(ValidateClientSettings _validClientSettings, String appTitle, String logoImage,   
 			int _tickrateMillis, int _clientRenderDelayMillis, int _timeoutMillis, float _mouseSens) { 
@@ -226,6 +227,8 @@ ConsoleInputListener {
 		this.sendInputsInterval = new RealtimeInterval(tickrateMillis);
 		nodes = new HashMap<String, Node>();
 
+		cameraSystem = new CameraSystem(this, Globals.FOLLOW_CAM);
+
 	}
 
 
@@ -244,7 +247,6 @@ ConsoleInputListener {
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.001f, Globals.CAM_VIEW_DIST);
 
 		soundSystem = new SoundSystem(this.getAssetManager(), this.getGameNode());
-		cameraSystem = new CameraSystem(this, Globals.FOLLOW_CAM);
 
 		setUpLight();
 
@@ -391,7 +393,7 @@ ConsoleInputListener {
 				}
 
 				if (joinedServer) {
-
+					
 					if (!this.showingHistory) {
 						if (Globals.FORCE_CLIENT_SLOWDOWN || sendInputsInterval.hitInterval()) {
 							this.sendInputs();
@@ -410,8 +412,10 @@ ConsoleInputListener {
 						// Todo - Check all nodes have an entity in the list
 					}
 
-					iterateThroughEntities(tpfSecs);
-
+					if (allEntitiesRcvd) { // scs new
+						iterateThroughEntities(tpfSecs);
+					}
+					
 					if (this.povWeapon != null) {
 						this.povWeapon.update(tpfSecs);
 					}
@@ -660,8 +664,9 @@ ConsoleInputListener {
 				this.expectedNumEntities = -1;
 				this.appendToLog("All entities received");
 				allEntitiesReceived();
-			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
+			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) {
 				this.removeAllEntities();
+				allEntitiesRcvd = false;
 			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) {
 				this.appendToLog("Game restarting...");
 			} else {
@@ -857,6 +862,7 @@ ConsoleInputListener {
 	 */
 	protected void allEntitiesReceived() {
 		this.getRootNode().attachChild(this.gameNode); // todo - do once all actually added
+		this.allEntitiesRcvd = true;
 	}
 
 
