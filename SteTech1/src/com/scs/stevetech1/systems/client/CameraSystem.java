@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -12,12 +13,11 @@ import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.entities.AbstractClientAvatar;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.server.Globals;
-import com.scs.stevetech1.server.RayCollisionData;
 import com.scs.stevetech1.systems.AbstractSystem;
 
 public class CameraSystem extends AbstractSystem {
 
-	private static final float MAX_FOLLOW = 1.5f;
+	private static final float MAX_FOLLOW = .8f; // todo - make param
 	private boolean followCam;
 
 	private AbstractGameClient game;
@@ -43,8 +43,14 @@ public class CameraSystem extends AbstractSystem {
 
 		} else {
 			Vector3f avatarPos = avatar.getWorldTranslation().clone(); // todo - don't create each time
-			avatarPos.y += avatar.avatarModel.getCameraHeight();
-			Ray r = new Ray(avatarPos, cam.getDirection().mult(-1));
+			avatarPos.y += avatar.avatarModel.getCameraHeight() + .1f;
+			
+			Vector3f dir = cam.getDirection().mult(-1);
+			Quaternion rotQ = new Quaternion();
+			rotQ.fromAngleAxis(.2f, Vector3f.UNIT_Y);
+			rotQ.multLocal(dir).normalizeLocal();
+			
+			Ray r = new Ray(avatarPos, dir);
 			r.setLimit(MAX_FOLLOW);
 			CollisionResults res = new CollisionResults();
 			int c = game.getGameNode().collideWith(r, res);
@@ -70,7 +76,7 @@ public class CameraSystem extends AbstractSystem {
 							if (dist > 0.1f) {
 								dist -= 0.1f;
 							}
-							Vector3f add = cam.getDirection().normalize().multLocal(-1).multLocal(dist);
+							Vector3f add = dir.multLocal(dist);
 							cam.setLocation(avatarPos.add(add));
 							found = true;
 							break;
@@ -80,7 +86,7 @@ public class CameraSystem extends AbstractSystem {
 			}
 
 			if (!found) {
-				Vector3f add = cam.getDirection().normalize().multLocal(-1).multLocal(MAX_FOLLOW);
+				Vector3f add = dir.multLocal(MAX_FOLLOW);
 				cam.setLocation(avatarPos.add(add));
 			}
 

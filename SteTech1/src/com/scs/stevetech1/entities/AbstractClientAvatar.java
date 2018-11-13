@@ -1,7 +1,12 @@
 package com.scs.stevetech1.entities;
 
+import java.util.Iterator;
+
 import com.jme3.asset.TextureKey;
+import com.jme3.collision.CollisionResult;
+import com.jme3.collision.CollisionResults;
 import com.jme3.material.Material;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Geometry;
@@ -210,7 +215,7 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 				} else {
 					// Push the client avatar towards where the server says they are
 					SimpleCharacterControl<PhysicalEntity> simplePlayerControl = (SimpleCharacterControl<PhysicalEntity>)this.simpleRigidBody;
-					simplePlayerControl.getAdditionalForce().addLocal(offset.mult(.8f));
+					simplePlayerControl.getAdditionalForce().addLocal(offset.mult(0.4f)); //.8f));
 				}
 			}
 		} else {
@@ -221,7 +226,26 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 
 	@Override
 	public Vector3f getShootDir() {
-		return this.cam.getDirection();
+		if (!Globals.FOLLOW_CAM) {
+			return this.cam.getDirection();
+		} else {
+			//Vector3f avatarPos = avatar.getWorldTranslation().clone(); // todo - don't create each time
+			//avatarPos.y += avatar.avatarModel.getCameraHeight();
+			Ray r = new Ray(cam.getLocation(), cam.getDirection());
+			CollisionResults res = new CollisionResults();
+			//int c = game.getGameNode().collideWith(r, res);
+			Iterator<CollisionResult> it = res.iterator();
+			while (it.hasNext()) {
+				CollisionResult col = it.next();
+				Vector3f hitPos = col.getContactPoint();
+				Vector3f dir = hitPos.subtract(this.getBulletStartPos()).normalizeLocal();
+				return dir;
+			}
+			// todo
+			return this.cam.getDirection();
+		}
+
+
 	}
 
 

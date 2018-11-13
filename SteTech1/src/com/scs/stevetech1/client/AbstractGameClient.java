@@ -162,6 +162,7 @@ ConsoleInputListener {
 	private String consoleInput;
 	private boolean showingHistory = false; // Showing history cam (feature in progress)
 	private volatile boolean quitting = false;
+	private boolean allEntitiesRcvd = false;
 
 	protected Thread connectingThread;
 	public Exception lastConnectException;
@@ -391,7 +392,7 @@ ConsoleInputListener {
 				}
 
 				if (joinedServer) {
-
+					
 					if (!this.showingHistory) {
 						if (Globals.FORCE_CLIENT_SLOWDOWN || sendInputsInterval.hitInterval()) {
 							this.sendInputs();
@@ -410,8 +411,10 @@ ConsoleInputListener {
 						// Todo - Check all nodes have an entity in the list
 					}
 
-					iterateThroughEntities(tpfSecs);
-
+					if (allEntitiesRcvd) { // scs new
+						iterateThroughEntities(tpfSecs);
+					}
+					
 					if (this.povWeapon != null) {
 						this.povWeapon.update(tpfSecs);
 					}
@@ -660,8 +663,9 @@ ConsoleInputListener {
 				this.expectedNumEntities = -1;
 				this.appendToLog("All entities received");
 				allEntitiesReceived();
-			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) { // We now have enough data to start
+			} else if (msg.command == GeneralCommandMessage.Command.RemoveAllEntities) {
 				this.removeAllEntities();
+				allEntitiesRcvd = false;
 			} else if (msg.command == GeneralCommandMessage.Command.GameRestarting) {
 				this.appendToLog("Game restarting...");
 			} else {
@@ -857,6 +861,7 @@ ConsoleInputListener {
 	 */
 	protected void allEntitiesReceived() {
 		this.getRootNode().attachChild(this.gameNode); // todo - do once all actually added
+		this.allEntitiesRcvd = true;
 	}
 
 
