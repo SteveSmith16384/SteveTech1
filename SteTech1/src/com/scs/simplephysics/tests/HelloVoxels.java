@@ -237,8 +237,8 @@ public class HelloVoxels extends SimpleApplication implements ActionListener, IC
 
 	@Override
 	public void simpleUpdate(float tpf_secs) {
-		//camDir.set(cam.getDirection()).multLocal(playerSpeed, 0.0f, playerSpeed); todo - re-add
-		camDir.set(cam.getDirection()).multLocal(playerSpeed, playerSpeed, playerSpeed);
+		camDir.set(cam.getDirection()).multLocal(playerSpeed, 0.0f, playerSpeed);
+		//camDir.set(cam.getDirection()).multLocal(playerSpeed, playerSpeed, playerSpeed);
 		camLeft.set(cam.getLeft()).multLocal(playerSpeed);
 		walkDirection.set(0, 0, 0);
 		if (left) {

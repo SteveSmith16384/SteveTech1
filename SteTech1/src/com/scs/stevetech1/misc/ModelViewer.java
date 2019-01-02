@@ -47,12 +47,12 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 	
 	
 	public String getAnimNode() {
-		return "todo";
+		return "unset";
 	}
 	
 
 	public String getAnimToShow() {
-		return "todo";
+		return "unset";
 	}
 	
 

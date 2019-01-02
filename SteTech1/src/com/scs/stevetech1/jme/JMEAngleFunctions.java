@@ -175,7 +175,6 @@ public class JMEAngleFunctions {
 	}
 
 
-	// This function hasn't been tested
 	public static void turnOnXAxis(Spatial spatial, float rads){
 		Quaternion rotateLeft = new Quaternion().fromAngleAxis(rads, Vector3f.UNIT_X);
 		spatial.rotate(rotateLeft);
@@ -197,7 +196,6 @@ public class JMEAngleFunctions {
 
 	public static Vector3f turnRight(Vector3f v) {
 		Vector3f v2 = v.normalize();
-		//float z = v.z;
 		v2.x += 1;
 		v2.y = v.y;
 		v2.z = v.z - 1;

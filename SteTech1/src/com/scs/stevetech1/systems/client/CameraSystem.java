@@ -17,7 +17,6 @@ import com.scs.stevetech1.systems.AbstractSystem;
 
 public class CameraSystem extends AbstractSystem {
 
-	//private static final float MAX_FOLLOW = .8f; // todo - make param
 	private boolean followCam;
 	private float followDist = 1f;
 	private float shoulderAngle = 0f;

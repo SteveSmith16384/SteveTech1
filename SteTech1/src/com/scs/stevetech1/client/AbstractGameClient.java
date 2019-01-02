@@ -409,7 +409,6 @@ ConsoleInputListener {
 								}
 							}
 						}
-						// Todo - Check all nodes have an entity in the list
 					}
 
 					if (allEntitiesRcvd) { // scs new

@@ -45,6 +45,8 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 	public PhysicalEntity killer;
 
 	private Node container;
+	private Vector3f tempAvatarDir = new Vector3f();
+	private CollisionResults res = new CollisionResults();
 
 	public AbstractClientAvatar(AbstractGameClient _client, int avatarType, int _playerID, IInputDevice _input, Camera _cam, int eid, 
 			float x, float y, float z, byte side, IAvatarModel avatarModel, IAvatarControl _avatarControl) {
@@ -159,9 +161,9 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 			if (Globals.FOLLOW_CAM) {
 				// Set position and direction of avatar model, which doesn't get moved automatically
 				this.container.setLocalTranslation(this.getWorldTranslation());
-				Vector3f dir = this.cam.getDirection().clone(); // todo - don't create each time
-				dir.y = 0;
-				JMEAngleFunctions.rotateToWorldDirection(this.container, dir);
+				tempAvatarDir.set(this.cam.getDirection());
+				tempAvatarDir.y = 0;
+				JMEAngleFunctions.rotateToWorldDirection(this.container, tempAvatarDir);
 				this.avatarModel.setAnim(super.currentAnimCode);
 			}
 		}
@@ -229,19 +231,16 @@ public abstract class AbstractClientAvatar extends AbstractAvatar implements ISh
 		if (!Globals.FOLLOW_CAM) {
 			return this.cam.getDirection();
 		} else {
-			//Vector3f avatarPos = avatar.getWorldTranslation().clone(); // todo - don't create each time
-			//avatarPos.y += avatar.avatarModel.getCameraHeight();
-			Ray r = new Ray(cam.getLocation(), cam.getDirection());
-			CollisionResults res = new CollisionResults();
-			//int c = game.getGameNode().collideWith(r, res);
+			Ray r = new Ray(cam.getLocation(), cam.getDirection()); // todo - don't create each time
+			res.clear();
+			game.getGameNode().collideWith(r, res);
 			Iterator<CollisionResult> it = res.iterator();
 			while (it.hasNext()) {
 				CollisionResult col = it.next();
 				Vector3f hitPos = col.getContactPoint();
-				Vector3f dir = hitPos.subtract(this.getBulletStartPos()).normalizeLocal();
+				Vector3f dir = hitPos.subtract(this.getBulletStartPos()).normalizeLocal(); // todo - don't create each time
 				return dir;
 			}
-			// todo
 			return this.cam.getDirection();
 		}
 

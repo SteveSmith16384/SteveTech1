@@ -580,7 +580,7 @@ ICollisionListener<PhysicalEntity> {
 	}
 
 
-	private AbstractServerAvatar createPlayersAvatar(ClientData client) { // todo - rename
+	private AbstractServerAvatar createPlayersAvatar(ClientData client) {
 		int id = getNextEntityID();
 		AbstractServerAvatar avatar = this.createPlayersAvatarEntity(client, id);
 		this.moveAvatarToStartPosition(avatar);
