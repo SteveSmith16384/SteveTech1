@@ -5,6 +5,80 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>SteveTech1</name>
   <description>Multiplayer FPS Engine</description>
+  
+  <properties>
+    <jme3_g>org.jmonkeyengine</jme3_g>
+    <jme3_v>3.2.0-stable</jme3_v>
+  </properties>
+  
+<repositories>
+    <repository>
+        <id>bintray-jmonkeyengine-org.jmonkeyengine</id>
+        <name>bintray</name>
+        <url>http://dl.bintray.com/jmonkeyengine/org.jmonkeyengine</url>
+    </repository>
+    <repository>
+        <id>jcenter</id>
+        <url>http://jcenter.bintray.com</url>
+    </repository>
+	  <repository>
+      <id>clojars</id>
+      <url>http://clojars.org/repo/</url>
+   </repository>
+</repositories>
+
+  <dependencies>
+	 <dependency>
+	   <groupId>com.esotericsoftware</groupId>
+	   <artifactId>kryo</artifactId>
+	   <version>5.0.0-RC1</version>
+	</dependency>
+   <dependency>
+      <groupId>kryonet</groupId>
+      <artifactId>kryonet</artifactId>
+      <version>2.21</version>
+   </dependency>
+   <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-core</artifactId>
+      <version>${jme3_v}</version>
+    </dependency>
+    <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-desktop</artifactId>
+      <version>${jme3_v}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-effects</artifactId>
+      <version>${jme3_v}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-networking</artifactId>
+      <version>${jme3_v}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-blender</artifactId>
+      <version>${jme3_v}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-lwjgl3</artifactId>
+      <version>${jme3_v}</version>
+    </dependency>
+    <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-terrain</artifactId>
+      <version>${jme3_v}</version>
+    </dependency>
+  </dependencies>
+  
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>

@@ -17,8 +17,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/SteTech1"/>
-	<classpathentry kind="lib" path="/SteTech1/libs/jme-3.2-stable/jme3-core.jar"/>
-	<classpathentry kind="lib" path="/SteTech1/libs/jme-3.2-stable/jme3-networking.jar"/>
 	<classpathentry kind="lib" path="/SteTech1/libs/jttf/jME-TTF-v2.12.jar"/>
 	<classpathentry kind="lib" path="/SteTech1/libs/jttf/sfntly.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">

@@ -16,7 +16,7 @@ public class Globals {
 	public static final boolean DEBUG_JUMPSYNC_PROBLEM = true;
 	public static final boolean DEBUG_ADJ_AVATAR_POS = true;
 
-	public static final boolean FOLLOW_CAM = true;
+	public static final boolean FOLLOW_CAM = false; // todo - make option
 	public static final boolean VOXEL_HACKS = true; // todo - remove
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true; // Avoid buffer overflows
 
