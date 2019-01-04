@@ -28,7 +28,7 @@ public class CustomMeshViewer extends SimpleApplication {
 
 	@Override
 	public void simpleInitApp() {
-		assetManager.registerLocator("assets/", FileLocator.class); // default
+		//assetManager.registerLocator("assets/", FileLocator.class); // default
 		//assetManager.registerLocator("assets/Textures/", FileLocator.class);
 		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
 		this.flyCam.setMoveSpeed(12f);

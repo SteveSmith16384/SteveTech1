@@ -1,0 +1,46 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>Tutorial</groupId>
+  <artifactId>Tutorial</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>SteveTech1 Tutorial</name>
+
+  <properties>
+    <jme3_g>org.jmonkeyengine</jme3_g>
+    <jme3_v>3.2.0-stable</jme3_v>
+  </properties>
+  
+<repositories>
+    <repository>
+        <id>bintray-jmonkeyengine-org.jmonkeyengine</id>
+        <name>bintray</name>
+        <url>http://dl.bintray.com/jmonkeyengine/org.jmonkeyengine</url>
+    </repository>
+    <repository>
+        <id>jcenter</id>
+        <url>http://jcenter.bintray.com</url>
+    </repository>
+</repositories>
+
+  <dependencies>
+   <dependency>
+      <groupId>${jme3_g}</groupId>
+      <artifactId>jme3-core</artifactId>
+      <version>${jme3_v}</version>
+    </dependency>
+  </dependencies>
+
+	<build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

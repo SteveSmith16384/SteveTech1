@@ -147,8 +147,8 @@ ICollisionListener<PhysicalEntity> {
 
 	@Override
 	public void simpleInitApp() {
-		assetManager.registerLocator("assets/", FileLocator.class); // default
-		assetManager.registerLocator("assets/", ClasspathLocator.class);
+		//assetManager.registerLocator("assets/", FileLocator.class); // default
+		//assetManager.registerLocator("assets/", ClasspathLocator.class);
 
 		this.gameStatusSystem = new ServerGameStatusSystem(this);
 		this.pingSystem = new ServerPingSystem(this);

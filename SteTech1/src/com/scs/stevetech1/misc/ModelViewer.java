@@ -58,7 +58,7 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 	@Override
 	public void simpleInitApp() {
-		assetManager.registerLocator("assets/", FileLocator.class); // default
+		//assetManager.registerLocator("assets/", FileLocator.class); // default
 		//assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
 		//assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
 		//assetManager.registerLocator("../TestGame/assets/", FileLocator.class);

@@ -34,7 +34,7 @@ public class TestCubeTex extends SimpleApplication {
 	
 	@Override
 	public void simpleInitApp() {
-		assetManager.registerLocator("assets/", FileLocator.class); // default
+		//assetManager.registerLocator("assets/", FileLocator.class); // default
 
 		flyCam.setMoveSpeed(40);
 
