@@ -8,19 +8,21 @@ import ssmith.lang.Functions;
 
 public class Globals {
 
-	public static final boolean RECORD_VID = false;
+	public static boolean RECORD_VID = false;
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
+	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
+	public static final boolean DEBUG_3D_PROBLEM = true; // todo - remove
 	public static final boolean DEBUG_SLOW_MA = true;
-	public static final boolean DEBUG_JUMPSYNC_PROBLEM = true;
-	public static final boolean DEBUG_ADJ_AVATAR_POS = true;
 
 	public static final boolean FOLLOW_CAM = false; // todo - make option
 	public static final boolean VOXEL_HACKS = true; // todo - remove
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true; // Avoid buffer overflows
 
 	// Lots of consts for specific debugging output
+	public static final boolean DEBUG_JUMPSYNC_PROBLEM = false;
+	public static final boolean DEBUG_ADJ_AVATAR_POS = false;
 	public static final boolean SHOW_SERVER_AVATAR_ON_CLIENT = false; // Show where the server thinks the client avatars are
 	public static final boolean DEBUG_JUMP_ANIM = false;
 	public static final boolean SHOW_BULLET_COLLISION_POS = false; // Show on the client where the server thinks the bullet hit.
@@ -50,7 +52,6 @@ public class Globals {
 	public static final boolean DEBUG_AI_TARGETTING = false;
 	public static final boolean DEBUG_AVATAR_SET = false;
 	public static final boolean DEBUG_CLIENT_SERVER_FAR_APART = false;
-	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
 	public static final boolean SHOW_IF_SYSTEM_TOO_SLOW = false;
 	public static final boolean TURN_OFF_CLIENT_POS_ADJ = false;
 	public static final boolean SHOW_SERVER_CLIENT_AVATAR_DIST = false;

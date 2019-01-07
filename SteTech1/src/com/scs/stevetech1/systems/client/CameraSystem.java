@@ -45,6 +45,11 @@ public class CameraSystem extends AbstractSystem {
 			cam.getLocation().x = vec.x;
 			cam.getLocation().y = vec.y + avatar.avatarModel.getCameraHeight();
 			cam.getLocation().z = vec.z;
+/*
+			if (Globals.DEBUG_3D_PROBLEM) {
+				cam.getLocation().y = 20;
+			}
+			*/
 			cam.update();
 
 		} else {

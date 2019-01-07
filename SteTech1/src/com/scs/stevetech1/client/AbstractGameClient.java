@@ -279,6 +279,9 @@ ConsoleInputListener {
 		getInputManager().addMapping(QUIT, new KeyTrigger(KeyInput.KEY_ESCAPE));
 		getInputManager().addListener(this, QUIT);            
 
+		getInputManager().addMapping("R", new KeyTrigger(KeyInput.KEY_R));
+		getInputManager().addListener(this, "R");            
+
 		if (!Globals.RELEASE_MODE) {
 			getInputManager().addMapping(TEST, new KeyTrigger(KeyInput.KEY_T));
 			getInputManager().addListener(this, TEST);            
@@ -364,7 +367,7 @@ ConsoleInputListener {
 			return;
 		}
 
-		if (runDisconnectedCode) {
+		if (runDisconnectedCode) { // this.entities
 			this.runWhenDisconnected();
 			runDisconnectedCode = false;
 		}
@@ -393,7 +396,7 @@ ConsoleInputListener {
 				}
 
 				if (joinedServer) {
-					
+
 					if (!this.showingHistory) {
 						if (Globals.FORCE_CLIENT_SLOWDOWN || sendInputsInterval.hitInterval()) {
 							this.sendInputs();
@@ -414,7 +417,7 @@ ConsoleInputListener {
 					if (allEntitiesRcvd) { // scs new
 						iterateThroughEntities(tpfSecs);
 					}
-					
+
 					if (this.povWeapon != null) {
 						this.povWeapon.update(tpfSecs);
 					}
@@ -533,8 +536,6 @@ ConsoleInputListener {
 	}
 
 
-	/**d
-	 */
 	public Node getHudNode() {
 		return this.getGuiNode();
 	}
@@ -1169,6 +1170,14 @@ ConsoleInputListener {
 			if (value) {
 				//quit("User quit.");
 				quitting = true;
+			}
+
+		} else if (name.equalsIgnoreCase("R")) {
+			if (value) {
+				Globals.p("Recording video!");
+				VideoRecorderAppState video_recorder = new VideoRecorderAppState();
+				stateManager.attach(video_recorder);
+				Globals.RECORD_VID = true;
 			}
 
 		} else if (name.equalsIgnoreCase(TEST)) {

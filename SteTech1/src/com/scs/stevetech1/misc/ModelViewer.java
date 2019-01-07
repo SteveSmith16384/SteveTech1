@@ -58,11 +58,6 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 	@Override
 	public void simpleInitApp() {
-		//assetManager.registerLocator("assets/", FileLocator.class); // default
-		//assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
-		//assetManager.registerLocator("../UndercoverAgent/assets/", FileLocator.class);
-		//assetManager.registerLocator("../TestGame/assets/", FileLocator.class);
-
 		cam.setFrustumPerspective(60, settings.getWidth() / settings.getHeight(), .1f, 100);
 
 		super.getViewPort().setBackgroundColor(ColorRGBA.Black);
