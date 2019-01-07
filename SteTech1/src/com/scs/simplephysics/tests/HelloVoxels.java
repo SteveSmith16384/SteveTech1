@@ -70,9 +70,6 @@ public class HelloVoxels extends SimpleApplication implements ActionListener, IC
 
 
 	public void simpleInitApp() {
-		assetManager.registerLocator("assets/", FileLocator.class); // default
-		assetManager.registerLocator("assets/", ClasspathLocator.class);
-
 		cam.setFrustumPerspective(45f, (float) cam.getWidth() / cam.getHeight(), 0.01f, 1000f);
 		cam.lookAt(new Vector3f(3, 1f, 20f), Vector3f.UNIT_Y);
 		viewPort.setBackgroundColor(ColorRGBA.Black);

@@ -39,7 +39,7 @@ Or check out this channel of other vidoes of stuff I've done with this engine: h
 * Designed and developed by Stephen Carlyle-Smith (http://twitter.com/stephencsmith, stephen.carlylesmith@googlemail.com)
 * Uses JMonkeyEngine for the 3D
 * Uses Kryonet for networking.
-* TTF font loader by Adam T. Ryder (https://1337atr.weebly.com/jttf.html)
+* TTF font loader by Adam T. Ryder ( https://1337atr.weebly.com/jttf.html )
 * For asset credits, see the relevant folder containing the asset.
 
 

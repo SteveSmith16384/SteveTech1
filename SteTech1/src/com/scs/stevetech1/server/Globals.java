@@ -13,7 +13,7 @@ public class Globals {
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
 	public static final boolean USE_BOXES_FOR_AVATARS_SOLDIER = false;
-	public static final boolean DEBUG_3D_PROBLEM = true; // todo - remove
+	public static final boolean DEBUG_3D_PROBLEM = false; // todo - remove
 	public static final boolean DEBUG_SLOW_MA = true;
 
 	public static final boolean FOLLOW_CAM = false; // todo - make option

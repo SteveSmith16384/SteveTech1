@@ -234,9 +234,6 @@ ConsoleInputListener {
 
 	@Override
 	public void simpleInitApp() {
-		//assetManager.registerLocator("assets/", FileLocator.class); // default
-		//assetManager.registerLocator("assets/", ClasspathLocator.class);
-
 		// Clear existing mappings
 		getInputManager().clearMappings();
 		getInputManager().clearRawInputListeners();
