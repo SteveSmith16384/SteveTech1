@@ -20,7 +20,6 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- * 渐变的外描边(更耗性能)
  * @author DING
  */
 public class OutlineProTest extends SimpleApplication implements ActionListener {

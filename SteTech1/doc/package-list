@@ -1,7 +1,10 @@
+com.ding.effect.outline.filter
+com.ding.effect.outline.test
 com.scs.simplephysics
 com.scs.simplephysics.tests
-com.scs.stevetech1
+com.scs.stevetech1.avatartypes
 com.scs.stevetech1.client
+com.scs.stevetech1.client.povweapon
 com.scs.stevetech1.components
 com.scs.stevetech1.data
 com.scs.stevetech1.entities
@@ -13,6 +16,7 @@ com.scs.stevetech1.lobby
 com.scs.stevetech1.misc
 com.scs.stevetech1.models
 com.scs.stevetech1.netmessages
+com.scs.stevetech1.netmessages.connecting
 com.scs.stevetech1.netmessages.lobby
 com.scs.stevetech1.networking
 com.scs.stevetech1.networking.spidermonkeytest
@@ -31,6 +35,7 @@ com.scs.testecs.components
 com.scs.testecs.systems
 myjme3test.helloworld
 ssmith.astar
+ssmith.audio
 ssmith.io
 ssmith.lang
 ssmith.util

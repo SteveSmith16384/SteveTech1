@@ -112,16 +112,6 @@ ICollisionListener<PhysicalEntity> {
 	private boolean runningSlow = false;
 	private int slowCount = 0;
 
-	/**
-	 * 
-	 * @param _gameCode  Must match the client's game code.
-	 * @param _key Must match the server's game code.
-	 * @param _gameOptions
-	 * @param _tickrateMillis The interval between each iteration of the game loop.
-	 * @param sendUpdateIntervalMillis How often to send updates to the clients
-	 * @param _clientRenderDelayMillis How far in the past the client should render the game
-	 * @param _timeoutMillis How long without comms before the server disconnects the client 
-	 */
 	public AbstractGameServer(ValidateClientSettings _clientValidationSettings, GameOptions _gameOptions) { 
 		super();
 
