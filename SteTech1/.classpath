@@ -22,6 +22,7 @@
 	<classpathentry kind="lib" path="libs/mp3/tritonus_share.jar"/>
 	<classpathentry kind="lib" path="libs/jttf/sfntly.jar"/>
 	<classpathentry kind="lib" path="libs/jttf/jME-TTF-v2.12.jar"/>
+	<classpathentry kind="lib" path="libs/blocky.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
