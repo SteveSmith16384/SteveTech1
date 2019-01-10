@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project SteTech1 with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="${dir.buildfile}/.."/>
+    <property name="dir.jarfile" value="E:/Temp"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/stevetech1.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.scs.stevetech1.misc.ModelViewer"/>
+                <attribute name="Class-Path" value=". stevetech1_lib/junit.jar stevetech1_lib/org.hamcrest.core_1.3.0.v201303031735.jar stevetech1_lib/jl1.0.jar stevetech1_lib/mp3spi1.9.4.jar stevetech1_lib/tritonus_share.jar stevetech1_lib/sfntly.jar stevetech1_lib/jME-TTF-v2.12.jar stevetech1_lib/kryo-5.0.0-RC1.jar stevetech1_lib/reflectasm-1.11.7.jar stevetech1_lib/objenesis-2.6.jar stevetech1_lib/minlog-1.3.0.jar stevetech1_lib/kryonet-2.21.jar stevetech1_lib/reflectasm-1.07-shaded.jar stevetech1_lib/minlog-1.2.jar stevetech1_lib/jme3-core-3.2.0-stable.jar stevetech1_lib/jme3-desktop-3.2.0-stable.jar stevetech1_lib/jme3-effects-3.2.0-stable.jar stevetech1_lib/jme3-networking-3.2.0-stable.jar stevetech1_lib/jme3-blender-3.2.0-stable.jar stevetech1_lib/core-0.27.jar stevetech1_lib/dense64-0.27.jar stevetech1_lib/simple-0.27.jar stevetech1_lib/denseC64-0.27.jar stevetech1_lib/jme3-lwjgl3-3.2.0-stable.jar stevetech1_lib/lwjgl-3.1.2.jar stevetech1_lib/lwjgl-glfw-3.1.2.jar stevetech1_lib/lwjgl-jemalloc-3.1.2.jar stevetech1_lib/lwjgl-openal-3.1.2.jar stevetech1_lib/lwjgl-opencl-3.1.2.jar stevetech1_lib/lwjgl-opengl-3.1.2.jar stevetech1_lib/lwjgl-3.1.2-natives-windows.jar stevetech1_lib/lwjgl-3.1.2-natives-linux.jar stevetech1_lib/lwjgl-3.1.2-natives-macos.jar stevetech1_lib/lwjgl-glfw-3.1.2-natives-windows.jar stevetech1_lib/lwjgl-glfw-3.1.2-natives-linux.jar stevetech1_lib/lwjgl-glfw-3.1.2-natives-macos.jar stevetech1_lib/lwjgl-jemalloc-3.1.2-natives-windows.jar stevetech1_lib/lwjgl-jemalloc-3.1.2-natives-linux.jar stevetech1_lib/lwjgl-jemalloc-3.1.2-natives-macos.jar stevetech1_lib/lwjgl-opengl-3.1.2-natives-windows.jar stevetech1_lib/lwjgl-opengl-3.1.2-natives-linux.jar stevetech1_lib/lwjgl-opengl-3.1.2-natives-macos.jar stevetech1_lib/lwjgl-openal-3.1.2-natives-windows.jar stevetech1_lib/lwjgl-openal-3.1.2-natives-linux.jar stevetech1_lib/lwjgl-openal-3.1.2-natives-macos.jar stevetech1_lib/jme3-terrain-3.2.0-stable.jar"/>
+            </manifest>
+            <fileset dir="${dir.buildfile}/target/classes"/>
+        </jar>
+        <delete dir="${dir.jarfile}/stevetech1_lib"/>
+        <mkdir dir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.p2/pool/plugins/org.junit_4.12.0.v201504281640/junit.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.p2/pool/plugins/org.hamcrest.core_1.3.0.v201303031735.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="${dir.buildfile}/libs/mp3/jl1.0.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="${dir.buildfile}/libs/mp3/mp3spi1.9.4.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="${dir.buildfile}/libs/mp3/tritonus_share.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="${dir.buildfile}/libs/jttf/sfntly.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="${dir.buildfile}/libs/jttf/jME-TTF-v2.12.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/com/esotericsoftware/kryo/5.0.0-RC1/kryo-5.0.0-RC1.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/com/esotericsoftware/reflectasm/1.11.7/reflectasm-1.11.7.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/objenesis/objenesis/2.6/objenesis-2.6.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/com/esotericsoftware/minlog/1.3.0/minlog-1.3.0.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/kryonet/kryonet/2.21/kryonet-2.21.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/com/esotericsoftware/reflectasm/reflectasm/1.07/reflectasm-1.07-shaded.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/com/esotericsoftware/minlog/minlog/1.2/minlog-1.2.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/jmonkeyengine/jme3-core/3.2.0-stable/jme3-core-3.2.0-stable.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/jmonkeyengine/jme3-desktop/3.2.0-stable/jme3-desktop-3.2.0-stable.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/jmonkeyengine/jme3-effects/3.2.0-stable/jme3-effects-3.2.0-stable.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/jmonkeyengine/jme3-networking/3.2.0-stable/jme3-networking-3.2.0-stable.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/jmonkeyengine/jme3-blender/3.2.0-stable/jme3-blender-3.2.0-stable.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/ejml/core/0.27/core-0.27.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/ejml/dense64/0.27/dense64-0.27.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/ejml/simple/0.27/simple-0.27.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/ejml/denseC64/0.27/denseC64-0.27.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/jmonkeyengine/jme3-lwjgl3/3.2.0-stable/jme3-lwjgl3-3.2.0-stable.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl/3.1.2/lwjgl-3.1.2.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-glfw/3.1.2/lwjgl-glfw-3.1.2.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-jemalloc/3.1.2/lwjgl-jemalloc-3.1.2.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-openal/3.1.2/lwjgl-openal-3.1.2.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-opencl/3.1.2/lwjgl-opencl-3.1.2.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-opengl/3.1.2/lwjgl-opengl-3.1.2.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl/3.1.2/lwjgl-3.1.2-natives-windows.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl/3.1.2/lwjgl-3.1.2-natives-linux.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl/3.1.2/lwjgl-3.1.2-natives-macos.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-glfw/3.1.2/lwjgl-glfw-3.1.2-natives-windows.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-glfw/3.1.2/lwjgl-glfw-3.1.2-natives-linux.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-glfw/3.1.2/lwjgl-glfw-3.1.2-natives-macos.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-jemalloc/3.1.2/lwjgl-jemalloc-3.1.2-natives-windows.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-jemalloc/3.1.2/lwjgl-jemalloc-3.1.2-natives-linux.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-jemalloc/3.1.2/lwjgl-jemalloc-3.1.2-natives-macos.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-opengl/3.1.2/lwjgl-opengl-3.1.2-natives-windows.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-opengl/3.1.2/lwjgl-opengl-3.1.2-natives-linux.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-opengl/3.1.2/lwjgl-opengl-3.1.2-natives-macos.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-openal/3.1.2/lwjgl-openal-3.1.2-natives-windows.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-openal/3.1.2/lwjgl-openal-3.1.2-natives-linux.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/lwjgl/lwjgl-openal/3.1.2/lwjgl-openal-3.1.2-natives-macos.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+        <copy file="C:/Users/stephencs/.m2/repository/org/jmonkeyengine/jme3-terrain/3.2.0-stable/jme3-terrain-3.2.0-stable.jar" todir="${dir.jarfile}/stevetech1_lib"/>
+    </target>
+</project>

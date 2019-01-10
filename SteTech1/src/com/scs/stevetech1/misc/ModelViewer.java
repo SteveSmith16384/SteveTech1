@@ -1,12 +1,9 @@
 package com.scs.stevetech1.misc;
 
-import com.ding.effect.outline.filter.OutlinePreFilter;
-import com.ding.effect.outline.filter.OutlineProFilter;
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
 import com.jme3.app.SimpleApplication;
-import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
@@ -14,7 +11,6 @@ import com.jme3.light.Light;
 import com.jme3.light.LightList;
 import com.jme3.math.ColorRGBA;
 import com.jme3.post.FilterPostProcessor;
-import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.scs.stevetech1.jme.JMEModelFunctions;
@@ -34,25 +30,21 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 
 	public Spatial getModel() {
-		Node model = (Node)assetManager.loadModel("Models/voxelito.blend");
-		Node sub = (Node)model.getChild(0);
-		sub.getChild(1).removeFromParent();
-		sub.getChild(1).removeFromParent();
-		model = sub;
+		Node model = (Node)assetManager.loadModel("Models/male.blend");
 
-		JMEModelFunctions.scaleModelToHeight(model, 2f);
-		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/lik_glavni_color_mapa.png");
+		//JMEModelFunctions.scaleModelToHeight(model, 2f);
+		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/young_lightskinned_male_diffuse.png");
 		return model;
 	}
 	
 	
 	public String getAnimNode() {
-		return "unset";
+		return "tshirt02 (Node)";
 	}
 	
 
 	public String getAnimToShow() {
-		return "unset";
+		return "WalkBaked";
 	}
 	
 
@@ -148,38 +140,5 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 	}
 
-
-	public void showOutlineEffect(Spatial model, int width, ColorRGBA color) {
-		OutlineProFilter outlineFilter = model.getUserData("OutlineProFilter");
-		if (outlineFilter == null) {
-			ViewPort outlineViewport = renderManager.createPreView("outlineViewport", cam);
-			FilterPostProcessor outlinefpp = new FilterPostProcessor(assetManager);
-			OutlinePreFilter outlinePreFilter = new OutlinePreFilter();
-			outlinefpp.addFilter(outlinePreFilter);
-			outlineViewport.attachScene(model);
-			outlineViewport.addProcessor(outlinefpp);
-
-			outlineViewport.setClearFlags(true, false, false);
-			outlineViewport.setBackgroundColor(new ColorRGBA(0f, 0f, 0f, 0f));
-
-			outlineFilter = new OutlineProFilter(outlinePreFilter);
-			model.setUserData("OutlineProFilter", outlineFilter);
-			outlineFilter.setOutlineColor(color);
-			outlineFilter.setOutlineWidth(width);
-			fpp.addFilter(outlineFilter);
-		} else {
-			outlineFilter.setEnabled(true);
-			outlineFilter.getOutlinePreFilter().setEnabled(true);
-		}
-	}
-
-
-	public void hideOutlineEffect(Spatial model) {
-		OutlineProFilter outlineFilter = model.getUserData("OutlineProFilter");
-		if (outlineFilter != null) {
-			outlineFilter.setEnabled(false);
-			outlineFilter.getOutlinePreFilter().setEnabled(false);
-		}
-	}
 
 }

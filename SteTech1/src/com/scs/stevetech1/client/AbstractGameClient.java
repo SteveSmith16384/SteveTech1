@@ -8,14 +8,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.prefs.BackingStoreException;
 
-import com.ding.effect.outline.filter.OutlinePreFilter;
-import com.ding.effect.outline.filter.OutlineProFilter;
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.VideoRecorderAppState;
 import com.jme3.asset.TextureKey;
-import com.jme3.asset.plugins.ClasspathLocator;
-import com.jme3.asset.plugins.FileLocator;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -28,7 +24,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
-import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
@@ -1446,43 +1441,6 @@ ConsoleInputListener {
 		}
 		if (Globals.FOLLOW_CAM) {
 			this.currentAvatar.avatarModel.setAnim(AbstractAvatar.ANIM_DIED);
-		}
-	}
-
-
-	/**
-	 * This currently causes an error.
-	 */
-	public void showOutlineEffect(Spatial model, int width, ColorRGBA color) {
-		OutlineProFilter outlineFilter = model.getUserData("OutlineProFilter");
-		if (outlineFilter == null) {
-			ViewPort outlineViewport = renderManager.createPreView("outlineViewport", cam);
-			FilterPostProcessor outlinefpp = new FilterPostProcessor(assetManager);
-			OutlinePreFilter outlinePreFilter = new OutlinePreFilter();
-			outlinefpp.addFilter(outlinePreFilter);
-			outlineViewport.attachScene(model);
-			outlineViewport.addProcessor(outlinefpp);
-
-			outlineViewport.setClearFlags(true, false, false);
-			outlineViewport.setBackgroundColor(new ColorRGBA(0f, 0f, 0f, 0f));
-
-			outlineFilter = new OutlineProFilter(outlinePreFilter);
-			model.setUserData("OutlineProFilter", outlineFilter);
-			outlineFilter.setOutlineColor(color);
-			outlineFilter.setOutlineWidth(width);
-			fpp.addFilter(outlineFilter);
-		} else {
-			outlineFilter.setEnabled(true);
-			outlineFilter.getOutlinePreFilter().setEnabled(true);
-		}
-	}
-
-
-	public void hideOutlineEffect(Spatial model) {
-		OutlineProFilter outlineFilter = model.getUserData("OutlineProFilter");
-		if (outlineFilter != null) {
-			outlineFilter.setEnabled(false);
-			outlineFilter.getOutlinePreFilter().setEnabled(false);
 		}
 	}
 
