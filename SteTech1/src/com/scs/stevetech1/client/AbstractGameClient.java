@@ -345,13 +345,14 @@ ConsoleInputListener {
 			tpfSecs = 1;
 		}
 
-		if (Globals.STRICT) {
+		/*if (Globals.STRICT) {
 			if (!Globals.VOXEL_HACKS) {
 				if (this.physicsController.getNumEntities() > this.entities.size()) {
 					Globals.pe("Warning: more simple rigid bodies than entities!");
 				}
 			}
-		}
+		}*/
+		
 		checkConsoleInput();
 
 		if (quitting) {
@@ -1064,13 +1065,13 @@ ConsoleInputListener {
 
 		if (pe.simpleRigidBody != null) {
 			this.getPhysicsController().addSimpleRigidBody(pe.simpleRigidBody);
-			if (Globals.STRICT) {
+			/*if (Globals.STRICT) {
 				if (!Globals.VOXEL_HACKS) {
 					if (this.physicsController.getNumEntities() > this.entities.size()) {
 						Globals.pe("Warning: more simple rigid bodies than entities!");
 					}
 				}
-			}
+			}*/
 		}
 
 	}
@@ -1087,13 +1088,13 @@ ConsoleInputListener {
 		this.gameNode.detachAllChildren();
 		this.gameNode.removeFromParent();
 
-		if (Globals.STRICT) {
+		/*if (Globals.STRICT) {
 			if (!Globals.VOXEL_HACKS) {
 				if (this.physicsController.getNumEntities() > this.entities.size()) {
 					Globals.pe("Warning: more simple rigid bodies than entities!");
 				}
 			}
-		}
+		}*/
 	}
 
 

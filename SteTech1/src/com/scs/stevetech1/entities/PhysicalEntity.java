@@ -162,13 +162,13 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			if (simpleRigidBody != null) {
 				this.game.getPhysicsController().removeSimpleRigidBody(simpleRigidBody);
 				// simpleRigidBody = null;  Don't set it to null as it might be removed in mid-function
-				if (Globals.STRICT) {
+				/*if (Globals.STRICT) {
 					if (!Globals.VOXEL_HACKS) {
-					if (this.game.getPhysicsController().getNumEntities() > game.getNumEntities()) {
-						Globals.pe("Warning: more simple rigid bodies than entities!");
+						if (this.game.getPhysicsController().getNumEntities() > game.getNumEntities()) {
+							Globals.pe("Warning: more simple rigid bodies than entities!");
+						}
 					}
-					}
-				}
+				}*/
 			}
 
 			if (this.mainNode.getParent() != null) {
@@ -473,8 +473,8 @@ public abstract class PhysicalEntity extends Entity implements IPhysicalEntity, 
 			}
 		}
 	}
-	
-	
+
+
 	public SimpleRigidBody<PhysicalEntity> GetSimpleRigidBody() {
 		return this.simpleRigidBody;
 	}

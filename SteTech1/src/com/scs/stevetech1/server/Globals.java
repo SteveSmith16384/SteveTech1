@@ -12,8 +12,7 @@ public class Globals {
 	public static final boolean RELEASE_MODE = false; // Turn off simulated packet dropping etc...
 	public static final boolean STRICT = true; // Extra checks (which will slow the game down)
 
-	public static final boolean DEBUG_3D_PROBLEM = false; // todo - remove
-	public static final boolean VOXEL_HACKS = true; // todo - remove
+	//public static final boolean VOXEL_HACKS = true; // todo - remove
 
 	public static final boolean FOLLOW_CAM = false; // todo - make option
 	public static final boolean SLEEP_BETWEEN_NEW_ENT_MSGS = true; // Avoid buffer overflows

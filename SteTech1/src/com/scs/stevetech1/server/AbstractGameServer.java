@@ -181,11 +181,11 @@ ICollisionListener<PhysicalEntity> {
 		consoleInput.checkConsoleInput();
 
 		if (Globals.STRICT) {
-			if (!Globals.VOXEL_HACKS) {
+			/*if (!Globals.VOXEL_HACKS) {
 				if (this.physicsController.getNumEntities() > this.entities.size()) {
 					Globals.pe("Warning: more simple rigid bodies than entities!");
 				}
-			}
+			}*/
 			for(IEntity e : this.entities.values()) {
 				if (e.requiresProcessing()) {
 					if (!this.entitiesForProcessing.contains(e)) {
