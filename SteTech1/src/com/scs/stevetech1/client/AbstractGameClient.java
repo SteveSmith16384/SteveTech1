@@ -1399,12 +1399,10 @@ ConsoleInputListener {
 
 	@Override
 	public void playSound(int soundId, int entityId, Vector3f _pos, float _volume, boolean _stream) {
-		//if (!Globals.MUTE) {
 		String sound = getSoundFileFromID(soundId);
 		if (sound != null && sound.length() > 0) {
 			soundSystem.playSound(sound, entityId, _pos, _volume, _stream);
 		}
-		//}
 	}
 
 

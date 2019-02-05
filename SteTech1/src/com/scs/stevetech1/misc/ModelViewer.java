@@ -30,21 +30,21 @@ public class ModelViewer extends SimpleApplication implements AnimEventListener 
 
 
 	public Spatial getModel() {
-		Node model = (Node)assetManager.loadModel("Models/male.blend");
+		Node model = (Node)assetManager.loadModel("Models/soldier1.blend");
 
 		//JMEModelFunctions.scaleModelToHeight(model, 2f);
-		JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/young_lightskinned_male_diffuse.png");
+		//JMEModelFunctions.setTextureOnSpatial(assetManager, model, "Models/young_lightskinned_male_diffuse.png");
 		return model;
 	}
 	
 	
 	public String getAnimNode() {
-		return "tshirt02 (Node)";
+		return "Cube (Node)";
 	}
 	
 
 	public String getAnimToShow() {
-		return "WalkBaked";
+		return "ArmatureAction";
 	}
 	
 

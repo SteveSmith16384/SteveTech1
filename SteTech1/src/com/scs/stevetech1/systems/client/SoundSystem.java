@@ -54,18 +54,15 @@ public class SoundSystem extends AbstractSystem {
 		//if (!Globals.MUTE) {
 		if (sound != null && sound.length() > 0) {
 			try {
-				AudioNode node = null;
-				if (node == null) {
-					node = new AudioNode(this.assetManager, sound, stream ? AudioData.DataType.Stream : AudioData.DataType.Buffer);
-					if (pos != null) {
-						node.setPositional(true);
-						node.setLocalTranslation(pos);
-					} else {
-						node.setPositional(false);
-					}
-					node.setVolume(volume);
-					node.setLooping(false);
+				AudioNode node = new AudioNode(this.assetManager, sound, stream ? AudioData.DataType.Stream : AudioData.DataType.Buffer);
+				if (pos != null) {
+					node.setPositional(true);
+					node.setLocalTranslation(pos);
+				} else {
+					node.setPositional(false);
 				}
+				node.setVolume(volume);
+				node.setLooping(false);
 
 				gameNode.attachChild(node);
 
