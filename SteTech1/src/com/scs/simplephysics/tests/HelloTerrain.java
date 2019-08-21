@@ -165,7 +165,7 @@ public class HelloTerrain extends SimpleApplication implements ActionListener, I
 		 * 3.5) We supply the prepared heightmap itself.
 		 */
 		int patchSize = 65;
-		TerrainQuad terrain = new TerrainQuad("my terrain", patchSize, initialSize, heightmap.getHeightMap());
+		final TerrainQuad terrain = new TerrainQuad("my terrain", patchSize, initialSize, heightmap.getHeightMap());
 		terrain.scale(3f, .5f, 3f);
 
 		/** 4. We give the terrain its material, position & scale it, and attach it. */
