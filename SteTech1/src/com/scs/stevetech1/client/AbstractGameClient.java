@@ -281,7 +281,7 @@ ConsoleInputListener {
 	}
 
 
-	public void connect(String gameServerIP, int gamePort, boolean thread) {
+	public void connect(final String gameServerIP, final int gamePort, boolean thread) {
 		lastConnectException = null;
 		final AbstractGameClient c = this;
 

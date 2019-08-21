@@ -78,7 +78,7 @@ public class KryonetGameServer implements IGameMessageServer {
 	}
 
 
-	public void setListener(IMessageServerListener listener) {
+	public void setListener(final IMessageServerListener listener) {
 
 		server.addListener(new Listener() {
 			public void received (Connection connection, Object object) {
