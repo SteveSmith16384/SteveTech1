@@ -1,28 +1,25 @@
 package com.scs.undercoveragent;
 
+import com.jme3.asset.plugins.ClasspathLocator;
+import com.jme3.asset.plugins.FileLocator;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.util.SkyFactory;
-import com.scs.simplephysics.SimpleRigidBody;
 import com.scs.stevetech1.client.AbstractGameClient;
 import com.scs.stevetech1.client.ValidateClientSettings;
 import com.scs.stevetech1.components.IEntity;
 import com.scs.stevetech1.data.SimpleGameData;
-import com.scs.stevetech1.data.SimplePlayerData;
 import com.scs.stevetech1.entities.PhysicalEntity;
 import com.scs.stevetech1.hud.AbstractHUDImage;
-import com.scs.stevetech1.netmessages.MyAbstractMessage;
 import com.scs.stevetech1.netmessages.NewEntityData;
 import com.scs.stevetech1.server.Globals;
 import com.scs.stevetech1.shared.AbstractCollisionValidator;
-import com.scs.undercoveragent.entities.SnowFloor;
 import com.scs.undercoveragent.systems.client.FallingSnowflakeSystem;
 
 import ssmith.util.MyProperties;
-import ssmith.util.RealtimeInterval;
 
 public class UndercoverAgentClient extends AbstractGameClient {
 
@@ -79,7 +76,7 @@ public class UndercoverAgentClient extends AbstractGameClient {
 	@Override
 	public void simpleInitApp() {
 		super.simpleInitApp();
-
+		
 		entityCreator = new UndercoverAgentClientEntityCreator();
 		collisionValidator = new AbstractCollisionValidator();
 				
