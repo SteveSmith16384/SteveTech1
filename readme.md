@@ -19,8 +19,8 @@ SteveTech1 is a 3D multiplayer FPS framework and engine, designed to help you cr
 ### GAMES MADE WITH STEVETECH1
 This project comes with a fully working exampke game "Undercover Agent".  I'm currently working on two others games (as of the time of writing):
 
-* Moonbase Assault (https://bitbucket.org/SteveSmith16384/moonbaseassault/src/master/)
-* Two Weeks in the Pub (Fortnite clone) (https://bitbucket.org/SteveSmith16384/twoweeksinthepub/src/master/)
+* Moonbase Assault ( https://github.com/SteveSmith16384/MoonbaseAssault )
+* Two Weeks in the Pub (Fortnite clone) ( https://github.com/SteveSmith16384/TwoWeeksInThePub )
 
 Here's a video of Moonbase Assault:-
 
@@ -44,7 +44,7 @@ Or check out this channel of other vidoes of stuff I've done with this engine: h
 
 
 ### LICENCES
-* The SteveTech code is licenced under MIT: https://bitbucket.org/SteveSmith16384/stetech1/raw/5d3d7eb190119e4b77e4a3f5042a59906653b7a2/stevetech1_mit_licence.txt
+* The SteveTech code is licenced under MIT
 * JMonkeyEngine licence: [https://jmonkeyengine.github.io/wiki/bsd_license.html#jme-s-bsd-license]
 * Kryonet Licence: [https://raw.githubusercontent.com/EsotericSoftware/kryonet/master/license.txt]
 * Simple Physics for JME [https://bitbucket.org/SteveSmith16384/simplephysicsforjme]
